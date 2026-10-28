@@ -16,9 +16,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -57,6 +59,8 @@ final class Mechanisms {
             // 22
             SimpleEvent.light("barrel_opens", EventTag.DOORS, 0.7,
                 player -> Nearby.any(player, 10, Mechanisms::closedBarrel), Mechanisms::openBarrel),
+            // 101: the music stops mid-song and the disc is knocked out
+            SimpleEvent.light("jukebox_pop", EventTag.DOORS, 0.7, player -> !playingJukeboxes(player).isEmpty(), Mechanisms::popRecord),
             // 20
             SimpleEvent.harmful("open_house", EventTag.DOORS, 0.7,
                 player -> player.level().isDarkOutside() && Nearby.any(player, 20, Mechanisms::closedWoodenDoor),
@@ -93,6 +97,22 @@ final class Mechanisms {
 
     private static boolean closedWoodenDoor(BlockState state) {
         return state.getBlock() instanceof DoorBlock door && DoorBlock.isWoodenDoor(state) && !door.isOpen(state);
+    }
+
+    private static List<JukeboxBlockEntity> playingJukeboxes(ServerPlayer player) {
+        return Nearby.all(player, 20, s -> s.is(Blocks.JUKEBOX) && s.getValue(JukeboxBlock.HAS_RECORD)).stream()
+            .map(pos -> player.level().getBlockEntity(pos))
+            .filter(entity -> entity instanceof JukeboxBlockEntity jukebox && jukebox.getSongPlayer().isPlaying())
+            .map(entity -> (JukeboxBlockEntity) entity)
+            .toList();
+    }
+
+    private static void popRecord(ServerPlayer player) {
+        List<JukeboxBlockEntity> playing = playingJukeboxes(player);
+        if (!playing.isEmpty()) {
+            JukeboxBlockEntity jukebox = playing.get(player.getRandom().nextInt(playing.size()));
+            jukebox.popOutTheItem();
+        }
     }
 
     private static void openHouse(ServerPlayer player) {

@@ -10,9 +10,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.Vec3;
@@ -55,6 +57,8 @@ final class Sounds {
             at("distant_bell", SoundEvents.BELL_BLOCK, 40.0, 4.0F, 0.6F),
             // 34
             at("phantom_jukebox", SoundEvents.MUSIC_DISC_11.value(), 8.0, 2.0F, 1.0F),
+            // 102: the game's own background music cuts out; it resumes on its usual schedule
+            sound("music_cut", player -> player.connection.send(new ClientboundStopSoundPacket(null, SoundSource.MUSIC))),
             // 35
             sound("whisper", player -> player.sendSystemMessage(
                 Component.literal("<???> " + player.getName().getString()).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))),

@@ -38,11 +38,23 @@ class DangerTest {
 
     @Test
     void cooldownShrinksWithDangerAndActivity() {
-        long calm = Danger.cooldownTicks(0, 1, 0.5);
-        long late = Danger.cooldownTicks(1, 1, 0.5);
-        long active = Danger.cooldownTicks(0, 2, 0.5);
+        long calm = Danger.cooldownTicks(0, 1, 0.5, 1);
+        long late = Danger.cooldownTicks(1, 1, 0.5, 1);
+        long active = Danger.cooldownTicks(0, 2, 0.5, 1);
         assertEquals(4 * 1.5 * 60 * 20, calm);
         assertTrue(late < calm);
         assertEquals(calm / 2, active);
+    }
+
+    @Test
+    void openDaylightStretchesCooldown() {
+        assertEquals(1.0, Danger.daylightFactor(false, false, false));
+        assertEquals(1.2, Danger.daylightFactor(true, false, false), 1e-9);
+        assertEquals(1.2 * 1.2 * 1.2, Danger.daylightFactor(true, true, true), 1e-9);
+        assertEquals((long) (calmTicks() * 1.2), Danger.cooldownTicks(0, 1, 0.5, 1.2), 1);
+    }
+
+    private static long calmTicks() {
+        return Danger.cooldownTicks(0, 1, 0.5, 1);
     }
 }

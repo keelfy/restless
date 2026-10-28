@@ -34,6 +34,7 @@ Tags in parentheses; `*` marks tags that do not exist in code yet.
 21. L: a chest lid clicks (sound and animation, contents untouched).
 22. L: a barrel opens.
 23. H: a piston pushes a block into the player's position.
+101. L: the jukebox music is cut off: the playing disc is knocked out.
 
 ## Sounds (SOUND*)
 
@@ -52,6 +53,7 @@ Tags in parentheses; `*` marks tags that do not exist in code yet.
 36. L: echo: the player's last sound repeats 3 s later.
 37. L: a player death sound nearby.
 38. L: dripping water in a dry cave.
+102. L: the game's background music cuts out (stop packet for the music category).
 
 ## Afflictions (AFFLICTION)
 

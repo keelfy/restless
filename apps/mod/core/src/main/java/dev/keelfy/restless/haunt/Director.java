@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 
@@ -113,7 +114,9 @@ public final class Director {
     }
 
     private static long cooldown(ServerPlayer player, SpiritType spirit) {
-        return Danger.cooldownTicks(danger(player), spirit.activity(), player.getRandom().nextDouble());
+        ServerLevel level = player.level();
+        double quiet = Danger.daylightFactor(level.isBrightOutside(), level.canSeeSky(player.blockPosition()), !level.isThundering());
+        return Danger.cooldownTicks(danger(player), spirit.activity(), player.getRandom().nextDouble(), quiet);
     }
 
     private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit) {

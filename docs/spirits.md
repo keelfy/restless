@@ -27,7 +27,10 @@ Update this file when any of them changes.
 
 ### Cooldown
 
-`minutes = (4 − 2.5 × danger) × (1 + roll) / activity`, `roll` uniform in 0..1 (minimum 1 second).
+`minutes = (4 − 2.5 × danger) × (1 + roll) × quiet / activity`, `roll` uniform in 0..1 (minimum 1 second).
+
+`quiet = 1.2^n`, where `n` counts the true conditions among: it is day, the player sees the sky, there is no thunderstorm.
+So a player in the open on a clear day waits up to 1.73× longer; in a mine, a house or at night nothing changes.
 
 ## Spirits
 
@@ -65,6 +68,7 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `open_house` | 20 | HARMFUL | DOORS | 0.7 | Night, and a closed wooden door within 20 | Opens every such door |
 | `chest_lid` | 21 | LIGHT | DOORS | 0.7 | A chest or trapped chest within 10 | Lid opens and closes with sound, contents untouched |
 | `barrel_opens` | 22 | LIGHT | DOORS | 0.7 | A closed barrel within 10 | Opens for 1.5 s, then closes |
+| `jukebox_pop` | 101 | LIGHT | DOORS | 0.7 | A jukebox within 20 is playing a disc | The music cuts out and the disc pops out of it |
 | `footsteps` | 24 | LIGHT | SOUND | 0.4 | Always | A step sound 2 blocks behind the player |
 | `creeper_hiss` | 25 | LIGHT | SOUND | 0.4 | Always | Creeper fuse hiss nearby |
 | `three_knocks` | 26 | LIGHT | SOUND | 0.4 | Always | Three knocks, on the nearest wooden door within 12 or else from nowhere nearby |
@@ -76,6 +80,7 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `breathing` | 32 | LIGHT | SOUND | 0.4 | Always | Five breaths 1 block from the player, each louder |
 | `distant_bell` | 33 | LIGHT | SOUND | 0.4 | Always | Loud bell from ~40 blocks away |
 | `phantom_jukebox` | 34 | LIGHT | SOUND | 0.4 | Always | Music disc 11 from a point nearby, no jukebox |
+| `music_cut` | 102 | LIGHT | SOUND | 0.4 | Always | Stops the game's background music for the player; it resumes on its usual schedule |
 | `whisper` | 35 | LIGHT | SOUND | 0.4 | Always | Chat line `<???> <player name>`, only to the player |
 | `death_cry` | 37 | LIGHT | SOUND | 0.4 | Always | Player death sound nearby |
 | `dripping` | 38 | LIGHT | SOUND | 0.4 | Always | Water drip nearby |
