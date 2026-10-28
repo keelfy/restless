@@ -8,6 +8,7 @@
     "minecraft:lamp_off": { "name": "Lamp Off", "description": "A lit redstone lamp switches off for a second, then comes back if still powered." },
     "minecraft:campfire_out": { "name": "Campfire Out", "description": "A lit campfire is snuffed out." },
     "minecraft:furnace_dies": { "name": "Dying Furnace", "description": "A burning furnace goes cold and its fuel is taken out for five seconds, then returned." },
+    "minecraft:dimming": { "name": "Dimming", "description": "The light slowly drains out of the world and then returns. Nothing in the world changes; only the player sees it." },
     "minecraft:candles_light": { "name": "Candle Lights Itself", "description": "An unlit candle nearby lights on its own." },
     "minecraft:new_face": { "name": "New Face", "description": "A jack o'lantern slowly turns to face another way." },
     "minecraft:blackout": { "name": "Blackout", "description": "Lights nearby go out and break, and a moment later a zombie or skeleton appears close by and attacks." },

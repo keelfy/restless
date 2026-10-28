@@ -5,6 +5,8 @@ import dev.keelfy.restless.debug.DebugMenu;
 import dev.keelfy.restless.debug.DebugPayload;
 import dev.keelfy.restless.debug.DebugScreen;
 import dev.keelfy.restless.debug.FirePayload;
+import dev.keelfy.restless.haunt.DimPayload;
+import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.DoorLockPayload;
 import dev.keelfy.restless.haunt.DoorLocks;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,6 +26,7 @@ public final class RestlessNeoForge {
         modBus.addListener((RegisterPayloadHandlersEvent e) -> e.registrar("1")
             .playToClient(DoorLockPayload.TYPE, DoorLockPayload.CODEC,
                 (payload, context) -> DoorLocks.put(context.player().level(), payload.pos(), payload.ticks()))
+            .playToClient(DimPayload.TYPE, DimPayload.CODEC, (payload, context) -> Dimming.start(payload.ticks()))
             .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))
             .playToServer(FirePayload.TYPE, FirePayload.CODEC, (payload, context) -> DebugMenu.fire((ServerPlayer) context.player(), payload)));
         NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post e) -> Restless.onServerTick(e.getServer()));

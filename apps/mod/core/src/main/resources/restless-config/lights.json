@@ -16,6 +16,7 @@
     "minecraft:lamp_off": { "weight": 0.8, "radius": 10, "relight_ticks": 20, "sound": { "volume": 0.4, "pitch": 1.6 } },
     "minecraft:campfire_out": { "weight": 0.8, "radius": 10, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:furnace_dies": { "weight": 0.8, "radius": 10, "return_ticks": 100, "sound": { "volume": 0.8, "pitch": 0.8 } },
+    "minecraft:dimming": { "weight": 0.6, "duration_ticks": 300, "peak": 0.8 },
     "minecraft:candles_light": { "weight": 0.8, "radius": 10, "sound": { "volume": 0.6, "pitch": 1.2 } },
     "minecraft:new_face": { "weight": 0.6, "radius": 10, "sound": { "volume": 1.0, "pitch": 0.7 } },
     "minecraft:blackout": {

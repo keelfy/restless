@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.DimPayload;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
@@ -10,6 +11,7 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -74,6 +76,9 @@ final class Lights {
             // 5: the fuel is taken away for a while, or the furnace would relight at once
             SimpleEvent.light("furnace_dies", EventTag.LIGHTS,
                 player -> !fueled(player).isEmpty(), Lights::douse),
+            // 7: the view fades on this player's client only; see Dimming
+            SimpleEvent.light("dimming", EventTag.LIGHTS, player -> true,
+                player -> player.connection.send(new ClientboundCustomPayloadPacket(new DimPayload(Config.event("dimming").integer("duration_ticks"))))),
             // 8
             SimpleEvent.light("candles_light", EventTag.LIGHTS,
                 player -> Nearby.any(player, "candles_light", CandleBlock::canLight),
