@@ -32,6 +32,8 @@ public final class Config {
     /** The bundled files, each a slice of the same tree (an {@code events} object in several of them is merged). */
     static final List<String> FILES = List.of(
         "haunt", "spirits", "lights", "mechanisms", "sounds", "afflictions", "assaults", "items", "blocks", "mobs", "presence");
+    /** The namespace of events that use only vanilla content. */
+    static final String DEFAULT_NAMESPACE = "minecraft";
     static final String VERSION = "version";
     private static final String DIR = "restless";
     private static final String RESOURCES = "/restless-config/";
@@ -57,9 +59,14 @@ public final class Config {
         return new Section(json, path);
     }
 
-    /** The values of one haunt event, by its id. */
+    /** The values of one haunt event, by its id; written like a vanilla one, so no namespace means {@code minecraft}. */
     public static Section event(String id) {
-        return section("events." + id);
+        return section("events." + eventKey(id));
+    }
+
+    /** The key an event has in the files: its id with the namespace spelled out. */
+    static String eventKey(String id) {
+        return id.indexOf(':') < 0 ? DEFAULT_NAMESPACE + ":" + id : id;
     }
 
     static JsonObject read(Path dir, Function<String, String> bundledText, Migrations migrations) {

@@ -2,6 +2,7 @@ package dev.keelfy.restless.config;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
@@ -13,13 +14,26 @@ import java.util.function.UnaryOperator;
  * they come from the bundled defaults.
  */
 public final class Migrations {
+    /** Version 2 of every event file: event ids carry a namespace ({@code cat_hiss} became {@code minecraft:cat_hiss}). */
+    private static final List<UnaryOperator<JsonObject>> NAMESPACED_EVENTS = List.of(Migrations::namespaceEvents);
+
     /** Steps per file name (without {@code .json}). A file with no entry has never changed shape: version 1. */
-    static final Migrations BUILT_IN = new Migrations(Map.of());
+    static final Migrations BUILT_IN = new Migrations(Map.of(
+        "lights", NAMESPACED_EVENTS, "mechanisms", NAMESPACED_EVENTS, "sounds", NAMESPACED_EVENTS,
+        "afflictions", NAMESPACED_EVENTS, "assaults", NAMESPACED_EVENTS, "items", NAMESPACED_EVENTS,
+        "blocks", NAMESPACED_EVENTS, "mobs", NAMESPACED_EVENTS, "presence", NAMESPACED_EVENTS));
 
     private final Map<String, List<UnaryOperator<JsonObject>>> steps;
 
     Migrations(Map<String, List<UnaryOperator<JsonObject>>> steps) {
         this.steps = steps;
+    }
+
+    /** These steps plus the given ones for one more file; for tests that exercise a step the real ones lack. */
+    Migrations plus(String file, List<UnaryOperator<JsonObject>> more) {
+        Map<String, List<UnaryOperator<JsonObject>>> all = new HashMap<>(steps);
+        all.put(file, more);
+        return new Migrations(all);
     }
 
     /** The version the bundled file of this name must have. */
@@ -34,6 +48,18 @@ public final class Migrations {
             json = all.get(version - 1).apply(json);
         }
         return json;
+    }
+
+    private static JsonObject namespaceEvents(JsonObject root) {
+        JsonElement events = root.get("events");
+        if (events != null && events.isJsonObject()) {
+            JsonObject namespaced = new JsonObject();
+            for (var entry : events.getAsJsonObject().entrySet()) {
+                namespaced.add(Config.eventKey(entry.getKey()), entry.getValue());
+            }
+            root.add("events", namespaced);
+        }
+        return root;
     }
 
     /** For use inside a step: moves the value at a dotted path to another, creating objects on the way. No-op if absent. */

@@ -19,7 +19,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 /** Debug/admin command: /haunt info|force|spirit add|spirit remove [player]. */
@@ -39,8 +41,8 @@ public final class HauntCommand {
                 .then(Commands.argument("player", EntityArgument.player())
                     .executes(c -> info(c.getSource(), EntityArgument.getPlayer(c, "player")))))
             .then(Commands.literal("force")
-                .then(Commands.argument("event", StringArgumentType.word())
-                    .suggests((c, b) -> SharedSuggestionProvider.suggest(HauntEvents.all().stream().map(HauntEvent::id), b))
+                .then(Commands.argument("event", IdentifierArgument.id())
+                    .suggests((c, b) -> SharedSuggestionProvider.suggestResource(HauntEvents.all().stream().map(HauntEvent::id), b))
                     .executes(c -> force(c, c.getSource().getPlayerOrException()))
                     .then(Commands.argument("player", EntityArgument.player())
                         .executes(c -> force(c, EntityArgument.getPlayer(c, "player"))))))
@@ -74,7 +76,7 @@ public final class HauntCommand {
     }
 
     private static int force(CommandContext<CommandSourceStack> c, ServerPlayer player) throws CommandSyntaxException {
-        String id = StringArgumentType.getString(c, "event");
+        Identifier id = IdentifierArgument.getId(c, "event");
         HauntEvent event = HauntEvents.byId(id).orElseThrow(() -> UNKNOWN_EVENT.create(id));
         if (!event.canRun(player)) {
             c.getSource().sendFailure(Component.literal(id + ": nothing to act on near " + player.getName().getString()));

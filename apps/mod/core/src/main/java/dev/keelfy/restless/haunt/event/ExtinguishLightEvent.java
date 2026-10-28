@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -18,8 +19,8 @@ import org.jspecify.annotations.Nullable;
 /** Snuffs a lit candle, or knocks a torch off (it drops, nothing is lost). */
 public final class ExtinguishLightEvent implements HauntEvent {
     @Override
-    public String id() {
-        return "extinguish_light";
+    public Identifier id() {
+        return Identifier.parse("extinguish_light");
     }
 
     @Override

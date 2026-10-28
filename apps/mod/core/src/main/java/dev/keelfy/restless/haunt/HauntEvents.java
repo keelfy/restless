@@ -8,6 +8,7 @@ import dev.keelfy.restless.haunt.event.ExtinguishLightEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraft.resources.Identifier;
 
 public final class HauntEvents {
     private static final List<HauntEvent> ALL = Stream.concat(
@@ -21,7 +22,7 @@ public final class HauntEvents {
         return ALL;
     }
 
-    public static Optional<HauntEvent> byId(String id) {
+    public static Optional<HauntEvent> byId(Identifier id) {
         return ALL.stream().filter(e -> e.id().equals(id)).findFirst();
     }
 }

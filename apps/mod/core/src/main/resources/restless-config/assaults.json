@@ -1,8 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
   "assaults": { "safe_health": 6.0 },
   "events": {
-    "cold_touch": {
+    "minecraft:cold_touch": {
       "weight": 1.0,
       "min_health": 2.0,
       "damage_min": 2,
@@ -10,9 +10,9 @@
       "keep_health": 1.0,
       "sound": { "volume": 1.0, "pitch": 0.6 }
     },
-    "trip": { "weight": 0.7, "ticks": 20, "amplifier": 6, "sound": { "volume": 1.0, "pitch": 0.7 } },
-    "scorch": { "weight": 0.6, "min_health": 6.0, "seconds": 1.0 },
-    "wrath": {
+    "minecraft:trip": { "weight": 0.7, "ticks": 20, "amplifier": 6, "sound": { "volume": 1.0, "pitch": 0.7 } },
+    "minecraft:scorch": { "weight": 0.6, "min_health": 6.0, "seconds": 1.0 },
+    "minecraft:wrath": {
       "weight": 0.6,
       "min_health": 8.0,
       "damage_min": 4,
@@ -20,8 +20,8 @@
       "keep_health": 1.0,
       "sound": { "volume": 1.0, "pitch": 0.8 }
     },
-    "snatch": { "weight": 0.7, "speed": 0.45, "lift": 0.3, "sound": { "volume": 1.0, "pitch": 0.5 } },
-    "suffocation": {
+    "minecraft:snatch": { "weight": 0.7, "speed": 0.45, "lift": 0.3, "sound": { "volume": 1.0, "pitch": 0.5 } },
+    "minecraft:suffocation": {
       "weight": 0.5,
       "margin": 2.0,
       "dark_below": 8,
@@ -34,9 +34,9 @@
       "sound": { "volume": 1.0, "pitch": 1.0 },
       "pulse_sound": { "volume": 0.8, "pitch": 1.0 }
     },
-    "shove": { "weight": 0.5, "margin": 4.0, "push": 0.7, "lift": 0.2, "sound": { "volume": 1.0, "pitch": 0.6 } },
-    "toss": { "weight": 0.5, "margin": 4.0, "lift": 1.0, "sound": { "volume": 1.0, "pitch": 0.6 } },
-    "thunder_knocks": {
+    "minecraft:shove": { "weight": 0.5, "margin": 4.0, "push": 0.7, "lift": 0.2, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "minecraft:toss": { "weight": 0.5, "margin": 4.0, "lift": 1.0, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "minecraft:thunder_knocks": {
       "weight": 0.5,
       "margin": 4.0,
       "strike_delay_ticks": 60,
@@ -46,7 +46,7 @@
       "damage": 6.0,
       "keep_health": 1.0
     },
-    "embrace": {
+    "minecraft:embrace": {
       "weight": 0.5,
       "margin": 4.0,
       "delay_ticks": 30,

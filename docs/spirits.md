@@ -193,7 +193,10 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 |---|---|
 | `haunt.json` | `director`, `danger`, `restore`, `place` |
 | `spirits.json` | `spirits` (activity, tag affinities) |
-| `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
+| `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
+
+Event ids are namespaced like vanilla keys. The namespace names the mod whose content the event uses: `minecraft` for everything that
+needs only vanilla, another mod's id for an integration with it (say `supplementaries:globe_spin`). In code a bare id means `minecraft`.
 
 An event holds its weight, radii, durations, damage, thresholds and texts, plus its sound (`sound`: `volume`, `pitch`;
 extra ones are named like `pulse_sound`) and particles (`particles`: `count`, `dx`, `dy`, `dz`, `speed`, `offset_y`).
@@ -214,6 +217,6 @@ the mod, or one that is not valid JSON, is logged and ignored (the defaults run)
 Permission level: gamemaster. `[player]` defaults to the caller.
 
 - `/haunt info [player]`: danger, days, advancements, and the numbered spirit list with time to each spirit's next event.
-- `/haunt force <event> [player]`: runs an event now (fails if it cannot run).
+- `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
 - `/haunt spirit add <spirit> [player]`: binds one more spirit.
 - `/haunt spirit remove <n> [player]`: unbinds spirit number `n` (1-based, as listed by `info`).

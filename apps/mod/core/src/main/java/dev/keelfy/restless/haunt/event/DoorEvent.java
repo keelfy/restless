@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -14,8 +15,8 @@ import org.jspecify.annotations.Nullable;
 /** Opens a closed wooden door or slams an open one. */
 public final class DoorEvent implements HauntEvent {
     @Override
-    public String id() {
-        return "door";
+    public Identifier id() {
+        return Identifier.parse("door");
     }
 
     @Override

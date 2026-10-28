@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Ticks;
 import java.util.Set;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -14,8 +15,8 @@ import net.minecraft.world.effect.MobEffects;
 
 public final class BlindnessEvent implements HauntEvent {
     @Override
-    public String id() {
-        return "blindness";
+    public Identifier id() {
+        return Identifier.parse("blindness");
     }
 
     @Override

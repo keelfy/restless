@@ -1,10 +1,10 @@
 {
-  "version": 1,
+  "version": 2,
   "events": {
-    "extinguish_light": { "weight": 1.0, "radius": 10, "sound": { "volume": 0.6, "pitch": 1.4 } },
-    "candles_out": { "weight": 0.8, "radius": 10 },
-    "torch_chain": { "weight": 0.8, "radius": 10, "interval_ticks": 6, "max_torches": 8, "sound": { "volume": 0.6, "pitch": 1.4 } },
-    "lantern_flicker": {
+    "minecraft:extinguish_light": { "weight": 1.0, "radius": 10, "sound": { "volume": 0.6, "pitch": 1.4 } },
+    "minecraft:candles_out": { "weight": 0.8, "radius": 10 },
+    "minecraft:torch_chain": { "weight": 0.8, "radius": 10, "interval_ticks": 6, "max_torches": 8, "sound": { "volume": 0.6, "pitch": 1.4 } },
+    "minecraft:lantern_flicker": {
       "weight": 0.8,
       "radius": 10,
       "interval_ticks": 4,
@@ -13,12 +13,12 @@
       "off_sound": { "volume": 0.3, "pitch": 1.8 },
       "on_sound": { "volume": 0.6, "pitch": 1.0 }
     },
-    "lamp_off": { "weight": 0.8, "radius": 10, "relight_ticks": 20, "sound": { "volume": 0.4, "pitch": 1.6 } },
-    "campfire_out": { "weight": 0.8, "radius": 10, "sound": { "volume": 1.0, "pitch": 1.0 } },
-    "furnace_dies": { "weight": 0.8, "radius": 10, "return_ticks": 100, "sound": { "volume": 0.8, "pitch": 0.8 } },
-    "candles_light": { "weight": 0.8, "radius": 10, "sound": { "volume": 0.6, "pitch": 1.2 } },
-    "new_face": { "weight": 0.6, "radius": 10, "sound": { "volume": 1.0, "pitch": 0.7 } },
-    "blackout": {
+    "minecraft:lamp_off": { "weight": 0.8, "radius": 10, "relight_ticks": 20, "sound": { "volume": 0.4, "pitch": 1.6 } },
+    "minecraft:campfire_out": { "weight": 0.8, "radius": 10, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:furnace_dies": { "weight": 0.8, "radius": 10, "return_ticks": 100, "sound": { "volume": 0.8, "pitch": 0.8 } },
+    "minecraft:candles_light": { "weight": 0.8, "radius": 10, "sound": { "volume": 0.6, "pitch": 1.2 } },
+    "minecraft:new_face": { "weight": 0.6, "radius": 10, "sound": { "volume": 1.0, "pitch": 0.7 } },
+    "minecraft:blackout": {
       "weight": 0.5,
       "radius": 16,
       "spawn_min": 5,
@@ -26,6 +26,6 @@
       "spawn_delay_ticks": 15,
       "sound": { "volume": 1.0, "pitch": 0.6 }
     },
-    "burning_hand": { "weight": 0.6, "lift": 0.15, "eye_drop": 0.3, "sound": { "volume": 0.8, "pitch": 1.0 } }
+    "minecraft:burning_hand": { "weight": 0.6, "lift": 0.15, "eye_drop": 0.3, "sound": { "volume": 0.8, "pitch": 1.0 } }
   }
 }

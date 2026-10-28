@@ -1,18 +1,18 @@
 {
-  "version": 1,
+  "version": 2,
   "events": {
-    "blindness": { "weight": 0.6, "seconds": 6, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "nausea": { "weight": 0.6, "seconds": 5, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "heaviness": { "weight": 0.6, "seconds": 8, "amplifier": 1, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "fatigue": { "weight": 0.6, "seconds": 10, "amplifier": 1, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "hunger_pang": { "weight": 0.5, "min_food": 6, "loss": 3 },
-    "darkness": { "weight": 0.6, "seconds": 6, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "shudder": { "weight": 0.5, "push": 0.4, "lift": 0.1 },
-    "poison": { "weight": 0.6, "seconds": 5, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "weakness": { "weight": 0.6, "seconds": 30, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "levitation": { "weight": 0.6, "seconds": 2, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "frostbite": { "weight": 0.6, "min_health": 6.0, "extra_freeze_ticks": 60, "sound": { "volume": 1.0, "pitch": 0.6 } },
-    "drained": { "weight": 0.6, "xp_min": 5, "xp_spread": 10 },
-    "bad_luck": { "weight": 0.6, "seconds": 300, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } }
+    "minecraft:blindness": { "weight": 0.6, "seconds": 6, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:nausea": { "weight": 0.6, "seconds": 5, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:heaviness": { "weight": 0.6, "seconds": 8, "amplifier": 1, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:fatigue": { "weight": 0.6, "seconds": 10, "amplifier": 1, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:hunger_pang": { "weight": 0.5, "min_food": 6, "loss": 3 },
+    "minecraft:darkness": { "weight": 0.6, "seconds": 6, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:shudder": { "weight": 0.5, "push": 0.4, "lift": 0.1 },
+    "minecraft:poison": { "weight": 0.6, "seconds": 5, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:weakness": { "weight": 0.6, "seconds": 30, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:levitation": { "weight": 0.6, "seconds": 2, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:frostbite": { "weight": 0.6, "min_health": 6.0, "extra_freeze_ticks": 60, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "minecraft:drained": { "weight": 0.6, "xp_min": 5, "xp_spread": 10 },
+    "minecraft:bad_luck": { "weight": 0.6, "seconds": 300, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } }
   }
 }

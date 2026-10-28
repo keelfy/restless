@@ -5,6 +5,7 @@ import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import java.util.Set;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,8 +13,8 @@ import net.minecraft.sounds.SoundSource;
 /** Damages the player but never kills: lethal events come later and must be telegraphed. */
 public final class ColdTouchEvent implements HauntEvent {
     @Override
-    public String id() {
-        return "cold_touch";
+    public Identifier id() {
+        return Identifier.parse("cold_touch");
     }
 
     @Override

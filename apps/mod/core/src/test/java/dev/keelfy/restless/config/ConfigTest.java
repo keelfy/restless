@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
@@ -25,14 +24,14 @@ import org.junit.jupiter.api.io.TempDir;
 
 class ConfigTest {
     private static final Path SOURCES = Path.of("src/main/java");
-    private static final Pattern EVENT_ID = Pattern.compile("\\b(?:light|harmful|sound|at|on)\\(\"([a-z_]+)\"");
-    private static final Pattern OWN_ID = Pattern.compile("public String id\\(\\) \\{\\s*return \"([a-z_]+)\";");
+    private static final Pattern EVENT_ID = Pattern.compile("\\b(?:light|harmful|sound|at|on)\\(\"([a-z_:]+)\"");
+    private static final Pattern OWN_ID = Pattern.compile("public Identifier id\\(\\) \\{\\s*return Identifier\\.parse\\(\"([a-z_:]+)\"\\);");
     private static final Pattern KEY = Pattern.compile("\\.(?:num|integer|text|texts|lines|section|tone|burst)\\(\"([a-z_]+)\"\\)");
     private static final Pattern LITERAL = Pattern.compile("\"([a-z_]+)\"");
 
     @Test
     void userFileOverridesOnlyWhatItSets(@TempDir Path dir) throws IOException {
-        // No version in the file: taken as version 1.
+        // No version in the file: taken as version 1, so its bare event ids are namespaced on the way in.
         Files.createDirectories(dir.resolve("restless"));
         Files.writeString(dir.resolve("restless/mechanisms.json"), "{\"events\":{\"door\":{\"radius\":3}}}");
         Config.load(dir);
@@ -68,11 +67,11 @@ class ConfigTest {
     @Test
     void oldFileIsMigratedAndTheOldOneKept(@TempDir Path dir) throws IOException {
         Files.writeString(dir.resolve("haunt.json"), "{\"version\":1,\"director\":{\"check_interval_ticks\":7,\"gone\":1}}");
-        Migrations migrations = new Migrations(Map.of("haunt", List.<UnaryOperator<JsonObject>>of(json -> {
+        Migrations migrations = Migrations.BUILT_IN.plus("haunt", List.<UnaryOperator<JsonObject>>of(json -> {
             Migrations.move(json, "director.check_interval_ticks", "director.check_interval");
             Migrations.remove(json, "director.gone");
             return json;
-        })));
+        }));
         JsonObject tree = Config.read(dir, name -> name.equals("haunt")
             ? "{\"version\":2,\"director\":{\"check_interval\":20,\"default_spirits\":3}}" : Config.bundledText(name), migrations);
         JsonObject director = tree.getAsJsonObject("director");
@@ -107,7 +106,8 @@ class ConfigTest {
     void everyEventInCodeHasAWeight() throws IOException {
         JsonObject events = Config.defaults().getAsJsonObject("events");
         for (String id : eventIds()) {
-            assertTrue(events.has(id) && events.getAsJsonObject(id).has("weight"), "no weight for event " + id);
+            String full = Config.eventKey(id);
+            assertTrue(events.has(full) && events.getAsJsonObject(full).has("weight"), "no weight for event " + full);
         }
     }
 
