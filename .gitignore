@@ -19,3 +19,6 @@ apps/frontend/next-env.d.ts
 *.tsbuildinfo
 
 .DS_Store
+
+# Logs
+logs/
