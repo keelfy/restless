@@ -57,6 +57,41 @@
       "sound": { "volume": 1.0, "pitch": 0.7 },
       "hit_sound": { "volume": 1.0, "pitch": 0.6 },
       "particles": { "count": 8, "dx": 0.4, "dy": 0.6, "dz": 0.4, "speed": 0.02, "offset_y": 1.0 }
+    },
+    "minecraft:shadow": {
+      "weight": 0.4,
+      "margin": 8.0,
+      "min_distance": 14,
+      "max_distance": 20,
+      "interval_ticks": 2,
+      "speed": 0.3,
+      "max_ticks": 1200,
+      "cleanup_ticks": 40,
+      "stuck_steps": 40,
+      "climb": 1,
+      "drop": 3,
+      "watch_degrees": 45.0,
+      "touch_distance": 1.2,
+      "damage": 14.0,
+      "beat_steps": 10,
+      "sound": { "volume": 1.0, "pitch": 0.6 },
+      "beat_sound": { "volume": 0.8, "pitch": 0.8 },
+      "touch_sound": { "volume": 1.0, "pitch": 0.7 },
+      "particles": { "count": 20, "dx": 0.3, "dy": 0.8, "dz": 0.3, "speed": 0.02, "offset_y": 1.0 }
+    },
+    "minecraft:the_call": {
+      "weight": 0.3,
+      "margin": 4.0,
+      "radius": 12,
+      "void_distance": 10.0,
+      "delay_ticks": 40,
+      "interval_ticks": 2,
+      "pull": 0.1,
+      "max_ticks": 600,
+      "arrive_distance": 1.5,
+      "free_distance": 6.0,
+      "sound": { "volume": 1.0, "pitch": 0.6 },
+      "particles": { "count": 2, "dx": 0.3, "dy": 0.1, "dz": 0.3, "speed": 0.01, "offset_y": 0.2 }
     }
   }
 }

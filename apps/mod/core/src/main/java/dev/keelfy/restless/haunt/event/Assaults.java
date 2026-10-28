@@ -4,6 +4,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,6 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -20,8 +22,10 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /** Direct physical harm. Every event leaves the player alive; lethal ones need a telegraph and come later. */
 final class Assaults {
@@ -67,17 +71,20 @@ final class Assaults {
             // 58
             SimpleEvent.harmful("thunder_knocks", EventTag.ASSAULT, player -> healthy(player, "thunder_knocks"), Assaults::thunderKnocks),
             // 60
-            SimpleEvent.harmful("embrace", EventTag.ASSAULT, player -> healthy(player, "embrace"), Assaults::embrace)
+            SimpleEvent.harmful("embrace", EventTag.ASSAULT, player -> healthy(player, "embrace"), Assaults::embrace),
+            // 100
+            SimpleEvent.harmful("the_call", EventTag.ASSAULT,
+                player -> healthy(player, "the_call") && night(player) && callTarget(player) != null, Assaults::call)
         );
     }
 
     /** Telegraphed events stop hurting once the player is down to this much health. */
-    private static float safeHealth() {
+    static float safeHealth() {
         return (float) Config.section("assaults").num("safe_health");
     }
 
     /** Enough health above the safe floor for the event to start. */
-    private static boolean healthy(ServerPlayer player, String id) {
+    static boolean healthy(ServerPlayer player, String id) {
         return player.getHealth() > safeHealth() + Config.event(id).num("margin");
     }
 
@@ -183,6 +190,63 @@ final class Assaults {
             p.level().sendParticles(ParticleTypes.SOUL, p.getX(), p.getY() + souls.offsetY(), p.getZ(), souls.count(), souls.dx(), souls.dy(), souls.dz(), souls.speed());
             p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.PLAYER_HURT_FREEZE, SoundSource.HOSTILE, hit.volume(), hit.pitch());
             p.hurtServer(p.level(), p.damageSources().magic(), Math.min((float) config.num("damage_step") * (n + 1), p.getHealth() - safeHealth()));
+            return true;
+        });
+    }
+
+    /** Night in the overworld; the other dimensions have no day, so the call may come at any time there. */
+    private static boolean night(ServerPlayer player) {
+        return player.level().dimension() != Level.OVERWORLD || player.level().isDarkOutside();
+    }
+
+    /** The nearest lava within the event's radius, else a bottomless column a few blocks off; the call pulls toward it. */
+    private static @Nullable Vec3 callTarget(ServerPlayer player) {
+        ServerLevel level = player.level();
+        BlockPos here = player.blockPosition();
+        BlockPos lava = Nearby.all(player, "the_call", state -> state.getFluidState().is(FluidTags.LAVA)).stream()
+            .min(Comparator.comparingDouble(pos -> pos.distSqr(here))).orElse(null);
+        if (lava != null) {
+            return Vec3.atBottomCenterOf(lava);
+        }
+        double distance = Config.event("the_call").num("void_distance");
+        for (int i = 0; i < 16; i++) {
+            double angle = i * Math.PI / 8;
+            BlockPos edge = BlockPos.containing(player.getX() + Math.cos(angle) * distance, player.getY(), player.getZ() + Math.sin(angle) * distance);
+            if (level.hasChunkAt(edge) && level.getHeight(Heightmap.Types.MOTION_BLOCKING, edge.getX(), edge.getZ()) <= level.getMinY()) {
+                return Vec3.atBottomCenterOf(edge);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * A moan first, then the player is drawn along the ground toward lava or the void a little every step. Walking away
+     * far enough breaks it. It also ends on arrival, in lava, at the safe health, or after a while.
+     */
+    private static void call(ServerPlayer player) {
+        Vec3 target = callTarget(player);
+        if (target == null) {
+            return;
+        }
+        Config.Section config = Config.event("the_call");
+        Config.Tone tone = config.tone("sound");
+        Config.Burst souls = config.burst("particles");
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WARDEN_NEARBY_CLOSER, SoundSource.HOSTILE, tone.volume(), tone.pitch());
+        double began = Math.hypot(target.x - player.getX(), target.z - player.getZ());
+        Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("interval_ticks"), (p, n) -> {
+            double dx = target.x - p.getX();
+            double dz = target.z - p.getZ();
+            double left = Math.max(Math.hypot(dx, dz), 1.0E-4);
+            if (p.getHealth() <= safeHealth() || p.isInLava() || left <= config.num("arrive_distance")
+                || left >= began + config.num("free_distance") || n * config.integer("interval_ticks") >= config.integer("max_ticks")) {
+                return false;
+            }
+            p.level().sendParticles(ParticleTypes.SOUL, p.getX(), p.getY() + souls.offsetY(), p.getZ(), souls.count(), souls.dx(), souls.dy(), souls.dz(), souls.speed());
+            if (p.onGround()) {
+                double pull = config.num("pull");
+                p.setDeltaMovement(dx / left * pull, p.getDeltaMovement().y, dz / left * pull);
+                p.connection.send(new ClientboundSetEntityMotionPacket(p));
+            }
             return true;
         });
     }

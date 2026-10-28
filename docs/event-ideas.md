@@ -1,7 +1,7 @@
 # Haunt event ideas
 
 Raw backlog of 100 event ideas. All 62 **Easy** and 28 of the 29 **Medium** ones are implemented (see the `Idea` column in
-`spirits.md`); 23 (piston push) was built and dropped as looking wrong. 7 of the 9 **Hard** ones are still open; 7 (dimming) and 36 (echo) are done. Numbers stay as they are so the difficulty section keeps working.
+`spirits.md`); 23 (piston push) was built and dropped as looking wrong. Of the 9 **Hard** ones, 7 (dimming), 36 (echo), 61 (shadow), 93 (double), 94 (edge figure), 95 (fog silhouette) and 100 (the call) are done, and 45 and 84 were skipped for now. Numbers stay as they are so the difficulty section keeps working.
 
 Tiers: **L** light, **H** harmful, **D** deadly (must be telegraphed so the player can react).
 Tags in parentheses; `*` marks tags that do not exist in code yet.
@@ -188,21 +188,18 @@ Infrastructure tags:
 - `access`: not needed. The furnace's private burn time is zeroed through its own save format (`saveCustomOnly` / `loadCustomOnly`).
 - `map`: not needed. `MapItemSavedData.addTargetDecoration` writes the marker into the item.
 
-### Hard (9, 2 done)
+### Hard (9, 7 done)
 
 7 is a client overlay: the `Dimming` HUD layer under the HUD, started by `DimPayload` (lighting is client-side, so no light level is touched).
 
 36 records the player's own sounds through `PlayLevelSoundEvent` (`Restless.onPlaySound`, `haunt/Echoes.java`) and replays the last one in another sound category so it is not recorded again.
 
+61 is a vanilla wither skeleton with its AI off, moved by hand each step by `event/ShadowEvent.java`: no entity type, renderer or client code, so it needs nothing the client lacks. 93 is the vanilla `mannequin` entity given the player's game profile, moved by the same `Walk` helper (`event/DoubleEvent.java`), so it too needs no renderer. 94 and 95 (`event/PresenceFigure.java`) turned out server-only too: the view-cone check is a dot product against the look vector, and "fog" is rain or darkness under open sky. 100 is a velocity nudge every few ticks with `ClientboundSetEntityMotionPacket`; resisting is simply walking away, because the client's own input competes with the pull.
+
 | # | Idea | Why |
 |---|---|---|
 | 45 | inverted controls | client input code and networking |
-| 61 | shadow | custom entity, watched/unwatched AI, renderer |
 | 84 | message in blocks | glyph font, finding a large valid surface, restore |
-| 93 | double | mob rendered with the player's skin, custom renderer |
-| 94 | figure at the edge of vision | client-side view-cone check or a custom entity |
-| 95 | silhouette in the fog | same as 94, plus fog conditions |
-| 100 | the call | gradual movement control, resistance check, telegraph |
 
 ### Order
 

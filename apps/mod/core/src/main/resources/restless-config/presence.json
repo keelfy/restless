@@ -23,6 +23,28 @@
       "particles": { "count": 12, "dx": 1.5, "dy": 0.2, "dz": 1.5, "speed": 0.0, "offset_y": 3.0 },
       "sound": { "volume": 0.6, "pitch": 1.0 }
     },
-    "minecraft:lost_time": { "weight": 0.5, "skip_ticks": 1000 }
+    "minecraft:lost_time": { "weight": 0.5, "skip_ticks": 1000 },
+    "minecraft:edge_figure": {
+      "weight": 0.4,
+      "distance": 16.0,
+      "min_angle": 45.0,
+      "max_angle": 65.0,
+      "vanish_degrees": 25.0,
+      "vanish_distance": 0.0,
+      "interval_ticks": 2,
+      "max_ticks": 600,
+      "cleanup_ticks": 40
+    },
+    "minecraft:fog_silhouette": {
+      "weight": 0.3,
+      "distance": 40.0,
+      "min_angle": 0.0,
+      "max_angle": 25.0,
+      "vanish_degrees": 0.0,
+      "vanish_distance": 24.0,
+      "interval_ticks": 2,
+      "max_ticks": 1200,
+      "cleanup_ticks": 40
+    }
   }
 }

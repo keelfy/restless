@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /** Finds somewhere valid for an event to act: a wall, a ledge, open floor, room to stand. */
@@ -42,14 +43,27 @@ final class Place {
 
     /** Standing room (floor and two free blocks) at a random bearing {@code min} to {@code max} blocks away. */
     static @Nullable BlockPos spawnSpot(ServerPlayer player, int min, int max) {
-        ServerLevel level = player.level();
         for (int i = 0; i < config().integer("tries"); i++) {
-            BlockPos base = scatter(player, min, max);
-            for (int dy = config().integer("spawn_climb"); dy >= -config().integer("spawn_drop"); dy--) {
-                BlockPos pos = base.above(dy);
-                if (level.isLoaded(pos) && free(level, pos) && level.getBlockState(pos.below()).isSolidRender()) {
-                    return pos;
-                }
+            BlockPos found = standing(player.level(), scatter(player, min, max));
+            if (found != null) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    /** Standing room {@code distance} blocks away, {@code yawOffset} degrees to the side of where the player looks. */
+    static @Nullable BlockPos standingAt(ServerPlayer player, double distance, double yawOffset) {
+        Vec3 at = Nearby.around(player, distance, yawOffset);
+        return standing(player.level(), BlockPos.containing(at.x, player.getY(), at.z));
+    }
+
+    /** The first spot in the column of {@code base}, a few blocks up to a few down, with a floor and two free blocks. */
+    private static @Nullable BlockPos standing(ServerLevel level, BlockPos base) {
+        for (int dy = config().integer("spawn_climb"); dy >= -config().integer("spawn_drop"); dy--) {
+            BlockPos pos = base.above(dy);
+            if (level.isLoaded(pos) && free(level, pos) && level.getBlockState(pos.below()).isSolidRender()) {
+                return pos;
             }
         }
         return null;

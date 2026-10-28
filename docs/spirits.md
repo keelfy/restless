@@ -111,6 +111,9 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `suffocation` | 57 | HARMFUL | ASSAULT | 0.5 | Health > 4 hearts, not in water, light level < 8 | Heartbeat, 2 s later the air bar drains (about 7 s to empty), then 1 HP a second. Stops in light, in water, at 3 hearts, or after 15 s |
 | `thunder_knocks` | 58 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts | Three knocks; 3 s later a bolt strikes nearby; 2 s after that a second bolt hits the player if they have moved less than 2 blocks since (6 HP, never lethal). Bolts set nothing on fire |
 | `embrace` | 60 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts | Growing damage once a second (0.5, 1, 1.5 HP…) until the player is 10 blocks from where it began. Stops at 3 hearts or after 20 hits |
+| `the_call` | 100 | HARMFUL | ASSAULT | 0.3 | Night in the overworld (any time elsewhere), health > 5 hearts, lava within 12 blocks or a bottomless column 10 blocks away | A warden moan, then after 2 s the player on the ground is drawn toward the lava (or void) at about 1.5 blocks/s, felt as a velocity nudge every 0.1 s, with soul particles at the feet. Walking 6 blocks further away than the start breaks it; it also ends on arrival, in lava, at 3 hearts, or after 30 s. Lava itself is not capped |
+| `shadow` | 61 | HARMFUL | ASSAULT | 0.4 | Not peaceful, no shadow already following the player, health > 7 hearts, standing room 14–20 blocks away | A wither skeleton with no AI and no gear (invulnerable, silent) stands there. Every 0.1 s it takes a 0.3-block stride toward the player, but only while the player is not looking at it (within 45° and in line of sight). Warden heartbeat once a second. A touch (1.2 blocks) deals up to 7 hearts but never below 3 hearts, then it vanishes in smoke; it also vanishes after 60 s or after 40 blocked strides |
+| `double` | 93 | HARMFUL | MOBS | 0.3 | Not peaceful, no double already after the player, health > 7 hearts, standing room 12–18 blocks away | A vanilla mannequin with the player's skin, armor and held item (invulnerable, silent) walks up at 0.2 blocks/tick, slower than a sprint. Within 1.8 blocks it hits every 0.5 s for up to 3 hearts, never below 3 hearts; it vanishes in smoke after 4 hits, 30 s, 40 blocked strides, or when the player is at 3 hearts |
 | `swap_slots` | 62 | LIGHT | ITEMS | 0.5 | Inventory not empty | Two inventory slots swap |
 | `hotbar_shift` | 63 | LIGHT | ITEMS | 0.5 | Always | Selected hotbar slot changes |
 | `strange_name` | 64 | LIGHT | ITEMS | 0.5 | An item without a custom name | Renamed to a creepy line |
@@ -141,6 +144,8 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `open_pen` | 90 | HARMFUL | MOBS | 0.6 | A closed gate with an animal within 5 of it | Opens the gate |
 | `wild_pet` | 91 | HARMFUL | MOBS | 0.6 | A tamed pet of the player within 32 | Loses its owner and targets the player |
 | `copycat` | 92 | HARMFUL | MOBS | 0.6 | Not peaceful, standing room 3 blocks behind | A zombie in a copy of the player's armor, targeting them |
+| `edge_figure` | 94 | LIGHT | PRESENCE | 0.4 | No such figure already, standing room 16 blocks away, 45–65° to a side of where the player looks | A silent, unhurtable mannequin with the player's own skin stands there facing them. Gone, with no sound or particles, when the player looks within 25° of it with a clear line, or after 30 s |
+| `fog_silhouette` | 95 | LIGHT | PRESENCE | 0.3 | Open sky and rain or darkness outside, standing room 40 blocks away within 25° of where the player looks | A mannequin in the default skin stands far off. Gone, silently, when the player comes within 24 blocks, or after 60 s |
 | `footprints` | 96 | LIGHT | PRESENCE | 0.6 | Standing on or in sand or snow | For 6 s, puffs of the ground and a step sound appear where the player stood a second ago. Particles only, nothing is placed |
 | `cold_breath` | 97 | LIGHT | PRESENCE | 0.6 | Warm biome | A breath puff at the face |
 | `local_rain` | 98 | LIGHT | PRESENCE | 0.6 | Sky visible, not raining | Rain particles and sound over the player for 6 s |
@@ -168,7 +173,7 @@ Shade: 5.0–10.0 at danger 0, 1.9–3.8 at 1.
 Multi-step events run through `haunt/Scheduler.java`: `later(player, delay, action)` and
 `repeat(player, delay, interval, step)` (the step returns false to stop). Tasks are in memory only and are dropped when
 the player dies, leaves or the world closes, so no step may leave something broken behind. Events that hurt
-(`suffocation`, `thunder_knocks`, `embrace`) announce themselves with a sound first and stop at 3 hearts.
+(`suffocation`, `thunder_knocks`, `embrace`, `shadow`, `double`, `the_call`) announce themselves with a sound first and stop at 3 hearts.
 
 ## Restoring and locks
 

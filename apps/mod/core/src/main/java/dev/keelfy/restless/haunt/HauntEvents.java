@@ -4,7 +4,9 @@ import dev.keelfy.restless.haunt.event.BlindnessEvent;
 import dev.keelfy.restless.haunt.event.Catalog;
 import dev.keelfy.restless.haunt.event.ColdTouchEvent;
 import dev.keelfy.restless.haunt.event.DoorEvent;
+import dev.keelfy.restless.haunt.event.DoubleEvent;
 import dev.keelfy.restless.haunt.event.ExtinguishLightEvent;
+import dev.keelfy.restless.haunt.event.ShadowEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -12,7 +14,7 @@ import net.minecraft.resources.Identifier;
 
 public final class HauntEvents {
     private static final List<HauntEvent> ALL = Stream.concat(
-            Stream.of(new ExtinguishLightEvent(), new DoorEvent(), new BlindnessEvent(), new ColdTouchEvent()),
+            Stream.of(new ExtinguishLightEvent(), new DoorEvent(), new BlindnessEvent(), new ColdTouchEvent(), new ShadowEvent(), new DoubleEvent()),
             Catalog.all().stream())
         .toList();
 
