@@ -1,7 +1,7 @@
 # Haunt event ideas
 
-Raw backlog of 100 event ideas. All 62 **Easy** and 28 of the 29 **Medium** ones are implemented (see the `Idea` column in
-`spirits.md`); 23 (piston push) was built and dropped as looking wrong. Of the 9 **Hard** ones, 7 (dimming), 36 (echo), 61 (shadow), 93 (double), 94 (edge figure), 95 (fog silhouette) and 100 (the call) are done, and 45 and 84 were skipped for now. Numbers stay as they are so the difficulty section keeps working.
+Raw backlog of 100 event ideas. 61 of the 62 **Easy** and 28 of the 29 **Medium** ones are implemented (see the `Idea` column in
+`spirits.md`); 23 (piston push) was built and dropped as looking wrong, and 64 (strange name) was built and then removed. Of the 9 **Hard** ones, 7 (dimming), 36 (echo), 61 (shadow), 93 (double), 94 (edge figure), 95 (fog silhouette) and 100 (the call) are done, and 45 and 84 were skipped for now. Numbers stay as they are so the difficulty section keeps working.
 
 Tiers: **L** light, **H** harmful, **D** deadly (must be telegraphed so the player can react).
 Tags in parentheses; `*` marks tags that do not exist in code yet.
@@ -88,7 +88,7 @@ Tags in parentheses; `*` marks tags that do not exist in code yet.
 
 62. L: two inventory slots swap.
 63. L: the selected hotbar slot changes.
-64. L: an item gets a strange name: "Why are you here".
+64. L: an item gets a strange name: "Why are you here". (Built, then dropped.)
 65. L: a book in the inventory is rewritten with creepy lines.
 66. L: items in a chest are shuffled.
 67. H: a tool loses some durability.

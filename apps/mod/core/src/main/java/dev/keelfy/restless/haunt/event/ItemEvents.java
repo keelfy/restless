@@ -58,12 +58,6 @@ final class ItemEvents {
                 player.getInventory().setSelectedSlot(slot);
                 player.connection.send(new ClientboundSetHeldSlotPacket(slot));
             }),
-            // 64
-            SimpleEvent.light("strange_name", EventTag.ITEMS, player -> !stacks(player, ItemEvents::unnamed).isEmpty(), player -> {
-                List<ItemStack> candidates = stacks(player, ItemEvents::unnamed);
-                candidates.get(player.getRandom().nextInt(candidates.size()))
-                    .set(DataComponents.CUSTOM_NAME, Component.literal(pick(player, Config.event("strange_name").texts("names"))));
-            }),
             // 65: adds a page instead of rewriting, so nothing the player wrote is lost
             SimpleEvent.light("book_page", EventTag.ITEMS, player -> !stacks(player, ItemEvents::isBook).isEmpty(), player -> {
                 List<ItemStack> books = stacks(player, ItemEvents::isBook);
@@ -203,10 +197,6 @@ final class ItemEvents {
 
     private static String pick(ServerPlayer player, List<String> options) {
         return options.get(player.getRandom().nextInt(options.size()));
-    }
-
-    private static boolean unnamed(ItemStack stack) {
-        return !stack.has(DataComponents.CUSTOM_NAME);
     }
 
     private static boolean isBook(ItemStack stack) {

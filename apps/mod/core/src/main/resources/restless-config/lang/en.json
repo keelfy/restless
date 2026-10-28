@@ -72,7 +72,6 @@
     "minecraft:embrace": { "name": "Embrace", "description": "Growing damage every second until the player is ten blocks from where it began. Stops at three hearts." },
     "minecraft:swap_slots": { "name": "Swapped Slots", "description": "Two inventory slots trade places." },
     "minecraft:hotbar_shift": { "name": "Hotbar Shift", "description": "The selected hotbar slot changes on its own." },
-    "minecraft:strange_name": { "name": "Strange Name", "description": "An item is renamed to something creepy." },
     "minecraft:book_page": { "name": "Extra Page", "description": "One creepy page is added to a book and quill or a written book; nothing is erased." },
     "minecraft:shuffle_chest": { "name": "Shuffled Chest", "description": "The contents of a nearby chest are shuffled." },
     "minecraft:wear": { "name": "Wear", "description": "A tool loses ten percent durability; it never breaks." },

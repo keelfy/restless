@@ -3,7 +3,6 @@
   "events": {
     "minecraft:swap_slots": { "weight": 0.5 },
     "minecraft:hotbar_shift": { "weight": 0.5 },
-    "minecraft:strange_name": { "weight": 0.5, "names": ["Why are you here", "Not yours", "Behind you", "Leave", "It sees", "Mine now"] },
     "minecraft:book_page": { "weight": 0.5, "pages": ["i can hear you breathing", "do not look behind you", "you were never alone here"] },
     "minecraft:shuffle_chest": { "weight": 0.5, "radius": 10 },
     "minecraft:wear": { "weight": 0.5, "fraction": 0.1 },
