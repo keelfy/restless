@@ -1,5 +1,6 @@
 package dev.keelfy.restless.debug;
 
+import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntTier;
 import java.util.Locale;
@@ -93,12 +94,16 @@ public final class DebugScreen extends Screen {
             return;
         }
         DebugPayload.Event event = row.event;
-        graphics.text(font, event.id().toString(), x, y, WHITE);
+        graphics.text(font, row.name, x, y, WHITE);
+        y += LINE;
+        graphics.text(font, event.id().toString(), x, y, GRAY);
         y += LINE;
         String tags = event.tags().stream().map(EventTag::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.joining(", "));
         graphics.text(font, event.tier().name().toLowerCase(Locale.ROOT) + "   weight " + event.weight() + "   " + tags, x, y, GRAY);
         y += LINE;
         graphics.text(font, event.canRun() ? "can run now" : "nothing to act on here", x, y, event.canRun() ? GREEN : RED);
+        y += LINE * 2;
+        graphics.textWithWordWrap(font, Component.literal(row.description), x, y, width - x - MARGIN, WHITE);
     }
 
     private final class EventList extends ObjectSelectionList<EventList.Row> {
@@ -112,19 +117,25 @@ public final class DebugScreen extends Screen {
 
         @Override
         public int getRowWidth() {
-            return width - 12;
+            // The bar sits a bar's width and 2 px beyond the row's right edge, and only a click inside the widget reaches it.
+            return width - 4 * scrollbarWidth() - 4;
         }
 
         private final class Row extends ObjectSelectionList.Entry<Row> {
             final DebugPayload.Event event;
+            final String name;
+            final String description;
 
             Row(DebugPayload.Event event) {
+                String language = minecraft.getLanguageManager().getSelected();
                 this.event = event;
+                this.name = Lang.name(language, event.id().toString());
+                this.description = Lang.description(language, event.id().toString());
             }
 
             @Override
             public Component getNarration() {
-                return Component.literal(event.id().toString());
+                return Component.literal(name);
             }
 
             @Override
@@ -132,7 +143,7 @@ public final class DebugScreen extends Screen {
                 if (hovered) {
                     graphics.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), 0x30FFFFFF);
                 }
-                graphics.text(font, event.id().toString(), getContentX(), getContentY(), event.canRun() ? WHITE : GRAY);
+                graphics.text(font, name, getContentX(), getContentY(), event.canRun() ? WHITE : GRAY);
                 String tier = event.tier() == HauntTier.HARMFUL ? "harmful" : "light";
                 graphics.text(font, tier, getContentRight() - font.width(tier), getContentY(), event.tier() == HauntTier.HARMFUL ? RED : GREEN);
             }

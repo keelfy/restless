@@ -195,6 +195,9 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 | `spirits.json` | `spirits` (activity, tag affinities) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
+Names and descriptions of events live apart, in `restless-config/lang/en.json` and `ru.json` (copied to `config/restless/lang/` on first run,
+edit the copy). The debug screen shows them in the client's language, falling back to English, then to the id. A new event needs an entry in both.
+
 Event ids are namespaced like vanilla keys. The namespace names the mod whose content the event uses: `minecraft` for everything that
 needs only vanilla, another mod's id for an integration with it (say `supplementaries:globe_spin`). In code a bare id means `minecraft`.
 

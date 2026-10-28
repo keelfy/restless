@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.Restore;
@@ -32,6 +33,7 @@ public final class Restless {
 
     public static void init() {
         Config.load(Platform.get().configDir());
+        Lang.load(Platform.get().configDir());
         LOGGER.info("Restless initialising on {}", Platform.get().loaderName());
     }
 

@@ -111,7 +111,7 @@ public final class Config {
     }
 
     /** One file's slice: the bundled values under the player's copy, migrated first if the copy is from an older release. */
-    private static JsonObject loadFile(Path dir, String name, String text, Migrations migrations) {
+    static JsonObject loadFile(Path dir, String name, String text, Migrations migrations) {
         JsonObject bundled = JsonParser.parseString(text).getAsJsonObject();
         int current = bundled.get(VERSION).getAsInt();
         if (current != migrations.latest(name)) {
