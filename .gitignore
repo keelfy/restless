@@ -1,0 +1,19 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+out/
+
+# Gradle / mod
+.gradle/
+build/
+apps/mod/**/run/
+apps/mod/**/runs/
+apps/mod/**/repo/
+
+# Frontend
+node_modules/
+apps/frontend/docs/.vitepress/dist/
+apps/frontend/docs/.vitepress/cache/
+
+.DS_Store

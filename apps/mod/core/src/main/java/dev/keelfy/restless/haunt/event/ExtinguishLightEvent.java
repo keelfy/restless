@@ -1,0 +1,64 @@
+package dev.keelfy.restless.haunt.event;
+
+import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.HauntTier;
+import java.util.Set;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.AbstractCandleBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
+
+/** Snuffs a lit candle, or knocks a torch off (it drops, nothing is lost). */
+public final class ExtinguishLightEvent implements HauntEvent {
+    @Override
+    public String id() {
+        return "extinguish_light";
+    }
+
+    @Override
+    public HauntTier tier() {
+        return HauntTier.LIGHT;
+    }
+
+    @Override
+    public Set<EventTag> tags() {
+        return Set.of(EventTag.LIGHTS);
+    }
+
+    @Override
+    public boolean canRun(ServerPlayer player) {
+        return find(player) != null;
+    }
+
+    @Override
+    public void run(ServerPlayer player) {
+        BlockPos pos = find(player);
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        BlockState state = level.getBlockState(pos);
+        if (AbstractCandleBlock.isLit(state)) {
+            AbstractCandleBlock.extinguish(null, state, level, pos);
+        } else {
+            level.destroyBlock(pos, true);
+            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1.4F);
+        }
+    }
+
+    private static @Nullable BlockPos find(ServerPlayer player) {
+        return Nearby.random(player, 10, ExtinguishLightEvent::isLight);
+    }
+
+    private static boolean isLight(BlockState state) {
+        return AbstractCandleBlock.isLit(state)
+            || state.is(Blocks.TORCH) || state.is(Blocks.WALL_TORCH)
+            || state.is(Blocks.SOUL_TORCH) || state.is(Blocks.SOUL_WALL_TORCH);
+    }
+}

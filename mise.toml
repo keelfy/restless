@@ -1,0 +1,36 @@
+[tools]
+java = "corretto-25"
+node = "24"
+pnpm = "12"
+
+[tasks."mod:build"]
+description = "Build the mod jars"
+dir = "apps/mod"
+run = "./gradlew build"
+
+[tasks."mod:client"]
+description = "Run a NeoForge dev client"
+dir = "apps/mod"
+run = "./gradlew :neoforge:runClient"
+
+[tasks."mod:server"]
+description = "Run a NeoForge dev dedicated server"
+dir = "apps/mod"
+run = "./gradlew :neoforge:runServer"
+
+[tasks."wiki:install"]
+description = "Install wiki dependencies"
+dir = "apps/frontend"
+run = "pnpm install"
+
+[tasks."wiki:dev"]
+description = "Run the wiki dev server"
+dir = "apps/frontend"
+depends = ["wiki:install"]
+run = "pnpm dev"
+
+[tasks."wiki:build"]
+description = "Build the static wiki"
+dir = "apps/frontend"
+depends = ["wiki:install"]
+run = "pnpm build"
