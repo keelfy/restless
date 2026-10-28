@@ -87,6 +87,7 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `phantom_jukebox` | 34 | LIGHT | SOUND | 0.4 | Always | Music disc 11 from a point nearby, no jukebox |
 | `music_cut` | 102 | LIGHT | SOUND | 0.4 | Always | Stops the game's background music for the player; it resumes on its usual schedule |
 | `whisper` | 35 | LIGHT | SOUND | 0.4 | Always | Chat line `<???> <player name>`, only to the player |
+| `echo` | 36 | LIGHT | SOUND | 0.4 | The player made a sound (step, splash, bite) in the last 5 s | That sound plays again 3 s later from where it was made, quieter and lower. Recorded through the loader's sound hook, `Restless.onPlaySound`; only sounds in the player category within 2 blocks of the player count |
 | `death_cry` | 37 | LIGHT | SOUND | 0.4 | Always | Player death sound nearby |
 | `dripping` | 38 | LIGHT | SOUND | 0.4 | Always | Water drip nearby |
 | `nausea` | 39 | LIGHT | AFFLICTION | 0.6 | No nausea | Nausea 5 s |

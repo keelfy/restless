@@ -6,18 +6,22 @@ import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.platform.Platform;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 
 /**
@@ -65,6 +69,11 @@ public final class Restless {
             }
         }
         return true;
+    }
+
+    /** Call whenever a level is about to play a sound at a point; the sound itself is left alone. */
+    public static void onPlaySound(Level level, Vec3 at, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) {
+        Echoes.hear(level, at, sound, source, volume, pitch);
     }
 
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {

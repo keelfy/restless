@@ -1,6 +1,7 @@
 {
   "version": 2,
   "events": {
+    "minecraft:echo": { "weight": 0.4, "capture_radius": 2.0, "max_age_ticks": 100, "delay_ticks": 60, "sound": { "volume": 0.8, "pitch": 0.85 } },
     "minecraft:footsteps": { "weight": 0.4, "distance": 2.0, "sound": { "volume": 1.0, "pitch": 0.9 } },
     "minecraft:creeper_hiss": { "weight": 0.4, "distance": 3.0, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:three_knocks": {

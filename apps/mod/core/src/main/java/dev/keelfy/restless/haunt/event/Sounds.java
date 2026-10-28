@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -66,6 +67,8 @@ final class Sounds {
             sound("whisper", player -> player.sendSystemMessage(
                 Component.literal(Config.event("whisper").text("format").formatted(player.getName().getString()))
                     .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))),
+            // 36: the last step or splash the player made comes back from where it was made
+            SimpleEvent.light("echo", EventTag.SOUND, Echoes::canReplay, Echoes::replay),
             // 37
             at("death_cry", SoundEvents.PLAYER_DEATH),
             // 38

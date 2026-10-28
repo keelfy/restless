@@ -26,6 +26,7 @@
     "minecraft:jukebox_pop": { "name": "Jukebox Pop", "description": "A playing jukebox cuts its music and spits the disc out." },
     "minecraft:locked_door": { "name": "Locked Door", "description": "A door slams shut with a thud and cannot be opened for ten seconds." },
     "minecraft:open_house": { "name": "Open House", "description": "At night, every closed wooden door nearby swings open." },
+    "minecraft:echo": { "name": "Echo", "description": "The last sound the player made, such as a step, a splash or a bite, is played again three seconds later from the place it was made." },
     "minecraft:footsteps": { "name": "Footsteps", "description": "A step sounds two blocks behind the player." },
     "minecraft:creeper_hiss": { "name": "Creeper Hiss", "description": "A creeper fuse hisses close by, with no creeper in sight." },
     "minecraft:three_knocks": { "name": "Three Knocks", "description": "Three knocks on the nearest wooden door, or from nowhere if there is none." },

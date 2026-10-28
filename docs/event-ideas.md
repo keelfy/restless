@@ -1,7 +1,7 @@
 # Haunt event ideas
 
 Raw backlog of 100 event ideas. All 62 **Easy** and 28 of the 29 **Medium** ones are implemented (see the `Idea` column in
-`spirits.md`); 23 (piston push) was built and dropped as looking wrong. 8 of the 9 **Hard** ones are still open; 7 (dimming) is done. Numbers stay as they are so the difficulty section keeps working.
+`spirits.md`); 23 (piston push) was built and dropped as looking wrong. 7 of the 9 **Hard** ones are still open; 7 (dimming) and 36 (echo) are done. Numbers stay as they are so the difficulty section keeps working.
 
 Tiers: **L** light, **H** harmful, **D** deadly (must be telegraphed so the player can react).
 Tags in parentheses; `*` marks tags that do not exist in code yet.
@@ -188,13 +188,14 @@ Infrastructure tags:
 - `access`: not needed. The furnace's private burn time is zeroed through its own save format (`saveCustomOnly` / `loadCustomOnly`).
 - `map`: not needed. `MapItemSavedData.addTargetDecoration` writes the marker into the item.
 
-### Hard (9, 1 done)
+### Hard (9, 2 done)
 
 7 is a client overlay: the `Dimming` HUD layer under the HUD, started by `DimPayload` (lighting is client-side, so no light level is touched).
 
+36 records the player's own sounds through `PlayLevelSoundEvent` (`Restless.onPlaySound`, `haunt/Echoes.java`) and replays the last one in another sound category so it is not recorded again.
+
 | # | Idea | Why |
 |---|---|---|
-| 36 | echo | capture the player's sounds via a loader hook, then replay |
 | 45 | inverted controls | client input code and networking |
 | 61 | shadow | custom entity, watched/unwatched AI, renderer |
 | 84 | message in blocks | glyph font, finding a large valid surface, restore |

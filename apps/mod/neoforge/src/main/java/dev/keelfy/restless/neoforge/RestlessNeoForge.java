@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.PlayLevelSoundEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -32,6 +33,10 @@ public final class RestlessNeoForge {
         NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post e) -> Restless.onServerTick(e.getServer()));
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> Restless.registerCommands(e.getDispatcher()));
         NeoForge.EVENT_BUS.addListener((ServerStoppingEvent e) -> Restless.onServerStopping());
+        NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtPosition e) ->
+            Restless.onPlaySound(e.getLevel(), e.getPosition(), e.getSound(), e.getSource(), e.getNewVolume(), e.getNewPitch()));
+        NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtEntity e) ->
+            Restless.onPlaySound(e.getLevel(), e.getEntity().position(), e.getSound(), e.getSource(), e.getNewVolume(), e.getNewPitch()));
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
             if (Restless.onUseBlock(e.getEntity(), e.getHand(), e.getPos())) {
                 e.setCanceled(true);
