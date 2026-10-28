@@ -11,9 +11,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 
-/** Rolls haunt events for every player's bound spirit. */
+/** Rolls haunt events for every spirit bound to every player; each spirit runs its own timer. */
 public final class Director {
     private static final int CHECK_INTERVAL = 20;
+    /** Spirits a player gets on first join. */
+    public static final int DEFAULT_SPIRITS = 3;
 
     private Director() {}
 
@@ -24,35 +26,68 @@ public final class Director {
         long now = server.overworld().getGameTime();
         HauntData data = HauntData.get(server);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            HauntData.Haunting haunting = haunting(player, data, now);
-            if (now < haunting.nextEventAt()) {
-                continue;
+            List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
+            boolean changed = false;
+            for (int i = 0; i < spirits.size(); i++) {
+                if (now < spirits.get(i).nextEventAt()) {
+                    continue;
+                }
+                SpiritType spirit = spirit(spirits.get(i));
+                if (!player.isSpectator() && !player.isCreative()) {
+                    pick(player, spirit).ifPresent(event -> fire(player, event));
+                }
+                spirits.set(i, bind(player, spirit, now));
+                changed = true;
             }
-            SpiritType spirit = spirit(haunting);
-            if (!player.isSpectator() && !player.isCreative()) {
-                pick(player, spirit).ifPresent(event -> fire(player, event));
+            if (changed) {
+                data.put(player.getUUID(), spirits);
             }
-            schedule(player, data, spirit, now);
         }
     }
 
-    public static HauntData.Haunting haunting(ServerPlayer player, HauntData data, long now) {
-        HauntData.Haunting haunting = data.get(player.getUUID());
-        if (haunting == null || Spirits.byId(haunting.spirit()).isEmpty()) {
+    /** Spirits haunting the player; rolls {@link #DEFAULT_SPIRITS} random ones on first sight. */
+    public static List<HauntData.Haunting> hauntings(ServerPlayer player, HauntData data, long now) {
+        List<HauntData.Haunting> spirits = data.get(player.getUUID());
+        if (spirits == null) {
             List<SpiritType> all = Spirits.all();
-            SpiritType spirit = all.get(player.getRandom().nextInt(all.size()));
-            haunting = new HauntData.Haunting(spirit.id(), now + cooldown(player, spirit));
-            data.put(player.getUUID(), haunting);
+            List<HauntData.Haunting> rolled = new ArrayList<>();
+            for (int i = 0; i < DEFAULT_SPIRITS; i++) {
+                rolled.add(bind(player, all.get(player.getRandom().nextInt(all.size())), now));
+            }
+            data.put(player.getUUID(), rolled);
+            return data.get(player.getUUID());
         }
-        return haunting;
+        // Drop spirits whose type no longer exists (renamed/removed between versions).
+        List<HauntData.Haunting> known = spirits.stream().filter(h -> Spirits.byId(h.spirit()).isPresent()).toList();
+        if (known.size() != spirits.size()) {
+            data.put(player.getUUID(), known);
+        }
+        return known;
     }
 
     public static SpiritType spirit(HauntData.Haunting haunting) {
         return Spirits.byId(haunting.spirit()).orElseThrow();
     }
 
-    public static void schedule(ServerPlayer player, HauntData data, SpiritType spirit, long now) {
-        data.put(player.getUUID(), new HauntData.Haunting(spirit.id(), now + cooldown(player, spirit)));
+    public static void add(ServerPlayer player, HauntData data, SpiritType spirit, long now) {
+        List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
+        spirits.add(bind(player, spirit, now));
+        data.put(player.getUUID(), spirits);
+    }
+
+    /** @param index 0-based position as listed by /haunt info */
+    public static boolean remove(ServerPlayer player, HauntData data, int index, long now) {
+        List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
+        if (index < 0 || index >= spirits.size()) {
+            return false;
+        }
+        spirits.remove(index);
+        data.put(player.getUUID(), spirits);
+        return true;
+    }
+
+    private static HauntData.Haunting bind(ServerPlayer player, SpiritType spirit, long now) {
+        return new HauntData.Haunting(spirit.id(), now + cooldown(player, spirit));
     }
 
     public static void fire(ServerPlayer player, HauntEvent event) {

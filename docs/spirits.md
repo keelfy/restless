@@ -6,8 +6,10 @@ Update this file when any of them changes.
 
 ## How it works
 
-- Each player gets a personal spirit on first check, chosen uniformly at random (50/50 today), and keeps it.
-- Every player has a cooldown. When it expires, the Director picks one event for that player and schedules the next one.
+- Each player gets 3 spirits (`Director.DEFAULT_SPIRITS`) on first check, each chosen uniformly at random
+  (repeats allowed), and keeps them. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`.
+- Every spirit has its own cooldown. When it expires, the Director picks one event for that player using that spirit's
+  affinities and schedules the spirit's next one. More spirits means proportionally more events.
   Spectators and creative players get no event, but the cooldown still resets.
 - The pick is a weighted random choice among events that can run right now (`canRun`):
 
@@ -29,46 +31,108 @@ Update this file when any of them changes.
 
 ## Spirits
 
-| Id | Description | Activity | Doors | Lights | Affliction | Assault |
-|---|---|---|---|---|---|---|
-| `poltergeist` | Noisy and physical. Mostly messes with doors; rarely hurts at first. | 1.3 | ×4.0 | ×1.0 | ×0.5 | ×0.5 |
-| `shade` | Quiet and oppressive. Snuffs lights and afflicts, turns violent as danger grows. | 0.8 | ×0.3 | ×3.0 | ×2.0 | ×1.0 |
+| Id | Description | Activity | Affinity (missing = ×1) |
+|---|---|---|---|
+| `poltergeist` | Noisy and physical. Mostly messes with doors and belongings; rarely hurts at first. | 1.3 | doors ×4, items ×3, blocks ×1.5, afflictions ×0.5, assaults ×0.5, sounds ×0.5, presence ×0.5 |
+| `shade` | Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as danger grows. | 0.8 | lights ×3, sounds ×2.5, afflictions ×2, presence ×2, assaults ×1, doors ×0.3, items ×0.5 |
 
-Affinity is a weight multiplier per event tag; a missing tag counts as ×1. Activity 1.3 means 1.3× as often.
+Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
 ## Events
 
-| Id | Tier | Tag | Base weight | Runs when | Effect |
-|---|---|---|---|---|---|
-| `extinguish_light` | LIGHT | LIGHTS | 1.0 | A lit candle or a torch / soul torch (floor or wall) is within 10 blocks | Snuffs a lit candle; a torch is knocked off and drops as an item |
-| `door` | LIGHT | DOORS | 1.0 | A wooden door is within 12 blocks | Opens a closed door or slams an open one |
-| `blindness` | LIGHT | AFFLICTION | 0.6 | Player is not already blind | Blindness for 6 s and a low cave ambient sound |
-| `cold_touch` | HARMFUL | ASSAULT | 1.0 | Player health > 1 heart | 1–2 hearts of magic damage (2–4 HP), never lethal (leaves at least 0.5 heart), freezing sound |
+`Idea` is the number in [event-ideas.md](event-ideas.md).
+
+| Id | Idea | Tier | Tag | Base weight | Runs when | Effect |
+|---|---|---|---|---|---|---|
+| `extinguish_light` | | LIGHT | LIGHTS | 1.0 | A lit candle or a torch / soul torch (floor or wall) is within 10 blocks | Snuffs a lit candle; a torch is knocked off and drops as an item |
+| `door` | | LIGHT | DOORS | 1.0 | A wooden door is within 12 blocks | Opens a closed door or slams an open one |
+| `blindness` | | LIGHT | AFFLICTION | 0.6 | Player is not already blind | Blindness for 6 s and a low cave ambient sound |
+| `cold_touch` | | HARMFUL | ASSAULT | 1.0 | Player health > 1 heart | 1–2 hearts of magic damage (2–4 HP), never lethal (leaves at least 0.5 heart), freezing sound |
+| `candles_out` | 1 | LIGHT | LIGHTS | 0.8 | A lit candle within 10 blocks | Every lit candle within 10 blocks goes out |
+| `campfire_out` | 6 | LIGHT | LIGHTS | 0.8 | A lit campfire within 10 | Snuffs one campfire |
+| `candles_light` | 8 | LIGHT | LIGHTS | 0.8 | An unlit candle within 10 | Lights one candle |
+| `new_face` | 9 | LIGHT | LIGHTS | 0.6 | A jack o'lantern within 10 | Turns it to face another way |
+| `burning_hand` | 11 | HARMFUL | LIGHTS | 0.6 | Torch or lantern in main hand | The item drops out of the hand |
+| `trapdoor` | 13 | LIGHT | DOORS | 0.7 | A wooden trapdoor within 12 | Toggles it with a slam |
+| `fence_gate` | 14 | LIGHT | DOORS | 0.7 | A fence gate within 12 | Toggles it |
+| `button` | 15 | LIGHT | DOORS | 0.7 | An unpressed button within 12 | Presses it |
+| `lever` | 16 | LIGHT | DOORS | 0.7 | A lever within 12 | Flips it |
+| `pressure_plate` | 17 | LIGHT | DOORS | 0.7 | An unpressed pressure plate within 12 | Triggers it for a second |
+| `iron_door` | 18 | LIGHT | DOORS | 0.7 | An iron door within 12 | Toggles it, no redstone |
+| `open_house` | 20 | HARMFUL | DOORS | 0.7 | Night, and a closed wooden door within 20 | Opens every such door |
+| `footsteps` | 24 | LIGHT | SOUND | 0.4 | Always | A step sound 2 blocks behind the player |
+| `creeper_hiss` | 25 | LIGHT | SOUND | 0.4 | Always | Creeper fuse hiss nearby |
+| `crying_child` | 27 | LIGHT | SOUND | 0.4 | Always | High-pitched villager hurt sound |
+| `block_breaking` | 28 | LIGHT | SOUND | 0.4 | Always | Stone / wood / glass / gravel break sound nearby |
+| `eating_behind_wall` | 29 | LIGHT | SOUND | 0.4 | Always | Eating sound 3 blocks away |
+| `enderman_hiss` | 30 | LIGHT | SOUND | 0.4 | Always | Enderman stare sound |
+| `chest_opens` | 31 | LIGHT | SOUND | 0.4 | Always | Chest open sound nearby |
+| `distant_bell` | 33 | LIGHT | SOUND | 0.4 | Always | Loud bell from ~40 blocks away |
+| `phantom_jukebox` | 34 | LIGHT | SOUND | 0.4 | Always | Music disc 11 from a point nearby, no jukebox |
+| `whisper` | 35 | LIGHT | SOUND | 0.4 | Always | Chat line `<???> <player name>`, only to the player |
+| `death_cry` | 37 | LIGHT | SOUND | 0.4 | Always | Player death sound nearby |
+| `dripping` | 38 | LIGHT | SOUND | 0.4 | Always | Water drip nearby |
+| `nausea` | 39 | LIGHT | AFFLICTION | 0.6 | No nausea | Nausea 5 s |
+| `heaviness` | 40 | LIGHT | AFFLICTION | 0.6 | No slowness | Slowness II 8 s |
+| `fatigue` | 41 | LIGHT | AFFLICTION | 0.6 | No mining fatigue | Mining fatigue II 10 s |
+| `hunger_pang` | 42 | LIGHT | AFFLICTION | 0.5 | Food > 3 bars | −3 food points |
+| `darkness` | 43 | LIGHT | AFFLICTION | 0.6 | No darkness | Darkness 6 s |
+| `shudder` | 44 | LIGHT | AFFLICTION | 0.5 | Always | Small random shove |
+| `poison` | 46 | HARMFUL | AFFLICTION | 0.6 | Not poisoned | Poison 5 s (cannot kill) |
+| `weakness` | 47 | HARMFUL | AFFLICTION | 0.6 | No weakness | Weakness 30 s |
+| `levitation` | 48 | HARMFUL | AFFLICTION | 0.6 | No levitation | Levitation 2 s, then the fall |
+| `frostbite` | 49 | HARMFUL | AFFLICTION | 0.6 | Health > 3 hearts, not freezing | Powder-snow freeze for about 3 s |
+| `drained` | 50 | HARMFUL | AFFLICTION | 0.6 | Player has XP | Loses 5–14 XP points |
+| `bad_luck` | 51 | HARMFUL | AFFLICTION | 0.6 | No bad luck | Bad luck 5 min |
+| `trip` | 53 | HARMFUL | ASSAULT | 0.7 | Not slowed | Stops dead for 1 s |
+| `scorch` | 54 | HARMFUL | ASSAULT | 0.6 | Health > 3 hearts, dry, not burning | On fire for 1 s |
+| `wrath` | 55 | HARMFUL | ASSAULT | 0.6 | Health > 4 hearts | 2–3.5 hearts of magic damage, never lethal |
+| `snatch` | 56 | HARMFUL | ASSAULT | 0.7 | Item in main hand | The item is thrown ~5 blocks away |
+| `swap_slots` | 62 | LIGHT | ITEMS | 0.5 | Inventory not empty | Two inventory slots swap |
+| `hotbar_shift` | 63 | LIGHT | ITEMS | 0.5 | Always | Selected hotbar slot changes |
+| `strange_name` | 64 | LIGHT | ITEMS | 0.5 | An item without a custom name | Renamed to a creepy line |
+| `book_page` | 65 | LIGHT | ITEMS | 0.5 | A book and quill or a written book | One creepy page is appended (nothing is erased) |
+| `shuffle_chest` | 66 | LIGHT | ITEMS | 0.5 | A non-empty chest within 10 | Its contents are shuffled |
+| `wear` | 67 | HARMFUL | ITEMS | 0.5 | A damageable tool with durability to spare | Loses 10% durability, never breaks |
+| `rot` | 68 | HARMFUL | ITEMS | 0.5 | Food in the inventory | One food stack becomes rotten flesh |
+| `vanishing_item` | 69 | HARMFUL | ITEMS | 0.5 | Two chests (not halves of one) within 10, one non-empty, one with space | One stack moves to the other chest |
+| `false_compass` | 70 | HARMFUL | ITEMS | 0.5 | A plain compass in the inventory | Points at a spot 30–60 blocks away (stays that way) |
+| `withering_crops` | 73 | LIGHT | BLOCKS | 0.6 | A grown crop within 6 | Every crop within 6 loses one growth stage |
+| `turning_frame` | 76 | LIGHT | BLOCKS | 0.6 | A filled item frame within 12 | Rotates its item |
+| `dry_cauldron` | 78 | LIGHT | BLOCKS | 0.6 | A water cauldron within 10 | Empties it |
+| `dead_ground` | 79 | LIGHT | BLOCKS | 0.6 | Player on grass | Grass in a 3-block radius becomes dirt |
+| `broken_bed` | 81 | HARMFUL | BLOCKS | 0.6 | A bed within 16 | Breaks it; it drops as an item |
+| `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
+| `dog_barks` | 87 | LIGHT | MOBS | 0.6 | A wolf within 16 | Turns away and makes its ambient sound |
+| `bats` | 89 | LIGHT | MOBS | 0.6 | Free air 4 blocks away | Five bats appear |
+| `open_pen` | 90 | HARMFUL | MOBS | 0.6 | A closed gate with an animal within 5 of it | Opens the gate |
+| `wild_pet` | 91 | HARMFUL | MOBS | 0.6 | A tamed pet of the player within 32 | Loses its owner and targets the player |
+| `copycat` | 92 | HARMFUL | MOBS | 0.6 | Not peaceful, standing room 3 blocks behind | A zombie in a copy of the player's armor, targeting them |
+| `cold_breath` | 97 | LIGHT | PRESENCE | 0.6 | Warm biome | A breath puff at the face |
+| `lost_time` | 99 | HARMFUL | PRESENCE | 0.5 | Night | The overworld clock jumps 1000 ticks (affects everyone) |
 
 ## Chances
 
-Chance of each event per roll, assuming all four events can run. The remaining rows scale between these points.
+Share of each tag per roll of one spirit, assuming every event can run (in practice many cannot, and the rest renormalise,
+so a spirit near no doors never rolls a door). Computed from the weights above.
 
-### Poltergeist
+| Spirit | Danger | Lights | Doors | Sound | Affliction | Assault | Items | Blocks | Mobs | Presence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `poltergeist` | 0 | 9.4% | 49.1% | 5.7% | 4.7% | 0% | 17.7% | 8.5% | 4.2% | 0.7% |
+| | 0.5 | 8.2% | 42.0% | 4.4% | 6.2% | 2.5% | 22.2% | 7.9% | 5.8% | 0.9% |
+| | 1 | 6.3% | 31.5% | 2.5% | 8.4% | 6.3% | 28.8% | 6.9% | 8.2% | 1.2% |
+| `shade` | 0 | 29.8% | 3.9% | 29.8% | 19.9% | 0% | 3.1% | 6.0% | 4.5% | 3.0% |
+| | 0.5 | 25.0% | 3.2% | 22.5% | 25.3% | 5.2% | 3.8% | 5.4% | 6.0% | 3.7% |
+| | 1 | 18.4% | 2.3% | 12.3% | 32.8% | 12.3% | 4.7% | 4.5% | 8.0% | 4.6% |
 
-| Danger | `extinguish_light` | `door` | `blindness` | `cold_touch` | Cooldown, min |
-|---|---|---|---|---|---|
-| 0.00 (fresh world) | 18.9% | 75.5% | 5.7% | 0% | 3.1–6.2 |
-| 0.25 | 18.3% | 73.4% | 5.5% | 2.8% | 2.6–5.2 |
-| 0.50 | 17.6% | 70.4% | 5.3% | 6.8% | 2.1–4.2 |
-| 0.75 | 16.4% | 65.7% | 4.9% | 13.0% | 1.6–3.3 |
-| 1.00 (~40 days and ~40 advancements) | 14.4% | 57.4% | 4.3% | 23.9% | 1.2–2.3 |
-
-### Shade
-
-| Danger | `extinguish_light` | `door` | `blindness` | `cold_touch` | Cooldown, min |
-|---|---|---|---|---|---|
-| 0.00 (fresh world) | 66.7% | 6.7% | 26.7% | 0% | 5.0–10.0 |
-| 0.25 | 62.5% | 6.2% | 25.0% | 6.3% | 4.2–8.4 |
-| 0.50 | 56.9% | 5.7% | 22.8% | 14.6% | 3.4–6.9 |
-| 0.75 | 49.4% | 4.9% | 19.7% | 26.0% | 2.7–5.3 |
-| 1.00 (~40 days and ~40 advancements) | 38.3% | 3.8% | 15.3% | 42.6% | 1.9–3.8 |
+Cooldown per spirit, minutes: `(4 − 2.5 × danger) × (1 + roll) / activity`. Poltergeist: 3.1–6.2 at danger 0, 1.2–2.3 at 1.
+Shade: 5.0–10.0 at danger 0, 1.9–3.8 at 1.
 
 ## Admin command
 
-`/haunt info|force|spirit [player]` (permission level: gamemaster) shows danger and the next event, forces an event, or reassigns a spirit.
+Permission level: gamemaster. `[player]` defaults to the caller.
+
+- `/haunt info [player]`: danger, days, advancements, and the numbered spirit list with time to each spirit's next event.
+- `/haunt force <event> [player]`: runs an event now (fails if it cannot run).
+- `/haunt spirit add <spirit> [player]`: binds one more spirit.
+- `/haunt spirit remove <n> [player]`: unbinds spirit number `n` (1-based, as listed by `info`).

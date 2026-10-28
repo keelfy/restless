@@ -5,5 +5,10 @@ public enum EventTag {
     LIGHTS,
     DOORS,
     AFFLICTION,
-    ASSAULT
+    ASSAULT,
+    SOUND,
+    ITEMS,
+    BLOCKS,
+    MOBS,
+    PRESENCE
 }
