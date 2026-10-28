@@ -1,7 +1,7 @@
 [tools]
 java = "corretto-25"
 node = "24"
-pnpm = "12"
+bun = "1"
 
 [tasks."mod:build"]
 description = "Build the mod jars"
@@ -21,16 +21,16 @@ run = "./gradlew :neoforge:runServer"
 [tasks."wiki:install"]
 description = "Install wiki dependencies"
 dir = "apps/frontend"
-run = "pnpm install"
+run = "bun install"
 
 [tasks."wiki:dev"]
 description = "Run the wiki dev server"
 dir = "apps/frontend"
 depends = ["wiki:install"]
-run = "pnpm dev"
+run = "bun run dev"
 
 [tasks."wiki:build"]
-description = "Build the static wiki"
+description = "Build the static wiki (apps/frontend/out)"
 dir = "apps/frontend"
 depends = ["wiki:install"]
-run = "pnpm build"
+run = "bun run build"

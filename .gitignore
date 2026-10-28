@@ -13,7 +13,9 @@ apps/mod/**/repo/
 
 # Frontend
 node_modules/
-apps/frontend/docs/.vitepress/dist/
-apps/frontend/docs/.vitepress/cache/
+apps/frontend/.next/
+apps/frontend/out/
+apps/frontend/next-env.d.ts
+*.tsbuildinfo
 
 .DS_Store

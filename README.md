@@ -1,27 +1,27 @@
 # Restless
 
-Хоррор-мод для Minecraft 26.3: личные и территориальные духи устраивают случайные события,
-которые становятся опаснее по мере прогресса игрока.
+A horror mod for Minecraft 26.3: personal and territorial spirits trigger random events
+that grow more dangerous as the player progresses.
 
-## Структура
+## Structure
 
-| Путь | Что |
+| Path | What |
 |---|---|
-| `apps/mod/core` | Логика мода. Только vanilla Minecraft, без API загрузчика |
-| `apps/mod/neoforge` | Адаптер NeoForge: точка входа, реализация `Platform`, сборка итогового jar |
-| `apps/frontend` | Вики (VitePress) |
+| `apps/mod/core` | Mod logic. Vanilla Minecraft only, no loader API |
+| `apps/mod/neoforge` | NeoForge adapter: entry point, `Platform` implementation, final jar assembly |
+| `apps/frontend` | Wiki (Next.js, TypeScript, Tailwind, shadcn/ui, Bun) |
 
-Всё, что зависит от загрузчика, `core` получает через `dev.keelfy.restless.platform.Platform`
-(ServiceLoader). Порт на Fabric = новый модуль `apps/mod/fabric` со своей реализацией `Platform`.
+`core` gets everything loader-dependent through `dev.keelfy.restless.platform.Platform`
+(ServiceLoader). A Fabric port = a new `apps/mod/fabric` module with its own `Platform` implementation.
 
-## Запуск
+## Usage
 
-Нужен [mise](https://mise.jdx.dev): `mise install` ставит Java 25, Node 24, pnpm 12.
+Requires [mise](https://mise.jdx.dev): `mise install` sets up Java 25, Node 24, Bun 1.
 
 ```sh
-mise run mod:build    # собрать jar → apps/mod/neoforge/build/libs
-mise run mod:client   # dev-клиент
-mise run mod:server   # dev-сервер
-mise run wiki:dev     # вики локально
-mise run wiki:build   # статическая сборка вики
+mise run mod:build    # build the jar → apps/mod/neoforge/build/libs
+mise run mod:client   # dev client
+mise run mod:server   # dev server
+mise run wiki:dev     # wiki locally
+mise run wiki:build   # static wiki build
 ```
