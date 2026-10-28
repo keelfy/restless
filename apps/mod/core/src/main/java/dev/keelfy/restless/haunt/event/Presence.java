@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -25,21 +26,23 @@ final class Presence {
     static List<HauntEvent> all() {
         return List.of(
             // 97: a puff of breath at the face where nobody should be breathing out
-            SimpleEvent.light("cold_breath", EventTag.PRESENCE, 0.6, Presence::warm, player -> {
+            SimpleEvent.light("cold_breath", EventTag.PRESENCE, Presence::warm, player -> {
+                Config.Section config = Config.event("cold_breath");
+                Config.Burst puff = config.burst("particles");
                 Vec3 look = player.getLookAngle();
-                Vec3 face = player.getEyePosition().add(look.x * 0.4, -0.1, look.z * 0.4);
-                player.level().sendParticles(ParticleTypes.CLOUD, face.x, face.y, face.z, 6, 0.05, 0.05, 0.05, 0.01);
+                Vec3 face = player.getEyePosition().add(look.x * config.num("forward"), puff.offsetY(), look.z * config.num("forward"));
+                player.level().sendParticles(ParticleTypes.CLOUD, face.x, face.y, face.z, puff.count(), puff.dx(), puff.dy(), puff.dz(), puff.speed());
             }),
             // 96
-            SimpleEvent.light("footprints", EventTag.PRESENCE, 0.6, player -> soft(player) != null, Presence::footprints),
+            SimpleEvent.light("footprints", EventTag.PRESENCE, player -> soft(player) != null, Presence::footprints),
             // 98
-            SimpleEvent.light("local_rain", EventTag.PRESENCE, 0.6,
+            SimpleEvent.light("local_rain", EventTag.PRESENCE,
                 player -> player.level().canSeeSky(player.blockPosition()) && !player.level().isRainingAt(player.blockPosition()),
                 Presence::localRain),
             // 99
-            SimpleEvent.harmful("lost_time", EventTag.PRESENCE, 0.5, player -> player.level().isDarkOutside(), player -> {
+            SimpleEvent.harmful("lost_time", EventTag.PRESENCE, player -> player.level().isDarkOutside(), player -> {
                 var server = player.level().getServer();
-                server.clockManager().addTicks(server.registryAccess().getOrThrow(WorldClocks.OVERWORLD), 1000);
+                server.clockManager().addTicks(server.registryAccess().getOrThrow(WorldClocks.OVERWORLD), Config.event("lost_time").integer("skip_ticks"));
             })
         );
     }
@@ -63,27 +66,35 @@ final class Presence {
 
     /** Something walks in the player's tracks, one step behind: puffs and crunching where they stood a moment ago. */
     private static void footprints(ServerPlayer player) {
+        Config.Section config = Config.event("footprints");
+        double minMove = config.num("min_move");
+        Config.Burst dust = config.burst("particles");
+        Config.Tone step = config.tone("sound");
         Vec3[] last = {player.position()};
-        Scheduler.repeat(player, 10, 10, (p, n) -> {
+        Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("interval_ticks"), (p, n) -> {
             Vec3 spot = last[0];
             last[0] = p.position();
             BlockState ground = soft(p);
-            if (ground != null && spot.distanceToSqr(p.position()) > 0.25) {
-                p.level().sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, ground), spot.x, spot.y + 0.05, spot.z, 8, 0.15, 0.0, 0.15, 0.02);
-                p.level().playSound(null, spot.x, spot.y, spot.z, ground.getSoundType().getStepSound(), SoundSource.HOSTILE, 0.8F, 0.8F);
+            if (ground != null && spot.distanceToSqr(p.position()) > minMove * minMove) {
+                p.level().sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, ground), spot.x, spot.y + dust.offsetY(), spot.z,
+                    dust.count(), dust.dx(), dust.dy(), dust.dz(), dust.speed());
+                p.level().playSound(null, spot.x, spot.y, spot.z, ground.getSoundType().getStepSound(), SoundSource.HOSTILE, step.volume(), step.pitch());
             }
-            return n < 11;
+            return n + 1 < config.integer("steps");
         });
     }
 
-    /** Six seconds of rain falling on nothing but the player. */
+    /** Rain falling on nothing but the player. */
     private static void localRain(ServerPlayer player) {
-        Scheduler.repeat(player, 0, 2, (p, n) -> {
-            p.level().sendParticles(ParticleTypes.RAIN, p.getX(), p.getY() + 3.0, p.getZ(), 12, 1.5, 0.2, 1.5, 0.0);
-            if (n % 10 == 0) {
-                p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WEATHER_RAIN, SoundSource.WEATHER, 0.6F, 1.0F);
+        Config.Section config = Config.event("local_rain");
+        Config.Burst drops = config.burst("particles");
+        Config.Tone patter = config.tone("sound");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            p.level().sendParticles(ParticleTypes.RAIN, p.getX(), p.getY() + drops.offsetY(), p.getZ(), drops.count(), drops.dx(), drops.dy(), drops.dz(), drops.speed());
+            if (n % config.integer("sound_every_steps") == 0) {
+                p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WEATHER_RAIN, SoundSource.WEATHER, patter.volume(), patter.pitch());
             }
-            return n < 60;
+            return n + 1 < config.integer("steps");
         });
     }
 }

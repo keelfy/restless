@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -32,53 +33,53 @@ import org.jspecify.annotations.Nullable;
 
 /** Animals and monsters reacting to something the player cannot see, or turning on the player. */
 final class MobEvents {
-    private static final double WEIGHT = 0.6;
-    private static final int BATS = 5;
+    private static final double BEHIND = 180.0;
 
     private MobEvents() {}
 
     static List<HauntEvent> all() {
         return List.of(
             // 86
-            SimpleEvent.light("cat_hiss", EventTag.MOBS, WEIGHT, player -> !near(player, Cat.class, 16).isEmpty(), player -> {
-                List<Cat> cats = near(player, Cat.class, 16);
+            SimpleEvent.light("cat_hiss", EventTag.MOBS, player -> !near(player, Cat.class, "cat_hiss").isEmpty(), player -> {
+                List<Cat> cats = near(player, Cat.class, "cat_hiss");
                 cats.get(player.getRandom().nextInt(cats.size())).hiss();
             }),
             // 87
-            SimpleEvent.light("dog_barks", EventTag.MOBS, WEIGHT, player -> !near(player, Wolf.class, 16).isEmpty(), player -> {
-                List<Wolf> wolves = near(player, Wolf.class, 16);
+            SimpleEvent.light("dog_barks", EventTag.MOBS, player -> !near(player, Wolf.class, "dog_barks").isEmpty(), player -> {
+                List<Wolf> wolves = near(player, Wolf.class, "dog_barks");
                 Wolf wolf = wolves.get(player.getRandom().nextInt(wolves.size()));
                 wolf.setYRot(player.getRandom().nextFloat() * 360.0F);
                 wolf.playAmbientSound();
             }),
             // 85
-            SimpleEvent.light("animals_stare", EventTag.MOBS, WEIGHT, player -> near(player, Animal.class, 16).size() >= 2,
-                player -> stare(player, near(player, Animal.class, 16), 60)),
+            SimpleEvent.light("animals_stare", EventTag.MOBS, player -> near(player, Animal.class, "animals_stare").size() >= Config.event("animals_stare").integer("min_animals"),
+                player -> stare(player, near(player, Animal.class, "animals_stare"), "animals_stare")),
             // 88
-            SimpleEvent.light("villager_stares", EventTag.MOBS, WEIGHT, player -> !near(player, Villager.class, 16).isEmpty(), player -> {
-                List<Villager> villagers = near(player, Villager.class, 16);
-                stare(player, List.of(villagers.get(player.getRandom().nextInt(villagers.size()))), 100);
+            SimpleEvent.light("villager_stares", EventTag.MOBS, player -> !near(player, Villager.class, "villager_stares").isEmpty(), player -> {
+                List<Villager> villagers = near(player, Villager.class, "villager_stares");
+                stare(player, List.of(villagers.get(player.getRandom().nextInt(villagers.size()))), "villager_stares");
             }),
             // 89
-            SimpleEvent.light("bats", EventTag.MOBS, WEIGHT, player -> airSpot(player, 4.0, 360.0) != null, player -> {
-                BlockPos spot = airSpot(player, 4.0, 360.0);
+            SimpleEvent.light("bats", EventTag.MOBS, player -> airSpot(player) != null, player -> {
+                BlockPos spot = airSpot(player);
                 if (spot != null) {
-                    for (int i = 0; i < BATS; i++) {
+                    for (int i = 0, n = Config.event("bats").integer("count"); i < n; i++) {
                         EntityTypes.BAT.spawn(player.level(), spot, EntitySpawnReason.EVENT);
                     }
                 }
             }),
             // 90
-            SimpleEvent.harmful("open_pen", EventTag.MOBS, WEIGHT, player -> penGate(player) != null, player -> {
+            SimpleEvent.harmful("open_pen", EventTag.MOBS, player -> penGate(player) != null, player -> {
                 BlockPos gate = penGate(player);
                 if (gate != null) {
                     ServerLevel level = player.level();
                     level.setBlockAndUpdate(gate, level.getBlockState(gate).setValue(BlockStateProperties.OPEN, true));
-                    level.playSound(null, gate, SoundEvents.FENCE_GATE_OPEN, SoundSource.BLOCKS, 1.0F, 0.9F);
+                    Config.Tone tone = Config.event("open_pen").tone("sound");
+                    level.playSound(null, gate, SoundEvents.FENCE_GATE_OPEN, SoundSource.BLOCKS, tone.volume(), tone.pitch());
                 }
             }),
             // 91
-            SimpleEvent.harmful("wild_pet", EventTag.MOBS, WEIGHT, player -> !pets(player).isEmpty(), player -> {
+            SimpleEvent.harmful("wild_pet", EventTag.MOBS, player -> !pets(player).isEmpty(), player -> {
                 List<TamableAnimal> pets = pets(player);
                 TamableAnimal pet = pets.get(player.getRandom().nextInt(pets.size()));
                 pet.setTame(false, false);
@@ -86,7 +87,7 @@ final class MobEvents {
                 pet.setTarget(player);
             }),
             // 92
-            SimpleEvent.harmful("copycat", EventTag.MOBS, WEIGHT,
+            SimpleEvent.harmful("copycat", EventTag.MOBS,
                 player -> player.level().getDifficulty() != Difficulty.PEACEFUL && groundSpot(player) != null,
                 player -> {
                     BlockPos spot = groundSpot(player);
@@ -106,31 +107,33 @@ final class MobEvents {
         );
     }
 
-    private static <T extends Entity> List<T> near(ServerPlayer player, Class<T> type, int radius) {
-        return player.level().getEntitiesOfClass(type, new AABB(player.blockPosition()).inflate(radius));
+    private static <T extends Entity> List<T> near(ServerPlayer player, Class<T> type, String event) {
+        return player.level().getEntitiesOfClass(type, new AABB(player.blockPosition()).inflate(Nearby.radius(event)));
     }
 
-    /** The mobs stop and face the player for {@code ticks}. */
-    private static void stare(ServerPlayer player, List<? extends Mob> mobs, int ticks) {
-        Scheduler.repeat(player, 0, 2, (p, n) -> {
+    /** The mobs stop and face the player for the event's stare time. */
+    private static void stare(ServerPlayer player, List<? extends Mob> mobs, String event) {
+        Config.Section config = Config.event(event);
+        int interval = config.integer("look_interval_ticks");
+        Scheduler.repeat(player, 0, interval, (p, n) -> {
             for (Mob mob : mobs) {
                 if (mob.isAlive()) {
                     mob.getNavigation().stop();
                     mob.lookAt(EntityAnchorArgument.Anchor.EYES, p.getEyePosition());
                 }
             }
-            return n * 2 < ticks;
+            return n * interval < config.integer("stare_ticks");
         });
     }
 
     private static List<TamableAnimal> pets(ServerPlayer player) {
-        return near(player, TamableAnimal.class, 32).stream().filter(p -> p.isTame() && p.isOwnedBy(player)).toList();
+        return near(player, TamableAnimal.class, "wild_pet").stream().filter(p -> p.isTame() && p.isOwnedBy(player)).toList();
     }
 
     /** A closed fence gate with a farm animal right next to it. */
     private static @Nullable BlockPos penGate(ServerPlayer player) {
-        for (BlockPos pos : Nearby.all(player, 12, MobEvents::closedGate)) {
-            if (!player.level().getEntitiesOfClass(Animal.class, new AABB(pos).inflate(5)).isEmpty()) {
+        for (BlockPos pos : Nearby.all(player, "open_pen", MobEvents::closedGate)) {
+            if (!player.level().getEntitiesOfClass(Animal.class, new AABB(pos).inflate(Config.event("open_pen").integer("animal_radius"))).isEmpty()) {
                 return pos;
             }
         }
@@ -143,12 +146,12 @@ final class MobEvents {
 
     /** Standing room (floor plus two free blocks) behind the player, within a step up or down. */
     private static @Nullable BlockPos groundSpot(ServerPlayer player) {
-        return spot(player, 3.0, 180.0, true);
+        return spot(player, Config.event("copycat").num("distance"), BEHIND, true);
     }
 
     /** Free air to spawn into, at a random bearing. */
-    private static @Nullable BlockPos airSpot(ServerPlayer player, double distance, double yaw) {
-        return spot(player, distance, player.getRandom().nextDouble() * yaw, false);
+    private static @Nullable BlockPos airSpot(ServerPlayer player) {
+        return spot(player, Config.event("bats").num("distance"), player.getRandom().nextDouble() * Nearby.FULL_TURN, false);
     }
 
     private static @Nullable BlockPos spot(ServerPlayer player, double distance, double yawOffset, boolean needsFloor) {

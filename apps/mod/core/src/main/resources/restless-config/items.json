@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "events": {
+    "swap_slots": { "weight": 0.5 },
+    "hotbar_shift": { "weight": 0.5 },
+    "strange_name": { "weight": 0.5, "names": ["Why are you here", "Not yours", "Behind you", "Leave", "It sees", "Mine now"] },
+    "book_page": { "weight": 0.5, "pages": ["i can hear you breathing", "do not look behind you", "you were never alone here"] },
+    "shuffle_chest": { "weight": 0.5, "radius": 10 },
+    "wear": { "weight": 0.5, "fraction": 0.1 },
+    "rot": { "weight": 0.5 },
+    "vanishing_item": { "weight": 0.5, "radius": 10, "min_distance": 2 },
+    "map_marker": { "weight": 0.5, "spread_pixels": 40, "sound": { "volume": 0.8, "pitch": 0.6 } },
+    "false_compass": { "weight": 0.5, "min_offset": 30, "offset_spread": 30, "sound": { "volume": 1.0, "pitch": 0.6 } }
+  }
+}

@@ -13,16 +13,15 @@ record SimpleEvent(
     String id,
     HauntTier tier,
     Set<EventTag> tags,
-    double baseWeight,
     Predicate<ServerPlayer> condition,
     Consumer<ServerPlayer> action
 ) implements HauntEvent {
-    static SimpleEvent light(String id, EventTag tag, double weight, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
-        return new SimpleEvent(id, HauntTier.LIGHT, Set.of(tag), weight, condition, action);
+    static SimpleEvent light(String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
+        return new SimpleEvent(id, HauntTier.LIGHT, Set.of(tag), condition, action);
     }
 
-    static SimpleEvent harmful(String id, EventTag tag, double weight, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
-        return new SimpleEvent(id, HauntTier.HARMFUL, Set.of(tag), weight, condition, action);
+    static SimpleEvent harmful(String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
+        return new SimpleEvent(id, HauntTier.HARMFUL, Set.of(tag), condition, action);
     }
 
     @Override

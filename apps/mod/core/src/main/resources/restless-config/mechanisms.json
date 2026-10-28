@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "events": {
+    "door": { "weight": 1.0, "radius": 12 },
+    "trapdoor": { "weight": 0.7, "radius": 12, "sound": { "volume": 1.0, "pitch": 0.9 } },
+    "fence_gate": { "weight": 0.7, "radius": 12, "sound": { "volume": 1.0, "pitch": 0.9 } },
+    "button": { "weight": 0.7, "radius": 12 },
+    "lever": { "weight": 0.7, "radius": 12 },
+    "pressure_plate": { "weight": 0.7, "radius": 12, "release_ticks": 20, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "iron_door": { "weight": 0.7, "radius": 12 },
+    "breathing_door": { "weight": 0.7, "radius": 12, "interval_ticks": 20, "toggles": 6 },
+    "chest_lid": { "weight": 0.7, "radius": 10, "close_after_ticks": 12, "sound": { "volume": 0.8, "pitch": 0.9 } },
+    "barrel_opens": { "weight": 0.7, "radius": 10, "close_after_ticks": 30, "sound": { "volume": 0.8, "pitch": 0.9 } },
+    "jukebox_pop": { "weight": 0.7, "radius": 20 },
+    "locked_door": {
+      "weight": 0.7,
+      "radius": 12,
+      "lock_ticks": 200,
+      "sync_range": 64.0,
+      "slam_sound": { "volume": 1.0, "pitch": 0.7 },
+      "denied_sound": { "volume": 1.0, "pitch": 0.8 }
+    },
+    "open_house": { "weight": 0.7, "radius": 20 }
+  }
+}

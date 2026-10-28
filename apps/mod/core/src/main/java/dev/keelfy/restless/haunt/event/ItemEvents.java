@@ -1,6 +1,8 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.haunt.HauntEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,42 +36,39 @@ import org.jspecify.annotations.Nullable;
 
 /** Meddling with the player's inventory and with chests nearby. */
 final class ItemEvents {
-    private static final int CHEST_RADIUS = 10;
-    private static final double WEIGHT = 0.5;
-    private static final List<String> NAMES = List.of("Why are you here", "Not yours", "Behind you", "Leave", "It sees", "Mine now");
-    private static final String MARK = "restless";
-    private static final List<String> PAGES = List.of("i can hear you breathing", "do not look behind you", "you were never alone here");
+    private static final String MARK = Restless.MOD_ID;
 
     private ItemEvents() {}
 
     static List<HauntEvent> all() {
         return List.of(
             // 62
-            SimpleEvent.light("swap_slots", EventTag.ITEMS, WEIGHT, player -> !stacks(player, s -> true).isEmpty(), player -> {
+            SimpleEvent.light("swap_slots", EventTag.ITEMS, player -> !stacks(player, s -> true).isEmpty(), player -> {
                 Inventory inventory = player.getInventory();
-                int a = player.getRandom().nextInt(36);
-                int b = (a + 1 + player.getRandom().nextInt(35)) % 36;
+                int a = player.getRandom().nextInt(Inventory.INVENTORY_SIZE);
+                int b = (a + 1 + player.getRandom().nextInt(Inventory.INVENTORY_SIZE - 1)) % Inventory.INVENTORY_SIZE;
                 ItemStack first = inventory.getItem(a);
                 inventory.setItem(a, inventory.getItem(b));
                 inventory.setItem(b, first);
             }),
             // 63
-            SimpleEvent.light("hotbar_shift", EventTag.ITEMS, WEIGHT, player -> true, player -> {
-                int slot = (player.getInventory().getSelectedSlot() + 1 + player.getRandom().nextInt(8)) % 9;
+            SimpleEvent.light("hotbar_shift", EventTag.ITEMS, player -> true, player -> {
+                int hotbar = Inventory.getSelectionSize();
+                int slot = (player.getInventory().getSelectedSlot() + 1 + player.getRandom().nextInt(hotbar - 1)) % hotbar;
                 player.getInventory().setSelectedSlot(slot);
                 player.connection.send(new ClientboundSetHeldSlotPacket(slot));
             }),
             // 64
-            SimpleEvent.light("strange_name", EventTag.ITEMS, WEIGHT, player -> !stacks(player, ItemEvents::unnamed).isEmpty(), player -> {
+            SimpleEvent.light("strange_name", EventTag.ITEMS, player -> !stacks(player, ItemEvents::unnamed).isEmpty(), player -> {
                 List<ItemStack> candidates = stacks(player, ItemEvents::unnamed);
                 candidates.get(player.getRandom().nextInt(candidates.size()))
-                    .set(DataComponents.CUSTOM_NAME, Component.literal(NAMES.get(player.getRandom().nextInt(NAMES.size()))));
+                    .set(DataComponents.CUSTOM_NAME, Component.literal(pick(player, Config.event("strange_name").texts("names"))));
             }),
             // 65: adds a page instead of rewriting, so nothing the player wrote is lost
-            SimpleEvent.light("book_page", EventTag.ITEMS, WEIGHT, player -> !stacks(player, ItemEvents::isBook).isEmpty(), player -> {
+            SimpleEvent.light("book_page", EventTag.ITEMS, player -> !stacks(player, ItemEvents::isBook).isEmpty(), player -> {
                 List<ItemStack> books = stacks(player, ItemEvents::isBook);
                 ItemStack book = books.get(player.getRandom().nextInt(books.size()));
-                String page = PAGES.get(player.getRandom().nextInt(PAGES.size()));
+                String page = pick(player, Config.event("book_page").texts("pages"));
                 if (book.is(Items.WRITABLE_BOOK)) {
                     List<Filterable<String>> pages = new ArrayList<>(book.getOrDefault(DataComponents.WRITABLE_BOOK_CONTENT, WritableBookContent.EMPTY).pages());
                     pages.add(Filterable.passThrough(page));
@@ -83,8 +82,8 @@ final class ItemEvents {
                 }
             }),
             // 66
-            SimpleEvent.light("shuffle_chest", EventTag.ITEMS, WEIGHT, player -> chests(player).stream().anyMatch(c -> !isEmpty(c.container())), player -> {
-                List<Located> filled = chests(player).stream().filter(c -> !isEmpty(c.container())).toList();
+            SimpleEvent.light("shuffle_chest", EventTag.ITEMS, player -> chests(player, "shuffle_chest").stream().anyMatch(c -> !isEmpty(c.container())), player -> {
+                List<Located> filled = chests(player, "shuffle_chest").stream().filter(c -> !isEmpty(c.container())).toList();
                 Container container = filled.get(player.getRandom().nextInt(filled.size())).container();
                 List<ItemStack> contents = new ArrayList<>();
                 for (int i = 0; i < container.getContainerSize(); i++) {
@@ -97,17 +96,17 @@ final class ItemEvents {
                 container.setChanged();
             }),
             // 67
-            SimpleEvent.harmful("wear", EventTag.ITEMS, WEIGHT, player -> !stacks(player, ItemEvents::wearable).isEmpty(), player -> {
+            SimpleEvent.harmful("wear", EventTag.ITEMS, player -> !stacks(player, ItemEvents::wearable).isEmpty(), player -> {
                 List<ItemStack> tools = stacks(player, ItemEvents::wearable);
                 ItemStack tool = tools.get(player.getRandom().nextInt(tools.size()));
-                int loss = Math.max(1, tool.getMaxDamage() / 10);
+                int loss = Math.max(1, (int) (tool.getMaxDamage() * Config.event("wear").num("fraction")));
                 tool.setDamageValue(Math.min(tool.getMaxDamage() - 1, tool.getDamageValue() + loss));
             }),
             // 68
-            SimpleEvent.harmful("rot", EventTag.ITEMS, WEIGHT, player -> !stacks(player, ItemEvents::rottable).isEmpty(), player -> {
+            SimpleEvent.harmful("rot", EventTag.ITEMS, player -> !stacks(player, ItemEvents::rottable).isEmpty(), player -> {
                 Inventory inventory = player.getInventory();
                 List<Integer> slots = new ArrayList<>();
-                for (int i = 0; i < 36; i++) {
+                for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
                     if (rottable(inventory.getItem(i))) {
                         slots.add(i);
                     }
@@ -116,7 +115,7 @@ final class ItemEvents {
                 inventory.setItem(slot, new ItemStack(Items.ROTTEN_FLESH, inventory.getItem(slot).getCount()));
             }),
             // 69: moves at once; the "turns up later" part needs delayed tasks
-            SimpleEvent.harmful("vanishing_item", EventTag.ITEMS, WEIGHT, player -> pair(player) != null, player -> {
+            SimpleEvent.harmful("vanishing_item", EventTag.ITEMS, player -> pair(player) != null, player -> {
                 Transfer transfer = pair(player);
                 if (transfer == null) {
                     return;
@@ -139,20 +138,22 @@ final class ItemEvents {
                 }
             }),
             // 71: stays on the map for good; the marker lives in the item, so only a new map gets rid of it
-            SimpleEvent.light("map_marker", EventTag.ITEMS, WEIGHT, player -> !unmarkedMaps(player).isEmpty(), ItemEvents::markMap),
+            SimpleEvent.light("map_marker", EventTag.ITEMS, player -> !unmarkedMaps(player).isEmpty(), ItemEvents::markMap),
             // 70: aims at a point near the player, so it keeps pointing somewhere wrong
-            SimpleEvent.harmful("false_compass", EventTag.ITEMS, WEIGHT,
+            SimpleEvent.harmful("false_compass", EventTag.ITEMS,
                 player -> !stacks(player, s -> s.is(Items.COMPASS) && !s.has(DataComponents.LODESTONE_TRACKER)).isEmpty(),
                 player -> {
                     List<ItemStack> compasses = stacks(player, s -> s.is(Items.COMPASS) && !s.has(DataComponents.LODESTONE_TRACKER));
+                    Config.Section config = Config.event("false_compass");
                     BlockPos target = player.blockPosition().offset(
-                        (player.getRandom().nextBoolean() ? 1 : -1) * (30 + player.getRandom().nextInt(30)),
+                        (player.getRandom().nextBoolean() ? 1 : -1) * (config.integer("min_offset") + player.getRandom().nextInt(config.integer("offset_spread"))),
                         0,
-                        (player.getRandom().nextBoolean() ? 1 : -1) * (30 + player.getRandom().nextInt(30)));
+                        (player.getRandom().nextBoolean() ? 1 : -1) * (config.integer("min_offset") + player.getRandom().nextInt(config.integer("offset_spread"))));
                     compasses.get(0).set(DataComponents.LODESTONE_TRACKER,
                         new LodestoneTracker(Optional.of(GlobalPos.of(player.level().dimension(), target)), false));
+                    Config.Tone tone = config.tone("sound");
                     player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-                        SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.HOSTILE, 1.0F, 0.6F);
+                        SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.HOSTILE, tone.volume(), tone.pitch());
                 })
         );
     }
@@ -163,7 +164,7 @@ final class ItemEvents {
 
     private static List<ItemStack> stacks(ServerPlayer player, Predicate<ItemStack> match) {
         List<ItemStack> found = new ArrayList<>();
-        for (int i = 0; i < 36; i++) {
+        for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (!stack.isEmpty() && match.test(stack)) {
                 found.add(stack);
@@ -189,11 +190,19 @@ final class ItemEvents {
             return;
         }
         int blocksPerPixel = 1 << data.scale;
+        Config.Section config = Config.event("map_marker");
+        int spread = config.integer("spread_pixels");
         BlockPos at = new BlockPos(
-            data.centerX + (player.getRandom().nextInt(81) - 40) * blocksPerPixel, 0, data.centerZ + (player.getRandom().nextInt(81) - 40) * blocksPerPixel);
+            data.centerX + (player.getRandom().nextInt(2 * spread + 1) - spread) * blocksPerPixel, 0,
+            data.centerZ + (player.getRandom().nextInt(2 * spread + 1) - spread) * blocksPerPixel);
         MapItemSavedData.addTargetDecoration(map, at, MARK, MapDecorationTypes.RED_X);
+        Config.Tone tone = config.tone("sound");
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-            SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.HOSTILE, 0.8F, 0.6F);
+            SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.HOSTILE, tone.volume(), tone.pitch());
+    }
+
+    private static String pick(ServerPlayer player, List<String> options) {
+        return options.get(player.getRandom().nextInt(options.size()));
     }
 
     private static boolean unnamed(ItemStack stack) {
@@ -217,9 +226,9 @@ final class ItemEvents {
     }
 
     /** One entry per chest block; a double chest shows up twice, once per half. */
-    private static List<Located> chests(ServerPlayer player) {
+    private static List<Located> chests(ServerPlayer player, String event) {
         List<Located> found = new ArrayList<>();
-        for (BlockPos pos : Nearby.all(player, CHEST_RADIUS, s -> s.getBlock() instanceof ChestBlock)) {
+        for (BlockPos pos : Nearby.all(player, event, s -> s.getBlock() instanceof ChestBlock)) {
             BlockState state = player.level().getBlockState(pos);
             Container container = ChestBlock.getContainer((ChestBlock) state.getBlock(), state, player.level(), pos, true);
             if (container != null) {
@@ -231,13 +240,14 @@ final class ItemEvents {
 
     /** A chest with something in it and a different chest (not its other half) with a free slot. */
     private static @Nullable Transfer pair(ServerPlayer player) {
-        List<Located> chests = chests(player);
+        List<Located> chests = chests(player, "vanishing_item");
+        int apart = Config.event("vanishing_item").integer("min_distance");
         for (Located from : chests) {
             if (from.container().isEmpty()) {
                 continue;
             }
             for (Located to : chests) {
-                if (from.pos().distManhattan(to.pos()) > 2 && hasFreeSlot(to.container())) {
+                if (from.pos().distManhattan(to.pos()) > apart && hasFreeSlot(to.container())) {
                     return new Transfer(from.container(), to.container());
                 }
             }

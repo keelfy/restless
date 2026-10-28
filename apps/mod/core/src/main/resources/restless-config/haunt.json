@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "director": { "check_interval_ticks": 20, "default_spirits": 3 },
+  "danger": {
+    "days_to_max": 40,
+    "advancements_to_max": 40,
+    "days_share": 0.6,
+    "advancements_share": 0.4,
+    "light_penalty": 0.7,
+    "daylight_step": 1.2,
+    "cooldown_calm_minutes": 4.0,
+    "cooldown_drop_minutes": 2.5,
+    "min_cooldown_ticks": 20
+  },
+  "restore": { "retry_ticks": 20 },
+  "place": {
+    "tries": 16,
+    "wall_min": 2,
+    "wall_max": 6,
+    "spawn_climb": 2,
+    "spawn_drop": 3,
+    "cross_climb": 2,
+    "cross_drop": 2,
+    "ledge_min_drop": 4,
+    "ledge_max_drop": 7,
+    "patch_layers": 1,
+    "sound_height": 0.5
+  }
+}

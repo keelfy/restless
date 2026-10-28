@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "assaults": { "safe_health": 6.0 },
+  "events": {
+    "cold_touch": {
+      "weight": 1.0,
+      "min_health": 2.0,
+      "damage_min": 2,
+      "damage_spread": 3,
+      "keep_health": 1.0,
+      "sound": { "volume": 1.0, "pitch": 0.6 }
+    },
+    "trip": { "weight": 0.7, "ticks": 20, "amplifier": 6, "sound": { "volume": 1.0, "pitch": 0.7 } },
+    "scorch": { "weight": 0.6, "min_health": 6.0, "seconds": 1.0 },
+    "wrath": {
+      "weight": 0.6,
+      "min_health": 8.0,
+      "damage_min": 4,
+      "damage_spread": 4,
+      "keep_health": 1.0,
+      "sound": { "volume": 1.0, "pitch": 0.8 }
+    },
+    "snatch": { "weight": 0.7, "speed": 0.45, "lift": 0.3, "sound": { "volume": 1.0, "pitch": 0.5 } },
+    "suffocation": {
+      "weight": 0.5,
+      "margin": 2.0,
+      "dark_below": 8,
+      "delay_ticks": 40,
+      "interval_ticks": 2,
+      "max_steps": 150,
+      "drain": 12,
+      "pulse_every": 10,
+      "damage": 1.0,
+      "sound": { "volume": 1.0, "pitch": 1.0 },
+      "pulse_sound": { "volume": 0.8, "pitch": 1.0 }
+    },
+    "shove": { "weight": 0.5, "margin": 4.0, "push": 0.7, "lift": 0.2, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "toss": { "weight": 0.5, "margin": 4.0, "lift": 1.0, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "thunder_knocks": {
+      "weight": 0.5,
+      "margin": 4.0,
+      "strike_delay_ticks": 60,
+      "miss_distance": 6.0,
+      "hit_delay_ticks": 40,
+      "still_blocks": 2.0,
+      "damage": 6.0,
+      "keep_health": 1.0
+    },
+    "embrace": {
+      "weight": 0.5,
+      "margin": 4.0,
+      "delay_ticks": 30,
+      "interval_ticks": 20,
+      "max_steps": 20,
+      "escape_blocks": 10.0,
+      "damage_step": 0.5,
+      "sound": { "volume": 1.0, "pitch": 0.7 },
+      "hit_sound": { "volume": 1.0, "pitch": 0.6 },
+      "particles": { "count": 8, "dx": 0.4, "dy": 0.6, "dz": 0.4, "speed": 0.02, "offset_y": 1.0 }
+    }
+  }
+}

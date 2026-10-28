@@ -3,6 +3,7 @@ package dev.keelfy.restless;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.keelfy.restless.command.HauntCommand;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.Restore;
@@ -15,6 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
 
 /**
@@ -29,6 +31,7 @@ public final class Restless {
     }
 
     public static void init() {
+        Config.load(Platform.get().configDir());
         LOGGER.info("Restless initialising on {}", Platform.get().loaderName());
     }
 
@@ -46,12 +49,18 @@ public final class Restless {
 
     /** Call before a player uses a block; true means the use must be cancelled. */
     public static boolean onUseBlock(Player player, InteractionHand hand, BlockPos pos) {
-        // The locks live on the server; the client only sees the open attempt snap back.
-        if (player.level().isClientSide() || !DoorLocks.isLocked(player.level(), pos)) {
+        Level level = player.level();
+        if (!DoorLocks.isLocked(level, pos)) {
             return false;
         }
+        // The client refuses on its own, so the server hears nothing and only the client plays the sound.
         if (hand == InteractionHand.MAIN_HAND) {
-            player.level().playSound(null, pos, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 0.8F);
+            Config.Tone tone = Config.event("locked_door").tone("denied_sound");
+            if (level.isClientSide()) {
+                level.playLocalSound(pos, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, tone.volume(), tone.pitch(), false);
+            } else {
+                level.playSound(null, pos, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+            }
         }
         return true;
     }

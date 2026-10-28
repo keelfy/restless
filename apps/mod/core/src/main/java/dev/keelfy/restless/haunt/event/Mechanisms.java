@@ -1,9 +1,9 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
 import java.util.function.Predicate;
@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
-import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -32,8 +31,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 /** Doors, gates, buttons and the like acting on their own. */
 final class Mechanisms {
-    private static final int RADIUS = 12;
-
     private Mechanisms() {}
 
     static List<HauntEvent> all() {
@@ -56,24 +53,22 @@ final class Mechanisms {
                     door.setOpen(null, level, s, pos, !door.isOpen(s));
                 }),
             // 12: opens and closes in a slow rhythm, ends the way it began
-            SimpleEvent.light("breathing_door", EventTag.DOORS, 0.7,
-                player -> Nearby.any(player, RADIUS, Mechanisms::woodenDoor), Mechanisms::breathe),
+            SimpleEvent.light("breathing_door", EventTag.DOORS,
+                player -> Nearby.any(player, "breathing_door", Mechanisms::woodenDoor), Mechanisms::breathe),
             // 21: only the lid moves, nothing is opened
-            SimpleEvent.light("chest_lid", EventTag.DOORS, 0.7,
-                player -> Nearby.any(player, 10, Mechanisms::chest), Mechanisms::clickLid),
+            SimpleEvent.light("chest_lid", EventTag.DOORS,
+                player -> Nearby.any(player, "chest_lid", Mechanisms::chest), Mechanisms::clickLid),
             // 22
-            SimpleEvent.light("barrel_opens", EventTag.DOORS, 0.7,
-                player -> Nearby.any(player, 10, Mechanisms::closedBarrel), Mechanisms::openBarrel),
+            SimpleEvent.light("barrel_opens", EventTag.DOORS,
+                player -> Nearby.any(player, "barrel_opens", Mechanisms::closedBarrel), Mechanisms::openBarrel),
             // 101: the music stops mid-song and the disc is knocked out
-            SimpleEvent.light("jukebox_pop", EventTag.DOORS, 0.7, player -> !playingJukeboxes(player).isEmpty(), Mechanisms::popRecord),
-            // 19: slams shut and cannot be opened for ten seconds; the cancelling lives in Restless.onUseBlock
-            SimpleEvent.harmful("locked_door", EventTag.DOORS, 0.7,
-                player -> Nearby.any(player, RADIUS, Mechanisms::lockableDoor), Mechanisms::lockDoor),
-            // 23: a piston and a block appear behind the player, then it shoves; everything is taken away again
-            SimpleEvent.harmful("piston_push", EventTag.DOORS, 0.6, player -> Place.piston(player) != null, Mechanisms::pistonPush),
+            SimpleEvent.light("jukebox_pop", EventTag.DOORS, player -> !playingJukeboxes(player).isEmpty(), Mechanisms::popRecord),
+            // 19: slams shut and cannot be opened for a while; the cancelling lives in Restless.onUseBlock, on both sides
+            SimpleEvent.harmful("locked_door", EventTag.DOORS,
+                player -> Nearby.any(player, "locked_door", Mechanisms::lockableDoor), Mechanisms::lockDoor),
             // 20
-            SimpleEvent.harmful("open_house", EventTag.DOORS, 0.7,
-                player -> player.level().isDarkOutside() && Nearby.any(player, 20, Mechanisms::closedWoodenDoor),
+            SimpleEvent.harmful("open_house", EventTag.DOORS,
+                player -> player.level().isDarkOutside() && Nearby.any(player, "open_house", Mechanisms::closedWoodenDoor),
                 Mechanisms::openHouse)
         );
     }
@@ -83,10 +78,10 @@ final class Mechanisms {
     }
 
     private static HauntEvent on(String id, Predicate<BlockState> match, Action action) {
-        return SimpleEvent.light(id, EventTag.DOORS, 0.7,
-            player -> Nearby.any(player, RADIUS, match),
+        return SimpleEvent.light(id, EventTag.DOORS,
+            player -> Nearby.any(player, id, match),
             player -> {
-                BlockPos pos = Nearby.random(player, RADIUS, match);
+                BlockPos pos = Nearby.random(player, id, match);
                 if (pos != null) {
                     action.apply(player.level(), pos, player.level().getBlockState(pos));
                 }
@@ -114,7 +109,7 @@ final class Mechanisms {
     }
 
     private static List<JukeboxBlockEntity> playingJukeboxes(ServerPlayer player) {
-        return Nearby.all(player, 20, s -> s.is(Blocks.JUKEBOX) && s.getValue(JukeboxBlock.HAS_RECORD)).stream()
+        return Nearby.all(player, "jukebox_pop", s -> s.is(Blocks.JUKEBOX) && s.getValue(JukeboxBlock.HAS_RECORD)).stream()
             .map(pos -> player.level().getBlockEntity(pos))
             .filter(entity -> entity instanceof JukeboxBlockEntity jukebox && jukebox.getSongPlayer().isPlaying())
             .map(entity -> (JukeboxBlockEntity) entity)
@@ -130,7 +125,7 @@ final class Mechanisms {
     }
 
     private static void openHouse(ServerPlayer player) {
-        for (BlockPos pos : Nearby.all(player, 20, Mechanisms::closedWoodenDoor)) {
+        for (BlockPos pos : Nearby.all(player, "open_house", Mechanisms::closedWoodenDoor)) {
             BlockState state = player.level().getBlockState(pos);
             ((DoorBlock) state.getBlock()).setOpen(null, player.level(), state, pos, true);
         }
@@ -139,36 +134,41 @@ final class Mechanisms {
     private static void slamTrapdoor(ServerLevel level, BlockPos pos, BlockState state) {
         boolean open = !state.getValue(BlockStateProperties.OPEN);
         level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.OPEN, open));
-        level.playSound(null, pos, open ? SoundEvents.WOODEN_TRAPDOOR_OPEN : SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 1.0F, 0.9F);
+        Config.Tone tone = Config.event("trapdoor").tone("sound");
+        level.playSound(null, pos, open ? SoundEvents.WOODEN_TRAPDOOR_OPEN : SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
         level.gameEvent(null, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
     }
 
     private static void toggleGate(ServerLevel level, BlockPos pos, BlockState state) {
         boolean open = !state.getValue(BlockStateProperties.OPEN);
         level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.OPEN, open));
-        level.playSound(null, pos, open ? SoundEvents.FENCE_GATE_OPEN : SoundEvents.FENCE_GATE_CLOSE, SoundSource.BLOCKS, 1.0F, 0.9F);
+        Config.Tone tone = Config.event("fence_gate").tone("sound");
+        level.playSound(null, pos, open ? SoundEvents.FENCE_GATE_OPEN : SoundEvents.FENCE_GATE_CLOSE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
         level.gameEvent(null, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
     }
 
     /** Powers the plate for a moment; its own tick finds nobody on it and releases it. */
     private static void pressPlate(ServerLevel level, BlockPos pos, BlockState state) {
-        level.setBlock(pos, state.setValue(BlockStateProperties.POWERED, true), 3);
+        level.setBlock(pos, state.setValue(BlockStateProperties.POWERED, true), Block.UPDATE_ALL);
         level.updateNeighborsAt(pos, state.getBlock());
         level.updateNeighborsAt(pos.below(), state.getBlock());
-        level.scheduleTick(pos, state.getBlock(), 20);
+        Config.Section config = Config.event("pressure_plate");
+        Config.Tone tone = config.tone("sound");
+        level.scheduleTick(pos, state.getBlock(), config.integer("release_ticks"));
         level.playSound(null, pos,
             state.is(BlockTags.STONE_PRESSURE_PLATES) ? SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON : SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON,
-            SoundSource.BLOCKS);
+            SoundSource.BLOCKS, tone.volume(), tone.pitch());
         level.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
     }
 
-    /** Six toggles, one a second; each step reads the door afresh, so a door broken or moved meanwhile is left alone. */
+    /** A run of toggles at a slow rhythm; each step reads the door afresh, so a door broken or moved meanwhile is left alone. */
     private static void breathe(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, RADIUS, Mechanisms::woodenDoor);
+        BlockPos pos = Nearby.random(player, "breathing_door", Mechanisms::woodenDoor);
         if (pos == null) {
             return;
         }
-        Scheduler.repeat(player, 0, 20, (p, n) -> {
+        Config.Section config = Config.event("breathing_door");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
             ServerLevel level = p.level();
             BlockState state = level.getBlockState(pos);
             if (!woodenDoor(state)) {
@@ -176,47 +176,49 @@ final class Mechanisms {
             }
             DoorBlock door = (DoorBlock) state.getBlock();
             door.setOpen(null, level, state, pos, !door.isOpen(state));
-            return n < 5;
+            return n + 1 < config.integer("toggles");
         });
     }
 
     private static void clickLid(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, 10, Mechanisms::chest);
+        BlockPos pos = Nearby.random(player, "chest_lid", Mechanisms::chest);
         if (pos == null) {
             return;
         }
         ServerLevel level = player.level();
         lid(level, pos, true);
-        Scheduler.later(player, 12, p -> lid(p.level(), pos, false));
+        Scheduler.later(player, Config.event("chest_lid").integer("close_after_ticks"), p -> lid(p.level(), pos, false));
     }
 
     private static void lid(ServerLevel level, BlockPos pos, boolean open) {
         BlockState state = level.getBlockState(pos);
         if (chest(state)) {
             level.blockEvent(pos, state.getBlock(), 1, open ? 1 : 0);
-            level.playSound(null, pos, open ? SoundEvents.CHEST_OPEN : SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, 0.8F, 0.9F);
+            Config.Tone tone = Config.event("chest_lid").tone("sound");
+            level.playSound(null, pos, open ? SoundEvents.CHEST_OPEN : SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
         }
     }
 
     private static void openBarrel(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, 10, Mechanisms::closedBarrel);
+        BlockPos pos = Nearby.random(player, "barrel_opens", Mechanisms::closedBarrel);
         if (pos == null) {
             return;
         }
         setBarrel(player.level(), pos, true);
-        Scheduler.later(player, 30, p -> setBarrel(p.level(), pos, false));
+        Scheduler.later(player, Config.event("barrel_opens").integer("close_after_ticks"), p -> setBarrel(p.level(), pos, false));
     }
 
     private static void setBarrel(ServerLevel level, BlockPos pos, boolean open) {
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() instanceof BarrelBlock && state.getValue(BarrelBlock.OPEN) != open) {
             level.setBlockAndUpdate(pos, state.setValue(BarrelBlock.OPEN, open));
-            level.playSound(null, pos, open ? SoundEvents.BARREL_OPEN : SoundEvents.BARREL_CLOSE, SoundSource.BLOCKS, 0.8F, 0.9F);
+            Config.Tone tone = Config.event("barrel_opens").tone("sound");
+            level.playSound(null, pos, open ? SoundEvents.BARREL_OPEN : SoundEvents.BARREL_CLOSE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
         }
     }
 
     private static void lockDoor(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, RADIUS, Mechanisms::lockableDoor);
+        BlockPos pos = Nearby.random(player, "locked_door", Mechanisms::lockableDoor);
         if (pos == null) {
             return;
         }
@@ -226,35 +228,9 @@ final class Mechanisms {
         if (door.isOpen(state)) {
             door.setOpen(null, level, state, pos, false);
         }
-        level.playSound(null, pos, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.BLOCKS, 1.0F, 0.7F);
-        DoorLocks.lock(level, pos, 200);
-    }
-
-    /** The piston is powered by a redstone block beside it. Afterwards each piece is removed only if it is still what was put there. */
-    private static void pistonPush(ServerPlayer player) {
-        Place.Piston spot = Place.piston(player);
-        if (spot == null) {
-            return;
-        }
-        ServerLevel level = player.level();
-        Restore.quiet(level, spot.base(), Blocks.PISTON.defaultBlockState().setValue(PistonBaseBlock.FACING, spot.facing()));
-        Restore.quiet(level, spot.block(), Blocks.STONE.defaultBlockState());
-        level.setBlockAndUpdate(spot.power(), Blocks.REDSTONE_BLOCK.defaultBlockState());
-        Restore.after(level, 80, force -> {
-            if (!force && !level.isLoaded(spot.base())) {
-                return false;
-            }
-            clear(level, spot.power(), Blocks.REDSTONE_BLOCK);
-            clear(level, spot.block(), Blocks.PISTON_HEAD);
-            clear(level, spot.target(), Blocks.STONE);
-            clear(level, spot.base(), Blocks.PISTON);
-            return true;
-        });
-    }
-
-    private static void clear(ServerLevel level, BlockPos pos, Block block) {
-        if (level.getBlockState(pos).is(block)) {
-            Restore.quiet(level, pos, Blocks.AIR.defaultBlockState());
-        }
+        Config.Section config = Config.event("locked_door");
+        Config.Tone tone = config.tone("slam_sound");
+        level.playSound(null, pos, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+        DoorLocks.lock(level, pos, config.integer("lock_ticks"));
     }
 }

@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
@@ -27,14 +28,17 @@ public final class ColdTouchEvent implements HauntEvent {
 
     @Override
     public boolean canRun(ServerPlayer player) {
-        return player.getHealth() > 2.0F;
+        return player.getHealth() > Config.event("cold_touch").num("min_health");
     }
 
     @Override
     public void run(ServerPlayer player) {
-        float damage = Math.min(2.0F + player.getRandom().nextInt(3), player.getHealth() - 1.0F);
+        Config.Section config = Config.event("cold_touch");
+        float damage = Math.min(config.integer("damage_min") + player.getRandom().nextInt(config.integer("damage_spread")),
+            player.getHealth() - (float) config.num("keep_health"));
+        Config.Tone tone = config.tone("sound");
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-            SoundEvents.PLAYER_HURT_FREEZE, SoundSource.HOSTILE, 1.0F, 0.6F);
+            SoundEvents.PLAYER_HURT_FREEZE, SoundSource.HOSTILE, tone.volume(), tone.pitch());
         player.hurtServer(player.level(), player.damageSources().magic(), damage);
     }
 }

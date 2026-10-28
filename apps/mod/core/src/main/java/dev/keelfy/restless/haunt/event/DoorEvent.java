@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
@@ -44,6 +45,6 @@ public final class DoorEvent implements HauntEvent {
     }
 
     private static @Nullable BlockPos find(ServerPlayer player) {
-        return Nearby.random(player, 12, s -> s.getBlock() instanceof DoorBlock && DoorBlock.isWoodenDoor(s));
+        return Nearby.random(player, Config.event("door").integer("radius"), s -> s.getBlock() instanceof DoorBlock && DoorBlock.isWoodenDoor(s));
     }
 }

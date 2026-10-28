@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "events": {
+    "cat_hiss": { "weight": 0.6, "radius": 16 },
+    "dog_barks": { "weight": 0.6, "radius": 16 },
+    "animals_stare": { "weight": 0.6, "radius": 16, "min_animals": 2, "stare_ticks": 60, "look_interval_ticks": 2 },
+    "villager_stares": { "weight": 0.6, "radius": 16, "stare_ticks": 100, "look_interval_ticks": 2 },
+    "bats": { "weight": 0.6, "distance": 4.0, "count": 5 },
+    "open_pen": { "weight": 0.6, "radius": 12, "animal_radius": 5, "sound": { "volume": 1.0, "pitch": 0.9 } },
+    "wild_pet": { "weight": 0.6, "radius": 32 },
+    "copycat": { "weight": 0.6, "distance": 3.0 }
+  }
+}

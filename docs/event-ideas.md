@@ -1,7 +1,7 @@
 # Haunt event ideas
 
-Raw backlog of 100 event ideas. All 62 **Easy** and all 29 **Medium** ones are implemented (see the `Idea` column in
-`spirits.md`); only the 9 **Hard** ones are still open. Numbers stay as they are so the difficulty section keeps working.
+Raw backlog of 100 event ideas. All 62 **Easy** and 28 of the 29 **Medium** ones are implemented (see the `Idea` column in
+`spirits.md`); 23 (piston push) was built and dropped as looking wrong. The 9 **Hard** ones are still open. Numbers stay as they are so the difficulty section keeps working.
 
 Tiers: **L** light, **H** harmful, **D** deadly (must be telegraphed so the player can react).
 Tags in parentheses; `*` marks tags that do not exist in code yet.
@@ -33,7 +33,7 @@ Tags in parentheses; `*` marks tags that do not exist in code yet.
 20. H: every door in the house is wide open at night, so mobs can walk in.
 21. L: a chest lid clicks (sound and animation, contents untouched).
 22. L: a barrel opens.
-23. H: a piston pushes a block into the player's position.
+23. H: a piston pushes a block into the player's position. (Built, then dropped: it looked wrong.)
 101. L: the jukebox music is cut off: the playing disc is knocked out.
 
 ## Sounds (SOUND*)
@@ -177,13 +177,13 @@ Infrastructure tags:
 53, 54, 55, 56, 62, 63, 64, 65, 66, 67, 68, 69, 70,
 73, 76, 78, 79, 81, 86, 87, 89, 90, 91, 92, 97, 99.
 
-### Medium (29, all done)
+### Medium (29, 28 done)
 
-3, 5, 10, 19, 23, 52, 59, 71, 72, 74, 75, 77, 80, 82, 83, on top of the 14 that needed only `sched`.
+3, 5, 10, 19, 52, 59, 71, 72, 74, 75, 77, 80, 82, 83, on top of the 14 that needed only `sched`. 23 was dropped.
 
 - `sched`: `haunt/Scheduler.java`.
 - `restore`: `haunt/Restore.java`, undo entries run when due and when the server stops.
-- `place`: `haunt/event/Place.java`: a wall, standing room, a ledge, a flat spot for a plus, room for a piston.
+- `place`: `haunt/event/Place.java`: a wall, standing room, a ledge, a flat spot for a plus.
 - `hook`: `Restless.onUseBlock` plus `haunt/DoorLocks.java`; the NeoForge module forwards `PlayerInteractEvent.RightClickBlock`.
 - `access`: not needed. The furnace's private burn time is zeroed through its own save format (`saveCustomOnly` / `loadCustomOnly`).
 - `map`: not needed. `MapItemSavedData.addTargetDecoration` writes the marker into the item.

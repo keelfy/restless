@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.config.Config;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -31,7 +32,6 @@ public final class Restore {
         }
     }
 
-    private static final int RETRY = 20;
     private static final List<Entry> PENDING = new ArrayList<>();
 
     private Restore() {}
@@ -72,7 +72,7 @@ public final class Restore {
                 if (entry.undo.run(false)) {
                     PENDING.remove(entry);
                 } else {
-                    entry.due = now + RETRY;
+                    entry.due = now + Config.section("restore").integer("retry_ticks");
                 }
             }
         }

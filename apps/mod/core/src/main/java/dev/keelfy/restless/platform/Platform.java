@@ -1,5 +1,6 @@
 package dev.keelfy.restless.platform;
 
+import java.nio.file.Path;
 import java.util.ServiceLoader;
 
 /**
@@ -10,6 +11,9 @@ public interface Platform {
     String loaderName();
 
     boolean isDevelopment();
+
+    /** Directory for user-editable config files. */
+    Path configDir();
 
     static Platform get() {
         return Holder.INSTANCE;

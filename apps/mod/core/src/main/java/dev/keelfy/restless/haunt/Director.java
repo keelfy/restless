@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import java.util.ArrayList;
@@ -14,14 +15,10 @@ import net.minecraft.util.RandomSource;
 
 /** Rolls haunt events for every spirit bound to every player; each spirit runs its own timer. */
 public final class Director {
-    private static final int CHECK_INTERVAL = 20;
-    /** Spirits a player gets on first join. */
-    public static final int DEFAULT_SPIRITS = 3;
-
     private Director() {}
 
     public static void tick(MinecraftServer server) {
-        if (server.getTickCount() % CHECK_INTERVAL != 0) {
+        if (server.getTickCount() % Config.section("director").integer("check_interval_ticks") != 0) {
             return;
         }
         long now = server.overworld().getGameTime();
@@ -46,13 +43,13 @@ public final class Director {
         }
     }
 
-    /** Spirits haunting the player; rolls {@link #DEFAULT_SPIRITS} random ones on first sight. */
+    /** Spirits haunting the player; rolls the configured number of random ones on first sight. */
     public static List<HauntData.Haunting> hauntings(ServerPlayer player, HauntData data, long now) {
         List<HauntData.Haunting> spirits = data.get(player.getUUID());
         if (spirits == null) {
             List<SpiritType> all = Spirits.all();
             List<HauntData.Haunting> rolled = new ArrayList<>();
-            for (int i = 0; i < DEFAULT_SPIRITS; i++) {
+            for (int i = 0, n = Config.section("director").integer("default_spirits"); i < n; i++) {
                 rolled.add(bind(player, all.get(player.getRandom().nextInt(all.size())), now));
             }
             data.put(player.getUUID(), rolled);
@@ -98,7 +95,7 @@ public final class Director {
 
     public static double danger(ServerPlayer player) {
         MinecraftServer server = player.level().getServer();
-        long days = server.overworld().getOverworldClockTime() / 24000L;
+        long days = server.overworld().getOverworldClockTime() / Ticks.DAY;
         return Danger.of(days, advancements(player));
     }
 

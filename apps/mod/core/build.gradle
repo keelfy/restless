@@ -16,6 +16,10 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.13.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Config reads JSON and logs; the vanilla libraries are compile-only for the tests.
+    testImplementation 'com.google.code.gson:gson:2.14.0'
+    testRuntimeOnly 'org.slf4j:slf4j-api:2.0.17'
+    testRuntimeOnly 'com.mojang:logging:1.7.12'
 }
 
 test {

@@ -10,6 +10,7 @@ import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
+import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import java.util.List;
@@ -60,11 +61,11 @@ public final class HauntCommand {
     private static int info(CommandSourceStack source, ServerPlayer player) {
         long now = source.getServer().overworld().getGameTime();
         List<HauntData.Haunting> spirits = Director.hauntings(player, HauntData.get(source.getServer()), now);
-        long days = source.getServer().overworld().getOverworldClockTime() / 24000L;
+        long days = source.getServer().overworld().getOverworldClockTime() / Ticks.DAY;
         StringBuilder list = new StringBuilder();
         for (int i = 0; i < spirits.size(); i++) {
             HauntData.Haunting h = spirits.get(i);
-            list.append(String.format(Locale.ROOT, "%n  %d. %s next=%ds", i + 1, h.spirit(), Math.max(0, (h.nextEventAt() - now) / 20)));
+            list.append(String.format(Locale.ROOT, "%n  %d. %s next=%ds", i + 1, h.spirit(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND)));
         }
         String text = String.format(Locale.ROOT, "%s: danger=%.2f days=%d advancements=%d spirits=%d%s",
             player.getName().getString(), Director.danger(player), days, Director.advancements(player), spirits.size(), list);

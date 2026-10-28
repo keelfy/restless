@@ -2,11 +2,11 @@
 
 Reference for the current content. Source of truth is the code:
 `spirit/Spirits.java`, `haunt/HauntEvents.java`, `haunt/event/*`, `haunt/Danger.java`, `haunt/Director.java`, `haunt/Scheduler.java`.
-Update this file when any of them changes.
+Update this file when any of them changes. The numbers below are the shipped defaults; see [Config](#config).
 
 ## How it works
 
-- Each player gets 3 spirits (`Director.DEFAULT_SPIRITS`) on first check, each chosen uniformly at random
+- Each player gets 3 spirits (`director.default_spirits`) on first check, each chosen uniformly at random
   (repeats allowed), and keeps them. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`.
 - Every spirit has its own cooldown. When it expires, the Director picks one event for that player using that spirit's
   affinities and schedules the spirit's next one. More spirits means proportionally more events.
@@ -72,8 +72,7 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `chest_lid` | 21 | LIGHT | DOORS | 0.7 | A chest or trapped chest within 10 | Lid opens and closes with sound, contents untouched |
 | `barrel_opens` | 22 | LIGHT | DOORS | 0.7 | A closed barrel within 10 | Opens for 1.5 s, then closes |
 | `jukebox_pop` | 101 | LIGHT | DOORS | 0.7 | A jukebox within 20 is playing a disc | The music cuts out and the disc pops out of it |
-| `locked_door` | 19 | HARMFUL | DOORS | 0.7 | A wooden door within 12 | Slams shut with a thud and cannot be opened for 10 s (a right click gets the locked-chest sound) |
-| `piston_push` | 23 | HARMFUL | DOORS | 0.6 | Free room in a line behind the player for a piston, a block and a redstone block, and dry standing room one block ahead | A powered piston shoves a stone block into the player's spot, pushing them a block; all of it is removed after 4 s |
+| `locked_door` | 19 | HARMFUL | DOORS | 0.7 | A wooden door within 12 | Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back |
 | `footsteps` | 24 | LIGHT | SOUND | 0.4 | Always | A step sound 2 blocks behind the player |
 | `creeper_hiss` | 25 | LIGHT | SOUND | 0.4 | Always | Creeper fuse hiss nearby |
 | `three_knocks` | 26 | LIGHT | SOUND | 0.4 | Always | Three knocks, on the nearest wooden door within 12 or else from nowhere nearby |
@@ -123,12 +122,12 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `wilted_flowers` | 72 | LIGHT | BLOCKS | 0.6 | A potted flower within 10 | Every one becomes a potted dead bush; restored after 2 min |
 | `withering_crops` | 73 | LIGHT | BLOCKS | 0.6 | A grown crop within 6 | Every crop within 6 loses one growth stage |
 | `turning_frame` | 76 | LIGHT | BLOCKS | 0.6 | A filled item frame within 12 | Rotates its item |
-| `new_sign` | 74 | LIGHT | BLOCKS | 0.6 | A sign within 10 | The front text becomes one creepy line; restored after 1 min unless the player has edited it |
+| `new_sign` | 74 | LIGHT | BLOCKS | 0.6 | A sign within 10 | The front text becomes one creepy phrase of up to three short lines (at most eight letters each, so it fits a hanging sign); restored after 1 min unless the player has edited it |
 | `new_painting` | 75 | LIGHT | BLOCKS | 0.6 | A painting within 12 with another variant of the same size | Becomes another painting; restored after 1 min |
 | `glass_wall` | 77 | LIGHT | BLOCKS | 0.6 | Not peaceful; a one-block wall 2–6 blocks away with standing room behind it | The wall's two blocks in front of the player become glass for 4 s; a silent, motionless husk stands behind them facing the player |
 | `dry_cauldron` | 78 | LIGHT | BLOCKS | 0.6 | A water cauldron within 10 | Empties it |
-| `dead_ground` | 79 | LIGHT | BLOCKS | 0.6 | Player on grass | Grass in a 3-block radius becomes dirt |
-| `shifting_floor` | 80 | HARMFUL | BLOCKS | 0.5 | On the ground; at least two blocks of the 3×3 floor under the player rest on solid blocks | The floor becomes sand or gravel for 1.5 s. It cannot fall, so it only looks and sounds wrong |
+| `dead_ground` | 79 | LIGHT | BLOCKS | 0.6 | Player on grass | A ragged patch of grass (radius 3, dense in the middle, sparse at the edge) becomes dirt or coarse dirt |
+| `shifting_floor` | 80 | HARMFUL | BLOCKS | 0.5 | On the ground, and the block under the player has a variant (see below) | A ragged patch of the floor (radius 2, a handful of blocks, always the one underfoot) turns into another kind of the same material for 1.5 s |
 | `broken_bed` | 81 | HARMFUL | BLOCKS | 0.6 | A bed within 16 | Breaks it; it drops as an item |
 | `wall_hole` | 82 | HARMFUL | BLOCKS | 0.6 | A one-block wall 2–6 blocks away with standing room behind it | Two blocks vanish for 30 s, no drops |
 | `cross` | 83 | LIGHT | BLOCKS | 0.6 | Room for a plus of five free blocks on solid ground 3–6 blocks away | A plus of bone blocks for 1 min |
@@ -153,11 +152,11 @@ so a spirit near no doors never rolls a door). Computed from the weights above.
 | Spirit | Danger | Lights | Doors | Sound | Affliction | Assault | Items | Blocks | Mobs | Presence |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `poltergeist` | 0 | 11.0% | 49.1% | 4.6% | 3.1% | 0% | 13.8% | 12.4% | 4.6% | 1.4% |
-|  | 0.5 | 9.6% | 45.4% | 3.6% | 4.0% | 2.8% | 16.2% | 12.0% | 5.2% | 1.3% |
-|  | 1 | 7.4% | 39.9% | 2.0% | 5.4% | 6.9% | 19.7% | 11.3% | 6.1% | 1.2% |
+|  | 0.5 | 9.8% | 44.1% | 3.6% | 4.1% | 2.9% | 16.6% | 12.2% | 5.3% | 1.3% |
+|  | 1 | 7.8% | 36.4% | 2.2% | 5.8% | 7.3% | 20.9% | 11.9% | 6.5% | 1.2% |
 | `shade` | 0 | 35.7% | 4.0% | 24.8% | 13.2% | 0% | 2.5% | 8.9% | 5.0% | 6.0% |
-|  | 0.5 | 31.0% | 3.7% | 19.2% | 17.4% | 6.0% | 2.9% | 8.6% | 5.6% | 5.6% |
-|  | 1 | 23.9% | 3.2% | 11.0% | 23.5% | 14.9% | 3.5% | 8.1% | 6.6% | 5.1% |
+|  | 0.5 | 31.0% | 3.5% | 19.3% | 17.4% | 6.0% | 2.9% | 8.6% | 5.6% | 5.6% |
+|  | 1 | 24.0% | 2.8% | 11.1% | 23.6% | 15.0% | 3.6% | 8.2% | 6.6% | 5.1% |
 
 Cooldown per spirit, minutes (before the daylight factor): `(4 − 2.5 × danger) × (1 + roll) / activity`. Poltergeist: 3.1–6.2 at danger 0, 1.2–2.3 at 1.
 Shade: 5.0–10.0 at danger 0, 1.9–3.8 at 1.
@@ -171,13 +170,44 @@ the player dies, leaves or the world closes, so no step may leave something brok
 
 ## Restoring and locks
 
+Block changes that must not damage a build (`dead_ground`, `shifting_floor`) only swap a block for another kind of
+the same material (`haunt/event/Variants.java`): grass to dirt or coarse dirt, dirt to coarse dirt or podzol, stone to
+andesite, granite or diorite, cobblestone to mossy, stone and deepslate bricks to cracked or mossy, deepslate to
+cobbled. Anything else is left alone. The patch is a scatter (`Place.patch`), not a disc.
+
 - `haunt/Restore.java`: changes that swap a block or an entity (flowers, sign, painting, glass, hole, floor, cross,
-  piston, lantern, furnace fuel) register an undo that runs when due and checks that the thing is still what the
+  lantern, furnace fuel) register an undo that runs when due and checks that the thing is still what the
   event left, so a block the player has since changed is not overwritten. Block swaps skip neighbour updates (nothing
   attached pops off) and are retried until the chunk is loaded. Everything still pending is undone when the server
   stops (`Restless.onServerStopping`). After a crash the changes stay. Not covered: `map_marker` is permanent.
-- `haunt/DoorLocks.java`: doors locked by `locked_door`, in memory. `Restless.onUseBlock` cancels the right click;
-  the loader forwards its block-interaction event to it.
+- `haunt/DoorLocks.java`: doors locked by `locked_door`, in memory. `Restless.onUseBlock` cancels the right click on
+  both sides; the loader forwards its block-interaction event to it. The server sends `DoorLockPayload` to clients
+  within 64 blocks, which the loader registers and hands to `DoorLocks.put`. A client that joins or walks up later
+  than the lock does not know it and sees the server undo its open attempt.
+
+## Config
+
+Every tunable value lives in `core/src/main/resources/restless-config/`, split into files that are slices of one tree:
+
+| File | Holds |
+|---|---|
+| `haunt.json` | `director`, `danger`, `restore`, `place` |
+| `spirits.json` | `spirits` (activity, tag affinities) |
+| `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
+
+An event holds its weight, radii, durations, damage, thresholds and texts, plus its sound (`sound`: `volume`, `pitch`;
+extra ones are named like `pulse_sound`) and particles (`particles`: `count`, `dx`, `dy`, `dz`, `speed`, `offset_y`).
+Only fixed units stay in code (ticks per second, 360 degrees, inventory size, sign lines).
+
+On first run each file is copied to `config/restless/`. They are read once at startup (restart to apply a change), and
+only the keys a file sets override the defaults. A key the code reads but the defaults lack, a default the code never
+reads, or a key defined in two files fails the build (`ConfigTest`).
+
+Versions: every file starts with `"version": N`. A file with no version counts as 1. When a release renames, moves or
+drops a key it bumps N by adding a step to `config/Migrations.java` (`Migrations.move` and `remove` help); on startup an
+older file is walked through the steps it has not seen, the old copy is kept as `<name>.json.v<N>.bak`, and the migrated
+file is written back complete. A new key needs no step, it comes from the defaults. A file with a newer version than
+the mod, or one that is not valid JSON, is logged and ignored (the defaults run) and never overwritten.
 
 ## Admin command
 

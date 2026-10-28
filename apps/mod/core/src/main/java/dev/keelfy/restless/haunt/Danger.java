@@ -1,26 +1,24 @@
 package dev.keelfy.restless.haunt;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.spirit.SpiritType;
 import java.util.Set;
 
 /** Pure progression math: no Minecraft types, so it is unit-testable. */
 public final class Danger {
-    static final double DAYS_TO_MAX = 40;
-    static final double ADVANCEMENTS_TO_MAX = 40;
-    static final double DAYLIGHT_STEP = 1.2;
-
     private Danger() {}
 
-    /** 0 on a fresh world, 1 at ~40 days and ~40 advancements. */
+    /** 0 on a fresh world, 1 once the configured days and advancements are reached. */
     public static double of(long days, int advancements) {
-        double byDays = Math.min(days / DAYS_TO_MAX, 1.0);
-        double byAdvancements = Math.min(advancements / ADVANCEMENTS_TO_MAX, 1.0);
-        return 0.6 * byDays + 0.4 * byAdvancements;
+        Config.Section config = Config.section("danger");
+        double byDays = Math.min(days / config.num("days_to_max"), 1.0);
+        double byAdvancements = Math.min(advancements / config.num("advancements_to_max"), 1.0);
+        return config.num("days_share") * byDays + config.num("advancements_share") * byAdvancements;
     }
 
     public static double tierFactor(HauntTier tier, double danger) {
         return switch (tier) {
-            case LIGHT -> 1.0 - 0.7 * danger;
+            case LIGHT -> 1.0 - Config.section("danger").num("light_penalty") * danger;
             case HARMFUL -> danger;
         };
     }
@@ -33,23 +31,25 @@ public final class Danger {
         return weight;
     }
 
-    /** Spirits are quieter in the open: each of day, open sky and no thunderstorm stretches the cooldown by 1.2. */
+    /** Spirits are quieter in the open: each of day, open sky and no thunderstorm stretches the cooldown by the daylight step. */
     public static double daylightFactor(boolean day, boolean seesSky, boolean noThunder) {
+        double step = Config.section("danger").num("daylight_step");
         double factor = 1.0;
         for (boolean calm : new boolean[] {day, seesSky, noThunder}) {
             if (calm) {
-                factor *= DAYLIGHT_STEP;
+                factor *= step;
             }
         }
         return factor;
     }
 
     /**
-     * Ticks until the next event: 4-8 min when calm, 1.5-3 min at max danger, scaled by spirit activity
-     * and stretched by {@code quiet} (see {@link #daylightFactor}).
+     * Ticks until the next event: the calm cooldown shrinks with danger, a roll stretches it up to twofold, then it is scaled
+     * by spirit activity and stretched by {@code quiet} (see {@link #daylightFactor}).
      */
     public static long cooldownTicks(double danger, double activity, double roll, double quiet) {
-        double minutes = (4.0 - 2.5 * danger) * (1.0 + roll) * quiet;
-        return Math.max(20, (long) (minutes * 60 * 20 / activity));
+        Config.Section config = Config.section("danger");
+        double minutes = (config.num("cooldown_calm_minutes") - config.num("cooldown_drop_minutes") * danger) * (1.0 + roll) * quiet;
+        return Math.max(config.integer("min_cooldown_ticks"), (long) (minutes * Ticks.MINUTE / activity));
     }
 }

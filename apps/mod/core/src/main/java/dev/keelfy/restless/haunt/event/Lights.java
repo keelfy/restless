@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
@@ -35,87 +36,89 @@ import net.minecraft.world.level.storage.TagValueInput;
 
 /** Fire and light sources misbehaving. The older {@code extinguish_light} event lives in its own class. */
 final class Lights {
-    private static final int RADIUS = 10;
-    private static final int BLACKOUT_RADIUS = 16;
-
     private Lights() {}
 
     static List<HauntEvent> all() {
         return List.of(
             // 1
-            SimpleEvent.light("candles_out", EventTag.LIGHTS, 0.8,
-                player -> Nearby.any(player, RADIUS, AbstractCandleBlock::isLit),
+            SimpleEvent.light("candles_out", EventTag.LIGHTS,
+                player -> Nearby.any(player, "candles_out", AbstractCandleBlock::isLit),
                 player -> {
                     ServerLevel level = player.level();
-                    for (BlockPos pos : Nearby.all(player, RADIUS, AbstractCandleBlock::isLit)) {
+                    for (BlockPos pos : Nearby.all(player, "candles_out", AbstractCandleBlock::isLit)) {
                         AbstractCandleBlock.extinguish(null, level.getBlockState(pos), level, pos);
                     }
                 }),
             // 2: the torches go out one by one, the nearest last
-            SimpleEvent.light("torch_chain", EventTag.LIGHTS, 0.8,
-                player -> Nearby.any(player, RADIUS, Lights::isTorch), Lights::torchChain),
+            SimpleEvent.light("torch_chain", EventTag.LIGHTS,
+                player -> Nearby.any(player, "torch_chain", Lights::isTorch), Lights::torchChain),
             // 3: gone and back a few times; Restore finishes it if the player is gone before the last step
-            SimpleEvent.light("lantern_flicker", EventTag.LIGHTS, 0.8,
-                player -> Nearby.any(player, RADIUS, Lights::isLantern), Lights::flicker),
+            SimpleEvent.light("lantern_flicker", EventTag.LIGHTS,
+                player -> Nearby.any(player, "lantern_flicker", Lights::isLantern), Lights::flicker),
             // 4: back on after a second
-            SimpleEvent.light("lamp_off", EventTag.LIGHTS, 0.8,
-                player -> Nearby.any(player, RADIUS, Lights::litLamp), Lights::lampOff),
+            SimpleEvent.light("lamp_off", EventTag.LIGHTS,
+                player -> Nearby.any(player, "lamp_off", Lights::litLamp), Lights::lampOff),
             // 6
-            SimpleEvent.light("campfire_out", EventTag.LIGHTS, 0.8,
-                player -> Nearby.any(player, RADIUS, CampfireBlock::isLitCampfire),
+            SimpleEvent.light("campfire_out", EventTag.LIGHTS,
+                player -> Nearby.any(player, "campfire_out", CampfireBlock::isLitCampfire),
                 player -> {
-                    BlockPos pos = Nearby.random(player, RADIUS, CampfireBlock::isLitCampfire);
+                    BlockPos pos = Nearby.random(player, "campfire_out", CampfireBlock::isLitCampfire);
                     if (pos != null) {
                         ServerLevel level = player.level();
                         BlockState state = level.getBlockState(pos);
                         level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, false));
-                        level.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        Config.Tone tone = Config.event("campfire_out").tone("sound");
+                        level.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
                     }
                 }),
             // 5: the fuel is taken away for a while, or the furnace would relight at once
-            SimpleEvent.light("furnace_dies", EventTag.LIGHTS, 0.8,
+            SimpleEvent.light("furnace_dies", EventTag.LIGHTS,
                 player -> !fueled(player).isEmpty(), Lights::douse),
             // 8
-            SimpleEvent.light("candles_light", EventTag.LIGHTS, 0.8,
-                player -> Nearby.any(player, RADIUS, CandleBlock::canLight),
+            SimpleEvent.light("candles_light", EventTag.LIGHTS,
+                player -> Nearby.any(player, "candles_light", CandleBlock::canLight),
                 player -> {
-                    BlockPos pos = Nearby.random(player, RADIUS, CandleBlock::canLight);
+                    BlockPos pos = Nearby.random(player, "candles_light", CandleBlock::canLight);
                     if (pos != null) {
                         ServerLevel level = player.level();
-                        level.setBlock(pos, level.getBlockState(pos).setValue(BlockStateProperties.LIT, true), 11);
-                        level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.6F, 1.2F);
+                        level.setBlock(pos, level.getBlockState(pos).setValue(BlockStateProperties.LIT, true), Block.UPDATE_ALL_IMMEDIATE);
+                        Config.Tone tone = Config.event("candles_light").tone("sound");
+                        level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
                     }
                 }),
             // 9
-            SimpleEvent.light("new_face", EventTag.LIGHTS, 0.6,
-                player -> Nearby.any(player, RADIUS, s -> s.is(Blocks.JACK_O_LANTERN)),
+            SimpleEvent.light("new_face", EventTag.LIGHTS,
+                player -> Nearby.any(player, "new_face", s -> s.is(Blocks.JACK_O_LANTERN)),
                 player -> {
-                    BlockPos pos = Nearby.random(player, RADIUS, s -> s.is(Blocks.JACK_O_LANTERN));
+                    BlockPos pos = Nearby.random(player, "new_face", s -> s.is(Blocks.JACK_O_LANTERN));
                     if (pos != null) {
                         ServerLevel level = player.level();
                         BlockState state = level.getBlockState(pos);
                         Direction now = state.getValue(CarvedPumpkinBlock.FACING);
                         Direction next = Direction.Plane.HORIZONTAL.stream().filter(d -> d != now).skip(player.getRandom().nextInt(3)).findFirst().orElse(now);
                         level.setBlockAndUpdate(pos, state.setValue(CarvedPumpkinBlock.FACING, next));
-                        level.playSound(null, pos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 0.7F);
+                        Config.Tone tone = Config.event("new_face").tone("sound");
+                        level.playSound(null, pos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
                     }
                 }),
             // 10
-            SimpleEvent.harmful("blackout", EventTag.LIGHTS, 0.5,
+            SimpleEvent.harmful("blackout", EventTag.LIGHTS,
                 player -> player.level().getDifficulty() != Difficulty.PEACEFUL
                     && !(player.level().isBrightOutside() && player.level().canSeeSky(player.blockPosition()))
-                    && Nearby.any(player, BLACKOUT_RADIUS, Lights::isLight)
-                    && Place.spawnSpot(player, 5, 9) != null,
+                    && Nearby.any(player, "blackout", Lights::isLight)
+                    && Place.spawnSpot(player, spawnMin(), spawnMax()) != null,
                 Lights::blackout),
             // 11
-            SimpleEvent.harmful("burning_hand", EventTag.LIGHTS, 0.6, player -> isHot(player.getMainHandItem()), player -> {
+            SimpleEvent.harmful("burning_hand", EventTag.LIGHTS, player -> isHot(player.getMainHandItem()), player -> {
+                Config.Section config = Config.event("burning_hand");
+                Config.Tone tone = config.tone("sound");
                 ItemStack held = player.getMainHandItem().copy();
                 player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-                ItemEntity item = new ItemEntity(player.level(), player.getX(), player.getEyeY() - 0.3, player.getZ(), held, 0, 0.15, 0);
+                ItemEntity item = new ItemEntity(player.level(), player.getX(), player.getEyeY() - config.num("eye_drop"), player.getZ(), held, 0, config.num("lift"), 0);
                 item.setDefaultPickUpDelay();
                 player.level().addFreshEntity(item);
                 player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.HOSTILE, 0.8F, 1.0F);
+                    SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.HOSTILE, tone.volume(), tone.pitch());
             })
         );
     }
@@ -133,36 +136,40 @@ final class Lights {
     }
 
     private static void torchChain(ServerPlayer player) {
-        List<BlockPos> torches = Nearby.all(player, RADIUS, Lights::isTorch).stream()
+        List<BlockPos> torches = Nearby.all(player, "torch_chain", Lights::isTorch).stream()
             .sorted(Comparator.comparingDouble((BlockPos pos) -> pos.distToCenterSqr(player.position())).reversed())
             .toList();
         if (torches.isEmpty()) {
             return;
         }
-        Scheduler.repeat(player, 0, 6, (p, n) -> {
+        Config.Section config = Config.event("torch_chain");
+        Config.Tone tone = config.tone("sound");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
             ServerLevel level = p.level();
             BlockPos pos = torches.get(n);
             if (isTorch(level.getBlockState(pos))) {
                 level.destroyBlock(pos, true);
-                level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1.4F);
+                level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, tone.volume(), tone.pitch());
             }
-            return n + 1 < Math.min(torches.size(), 8);
+            return n + 1 < Math.min(torches.size(), config.integer("max_torches"));
         });
     }
 
     /** The lamp is lit again afterwards only if it is still powered; a lamp left off then is simply a lamp with no power. */
     private static void lampOff(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, RADIUS, Lights::litLamp);
+        BlockPos pos = Nearby.random(player, "lamp_off", Lights::litLamp);
         if (pos == null) {
             return;
         }
         ServerLevel level = player.level();
-        level.setBlock(pos, level.getBlockState(pos).setValue(BlockStateProperties.LIT, false), 3);
-        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.4F, 1.6F);
-        Scheduler.later(player, 20, p -> {
+        level.setBlock(pos, level.getBlockState(pos).setValue(BlockStateProperties.LIT, false), Block.UPDATE_ALL);
+        Config.Section config = Config.event("lamp_off");
+        Config.Tone tone = config.tone("sound");
+        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+        Scheduler.later(player, config.integer("relight_ticks"), p -> {
             BlockState state = p.level().getBlockState(pos);
             if (state.is(Blocks.REDSTONE_LAMP) && !state.getValue(BlockStateProperties.LIT) && p.level().hasNeighborSignal(pos)) {
-                p.level().setBlock(pos, state.setValue(BlockStateProperties.LIT, true), 3);
+                p.level().setBlock(pos, state.setValue(BlockStateProperties.LIT, true), Block.UPDATE_ALL);
             }
         });
     }
@@ -176,13 +183,16 @@ final class Lights {
     }
 
     private static void flicker(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, RADIUS, Lights::isLantern);
+        BlockPos pos = Nearby.random(player, "lantern_flicker", Lights::isLantern);
         if (pos == null) {
             return;
         }
+        Config.Section config = Config.event("lantern_flicker");
+        Config.Tone off = config.tone("off_sound");
+        Config.Tone on = config.tone("on_sound");
         ServerLevel level = player.level();
         BlockState lantern = level.getBlockState(pos);
-        Restore.after(level, 60, force -> {
+        Restore.after(level, config.integer("restore_ticks"), force -> {
             if (!force && !level.isLoaded(pos)) {
                 return false;
             }
@@ -192,22 +202,22 @@ final class Lights {
             return true;
         });
         // Out on even steps, back on odd ones; each step reads the world afresh, so a lantern the player replaced is left alone.
-        Scheduler.repeat(player, 0, 4, (p, n) -> {
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
             ServerLevel here = p.level();
             if (n % 2 == 0 && here.getBlockState(pos) == lantern) {
                 Restore.quiet(here, pos, Blocks.AIR.defaultBlockState());
-                here.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3F, 1.8F);
+                here.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, off.volume(), off.pitch());
             } else if (n % 2 == 1 && here.isEmptyBlock(pos)) {
                 Restore.quiet(here, pos, lantern);
-                here.playSound(null, pos, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, 0.6F, 1.0F);
+                here.playSound(null, pos, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, on.volume(), on.pitch());
             }
-            return n < 5;
+            return n + 1 < config.integer("steps");
         });
     }
 
     /** Burning furnaces, blast furnaces and smokers that still have fuel in the fuel slot. */
     private static List<BlockPos> fueled(ServerPlayer player) {
-        return Nearby.all(player, RADIUS, s -> s.getBlock() instanceof AbstractFurnaceBlock && s.getValue(BlockStateProperties.LIT)).stream()
+        return Nearby.all(player, "furnace_dies", s -> s.getBlock() instanceof AbstractFurnaceBlock && s.getValue(BlockStateProperties.LIT)).stream()
             .filter(pos -> player.level().getBlockEntity(pos) instanceof AbstractFurnaceBlockEntity furnace && !furnace.getItem(1).isEmpty())
             .toList();
     }
@@ -230,8 +240,10 @@ final class Lights {
         furnace.loadCustomOnly(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), data));
         furnace.setItem(1, ItemStack.EMPTY);
         level.setBlock(pos, level.getBlockState(pos).setValue(BlockStateProperties.LIT, false), Block.UPDATE_ALL);
-        level.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.8F, 0.8F);
-        Restore.after(level, 100, force -> {
+        Config.Section config = Config.event("furnace_dies");
+        Config.Tone tone = config.tone("sound");
+        level.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+        Restore.after(level, config.integer("return_ticks"), force -> {
             if (!force && !level.isLoaded(pos)) {
                 return false;
             }
@@ -244,10 +256,18 @@ final class Lights {
         });
     }
 
-    /** Every light within 16 blocks goes out; a moment later something hostile steps out of the dark. */
+    private static int spawnMin() {
+        return Config.event("blackout").integer("spawn_min");
+    }
+
+    private static int spawnMax() {
+        return Config.event("blackout").integer("spawn_max");
+    }
+
+    /** Every light in range goes out; a moment later something hostile steps out of the dark. */
     private static void blackout(ServerPlayer player) {
         ServerLevel level = player.level();
-        for (BlockPos pos : Nearby.all(player, BLACKOUT_RADIUS, Lights::isLight)) {
+        for (BlockPos pos : Nearby.all(player, "blackout", Lights::isLight)) {
             BlockState state = level.getBlockState(pos);
             if (isTorch(state)) {
                 level.destroyBlock(pos, true);
@@ -259,9 +279,10 @@ final class Lights {
                 level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, false));
             }
         }
-        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, 1.0F, 0.6F);
-        Scheduler.later(player, 15, p -> {
-            BlockPos spot = Place.spawnSpot(p, 5, 9);
+        Config.Tone tone = Config.event("blackout").tone("sound");
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, tone.volume(), tone.pitch());
+        Scheduler.later(player, Config.event("blackout").integer("spawn_delay_ticks"), p -> {
+            BlockPos spot = Place.spawnSpot(p, spawnMin(), spawnMax());
             if (spot == null) {
                 return;
             }

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "events": {
+    "wilted_flowers": { "weight": 0.6, "radius": 10, "restore_ticks": 2400, "sound": { "volume": 0.8, "pitch": 0.5 } },
+    "withering_crops": { "weight": 0.6, "radius": 6 },
+    "turning_frame": { "weight": 0.6, "radius": 12, "min_turns": 1, "turn_spread": 3 },
+    "new_sign": {
+      "weight": 0.6,
+      "radius": 10,
+      "restore_ticks": 1200,
+      "texts": [
+        ["behind", "you"],
+        ["i am", "still", "here"],
+        ["do not", "sleep"],
+        ["leave", "now"],
+        ["you are", "not", "alone"],
+        ["i see", "you"]
+      ]
+    },
+    "new_painting": { "weight": 0.6, "radius": 12, "restore_ticks": 1200 },
+    "glass_wall": { "weight": 0.6, "restore_ticks": 80, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "dry_cauldron": { "weight": 0.6, "radius": 10 },
+    "dead_ground": { "weight": 0.6, "patch_radius": 3, "density": 0.8 },
+    "shifting_floor": { "weight": 0.5, "patch_radius": 2, "density": 0.6, "restore_ticks": 30, "sound": { "volume": 0.6, "pitch": 0.7 } },
+    "broken_bed": { "weight": 0.6, "radius": 16, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "wall_hole": { "weight": 0.6, "restore_ticks": 600, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "cross": { "weight": 0.6, "min_distance": 3, "max_distance": 6, "restore_ticks": 1200, "sound": { "volume": 1.0, "pitch": 0.6 } }
+  }
+}

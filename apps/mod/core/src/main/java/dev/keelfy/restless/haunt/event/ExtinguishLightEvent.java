@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
@@ -48,12 +49,13 @@ public final class ExtinguishLightEvent implements HauntEvent {
             AbstractCandleBlock.extinguish(null, state, level, pos);
         } else {
             level.destroyBlock(pos, true);
-            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1.4F);
+            Config.Tone tone = Config.event("extinguish_light").tone("sound");
+            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, tone.volume(), tone.pitch());
         }
     }
 
     private static @Nullable BlockPos find(ServerPlayer player) {
-        return Nearby.random(player, 10, ExtinguishLightEvent::isLight);
+        return Nearby.random(player, Config.event("extinguish_light").integer("radius"), ExtinguishLightEvent::isLight);
     }
 
     private static boolean isLight(BlockState state) {

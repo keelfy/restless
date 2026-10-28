@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -21,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 
 /** Sounds with no source. Always runnable, never touch the world. */
 final class Sounds {
-    private static final double WEIGHT = 0.4;
+    private static final double BEHIND = 180.0;
     private static final SoundType[] BREAKS = {SoundType.STONE, SoundType.WOOD, SoundType.GLASS, SoundType.GRAVEL};
 
     private Sounds() {}
@@ -30,73 +31,84 @@ final class Sounds {
         return List.of(
             // 24
             sound("footsteps", player -> {
-                Vec3 at = Nearby.around(player, 2.0, 180.0);
+                Config.Section config = Config.event("footsteps");
+                Vec3 at = Nearby.around(player, config.num("distance"), BEHIND);
                 var below = player.level().getBlockState(player.blockPosition().below());
-                Nearby.sound(player, below.getSoundType().getStepSound(), at.with(Direction.Axis.Y, player.getY()), 1.0F, 0.9F);
+                Nearby.sound(player, below.getSoundType().getStepSound(), at.with(Direction.Axis.Y, player.getY()), config.tone("sound"));
             }),
             // 25
-            at("creeper_hiss", SoundEvents.CREEPER_PRIMED, 3.0, 1.0F, 1.0F),
+            at("creeper_hiss", SoundEvents.CREEPER_PRIMED),
             // 26
             sound("three_knocks", player -> knocks(player, knockSpot(player))),
             // 27
-            at("crying_child", SoundEvents.VILLAGER_HURT, 6.0, 1.0F, 1.8F),
+            at("crying_child", SoundEvents.VILLAGER_HURT),
             // 28
             sound("block_breaking", player -> {
+                Config.Section config = Config.event("block_breaking");
                 SoundType type = BREAKS[player.getRandom().nextInt(BREAKS.length)];
-                Nearby.sound(player, type.getBreakSound(), Nearby.randomAround(player, 5.0), 1.0F, 0.8F);
+                Nearby.sound(player, type.getBreakSound(), Nearby.randomAround(player, config.num("distance")), config.tone("sound"));
             }),
             // 29
-            at("eating_behind_wall", SoundEvents.GENERIC_EAT.value(), 3.0, 1.0F, 0.8F),
+            at("eating_behind_wall", SoundEvents.GENERIC_EAT.value()),
             // 30
-            at("enderman_hiss", SoundEvents.ENDERMAN_STARE, 6.0, 0.8F, 0.8F),
+            at("enderman_hiss", SoundEvents.ENDERMAN_STARE),
             // 31
-            at("chest_opens", SoundEvents.CHEST_OPEN, 4.0, 1.0F, 0.9F),
+            at("chest_opens", SoundEvents.CHEST_OPEN),
             // 32: right beside the player, a little louder each time
             sound("breathing", Sounds::breathe),
             // 33: loud enough to carry, so it reads as distant
-            at("distant_bell", SoundEvents.BELL_BLOCK, 40.0, 4.0F, 0.6F),
+            at("distant_bell", SoundEvents.BELL_BLOCK),
             // 34
-            at("phantom_jukebox", SoundEvents.MUSIC_DISC_11.value(), 8.0, 2.0F, 1.0F),
+            at("phantom_jukebox", SoundEvents.MUSIC_DISC_11.value()),
             // 102: the game's own background music cuts out; it resumes on its usual schedule
             sound("music_cut", player -> player.connection.send(new ClientboundStopSoundPacket(null, SoundSource.MUSIC))),
             // 35
             sound("whisper", player -> player.sendSystemMessage(
-                Component.literal("<???> " + player.getName().getString()).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))),
+                Component.literal(Config.event("whisper").text("format").formatted(player.getName().getString()))
+                    .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))),
             // 37
-            at("death_cry", SoundEvents.PLAYER_DEATH, 7.0, 0.8F, 1.0F),
+            at("death_cry", SoundEvents.PLAYER_DEATH),
             // 38
-            at("dripping", SoundEvents.POINTED_DRIPSTONE_DRIP_WATER, 3.0, 1.0F, 1.0F)
+            at("dripping", SoundEvents.POINTED_DRIPSTONE_DRIP_WATER)
         );
     }
 
     /** On the nearest wooden door if there is one, otherwise out of thin air nearby. */
     static Vec3 knockSpot(ServerPlayer player) {
-        BlockPos door = Nearby.all(player, 12, s -> s.getBlock() instanceof DoorBlock && DoorBlock.isWoodenDoor(s)).stream()
+        Config.Section config = Config.event("three_knocks");
+        BlockPos door = Nearby.all(player, config.integer("radius"), s -> s.getBlock() instanceof DoorBlock && DoorBlock.isWoodenDoor(s)).stream()
             .min(Comparator.comparingDouble(pos -> pos.distToCenterSqr(player.position())))
             .orElse(null);
-        return door != null ? Vec3.atCenterOf(door) : Nearby.randomAround(player, 3.0);
+        return door != null ? Vec3.atCenterOf(door) : Nearby.randomAround(player, config.num("fallback_distance"));
     }
 
     static void knocks(ServerPlayer player, Vec3 at) {
-        Scheduler.repeat(player, 0, 10, (p, n) -> {
-            Nearby.sound(p, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, at, 1.0F, 0.6F);
-            return n < 2;
+        Config.Section config = Config.event("three_knocks");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            Nearby.sound(p, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, at, config.tone("sound"));
+            return n + 1 < config.integer("knocks");
         });
     }
 
     private static void breathe(ServerPlayer player) {
-        double yaw = player.getRandom().nextDouble() * 360.0;
-        Scheduler.repeat(player, 0, 25, (p, n) -> {
-            Nearby.sound(p, SoundEvents.PLAYER_BREATH, Nearby.around(p, 1.0, yaw), 0.2F + 0.2F * n, 0.7F);
-            return n < 4;
+        Config.Section config = Config.event("breathing");
+        double yaw = player.getRandom().nextDouble() * Nearby.FULL_TURN;
+        Config.Tone start = config.tone("sound");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            Nearby.sound(p, SoundEvents.PLAYER_BREATH, Nearby.around(p, config.num("distance"), yaw),
+                new Config.Tone(start.volume() + (float) config.num("volume_step") * n, start.pitch()));
+            return n + 1 < config.integer("breaths");
         });
     }
 
     private static HauntEvent sound(String id, Consumer<ServerPlayer> action) {
-        return SimpleEvent.light(id, EventTag.SOUND, WEIGHT, player -> true, action);
+        return SimpleEvent.light(id, EventTag.SOUND, player -> true, action);
     }
 
-    private static HauntEvent at(String id, SoundEvent sound, double distance, float volume, float pitch) {
-        return sound(id, player -> Nearby.sound(player, sound, Nearby.randomAround(player, distance), volume, pitch));
+    private static HauntEvent at(String id, SoundEvent sound) {
+        return sound(id, player -> {
+            Config.Section config = Config.event(id);
+            Nearby.sound(player, sound, Nearby.randomAround(player, config.num("distance")), config.tone("sound"));
+        });
     }
 }

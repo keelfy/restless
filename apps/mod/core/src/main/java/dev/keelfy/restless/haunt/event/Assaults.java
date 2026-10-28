@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -24,97 +25,115 @@ import net.minecraft.world.phys.Vec3;
 
 /** Direct physical harm. Every event leaves the player alive; lethal ones need a telegraph and come later. */
 final class Assaults {
-    /** Telegraphed events stop hurting once the player is down to this much health (3 hearts). */
-    private static final float SAFE_HEALTH = 6.0F;
-
     private Assaults() {}
 
     static List<HauntEvent> all() {
         return List.of(
-            // 53: freeze the legs for a second
-            SimpleEvent.harmful("trip", EventTag.ASSAULT, 0.7, player -> !player.hasEffect(MobEffects.SLOWNESS), player -> {
-                player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 20, 6), null);
+            // 53: freeze the legs for a moment
+            SimpleEvent.harmful("trip", EventTag.ASSAULT, player -> !player.hasEffect(MobEffects.SLOWNESS), player -> {
+                Config.Section config = Config.event("trip");
+                player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, config.integer("ticks"), config.integer("amplifier")), null);
                 player.setDeltaMovement(0, player.getDeltaMovement().y, 0);
                 player.connection.send(new ClientboundSetEntityMotionPacket(player));
+                Config.Tone tone = config.tone("sound");
                 player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.PLAYER_SMALL_FALL, SoundSource.HOSTILE, 1.0F, 0.7F);
+                    SoundEvents.PLAYER_SMALL_FALL, SoundSource.HOSTILE, tone.volume(), tone.pitch());
             }),
             // 54
-            SimpleEvent.harmful("scorch", EventTag.ASSAULT, 0.6,
-                player -> player.getHealth() > 6.0F && !player.isInWater() && !player.isOnFire() && !player.fireImmune(),
-                player -> player.igniteForSeconds(1.0F)),
+            SimpleEvent.harmful("scorch", EventTag.ASSAULT,
+                player -> player.getHealth() > Config.event("scorch").num("min_health") && !player.isInWater() && !player.isOnFire() && !player.fireImmune(),
+                player -> player.igniteForSeconds((float) Config.event("scorch").num("seconds"))),
             // 55: like cold_touch, harder
-            SimpleEvent.harmful("wrath", EventTag.ASSAULT, 0.6, player -> player.getHealth() > 8.0F, player -> {
-                float damage = Math.min(4.0F + player.getRandom().nextInt(4), player.getHealth() - 1.0F);
+            SimpleEvent.harmful("wrath", EventTag.ASSAULT, player -> player.getHealth() > Config.event("wrath").num("min_health"), player -> {
+                Config.Section config = Config.event("wrath");
+                float damage = Math.min(config.integer("damage_min") + player.getRandom().nextInt(config.integer("damage_spread")),
+                    player.getHealth() - (float) config.num("keep_health"));
+                Config.Tone tone = config.tone("sound");
                 player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.WARDEN_NEARBY_CLOSE, SoundSource.HOSTILE, 1.0F, 0.8F);
+                    SoundEvents.WARDEN_NEARBY_CLOSE, SoundSource.HOSTILE, tone.volume(), tone.pitch());
                 player.hurtServer(player.level(), player.damageSources().magic(), damage);
             }),
             // 56
-            SimpleEvent.harmful("snatch", EventTag.ASSAULT, 0.7, player -> !player.getMainHandItem().isEmpty(), Assaults::snatch),
+            SimpleEvent.harmful("snatch", EventTag.ASSAULT, player -> !player.getMainHandItem().isEmpty(), Assaults::snatch),
             // 57
-            SimpleEvent.harmful("suffocation", EventTag.ASSAULT, 0.5,
-                player -> player.getHealth() > SAFE_HEALTH + 2 && !player.isInWater() && dark(player), Assaults::suffocate),
-            // 52: always toward a drop of four to seven blocks onto solid ground
-            SimpleEvent.harmful("shove", EventTag.ASSAULT, 0.5, player -> player.getHealth() > SAFE_HEALTH + 4 && Place.ledge(player) != null, Assaults::shove),
-            // 59: straight up from solid ground, about two hearts of fall
-            SimpleEvent.harmful("toss", EventTag.ASSAULT, 0.5,
-                player -> player.getHealth() > SAFE_HEALTH + 4 && player.onGround() && !player.isInWater() && !player.isInLava(),
+            SimpleEvent.harmful("suffocation", EventTag.ASSAULT,
+                player -> healthy(player, "suffocation") && !player.isInWater() && dark(player), Assaults::suffocate),
+            // 52: always toward a drop onto solid ground
+            SimpleEvent.harmful("shove", EventTag.ASSAULT, player -> healthy(player, "shove") && Place.ledge(player) != null, Assaults::shove),
+            // 59: straight up from solid ground
+            SimpleEvent.harmful("toss", EventTag.ASSAULT,
+                player -> healthy(player, "toss") && player.onGround() && !player.isInWater() && !player.isInLava(),
                 Assaults::toss),
             // 58
-            SimpleEvent.harmful("thunder_knocks", EventTag.ASSAULT, 0.5, player -> player.getHealth() > SAFE_HEALTH + 4, Assaults::thunderKnocks),
+            SimpleEvent.harmful("thunder_knocks", EventTag.ASSAULT, player -> healthy(player, "thunder_knocks"), Assaults::thunderKnocks),
             // 60
-            SimpleEvent.harmful("embrace", EventTag.ASSAULT, 0.5, player -> player.getHealth() > SAFE_HEALTH + 4, Assaults::embrace)
+            SimpleEvent.harmful("embrace", EventTag.ASSAULT, player -> healthy(player, "embrace"), Assaults::embrace)
         );
+    }
+
+    /** Telegraphed events stop hurting once the player is down to this much health. */
+    private static float safeHealth() {
+        return (float) Config.section("assaults").num("safe_health");
+    }
+
+    /** Enough health above the safe floor for the event to start. */
+    private static boolean healthy(ServerPlayer player, String id) {
+        return player.getHealth() > safeHealth() + Config.event(id).num("margin");
     }
 
     private static void shove(ServerPlayer player) {
         Direction toward = Place.ledge(player);
         if (toward != null) {
-            push(player, toward.getStepX() * 0.7, 0.2, toward.getStepZ() * 0.7);
+            Config.Section config = Config.event("shove");
+            push(player, toward.getStepX() * config.num("push"), config.num("lift"), toward.getStepZ() * config.num("push"), config.tone("sound"));
         }
     }
 
     private static void toss(ServerPlayer player) {
-        push(player, 0.0, 1.0, 0.0);
+        Config.Section config = Config.event("toss");
+        push(player, 0.0, config.num("lift"), 0.0, config.tone("sound"));
     }
 
-    private static void push(ServerPlayer player, double x, double y, double z) {
+    private static void push(ServerPlayer player, double x, double y, double z, Config.Tone tone) {
         player.setDeltaMovement(x, y, z);
         player.connection.send(new ClientboundSetEntityMotionPacket(player));
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-            SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.HOSTILE, 1.0F, 0.6F);
+            SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.HOSTILE, tone.volume(), tone.pitch());
     }
 
     private static void snatch(ServerPlayer player) {
         ItemStack held = player.getMainHandItem().copy();
         player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
         double angle = player.getRandom().nextDouble() * Math.PI * 2;
-        // Launch speed chosen so the item lands roughly five blocks away.
-        Vec3 velocity = new Vec3(Math.cos(angle) * 0.45, 0.3, Math.sin(angle) * 0.45);
+        Config.Section config = Config.event("snatch");
+        Vec3 velocity = new Vec3(Math.cos(angle) * config.num("speed"), config.num("lift"), Math.sin(angle) * config.num("speed"));
         ItemEntity item = new ItemEntity(player.level(), player.getX(), player.getEyeY(), player.getZ(), held, velocity.x, velocity.y, velocity.z);
         item.setDefaultPickUpDelay();
         player.level().addFreshEntity(item);
+        Config.Tone tone = config.tone("sound");
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-            SoundEvents.ITEM_PICKUP, SoundSource.HOSTILE, 1.0F, 0.5F);
+            SoundEvents.ITEM_PICKUP, SoundSource.HOSTILE, tone.volume(), tone.pitch());
     }
 
     private static boolean dark(ServerPlayer player) {
-        return player.level().getMaxLocalRawBrightness(player.blockPosition()) < 8;
+        return player.level().getMaxLocalRawBrightness(player.blockPosition()) < Config.event("suffocation").integer("dark_below");
     }
 
     /** A heartbeat first, then the air drains until the player finds light; out of water nothing else would hurt them. */
     private static void suffocate(ServerPlayer player) {
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.HOSTILE, 1.0F, 1.0F);
-        Scheduler.repeat(player, 40, 2, (p, n) -> {
-            if (!dark(p) || p.isInWater() || p.getHealth() <= SAFE_HEALTH || n >= 150) {
+        Config.Section config = Config.event("suffocation");
+        Config.Tone start = config.tone("sound");
+        Config.Tone pulse = config.tone("pulse_sound");
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.HOSTILE, start.volume(), start.pitch());
+        Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("interval_ticks"), (p, n) -> {
+            if (!dark(p) || p.isInWater() || p.getHealth() <= safeHealth() || n >= config.integer("max_steps")) {
                 return false;
             }
-            p.setAirSupply(Math.max(0, p.getAirSupply() - 12));
-            if (n % 10 == 0) {
-                p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.HOSTILE, 0.8F, 1.0F);
+            p.setAirSupply(Math.max(0, p.getAirSupply() - config.integer("drain")));
+            if (n % config.integer("pulse_every") == 0) {
+                p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.HOSTILE, pulse.volume(), pulse.pitch());
                 if (p.getAirSupply() == 0) {
-                    p.hurtServer(p.level(), p.damageSources().drown(), 1.0F);
+                    p.hurtServer(p.level(), p.damageSources().drown(), (float) config.num("damage"));
                 }
             }
             return true;
@@ -124,13 +143,15 @@ final class Assaults {
     /** Three knocks, a bolt that misses, and a bolt for whoever has not moved since. */
     private static void thunderKnocks(ServerPlayer player) {
         Sounds.knocks(player, Sounds.knockSpot(player));
-        Scheduler.later(player, 60, p -> {
+        Config.Section config = Config.event("thunder_knocks");
+        double still = config.num("still_blocks");
+        Scheduler.later(player, config.integer("strike_delay_ticks"), p -> {
             Vec3 stood = p.position();
-            strike(p.level(), BlockPos.containing(Nearby.randomAround(p, 6.0)));
-            Scheduler.later(p, 40, q -> {
-                if (q.position().distanceToSqr(stood) < 4.0 && q.getHealth() > SAFE_HEALTH) {
+            strike(p.level(), BlockPos.containing(Nearby.randomAround(p, config.num("miss_distance"))));
+            Scheduler.later(p, config.integer("hit_delay_ticks"), q -> {
+                if (q.position().distanceToSqr(stood) < still * still && q.getHealth() > safeHealth()) {
                     strike(q.level(), q.blockPosition());
-                    q.hurtServer(q.level(), q.damageSources().lightningBolt(), Math.min(6.0F, q.getHealth() - 1.0F));
+                    q.hurtServer(q.level(), q.damageSources().lightningBolt(), Math.min((float) config.num("damage"), q.getHealth() - (float) config.num("keep_health")));
                 }
             });
         });
@@ -146,17 +167,22 @@ final class Assaults {
         }
     }
 
-    /** A hit a second, a little harder each time, until the player is 10 blocks from where it began. */
+    /** A hit every so often, a little harder each time, until the player is far enough from where it began. */
     private static void embrace(ServerPlayer player) {
         Vec3 origin = player.position();
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WARDEN_NEARBY_CLOSE, SoundSource.HOSTILE, 1.0F, 0.7F);
-        Scheduler.repeat(player, 30, 20, (p, n) -> {
-            if (p.position().distanceToSqr(origin) >= 100.0 || p.getHealth() <= SAFE_HEALTH || n >= 20) {
+        Config.Section config = Config.event("embrace");
+        Config.Tone start = config.tone("sound");
+        Config.Tone hit = config.tone("hit_sound");
+        Config.Burst souls = config.burst("particles");
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WARDEN_NEARBY_CLOSE, SoundSource.HOSTILE, start.volume(), start.pitch());
+        double escape = config.num("escape_blocks");
+        Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("interval_ticks"), (p, n) -> {
+            if (p.position().distanceToSqr(origin) >= escape * escape || p.getHealth() <= safeHealth() || n >= config.integer("max_steps")) {
                 return false;
             }
-            p.level().sendParticles(ParticleTypes.SOUL, p.getX(), p.getY() + 1.0, p.getZ(), 8, 0.4, 0.6, 0.4, 0.02);
-            p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.PLAYER_HURT_FREEZE, SoundSource.HOSTILE, 1.0F, 0.6F);
-            p.hurtServer(p.level(), p.damageSources().magic(), Math.min(0.5F * (n + 1), p.getHealth() - SAFE_HEALTH));
+            p.level().sendParticles(ParticleTypes.SOUL, p.getX(), p.getY() + souls.offsetY(), p.getZ(), souls.count(), souls.dx(), souls.dy(), souls.dz(), souls.speed());
+            p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.PLAYER_HURT_FREEZE, SoundSource.HOSTILE, hit.volume(), hit.pitch());
+            p.hurtServer(p.level(), p.damageSources().magic(), Math.min((float) config.num("damage_step") * (n + 1), p.getHealth() - safeHealth()));
             return true;
         });
     }
