@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.platform.Platform;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
@@ -26,6 +27,7 @@ public final class Restless {
 
     /** Call once per server tick, after the world has ticked. */
     public static void onServerTick(MinecraftServer server) {
+        Scheduler.tick(server);
         Director.tick(server);
     }
 

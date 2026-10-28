@@ -2,7 +2,9 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,12 +15,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -46,6 +50,14 @@ final class MobEvents {
                 Wolf wolf = wolves.get(player.getRandom().nextInt(wolves.size()));
                 wolf.setYRot(player.getRandom().nextFloat() * 360.0F);
                 wolf.playAmbientSound();
+            }),
+            // 85
+            SimpleEvent.light("animals_stare", EventTag.MOBS, WEIGHT, player -> near(player, Animal.class, 16).size() >= 2,
+                player -> stare(player, near(player, Animal.class, 16), 60)),
+            // 88
+            SimpleEvent.light("villager_stares", EventTag.MOBS, WEIGHT, player -> !near(player, Villager.class, 16).isEmpty(), player -> {
+                List<Villager> villagers = near(player, Villager.class, 16);
+                stare(player, List.of(villagers.get(player.getRandom().nextInt(villagers.size()))), 100);
             }),
             // 89
             SimpleEvent.light("bats", EventTag.MOBS, WEIGHT, player -> airSpot(player, 4.0, 360.0) != null, player -> {
@@ -96,6 +108,19 @@ final class MobEvents {
 
     private static <T extends Entity> List<T> near(ServerPlayer player, Class<T> type, int radius) {
         return player.level().getEntitiesOfClass(type, new AABB(player.blockPosition()).inflate(radius));
+    }
+
+    /** The mobs stop and face the player for {@code ticks}. */
+    private static void stare(ServerPlayer player, List<? extends Mob> mobs, int ticks) {
+        Scheduler.repeat(player, 0, 2, (p, n) -> {
+            for (Mob mob : mobs) {
+                if (mob.isAlive()) {
+                    mob.getNavigation().stop();
+                    mob.lookAt(EntityAnchorArgument.Anchor.EYES, p.getEyePosition());
+                }
+            }
+            return n * 2 < ticks;
+        });
     }
 
     private static List<TamableAnimal> pets(ServerPlayer player) {

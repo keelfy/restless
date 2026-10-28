@@ -1,7 +1,7 @@
 # Haunt event ideas
 
-Raw backlog of 100 event ideas. All 62 **Easy** ones are implemented (see the `Idea` column in `spirits.md`);
-Medium and Hard ones are still open. Numbers stay as they are so the difficulty section keeps working.
+Raw backlog of 100 event ideas. All 62 **Easy** ones and the 14 **Medium** ones that need only `sched` are implemented
+(see the `Idea` column in `spirits.md`); the other Medium ones and the Hard ones are still open. Numbers stay as they are so the difficulty section keeps working.
 
 Tiers: **L** light, **H** harmful, **D** deadly (must be telegraphed so the player can react).
 Tags in parentheses; `*` marks tags that do not exist in code yet.
@@ -175,27 +175,17 @@ Infrastructure tags:
 53, 54, 55, 56, 62, 63, 64, 65, 66, 67, 68, 69, 70,
 73, 76, 78, 79, 81, 86, 87, 89, 90, 91, 92, 97, 99.
 
-### Medium (29)
+### Medium (29, 14 done)
 
 | # | Idea | Needs |
 |---|---|---|
-| 2 | torch chain | `sched` |
 | 3 | lantern flicker | `sched`, `restore` |
-| 4 | lamp switches off | `sched` |
 | 5 | furnace dies with fuel | `access` |
 | 10 | blackout + mob | `place` |
-| 12 | breathing door | `sched` |
 | 19 | locked door | `sched`, `hook` |
-| 21 | chest lid click | `sched` |
-| 22 | barrel opens | `sched` |
 | 23 | piston push | `place`, `restore` |
-| 26 | three knocks | `sched` |
-| 32 | breathing gets louder | `sched` |
 | 52 | push near a ledge | `place` |
-| 57 | suffocation | `sched` |
-| 58 | knocks then lightning | `sched` |
 | 59 | toss over a drop | `place` |
-| 60 | embrace | `sched` |
 | 71 | fake map marker | `map` |
 | 72 | flowers wither | `restore` |
 | 74 | sign rewritten | `restore` |
@@ -204,10 +194,6 @@ Infrastructure tags:
 | 80 | floor turns to sand | `sched`, `restore` |
 | 82 | hole in the wall | `place`, `restore` |
 | 83 | block pattern | `place`, `restore` |
-| 85 | animals stare | `sched` |
-| 88 | villager stares | `sched` |
-| 96 | footprints | `sched` |
-| 98 | rain over the player | `sched` |
 
 ### Hard (9)
 
@@ -226,8 +212,8 @@ Infrastructure tags:
 ### Order
 
 1. Easy events: pick them for spirit coverage and tags; no new code beyond the event itself.
-2. `sched`: needed by 18 medium events; alone it unlocks 14 of them, including the deadly 57, 58, 60
-   (and it is the base for 100).
+2. `sched` (done, `haunt/Scheduler.java`): needed by 18 medium events; it alone unlocked 14 of them, including the
+   deadly 57, 58, 60 (and it is the base for 100).
 3. `restore`: needed by 9 medium events; with `sched` it unlocks 72, 74, 75, 3, 77, 80.
    Also required before any block-replacement event ships.
 4. `place`, then the rest as needed. Hard events after the client module exists.
