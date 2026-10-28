@@ -1,7 +1,9 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
 import java.util.function.Predicate;
@@ -12,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.BarrelBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DoorBlock;
@@ -21,8 +24,10 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 /** Doors, gates, buttons and the like acting on their own. */
@@ -61,6 +66,11 @@ final class Mechanisms {
                 player -> Nearby.any(player, 10, Mechanisms::closedBarrel), Mechanisms::openBarrel),
             // 101: the music stops mid-song and the disc is knocked out
             SimpleEvent.light("jukebox_pop", EventTag.DOORS, 0.7, player -> !playingJukeboxes(player).isEmpty(), Mechanisms::popRecord),
+            // 19: slams shut and cannot be opened for ten seconds; the cancelling lives in Restless.onUseBlock
+            SimpleEvent.harmful("locked_door", EventTag.DOORS, 0.7,
+                player -> Nearby.any(player, RADIUS, Mechanisms::lockableDoor), Mechanisms::lockDoor),
+            // 23: a piston and a block appear behind the player, then it shoves; everything is taken away again
+            SimpleEvent.harmful("piston_push", EventTag.DOORS, 0.6, player -> Place.piston(player) != null, Mechanisms::pistonPush),
             // 20
             SimpleEvent.harmful("open_house", EventTag.DOORS, 0.7,
                 player -> player.level().isDarkOutside() && Nearby.any(player, 20, Mechanisms::closedWoodenDoor),
@@ -89,6 +99,10 @@ final class Mechanisms {
 
     private static boolean chest(BlockState state) {
         return state.is(Blocks.CHEST) || state.is(Blocks.TRAPPED_CHEST);
+    }
+
+    private static boolean lockableDoor(BlockState state) {
+        return woodenDoor(state) && state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER;
     }
 
     private static boolean closedBarrel(BlockState state) {
@@ -198,6 +212,49 @@ final class Mechanisms {
         if (state.getBlock() instanceof BarrelBlock && state.getValue(BarrelBlock.OPEN) != open) {
             level.setBlockAndUpdate(pos, state.setValue(BarrelBlock.OPEN, open));
             level.playSound(null, pos, open ? SoundEvents.BARREL_OPEN : SoundEvents.BARREL_CLOSE, SoundSource.BLOCKS, 0.8F, 0.9F);
+        }
+    }
+
+    private static void lockDoor(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, RADIUS, Mechanisms::lockableDoor);
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        BlockState state = level.getBlockState(pos);
+        DoorBlock door = (DoorBlock) state.getBlock();
+        if (door.isOpen(state)) {
+            door.setOpen(null, level, state, pos, false);
+        }
+        level.playSound(null, pos, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.BLOCKS, 1.0F, 0.7F);
+        DoorLocks.lock(level, pos, 200);
+    }
+
+    /** The piston is powered by a redstone block beside it. Afterwards each piece is removed only if it is still what was put there. */
+    private static void pistonPush(ServerPlayer player) {
+        Place.Piston spot = Place.piston(player);
+        if (spot == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        Restore.quiet(level, spot.base(), Blocks.PISTON.defaultBlockState().setValue(PistonBaseBlock.FACING, spot.facing()));
+        Restore.quiet(level, spot.block(), Blocks.STONE.defaultBlockState());
+        level.setBlockAndUpdate(spot.power(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+        Restore.after(level, 80, force -> {
+            if (!force && !level.isLoaded(spot.base())) {
+                return false;
+            }
+            clear(level, spot.power(), Blocks.REDSTONE_BLOCK);
+            clear(level, spot.block(), Blocks.PISTON_HEAD);
+            clear(level, spot.target(), Blocks.STONE);
+            clear(level, spot.base(), Blocks.PISTON);
+            return true;
+        });
+    }
+
+    private static void clear(ServerLevel level, BlockPos pos, Block block) {
+        if (level.getBlockState(pos).is(block)) {
+            Restore.quiet(level, pos, Blocks.AIR.defaultBlockState());
         }
     }
 }

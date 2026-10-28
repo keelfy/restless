@@ -1,7 +1,7 @@
 # Haunt event ideas
 
-Raw backlog of 100 event ideas. All 62 **Easy** ones and the 14 **Medium** ones that need only `sched` are implemented
-(see the `Idea` column in `spirits.md`); the other Medium ones and the Hard ones are still open. Numbers stay as they are so the difficulty section keeps working.
+Raw backlog of 100 event ideas. All 62 **Easy** and all 29 **Medium** ones are implemented (see the `Idea` column in
+`spirits.md`); only the 9 **Hard** ones are still open. Numbers stay as they are so the difficulty section keeps working.
 
 Tiers: **L** light, **H** harmful, **D** deadly (must be telegraphed so the player can react).
 Tags in parentheses; `*` marks tags that do not exist in code yet.
@@ -177,25 +177,16 @@ Infrastructure tags:
 53, 54, 55, 56, 62, 63, 64, 65, 66, 67, 68, 69, 70,
 73, 76, 78, 79, 81, 86, 87, 89, 90, 91, 92, 97, 99.
 
-### Medium (29, 14 done)
+### Medium (29, all done)
 
-| # | Idea | Needs |
-|---|---|---|
-| 3 | lantern flicker | `sched`, `restore` |
-| 5 | furnace dies with fuel | `access` |
-| 10 | blackout + mob | `place` |
-| 19 | locked door | `sched`, `hook` |
-| 23 | piston push | `place`, `restore` |
-| 52 | push near a ledge | `place` |
-| 59 | toss over a drop | `place` |
-| 71 | fake map marker | `map` |
-| 72 | flowers wither | `restore` |
-| 74 | sign rewritten | `restore` |
-| 75 | painting changes | `restore` |
-| 77 | glass wall and a figure | `sched`, `restore` |
-| 80 | floor turns to sand | `sched`, `restore` |
-| 82 | hole in the wall | `place`, `restore` |
-| 83 | block pattern | `place`, `restore` |
+3, 5, 10, 19, 23, 52, 59, 71, 72, 74, 75, 77, 80, 82, 83, on top of the 14 that needed only `sched`.
+
+- `sched`: `haunt/Scheduler.java`.
+- `restore`: `haunt/Restore.java`, undo entries run when due and when the server stops.
+- `place`: `haunt/event/Place.java`: a wall, standing room, a ledge, a flat spot for a plus, room for a piston.
+- `hook`: `Restless.onUseBlock` plus `haunt/DoorLocks.java`; the NeoForge module forwards `PlayerInteractEvent.RightClickBlock`.
+- `access`: not needed. The furnace's private burn time is zeroed through its own save format (`saveCustomOnly` / `loadCustomOnly`).
+- `map`: not needed. `MapItemSavedData.addTargetDecoration` writes the marker into the item.
 
 ### Hard (9)
 
@@ -216,6 +207,5 @@ Infrastructure tags:
 1. Easy events: pick them for spirit coverage and tags; no new code beyond the event itself.
 2. `sched` (done, `haunt/Scheduler.java`): needed by 18 medium events; it alone unlocked 14 of them, including the
    deadly 57, 58, 60 (and it is the base for 100).
-3. `restore`: needed by 9 medium events; with `sched` it unlocks 72, 74, 75, 3, 77, 80.
-   Also required before any block-replacement event ships.
-4. `place`, then the rest as needed. Hard events after the client module exists.
+3. `restore` (done, `haunt/Restore.java`): also required before any block-replacement event ships.
+4. `place`, `hook` (done). Hard events after the client module exists.

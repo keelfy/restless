@@ -5,6 +5,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -54,11 +55,35 @@ final class Assaults {
             // 57
             SimpleEvent.harmful("suffocation", EventTag.ASSAULT, 0.5,
                 player -> player.getHealth() > SAFE_HEALTH + 2 && !player.isInWater() && dark(player), Assaults::suffocate),
+            // 52: always toward a drop of four to seven blocks onto solid ground
+            SimpleEvent.harmful("shove", EventTag.ASSAULT, 0.5, player -> player.getHealth() > SAFE_HEALTH + 4 && Place.ledge(player) != null, Assaults::shove),
+            // 59: straight up from solid ground, about two hearts of fall
+            SimpleEvent.harmful("toss", EventTag.ASSAULT, 0.5,
+                player -> player.getHealth() > SAFE_HEALTH + 4 && player.onGround() && !player.isInWater() && !player.isInLava(),
+                Assaults::toss),
             // 58
             SimpleEvent.harmful("thunder_knocks", EventTag.ASSAULT, 0.5, player -> player.getHealth() > SAFE_HEALTH + 4, Assaults::thunderKnocks),
             // 60
             SimpleEvent.harmful("embrace", EventTag.ASSAULT, 0.5, player -> player.getHealth() > SAFE_HEALTH + 4, Assaults::embrace)
         );
+    }
+
+    private static void shove(ServerPlayer player) {
+        Direction toward = Place.ledge(player);
+        if (toward != null) {
+            push(player, toward.getStepX() * 0.7, 0.2, toward.getStepZ() * 0.7);
+        }
+    }
+
+    private static void toss(ServerPlayer player) {
+        push(player, 0.0, 1.0, 0.0);
+    }
+
+    private static void push(ServerPlayer player, double x, double y, double z) {
+        player.setDeltaMovement(x, y, z);
+        player.connection.send(new ClientboundSetEntityMotionPacket(player));
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+            SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.HOSTILE, 1.0F, 0.6F);
     }
 
     private static void snatch(ServerPlayer player) {

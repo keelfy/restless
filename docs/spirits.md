@@ -54,9 +54,12 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `candles_out` | 1 | LIGHT | LIGHTS | 0.8 | A lit candle within 10 blocks | Every lit candle within 10 blocks goes out |
 | `torch_chain` | 2 | LIGHT | LIGHTS | 0.8 | A torch within 10 | Up to 8 torches knock off one by one, every 0.3 s, nearest to the player last |
 | `lamp_off` | 4 | LIGHT | LIGHTS | 0.8 | A lit redstone lamp within 10 | Switches it off for 1 s, back on if still powered |
+| `lantern_flicker` | 3 | LIGHT | LIGHTS | 0.8 | A lantern or soul lantern within 10 | Removed and put back three times in 1.2 s, ends in place |
 | `campfire_out` | 6 | LIGHT | LIGHTS | 0.8 | A lit campfire within 10 | Snuffs one campfire |
+| `furnace_dies` | 5 | LIGHT | LIGHTS | 0.8 | A burning furnace, blast furnace or smoker within 10 with fuel in the fuel slot | The fire goes out and the fuel is taken out for 5 s, then returned (dropped if the slot was filled meanwhile or the furnace is gone) |
 | `candles_light` | 8 | LIGHT | LIGHTS | 0.8 | An unlit candle within 10 | Lights one candle |
 | `new_face` | 9 | LIGHT | LIGHTS | 0.6 | A jack o'lantern within 10 | Turns it to face another way |
+| `blackout` | 10 | HARMFUL | LIGHTS | 0.5 | Not peaceful, not daylight under open sky, a light within 16, standing room 5–9 blocks away | Torches break, candles, campfires and lit lamps within 16 go out; 0.75 s later a zombie or skeleton appears 5–9 blocks away and targets the player |
 | `burning_hand` | 11 | HARMFUL | LIGHTS | 0.6 | Torch or lantern in main hand | The item drops out of the hand |
 | `breathing_door` | 12 | LIGHT | DOORS | 0.7 | A wooden door within 12 | Toggles once a second, six times, ending as it began |
 | `trapdoor` | 13 | LIGHT | DOORS | 0.7 | A wooden trapdoor within 12 | Toggles it with a slam |
@@ -69,6 +72,8 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `chest_lid` | 21 | LIGHT | DOORS | 0.7 | A chest or trapped chest within 10 | Lid opens and closes with sound, contents untouched |
 | `barrel_opens` | 22 | LIGHT | DOORS | 0.7 | A closed barrel within 10 | Opens for 1.5 s, then closes |
 | `jukebox_pop` | 101 | LIGHT | DOORS | 0.7 | A jukebox within 20 is playing a disc | The music cuts out and the disc pops out of it |
+| `locked_door` | 19 | HARMFUL | DOORS | 0.7 | A wooden door within 12 | Slams shut with a thud and cannot be opened for 10 s (a right click gets the locked-chest sound) |
+| `piston_push` | 23 | HARMFUL | DOORS | 0.6 | Free room in a line behind the player for a piston, a block and a redstone block, and dry standing room one block ahead | A powered piston shoves a stone block into the player's spot, pushing them a block; all of it is removed after 4 s |
 | `footsteps` | 24 | LIGHT | SOUND | 0.4 | Always | A step sound 2 blocks behind the player |
 | `creeper_hiss` | 25 | LIGHT | SOUND | 0.4 | Always | Creeper fuse hiss nearby |
 | `three_knocks` | 26 | LIGHT | SOUND | 0.4 | Always | Three knocks, on the nearest wooden door within 12 or else from nowhere nearby |
@@ -100,6 +105,8 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `scorch` | 54 | HARMFUL | ASSAULT | 0.6 | Health > 3 hearts, dry, not burning | On fire for 1 s |
 | `wrath` | 55 | HARMFUL | ASSAULT | 0.6 | Health > 4 hearts | 2–3.5 hearts of magic damage, never lethal |
 | `snatch` | 56 | HARMFUL | ASSAULT | 0.7 | Item in main hand | The item is thrown ~5 blocks away |
+| `shove` | 52 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts, on the ground at the edge of a 4–7 block drop onto solid ground | Pushes the player toward the drop (a fall of 1–4 HP). Runs only at a ledge |
+| `toss` | 59 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts, on the ground, not in water or lava | Thrown straight up about 5 blocks; the landing costs a couple of HP |
 | `suffocation` | 57 | HARMFUL | ASSAULT | 0.5 | Health > 4 hearts, not in water, light level < 8 | Heartbeat, 2 s later the air bar drains (about 7 s to empty), then 1 HP a second. Stops in light, in water, at 3 hearts, or after 15 s |
 | `thunder_knocks` | 58 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts | Three knocks; 3 s later a bolt strikes nearby; 2 s after that a second bolt hits the player if they have moved less than 2 blocks since (6 HP, never lethal). Bolts set nothing on fire |
 | `embrace` | 60 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts | Growing damage once a second (0.5, 1, 1.5 HP…) until the player is 10 blocks from where it began. Stops at 3 hearts or after 20 hits |
@@ -112,11 +119,19 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `rot` | 68 | HARMFUL | ITEMS | 0.5 | Food in the inventory | One food stack becomes rotten flesh |
 | `vanishing_item` | 69 | HARMFUL | ITEMS | 0.5 | Two chests (not halves of one) within 10, one non-empty, one with space | One stack moves to the other chest |
 | `false_compass` | 70 | HARMFUL | ITEMS | 0.5 | A plain compass in the inventory | Points at a spot 30–60 blocks away (stays that way) |
+| `map_marker` | 71 | LIGHT | ITEMS | 0.5 | A filled map in the inventory without a marker of this event | A red X appears on it somewhere in its area. Permanent: the marker is stored in the map item |
+| `wilted_flowers` | 72 | LIGHT | BLOCKS | 0.6 | A potted flower within 10 | Every one becomes a potted dead bush; restored after 2 min |
 | `withering_crops` | 73 | LIGHT | BLOCKS | 0.6 | A grown crop within 6 | Every crop within 6 loses one growth stage |
 | `turning_frame` | 76 | LIGHT | BLOCKS | 0.6 | A filled item frame within 12 | Rotates its item |
+| `new_sign` | 74 | LIGHT | BLOCKS | 0.6 | A sign within 10 | The front text becomes one creepy line; restored after 1 min unless the player has edited it |
+| `new_painting` | 75 | LIGHT | BLOCKS | 0.6 | A painting within 12 with another variant of the same size | Becomes another painting; restored after 1 min |
+| `glass_wall` | 77 | LIGHT | BLOCKS | 0.6 | Not peaceful; a one-block wall 2–6 blocks away with standing room behind it | The wall's two blocks in front of the player become glass for 4 s; a silent, motionless husk stands behind them facing the player |
 | `dry_cauldron` | 78 | LIGHT | BLOCKS | 0.6 | A water cauldron within 10 | Empties it |
 | `dead_ground` | 79 | LIGHT | BLOCKS | 0.6 | Player on grass | Grass in a 3-block radius becomes dirt |
+| `shifting_floor` | 80 | HARMFUL | BLOCKS | 0.5 | On the ground; at least two blocks of the 3×3 floor under the player rest on solid blocks | The floor becomes sand or gravel for 1.5 s. It cannot fall, so it only looks and sounds wrong |
 | `broken_bed` | 81 | HARMFUL | BLOCKS | 0.6 | A bed within 16 | Breaks it; it drops as an item |
+| `wall_hole` | 82 | HARMFUL | BLOCKS | 0.6 | A one-block wall 2–6 blocks away with standing room behind it | Two blocks vanish for 30 s, no drops |
+| `cross` | 83 | LIGHT | BLOCKS | 0.6 | Room for a plus of five free blocks on solid ground 3–6 blocks away | A plus of bone blocks for 1 min |
 | `animals_stare` | 85 | LIGHT | MOBS | 0.6 | Two animals within 16 | They stop and face the player for 3 s |
 | `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
 | `dog_barks` | 87 | LIGHT | MOBS | 0.6 | A wolf within 16 | Turns away and makes its ambient sound |
@@ -137,14 +152,14 @@ so a spirit near no doors never rolls a door). Computed from the weights above.
 
 | Spirit | Danger | Lights | Doors | Sound | Affliction | Assault | Items | Blocks | Mobs | Presence |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `poltergeist` | 0 | 9.4% | 49.1% | 5.7% | 4.7% | 0% | 17.7% | 8.5% | 4.2% | 0.7% |
-| | 0.5 | 8.2% | 42.0% | 4.4% | 6.2% | 2.5% | 22.2% | 7.9% | 5.8% | 0.9% |
-| | 1 | 6.3% | 31.5% | 2.5% | 8.4% | 6.3% | 28.8% | 6.9% | 8.2% | 1.2% |
-| `shade` | 0 | 29.8% | 3.9% | 29.8% | 19.9% | 0% | 3.1% | 6.0% | 4.5% | 3.0% |
-| | 0.5 | 25.0% | 3.2% | 22.5% | 25.3% | 5.2% | 3.8% | 5.4% | 6.0% | 3.7% |
-| | 1 | 18.4% | 2.3% | 12.3% | 32.8% | 12.3% | 4.7% | 4.5% | 8.0% | 4.6% |
+| `poltergeist` | 0 | 11.0% | 49.1% | 4.6% | 3.1% | 0% | 13.8% | 12.4% | 4.6% | 1.4% |
+|  | 0.5 | 9.6% | 45.4% | 3.6% | 4.0% | 2.8% | 16.2% | 12.0% | 5.2% | 1.3% |
+|  | 1 | 7.4% | 39.9% | 2.0% | 5.4% | 6.9% | 19.7% | 11.3% | 6.1% | 1.2% |
+| `shade` | 0 | 35.7% | 4.0% | 24.8% | 13.2% | 0% | 2.5% | 8.9% | 5.0% | 6.0% |
+|  | 0.5 | 31.0% | 3.7% | 19.2% | 17.4% | 6.0% | 2.9% | 8.6% | 5.6% | 5.6% |
+|  | 1 | 23.9% | 3.2% | 11.0% | 23.5% | 14.9% | 3.5% | 8.1% | 6.6% | 5.1% |
 
-Cooldown per spirit, minutes: `(4 − 2.5 × danger) × (1 + roll) / activity`. Poltergeist: 3.1–6.2 at danger 0, 1.2–2.3 at 1.
+Cooldown per spirit, minutes (before the daylight factor): `(4 − 2.5 × danger) × (1 + roll) / activity`. Poltergeist: 3.1–6.2 at danger 0, 1.2–2.3 at 1.
 Shade: 5.0–10.0 at danger 0, 1.9–3.8 at 1.
 
 ## Scheduled events
@@ -153,6 +168,16 @@ Multi-step events run through `haunt/Scheduler.java`: `later(player, delay, acti
 `repeat(player, delay, interval, step)` (the step returns false to stop). Tasks are in memory only and are dropped when
 the player dies, leaves or the world closes, so no step may leave something broken behind. Events that hurt
 (`suffocation`, `thunder_knocks`, `embrace`) announce themselves with a sound first and stop at 3 hearts.
+
+## Restoring and locks
+
+- `haunt/Restore.java`: changes that swap a block or an entity (flowers, sign, painting, glass, hole, floor, cross,
+  piston, lantern, furnace fuel) register an undo that runs when due and checks that the thing is still what the
+  event left, so a block the player has since changed is not overwritten. Block swaps skip neighbour updates (nothing
+  attached pops off) and are retried until the chunk is loaded. Everything still pending is undone when the server
+  stops (`Restless.onServerStopping`). After a crash the changes stay. Not covered: `map_marker` is permanent.
+- `haunt/DoorLocks.java`: doors locked by `locked_door`, in memory. `Restless.onUseBlock` cancels the right click;
+  the loader forwards its block-interaction event to it.
 
 ## Admin command
 

@@ -21,11 +21,15 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.component.LodestoneTracker;
+import net.minecraft.world.item.component.MapDecorations;
 import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jspecify.annotations.Nullable;
 
 /** Meddling with the player's inventory and with chests nearby. */
@@ -33,6 +37,7 @@ final class ItemEvents {
     private static final int CHEST_RADIUS = 10;
     private static final double WEIGHT = 0.5;
     private static final List<String> NAMES = List.of("Why are you here", "Not yours", "Behind you", "Leave", "It sees", "Mine now");
+    private static final String MARK = "restless";
     private static final List<String> PAGES = List.of("i can hear you breathing", "do not look behind you", "you were never alone here");
 
     private ItemEvents() {}
@@ -133,6 +138,8 @@ final class ItemEvents {
                     }
                 }
             }),
+            // 71: stays on the map for good; the marker lives in the item, so only a new map gets rid of it
+            SimpleEvent.light("map_marker", EventTag.ITEMS, WEIGHT, player -> !unmarkedMaps(player).isEmpty(), ItemEvents::markMap),
             // 70: aims at a point near the player, so it keeps pointing somewhere wrong
             SimpleEvent.harmful("false_compass", EventTag.ITEMS, WEIGHT,
                 player -> !stacks(player, s -> s.is(Items.COMPASS) && !s.has(DataComponents.LODESTONE_TRACKER)).isEmpty(),
@@ -163,6 +170,30 @@ final class ItemEvents {
             }
         }
         return found;
+    }
+
+    private static List<ItemStack> unmarkedMaps(ServerPlayer player) {
+        return stacks(player, s -> s.is(Items.FILLED_MAP) && MapItem.getSavedData(s, player.level()) != null
+            && s.getOrDefault(DataComponents.MAP_DECORATIONS, MapDecorations.EMPTY).decorations().keySet().stream().noneMatch(k -> k.startsWith(MARK)));
+    }
+
+    /** An explorer's red X somewhere on the map's area. */
+    private static void markMap(ServerPlayer player) {
+        List<ItemStack> maps = unmarkedMaps(player);
+        if (maps.isEmpty()) {
+            return;
+        }
+        ItemStack map = maps.get(player.getRandom().nextInt(maps.size()));
+        MapItemSavedData data = MapItem.getSavedData(map, player.level());
+        if (data == null) {
+            return;
+        }
+        int blocksPerPixel = 1 << data.scale;
+        BlockPos at = new BlockPos(
+            data.centerX + (player.getRandom().nextInt(81) - 40) * blocksPerPixel, 0, data.centerZ + (player.getRandom().nextInt(81) - 40) * blocksPerPixel);
+        MapItemSavedData.addTargetDecoration(map, at, MARK, MapDecorationTypes.RED_X);
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+            SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.HOSTILE, 0.8F, 0.6F);
     }
 
     private static boolean unnamed(ItemStack stack) {
