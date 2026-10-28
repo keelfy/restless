@@ -216,6 +216,7 @@ the mod, or one that is not valid JSON, is logged and ignored (the defaults run)
 
 Permission level: gamemaster. `[player]` defaults to the caller.
 
+- `/haunt`: opens the debug screen (needs the mod on the client): your danger, days, advancements and spirits, every event with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
 - `/haunt info [player]`: danger, days, advancements, and the numbered spirit list with time to each spirit's next event.
 - `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
 - `/haunt spirit add <spirit> [player]`: binds one more spirit.

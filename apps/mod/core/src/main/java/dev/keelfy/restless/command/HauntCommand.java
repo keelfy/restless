@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import dev.keelfy.restless.debug.DebugMenu;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
@@ -24,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
-/** Debug/admin command: /haunt info|force|spirit add|spirit remove [player]. */
+/** Debug/admin command: /haunt opens the debug screen; info|force|spirit add|spirit remove [player] work from chat. */
 public final class HauntCommand {
     private static final DynamicCommandExceptionType UNKNOWN_EVENT =
         new DynamicCommandExceptionType(id -> Component.literal("Unknown haunt event: " + id));
@@ -36,6 +37,10 @@ public final class HauntCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("haunt")
             .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+            .executes(c -> {
+                DebugMenu.open(c.getSource().getPlayerOrException());
+                return 1;
+            })
             .then(Commands.literal("info")
                 .executes(c -> info(c.getSource(), c.getSource().getPlayerOrException()))
                 .then(Commands.argument("player", EntityArgument.player())
