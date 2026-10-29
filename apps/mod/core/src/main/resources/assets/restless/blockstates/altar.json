@@ -1,1 +1,37 @@
-{"variants":{"held=empty":{"model":"restless:block/altar"},"held=water":{"model":"restless:block/altar"},"held=iron":{"model":"restless:block/altar"},"held=glowstone":{"model":"restless:block/altar"},"held=holy_water":{"model":"restless:block/altar"},"held=mirror":{"model":"restless:block/altar"}}}
+{
+  "variants": {
+    "part=center": {
+      "model": "restless:block/altar"
+    },
+    "part=north": {
+      "model": "restless:block/altar_edge"
+    },
+    "part=east": {
+      "model": "restless:block/altar_edge",
+      "y": 90
+    },
+    "part=south": {
+      "model": "restless:block/altar_edge",
+      "y": 180
+    },
+    "part=west": {
+      "model": "restless:block/altar_edge",
+      "y": 270
+    },
+    "part=north_west": {
+      "model": "restless:block/altar_corner"
+    },
+    "part=north_east": {
+      "model": "restless:block/altar_corner",
+      "y": 90
+    },
+    "part=south_east": {
+      "model": "restless:block/altar_corner",
+      "y": 180
+    },
+    "part=south_west": {
+      "model": "restless:block/altar_corner",
+      "y": 270
+    }
+  }
+}

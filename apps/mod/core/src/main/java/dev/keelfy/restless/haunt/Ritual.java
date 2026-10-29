@@ -43,7 +43,7 @@ public final class Ritual {
                 candles.add(pos.immutable());
             }
         });
-        if (candles.size() < config.integer("candles") || !Wards.ringed(level, altar)) {
+        if (!Altar.isComplete(level, altar) || candles.size() < config.integer("candles") || !Wards.ringed(level, altar)) {
             player.sendSystemMessage(Component.translatable("message.restless.altar_incomplete", config.integer("candles")), true);
             return false;
         }
@@ -70,7 +70,8 @@ public final class Ritual {
     private static boolean wave(ServerPlayer player, ServerLevel level, BlockPos altar, Focus focus, List<BlockPos> candles, Sense.Spirit spirit, int n) {
         Config.Section config = Config.section("ritual");
         BlockState state = level.getBlockState(altar);
-        boolean held = state.is(Content.ALTAR.get()) && state.getValue(Altar.HELD) == Altar.Held.of(focus);
+        boolean held = state.is(Content.ALTAR.get()) && state.getValue(Altar.HELD) == Altar.Held.of(focus)
+            && Altar.isComplete(level, altar);
         boolean lit = candles.stream().allMatch(pos -> AbstractCandleBlock.isLit(level.getBlockState(pos)));
         boolean near = player.level() == level && player.blockPosition().closerThan(altar, config.integer("radius"));
         if (!held || !lit || !near) {

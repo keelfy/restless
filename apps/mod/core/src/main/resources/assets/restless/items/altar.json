@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:block/altar"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:item/altar"
+  }
+}

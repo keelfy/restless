@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/polished_deepslate",
+    "stone": "minecraft:block/polished_deepslate",
+    "tile": "minecraft:block/deepslate_tiles",
+    "rim": "minecraft:block/chiseled_polished_blackstone",
+    "copper": "minecraft:block/copper_block",
+    "rune": "minecraft:block/oxidized_copper",
+    "light": "minecraft:block/sea_lantern",
+    "basin": "minecraft:block/blackstone_top"
+  },
+  "elements": [
+    {"from":[0,0,0],"to":[16,2,16],"faces":{"down":{"texture":"#stone"},"up":{"texture":"#stone"},"north":{"texture":"#stone"},"south":{"texture":"#stone"},"west":{"texture":"#stone"},"east":{"texture":"#stone"}}},
+    {"from":[0,2,0],"to":[16,3,16],"faces":{"down":{"texture":"#tile"},"up":{"texture":"#tile"},"north":{"texture":"#tile"},"south":{"texture":"#tile"},"west":{"texture":"#tile"},"east":{"texture":"#tile"}}},
+    {"from":[0,3.02,0],"to":[16,3.02,1],"shade":false,"faces":{"up":{"texture":"#stone"}}},
+    {"from":[0,3.02,3],"to":[16,3.02,4],"shade":false,"faces":{"up":{"texture":"#copper"}}},
+    {"from":[0,3.02,7],"to":[16,3.02,9],"shade":false,"faces":{"up":{"texture":"#rune"}}},
+    {"from":[7,3.02,9],"to":[9,3.02,16],"shade":false,"faces":{"up":{"texture":"#rune"}}},
+    {"from":[5,3.02,5],"to":[6,3.02,6],"shade":false,"faces":{"up":{"texture":"#rune"}}},
+    {"from":[10,3.02,5],"to":[11,3.02,6],"shade":false,"faces":{"up":{"texture":"#rune"}}},
+    {"from":[5,3.02,10],"to":[6,3.02,11],"shade":false,"faces":{"up":{"texture":"#rune"}}},
+    {"from":[10,3.02,10],"to":[11,3.02,11],"shade":false,"faces":{"up":{"texture":"#rune"}}}
+  ]
+}

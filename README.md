@@ -25,3 +25,6 @@ mise run mod:server   # dev server
 mise run wiki:dev     # wiki locally
 mise run wiki:build   # static wiki build
 ```
+
+With Java 25, run `./gradlew :neoforge:runGameTestServer` from `apps/mod` to verify altar placement,
+dismantling, offerings and salt rings in a dedicated test world. Test code is excluded from the mod jar.

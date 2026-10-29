@@ -91,6 +91,10 @@ public final class Wards {
         if (state.is(Content.SALT_LINE.get())) {
             return Enclosure.Cell.SALT;
         }
+        // The ritual platform must not wall off the flood fill before it reaches the salt outside it.
+        if (state.is(Content.ALTAR.get())) {
+            return Enclosure.Cell.OPEN;
+        }
         boolean solid = !state.getCollisionShape(level, pos).isEmpty() || !level.getBlockState(pos.above()).getCollisionShape(level, pos.above()).isEmpty();
         return solid ? Enclosure.Cell.WALL : Enclosure.Cell.OPEN;
     }

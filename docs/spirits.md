@@ -150,7 +150,14 @@ Every trait names a **weakness** (`weakness` in `spirits.json`): iron, glowstone
 weak to the one most of its traits name; a tie goes to the first in that order. A photograph shows the weakness of the
 trait it names, so a few photos of one spirit tell what it is weak to.
 
-The **altar** (chiseled stone bricks, salt, candle) needs at least `ritual.candles` (4) lit candles within
+One **altar** item (chiseled stone bricks, salt, candle) places a 3×3 platform centered on the clicked space:
+a raised bowl, four corner pillars and a copper-and-turquoise floor pattern. All nine spaces must be clear, dry,
+and supported by solid top faces. Breaking any part dismantles the platform and returns one altar plus its held
+item; creative mode does not drop the altar. Any part accepts or returns the offering. Existing single-block altars
+must be broken and placed again to assemble the platform.
+Place the salt outside the platform, for example as the perimeter of a 5×5 square.
+
+The altar needs at least `ritual.candles` (4) lit candles within
 `ritual.candle_radius` (3) and a closed salt loop around it, checked like a salt ward on the altar's own level. Using it
 with a focus (an iron ingot, glowstone dust, **holy water**, a **mirror** from a glass pane and two iron nuggets) takes the
 focus and calls the first spirit near the player that is weak to it:

@@ -49,7 +49,7 @@ public final class AltarRenderer implements BlockEntityRenderer<AltarEntity, Alt
             return;
         }
         pose.pushPose();
-        pose.translate(0.5f, 1.05f + (float) Math.sin(state.animationTicks * 0.06f) * 0.035f, 0.5f);
+        pose.translate(0.5f, 1.12f + (float) Math.sin(state.animationTicks * 0.06f) * 0.035f, 0.5f);
         pose.rotateDegrees(Axis.YP, state.animationTicks * 1.5f);
         pose.scale(0.5f, 0.5f, 0.5f);
         state.item.submit(pose, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);

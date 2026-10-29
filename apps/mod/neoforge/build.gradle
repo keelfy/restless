@@ -4,31 +4,50 @@ plugins {
 
 def core = project(':core')
 
+sourceSets {
+    gameTest
+}
+
 neoForge {
     version = project.neo_version
-
-    runs {
-        client {
-            client()
-        }
-        server {
-            server()
-            programArgument '--nogui'
-        }
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-    }
+    addModdingDependenciesTo(sourceSets.gameTest)
 
     mods {
         "${mod_id}" {
             sourceSet(sourceSets.main)
+        }
+        restless_tests {
+            sourceSet(sourceSets.gameTest)
+        }
+    }
+
+    runs {
+        client {
+            client()
+            loadedMods = [mods[mod_id]]
+        }
+        server {
+            server()
+            programArgument '--nogui'
+            loadedMods = [mods[mod_id]]
+        }
+        gameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gameTest
+            gameDirectory = layout.buildDirectory.dir('gametest')
+            programArgument '--tests'
+            programArgument 'restless_tests:*'
+        }
+        configureEach {
+            logLevel = org.slf4j.event.Level.INFO
         }
     }
 }
 
 dependencies {
     compileOnly core
+    gameTestImplementation sourceSets.main.output
+    gameTestCompileOnly core
 }
 
 // Core is bundled into this jar: its sources and resources are compiled here.
