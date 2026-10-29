@@ -29,6 +29,8 @@ final class Presence {
             PresenceFigure.edge(),
             // 95
             PresenceFigure.fog(),
+            // 123
+            PresenceFigure.distantPlayer(),
             // 97: a puff of breath at the face where nobody should be breathing out
             SimpleEvent.light("cold_breath", EventTag.PRESENCE, Presence::warm, player -> {
                 Config.Section config = Config.event("cold_breath");

@@ -1,6 +1,7 @@
 # Hardcore mode (plan)
 
-Not built. A world setting under which every temporary change stays and every purely visual trick becomes real:
+Built so far: the setting and `Restore.revert` (see the Where it plugs in table; the existing block events already follow it,
+the per-event real branches are not written). A world setting under which every temporary change stays and every purely visual trick becomes real:
 a swapped block is not swapped back, a fake block becomes a real one, a hallucinated mob is spawned for real.
 The exact design is decided later; this file only fixes the seams and the rules.
 

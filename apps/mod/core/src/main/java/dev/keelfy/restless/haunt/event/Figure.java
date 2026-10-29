@@ -1,5 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
+import com.mojang.authlib.GameProfile;
+import java.util.UUID;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -34,6 +36,11 @@ final class Figure {
         face(figure, player);
         level.addFreshEntity(figure);
         return figure;
+    }
+
+    /** A skin of no one: a fresh id with no textures gets one of the default player skins, Steve, Alex and the rest. */
+    static ResolvableProfile stranger(ServerPlayer player) {
+        return ResolvableProfile.createResolved(new GameProfile(new UUID(player.getRandom().nextLong(), player.getRandom().nextLong()), "Steve"));
     }
 
     static void face(Mannequin figure, ServerPlayer player) {

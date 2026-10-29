@@ -45,6 +45,17 @@
       "interval_ticks": 2,
       "max_ticks": 1200,
       "cleanup_ticks": 40
+    },
+    "minecraft:distant_player": {
+      "weight": 0.3,
+      "distance": 60.0,
+      "min_angle": 0.0,
+      "max_angle": 40.0,
+      "vanish_degrees": 0.0,
+      "vanish_distance": 35.0,
+      "interval_ticks": 1,
+      "max_ticks": 1200,
+      "cleanup_ticks": 40
     }
   }
 }

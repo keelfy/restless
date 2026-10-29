@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
@@ -172,8 +173,13 @@ public final class HauntData extends SavedData {
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Grave.CODEC).optionalFieldOf("graves", Map.of()).forGetter(data -> data.graves),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.DOUBLE).optionalFieldOf("sanity", Map.of()).forGetter(data -> data.sanity),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, ComponentSerialization.CODEC.listOf()).optionalFieldOf("journal", Map.of()).forGetter(data -> data.journal),
-            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Blight.CODEC).optionalFieldOf("blight", Map.of()).forGetter(data -> data.blight)
-        ).apply(i, HauntData::new)),
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Blight.CODEC).optionalFieldOf("blight", Map.of()).forGetter(data -> data.blight),
+            Codec.BOOL.optionalFieldOf("hardcore").forGetter(data -> Optional.ofNullable(data.hardcore))
+        ).apply(i, (players, territorial, graves, sanity, journal, blight, hardcore) -> {
+            HauntData data = new HauntData(players, territorial, graves, sanity, journal, blight);
+            data.hardcore = hardcore.orElse(null);
+            return data;
+        })),
         PERSONAL.xmap(players -> new HauntData(players, List.of(), Map.of(), Map.of(), Map.of(), Map.of()), data -> data.hauntings));
 
     // No vanilla data fixer for mod data; NeoForge skips fixing when this is null.
@@ -190,6 +196,8 @@ public final class HauntData extends SavedData {
     private final Map<UUID, List<Component>> journal;
     /** Keyed by spirit; outlives the spirit until the land has healed. */
     private final Map<UUID, Blight> blight;
+    /** Decided the first time anyone asks and never again, so changing the config later does not flip a world; null until then. */
+    private @Nullable Boolean hardcore;
 
     private HauntData() {
         this(Map.of(), List.of(), Map.of(), Map.of(), Map.of(), Map.of());
@@ -284,6 +292,20 @@ public final class HauntData extends SavedData {
         } else {
             blight.put(spirit, new Blight(spread.dimension(), List.copyOf(spread.spots()), List.copyOf(spread.columns())));
         }
+        setDirty();
+    }
+
+    /** Whether this world runs hardcore haunting; {@code initial} is asked once, the first time, and the answer is saved. */
+    public boolean hardcore(Supplier<Boolean> initial) {
+        if (hardcore == null) {
+            hardcore = initial.get();
+            setDirty();
+        }
+        return hardcore;
+    }
+
+    public void putHardcore(boolean on) {
+        hardcore = on;
         setDirty();
     }
 

@@ -10,5 +10,7 @@ public enum EventTag {
     ITEMS,
     BLOCKS,
     MOBS,
-    PRESENCE
+    PRESENCE,
+    /** Something that looks like another player. */
+    PLAYER
 }

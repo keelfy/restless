@@ -27,27 +27,34 @@ import org.jspecify.annotations.Nullable;
  */
 final class PresenceFigure implements HauntEvent {
     private final String id;
+    private final Set<EventTag> tags;
     private final Predicate<ServerPlayer> place;
     private final Function<ServerPlayer, ResolvableProfile> skin;
     /** The figure each player has now; one per event at a time. */
     private final Map<UUID, Mannequin> active = new ConcurrentHashMap<>();
 
-    private PresenceFigure(String id, Predicate<ServerPlayer> place, Function<ServerPlayer, ResolvableProfile> skin) {
+    private PresenceFigure(String id, Set<EventTag> tags, Predicate<ServerPlayer> place, Function<ServerPlayer, ResolvableProfile> skin) {
         this.id = id;
+        this.tags = tags;
         this.place = place;
         this.skin = skin;
     }
 
     /** 94: the player's own likeness at the edge of vision. */
     static HauntEvent edge() {
-        return new PresenceFigure("edge_figure", player -> true, player -> ResolvableProfile.createResolved(player.getGameProfile()));
+        return new PresenceFigure("edge_figure", Set.of(EventTag.PRESENCE), player -> true, player -> ResolvableProfile.createResolved(player.getGameProfile()));
     }
 
     /** 95: a pale stranger far off in the fog, which is rain or darkness under open sky. */
     static HauntEvent fog() {
-        return new PresenceFigure("fog_silhouette",
+        return new PresenceFigure("fog_silhouette", Set.of(EventTag.PRESENCE),
             player -> player.level().canSeeSky(player.blockPosition()) && (player.level().isRaining() || player.level().isDarkOutside()),
             player -> Mannequin.DEFAULT_PROFILE);
+    }
+
+    /** 123: another player, in a default skin, far off and turned toward the player until approached. */
+    static HauntEvent distantPlayer() {
+        return new PresenceFigure("distant_player", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Figure::stranger);
     }
 
     @Override
@@ -62,7 +69,7 @@ final class PresenceFigure implements HauntEvent {
 
     @Override
     public Set<EventTag> tags() {
-        return Set.of(EventTag.PRESENCE);
+        return tags;
     }
 
     @Override

@@ -4,6 +4,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.UnlitLights;
 import dev.keelfy.restless.haunt.DimPayload;
 import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -199,7 +200,7 @@ final class Lights {
         ServerLevel level = player.level();
         BlockState lantern = level.getBlockState(pos);
         BlockState unlit = UnlitLights.extinguished(lantern);
-        Restore.after(level, config.integer("restore_ticks"), force -> {
+        Restore.revert(level, config.integer("restore_ticks"), force -> {
             if (!force && !level.isLoaded(pos)) {
                 return false;
             }
@@ -208,13 +209,14 @@ final class Lights {
             }
             return true;
         });
-        // Out on even steps, back on odd ones; each step reads the world afresh, so a lantern the player replaced is left alone.
+        boolean stays = Hardcore.on(level);
+        // Out on even steps, back on odd ones (never back in hardcore); each step reads the world afresh, so a lantern the player replaced is left alone.
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
             ServerLevel here = p.level();
             if (n % 2 == 0 && here.getBlockState(pos) == lantern) {
                 Restore.quiet(here, pos, unlit);
                 here.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, off.volume(), off.pitch());
-            } else if (n % 2 == 1 && here.getBlockState(pos) == unlit) {
+            } else if (n % 2 == 1 && !stays && here.getBlockState(pos) == unlit) {
                 Restore.quiet(here, pos, lantern);
                 here.playSound(null, pos, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, on.volume(), on.pitch());
             }
@@ -250,7 +252,7 @@ final class Lights {
         Config.Section config = Config.event("furnace_dies");
         Config.Tone tone = config.tone("sound");
         level.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
-        Restore.after(level, config.integer("return_ticks"), force -> {
+        Restore.revert(level, config.integer("return_ticks"), force -> {
             if (!force && !level.isLoaded(pos)) {
                 return false;
             }

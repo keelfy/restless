@@ -36,8 +36,16 @@ public final class Restore {
 
     private Restore() {}
 
+    /** Runs {@code undo} after {@code delay} ticks, or at shutdown. For cleanup of things an event made (a figure, a double). */
     public static void after(ServerLevel level, int delay, Undo undo) {
         PENDING.add(new Entry(undo, level.getServer().getTickCount() + delay));
+    }
+
+    /** Like {@link #after}, but for undoing a change to the world: under {@linkplain Hardcore hardcore} the change stays and nothing is registered. */
+    public static void revert(ServerLevel level, int delay, Undo undo) {
+        if (!Hardcore.on(level)) {
+            after(level, delay, undo);
+        }
     }
 
     /** Changes a block without neighbour updates, so nothing attached to it pops off; the client still sees it. */
@@ -50,7 +58,7 @@ public final class Restore {
         BlockPos at = pos.immutable();
         BlockState from = level.getBlockState(at);
         quiet(level, at, to);
-        after(level, delay, force -> {
+        revert(level, delay, force -> {
             if (!force && !level.isLoaded(at)) {
                 return false;
             }

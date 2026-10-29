@@ -369,6 +369,7 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `copycat` | 92 | HARMFUL | MOBS | 0.6 | Not peaceful, standing room 3 blocks behind | A zombie in a copy of the player's armor, targeting them |
 | `edge_figure` | 94 | LIGHT | PRESENCE | 0.4 | No such figure already, standing room 16 blocks away, 45–65° to a side of where the player looks | A silent, unhurtable mannequin with the player's own skin stands there facing them. Gone, with no sound or particles, when the player looks within 25° of it with a clear line, or after 30 s |
 | `fog_silhouette` | 95 | LIGHT | PRESENCE | 0.3 | Open sky and rain or darkness outside, standing room 40 blocks away within 25° of where the player looks | A mannequin in the default skin stands far off. Gone, silently, when the player comes within 24 blocks, or after 60 s |
+| `distant_player` | 123 | LIGHT | PRESENCE, PLAYER | 0.3 | Standing room 60 blocks away within 40° of where the player looks | A silent, unhurtable mannequin in a random default skin (Steve, Alex and the rest) stands there facing them. Gone, silently, when the player comes within 35 blocks, or after 60 s |
 | `footprints` | 96 | LIGHT | PRESENCE | 0.6 | Standing on or in sand or snow | For 6 s, puffs of the ground and a step sound appear where the player stood a second ago. Particles only, nothing is placed |
 | `cold_breath` | 97 | LIGHT | PRESENCE | 0.6 | Warm biome | A breath puff at the face |
 | `local_rain` | 98 | LIGHT | PRESENCE | 0.6 | Sky visible, not raining | Rain particles and sound over the player for 6 s |
@@ -421,6 +422,12 @@ cobbled. Anything else is left alone. The patch is a scatter (`Place.patch`), no
   event left, so a block the player has since changed is not overwritten. Block swaps skip neighbour updates (nothing
   attached pops off) and are retried until the chunk is loaded. Everything still pending is undone when the server
   stops (`Restless.onServerStopping`). After a crash the changes stay. Not covered: `map_marker` is permanent.
+- `haunt/Hardcore.java`: in a hardcore world nothing is undone. `Restore.swap` and `Restore.revert` (the world-changing
+  undos; `Restore.after` stays for cleanup of figures and doubles) register nothing, so flowers, signs, paintings,
+  glass, holes, floors, crosses and furnace fuel stay as the event left them, and a flickering lantern stays out. The
+  `hardcore.mode` setting in `haunt.json` is `auto` (the world's vanilla hardcore flag), `true` or `false`. It is
+  decided the first time it is asked and saved in `HauntData`, so editing the config later does not flip a world.
+  Plan and rules: [hardcore.md](hardcore.md).
 - `haunt/DoorLocks.java`: doors locked by `locked_door`, in memory. `Restless.onUseBlock` cancels the right click on
   both sides; the loader forwards its block-interaction event to it. The server sends `DoorLockPayload` to clients
   within 64 blocks, which the loader registers and hands to `DoorLocks.put`. A client that joins or walks up later
@@ -432,7 +439,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 
 | File | Holds |
 |---|---|
-| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `corruption`, `evolution`, `journal`, `restore`, `place` |
+| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `corruption`, `evolution`, `journal`, `hardcore`, `restore`, `place` |
 | `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words, hint and weakness), `story` (nickname words, days, causes) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence`, `lies` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 

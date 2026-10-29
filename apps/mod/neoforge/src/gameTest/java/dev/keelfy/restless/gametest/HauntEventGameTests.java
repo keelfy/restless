@@ -16,6 +16,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.decoration.Mannequin;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
@@ -43,6 +46,25 @@ final class HauntEventGameTests {
             helper.setBlock(FEET.south(2).below(), Blocks.FARMLAND);
             helper.setBlock(FEET.south(2), ((CropBlock) Blocks.WHEAT).getStateForAge(7));
         }, () -> helper.assertBlockProperty(FEET.south(2), CropBlock.AGE, 0)));
+        tests.put("event_distant_player", helper -> runs(helper, "distant_player", player -> {
+            // Standing room on a ring 60 blocks out, wherever the event picks its side.
+            BlockPos centre = helper.absolutePos(FEET);
+            for (int x = -64; x <= 64; x++) {
+                for (int z = -64; z <= 64; z++) {
+                    double ring = Math.hypot(x, z);
+                    if (ring >= 58 && ring <= 62) {
+                        helper.getLevel().setBlock(centre.offset(x, -1, z), Blocks.STONE.defaultBlockState(), 2);
+                    }
+                }
+            }
+        }, () -> {
+            AABB around = new AABB(helper.absolutePos(FEET)).inflate(70);
+            List<Mannequin> figures = helper.getLevel().getEntitiesOfClass(Mannequin.class, around);
+            check(helper, figures.size() == 1, "distant_player must leave one figure standing, found " + figures.size());
+            double away = figures.get(0).distanceToSqr(Vec3.atCenterOf(helper.absolutePos(FEET)));
+            check(helper, away > 50 * 50, "distant_player must stand far off");
+            figures.get(0).discard();
+        }));
     }
 
     /** Sets the scene, checks the event can run, runs it, lets its scheduled steps finish, then checks the result. */

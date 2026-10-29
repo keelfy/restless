@@ -188,7 +188,7 @@ final class BlockEvents {
         }
         SignText haunted = edit.asImmutable();
         sign.setText(haunted, SignTextSlot.FRONT);
-        Restore.after(level, restoreTicks("new_sign"), force -> {
+        Restore.revert(level, restoreTicks("new_sign"), force -> {
             if (!force && !level.isLoaded(pos)) {
                 return false;
             }
@@ -221,7 +221,7 @@ final class BlockEvents {
         Holder<PaintingVariant> original = old.getVariant();
         List<Holder.Reference<PaintingVariant>> options = others(level, old);
         Painting fresh = replace(level, old, options.get(player.getRandom().nextInt(options.size())));
-        Restore.after(level, restoreTicks("new_painting"), force -> {
+        Restore.revert(level, restoreTicks("new_painting"), force -> {
             if (!fresh.isRemoved()) {
                 replace(level, fresh, original);
             }
