@@ -77,9 +77,12 @@ public final class Wards {
     }
 
     public static boolean shelters(ServerPlayer player) {
-        ServerLevel level = player.level();
-        BlockPos feet = player.blockPosition();
-        return Enclosure.sealed(feet.getX(), feet.getZ(), (x, z) -> cell(level, new BlockPos(x, feet.getY(), z)),
+        return ringed(player.level(), player.blockPosition());
+    }
+
+    /** Whether {@code pos} lies inside a closed loop of salt, walls closing the gaps. */
+    public static boolean ringed(ServerLevel level, BlockPos pos) {
+        return Enclosure.sealed(pos.getX(), pos.getZ(), (x, z) -> cell(level, new BlockPos(x, pos.getY(), z)),
             Config.section("salt").integer("max_cells"));
     }
 

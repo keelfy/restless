@@ -4,12 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.spirit.Traits;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.Identifier;
@@ -141,6 +143,31 @@ public final class HauntData extends SavedData {
 
     public void put(UUID player, List<Haunting> spirits) {
         hauntings.put(player, List.copyOf(spirits));
+        setDirty();
+    }
+
+    /** Changes the spirit with this uuid, wherever it is saved; a null result removes it. */
+    public void change(UUID spirit, Function<Haunting, @Nullable Haunting> how) {
+        for (Map.Entry<UUID, List<Haunting>> entry : hauntings.entrySet()) {
+            if (entry.getValue().stream().anyMatch(h -> h.uuid().equals(spirit))) {
+                List<Haunting> changed = new ArrayList<>();
+                for (Haunting h : entry.getValue()) {
+                    Haunting kept = h.uuid().equals(spirit) ? how.apply(h) : h;
+                    if (kept != null) {
+                        changed.add(kept);
+                    }
+                }
+                entry.setValue(List.copyOf(changed));
+            }
+        }
+        List<Territorial> changed = new ArrayList<>();
+        for (Territorial t : territorial) {
+            Haunting kept = t.haunting().uuid().equals(spirit) ? how.apply(t.haunting()) : t.haunting();
+            if (kept != null) {
+                changed.add(new Territorial(kept, t.dimension(), t.anchor(), t.radius()));
+            }
+        }
+        territorial = List.copyOf(changed);
         setDirty();
     }
 }

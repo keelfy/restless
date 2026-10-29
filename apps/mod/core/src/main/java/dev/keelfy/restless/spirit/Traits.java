@@ -65,6 +65,19 @@ public final class Traits {
         return traits.stream().mapToDouble(Trait::noise).sum() * sounds;
     }
 
+    /** The focus most of the traits name; a tie goes to the one declared first in {@link Focus}. */
+    public static Focus weakness(List<Trait> traits) {
+        int[] votes = new int[Focus.values().length];
+        traits.forEach(t -> votes[t.weakness().ordinal()]++);
+        Focus best = Focus.values()[0];
+        for (Focus focus : Focus.values()) {
+            if (votes[focus.ordinal()] > votes[best.ordinal()]) {
+                best = focus;
+            }
+        }
+        return best;
+    }
+
     public static boolean reacts(List<Trait> traits, Trait.Trigger trigger) {
         return traits.stream().anyMatch(t -> t.reacts().contains(trigger));
     }
@@ -84,6 +97,6 @@ public final class Traits {
             : EnumSet.noneOf(Clue.class);
         return new Trait(id, Map.copyOf(tags), config.has("activity") ? config.num("activity") : 1.0, when,
             config.has("noise") ? config.num("noise") : 0.0, reacts, Set.copyOf(clues), config.texts("words"), config.text("hint"),
-            config.has("lies") && config.num("lies") > 0);
+            config.has("lies") && config.num("lies") > 0, Focus.valueOf(config.text("weakness").toUpperCase(Locale.ROOT)));
     }
 }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.keelfy.restless.spirit.Clue;
+import dev.keelfy.restless.spirit.Focus;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
 import java.util.List;
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 class CluesTest {
     private static Trait trait(String id, boolean lies, Clue... clues) {
-        return new Trait(id, Map.of(), 1.0, Trait.Condition.ANY, 0.0, List.of(), Set.of(clues), List.of("word"), id, lies);
+        return new Trait(id, Map.of(), 1.0, Trait.Condition.ANY, 0.0, List.of(), Set.of(clues), List.of("word"), id, lies, Focus.IRON);
     }
 
     @Test

@@ -44,7 +44,7 @@ public final class Director {
                 }
                 SpiritType spirit = spirit(haunting);
                 if (canHaunt(player)) {
-                    pick(player, spirit, Traits.of(haunting.traits()), power(haunting, now)).ifPresent(event -> fireUnlessWarded(player, event, at));
+                    pick(player, spirit, Traits.of(haunting.traits()), power(haunting, now), null).ifPresent(event -> fireUnlessWarded(player, event, at));
                 }
                 spirits.set(i, haunting.rescheduled(now + cooldown(player.level(), player.blockPosition(), haunting, now, player.getRandom())));
                 changed = true;
@@ -69,7 +69,7 @@ public final class Director {
             List<ServerPlayer> near = level.players().stream().filter(p -> canHaunt(p) && territorial.reaches(p)).toList();
             if (!near.isEmpty()) {
                 ServerPlayer player = near.get(level.getRandom().nextInt(near.size()));
-                pick(player, spirit(territorial.haunting()), Traits.of(territorial.haunting().traits()), power(territorial.haunting(), now))
+                pick(player, spirit(territorial.haunting()), Traits.of(territorial.haunting().traits()), power(territorial.haunting(), now), null)
                     .ifPresent(event -> fireUnlessWarded(player, event, Vec3.atCenterOf(territorial.anchor())));
             }
             long next = now + cooldown(level, territorial.anchor(), territorial.haunting(), now, level.getRandom());
@@ -157,6 +157,15 @@ public final class Director {
         return born.rescheduled(now + cooldown(player.level(), player.blockPosition(), born, now, player.getRandom()));
     }
 
+    /**
+     * The spirit acts on the player now, outside its timer and past every ward (a ritual has called it in);
+     * {@code tier}, when given, is the only kind of event it may pick.
+     */
+    public static void act(ServerPlayer player, HauntData.Haunting haunting, @Nullable Vec3 at, @Nullable HauntTier tier) {
+        long now = player.level().getServer().overworld().getGameTime();
+        pick(player, spirit(haunting), Traits.of(haunting.traits()), power(haunting, now), tier).ifPresent(event -> fire(player, event, at));
+    }
+
     private static void fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
         if (Wards.stops(player, event)) {
             Wards.blocked(player);
@@ -206,12 +215,12 @@ public final class Director {
         return event.canRun(player) ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power) : 0.0;
     }
 
-    private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit, List<Trait> traits, double power) {
+    private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit, List<Trait> traits, double power, @Nullable HauntTier tier) {
         List<HauntEvent> candidates = new ArrayList<>();
         List<Double> weights = new ArrayList<>();
         double total = 0;
         for (HauntEvent event : HauntEvents.all()) {
-            double weight = weight(event, player, spirit, traits, power);
+            double weight = tier == null || event.tier() == tier ? weight(event, player, spirit, traits, power) : 0.0;
             if (weight > 0) {
                 candidates.add(event);
                 weights.add(weight);

@@ -21,6 +21,8 @@
   "spirit_box": { "radius": 6, "delay_ticks": 30 },
   "ouija": { "delay_ticks": 20, "letter_ticks": 6 },
   "clues": { "lie_chance": 0.5 },
+  "ritual": { "candles": 4, "candle_radius": 3, "radius": 16, "wave_ticks": 100, "waves": 12, "snuff_chance": 0.25, "fury_chance": 0.5, "fail_anger": 0.3, "bless_ticks": 12000 },
+  "artifacts": { "amulet_radius": 12, "amulet_cooldown_ticks": 40, "eye_radius": 32, "eye_ticks": 200, "eye_cooldown_ticks": 1200 },
   "candle": { "step_ticks": 4, "warning_ticks": 60, "lean": 0.5 },
   "restore": { "retry_ticks": 20 },
   "location": { "min_distance": 6.0, "max_distance": 14.0, "step": 3.0, "height": 0.5 },

@@ -144,6 +144,35 @@ ward found decides; the lantern, then the dreamcatcher, the door charm and the s
 Not built yet: salt from a cauldron, and the traits that hate a ward (the lantern raising anger of light-hating
 traits, the bell of noise-hating ones). The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
 
+## Banishing
+
+Every trait names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror. A spirit is
+weak to the one most of its traits name; a tie goes to the first in that order. A photograph shows the weakness of the
+trait it names, so a few photos of one spirit tell what it is weak to.
+
+The **altar** (chiseled stone bricks, salt, candle) needs at least `ritual.candles` (4) lit candles within
+`ritual.candle_radius` (3) and a closed salt loop around it, checked like a salt ward on the altar's own level. Using it
+with a focus (an iron ingot, glowstone dust, **holy water**, a **mirror** from a glass pane and two iron nuggets) takes the
+focus and calls the first spirit near the player that is weak to it:
+
+- The ritual runs `ritual.waves` (12) waves of `ritual.wave_ticks` (5 s). Each wave the spirit may snuff one of the
+  candles (`ritual.snuff_chance`) and may act on the player at once, past every ward (`ritual.fury_chance`).
+- At the next wave every candle must be lit again, the focus still on the altar and the player within `ritual.radius`
+  (16). Otherwise the ritual breaks: the focus is lost and the spirit's anger rises by `ritual.fail_anger`.
+- After the last wave the spirit is gone for good and drops its **essence** (`<type>_essence`).
+- No spirit near is weak to the focus: one of them eats it, its anger goes to 1 and it strikes at once with a harmful event.
+
+Altars with nothing to answer, or missing candles or salt, refuse the focus. Empty-handed use takes the item back.
+**Holy water** is a water bottle left on the altar for `ritual.bless_ticks` (half a day).
+
+| Essence | Artifact | Use |
+|---|---|---|
+| Poltergeist | **Telekinesis amulet** (essence, gold ingot, string) | Pulls every dropped item within `artifacts.amulet_radius` to you. |
+| Shade | **Dark eye** (essence, eye of ender) | Night vision, and every living thing within `artifacts.eye_radius` glows, for `artifacts.eye_ticks`. |
+
+Not built yet: offerings, throwing holy water to end a running event, the essence lure, and the pact enchantment and
+mimic mask (there are no spirit types for them yet). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
+
 ## Spirits
 
 | Id | Description | Activity | Affinity (missing = ×1) |
@@ -309,8 +338,8 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 
 | File | Holds |
 |---|---|
-| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `restore`, `place` |
-| `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words and hint), `story` (nickname words, days, causes) |
+| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `restore`, `place` |
+| `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words, hint and weakness), `story` (nickname words, days, causes) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
 Names and descriptions of events live apart, in `restless-config/lang/en.json` and `ru.json` (copied to `config/restless/lang/` on first run,

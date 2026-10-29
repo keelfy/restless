@@ -54,6 +54,17 @@ public final class Content {
         p -> new WornWard(p.strength(0.5f).sound(SoundType.GRASS).noOcclusion(), Block.box(1, 0, 6, 15, 16, 10), WardBlock.Kind.SCARECROW, 10));
     public static final Supplier<Item> SCARECROW_ITEM = blockItem("scarecrow", SCARECROW);
 
+    public static final Supplier<Block> ALTAR = block("altar",
+        p -> new Altar(p.strength(2.0f).sound(SoundType.STONE).noOcclusion()));
+    public static final Supplier<Item> ALTAR_ITEM = blockItem("altar", ALTAR);
+    public static final Supplier<Item> HOLY_WATER = item("holy_water", p -> new Item(p.stacksTo(16)));
+    public static final Supplier<Item> MIRROR = item("mirror", p -> new Item(p.stacksTo(16)));
+    /** A banished spirit drops the essence named after its type: {@code <type>_essence}. */
+    public static final Supplier<Item> POLTERGEIST_ESSENCE = item("poltergeist_essence", Item::new);
+    public static final Supplier<Item> SHADE_ESSENCE = item("shade_essence", Item::new);
+    public static final Supplier<Item> TELEKINESIS_AMULET = item("telekinesis_amulet", p -> new TelekinesisAmulet(p.stacksTo(1)));
+    public static final Supplier<Item> DARK_EYE = item("dark_eye", p -> new DarkEye(p.stacksTo(1)));
+
     private Content() {
     }
 
@@ -74,7 +85,8 @@ public final class Content {
     public static void init() {
         Platform.get().registerTab("restless", Component.translatable("itemGroup.restless"), () -> new ItemStack(SPIRIT_CANDLE.get()),
             List.of(SALT, ASH, SPIRIT_CANDLE, SPIRIT_COMPASS, CAMERA_OBSCURA, SPIRIT_BOX_ITEM, OUIJA_BOARD_ITEM,
-                DOOR_CHARM_ITEM, DREAMCATCHER_ITEM, HALLOWED_LANTERN_ITEM, SCARECROW_ITEM, TEST_ITEM));
+                DOOR_CHARM_ITEM, DREAMCATCHER_ITEM, HALLOWED_LANTERN_ITEM, SCARECROW_ITEM, ALTAR_ITEM, HOLY_WATER, MIRROR,
+                POLTERGEIST_ESSENCE, SHADE_ESSENCE, TELEKINESIS_AMULET, DARK_EYE, TEST_ITEM));
         Restless.LOGGER.debug("Content declared");
     }
 }

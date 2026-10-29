@@ -58,4 +58,19 @@ class TraitsTest {
         assertFalse(Traits.reacts(fed, Trait.Trigger.KILL));
         assertFalse(Traits.reacts(plain, Trait.Trigger.CHEST));
     }
+
+    @Test
+    void theSpiritIsWeakToWhatMostOfItsTraitsName() {
+        // light_eater, cold_touch: glowstone; door_slammer: iron
+        assertEquals(Focus.GLOWSTONE, Traits.weakness(Traits.of(List.of("door_slammer", "light_eater", "cold_touch"))));
+        // a tie goes to the focus declared first
+        assertEquals(Focus.IRON, Traits.weakness(Traits.of(List.of("light_eater", "door_slammer"))));
+    }
+
+    @Test
+    void everyFocusIsSomeTraitsWeakness() {
+        Set<Focus> named = EnumSet.noneOf(Focus.class);
+        Traits.all().forEach(t -> named.add(t.weakness()));
+        assertEquals(EnumSet.allOf(Focus.class), named);
+    }
 }

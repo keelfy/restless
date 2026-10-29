@@ -54,7 +54,9 @@ public final class Divination {
         ItemStack photo = new ItemStack(Content.PHOTO.get());
         photo.set(DataComponents.LORE, new ItemLore(List.of(
             Component.translatable("item.restless.photo.silhouette", Component.translatable("spirit.restless." + reading.get().spirit().haunting().spirit())),
-            Component.translatable("item.restless.photo.hint", reading.get().trait().hint()))));
+            Component.translatable("item.restless.photo.hint", reading.get().trait().hint()),
+            Component.translatable("item.restless.photo.weakness",
+                Component.translatable("focus.restless." + reading.get().trait().weakness().name().toLowerCase(java.util.Locale.ROOT))))));
         return Optional.of(photo);
     }
 
