@@ -1,11 +1,15 @@
 package dev.keelfy.restless.platform;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Services core needs from the mod loader. Each loader module ships one implementation,
@@ -24,6 +28,9 @@ public interface Platform {
      * the factory gets the key the entry must be built with, and the supplier is valid after that.
      */
     <T> Supplier<T> register(Registry<T> registry, String name, Function<ResourceKey<T>, T> factory);
+
+    /** Declares a creative tab of this mod that lists {@code items}; they are looked up when the tab is filled. */
+    void registerTab(String name, Component title, Supplier<ItemStack> icon, List<? extends Supplier<? extends Item>> items);
 
     static Platform get() {
         return Holder.INSTANCE;

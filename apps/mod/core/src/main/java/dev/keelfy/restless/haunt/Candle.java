@@ -2,13 +2,10 @@ package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.Vec3;
@@ -19,8 +16,6 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class Candle {
     private Candle() {}
-
-    private record Next(long dueAt, Vec3 at) {}
 
     public static void tick(MinecraftServer server) {
         Config.Section config = Config.section("candle");
@@ -35,9 +30,9 @@ public final class Candle {
             }
             data = data == null ? HauntData.get(server) : data;
             Vec3 hand = player.getEyePosition().add(player.getLookAngle().scale(0.6)).add(0, -0.4, 0);
-            Next next = next(player, data);
-            boolean warning = next != null && next.dueAt() - now <= config.integer("warning_ticks");
-            Vec3 lean = next == null || next.at() == null ? Vec3.ZERO : next.at().subtract(hand).multiply(1, 0, 1).normalize();
+            Optional<Sense.Spirit> next = Sense.of(player, data).stream().min(Comparator.comparingLong(s -> s.haunting().nextEventAt()));
+            boolean warning = next.filter(s -> s.haunting().nextEventAt() - now <= config.integer("warning_ticks")).isPresent();
+            Vec3 lean = next.map(Sense.Spirit::at).map(at -> at.subtract(hand).multiply(1, 0, 1).normalize()).orElse(Vec3.ZERO);
             player.level().sendParticles(warning ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 hand.x, hand.y, hand.z, 0, lean.x * config.num("lean"), 1.0, lean.z * config.num("lean"), 0.03);
         }
@@ -50,24 +45,5 @@ public final class Candle {
             }
         }
         return false;
-    }
-
-    /** The spirit of this player, personal or territorial and in reach, whose event comes first. */
-    private static Next next(ServerPlayer player, HauntData data) {
-        List<Next> all = new ArrayList<>();
-        List<HauntData.Haunting> personal = data.get(player.getUUID());
-        if (personal != null) {
-            for (HauntData.Haunting haunting : personal) {
-                UUID id = haunting.uuid();
-                all.add(new Next(haunting.nextEventAt(), Location.roaming(id)));
-            }
-        }
-        ServerLevel level = player.level();
-        for (HauntData.Territorial territorial : data.territorial()) {
-            if (territorial.dimension().equals(level.dimension()) && territorial.reaches(player)) {
-                all.add(new Next(territorial.haunting().nextEventAt(), Vec3.atCenterOf(territorial.anchor())));
-            }
-        }
-        return all.stream().min(Comparator.comparingLong(Next::dueAt)).orElse(null);
     }
 }

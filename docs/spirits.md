@@ -94,22 +94,55 @@ So a player in the open on a clear day waits up to 1.73× longer; in a mine, a h
 
 ## Detection and protection
 
-Three items: **salt**, the **salt line** it places, and the **spirit candle**. Both are crafted (shapeless): sand and dried
-kelp make 2 salt; a candle and soul sand make a spirit candle.
+Everything is crafted (shapeless) and listed in the **Restless** creative tab. Salt: sand and dried kelp (makes 2).
 
-**Spirit candle.** Held in either hand, it shows a flame at the hand. The flame leans toward the spirit whose event comes
-first (a personal spirit's roaming point, or the anchor of a territorial one in reach) and turns blue for the last
-`warning_ticks` before that event. It reads the same timer the director runs, so the warning is never wrong. A personal
-spirit has no point until the director's first check, so its flame then stands straight.
+### Clues
 
-**Salt.** Placed like redstone dust, one flat tile per block, walkable. A player standing inside a closed loop of salt
-cannot be reached: when a spirit's event comes due on them, nothing fires, ash falls around them and a chime sounds. The
-loop is checked on the floor level the player stands on, with walls closing the gaps, only through four-way neighbours
-(a diagonal line closes), and the shut-in area may not exceed `salt.max_cells`. Walls alone do not ward a room; at
-least one salt tile has to border it. The spirit's cooldown still runs, so the event is lost, not postponed.
+A trait lists which of four clues it leaves (`clues` in `spirits.json`), so a spirit leaves the union of its traits'
+clues. A tool that reads a clue the spirit does not leave finds nothing. The tools read the player's own spirits and the
+territorial ones whose radius holds them.
 
-Not built yet: the other clue items (compass, ash, camera, spirit box, ouija board), the other wards, salt from a
-cauldron, and clues depending on a spirit's traits. Neither new item has a creative tab yet; use `/give`.
+| Clue | Tool | What it shows |
+|---|---|---|
+| footprints | **Ash powder** (charcoal, makes 4) | Placed flat like salt. After `ash.reveal_ticks` (30 s), if a spirit that leaves footprints is within `ash.reach` of it, it takes one of four prints (bare foot, paw, hoof, drag), picked by the spirit's seed: the same spirit always leaves the same print. |
+| silhouette | **Camera obscura** (iron, glass pane, black dye) | Use it: a **photograph** with the spirit's type and one trait's hint, `camera.cooldown_ticks` apart. |
+| voice | **Spirit box** (block: iron, redstone, note block) | Say something in chat within `spirit_box.radius` of it: a moment later it answers with a word of one trait. |
+| planchette | **Ouija board** (block: planks, black dye, salt) | Use it: the planchette spells one trait's hint letter by letter on the action bar. |
+
+A spirit with the `liar` trait lies through the spirit box and the ouija board half the time (`clues.lie_chance`): it
+names a trait it does not have. A photograph and footprints never lie.
+
+Two tools do not depend on traits: the **spirit candle** (candle, soul sand) and the **spirit compass** (compass,
+amethyst shard, soul sand).
+
+- The candle in a hand shows a flame that leans toward the spirit whose event comes first, and burns blue for the last
+  `candle.warning_ticks` before it. It reads the timer the director runs, so the warning is never wrong.
+- The compass in a hand points at the nearest spirit. It uses the game's lodestone needle: the server writes the spirit's
+  point into the compass, so the client has no code of its own. With no spirit in reach it spins.
+
+A personal spirit has no point until the director's first check, so until then the flame stands straight and the compass spins.
+
+### Protection
+
+Checked when a spirit's event is about to run on a player. A ward stops that one event and shows ash and a chime; the
+spirit's cooldown still runs, so the event is lost, not postponed.
+
+| Ward | Stops | Wears out |
+|---|---|---|
+| **Salt line** | Any event on a player standing inside a closed loop of salt. | No |
+| **Hallowed lantern** (lantern, salt, glowstone dust) | Any event within `wards.lantern_radius` (6). It gives light. | No |
+| **Dreamcatcher** (string, feather, stick, salt) | Any event on a player sleeping within `wards.dreamcatcher_radius` (5). | No |
+| **Door charm** (salt, paper, string) | Door events within `wards.charm_radius` (8). | Breaks after 5 |
+| **Scarecrow** (hay, carved pumpkin, stick, salt) | Any event within `wards.scarecrow_radius` (16). | Breaks after 10 |
+| **Bell** (vanilla) | Ringing it pushes every spirit within `bell.radius` back by `bell.delay_ticks`. | No |
+
+Salt is placed like redstone dust, one flat tile per block, walkable. The loop is checked on the floor level the player
+stands on, with walls closing the gaps, through four-way neighbours only (a diagonal line closes), and the shut-in area
+may not exceed `salt.max_cells`. Walls alone do not ward a room; at least one salt tile has to border it. The first
+ward found decides; the lantern, then the dreamcatcher, the door charm and the scarecrow.
+
+Not built yet: salt from a cauldron, and the traits that hate a ward (the lantern raising anger of light-hating
+traits, the bell of noise-hating ones). The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
 
 ## Spirits
 
@@ -276,8 +309,8 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 
 | File | Holds |
 |---|---|
-| `haunt.json` | `director`, `power`, `anger`, `salt`, `candle`, `restore`, `place` |
-| `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog), `story` (nickname words, days, causes) |
+| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `restore`, `place` |
+| `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words and hint), `story` (nickname words, days, causes) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
 Names and descriptions of events live apart, in `restless-config/lang/en.json` and `ru.json` (copied to `config/restless/lang/` on first run,

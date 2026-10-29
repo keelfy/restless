@@ -12,8 +12,13 @@ import java.util.Set;
  * @param activity how much more often the spirit acts while {@code when} holds; 2 means twice as often
  * @param noise ticks the next event comes sooner for every sound its player makes; 0 for a spirit that ignores noise
  * @param reacts player actions that can make the spirit act right away
+ * @param clues the ways this trait gives the spirit away
+ * @param words what the spirit says through a spirit box
+ * @param hint what the trait is, in a few words, for the camera and the ouija board
+ * @param lies a spirit with this trait often names a trait it does not have, through the spirit box and the ouija board
  */
-public record Trait(String id, Map<EventTag, Double> affinity, double activity, Condition when, double noise, List<Trigger> reacts) {
+public record Trait(String id, Map<EventTag, Double> affinity, double activity, Condition when, double noise, List<Trigger> reacts,
+                    Set<Clue> clues, List<String> words, String hint, boolean lies) {
     /** What the spirit's surroundings must be like for its activity modifier to apply. */
     public enum Condition {
         ANY,

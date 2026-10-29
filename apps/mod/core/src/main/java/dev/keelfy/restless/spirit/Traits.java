@@ -4,11 +4,13 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /** The trait catalog from the {@code traits} config section, and the roll that gives each spirit its own few. */
 public final class Traits {
@@ -35,6 +37,11 @@ public final class Traits {
     public static List<Trait> of(List<String> ids) {
         Set<String> known = Config.section("traits").keys();
         return ids.stream().filter(known::contains).map(Traits::byId).toList();
+    }
+
+    /** Every trait in the catalog. */
+    public static List<Trait> all() {
+        return Config.section("traits").keys().stream().sorted().map(Traits::byId).toList();
     }
 
     public static double affinity(List<Trait> traits, EventTag tag) {
@@ -72,7 +79,11 @@ public final class Traits {
         Trait.Condition when = config.has("when") ? Trait.Condition.valueOf(config.text("when").toUpperCase(Locale.ROOT)) : Trait.Condition.ANY;
         List<Trait.Trigger> reacts = config.has("reacts")
             ? config.texts("reacts").stream().map(t -> Trait.Trigger.valueOf(t.toUpperCase(Locale.ROOT))).toList() : List.of();
+        Set<Clue> clues = config.has("clues")
+            ? config.texts("clues").stream().map(c -> Clue.valueOf(c.toUpperCase(Locale.ROOT))).collect(Collectors.toCollection(() -> EnumSet.noneOf(Clue.class)))
+            : EnumSet.noneOf(Clue.class);
         return new Trait(id, Map.copyOf(tags), config.has("activity") ? config.num("activity") : 1.0, when,
-            config.has("noise") ? config.num("noise") : 0.0, reacts);
+            config.has("noise") ? config.num("noise") : 0.0, reacts, Set.copyOf(clues), config.texts("words"), config.text("hint"),
+            config.has("lies") && config.num("lies") > 0);
     }
 }

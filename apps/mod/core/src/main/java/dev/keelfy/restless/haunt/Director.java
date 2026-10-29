@@ -44,11 +44,7 @@ public final class Director {
                 }
                 SpiritType spirit = spirit(haunting);
                 if (canHaunt(player)) {
-                    if (Wards.shelters(player)) {
-                        Wards.blocked(player);
-                    } else {
-                        pick(player, spirit, Traits.of(haunting.traits()), power(haunting, now)).ifPresent(event -> fire(player, event, at));
-                    }
+                    pick(player, spirit, Traits.of(haunting.traits()), power(haunting, now)).ifPresent(event -> fireUnlessWarded(player, event, at));
                 }
                 spirits.set(i, haunting.rescheduled(now + cooldown(player.level(), player.blockPosition(), haunting, now, player.getRandom())));
                 changed = true;
@@ -73,12 +69,8 @@ public final class Director {
             List<ServerPlayer> near = level.players().stream().filter(p -> canHaunt(p) && territorial.reaches(p)).toList();
             if (!near.isEmpty()) {
                 ServerPlayer player = near.get(level.getRandom().nextInt(near.size()));
-                if (Wards.shelters(player)) {
-                    Wards.blocked(player);
-                } else {
-                    pick(player, spirit(territorial.haunting()), Traits.of(territorial.haunting().traits()), power(territorial.haunting(), now))
-                        .ifPresent(event -> fire(player, event, Vec3.atCenterOf(territorial.anchor())));
-                }
+                pick(player, spirit(territorial.haunting()), Traits.of(territorial.haunting().traits()), power(territorial.haunting(), now))
+                    .ifPresent(event -> fireUnlessWarded(player, event, Vec3.atCenterOf(territorial.anchor())));
             }
             long next = now + cooldown(level, territorial.anchor(), territorial.haunting(), now, level.getRandom());
             spirits.set(i, territorial.rescheduled(next));
@@ -163,6 +155,14 @@ public final class Director {
     private static HauntData.Haunting bind(ServerPlayer player, SpiritType spirit, long now) {
         HauntData.Haunting born = HauntData.Haunting.born(spirit.id(), now, player.getRandom());
         return born.rescheduled(now + cooldown(player.level(), player.blockPosition(), born, now, player.getRandom()));
+    }
+
+    private static void fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
+        if (Wards.stops(player, event)) {
+            Wards.blocked(player);
+        } else {
+            fire(player, event, at);
+        }
     }
 
     /** Runs an event with no spirit behind it; free-source events fall back to a random point around the player. */

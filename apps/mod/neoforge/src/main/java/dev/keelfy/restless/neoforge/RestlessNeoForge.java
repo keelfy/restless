@@ -14,6 +14,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.PlayLevelSoundEvent;
+import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -46,6 +47,7 @@ public final class RestlessNeoForge {
                 Restless.onBreakBlock(player, e.getState(), e.getPos());
             }
         });
+        NeoForge.EVENT_BUS.addListener((ServerChatEvent e) -> Restless.onChat(e.getPlayer()));
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
             if (Restless.onUseBlock(e.getEntity(), e.getHand(), e.getPos())) {
                 e.setCanceled(true);

@@ -8,6 +8,9 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.haunt.Anger;
 import dev.keelfy.restless.haunt.Candle;
+import dev.keelfy.restless.haunt.Compass;
+import dev.keelfy.restless.haunt.Divination;
+import dev.keelfy.restless.haunt.Wards;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Location;
@@ -24,6 +27,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -34,6 +38,7 @@ import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -64,6 +69,7 @@ public final class Restless {
         Restore.tick(server);
         Director.tick(server);
         Candle.tick(server);
+        Compass.tick(server);
     }
 
     /** Call when the server starts to stop, before the worlds are saved. */
@@ -90,11 +96,19 @@ public final class Restless {
         Anger.broke(player, state, pos);
     }
 
+    /** Call when a player says something in chat. */
+    public static void onChat(ServerPlayer player) {
+        Divination.ask(player);
+    }
+
     /** Call before a player uses a block; true means the use must be cancelled. */
     public static boolean onUseBlock(Player player, InteractionHand hand, BlockPos pos) {
         Level level = player.level();
         if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
             Reactions.used(server, level.getBlockState(pos));
+        }
+        if (level instanceof ServerLevel server && hand == InteractionHand.MAIN_HAND && level.getBlockState(pos).is(Blocks.BELL)) {
+            Wards.rung(server, pos);
         }
         if (player instanceof ServerPlayer server && isFire(player.getItemInHand(hand))
             && (level.getBlockState(pos).is(BlockTags.LOGS) || level.getBlockState(pos).is(BlockTags.LEAVES))) {

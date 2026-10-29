@@ -1,0 +1,1 @@
+{"textures":{"particle":"restless:block/dreamcatcher","all":"restless:block/dreamcatcher"},"elements":[{"from":[3,0,7],"to":[13,12,9],"faces":{"up":{"texture":"#all"},"down":{"texture":"#all"},"north":{"texture":"#all"},"south":{"texture":"#all"},"east":{"texture":"#all"},"west":{"texture":"#all"}}}]}

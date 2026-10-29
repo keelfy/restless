@@ -1,0 +1,1 @@
+{"textures":{"particle":"restless:block/spirit_box","all":"restless:block/spirit_box"},"elements":[{"from":[3,0,3],"to":[13,6,13],"faces":{"up":{"texture":"#all"},"down":{"texture":"#all"},"north":{"texture":"#all"},"south":{"texture":"#all"},"east":{"texture":"#all"},"west":{"texture":"#all"}}}]}
