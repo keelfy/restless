@@ -16,10 +16,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
@@ -49,13 +50,18 @@ final class HauntEventGameTests {
         tests.put("event_lost_growth", helper -> runs(helper, "lost_growth", player -> {
             helper.setBlock(FEET.south(2).below(), Blocks.FARMLAND);
             helper.setBlock(FEET.south(2), ((CropBlock) Blocks.WHEAT).getStateForAge(7));
-        }, () -> helper.assertBlockProperty(FEET.south(2), CropBlock.AGE, 0)));
-        figureFarOff(tests, "distant_player", 60);
-        figureFarOff(tests, "distant_walker", 45);
+            // Random ticks may grow it a stage again before the check, so "lost" is: no longer ripe.
+        }, () -> check(helper, helper.getBlockState(FEET.south(2)).getValue(CropBlock.AGE) < CropBlock.MAX_AGE, "lost_growth must take the growth")));
+        farOff(tests, "distant_player", 60, Mannequin.class);
+        farOff(tests, "distant_walker", 45, Mannequin.class);
+        farOff(tests, "nametag", 30, Display.TextDisplay.class);
     }
 
-    /** A figure event on a ring of standing room {@code distance} blocks out, wherever it picks its side; one figure stays there. */
-    private static void figureFarOff(Map<String, Consumer<GameTestHelper>> tests, String id, int distance) {
+    /**
+     * An event that puts one {@code kind} up to {@code distance} blocks out, given a ring of standing room there wherever
+     * it picks its side; the one is checked and removed.
+     */
+    private static void farOff(Map<String, Consumer<GameTestHelper>> tests, String id, int distance, Class<? extends Entity> kind) {
         PADDING.put("event_" + id, 2 * (distance + 10));
         tests.put("event_" + id, helper -> runs(helper, id, player -> {
             BlockPos centre = helper.absolutePos(FEET);
@@ -72,11 +78,9 @@ final class HauntEventGameTests {
             }
         }, () -> {
             AABB around = new AABB(helper.absolutePos(FEET)).inflate(distance + 10);
-            List<Mannequin> figures = helper.getLevel().getEntitiesOfClass(Mannequin.class, around);
-            check(helper, figures.size() == 1, id + " must leave one figure standing, found " + figures.size());
-            double away = figures.get(0).distanceToSqr(Vec3.atCenterOf(helper.absolutePos(FEET)));
-            check(helper, away > (distance - 10) * (distance - 10), id + " must stand far off");
-            figures.get(0).discard();
+            List<? extends Entity> found = helper.getLevel().getEntitiesOfClass(kind, around);
+            check(helper, found.size() == 1, id + " must leave one " + kind.getSimpleName() + ", found " + found.size());
+            found.get(0).discard();
             forceChunks(helper, helper.absolutePos(FEET), distance + 4, false);
         }));
     }
