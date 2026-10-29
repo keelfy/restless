@@ -23,6 +23,8 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -34,7 +36,7 @@ import org.jspecify.annotations.Nullable;
  * The center of a ritual. It holds one thing: a focus, which starts a ritual on the spirit weak to it (see {@link Ritual}),
  * or a bottle of water, which turns holy after a night on it. Using it with an empty hand takes the thing back.
  */
-public final class Altar extends ShapedBlock {
+public final class Altar extends ShapedBlock implements EntityBlock {
     /** What lies on the altar. */
     public enum Held implements StringRepresentable {
         EMPTY(null), WATER(null), IRON(Focus.IRON), GLOWSTONE(Focus.GLOWSTONE), HOLY_WATER(Focus.HOLY_WATER), MIRROR(Focus.MIRROR);
@@ -85,6 +87,11 @@ public final class Altar extends ShapedBlock {
     public Altar(BlockBehaviour.Properties properties) {
         super(properties, Block.box(1, 0, 1, 15, 12, 15));
         registerDefaultState(stateDefinition.any().setValue(HELD, Held.EMPTY));
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new AltarEntity(pos, state);
     }
 
     @Override

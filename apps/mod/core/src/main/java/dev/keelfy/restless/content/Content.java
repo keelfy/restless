@@ -3,6 +3,7 @@ package dev.keelfy.restless.content;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.platform.Platform;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 /** Everything the mod adds to the game's registries; the loader fills them through {@link Platform#register}. */
@@ -57,6 +59,8 @@ public final class Content {
     public static final Supplier<Block> ALTAR = block("altar",
         p -> new Altar(p.strength(2.0f).sound(SoundType.STONE).noOcclusion()));
     public static final Supplier<Item> ALTAR_ITEM = blockItem("altar", ALTAR);
+    public static final Supplier<BlockEntityType<?>> ALTAR_ENTITY = Platform.get().register(BuiltInRegistries.BLOCK_ENTITY_TYPE, "altar",
+        key -> new BlockEntityType<>(AltarEntity::new, Set.of(ALTAR.get())));
     public static final Supplier<Item> HOLY_WATER = item("holy_water", p -> new Item(p.stacksTo(16)));
     public static final Supplier<Item> MIRROR = item("mirror", p -> new Item(p.stacksTo(16)));
     /** A banished spirit drops the essence named after its type: {@code <type>_essence}. */
