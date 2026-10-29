@@ -1,7 +1,7 @@
 # Restless
 
 A horror mod for Minecraft 26.3: personal and territorial spirits trigger random events
-that grow more dangerous as the player progresses.
+that grow more dangerous as they age and are angered.
 
 ## Structure
 

@@ -78,13 +78,13 @@ public final class DebugScreen extends Screen {
         int y = TOP;
         graphics.text(font, data.player(), x, y, WHITE);
         y += LINE;
-        graphics.text(font, String.format(Locale.ROOT, "danger %.2f   day %d   advancements %d", data.danger(), data.days(), data.advancements()), x, y, GRAY);
-        y += LINE * 2;
+        y += LINE;
         graphics.text(font, "Spirits (" + data.spirits().size() + ")", x, y, WHITE);
         for (int i = 0; i < data.spirits().size(); i++) {
             y += LINE;
             DebugPayload.Spirit spirit = data.spirits().get(i);
-            graphics.text(font, (i + 1) + ". " + spirit.id() + "  next in " + spirit.seconds() + "s", x, y, GRAY);
+            graphics.text(font, String.format(Locale.ROOT, "%d. %s  seed %x  power %.2f  next in %ds",
+                i + 1, spirit.id(), spirit.seed(), spirit.power(), spirit.seconds()), x, y, GRAY);
         }
         y += LINE * 2;
 

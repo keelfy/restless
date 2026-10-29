@@ -85,6 +85,18 @@ class ConfigTest {
     }
 
     @Test
+    void dangerSectionBecomesPower(@TempDir Path dir) throws IOException {
+        Files.writeString(dir.resolve("haunt.json"),
+            "{\"version\":1,\"danger\":{\"days_to_max\":9,\"days_share\":1,\"cooldown_calm_minutes\":7}}");
+        JsonObject tree = Config.read(dir, Config::bundledText, Migrations.BUILT_IN);
+        assertFalse(tree.has("danger") && tree.getAsJsonObject("danger").has("days_to_max"));
+        JsonObject power = tree.getAsJsonObject("power");
+        assertEquals(7, power.get("cooldown_calm_minutes").getAsInt());
+        assertEquals(30, power.get("maturity_days").getAsInt());
+        assertFalse(power.has("days_to_max") || power.has("days_share"));
+    }
+
+    @Test
     void newerOrBrokenFileFallsBackAndIsLeftAlone(@TempDir Path dir) throws IOException {
         String newer = "{\"version\":99,\"director\":{\"check_interval_ticks\":7}}";
         Files.writeString(dir.resolve("haunt.json"), newer);

@@ -1,7 +1,7 @@
 # Spirits and haunt events
 
 Reference for the current content. Source of truth is the code:
-`spirit/Spirits.java`, `haunt/HauntEvents.java`, `haunt/event/*`, `haunt/Danger.java`, `haunt/Director.java`, `haunt/Scheduler.java`.
+`spirit/Spirits.java`, `haunt/HauntEvents.java`, `haunt/event/*`, `haunt/Power.java`, `haunt/Director.java`, `haunt/Scheduler.java`.
 Update this file when any of them changes. The numbers below are the shipped defaults; see [Config](#config).
 
 ## How it works
@@ -13,21 +13,25 @@ Update this file when any of them changes. The numbers below are the shipped def
   Spectators and creative players get no event, but the cooldown still resets.
 - The pick is a weighted random choice among events that can run right now (`canRun`):
 
-  `weight = baseWeight × tierFactor(tier, danger) × Π affinity(spirit, tag)`
+  `weight = baseWeight × tierFactor(tier, power) × Π affinity(spirit, tag)`
 
   `chance = weight / Σ weights of runnable events`. An event that cannot run is excluded and the rest are renormalised.
 
-### Danger
+### Power
 
-`danger = 0.6 × min(days / 40, 1) + 0.4 × min(advancements / 40, 1)`, range 0..1.
+Each spirit has an identity: `uuid`, `seed`, `bornAt` (game time it appeared) and `anger` 0..1. Anger is stored but nothing
+raises it yet. Power depends on the spirit alone, never on the world:
 
-- `days` – overworld clock days. `advancements` – completed advancements that have a toast (recipe unlocks do not count).
-- Tier factor: `LIGHT = 1 − 0.7 × danger`, `HARMFUL = danger`. Danger moves weight from light to harmful events;
-  harmful events are impossible at danger 0.
+`power = min(1, 0.6 × min(age / 30 days, 1) + 0.4 × anger)`, range 0..1.
+
+- A new spirit starts at 0 and reaches 0.6 after 30 in-game days (`power.maturity_days`). Spirits from saves that predate identity
+  count as born at tick 0.
+- Tier factor: `LIGHT = 1 − 0.7 × power`, `HARMFUL = power`. Power moves weight from light to harmful events;
+  harmful events are impossible at power 0.
 
 ### Cooldown
 
-`minutes = (4 − 2.5 × danger) × (1 + roll) × quiet / activity`, `roll` uniform in 0..1 (minimum 1 second).
+`minutes = (4 − 2.5 × power) × (1 + roll) × quiet / activity`, `roll` uniform in 0..1 (minimum 1 second).
 
 `quiet = 1.2^n`, where `n` counts the true conditions among: it is day, the player sees the sky, there is no thunderstorm.
 So a player in the open on a clear day waits up to 1.73× longer; in a mine, a house or at night nothing changes.
@@ -37,7 +41,7 @@ So a player in the open on a clear day waits up to 1.73× longer; in a mine, a h
 | Id | Description | Activity | Affinity (missing = ×1) |
 |---|---|---|---|
 | `poltergeist` | Noisy and physical. Mostly messes with doors and belongings; rarely hurts at first. | 1.3 | doors ×4, items ×3, blocks ×1.5, afflictions ×0.5, assaults ×0.5, sounds ×0.5, presence ×0.5 |
-| `shade` | Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as danger grows. | 0.8 | lights ×3, sounds ×2.5, afflictions ×2, presence ×2, assaults ×1, doors ×0.3, items ×0.5 |
+| `shade` | Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as its power grows. | 0.8 | lights ×3, sounds ×2.5, afflictions ×2, presence ×2, assaults ×1, doors ×0.3, items ×0.5 |
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
@@ -155,7 +159,7 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 Share of each tag per roll of one spirit, assuming every event can run (in practice many cannot, and the rest renormalise,
 so a spirit near no doors never rolls a door). Computed from the weights above.
 
-| Spirit | Danger | Lights | Doors | Sound | Affliction | Assault | Items | Blocks | Mobs | Presence |
+| Spirit | Power | Lights | Doors | Sound | Affliction | Assault | Items | Blocks | Mobs | Presence |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `poltergeist` | 0 | 11.0% | 49.1% | 4.6% | 3.1% | 0% | 13.8% | 12.4% | 4.6% | 1.4% |
 |  | 0.5 | 9.8% | 44.1% | 3.6% | 4.1% | 2.9% | 16.6% | 12.2% | 5.3% | 1.3% |
@@ -164,8 +168,8 @@ so a spirit near no doors never rolls a door). Computed from the weights above.
 |  | 0.5 | 31.0% | 3.5% | 19.3% | 17.4% | 6.0% | 2.9% | 8.6% | 5.6% | 5.6% |
 |  | 1 | 24.0% | 2.8% | 11.1% | 23.6% | 15.0% | 3.6% | 8.2% | 6.6% | 5.1% |
 
-Cooldown per spirit, minutes (before the daylight factor): `(4 − 2.5 × danger) × (1 + roll) / activity`. Poltergeist: 3.1–6.2 at danger 0, 1.2–2.3 at 1.
-Shade: 5.0–10.0 at danger 0, 1.9–3.8 at 1.
+Cooldown per spirit, minutes (before the daylight factor): `(4 − 2.5 × power) × (1 + roll) / activity`. Poltergeist: 3.1–6.2 at power 0, 1.2–2.3 at 1.
+Shade: 5.0–10.0 at power 0, 1.9–3.8 at 1.
 
 ## Scheduled events
 
@@ -197,7 +201,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 
 | File | Holds |
 |---|---|
-| `haunt.json` | `director`, `danger`, `restore`, `place` |
+| `haunt.json` | `director`, `power`, `restore`, `place` |
 | `spirits.json` | `spirits` (activity, tag affinities) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
@@ -225,8 +229,8 @@ the mod, or one that is not valid JSON, is logged and ignored (the defaults run)
 
 Permission level: gamemaster. `[player]` defaults to the caller.
 
-- `/haunt`: opens the debug screen (needs the mod on the client): your danger, days, advancements and spirits, every event with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
-- `/haunt info [player]`: danger, days, advancements, and the numbered spirit list with time to each spirit's next event.
+- `/haunt`: opens the debug screen (needs the mod on the client): your spirits (seed, power), every event with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
+- `/haunt info [player]`: the numbered spirit list with each spirit's seed, power, anger and time to its next event.
 - `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
 - `/haunt spirit add <spirit> [player]`: binds one more spirit.
 - `/haunt spirit remove <n> [player]`: unbinds spirit number `n` (1-based, as listed by `info`).

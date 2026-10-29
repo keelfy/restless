@@ -11,12 +11,13 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
 /** What the debug screen shows: the viewer's haunt state and every event, as the server sees them when it opens. */
-public record DebugPayload(String player, double danger, int days, int advancements, List<Spirit> spirits, List<Event> events)
+public record DebugPayload(String player, List<Spirit> spirits, List<Event> events)
     implements CustomPacketPayload {
     /** @param seconds time to the spirit's next roll */
-    public record Spirit(String id, int seconds) {
+    public record Spirit(String id, long seed, double power, int seconds) {
         static final StreamCodec<ByteBuf, Spirit> CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8, Spirit::id, ByteBufCodecs.VAR_INT, Spirit::seconds, Spirit::new);
+            ByteBufCodecs.STRING_UTF8, Spirit::id, ByteBufCodecs.VAR_LONG, Spirit::seed, ByteBufCodecs.DOUBLE, Spirit::power,
+            ByteBufCodecs.VAR_INT, Spirit::seconds, Spirit::new);
     }
 
     /** @param canRun whether the event has something to act on near the viewer right now */
@@ -33,9 +34,6 @@ public record DebugPayload(String player, double danger, int days, int advanceme
     public static final Type<DebugPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "debug"));
     public static final StreamCodec<ByteBuf, DebugPayload> CODEC = StreamCodec.composite(
         ByteBufCodecs.STRING_UTF8, DebugPayload::player,
-        ByteBufCodecs.DOUBLE, DebugPayload::danger,
-        ByteBufCodecs.VAR_INT, DebugPayload::days,
-        ByteBufCodecs.VAR_INT, DebugPayload::advancements,
         Spirit.CODEC.apply(ByteBufCodecs.list()), DebugPayload::spirits,
         Event.CODEC.apply(ByteBufCodecs.list()), DebugPayload::events,
         DebugPayload::new);

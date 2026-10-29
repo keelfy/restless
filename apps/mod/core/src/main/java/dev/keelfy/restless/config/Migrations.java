@@ -17,9 +17,12 @@ public final class Migrations {
     /** Version 2 of every event file: event ids carry a namespace ({@code cat_hiss} became {@code minecraft:cat_hiss}). */
     private static final List<UnaryOperator<JsonObject>> NAMESPACED_EVENTS = List.of(Migrations::namespaceEvents);
 
+    /** Version 2 of haunt: the world-wide {@code danger} section became per-spirit {@code power}; its progression keys are gone. */
+    private static final List<UnaryOperator<JsonObject>> POWER = List.of(Migrations::dangerToPower);
+
     /** Steps per file name (without {@code .json}). A file with no entry has never changed shape: version 1. */
     static final Migrations BUILT_IN = new Migrations(Map.of(
-        "lights", NAMESPACED_EVENTS, "mechanisms", NAMESPACED_EVENTS, "sounds", NAMESPACED_EVENTS,
+        "haunt", POWER, "lights", NAMESPACED_EVENTS, "mechanisms", NAMESPACED_EVENTS, "sounds", NAMESPACED_EVENTS,
         "afflictions", NAMESPACED_EVENTS, "assaults", NAMESPACED_EVENTS, "items", NAMESPACED_EVENTS,
         "blocks", NAMESPACED_EVENTS, "mobs", NAMESPACED_EVENTS, "presence", NAMESPACED_EVENTS));
 
@@ -59,6 +62,14 @@ public final class Migrations {
             }
             root.add("events", namespaced);
         }
+        return root;
+    }
+
+    private static JsonObject dangerToPower(JsonObject root) {
+        for (String gone : List.of("days_to_max", "advancements_to_max", "days_share", "advancements_share")) {
+            remove(root, "danger." + gone);
+        }
+        move(root, "danger", "power");
         return root;
     }
 

@@ -22,13 +22,13 @@ public final class DebugMenu {
     public static void open(ServerPlayer viewer) {
         long now = viewer.level().getServer().overworld().getGameTime();
         List<DebugPayload.Spirit> spirits = Director.hauntings(viewer, HauntData.get(viewer.level().getServer()), now).stream()
-            .map(h -> new DebugPayload.Spirit(h.spirit(), (int) Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND)))
+            .map(h -> new DebugPayload.Spirit(h.spirit(), h.seed(), Director.power(h, now),
+                (int) Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND)))
             .toList();
         List<DebugPayload.Event> events = HauntEvents.all().stream()
             .map(e -> new DebugPayload.Event(e.id(), e.tier(), List.copyOf(e.tags()), e.baseWeight(), e.canRun(viewer)))
             .toList();
-        viewer.connection.send(new ClientboundCustomPayloadPacket(new DebugPayload(viewer.getName().getString(), Director.danger(viewer),
-            (int) (viewer.level().getServer().overworld().getOverworldClockTime() / Ticks.DAY), Director.advancements(viewer), spirits, events)));
+        viewer.connection.send(new ClientboundCustomPayloadPacket(new DebugPayload(viewer.getName().getString(), spirits, events)));
     }
 
     /** Runs the event on the sender after {@link #FIRE_DELAY}; the sender must be allowed to use {@code /haunt}. */

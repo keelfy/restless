@@ -68,14 +68,13 @@ public final class HauntCommand {
     private static int info(CommandSourceStack source, ServerPlayer player) {
         long now = source.getServer().overworld().getGameTime();
         List<HauntData.Haunting> spirits = Director.hauntings(player, HauntData.get(source.getServer()), now);
-        long days = source.getServer().overworld().getOverworldClockTime() / Ticks.DAY;
         StringBuilder list = new StringBuilder();
         for (int i = 0; i < spirits.size(); i++) {
             HauntData.Haunting h = spirits.get(i);
-            list.append(String.format(Locale.ROOT, "%n  %d. %s next=%ds", i + 1, h.spirit(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND)));
+            list.append(String.format(Locale.ROOT, "%n  %d. %s seed=%x power=%.2f anger=%.2f next=%ds", i + 1, h.spirit(), h.seed(),
+                Director.power(h, now), h.anger(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND)));
         }
-        String text = String.format(Locale.ROOT, "%s: danger=%.2f days=%d advancements=%d spirits=%d%s",
-            player.getName().getString(), Director.danger(player), days, Director.advancements(player), spirits.size(), list);
+        String text = String.format(Locale.ROOT, "%s: spirits=%d%s", player.getName().getString(), spirits.size(), list);
         source.sendSuccess(() -> Component.literal(text), false);
         return 1;
     }

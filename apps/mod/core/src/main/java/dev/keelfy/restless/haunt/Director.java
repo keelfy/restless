@@ -7,7 +7,6 @@ import dev.keelfy.restless.spirit.Spirits;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,11 +29,12 @@ public final class Director {
                 if (now < spirits.get(i).nextEventAt()) {
                     continue;
                 }
-                SpiritType spirit = spirit(spirits.get(i));
+                HauntData.Haunting haunting = spirits.get(i);
+                SpiritType spirit = spirit(haunting);
                 if (!player.isSpectator() && !player.isCreative()) {
-                    pick(player, spirit).ifPresent(event -> fire(player, event));
+                    pick(player, spirit, power(haunting, now)).ifPresent(event -> fire(player, event));
                 }
-                spirits.set(i, bind(player, spirit, now));
+                spirits.set(i, haunting.rescheduled(now + cooldown(player, haunting, now)));
                 changed = true;
             }
             if (changed) {
@@ -85,7 +85,8 @@ public final class Director {
     }
 
     private static HauntData.Haunting bind(ServerPlayer player, SpiritType spirit, long now) {
-        return new HauntData.Haunting(spirit.id(), now + cooldown(player, spirit));
+        HauntData.Haunting born = HauntData.Haunting.born(spirit.id(), now, player.getRandom());
+        return born.rescheduled(now + cooldown(player, born, now));
     }
 
     public static void fire(ServerPlayer player, HauntEvent event) {
@@ -93,36 +94,23 @@ public final class Director {
         event.run(player);
     }
 
-    public static double danger(ServerPlayer player) {
-        MinecraftServer server = player.level().getServer();
-        long days = server.overworld().getOverworldClockTime() / Ticks.DAY;
-        return Danger.of(days, advancements(player));
+    /** How harmful and how frequent the spirit is right now; depends only on the spirit. */
+    public static double power(HauntData.Haunting haunting, long now) {
+        return Power.of(now - haunting.bornAt(), haunting.anger());
     }
 
-    /** Completed advancements that have a toast; recipe unlocks are hidden ones and do not count. */
-    public static int advancements(ServerPlayer player) {
-        int done = 0;
-        for (AdvancementHolder holder : player.level().getServer().getAdvancements().getAllAdvancements()) {
-            if (holder.value().display().isPresent() && player.getAdvancements().getOrStartProgress(holder).isDone()) {
-                done++;
-            }
-        }
-        return done;
-    }
-
-    private static long cooldown(ServerPlayer player, SpiritType spirit) {
+    private static long cooldown(ServerPlayer player, HauntData.Haunting haunting, long now) {
         ServerLevel level = player.level();
-        double quiet = Danger.daylightFactor(level.isBrightOutside(), level.canSeeSky(player.blockPosition()), !level.isThundering());
-        return Danger.cooldownTicks(danger(player), spirit.activity(), player.getRandom().nextDouble(), quiet);
+        double quiet = Power.daylightFactor(level.isBrightOutside(), level.canSeeSky(player.blockPosition()), !level.isThundering());
+        return Power.cooldownTicks(power(haunting, now), spirit(haunting).activity(), player.getRandom().nextDouble(), quiet);
     }
 
-    private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit) {
-        double danger = danger(player);
+    private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit, double power) {
         List<HauntEvent> candidates = new ArrayList<>();
         List<Double> weights = new ArrayList<>();
         double total = 0;
         for (HauntEvent event : HauntEvents.all()) {
-            double weight = Danger.weight(event.tier(), event.tags(), event.baseWeight(), spirit, danger);
+            double weight = Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, power);
             if (weight > 0 && event.canRun(player)) {
                 candidates.add(event);
                 weights.add(weight);
