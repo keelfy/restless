@@ -7,7 +7,6 @@
     "rim": "minecraft:block/chiseled_polished_blackstone",
     "copper": "minecraft:block/copper_block",
     "rune": "minecraft:block/oxidized_copper",
-    "light": "minecraft:block/sea_lantern",
     "basin": "minecraft:block/blackstone_top"
   },
   "elements": [
@@ -23,6 +22,10 @@
     {"from":[5,5,5],"to":[11,11,11],"faces":{"down":{"texture":"#rim"},"up":{"texture":"#rim"},"north":{"texture":"#rim"},"south":{"texture":"#rim"},"west":{"texture":"#rim"},"east":{"texture":"#rim"}}},
     {"from":[3,11,3],"to":[13,12,13],"faces":{"down":{"texture":"#copper"},"up":{"texture":"#copper"},"north":{"texture":"#copper"},"south":{"texture":"#copper"},"west":{"texture":"#copper"},"east":{"texture":"#copper"}}},
     {"from":[3,12,3],"to":[13,13,13],"faces":{"down":{"texture":"#stone"},"up":{"texture":"#stone"},"north":{"texture":"#stone"},"south":{"texture":"#stone"},"west":{"texture":"#stone"},"east":{"texture":"#stone"}}},
-    {"from":[5,13.02,5],"to":[11,13.02,11],"shade":false,"faces":{"up":{"texture":"#light"}}}
+    {"from":[5,13.02,5],"to":[11,13.02,11],"faces":{"up":{"texture":"#basin"}}},
+    {"from":[7,13.04,6],"to":[9,13.04,7],"faces":{"up":{"texture":"#rune"}}},
+    {"from":[6,13.04,7],"to":[7,13.04,9],"faces":{"up":{"texture":"#rune"}}},
+    {"from":[9,13.04,7],"to":[10,13.04,9],"faces":{"up":{"texture":"#rune"}}},
+    {"from":[7,13.04,9],"to":[9,13.04,10],"faces":{"up":{"texture":"#rune"}}}
   ]
 }

@@ -61,9 +61,30 @@ public final class Ritual {
         Sense.Spirit spirit = weak.get();
         player.sendSystemMessage(Component.translatable("message.restless.ritual_begins"), true);
         level.playSound(null, altar, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0f, 0.6f);
-        int wave = config.integer("wave_ticks");
-        Scheduler.repeat(player, wave, wave, (p, n) -> wave(p, level, altar, focus, candles, spirit, n));
+        int waveTicks = Math.max(1, config.integer("wave_ticks"));
+        Scheduler.repeat(player, 1, 1, (p, n) -> {
+            int elapsed = n + 1;
+            if (elapsed % waveTicks == 0 && !wave(p, level, altar, focus, candles, spirit, elapsed / waveTicks - 1)) {
+                return false;
+            }
+            if (elapsed % 2 == 0) {
+                smoke(level, altar, focus);
+            }
+            return true;
+        });
         return true;
+    }
+
+    /** Dense vanilla soot follows the offering's bob; its task ends with the ritual, including player departure. */
+    private static void smoke(ServerLevel level, BlockPos altar, Focus focus) {
+        BlockState state = level.getBlockState(altar);
+        if (!state.is(Content.ALTAR.get()) || state.getValue(Altar.HELD) != Altar.Held.of(focus)
+            || !Altar.isComplete(level, altar)) {
+            return;
+        }
+        double height = 1.12 + Math.sin((level.getGameTime() % 24000) * 0.06) * 0.035;
+        level.sendParticles(ParticleTypes.LARGE_SMOKE, altar.getX() + 0.5, altar.getY() + height, altar.getZ() + 0.5,
+            4, 0.22, 0.10, 0.22, 0.008);
     }
 
     /** One wave: the ritual holds or breaks, ends after the last, and otherwise the spirit fights back. @return whether it goes on */

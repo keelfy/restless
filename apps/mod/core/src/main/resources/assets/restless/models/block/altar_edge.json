@@ -7,7 +7,6 @@
     "rim": "minecraft:block/chiseled_polished_blackstone",
     "copper": "minecraft:block/copper_block",
     "rune": "minecraft:block/oxidized_copper",
-    "light": "minecraft:block/sea_lantern",
     "basin": "minecraft:block/blackstone_top"
   },
   "elements": [
