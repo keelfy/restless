@@ -19,6 +19,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
@@ -93,6 +94,13 @@ final class HauntEventGameTests {
             }
         }, () -> check(helper, helper.getLevel().getEntitiesOfClass(Entity.class, new AABB(helper.absolutePos(FEET)).inflate(30), e -> !(e instanceof ServerPlayer)).isEmpty(),
             "hallucination must leave nothing on the server")));
+        PADDING.put("event_moving_tree", 20);
+        tests.put("event_moving_tree", helper -> runs(helper, "moving_tree", player -> tree(helper), () -> {
+            BlockPos centre = helper.absolutePos(FEET);
+            check(helper, !helper.getLevel().getBlockState(centre.east(6)).is(BlockTags.LOGS), "moving_tree must leave the trunk's old place");
+            check(helper, BlockPos.betweenClosedStream(centre.offset(-12, 0, -12), centre.offset(12, 6, 12))
+                .filter(pos -> helper.getLevel().getBlockState(pos).is(BlockTags.LOGS)).count() == 3, "moving_tree must keep the trunk whole");
+        }));
         tests.put("event_cracking_floor", helper -> runs(helper, "cracking_floor", player -> {},
             () -> helper.assertBlockPresent(Blocks.STONE, FEET.below())));
         tests.put("event_hostile_animal", helper -> runs(helper, "hostile_animal",
@@ -151,6 +159,23 @@ final class HauntEventGameTests {
         for (int x = (centre.getX() - reach) >> 4; x <= (centre.getX() + reach) >> 4; x++) {
             for (int z = (centre.getZ() - reach) >> 4; z <= (centre.getZ() + reach) >> 4; z++) {
                 helper.getLevel().setChunkForced(x, z, forced);
+            }
+        }
+    }
+
+    /** A three-log oak with a crown, six blocks east of the player, on dirt as far as it can walk. */
+    static void tree(GameTestHelper helper) {
+        BlockPos centre = helper.absolutePos(FEET);
+        for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-12, -1, -12), centre.offset(12, -1, 12))) {
+            helper.getLevel().setBlock(pos, Blocks.DIRT.defaultBlockState(), 2);
+        }
+        BlockPos trunk = centre.east(6);
+        for (int dy = 0; dy < 3; dy++) {
+            helper.getLevel().setBlock(trunk.above(dy), Blocks.OAK_LOG.defaultBlockState(), 2);
+        }
+        for (BlockPos pos : BlockPos.betweenClosed(trunk.offset(-1, 2, -1), trunk.offset(1, 3, 1))) {
+            if (!pos.equals(trunk.above(2))) {
+                helper.getLevel().setBlock(pos, Blocks.OAK_LEAVES.defaultBlockState(), 2);
             }
         }
     }

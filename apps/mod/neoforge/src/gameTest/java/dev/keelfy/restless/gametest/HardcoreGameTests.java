@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.clock.ClockTimeMarkers;
 import net.minecraft.world.clock.WorldClocks;
 import net.minecraft.world.entity.LivingEntity;
@@ -78,6 +79,11 @@ final class HardcoreGameTests {
                 .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Content.GHOST_LOG.get())), "ghost_tree must really stand");
         }));
         HauntEventGameTests.PADDING.put("hardcore_ghost_tree", 30);
+        hardcore(tests, "hardcore_moving_tree", helper -> runs(helper, "moving_tree", player -> HauntEventGameTests.tree(helper), () -> {
+            BlockPos centre = helper.absolutePos(FEET);
+            check(helper, !helper.getLevel().getBlockState(centre.east(6)).is(BlockTags.LOGS), "moving_tree must stay moved");
+        }));
+        HauntEventGameTests.PADDING.put("hardcore_moving_tree", 20);
         hardcore(tests, "hardcore_hallucination", helper -> runs(helper, "hallucination", player -> floor(helper, 22), () -> {
             List<LivingEntity> mobs = helper.getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(helper.absolutePos(FEET)).inflate(30),
                 e -> !(e instanceof ServerPlayer));
