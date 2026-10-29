@@ -41,6 +41,7 @@ public final class AltarGameTests {
     private static final Map<String, Consumer<GameTestHelper>> TESTS = new LinkedHashMap<>();
 
     public AltarGameTests(IEventBus bus) {
+        DreamcatcherGameTests.register(TESTS);
         TESTS.put("placement", helper -> {
             place(helper);
             check(helper, Altar.isComplete(helper.getLevel(), helper.absolutePos(CENTER)), "All nine parts must be present");

@@ -49,6 +49,8 @@ public final class Content {
     public static final Supplier<Block> DREAMCATCHER = block("dreamcatcher",
         p -> new Dreamcatcher(p.instabreak().sound(SoundType.WOOL).noOcclusion()));
     public static final Supplier<Item> DREAMCATCHER_ITEM = blockItem("dreamcatcher", DREAMCATCHER);
+    public static final Supplier<BlockEntityType<?>> DREAMCATCHER_ENTITY = Platform.get().register(BuiltInRegistries.BLOCK_ENTITY_TYPE, "dreamcatcher",
+        key -> new BlockEntityType<>(DreamcatcherEntity::new, Set.of(DREAMCATCHER.get())));
     public static final Supplier<Block> HALLOWED_LANTERN = block("hallowed_lantern",
         p -> new WardLantern(p.strength(1.0f).sound(SoundType.LANTERN).lightLevel(s -> 12).noOcclusion()));
     public static final Supplier<Item> HALLOWED_LANTERN_ITEM = blockItem("hallowed_lantern", HALLOWED_LANTERN);

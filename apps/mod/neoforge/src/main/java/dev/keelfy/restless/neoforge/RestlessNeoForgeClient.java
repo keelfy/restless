@@ -4,6 +4,8 @@ import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.content.AltarEntity;
 import dev.keelfy.restless.content.AltarRenderer;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.DreamcatcherEntity;
+import dev.keelfy.restless.content.DreamcatcherRenderer;
 import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.SanityOverlay;
 import net.minecraft.resources.Identifier;
@@ -31,5 +33,6 @@ public final class RestlessNeoForgeClient {
     @SuppressWarnings("unchecked") // the registry is typed BlockEntityType<?>; this one is built for AltarEntity
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer((BlockEntityType<AltarEntity>) Content.ALTAR_ENTITY.get(), AltarRenderer::new);
+        event.registerBlockEntityRenderer((BlockEntityType<DreamcatcherEntity>) Content.DREAMCATCHER_ENTITY.get(), context -> new DreamcatcherRenderer());
     }
 }

@@ -1,1 +1,20 @@
-{"variants":{"":{"model":"restless:block/dreamcatcher"}}}
+{
+  "variants": {
+    "facing=north": {
+      "model": "restless:block/dreamcatcher",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "restless:block/dreamcatcher",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "restless:block/dreamcatcher",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "restless:block/dreamcatcher",
+      "y": 270
+    }
+  }
+}
