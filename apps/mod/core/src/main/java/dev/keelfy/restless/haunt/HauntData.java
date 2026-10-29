@@ -57,6 +57,10 @@ public final class HauntData extends SavedData {
         public Haunting rescheduled(long nextEventAt) {
             return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt);
         }
+
+        public Haunting angered(double by) {
+            return new Haunting(uuid, spirit, seed, traits, bornAt, Math.min(1.0, anger + by), nextEventAt);
+        }
     }
 
     /**
@@ -74,6 +78,16 @@ public final class HauntData extends SavedData {
 
         public Territorial rescheduled(long nextEventAt) {
             return new Territorial(haunting.rescheduled(nextEventAt), dimension, anchor, radius);
+        }
+
+        public Territorial angered(double by) {
+            return new Territorial(haunting.angered(by), dimension, anchor, radius);
+        }
+
+        /** Whether {@code pos} is within {@code reach} blocks of the anchor, but never beyond the spirit's own radius. */
+        public boolean covers(BlockPos pos, int reach) {
+            long limit = Math.min(reach, radius);
+            return anchor.distSqr(pos) <= limit * limit;
         }
 
         public boolean reaches(Entity entity) {

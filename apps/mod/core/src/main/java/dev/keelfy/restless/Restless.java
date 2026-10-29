@@ -6,6 +6,7 @@ import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.config.Lang;
+import dev.keelfy.restless.haunt.Anger;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Location;
@@ -20,6 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -27,8 +29,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -67,9 +73,19 @@ public final class Restless {
 
     /** Call when a living thing dies; {@code killer} is whoever dealt the blow, if anyone. */
     public static void onKill(@Nullable Entity killer, LivingEntity dead) {
-        if (killer instanceof ServerPlayer player && dead instanceof Mob) {
-            Reactions.trigger(player, Trait.Trigger.KILL);
+        if (killer instanceof ServerPlayer player) {
+            if (dead instanceof Mob) {
+                Reactions.trigger(player, Trait.Trigger.KILL);
+            }
+            if (dead instanceof Cat) {
+                Anger.provoke(player, Anger.Source.KILL_CAT, dead.blockPosition());
+            }
         }
+    }
+
+    /** Call when a player breaks a block, before it is gone; {@code state} is what stood there. */
+    public static void onBreakBlock(ServerPlayer player, BlockState state, BlockPos pos) {
+        Anger.broke(player, state, pos);
     }
 
     /** Call before a player uses a block; true means the use must be cancelled. */
@@ -77,6 +93,10 @@ public final class Restless {
         Level level = player.level();
         if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
             Reactions.used(server, level.getBlockState(pos));
+        }
+        if (player instanceof ServerPlayer server && isFire(player.getItemInHand(hand))
+            && (level.getBlockState(pos).is(BlockTags.LOGS) || level.getBlockState(pos).is(BlockTags.LEAVES))) {
+            Anger.provoke(server, Anger.Source.BURN_FOREST, pos);
         }
         if (!DoorLocks.isLocked(level, pos)) {
             return false;
@@ -91,6 +111,10 @@ public final class Restless {
             }
         }
         return true;
+    }
+
+    private static boolean isFire(ItemStack stack) {
+        return stack.is(Items.FLINT_AND_STEEL) || stack.is(Items.FIRE_CHARGE);
     }
 
     /** Call whenever a level is about to play a sound at a point; the sound itself is left alone. */

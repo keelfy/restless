@@ -11,6 +11,7 @@
     "cooldown_drop_minutes": 2.5,
     "min_cooldown_ticks": 20
   },
+  "anger": { "kill_cat": 0.15, "break_grave": 0.2, "burn_forest": 0.1, "break_anchor": 0.3, "anchor_reach": 3, "graves": ["minecraft:skeleton_skull", "minecraft:wither_skeleton_skull", "minecraft:bone_block"] },
   "restore": { "retry_ticks": 20 },
   "location": { "min_distance": 6.0, "max_distance": 14.0, "step": 3.0, "height": 0.5 },
   "place": {

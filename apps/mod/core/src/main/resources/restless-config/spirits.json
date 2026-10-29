@@ -37,5 +37,13 @@
     "sleep_thief": { "affinity": { "PRESENCE": 1.5 }, "reacts": ["bed"] },
     "deep_caller": { "affinity": { "SOUND": 1.5 }, "reacts": ["deep"] },
     "grudge": { "affinity": { "ASSAULT": 1.5 }, "reacts": ["kill"] }
+  },
+  "story": {
+    "days_min": 3,
+    "days_max": 400,
+    "name_first": ["Cobble", "Diamond", "Creeper", "Sneaky", "Lava", "Pixel", "Obsidian", "Ghast", "Redstone", "Zombie", "Ender", "Gravel", "Cave", "Torch", "Villager", "Bedrock", "Skeleton", "Iron", "Golden", "Emerald", "Nether", "Shadow", "Pro", "Epic", "Mega", "Dark", "Blaze", "Frozen", "Cactus", "Pumpkin", "Wither", "Dragon", "Night", "Silent", "Rusty", "Tiny", "Angry", "Lucky", "Salty", "Mossy", "Dusty", "Glitch", "Phantom", "Sculk", "Amethyst", "Copper", "Crimson", "Husk"],
+    "name_second": ["Digger", "Hugger", "Miner", "Rider", "Slayer", "Hunter", "Builder", "Farmer", "Crafter", "Gamer", "Master", "Lord", "King", "Knight", "Wolf", "Fox", "Panda", "Axolotl", "Steve", "Alex", "Tim", "Bob", "Sam", "Pete", "Ron", "Gus", "Vic", "Ollie", "Eve", "Noob", "Bandit", "Ninja", "Wizard", "Goblin", "Bee", "Cow", "Pig", "Sheep", "Mole", "Bat", "Pickaxe", "Sword", "Shovel", "Anvil", "Chest", "Torch", "Bucket", "Furnace", "Zombie", "Creeper"],
+    "name_number_max": 99,
+    "causes": ["fell into lava", "starved in a deep mine", "was blown up by a creeper", "drowned in a flooded cave", "was shot by a skeleton", "fell from a high place", "burned down with the house", "was lost in the Nether", "suffocated in a collapsed tunnel", "was slain by a zombie horde", "never found the way back to bed", "was pushed off by a friend"]
   }
 }

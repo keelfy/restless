@@ -14,6 +14,7 @@ import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.SpiritType;
+import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Spirits;
 import java.util.List;
 import java.util.Locale;
@@ -90,7 +91,7 @@ public final class HauntCommand {
     private static String describe(int number, HauntData.Haunting h, String kind, long now, String extra) {
         Vec3 roaming = Location.roaming(h.uuid());
         String at = roaming == null ? "" : String.format(Locale.ROOT, " at=%.0f,%.0f,%.0f", roaming.x, roaming.y, roaming.z);
-        return String.format(Locale.ROOT, "%n  %d. %s %s seed=%x traits=%s power=%.2f anger=%.2f next=%ds%s%s", number, h.spirit(), kind, h.seed(), String.join(",", h.traits()),
+        return String.format(Locale.ROOT, "%n  %d. %s %s \"%s\" seed=%x traits=%s power=%.2f anger=%.2f next=%ds%s%s", number, h.spirit(), kind, Story.of(h.seed()), h.seed(), String.join(",", h.traits()),
             Director.power(h, now), h.anger(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND), at, extra);
     }
 

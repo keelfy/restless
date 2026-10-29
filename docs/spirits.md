@@ -1,7 +1,7 @@
 # Spirits and haunt events
 
 Reference for the current content. Source of truth is the code:
-`spirit/Spirits.java`, `haunt/HauntEvents.java`, `haunt/event/*`, `haunt/Power.java`, `haunt/Reactions.java`, `spirit/Traits.java`, `haunt/Director.java`, `haunt/Scheduler.java`.
+`spirit/Spirits.java`, `haunt/HauntEvents.java`, `haunt/event/*`, `haunt/Power.java`, `haunt/Reactions.java`, `haunt/Anger.java`, `spirit/Traits.java`, `spirit/Story.java`, `haunt/Director.java`, `haunt/Scheduler.java`.
 Update this file when any of them changes. The numbers below are the shipped defaults; see [Config](#config).
 
 ## How it works
@@ -32,8 +32,7 @@ Update this file when any of them changes. The numbers below are the shipped def
 
 ### Power
 
-Each spirit has an identity: `uuid`, `seed`, `bornAt` (game time it appeared) and `anger` 0..1. Anger is stored but nothing
-raises it yet. Power depends on the spirit alone, never on the world:
+Each spirit has an identity: `uuid`, `seed`, `bornAt` (game time it appeared) and `anger` 0..1. Player actions raise anger (see [Anger](#anger)). Power depends on the spirit alone, never on the world:
 
 `power = min(1, 0.6 × min(age / 30 days, 1) + 0.4 × anger)`, range 0..1.
 
@@ -62,6 +61,28 @@ what they pick and when they act. A trait has any of:
 
 Noise and reactions apply to personal spirits only. The debug screen shows each spirit's traits and, for the selected
 event, the chance each spirit rolls it next.
+
+### Anger
+
+Anger is saved per spirit and only goes up for now (offerings that lower it come later). The amounts are the `anger` config:
+
+| Source | Amount | Who takes it |
+|---|---|---|
+| Killing a cat | `kill_cat` 0.15 | all the player's spirits; territorial ones if it happened in their radius |
+| Breaking a grave (`graves`: skeleton and wither skeleton skull, bone block) | `break_grave` 0.2 | same |
+| Lighting a log or leaves with flint and steel or a fire charge | `burn_forest` 0.1 per ignition | same |
+| Breaking a block within `anchor_reach` (3) of a territorial spirit's anchor | `break_anchor` 0.3 | that spirit only |
+
+Anger is capped at 1. A territorial spirit takes nothing from a player outside its radius, and a player's actions never
+anger another player's personal spirits. Fire is counted when the player lights it, not when a forest burns down.
+
+### Story
+
+Every spirit was a player once: `Story.of(seed)` gives a nickname, how many days it had been dead when it woke (between
+`days_min` and `days_max`) and a cause of death, all drawn from the `story` lists in `spirits.json`. Nothing is saved, the
+same seed always tells the same story, and only `/haunt info` shows it for now. The nicknames are built from two word lists (`name_first`, `name_second`) with an optional `_` and number, which gives
+over a hundred thousand different ones. They are made up: there is no way to ask Mojang for random real ones, and a name
+taken from the server's own players would change the story whenever they do.
 
 ### Cooldown
 
@@ -236,8 +257,8 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 
 | File | Holds |
 |---|---|
-| `haunt.json` | `director`, `power`, `restore`, `place` |
-| `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog) |
+| `haunt.json` | `director`, `power`, `anger`, `restore`, `place` |
+| `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog), `story` (nickname words, days, causes) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
 Names and descriptions of events live apart, in `restless-config/lang/en.json` and `ru.json` (copied to `config/restless/lang/` on first run,
@@ -265,7 +286,7 @@ the mod, or one that is not valid JSON, is logged and ignored (the defaults run)
 Permission level: gamemaster. `[player]` defaults to the caller.
 
 - `/haunt`: opens the debug screen (needs the mod on the client): your spirits (seed, traits, power), every event with the chance each spirit rolls it next, with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
-- `/haunt info [player]`: the numbered spirit list with each spirit's kind, seed, traits, power, anger and time to its next event.
+- `/haunt info [player]`: the numbered spirit list with each spirit's kind, story, seed, traits, power, anger and time to its next event.
 - `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
 - `/haunt spirit add <spirit> [player]`: binds one more personal spirit; for a territorial one, anchors it where the player stands.
 - `/haunt spirit remove <n> [player]`: removes spirit number `n` (1-based, as listed by `info`: the player's personal spirits, then the territorial ones in their dimension).
