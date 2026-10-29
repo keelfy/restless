@@ -151,7 +151,10 @@ weak to the one most of its traits name; a tie goes to the first in that order. 
 trait it names, so a few photos of one spirit tell what it is weak to.
 
 One **altar** item (chiseled stone bricks, salt, candle) places a 3×3 platform centered on the clicked space:
-a raised bowl, four corner pillars and a copper-and-turquoise floor pattern. All nine spaces must be clear, dry,
+a worn charcoal-stone offering slab, raised tuff paving with recessed joints, a broken chalk circle and four iron
+candle stands. The offering rests flat on a red clay inset. Place ordinary candles on top of the corner stands and
+light them: they count toward the ritual and spirits can extinguish them. Breaking the altar also releases these
+candles. All nine spaces must be clear, dry,
 and supported by solid top faces. Breaking any part dismantles the platform and returns one altar plus its held
 item; creative mode does not drop the altar. Any part accepts or returns the offering. Existing single-block altars
 must be broken and placed again to assemble the platform.

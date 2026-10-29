@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -127,15 +129,20 @@ public final class Altar extends Block implements EntityBlock {
 
     public static final EnumProperty<Held> HELD = EnumProperty.create("held", Held.class);
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
-    private static final VoxelShape BASE = Block.box(0, 0, 0, 16, 3, 16);
+    private static final VoxelShape BASE = Shapes.or(Block.box(0, 0, 0, 16, 2, 16),
+        Block.box(0.5, 2, 0.5, 7.75, 3.5, 7.75), Block.box(8.25, 2, 0.5, 15.5, 3.5, 7.75),
+        Block.box(0.5, 2, 8.25, 7.75, 3.5, 15.5), Block.box(8.25, 2, 8.25, 15.5, 3.5, 15.5));
     private static final VoxelShape BOWL = Shapes.or(BASE,
-        Block.box(3, 3, 3, 13, 5, 13), Block.box(5, 5, 5, 11, 9, 11),
-        Block.box(2, 9, 2, 14, 11, 14),
-        Block.box(1, 11, 1, 15, 14, 3), Block.box(1, 11, 13, 15, 14, 15),
-        Block.box(1, 11, 3, 3, 14, 13), Block.box(13, 11, 3, 15, 14, 13));
+        Block.box(3, 3, 3, 13, 9, 13), Block.box(1, 9, 1, 15, 12, 15),
+        Block.box(1, 12, 1, 15, 13, 3), Block.box(1, 12, 13, 15, 13, 15),
+        Block.box(1, 12, 3, 3, 13, 13), Block.box(13, 12, 3, 15, 13, 13),
+        Block.box(2.75, 4, 2.75, 13.25, 5, 13.25),
+        Block.box(6, 6, 2.75, 10, 8, 3), Block.box(6, 6, 13, 10, 8, 13.25),
+        Block.box(2.75, 6, 6, 3, 8, 10), Block.box(13, 6, 6, 13.25, 8, 10));
     private static final VoxelShape PILLAR = Shapes.or(BASE,
-        Block.box(3, 3, 3, 13, 5, 13), Block.box(5, 5, 5, 11, 11, 11),
-        Block.box(3, 11, 3, 13, 13, 13));
+        Block.box(4, 3, 4, 12, 5, 12), Block.box(5, 5, 5, 11, 6, 11),
+        Block.box(6.5, 6, 6.5, 9.5, 12, 9.5), Block.box(5.5, 11, 5.5, 10.5, 13, 10.5),
+        Block.box(4, 13, 4, 12, 14, 12), Block.box(3, 14, 3, 13, 16, 13));
 
     public Altar(BlockBehaviour.Properties properties) {
         super(properties.pushReaction(PushReaction.IMMOVEABLE));
@@ -202,6 +209,9 @@ public final class Altar extends Block implements EntityBlock {
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
         Part removed = state.getValue(PART);
+        if (removed.corner() && level.getBlockState(pos.above()).getBlock() instanceof CandleBlock) {
+            level.destroyBlock(pos.above(), true);
+        }
         BlockPos center = removed.center(pos);
         if (removed != Part.CENTER) {
             if (isPart(level.getBlockState(center), Part.CENTER)) {
@@ -245,6 +255,10 @@ public final class Altar extends Block implements EntityBlock {
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (state.getValue(PART).corner() && hit.getDirection() == Direction.UP
+            && stack.getItem() instanceof BlockItem item && item.getBlock() instanceof CandleBlock) {
+            return InteractionResult.PASS;
+        }
         pos = state.getValue(PART).center(pos);
         state = level.getBlockState(pos);
         if (!isPart(state, Part.CENTER)) {
@@ -295,7 +309,7 @@ public final class Altar extends Block implements EntityBlock {
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         Part part = state.getValue(PART);
-        if (part != Part.CENTER && !part.corner()) {
+        if (part != Part.CENTER) {
             return;
         }
         BlockState center = level.getBlockState(part.center(pos));
@@ -303,7 +317,7 @@ public final class Altar extends Block implements EntityBlock {
             return;
         }
         double angle = random.nextDouble() * Math.PI * 2;
-        double radius = part == Part.CENTER ? 0.3 : 0.1;
+        double radius = 0.3;
         double x = pos.getX() + 0.5 + Math.cos(angle) * radius;
         double z = pos.getZ() + 0.5 + Math.sin(angle) * radius;
         boolean blessing = center.getValue(HELD) == Held.WATER || center.getValue(HELD) == Held.HOLY_WATER;

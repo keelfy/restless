@@ -2,6 +2,7 @@ package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.content.Altar;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.haunt.Scan;
 import dev.keelfy.restless.haunt.Wards;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,7 +25,9 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -148,6 +151,47 @@ public final class AltarGameTests {
                 helper.succeed();
             });
         });
+        for (boolean breakCorner : new boolean[] {false, true}) {
+            TESTS.put("corner_candles_" + (breakCorner ? "corner_break" : "center_break"), helper -> {
+                place(helper);
+                var level = helper.getLevel();
+                BlockPos center = helper.absolutePos(CENTER);
+                level.setBlockAndUpdate(center, level.getBlockState(center).setValue(Altar.HELD, Altar.Held.IRON));
+                Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+                for (int x : new int[] {-1, 1}) {
+                    for (int z : new int[] {-1, 1}) {
+                        BlockPos corner = center.offset(x, 0, z);
+                        BlockHitResult hit = new BlockHitResult(Vec3.atBottomCenterOf(corner.above()), Direction.UP, corner, false);
+                        ItemStack candle = new ItemStack(Items.CANDLE);
+                        check(helper, level.getBlockState(corner).useItemOn(candle, level, player, InteractionHand.MAIN_HAND, hit)
+                            == net.minecraft.world.InteractionResult.PASS, "A candle must reach item placement without taking the offering");
+                        check(helper, ((BlockItem) candle.getItem()).place(new BlockPlaceContext(level, player,
+                            InteractionHand.MAIN_HAND, candle, hit)).consumesAction(), "A corner stand must support a real candle");
+                        check(helper, candle.isEmpty(), "Placing a candle must consume it once");
+                        BlockPos above = corner.above();
+                        check(helper, level.getBlockState(above).canSurvive(level, above), "The tray must support the candle");
+                        level.setBlockAndUpdate(above, level.getBlockState(above).setValue(CandleBlock.LIT, true));
+                    }
+                }
+                int[] lit = {0};
+                Scan.each(level, center, 3, (pos, state) -> {
+                    if (AbstractCandleBlock.isLit(state)) lit[0]++;
+                });
+                check(helper, lit[0] == 4, "The ritual scan must see four lit candles on the stands");
+                helper.assertBlockProperty(CENTER, Altar.HELD, Altar.Held.IRON);
+                BlockPos candle = center.offset(-1, 1, -1);
+                AbstractCandleBlock.extinguish(null, level.getBlockState(candle), level, candle);
+                check(helper, !AbstractCandleBlock.isLit(level.getBlockState(candle)), "A spirit must be able to snuff a stand's candle");
+                level.destroyBlock(breakCorner ? center.offset(-1, 0, -1) : center, true);
+                helper.runAfterDelay(2, () -> {
+                    for (int x : new int[] {-1, 1}) {
+                        for (int z : new int[] {-1, 1}) helper.assertBlockPresent(Blocks.AIR, CENTER.offset(x, 1, z));
+                    }
+                    check(helper, drops(helper, Items.CANDLE) == 4, "Dismantling must return each placed candle once");
+                    helper.succeed();
+                });
+            });
+        }
 
         DeferredRegister<Consumer<GameTestHelper>> functions = DeferredRegister.create(Registries.TEST_FUNCTION, "restless_tests");
         TESTS.forEach((name, test) -> functions.register(name, () -> test));
