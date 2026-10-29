@@ -67,6 +67,10 @@ final class HauntEventGameTests {
             AABB around = new AABB(field).inflate(8);
             check(helper, helper.getLevel().getEntitiesOfClass(Mannequin.class, around).isEmpty(), "harvest must leave once the field is bare");
         }));
+        tests.put("event_false_windows", helper -> runs(helper, "false_windows",
+            player -> helper.setBlock(FEET.north(2), Blocks.GLASS), () -> helper.assertBlockPresent(Blocks.GLASS, FEET.north(2))));
+        tests.put("event_false_looks", helper -> runs(helper, "false_looks",
+            player -> helper.setBlock(FEET.west(2), Blocks.CRAFTING_TABLE), () -> helper.assertBlockPresent(Blocks.CRAFTING_TABLE, FEET.west(2))));
         tests.put("event_cracking_floor", helper -> runs(helper, "cracking_floor", player -> {},
             () -> helper.assertBlockPresent(Blocks.STONE, FEET.below())));
         tests.put("event_hostile_animal", helper -> runs(helper, "hostile_animal",

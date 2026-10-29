@@ -1,0 +1,91 @@
+package dev.keelfy.restless.haunt.event;
+
+import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.HauntEvent;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+
+/** The player's own view of the world lies to them; see {@link FakeBlocks}. Nothing on the server changes. */
+final class Illusions {
+    private Illusions() {}
+
+    static List<HauntEvent> all() {
+        return List.of(
+            // 105: every window nearby is gone, or fenced, or walled up with what is around it
+            SimpleEvent.light("false_windows", EventTag.BLOCKS, player -> Nearby.any(player, "false_windows", Illusions::isGlass), Illusions::falseWindows),
+            // 106: blocks look like others: a crafting table like a furnace, a furnace like a chest
+            SimpleEvent.light("false_looks", EventTag.BLOCKS, player -> Nearby.any(player, "false_looks", state -> look(state).isPresent()), player -> {
+                Config.Section config = Config.event("false_looks");
+                Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
+                for (BlockPos pos : nearest(player, Nearby.all(player, "false_looks", state -> look(state).isPresent()), config.integer("max_blocks"))) {
+                    look(player.level().getBlockState(pos)).ifPresent(state -> shown.put(pos, state));
+                }
+                FakeBlocks.show(player, shown, config.integer("ticks"));
+            })
+        );
+    }
+
+    private static void falseWindows(ServerPlayer player) {
+        Config.Section config = Config.event("false_windows");
+        ServerLevel level = player.level();
+        List<String> modes = config.texts("modes");
+        String mode = modes.get(player.getRandom().nextInt(modes.size()));
+        Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
+        for (BlockPos pos : nearest(player, Nearby.all(player, "false_windows", Illusions::isGlass), config.integer("max_blocks"))) {
+            shown.put(pos, switch (mode) {
+                // Connected to the walls around it, as a fence put there would be.
+                case "fence" -> Block.updateFromNeighbourShapes(Blocks.OAK_FENCE.defaultBlockState(), level, pos);
+                case "wall" -> commonNeighbour(level, pos);
+                default -> Blocks.AIR.defaultBlockState();
+            });
+        }
+        FakeBlocks.show(player, shown, config.integer("ticks"));
+    }
+
+    /** Glass blocks and panes, plain, stained or tinted. */
+    private static boolean isGlass(BlockState state) {
+        return state.is(BlockTags.IMPERMEABLE) || BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().endsWith("glass_pane");
+    }
+
+    /** The full block most of its neighbours are, so the hole looks bricked up; air if none is. */
+    private static BlockState commonNeighbour(ServerLevel level, BlockPos pos) {
+        Map<BlockState, Integer> counts = new HashMap<>();
+        for (Direction d : Direction.values()) {
+            BlockState next = level.getBlockState(pos.relative(d));
+            if (next.isSolidRender() && !isGlass(next) && !next.hasBlockEntity()) {
+                counts.merge(next, 1, Integer::sum);
+            }
+        }
+        return counts.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(Blocks.AIR.defaultBlockState());
+    }
+
+    /** What {@code state} looks like under {@code false_looks.looks}, keeping what it shares with it (its facing). */
+    private static Optional<BlockState> look(BlockState state) {
+        Config.Section looks = Config.event("false_looks").section("looks");
+        String id = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
+        if (!looks.has(id)) {
+            return Optional.empty();
+        }
+        return BuiltInRegistries.BLOCK.getOptional(Identifier.parse(looks.text(id))).map(to -> to.defaultBlockState().withPropertiesOf(state));
+    }
+
+    /** The {@code max} of {@code found} nearest the player. */
+    private static List<BlockPos> nearest(ServerPlayer player, List<BlockPos> found, int max) {
+        return found.stream().sorted(Comparator.comparingDouble(pos -> pos.distSqr(player.blockPosition()))).limit(max).toList();
+    }
+}

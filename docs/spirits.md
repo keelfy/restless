@@ -352,6 +352,8 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `wilted_flowers` | 72 | LIGHT | BLOCKS | 0.6 | A potted flower within 10 | Every one becomes a potted dead bush; restored after 2 min |
 | `withering_crops` | 73 | LIGHT | BLOCKS | 0.6 | A grown crop within 6 | Every crop within 6 loses one growth stage |
 | `lost_growth` | 110 | LIGHT | BLOCKS | 0.5 | A crop, stem, berry bush or cocoa past its first stage within 8 | One of them is set back to age 0 |
+| `false_windows` | 105 | LIGHT | BLOCKS | 0.4 | Glass or a glass pane within 10 | Only this player's client is told that the 64 nearest glass blocks and panes are, all alike, air, an oak fence (connected to the walls) or the full block most of its neighbours are. 10 s later it gets the real blocks back. Nothing on the server |
+| `false_looks` | 106 | LIGHT | BLOCKS | 0.4 | A block from `looks` within 10 | Only this player's client is told that the 16 nearest of them are their look-alike (crafting table → furnace → chest → crafting table, smoker ↔ blast furnace, bookshelf → oak planks), keeping the facing. 10 s later it gets the real blocks back. Nothing on the server |
 | `turning_frame` | 76 | LIGHT | BLOCKS | 0.6 | A filled item frame within 12 | Rotates its item |
 | `new_sign` | 74 | LIGHT | BLOCKS | 0.6 | A sign within 10 | The front text becomes one creepy phrase of up to three short lines (at most eight letters each, so it fits a hanging sign); restored after 1 min unless the player has edited it |
 | `new_painting` | 75 | LIGHT | BLOCKS | 0.6 | A painting within 12 with another variant of the same size | Becomes another painting; restored after 1 min |

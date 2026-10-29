@@ -115,6 +115,8 @@
     "minecraft:bottle_shatter": { "name": "Bottle Shatter", "description": "A splash potion shatters nearby, with no potion." },
     "minecraft:note_block_voice": { "name": "Note Block Voice", "description": "A note block nearby plays a voice instead of a note." },
     "minecraft:lost_growth": { "name": "Lost Growth", "description": "One crop, stem, berry bush or cocoa pod nearby is back to a seedling." },
+    "minecraft:false_windows": { "name": "False Windows", "description": "Every window nearby is gone, or fenced, or walled up with what is around it, for this player alone. A click on one, or coming back later, shows the glass." },
+    "minecraft:false_looks": { "name": "False Looks", "description": "Blocks nearby look like others for this player alone: a crafting table like a furnace, a furnace like a chest, a chest like a crafting table. A click on one shows what it is." },
     "minecraft:false_wound": { "name": "False Wound", "description": "For a moment the health bar shows four hearts less; the real health is untouched." },
     "minecraft:false_hearts": { "name": "False Hearts", "description": "Wither or poison hearts for five seconds, with no effect." },
     "minecraft:false_hunger": { "name": "False Hunger", "description": "For a moment the hunger bar shows empty." },

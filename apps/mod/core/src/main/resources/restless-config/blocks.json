@@ -4,6 +4,8 @@
     "minecraft:wilted_flowers": { "weight": 0.6, "radius": 10, "restore_ticks": 2400, "sound": { "volume": 0.8, "pitch": 0.5 } },
     "minecraft:withering_crops": { "weight": 0.6, "radius": 6 },
     "minecraft:lost_growth": { "weight": 0.5, "radius": 8, "sound": { "volume": 0.8, "pitch": 0.6 } },
+    "minecraft:false_windows": { "weight": 0.4, "radius": 10, "max_blocks": 64, "ticks": 200, "modes": ["air", "fence", "wall"] },
+    "minecraft:false_looks": { "weight": 0.4, "radius": 10, "max_blocks": 16, "ticks": 200, "looks": { "minecraft:crafting_table": "minecraft:furnace", "minecraft:furnace": "minecraft:chest", "minecraft:chest": "minecraft:crafting_table", "minecraft:smoker": "minecraft:blast_furnace", "minecraft:blast_furnace": "minecraft:smoker", "minecraft:bookshelf": "minecraft:oak_planks" } },
     "minecraft:turning_frame": { "weight": 0.6, "radius": 12, "min_turns": 1, "turn_spread": 3 },
     "minecraft:new_sign": {
       "weight": 0.6,
