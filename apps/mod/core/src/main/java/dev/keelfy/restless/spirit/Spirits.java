@@ -4,6 +4,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,11 +20,16 @@ public final class Spirits {
         return ALL;
     }
 
+    /** The types a player can be bound to; first-join binding draws from these. */
+    public static List<SpiritType> personal() {
+        return ALL.stream().filter(s -> s.kind() == SpiritType.Kind.PERSONAL).toList();
+    }
+
     public static Optional<SpiritType> byId(String id) {
         return ALL.stream().filter(s -> s.id().equals(id)).findFirst();
     }
 
-    /** Affinities and activity come from the {@code spirits.<id>} config section. */
+    /** Kind, affinities and activity come from the {@code spirits.<id>} config section. */
     private static SpiritType of(String id) {
         Config.Section config = Config.section("spirits." + id);
         Config.Section affinity = config.section("affinity");
@@ -31,6 +37,6 @@ public final class Spirits {
         for (String tag : affinity.keys()) {
             tags.put(EventTag.valueOf(tag), affinity.num(tag));
         }
-        return new SpiritType(id, Map.copyOf(tags), config.num("activity"));
+        return new SpiritType(id, SpiritType.Kind.valueOf(config.text("kind").toUpperCase(Locale.ROOT)), Map.copyOf(tags), config.num("activity"));
     }
 }

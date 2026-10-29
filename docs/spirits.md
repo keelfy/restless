@@ -6,8 +6,21 @@ Update this file when any of them changes. The numbers below are the shipped def
 
 ## How it works
 
-- Each player gets 3 spirits (`director.default_spirits`) on first check, each chosen uniformly at random
-  (repeats allowed), and keeps them. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`.
+- A spirit is **personal** (follows one player) or **territorial** (stays at an anchor); the kind is `kind` in `spirits.json`.
+  `shade` is personal, `poltergeist` is territorial.
+- Each player gets 3 personal spirits (`director.default_spirits`) on first check, each chosen uniformly at random
+  (repeats allowed), and keeps them. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`. A poltergeist
+  in an older save is dropped.
+- A territorial spirit has an anchor, a dimension and a radius (`director.territorial_radius`, 48 blocks), saved per world.
+  When its cooldown expires it acts on one random player (survival or adventure) inside the radius, and does nothing, but
+  still reschedules, if nobody is there.
+- Every spirit has a location. A personal spirit roams in a ring `location.min_distance` to `location.max_distance`
+  blocks from its player, drifting `location.step` blocks per second, and is forgotten on restart; a territorial spirit
+  stays at its anchor. Sound events with no fixed source (creeper hiss, crying child, eating behind a wall, enderman
+  hiss, chest opening, distant bell, phantom jukebox, death cry, dripping, block breaking, and the knocks when no door
+  is near) come from that point, so a territorial spirit's sounds are only heard near its anchor. Events started by hand
+  with `/haunt force` have no spirit and keep a random point around the player. `/haunt info` shows a personal spirit's
+  current point as `at=`.
 - Every spirit has its own cooldown. When it expires, the Director picks one event for that player using that spirit's
   affinities and schedules the spirit's next one. More spirits means proportionally more events.
   Spectators and creative players get no event, but the cooldown still resets.
@@ -230,7 +243,7 @@ the mod, or one that is not valid JSON, is logged and ignored (the defaults run)
 Permission level: gamemaster. `[player]` defaults to the caller.
 
 - `/haunt`: opens the debug screen (needs the mod on the client): your spirits (seed, power), every event with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
-- `/haunt info [player]`: the numbered spirit list with each spirit's seed, power, anger and time to its next event.
+- `/haunt info [player]`: the numbered spirit list with each spirit's kind, seed, power, anger and time to its next event.
 - `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
-- `/haunt spirit add <spirit> [player]`: binds one more spirit.
-- `/haunt spirit remove <n> [player]`: unbinds spirit number `n` (1-based, as listed by `info`).
+- `/haunt spirit add <spirit> [player]`: binds one more personal spirit; for a territorial one, anchors it where the player stands.
+- `/haunt spirit remove <n> [player]`: removes spirit number `n` (1-based, as listed by `info`: the player's personal spirits, then the territorial ones in their dimension).

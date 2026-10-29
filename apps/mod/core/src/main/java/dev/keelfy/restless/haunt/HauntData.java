@@ -9,15 +9,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-/** Per-world state of player-bound spirits, keyed by player UUID; each spirit keeps its own timer. */
+/** Per-world state of spirits: personal ones keyed by player UUID, territorial ones tied to an anchor; each keeps its own timer. */
 public final class HauntData extends SavedData {
     /**
      * One spirit. Saves from before identity existed carry only {@code spirit} and {@code nextEventAt}: they get a fresh uuid and
@@ -48,21 +53,52 @@ public final class HauntData extends SavedData {
         }
     }
 
-    private static final Codec<HauntData> CODEC = Codec.unboundedMap(UUIDUtil.STRING_CODEC, Haunting.CODEC.listOf())
-        .xmap(HauntData::new, data -> data.hauntings);
+    /**
+     * A spirit bound to a place: it acts on players within {@code radius} blocks of {@code anchor} in {@code dimension}.
+     *
+     * @param radius blocks
+     */
+    public record Territorial(Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius) {
+        static final Codec<Territorial> CODEC = RecordCodecBuilder.create(i -> i.group(
+            Haunting.CODEC.fieldOf("haunting").forGetter(Territorial::haunting),
+            Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(Territorial::dimension),
+            BlockPos.CODEC.fieldOf("anchor").forGetter(Territorial::anchor),
+            Codec.INT.fieldOf("radius").forGetter(Territorial::radius)
+        ).apply(i, Territorial::new));
+
+        public Territorial rescheduled(long nextEventAt) {
+            return new Territorial(haunting.rescheduled(nextEventAt), dimension, anchor, radius);
+        }
+
+        public boolean reaches(Entity entity) {
+            return entity.level().dimension().equals(dimension) && entity.distanceToSqr(Vec3.atCenterOf(anchor)) <= (double) radius * radius;
+        }
+    }
+
+    private static final Codec<Map<UUID, List<Haunting>>> PERSONAL = Codec.unboundedMap(UUIDUtil.STRING_CODEC, Haunting.CODEC.listOf());
+
+    // Saves from before territorial spirits are the bare player map; "players" is required so that map cannot parse as the new shape.
+    private static final Codec<HauntData> CODEC = Codec.withAlternative(
+        RecordCodecBuilder.create(i -> i.group(
+            PERSONAL.fieldOf("players").forGetter(data -> data.hauntings),
+            Territorial.CODEC.listOf().fieldOf("territorial").forGetter(data -> data.territorial)
+        ).apply(i, HauntData::new)),
+        PERSONAL.xmap(players -> new HauntData(players, List.of()), data -> data.hauntings));
 
     // No vanilla data fixer for mod data; NeoForge skips fixing when this is null.
     private static final SavedDataType<HauntData> TYPE = new SavedDataType<>(
         Identifier.fromNamespaceAndPath(Restless.MOD_ID, "hauntings"), HauntData::new, CODEC, null);
 
     private final Map<UUID, List<Haunting>> hauntings;
+    private List<Territorial> territorial;
 
     private HauntData() {
-        this(Map.of());
+        this(Map.of(), List.of());
     }
 
-    private HauntData(Map<UUID, List<Haunting>> hauntings) {
+    private HauntData(Map<UUID, List<Haunting>> hauntings, List<Territorial> territorial) {
         this.hauntings = new HashMap<>(hauntings);
+        this.territorial = List.copyOf(territorial);
     }
 
     public static HauntData get(MinecraftServer server) {
@@ -72,6 +108,15 @@ public final class HauntData extends SavedData {
     /** @return null for a player never seen before; an empty list means every spirit was removed */
     public @Nullable List<Haunting> get(UUID player) {
         return hauntings.get(player);
+    }
+
+    public List<Territorial> territorial() {
+        return territorial;
+    }
+
+    public void putTerritorial(List<Territorial> spirits) {
+        territorial = List.copyOf(spirits);
+        setDirty();
     }
 
     public void put(UUID player, List<Haunting> spirits) {

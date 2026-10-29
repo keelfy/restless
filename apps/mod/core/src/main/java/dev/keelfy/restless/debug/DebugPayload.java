@@ -14,9 +14,9 @@ import net.minecraft.resources.Identifier;
 public record DebugPayload(String player, List<Spirit> spirits, List<Event> events)
     implements CustomPacketPayload {
     /** @param seconds time to the spirit's next roll */
-    public record Spirit(String id, long seed, double power, int seconds) {
+    public record Spirit(String id, boolean territorial, long seed, double power, int seconds) {
         static final StreamCodec<ByteBuf, Spirit> CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8, Spirit::id, ByteBufCodecs.VAR_LONG, Spirit::seed, ByteBufCodecs.DOUBLE, Spirit::power,
+            ByteBufCodecs.STRING_UTF8, Spirit::id, ByteBufCodecs.BOOL, Spirit::territorial, ByteBufCodecs.VAR_LONG, Spirit::seed, ByteBufCodecs.DOUBLE, Spirit::power,
             ByteBufCodecs.VAR_INT, Spirit::seconds, Spirit::new);
     }
 

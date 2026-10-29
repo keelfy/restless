@@ -47,7 +47,7 @@ final class Sounds {
             sound("block_breaking", player -> {
                 Config.Section config = Config.event("block_breaking");
                 SoundType type = BREAKS[player.getRandom().nextInt(BREAKS.length)];
-                Nearby.sound(player, type.getBreakSound(), Nearby.randomAround(player, config.num("distance")), config.tone("sound"));
+                Nearby.sound(player, type.getBreakSound(), Nearby.source(player, config.num("distance")), config.tone("sound"));
             }),
             // 29
             at("eating_behind_wall", SoundEvents.GENERIC_EAT.value()),
@@ -82,7 +82,7 @@ final class Sounds {
         BlockPos door = Nearby.all(player, config.integer("radius"), s -> s.getBlock() instanceof DoorBlock && DoorBlock.isWoodenDoor(s)).stream()
             .min(Comparator.comparingDouble(pos -> pos.distToCenterSqr(player.position())))
             .orElse(null);
-        return door != null ? Vec3.atCenterOf(door) : Nearby.randomAround(player, config.num("fallback_distance"));
+        return door != null ? Vec3.atCenterOf(door) : Nearby.source(player, config.num("fallback_distance"));
     }
 
     static void knocks(ServerPlayer player, Vec3 at) {
@@ -111,7 +111,7 @@ final class Sounds {
     private static HauntEvent at(String id, SoundEvent sound) {
         return sound(id, player -> {
             Config.Section config = Config.event(id);
-            Nearby.sound(player, sound, Nearby.randomAround(player, config.num("distance")), config.tone("sound"));
+            Nearby.sound(player, sound, Nearby.source(player, config.num("distance")), config.tone("sound"));
         });
     }
 }

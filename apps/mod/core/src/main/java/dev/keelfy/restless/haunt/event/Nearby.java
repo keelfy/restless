@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.Location;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -69,5 +70,10 @@ final class Nearby {
 
     static Vec3 randomAround(ServerPlayer player, double distance) {
         return around(player, distance, player.getRandom().nextDouble() * FULL_TURN);
+    }
+
+    /** Where a source-free sound comes from: the spirit that sent it, or {@code distance} blocks away at a random bearing when none did. */
+    static Vec3 source(ServerPlayer player, double distance) {
+        return Location.source(randomAround(player, distance));
     }
 }

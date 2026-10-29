@@ -2,6 +2,7 @@
   "version": 1,
   "spirits": {
     "poltergeist": {
+      "kind": "territorial",
       "activity": 1.3,
       "affinity": {
         "DOORS": 4.0,
@@ -15,6 +16,7 @@
       }
     },
     "shade": {
+      "kind": "personal",
       "activity": 0.8,
       "affinity": { "DOORS": 0.3, "LIGHTS": 3.0, "AFFLICTION": 2.0, "ASSAULT": 1.0, "SOUND": 2.5, "ITEMS": 0.5, "PRESENCE": 2.0 }
     }

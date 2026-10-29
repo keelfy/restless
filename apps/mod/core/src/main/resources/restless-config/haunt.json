@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "director": { "check_interval_ticks": 20, "default_spirits": 3 },
+  "director": { "check_interval_ticks": 20, "default_spirits": 3, "territorial_radius": 48 },
   "power": {
     "maturity_days": 30,
     "maturity_share": 0.6,
@@ -12,6 +12,7 @@
     "min_cooldown_ticks": 20
   },
   "restore": { "retry_ticks": 20 },
+  "location": { "min_distance": 6.0, "max_distance": 14.0, "step": 3.0, "height": 0.5 },
   "place": {
     "tries": 16,
     "wall_min": 2,

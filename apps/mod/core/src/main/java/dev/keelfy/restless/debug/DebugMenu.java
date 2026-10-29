@@ -7,6 +7,7 @@ import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import java.util.List;
+import java.util.stream.Stream;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,14 +22,18 @@ public final class DebugMenu {
 
     public static void open(ServerPlayer viewer) {
         long now = viewer.level().getServer().overworld().getGameTime();
-        List<DebugPayload.Spirit> spirits = Director.hauntings(viewer, HauntData.get(viewer.level().getServer()), now).stream()
-            .map(h -> new DebugPayload.Spirit(h.spirit(), h.seed(), Director.power(h, now),
-                (int) Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND)))
-            .toList();
+        HauntData data = HauntData.get(viewer.level().getServer());
+        List<DebugPayload.Spirit> spirits = Stream.concat(
+            Director.hauntings(viewer, data, now).stream().map(h -> spirit(h, false, now)),
+            Director.territorial(data, viewer.level()).stream().filter(t -> t.reaches(viewer)).map(t -> spirit(t.haunting(), true, now))).toList();
         List<DebugPayload.Event> events = HauntEvents.all().stream()
             .map(e -> new DebugPayload.Event(e.id(), e.tier(), List.copyOf(e.tags()), e.baseWeight(), e.canRun(viewer)))
             .toList();
         viewer.connection.send(new ClientboundCustomPayloadPacket(new DebugPayload(viewer.getName().getString(), spirits, events)));
+    }
+
+    private static DebugPayload.Spirit spirit(HauntData.Haunting h, boolean territorial, long now) {
+        return new DebugPayload.Spirit(h.spirit(), territorial, h.seed(), Director.power(h, now), (int) Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND));
     }
 
     /** Runs the event on the sender after {@link #FIRE_DELAY}; the sender must be allowed to use {@code /haunt}. */

@@ -83,8 +83,8 @@ public final class DebugScreen extends Screen {
         for (int i = 0; i < data.spirits().size(); i++) {
             y += LINE;
             DebugPayload.Spirit spirit = data.spirits().get(i);
-            graphics.text(font, String.format(Locale.ROOT, "%d. %s  seed %x  power %.2f  next in %ds",
-                i + 1, spirit.id(), spirit.seed(), spirit.power(), spirit.seconds()), x, y, GRAY);
+            graphics.text(font, String.format(Locale.ROOT, "%d. %s%s  seed %x  power %.2f  next in %ds",
+                i + 1, spirit.id(), spirit.territorial() ? " (territorial)" : "", spirit.seed(), spirit.power(), spirit.seconds()), x, y, GRAY);
         }
         y += LINE * 2;
 

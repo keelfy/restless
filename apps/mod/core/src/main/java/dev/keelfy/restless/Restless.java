@@ -4,9 +4,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Echoes;
+import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -38,6 +40,7 @@ public final class Restless {
     public static void init() {
         Config.load(Platform.get().configDir());
         Lang.load(Platform.get().configDir());
+        Content.init();
         LOGGER.info("Restless initialising on {}", Platform.get().loaderName());
     }
 
@@ -51,6 +54,7 @@ public final class Restless {
     /** Call when the server starts to stop, before the worlds are saved. */
     public static void onServerStopping() {
         Restore.flush();
+        Location.clear();
     }
 
     /** Call before a player uses a block; true means the use must be cancelled. */

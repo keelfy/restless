@@ -11,6 +11,7 @@ import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
+import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
@@ -23,6 +24,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerPlayer;
 
 /** Debug/admin command: /haunt opens the debug screen; info|force|spirit add|spirit remove [player] work from chat. */
@@ -67,16 +69,29 @@ public final class HauntCommand {
 
     private static int info(CommandSourceStack source, ServerPlayer player) {
         long now = source.getServer().overworld().getGameTime();
-        List<HauntData.Haunting> spirits = Director.hauntings(player, HauntData.get(source.getServer()), now);
+        HauntData data = HauntData.get(source.getServer());
+        List<HauntData.Haunting> spirits = Director.hauntings(player, data, now);
+        List<HauntData.Territorial> places = Director.territorial(data, player.level());
         StringBuilder list = new StringBuilder();
         for (int i = 0; i < spirits.size(); i++) {
             HauntData.Haunting h = spirits.get(i);
-            list.append(String.format(Locale.ROOT, "%n  %d. %s seed=%x power=%.2f anger=%.2f next=%ds", i + 1, h.spirit(), h.seed(),
-                Director.power(h, now), h.anger(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND)));
+            list.append(describe(i + 1, h, "personal", now, ""));
         }
-        String text = String.format(Locale.ROOT, "%s: spirits=%d%s", player.getName().getString(), spirits.size(), list);
+        for (int i = 0; i < places.size(); i++) {
+            HauntData.Territorial t = places.get(i);
+            list.append(describe(spirits.size() + i + 1, t.haunting(), "territorial", now, String.format(Locale.ROOT,
+                " anchor=%d,%d,%d radius=%d%s", t.anchor().getX(), t.anchor().getY(), t.anchor().getZ(), t.radius(), t.reaches(player) ? " (in range)" : "")));
+        }
+        String text = String.format(Locale.ROOT, "%s: spirits=%d%s", player.getName().getString(), spirits.size() + places.size(), list);
         source.sendSuccess(() -> Component.literal(text), false);
         return 1;
+    }
+
+    private static String describe(int number, HauntData.Haunting h, String kind, long now, String extra) {
+        Vec3 roaming = Location.roaming(h.uuid());
+        String at = roaming == null ? "" : String.format(Locale.ROOT, " at=%.0f,%.0f,%.0f", roaming.x, roaming.y, roaming.z);
+        return String.format(Locale.ROOT, "%n  %d. %s %s seed=%x power=%.2f anger=%.2f next=%ds%s%s", number, h.spirit(), kind, h.seed(),
+            Director.power(h, now), h.anger(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND), at, extra);
     }
 
     private static int force(CommandContext<CommandSourceStack> c, ServerPlayer player) throws CommandSyntaxException {
@@ -95,7 +110,13 @@ public final class HauntCommand {
         String id = StringArgumentType.getString(c, "spirit");
         SpiritType spirit = Spirits.byId(id).orElseThrow(() -> UNKNOWN_SPIRIT.create(id));
         long now = c.getSource().getServer().overworld().getGameTime();
-        Director.add(player, HauntData.get(c.getSource().getServer()), spirit, now);
+        HauntData data = HauntData.get(c.getSource().getServer());
+        if (spirit.kind() == SpiritType.Kind.TERRITORIAL) {
+            Director.anchor(data, spirit, player.level(), player.blockPosition(), now);
+            c.getSource().sendSuccess(() -> Component.literal(id + " now haunts the place where " + player.getName().getString() + " stands"), true);
+            return 1;
+        }
+        Director.add(player, data, spirit, now);
         c.getSource().sendSuccess(() -> Component.literal(id + " now haunts " + player.getName().getString()), true);
         return 1;
     }
