@@ -23,6 +23,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.phys.Vec3;
@@ -30,7 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Per-world state of spirits: personal ones keyed by player UUID, territorial ones tied to an anchor; each keeps its own timer.
- * Also what belongs to them for good: their graves, and each player's sanity and journal.
+ * Also what belongs to them for good: their graves and blighted land, and each player's sanity and journal.
  */
 public final class HauntData extends SavedData {
     /**
@@ -42,8 +43,9 @@ public final class HauntData extends SavedData {
      * @param bornAt overworld game time the spirit appeared; its age is how mature it is
      * @param anger 0..1
      * @param nextEventAt overworld game time of the next roll
+     * @param evolved grown up after being left alone long enough; it never grows back down
      */
-    public record Haunting(UUID uuid, String spirit, long seed, List<String> traits, long bornAt, double anger, long nextEventAt) {
+    public record Haunting(UUID uuid, String spirit, long seed, List<String> traits, long bornAt, double anger, long nextEventAt, boolean evolved) {
         static final Codec<Haunting> CODEC = RecordCodecBuilder.create(i -> i.group(
             UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(h -> Optional.of(h.uuid)),
             Codec.STRING.fieldOf("spirit").forGetter(Haunting::spirit),
@@ -51,23 +53,33 @@ public final class HauntData extends SavedData {
             Codec.STRING.listOf().optionalFieldOf("traits").forGetter(h -> Optional.of(h.traits)),
             Codec.LONG.optionalFieldOf("born_at", 0L).forGetter(Haunting::bornAt),
             Codec.DOUBLE.optionalFieldOf("anger", 0.0).forGetter(Haunting::anger),
-            Codec.LONG.fieldOf("next_event_at").forGetter(Haunting::nextEventAt)
-        ).apply(i, (uuid, spirit, seed, traits, bornAt, anger, next) -> {
+            Codec.LONG.fieldOf("next_event_at").forGetter(Haunting::nextEventAt),
+            Codec.BOOL.optionalFieldOf("evolved", false).forGetter(Haunting::evolved)
+        ).apply(i, (uuid, spirit, seed, traits, bornAt, anger, next, evolved) -> {
             long rolled = seed.orElseGet(() -> ThreadLocalRandom.current().nextLong());
-            return new Haunting(uuid.orElseGet(UUID::randomUUID), spirit, rolled, traits.orElseGet(() -> Traits.roll(rolled)), bornAt, anger, next);
+            return new Haunting(uuid.orElseGet(UUID::randomUUID), spirit, rolled, traits.orElseGet(() -> Traits.roll(rolled)), bornAt, anger, next, evolved);
         }));
 
         public static Haunting born(String spirit, long now, RandomSource random) {
             long seed = random.nextLong();
-            return new Haunting(UUID.randomUUID(), spirit, seed, Traits.roll(seed), now, 0.0, now);
+            return new Haunting(UUID.randomUUID(), spirit, seed, Traits.roll(seed), now, 0.0, now, false);
         }
 
         public Haunting rescheduled(long nextEventAt) {
-            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt);
+            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, evolved);
         }
 
         public Haunting angered(double by) {
-            return new Haunting(uuid, spirit, seed, traits, bornAt, Math.min(1.0, anger + by), nextEventAt);
+            return new Haunting(uuid, spirit, seed, traits, bornAt, Math.min(1.0, anger + by), nextEventAt, evolved);
+        }
+
+        /** Born {@code ticks} earlier than it was. */
+        public Haunting aged(long ticks) {
+            return new Haunting(uuid, spirit, seed, traits, bornAt - ticks, anger, nextEventAt, evolved);
+        }
+
+        public Haunting evolve() {
+            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, true);
         }
     }
 
@@ -115,6 +127,24 @@ public final class HauntData extends SavedData {
         ).apply(i, Grave::new));
     }
 
+    /**
+     * The land a territorial spirit has fouled: each spot keeps what stood there before, so it can be put back once the
+     * spirit is gone, even after the spirit's own record is.
+     */
+    public record Blight(ResourceKey<Level> dimension, List<Spot> spots) {
+        static final Codec<Blight> CODEC = RecordCodecBuilder.create(i -> i.group(
+            Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(Blight::dimension),
+            Spot.CODEC.listOf().fieldOf("spots").forGetter(Blight::spots)
+        ).apply(i, Blight::new));
+
+        public record Spot(BlockPos pos, BlockState was) {
+            static final Codec<Spot> CODEC = RecordCodecBuilder.create(i -> i.group(
+                BlockPos.CODEC.fieldOf("pos").forGetter(Spot::pos),
+                BlockState.CODEC.fieldOf("was").forGetter(Spot::was)
+            ).apply(i, Spot::new));
+        }
+    }
+
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL = Codec.unboundedMap(UUIDUtil.STRING_CODEC, Haunting.CODEC.listOf());
 
     // Saves from before territorial spirits are the bare player map; "players" is required so that map cannot parse as the new shape.
@@ -124,9 +154,10 @@ public final class HauntData extends SavedData {
             Territorial.CODEC.listOf().fieldOf("territorial").forGetter(data -> data.territorial),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Grave.CODEC).optionalFieldOf("graves", Map.of()).forGetter(data -> data.graves),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.DOUBLE).optionalFieldOf("sanity", Map.of()).forGetter(data -> data.sanity),
-            Codec.unboundedMap(UUIDUtil.STRING_CODEC, ComponentSerialization.CODEC.listOf()).optionalFieldOf("journal", Map.of()).forGetter(data -> data.journal)
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, ComponentSerialization.CODEC.listOf()).optionalFieldOf("journal", Map.of()).forGetter(data -> data.journal),
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Blight.CODEC).optionalFieldOf("blight", Map.of()).forGetter(data -> data.blight)
         ).apply(i, HauntData::new)),
-        PERSONAL.xmap(players -> new HauntData(players, List.of(), Map.of(), Map.of(), Map.of()), data -> data.hauntings));
+        PERSONAL.xmap(players -> new HauntData(players, List.of(), Map.of(), Map.of(), Map.of(), Map.of()), data -> data.hauntings));
 
     // No vanilla data fixer for mod data; NeoForge skips fixing when this is null.
     private static final SavedDataType<HauntData> TYPE = new SavedDataType<>(
@@ -140,18 +171,21 @@ public final class HauntData extends SavedData {
     private final Map<UUID, Double> sanity;
     /** Keyed by player, oldest entry first. */
     private final Map<UUID, List<Component>> journal;
+    /** Keyed by spirit; outlives the spirit until the land has healed. */
+    private final Map<UUID, Blight> blight;
 
     private HauntData() {
-        this(Map.of(), List.of(), Map.of(), Map.of(), Map.of());
+        this(Map.of(), List.of(), Map.of(), Map.of(), Map.of(), Map.of());
     }
 
     private HauntData(Map<UUID, List<Haunting>> hauntings, List<Territorial> territorial, Map<UUID, Grave> graves,
-                      Map<UUID, Double> sanity, Map<UUID, List<Component>> journal) {
+                      Map<UUID, Double> sanity, Map<UUID, List<Component>> journal, Map<UUID, Blight> blight) {
         this.hauntings = new HashMap<>(hauntings);
         this.territorial = List.copyOf(territorial);
         this.graves = new HashMap<>(graves);
         this.sanity = new HashMap<>(sanity);
         this.journal = new HashMap<>(journal);
+        this.blight = new HashMap<>(blight);
     }
 
     public static HauntData get(MinecraftServer server) {
@@ -218,6 +252,20 @@ public final class HauntData extends SavedData {
             graves.remove(spirit);
         } else {
             graves.put(spirit, grave);
+        }
+        setDirty();
+    }
+
+    public Map<UUID, Blight> blight() {
+        return Collections.unmodifiableMap(blight);
+    }
+
+    /** A null or spotless blight removes it. */
+    public void putBlight(UUID spirit, @Nullable Blight spread) {
+        if (spread == null || spread.spots().isEmpty()) {
+            blight.remove(spirit);
+        } else {
+            blight.put(spirit, new Blight(spread.dimension(), List.copyOf(spread.spots())));
         }
         setDirty();
     }

@@ -18,6 +18,27 @@ public final class Power {
         return Math.min(1.0, config.num("maturity_share") * maturity + config.num("anger_share") * anger);
     }
 
+    /** As {@link #of(long, double)}, but an evolved spirit never drops below the evolution floor. */
+    public static double of(long ageTicks, double anger, boolean evolved) {
+        double power = of(ageTicks, anger);
+        return evolved ? Math.max(Config.section("evolution").num("power_floor"), power) : power;
+    }
+
+    /** Whether a spirit this old has been left alone long enough to grow up. */
+    public static boolean grown(long ageTicks) {
+        return ageTicks >= Config.section("evolution").num("days") * Ticks.DAY;
+    }
+
+    /**
+     * How far from its anchor a territorial spirit has fouled the land: it starts close and reaches its full radius
+     * after the configured days.
+     */
+    public static double blightReach(long ageTicks, int radius) {
+        Config.Section config = Config.section("corruption");
+        double start = Math.min(config.num("start_reach"), radius);
+        return start + (radius - start) * Math.min(ageTicks / (config.num("grow_days") * Ticks.DAY), 1.0);
+    }
+
     public static double tierFactor(HauntTier tier, double power) {
         return switch (tier) {
             case LIGHT -> 1.0 - Config.section("power").num("light_penalty") * power;

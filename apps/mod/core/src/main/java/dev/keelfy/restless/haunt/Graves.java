@@ -131,7 +131,7 @@ public final class Graves {
         ExperienceOrb.award(level, above, config.integer("experience"));
         level.sendParticles(ParticleTypes.END_ROD, above.x, above.y, above.z, 30, 0.3, 0.8, 0.3, 0.03);
         level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.BLOCKS, 1.0f, 0.7f);
-        Component type = Component.translatable("spirit.restless." + spirit.spirit());
+        Component type = Evolution.name(spirit);
         player.sendSystemMessage(Component.translatable("message.restless.rested", story.name()), true);
         Journal.write(player, Component.translatable("journal.restless.rested", story.name(), type));
     }

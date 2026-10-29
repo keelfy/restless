@@ -52,11 +52,11 @@ public final class Divination {
             player.sendSystemMessage(Component.translatable("message.restless.camera_empty"), true);
             return Optional.empty();
         }
-        Component type = Component.translatable("spirit.restless." + reading.get().spirit().haunting().spirit());
+        Component type = Evolution.name(reading.get().spirit().haunting());
         Journal.write(player, Component.translatable("journal.restless.photo", type, reading.get().trait().hint()));
         ItemStack photo = new ItemStack(Content.PHOTO.get());
         photo.set(DataComponents.LORE, new ItemLore(List.of(
-            Component.translatable("item.restless.photo.silhouette", Component.translatable("spirit.restless." + reading.get().spirit().haunting().spirit())),
+            Component.translatable("item.restless.photo.silhouette", Evolution.name(reading.get().spirit().haunting())),
             Component.translatable("item.restless.photo.hint", reading.get().trait().hint()),
             Component.translatable("item.restless.photo.weakness",
                 Component.translatable("focus.restless." + reading.get().trait().weakness().name().toLowerCase(java.util.Locale.ROOT))))));

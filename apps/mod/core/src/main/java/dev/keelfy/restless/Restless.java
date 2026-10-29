@@ -9,6 +9,8 @@ import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.haunt.Anger;
 import dev.keelfy.restless.haunt.Candle;
 import dev.keelfy.restless.haunt.Compass;
+import dev.keelfy.restless.haunt.Corruption;
+import dev.keelfy.restless.haunt.Evolution;
 import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.Graves;
 import dev.keelfy.restless.haunt.Sanity;
@@ -74,6 +76,8 @@ public final class Restless {
         Compass.tick(server);
         Graves.tick(server);
         Sanity.tick(server);
+        Corruption.tick(server);
+        Evolution.tick(server);
     }
 
     /** Call when the server starts to stop, before the worlds are saved. */

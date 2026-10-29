@@ -1,1 +1,10 @@
-{"variants":{"":{"model":"restless:block/hallowed_lantern"}}}
+{
+  "variants": {
+    "hanging=false": {
+      "model": "restless:block/hallowed_lantern"
+    },
+    "hanging=true": {
+      "model": "restless:block/hallowed_lantern_hanging"
+    }
+  }
+}

@@ -215,6 +215,31 @@ of a grave, a gravestone is read, a spirit goes to rest and a spirit is banished
 Not built yet: diary pages and portraits in chests, the other quest kinds (bury remains, a letter to a descendant, a
 named killer mob, a killer spirit), hallucinations at very low sanity, and research: the journal unlocks no recipes.
 
+## Spread and evolution
+
+### Corruption
+
+A territorial spirit fouls the land around its anchor while the anchor's chunk is loaded, with or without players. Every
+`corruption.check_ticks` (100) it tries `tries` (3) random columns in a disc whose radius grows from `start_reach` (6) to
+the spirit's own radius over `grow_days` (3) in-game days of its age, and turns the top block of a loaded column as
+`corruption.blocks` says: grass to coarse dirt, grass, ferns and flowers to dead bushes. It stops at `max_blocks` (1500).
+Each spot keeps what stood there, saved with the world.
+
+Once the spirit is gone (banished, at rest, removed) its land heals: `recede` (48) spots a check, wherever their chunk
+is loaded, go back to what they were; a spot something else has changed since is left as it is.
+
+### Evolution
+
+A spirit `evolution.days` (5) in-game days old grows up, once and for good: a poltergeist turns **raging**, a shade a
+**light-eater**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
+territorial one tries `corruption.evolved_factor` (3) times as many columns. The players it haunts (its own player, or
+those in its radius) hear a heartbeat, are told, and it goes in their journal; from then on it goes by its grown name.
+A personal spirit grows only while its player is online.
+
+Not built yet: world-born spirits (death spots, abandoned structures, blood moon, deeds), merging, the calendar (full
+moon, blood night, day of the dead), fog and possessed mobs in corrupted land, crops stopping, and new events or clues
+for evolved spirits.
+
 ## Spirits
 
 | Id | Description | Activity | Affinity (missing = ×1) |
@@ -380,7 +405,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 
 | File | Holds |
 |---|---|
-| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `journal`, `restore`, `place` |
+| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `corruption`, `evolution`, `journal`, `restore`, `place` |
 | `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words, hint and weakness), `story` (nickname words, days, causes) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
@@ -409,8 +434,9 @@ the mod, or one that is not valid JSON, is logged and ignored (the defaults run)
 Permission level: gamemaster. `[player]` defaults to the caller.
 
 - `/haunt`: opens the debug screen (needs the mod on the client): your spirits (seed, traits, power), every event with the chance each spirit rolls it next, with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
-- `/haunt info [player]`: the player's sanity and the numbered spirit list with each spirit's kind, story, seed, traits, power, anger, time to its next event, and its grave and the item it wants.
+- `/haunt info [player]`: the player's sanity and the numbered spirit list with each spirit's kind, story, seed, traits, power, anger, time to its next event, its grave and the item it wants, whether it has evolved, and how many spots of land it has fouled.
 - `/haunt sanity <0..1> [player]`: sets sanity.
 - `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
 - `/haunt spirit add <spirit> [player]`: binds one more personal spirit; for a territorial one, anchors it where the player stands.
+- `/haunt spirit age <n> <days> [player]`: makes spirit number `n` that many in-game days older (maturity, blight reach, evolution).
 - `/haunt spirit remove <n> [player]`: removes spirit number `n` (1-based, as listed by `info`: the player's personal spirits, then the territorial ones in their dimension).

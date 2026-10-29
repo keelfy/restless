@@ -48,6 +48,26 @@
     "overlay_below": 0.6,
     "overlay_peak": 0.9
   },
+  "corruption": {
+    "check_ticks": 100,
+    "tries": 3,
+    "evolved_factor": 3,
+    "start_reach": 6,
+    "grow_days": 3,
+    "max_blocks": 1500,
+    "recede": 48,
+    "blocks": {
+      "minecraft:grass_block": "minecraft:coarse_dirt",
+      "minecraft:short_grass": "minecraft:dead_bush",
+      "minecraft:fern": "minecraft:dead_bush",
+      "minecraft:dandelion": "minecraft:dead_bush",
+      "minecraft:poppy": "minecraft:dead_bush",
+      "minecraft:azure_bluet": "minecraft:dead_bush",
+      "minecraft:oxeye_daisy": "minecraft:dead_bush",
+      "minecraft:cornflower": "minecraft:dead_bush"
+    }
+  },
+  "evolution": { "check_ticks": 100, "days": 5, "power_floor": 0.7, "extra_waves": 4 },
   "journal": { "entries_per_page": 3 },
   "candle": { "step_ticks": 4, "warning_ticks": 60, "lean": 0.5 },
   "restore": { "retry_ticks": 20 },

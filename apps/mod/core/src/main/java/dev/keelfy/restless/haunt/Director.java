@@ -188,7 +188,7 @@ public final class Director {
 
     /** How harmful and how frequent the spirit is right now; depends only on the spirit. */
     public static double power(HauntData.Haunting haunting, long now) {
-        return Power.of(now - haunting.bornAt(), haunting.anger());
+        return Power.of(now - haunting.bornAt(), haunting.anger(), haunting.evolved());
     }
 
     private static long cooldown(ServerLevel level, BlockPos at, HauntData.Haunting haunting, long now, RandomSource random) {

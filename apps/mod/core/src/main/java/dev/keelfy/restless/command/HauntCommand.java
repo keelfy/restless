@@ -8,6 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import dev.keelfy.restless.debug.DebugMenu;
+import dev.keelfy.restless.haunt.Corruption;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Graves;
 import dev.keelfy.restless.haunt.HauntData;
@@ -19,6 +20,7 @@ import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Spirits;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.commands.CommandSourceStack;
@@ -32,7 +34,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerPlayer;
 
-/** Debug/admin command: /haunt opens the debug screen; info|force|sanity|spirit add|spirit remove [player] work from chat. */
+/** Debug/admin command: /haunt opens the debug screen; info|force|sanity|spirit add|age|remove [player] work from chat. */
 public final class HauntCommand {
     private static final DynamicCommandExceptionType UNKNOWN_EVENT =
         new DynamicCommandExceptionType(id -> Component.literal("Unknown haunt event: " + id));
@@ -70,6 +72,12 @@ public final class HauntCommand {
                         .executes(c -> add(c, c.getSource().getPlayerOrException()))
                         .then(Commands.argument("player", EntityArgument.player())
                             .executes(c -> add(c, EntityArgument.getPlayer(c, "player"))))))
+                .then(Commands.literal("age")
+                    .then(Commands.argument("index", IntegerArgumentType.integer(1))
+                        .then(Commands.argument("days", DoubleArgumentType.doubleArg(0))
+                            .executes(c -> age(c, c.getSource().getPlayerOrException()))
+                            .then(Commands.argument("player", EntityArgument.player())
+                                .executes(c -> age(c, EntityArgument.getPlayer(c, "player")))))))
                 .then(Commands.literal("remove")
                     .then(Commands.argument("index", IntegerArgumentType.integer(1))
                         .executes(c -> remove(c, c.getSource().getPlayerOrException()))
@@ -103,6 +111,8 @@ public final class HauntCommand {
         HauntData.Grave grave = HauntData.get(source.getServer()).graves().get(h.uuid());
         String buried = grave == null ? "" : String.format(Locale.ROOT, " grave=%d,%d,%d%s wants=%s", grave.pos().getX(), grave.pos().getY(), grave.pos().getZ(),
             grave.built() ? "" : "(unbuilt)", BuiltInRegistries.ITEM.getKey(Graves.wanted(h.seed())));
+        int blight = Corruption.size(HauntData.get(source.getServer()), h.uuid());
+        extra += (h.evolved() ? " evolved" : "") + (blight > 0 ? " blight=" + blight : "");
         return String.format(Locale.ROOT, "%n  %d. %s %s \"%s\" seed=%x traits=%s power=%.2f anger=%.2f next=%ds%s%s", number, h.spirit(), kind, Story.of(h.seed()), h.seed(), String.join(",", h.traits()),
             Director.power(h, now), h.anger(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND), at + buried, extra);
     }
@@ -138,6 +148,23 @@ public final class HauntCommand {
         }
         Director.add(player, data, spirit, now);
         c.getSource().sendSuccess(() -> Component.literal(id + " now haunts " + player.getName().getString()), true);
+        return 1;
+    }
+
+    /** Makes the spirit at this /haunt info index older, so maturity, blight reach and evolution can be tried at once. */
+    private static int age(CommandContext<CommandSourceStack> c, ServerPlayer player) {
+        int index = IntegerArgumentType.getInteger(c, "index");
+        double days = DoubleArgumentType.getDouble(c, "days");
+        long now = c.getSource().getServer().overworld().getGameTime();
+        HauntData data = HauntData.get(c.getSource().getServer());
+        List<HauntData.Haunting> listed = new ArrayList<>(Director.hauntings(player, data, now));
+        Director.territorial(data, player.level()).forEach(t -> listed.add(t.haunting()));
+        if (index > listed.size()) {
+            c.getSource().sendFailure(Component.literal(player.getName().getString() + " has no spirit #" + index));
+            return 0;
+        }
+        data.change(listed.get(index - 1).uuid(), h -> h.aged((long) (days * Ticks.DAY)));
+        c.getSource().sendSuccess(() -> Component.literal(String.format(Locale.ROOT, "Spirit #%d of %s is %.1f days older", index, player.getName().getString(), days)), true);
         return 1;
     }
 

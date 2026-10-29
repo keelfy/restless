@@ -99,7 +99,7 @@ public final class Ritual {
             fail(player, level, altar, spirit);
             return false;
         }
-        if (n + 1 >= config.integer("waves")) {
+        if (n + 1 >= config.integer("waves") + (spirit.haunting().evolved() ? Config.section("evolution").integer("extra_waves") : 0)) {
             banish(player, level, altar, spirit);
             return false;
         }
@@ -124,7 +124,7 @@ public final class Ritual {
         item.ifPresent(i -> level.addFreshEntity(new ItemEntity(level, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, new ItemStack(i))));
         level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, 40, 0.5, 1.0, 0.5, 0.05);
         level.playSound(null, altar, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0f, 0.6f);
-        Component type = Component.translatable("spirit.restless." + spirit.haunting().spirit());
+        Component type = Evolution.name(spirit.haunting());
         player.sendSystemMessage(Component.translatable("message.restless.banished", type), true);
         Journal.write(player, Component.translatable("journal.restless.banished", type, Story.of(spirit.haunting().seed()).name()));
     }
