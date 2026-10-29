@@ -1,10 +1,10 @@
 {
   "version": 1,
   "events": {
-    "minecraft:extinguish_light": { "name": "Snuffed Light", "description": "Snuffs a lit candle nearby, or knocks a torch off its mount so it drops as an item." },
+    "minecraft:extinguish_light": { "name": "Snuffed Light", "description": "Snuffs a nearby candle, torch or lantern in place." },
     "minecraft:candles_out": { "name": "Candles Out", "description": "Every lit candle within range goes out at once." },
-    "minecraft:torch_chain": { "name": "Torch Chain", "description": "Up to eight torches are knocked off one after another, the nearest to the player last." },
-    "minecraft:lantern_flicker": { "name": "Lantern Flicker", "description": "A lantern vanishes and returns three times in a blink, then stays where it was." },
+    "minecraft:torch_chain": { "name": "Torch Chain", "description": "Up to eight torches go dark one after another, the nearest to the player last." },
+    "minecraft:lantern_flicker": { "name": "Lantern Flicker", "description": "A lantern flickers off and on three times without leaving its mount." },
     "minecraft:lamp_off": { "name": "Lamp Off", "description": "A lit redstone lamp switches off for a second, then comes back if still powered." },
     "minecraft:campfire_out": { "name": "Campfire Out", "description": "A lit campfire is snuffed out." },
     "minecraft:furnace_dies": { "name": "Dying Furnace", "description": "A burning furnace goes cold and its fuel is taken out for five seconds, then returned." },
@@ -102,6 +102,24 @@
     "minecraft:cold_breath": { "name": "Cold Breath", "description": "A puff of breath at the player's face, as if in the cold." },
     "minecraft:footprints": { "name": "Footprints", "description": "On sand or snow, puffs and step sounds appear where the player stood a second ago." },
     "minecraft:local_rain": { "name": "Local Rain", "description": "Rain falls over the player alone for six seconds." },
-    "minecraft:lost_time": { "name": "Lost Time", "description": "At night, the clock jumps a thousand ticks forward for everyone." }
+    "minecraft:lost_time": { "name": "Lost Time", "description": "At night, the clock jumps a thousand ticks forward for everyone." },
+    "minecraft:distant_mob": { "name": "Distant Mob", "description": "A monster sound from anywhere between two and forty blocks away." },
+    "minecraft:hostile_animal": { "name": "Hostile Animal", "description": "A nearby animal groans like a zombie or hisses like a creeper; only the player hears it." },
+    "minecraft:spider_overhead": { "name": "Spider Overhead", "description": "Under a low ceiling, a spider crawls across it right above the player." },
+    "minecraft:cracking_floor": { "name": "Cracking Floor", "description": "The block under the player sounds and looks as if it breaks, and holds." },
+    "minecraft:bottle_shatter": { "name": "Bottle Shatter", "description": "A splash potion shatters nearby, with no potion." },
+    "minecraft:note_block_voice": { "name": "Note Block Voice", "description": "A note block nearby plays a voice instead of a note." },
+    "minecraft:lost_growth": { "name": "Lost Growth", "description": "One crop, stem, berry bush or cocoa pod nearby is back to a seedling." },
+    "minecraft:false_wound": { "name": "False Wound", "description": "For a moment the health bar shows four hearts less; the real health is untouched." },
+    "minecraft:false_hearts": { "name": "False Hearts", "description": "Wither or poison hearts for five seconds, with no effect." },
+    "minecraft:false_hunger": { "name": "False Hunger", "description": "For a moment the hunger bar shows empty." },
+    "minecraft:guardian_face": { "name": "Guardian Face", "description": "The elder guardian's face, far from any monument." },
+    "minecraft:false_totem": { "name": "False Totem", "description": "The totem of undying animation, with no totem." },
+    "minecraft:subliminal_title": { "name": "Subliminal Title", "description": "A title like \"BEHIND YOU\" for three ticks." },
+    "minecraft:red_vignette": { "name": "Red Vignette", "description": "The red border warning tint at the screen edges for five seconds." },
+    "minecraft:own_voice": { "name": "Own Voice", "description": "A chat line in the player's own name that they never wrote, seen only by them." },
+    "minecraft:false_death": { "name": "False Death", "description": "The player's own death message, \"slain by ???\", seen only by them." },
+    "minecraft:private_rain": { "name": "Private Rain", "description": "Rain, sometimes a storm, that only this player sees, for twenty seconds." },
+    "minecraft:silent_lightning": { "name": "Silent Lightning", "description": "Lightning strikes nearby and sets nothing on fire." }
   }
 }

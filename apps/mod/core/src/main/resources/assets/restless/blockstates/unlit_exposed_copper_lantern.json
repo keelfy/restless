@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "restless:block/unlit_exposed_copper_lantern"
+    },
+    "hanging=true": {
+      "model": "restless:block/unlit_exposed_copper_lantern_hanging"
+    }
+  }
+}

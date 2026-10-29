@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:false_wound": { "weight": 0.3, "min_health": 2.0, "loss": 8.0, "ticks": 30 },
+    "minecraft:false_hearts": { "weight": 0.3, "ticks": 100 },
+    "minecraft:false_hunger": { "weight": 0.3, "shown_food": 0, "ticks": 40 },
+    "minecraft:guardian_face": { "weight": 0.15 },
+    "minecraft:false_totem": { "weight": 0.15 },
+    "minecraft:subliminal_title": { "weight": 0.3, "ticks": 3, "texts": ["BEHIND YOU", "LOOK UP", "NOT ALONE", "I SEE YOU", "WAKE UP"] },
+    "minecraft:red_vignette": { "weight": 0.3, "strength": 0.8, "seconds": 5 },
+    "minecraft:own_voice": { "weight": 0.2, "lines": ["help me", "it is here", "don't turn around", "who is that"] },
+    "minecraft:false_death": { "weight": 0.2, "killer": "???" },
+    "minecraft:private_rain": { "weight": 0.3, "thunder_chance": 0.3, "seconds": 20 },
+    "minecraft:silent_lightning": { "weight": 0.2, "distance": 24.0 }
+  }
+}

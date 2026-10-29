@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "restless:block/unlit_wall_torch"
+    },
+    "facing=south": {
+      "model": "restless:block/unlit_wall_torch",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "restless:block/unlit_wall_torch",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "restless:block/unlit_wall_torch",
+      "y": 270
+    }
+  }
+}

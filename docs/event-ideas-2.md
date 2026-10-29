@@ -29,6 +29,7 @@ A score includes the event's share of a shared piece only the first time; later 
 | `sounds` | Custom sound events: `assets/restless/sounds.json` and `.ogg` files in `core`. Sources must be CC0 (freesound.org filter) or CC-BY with credit in the README. | 2 + asset hunt |
 | `twin-block` | Custom look-alike blocks swapped in by `Restore`: burnt-out torch and lantern, static stonecutter, walk-through log and leaves. Each family needs models and textures. | 3 per family |
 | `menu` | Read-only menus: a `CraftingMenu` / furnace menu subclass whose clicks, shift-clicks and `removed()` do nothing, prefilled from a container nobody owns. | 3 |
+| `sound-remap` | Client-side sound swap: a payload "sounds of X play as Y for N ticks", applied in the client through a `Platform` hook on the loader's play-sound event (NeoForge `PlaySoundEvent`). Unlocks 206 and similar: footsteps on grass sounding like glass, placing sounds, a cow mooing like a ghast. | 4 |
 | `stash` | Items a spirit holds: `ItemStack` list in the spirit's saved data (codec with registries), given back by the banishing ritual. | 3 |
 
 ## Blocks and world
@@ -88,6 +89,8 @@ A score includes the event's share of a shared piece only the first time; later 
 | 138 | H | A block breaks under the feet, with effects | Level event 2001 on the block below, no change. | it breaks for real, only if the drop is one block (D, telegraphed) | 1 |
 | 139 | L | A bottle shatters nearby | Level event 2002 (splash potion break, coloured particles). | — | 1 |
 | 140 | L | A note block plays something that is not a note | Any sound (mob, scream, whisper) at a real note block nearby, like a head on top would make. | — | 1 |
+| 205 | L | Someone climbs a ladder or walks up the stairs nearby | `Scheduler` repeating: ladder step sounds moving up or down a real ladder column nearby (a shaft, a tower); for stairs, step sounds of the stair's material rising along a real staircase. No ladder or stairs near: from the spirit's point. | — | 2 |
+| 206 | L | Blocks the player breaks sound wrong (stone breaks with the glowstone or glass sound) | The breaker's own break and hit sounds are played by their client, not sent by the server, so this needs `sound-remap`. | — | 4 |
 
 ## Afflictions and assaults
 
@@ -116,9 +119,99 @@ A score includes the event's share of a shared piece only the first time; later 
 | 151 | A spirit that grows calmer instead | A trait or evolution branch where power falls with age after maturity and anger decays; maybe it asks to be banished. | 3 |
 | 152 | Twins: two events at once, as if two spirits | A paired spirit: one record, two locations; each cooldown picks two events of different tags. Banishing one could anger the other. | 4 |
 
+## Packet lies
+
+The server tells one client something untrue and resends the truth a moment later. Server-only, no client code, so
+most cost 1.
+
+| # | Tier | Idea | Sketch | Hardcore | Diff |
+|---|---|---|---|---|---|
+| 153 | L | Health drops for a moment | `ClientboundSetHealthPacket` with lower health, the real value resent after 1–2 s. | real damage, never below one heart | 1 |
+| 154 | L | Black wither (or green poison) hearts with no effect | `ClientboundUpdateMobEffectPacket` to the client only, a remove packet later; the server has no effect. | the effect is real, short | 1 |
+| 155 | L | The hunger bar empties for a moment | Same health packet, it carries food too. | real hunger loss | 1 |
+| 156 | L | The elder guardian face, far from any monument | `ClientboundGameEventPacket` `GUARDIAN_ELDER_EFFECT`. A built-in vanilla jump scare. | plus real mining fatigue, as vanilla gives | 1 |
+| 157 | L | Totem of undying animation with no totem | Entity event 35 to that player only; the client shows a default totem when the inventory has none. | — | 1 |
+| 158 | L | A subliminal title for 2–3 ticks: "BEHIND YOU", the spirit's nickname | Title packets with zero fade. | — | 1 |
+| 159 | L | Night falls at noon, for one player | Time packet with a night time and a frozen cycle, real time resent after. | real jump to night (like 99) | 2 |
+| 160 | L | Red vignette at the screen edges | Per-player world border warning distance set huge so the tint shows, reset after. | — | 1 |
+| 161 | L | A slot shows an item that is not there (a skull, a bone, the player's own head) | `ClientboundContainerSetSlotPacket`; any click resyncs. | the item really appears (worthless) | 2 |
+| 162 | L | The player's own chat line they never wrote: "<name> help me" | System message formatted like chat, sent only to them. | — | 1 |
+| 163 | L | Their own death message in chat: "<name> was slain by ???" | Same, only to them. | — | 1 |
+| 164 | L | Fake subtitles: "Something breathes behind you" | `sounds` event with a silent file and a custom subtitle. Only seen with subtitles on, which is the point. | — | 2 |
+| 165 | L | Advancement toast: "Who are you?", "Not alone" | Hidden advancements in the mod's data, granted then revoked. | — | 2 |
+| 166 | H | Something turns the player's head | `ClientboundPlayerRotationPacket` turns the camera toward a figure, a sound or the anchor. | — | 2 |
+| 167 | L | Rain or thunder starts for one player, then stops | Game event packets for rain and thunder level. | — | 1 |
+| 168 | L | Lightning near the house, visual only | `LightningBolt` with `setVisualOnly(true)`. | real lightning (fire) | 1 |
+
+## Sleep
+
+| # | Tier | Idea | Sketch | Hardcore | Diff |
+|---|---|---|---|---|---|
+| 169 | L | "This bed is occupied", nobody in it | Set the bed's `occupied` property for a while; vanilla shows the message itself. | — | 2 |
+| 170 | L | "You may not rest now, there are monsters nearby", no monsters | `onUseBlock` on a bed cancels and sends the vanilla message. | — | 2 |
+| 171 | H | Insomnia: phantoms come the next night | After waking, the `time_since_rest` stat is set past three days. | — | 1 |
+| 172 | H | Sleepwalking: the player wakes up somewhere else | After a slept night, move the player to a safe spot (`Place`) outside, by the door, or toward the anchor. | — | 3 |
+| 173 | L | A dream: "You dreamed of ..." on waking | Line in chat and the journal from the spirit's `Story` or one trait. Doubles as a clue. | — | 2 |
+
+## Home and mechanisms
+
+| # | Tier | Idea | Sketch | Hardcore | Diff |
+|---|---|---|---|---|---|
+| 174 | L | A lectern turns pages by itself | Set the page, page sound. | — | 1 |
+| 175 | L | A decorated pot wobbles, a bell swings | Block events, real animation and sound. | — | 1 |
+| 176 | L | Books in a chiseled bookshelf rearrange into a pattern | Change slots; `revert` puts them back. | stays | 2 |
+| 177 | H | A dispenser near the player clicks, then shoots an arrow at them | Click as the telegraph, arrow spawned from its face, no ammo used. | uses its real contents | 2 |
+| 178 | H | A repeater's delay or a comparator's mode changes silently | Set the property; `revert` sets it back. | stays (breaks the contraption) | 1 |
+| 179 | L | An empty minecart rolls along rails toward the player | Give it velocity along the rail every few ticks. | — | 3 |
+| 180 | L | A boat drifts away from the shore after the player gets out | A slow push away from land. | — | 2 |
+| 181 | H | A leash snaps and the animal is loose | Drop the fence knot. | — | 1 |
+| 182 | L | The furnace smelted the wrong thing: iron came out as charcoal or rotten flesh | Swap the output slot; `revert` swaps it back if it was not taken. | stays | 2 |
+| 183 | H | A leak: water drips from the ceiling inside the house | Water source under the roof; `revert` removes it. | stays, the player cleans up | 3 |
+| 184 | L | Muddy footprints indoors lead to the bed or the chest | `twin-block` floor decals, `revert`. | stay | 4 |
+| 185 | L | A gravestone appears by the house with the player's name and tomorrow's date | The existing `Gravestone` block; `revert`. | stays | 3 |
+| 186 | L | Gifts on the doorstep: flowers, a bone, raw rabbit, a letter signed by the spirit | Items at the door; the letter is a written book signed with the `Story` nickname. | — (already real) | 2 |
+
+## Mines and caves
+
+| # | Tier | Idea | Sketch | Hardcore | Diff |
+|---|---|---|---|---|---|
+| 187 | H | Torches behind the player in a tunnel go out one by one, so the way back is lost | Burnt-out `twin-block` torches (111) or removal, `revert`. | stay out | 3 |
+| 188 | H | The tunnel behind the player is sealed with stone | `fake-block`, or real with `revert`. | real, the player digs out | 3 |
+| 189 | L | Signs on the cave walls point deeper or say "go back" | Signs on walls along the tunnel, `revert`. | stay | 3 |
+| 190 | L | A line of torches in a dark forest leads somewhere and is gone when approached | `fake-block` torches along a line. | real torches | 3 |
+| 191 | H | Stone the player is about to mine is infested: silverfish | Swap stone ahead of the player to its infested variant. | same | 2 |
+
+## Mobs
+
+| # | Tier | Idea | Sketch | Hardcore | Diff |
+|---|---|---|---|---|---|
+| 192 | L | A villager shakes its head and will not trade | The unhappy animation (its synced counter), turn away. | — | 2 |
+| 193 | L | An iron golem holds out a poppy to empty air | Its flower-offer entity event. | — | 1 |
+| 194 | L | A dog sits and growls at the empty space next to the player, will not follow | Sit, look at the spot, growl sound. | — | 1 |
+| 195 | L | Farm animals walk to one corner of the pen and face the wall | Navigation to the corner, then fixed yaw. | — | 3 |
+| 196 | H | Bees get angry at the player for no reason | Set the hive's bees angry at the player. | — | 1 |
+| 197 | H | A goat out of sight rams the player | A real goat nearby given the player as its ram target, or a `phantom` goat plus knockback. | — | 2 |
+| 198 | L | An enderman carries a block taken from the player's house | Take a block from the build, give it to an enderman nearby; `revert` puts it back. | the block is gone for good | 3 |
+| 199 | L | A sculk shrieker nearby shrieks with no vibration; a warden heartbeat with no warden | Trigger the shrieker; play the heartbeat. | — | 1 |
+
+## Multiplayer
+
+| # | Tier | Idea | Sketch | Hardcore | Diff |
+|---|---|---|---|---|---|
+| 200 | L | Another real player looks frozen in place while they walk | Hide the real one and show a `phantom` copy at their last spot; the clean way, filtering their movement packets, needs a packet filter through `Platform`. | — | 5 |
+| 201 | L | A friend is in two places at once | `npc` with their skin and nametag far away while they stand next to the player. | — | 3 |
+| 202 | L | A whisper "from" a real online player who never sent it | System message styled like `/msg`. Impersonates a real person, so it should be off by default. | — | 1 |
+
+## Structure
+
+| # | Idea | Sketch | Diff |
+|---|---|---|---|
+| 203 | Scenes: events chained into one scripted sequence (knocks, the door opens, steps on the stairs, a figure at the top) | A `scene` piece on top of `Scheduler`: a list of events with delays and conditions (the player is still near, has not looked). Chosen as one event by the Director. | 5 |
+| 204 | The spirit writes in the journal in the first person and its `Story` leaks through | New journal entries; tone from type and traits. | 2 |
+
 ## Cheapest first
 
-1. Sounds (131, 132, 136, 138, 139, 140) and 110: 1 each, no new infra.
+1. Packet lies (153–168), sounds (131, 132, 136, 138, 139, 140) and 110: 1 each, no new infra.
 2. Hardcore seam (`Restore.revert` and the setting): about 3, and every later block event gets its hardcore branch for free.
 3. `npc` (119–124, 148): unlocks the whole "other player" group.
 4. `fake-block` and `phantom` (105–107, 126, 127): unlock most visual tricks without client code.

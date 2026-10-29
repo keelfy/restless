@@ -11,7 +11,7 @@ public final class Catalog {
     public static List<HauntEvent> all() {
         return Stream.of(
                 Lights.all(), Mechanisms.all(), Sounds.all(), Afflictions.all(), Assaults.all(),
-                ItemEvents.all(), BlockEvents.all(), MobEvents.all(), Presence.all())
+                ItemEvents.all(), BlockEvents.all(), MobEvents.all(), Presence.all(), Lies.all())
             .flatMap(List::stream)
             .toList();
     }

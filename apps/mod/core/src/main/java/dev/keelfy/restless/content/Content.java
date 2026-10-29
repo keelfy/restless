@@ -100,10 +100,12 @@ public final class Content {
 
     /** Forces the class to load, which declares every entry and the creative tab that holds the items. */
     public static void init() {
+        var tabItems = new java.util.ArrayList<Supplier<Item>>(UnlitLights.ITEMS);
+        tabItems.addAll(List.of(SALT, ASH, SPIRIT_CANDLE, SPIRIT_COMPASS, CAMERA_OBSCURA, SPIRIT_BOX_ITEM, OUIJA_BOARD_ITEM,
+            DOOR_CHARM_ITEM, DREAMCATCHER_ITEM, HALLOWED_LANTERN_ITEM, SCARECROW_ITEM, ALTAR_ITEM, HOLY_WATER, MIRROR,
+            POLTERGEIST_ESSENCE, SHADE_ESSENCE, TELEKINESIS_AMULET, DARK_EYE, JOURNAL, GRAVESTONE_ITEM, TEST_ITEM));
         Platform.get().registerTab("restless", Component.translatable("itemGroup.restless"), () -> new ItemStack(SPIRIT_CANDLE.get()),
-            List.of(SALT, ASH, SPIRIT_CANDLE, SPIRIT_COMPASS, CAMERA_OBSCURA, SPIRIT_BOX_ITEM, OUIJA_BOARD_ITEM,
-                DOOR_CHARM_ITEM, DREAMCATCHER_ITEM, HALLOWED_LANTERN_ITEM, SCARECROW_ITEM, ALTAR_ITEM, HOLY_WATER, MIRROR,
-                POLTERGEIST_ESSENCE, SHADE_ESSENCE, TELEKINESIS_AMULET, DARK_EYE, JOURNAL, GRAVESTONE_ITEM, TEST_ITEM));
+            tabItems);
         Restless.LOGGER.debug("Content declared");
     }
 }

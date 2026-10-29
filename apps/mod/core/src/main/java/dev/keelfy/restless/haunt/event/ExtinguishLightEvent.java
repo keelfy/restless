@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.UnlitLights;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
@@ -12,11 +13,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.AbstractCandleBlock;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-/** Snuffs a lit candle, or knocks a torch off (it drops, nothing is lost). */
+/** Snuffs candles, torches and lanterns in place. */
 public final class ExtinguishLightEvent implements HauntEvent {
     @Override
     public Identifier id() {
@@ -49,7 +49,7 @@ public final class ExtinguishLightEvent implements HauntEvent {
         if (AbstractCandleBlock.isLit(state)) {
             AbstractCandleBlock.extinguish(null, state, level, pos);
         } else {
-            level.destroyBlock(pos, true);
+            UnlitLights.extinguish(level, pos);
             Config.Tone tone = Config.event("extinguish_light").tone("sound");
             level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, tone.volume(), tone.pitch());
         }
@@ -61,7 +61,6 @@ public final class ExtinguishLightEvent implements HauntEvent {
 
     private static boolean isLight(BlockState state) {
         return AbstractCandleBlock.isLit(state)
-            || state.is(Blocks.TORCH) || state.is(Blocks.WALL_TORCH)
-            || state.is(Blocks.SOUL_TORCH) || state.is(Blocks.SOUL_WALL_TORCH);
+            || UnlitLights.isTorch(state) || UnlitLights.isLantern(state);
     }
 }

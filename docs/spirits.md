@@ -17,7 +17,7 @@ Update this file when any of them changes. The numbers below are the shipped def
 - Every spirit has a location. A personal spirit roams in a ring `location.min_distance` to `location.max_distance`
   blocks from its player, drifting `location.step` blocks per second, and is forgotten on restart; a territorial spirit
   stays at its anchor. Sound events with no fixed source (creeper hiss, crying child, eating behind a wall, enderman
-  hiss, chest opening, distant bell, phantom jukebox, death cry, dripping, block breaking, and the knocks when no door
+  hiss, chest opening, distant bell, phantom jukebox, death cry, dripping, block breaking, bottle shatter, and the knocks when no door
   is near) come from that point, so a territorial spirit's sounds are only heard near its anchor. Events started by hand
   with `/haunt force` have no spirit and keep a random point around the player. `/haunt info` shows a personal spirit's
   current point as `at=`.
@@ -307,6 +307,12 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `echo` | 36 | LIGHT | SOUND | 0.4 | The player made a sound (step, splash, bite) in the last 5 s | That sound plays again 3 s later from where it was made, quieter and lower. Recorded through the loader's sound hook, `Restless.onPlaySound`; only sounds in the player category within 2 blocks of the player count |
 | `death_cry` | 37 | LIGHT | SOUND | 0.4 | Always | Player death sound nearby |
 | `dripping` | 38 | LIGHT | SOUND | 0.4 | Always | Water drip nearby |
+| `distant_mob` | 131 | LIGHT | SOUND | 0.4 | Always | A zombie, skeleton, spider, enderman, witch, husk, drowned or pillager sound 2–40 blocks away; louder the farther, so it carries |
+| `hostile_animal` | 132 | LIGHT | SOUND | 0.4 | An animal within 16 | A zombie, creeper, skeleton or witch sound bound to it, sent to this player only |
+| `spider_overhead` | 136 | LIGHT | SOUND | 0.4 | A solid block 2–3 above the head with air below it | A spider sound, then five steps crawling across the ceiling |
+| `cracking_floor` | 138 | HARMFUL | SOUND | 0.3 | Standing on a block | Break particles and sound of the block underfoot; it stays |
+| `bottle_shatter` | 139 | LIGHT | SOUND | 0.4 | Always | A splash potion shatters 4 blocks away (sound and coloured particles) |
+| `note_block_voice` | 140 | LIGHT | SOUND | 0.5 | A note block within 16 | It plays a villager or player hurt, ghast scream, zombie villager or vex sound, with a note particle |
 | `nausea` | 39 | LIGHT | AFFLICTION | 0.6 | No nausea | Nausea 5 s |
 | `heaviness` | 40 | LIGHT | AFFLICTION | 0.6 | No slowness | Slowness II 8 s |
 | `fatigue` | 41 | LIGHT | AFFLICTION | 0.6 | No mining fatigue | Mining fatigue II 10 s |
@@ -342,6 +348,7 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `map_marker` | 71 | LIGHT | ITEMS | 0.5 | A filled map in the inventory without a marker of this event | A red X appears on it somewhere in its area. Permanent: the marker is stored in the map item |
 | `wilted_flowers` | 72 | LIGHT | BLOCKS | 0.6 | A potted flower within 10 | Every one becomes a potted dead bush; restored after 2 min |
 | `withering_crops` | 73 | LIGHT | BLOCKS | 0.6 | A grown crop within 6 | Every crop within 6 loses one growth stage |
+| `lost_growth` | 110 | LIGHT | BLOCKS | 0.5 | A crop, stem, berry bush or cocoa past its first stage within 8 | One of them is set back to age 0 |
 | `turning_frame` | 76 | LIGHT | BLOCKS | 0.6 | A filled item frame within 12 | Rotates its item |
 | `new_sign` | 74 | LIGHT | BLOCKS | 0.6 | A sign within 10 | The front text becomes one creepy phrase of up to three short lines (at most eight letters each, so it fits a hanging sign); restored after 1 min unless the player has edited it |
 | `new_painting` | 75 | LIGHT | BLOCKS | 0.6 | A painting within 12 with another variant of the same size | Becomes another painting; restored after 1 min |
@@ -366,6 +373,17 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `cold_breath` | 97 | LIGHT | PRESENCE | 0.6 | Warm biome | A breath puff at the face |
 | `local_rain` | 98 | LIGHT | PRESENCE | 0.6 | Sky visible, not raining | Rain particles and sound over the player for 6 s |
 | `lost_time` | 99 | HARMFUL | PRESENCE | 0.5 | Night | The overworld clock jumps 1000 ticks (affects everyone) |
+| `false_wound` | 153 | LIGHT | AFFLICTION | 0.3 | Health above 1 heart | The client is told health is 4 hearts lower (never below 1 heart) for 1.5 s, then the real value |
+| `false_hearts` | 154 | LIGHT | AFFLICTION | 0.3 | No wither or poison | The client shows wither or poison for 5 s; the server has no effect |
+| `false_hunger` | 155 | LIGHT | AFFLICTION | 0.3 | Always | The client is told the food bar is empty for 2 s |
+| `guardian_face` | 156 | LIGHT | PRESENCE | 0.15 | Always | The elder guardian face and sound, client only |
+| `false_totem` | 157 | LIGHT | PRESENCE | 0.15 | Always | The totem of undying animation (a plain totem if none is carried) |
+| `subliminal_title` | 158 | LIGHT | PRESENCE | 0.3 | Always | A dark red title from `texts` for 3 ticks with no fade; fade times reset after |
+| `red_vignette` | 160 | LIGHT | PRESENCE | 0.3 | Always | The client's border warning distance is raised so the red tint shows at 80% for 5 s, then the real one |
+| `own_voice` | 162 | LIGHT | SOUND | 0.2 | Always | A chat line `<name> ...` from `lines`, sent only to the player |
+| `false_death` | 163 | LIGHT | PRESENCE | 0.2 | Always | Their own "was slain by ???" death message, sent only to them |
+| `private_rain` | 167 | LIGHT | PRESENCE | 0.3 | Weather dimension, not raining, sky visible | Rain for this client only, a storm 30% of the time, for 20 s; then the real weather |
+| `silent_lightning` | 168 | LIGHT | PRESENCE | 0.2 | Weather dimension, sky visible | A visual-only bolt 24 blocks away |
 
 ## Chances
 
@@ -374,12 +392,12 @@ so a spirit near no doors never rolls a door). Computed from the weights above.
 
 | Spirit | Power | Lights | Doors | Sound | Affliction | Assault | Items | Blocks | Mobs | Presence |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `poltergeist` | 0 | 11.0% | 49.1% | 4.6% | 3.1% | 0% | 13.8% | 12.4% | 4.6% | 1.4% |
-|  | 0.5 | 9.8% | 44.1% | 3.6% | 4.1% | 2.9% | 16.6% | 12.2% | 5.3% | 1.3% |
-|  | 1 | 7.8% | 36.4% | 2.2% | 5.8% | 7.3% | 20.9% | 11.9% | 6.5% | 1.2% |
-| `shade` | 0 | 35.7% | 4.0% | 24.8% | 13.2% | 0% | 2.5% | 8.9% | 5.0% | 6.0% |
-|  | 0.5 | 31.0% | 3.5% | 19.3% | 17.4% | 6.0% | 2.9% | 8.6% | 5.6% | 5.6% |
-|  | 1 | 24.0% | 2.8% | 11.1% | 23.6% | 15.0% | 3.6% | 8.2% | 6.6% | 5.1% |
+| `poltergeist` | 0 | 10.8% | 44.7% | 6.9% | 3.4% | 0% | 12.0% | 14.1% | 4.8% | 3.3% |
+|  | 0.5 | 9.6% | 40.4% | 5.6% | 4.4% | 2.8% | 15.2% | 13.5% | 5.8% | 2.8% |
+|  | 1 | 7.6% | 33.9% | 3.5% | 5.9% | 7.0% | 20.0% | 12.6% | 7.3% | 2.1% |
+| `shade` | 0 | 28.7% | 2.9% | 30.5% | 12.1% | 0% | 1.8% | 8.3% | 4.2% | 11.5% |
+|  | 0.5 | 25.7% | 2.7% | 25.1% | 15.9% | 5.0% | 2.3% | 8.1% | 5.2% | 10.1% |
+|  | 1 | 21.1% | 2.4% | 16.3% | 21.9% | 13.0% | 3.1% | 7.8% | 6.7% | 7.8% |
 
 Cooldown per spirit, minutes (before the daylight factor): `(4 − 2.5 × power) × (1 + roll) / activity`. Poltergeist: 3.1–6.2 at power 0, 1.2–2.3 at 1.
 Shade: 5.0–10.0 at power 0, 1.9–3.8 at 1.
@@ -416,7 +434,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 |---|---|
 | `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `corruption`, `evolution`, `journal`, `restore`, `place` |
 | `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words, hint and weakness), `story` (nickname words, days, causes) |
-| `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
+| `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence`, `lies` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
 Names and descriptions of events live apart, in `restless-config/lang/en.json` and `ru.json` (copied to `config/restless/lang/` on first run,
 edit the copy). The debug screen shows them in the client's language, falling back to English, then to the id. A new event needs an entry in both.

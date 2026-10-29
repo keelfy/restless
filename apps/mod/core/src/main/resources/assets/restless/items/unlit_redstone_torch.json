@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:item/unlit_redstone_torch"
+  }
+}

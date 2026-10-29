@@ -12,19 +12,36 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-/** Sounds with no source. Always runnable, never touch the world. */
+/** Sounds with no real source. They never touch the world. */
 final class Sounds {
     private static final double BEHIND = 180.0;
     private static final SoundType[] BREAKS = {SoundType.STONE, SoundType.WOOD, SoundType.GLASS, SoundType.GRAVEL};
+    private static final SoundEvent[] MOBS = {
+        SoundEvents.ZOMBIE_AMBIENT, SoundEvents.SKELETON_AMBIENT, SoundEvents.SPIDER_AMBIENT, SoundEvents.ENDERMAN_AMBIENT,
+        SoundEvents.WITCH_AMBIENT, SoundEvents.HUSK_AMBIENT, SoundEvents.DROWNED_AMBIENT, SoundEvents.PILLAGER_AMBIENT};
+    private static final SoundEvent[] HOSTILE = {SoundEvents.ZOMBIE_AMBIENT, SoundEvents.CREEPER_PRIMED, SoundEvents.SKELETON_AMBIENT, SoundEvents.WITCH_AMBIENT};
+    private static final SoundEvent[] VOICES = {
+        SoundEvents.VILLAGER_HURT, SoundEvents.PLAYER_HURT, SoundEvents.GHAST_SCREAM, SoundEvents.ZOMBIE_VILLAGER_AMBIENT, SoundEvents.VEX_AMBIENT};
+    /** Splash colours of a few potions, so the shatter reads as a real one. */
+    private static final int[] POTION_COLORS = {0x8889A6, 0x87A363, 0x4E9331, 0x1F1FA1, 0xF82423, 0x484D48};
 
     private Sounds() {}
 
@@ -72,7 +89,42 @@ final class Sounds {
             // 37
             at("death_cry", SoundEvents.PLAYER_DEATH),
             // 38
-            at("dripping", SoundEvents.POINTED_DRIPSTONE_DRIP_WATER)
+            at("dripping", SoundEvents.POINTED_DRIPSTONE_DRIP_WATER),
+            // 131: some monster, anywhere from right beside the player to the edge of hearing
+            sound("distant_mob", player -> {
+                Config.Section config = Config.event("distant_mob");
+                double distance = config.num("min_distance") + player.getRandom().nextDouble() * (config.num("max_distance") - config.num("min_distance"));
+                Config.Tone tone = config.tone("sound");
+                // Volume above 1 only widens the range a sound carries (16 blocks per unit), so far ones stay audible.
+                float volume = Math.max(tone.volume(), (float) (distance / config.num("blocks_per_volume")));
+                Nearby.sound(player, MOBS[player.getRandom().nextInt(MOBS.length)], Nearby.randomAround(player, distance), new Config.Tone(volume, tone.pitch()));
+            }),
+            // 132: a cow that groans like a zombie; only this player hears it, and it follows the animal
+            SimpleEvent.light("hostile_animal", EventTag.SOUND, player -> !animals(player).isEmpty(), player -> {
+                List<Animal> animals = animals(player);
+                Animal animal = animals.get(player.getRandom().nextInt(animals.size()));
+                Config.Tone tone = Config.event("hostile_animal").tone("sound");
+                player.connection.send(new ClientboundSoundEntityPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(HOSTILE[player.getRandom().nextInt(HOSTILE.length)]),
+                    SoundSource.HOSTILE, animal, tone.volume(), tone.pitch(), player.getRandom().nextLong()));
+            }),
+            // 136: something crawls on the ceiling right above
+            SimpleEvent.light("spider_overhead", EventTag.SOUND, player -> ceiling(player) != null, Sounds::spiderOverhead),
+            // 138: the floor sounds and looks as if it gives way, and holds
+            SimpleEvent.harmful("cracking_floor", EventTag.SOUND, player -> !player.level().getBlockState(player.blockPosition().below()).isAir(), player -> {
+                BlockPos below = player.blockPosition().below();
+                player.level().levelEvent(LevelEvent.PARTICLES_AND_SOUND_DESTROY_BLOCK, below, Block.getId(player.level().getBlockState(below)));
+            }),
+            // 139
+            sound("bottle_shatter", player -> player.level().levelEvent(LevelEvent.PARTICLES_SPELL_POTION_SPLASH,
+                BlockPos.containing(Nearby.source(player, Config.event("bottle_shatter").num("distance"))),
+                POTION_COLORS[player.getRandom().nextInt(POTION_COLORS.length)])),
+            // 140: a note block that plays a voice instead of a note
+            SimpleEvent.light("note_block_voice", EventTag.SOUND, player -> Nearby.any(player, "note_block_voice", s -> s.is(Blocks.NOTE_BLOCK)), player -> {
+                BlockPos block = Nearby.random(player, "note_block_voice", s -> s.is(Blocks.NOTE_BLOCK));
+                Config.Tone tone = Config.event("note_block_voice").tone("sound");
+                player.level().playSound(null, block, VOICES[player.getRandom().nextInt(VOICES.length)], SoundSource.RECORDS, tone.volume(), tone.pitch());
+                player.level().sendParticles(ParticleTypes.NOTE, block.getX() + 0.5, block.getY() + 1.2, block.getZ() + 0.5, 0, player.getRandom().nextInt(25) / 24.0, 0, 0, 1);
+            })
         );
     }
 
@@ -101,6 +153,34 @@ final class Sounds {
             Nearby.sound(p, SoundEvents.PLAYER_BREATH, Nearby.around(p, config.num("distance"), yaw),
                 new Config.Tone(start.volume() + (float) config.num("volume_step") * n, start.pitch()));
             return n + 1 < config.integer("breaths");
+        });
+    }
+
+    private static List<Animal> animals(ServerPlayer player) {
+        return player.level().getEntitiesOfClass(Animal.class, new AABB(player.blockPosition()).inflate(Nearby.radius("hostile_animal")));
+    }
+
+    /** The solid block 2 or 3 above the player's head, if the space between is open. */
+    private static @Nullable BlockPos ceiling(ServerPlayer player) {
+        BlockPos head = BlockPos.containing(player.getEyePosition());
+        for (int up = 2; up <= 3; up++) {
+            BlockPos pos = head.above(up);
+            if (player.level().getBlockState(head.above(up - 1)).isAir() && player.level().getBlockState(pos).isSolidRender()) {
+                return pos;
+            }
+        }
+        return null;
+    }
+
+    private static void spiderOverhead(ServerPlayer player) {
+        Config.Section config = Config.event("spider_overhead");
+        BlockPos start = ceiling(player);
+        Config.Tone step = config.tone("sound");
+        Vec3 drift = Nearby.randomAround(player, 1.0).subtract(player.position()).multiply(1, 0, 1).normalize().scale(config.num("step_blocks"));
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            Vec3 at = Vec3.atBottomCenterOf(start).add(drift.scale(n));
+            Nearby.sound(p, n == 0 ? SoundEvents.SPIDER_AMBIENT : SoundEvents.SPIDER_STEP, at, step);
+            return n + 1 < config.integer("steps");
         });
     }
 

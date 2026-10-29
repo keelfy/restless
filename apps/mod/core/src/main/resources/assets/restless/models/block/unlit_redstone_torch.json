@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_torch",
+  "textures": {
+    "torch": "restless:block/unlit_redstone_torch"
+  }
+}

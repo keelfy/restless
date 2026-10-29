@@ -1,0 +1,16 @@
+{
+  "block.restless.unlit_torch": "Потухший факел",
+  "block.restless.unlit_soul_torch": "Потухший факел душ",
+  "block.restless.unlit_copper_torch": "Потухший медный факел",
+  "block.restless.unlit_redstone_torch": "Потухший редстоуновый факел",
+  "block.restless.unlit_lantern": "Потухший фонарь",
+  "block.restless.unlit_soul_lantern": "Потухший фонарь душ",
+  "block.restless.unlit_copper_lantern": "Потухший медный фонарь",
+  "block.restless.unlit_exposed_copper_lantern": "Потухший потемневший медный фонарь",
+  "block.restless.unlit_weathered_copper_lantern": "Потухший состаренный медный фонарь",
+  "block.restless.unlit_oxidized_copper_lantern": "Потухший окисленный медный фонарь",
+  "block.restless.unlit_waxed_copper_lantern": "Потухший вощёный медный фонарь",
+  "block.restless.unlit_waxed_exposed_copper_lantern": "Потухший вощёный потемневший медный фонарь",
+  "block.restless.unlit_waxed_weathered_copper_lantern": "Потухший вощёный состаренный медный фонарь",
+  "block.restless.unlit_waxed_oxidized_copper_lantern": "Потухший вощёный окисленный медный фонарь"
+}

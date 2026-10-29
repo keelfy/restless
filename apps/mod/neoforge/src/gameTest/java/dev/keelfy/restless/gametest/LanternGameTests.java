@@ -1,6 +1,7 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.UnlitLights;
 import dev.keelfy.restless.content.WardBlock;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -25,6 +26,27 @@ final class LanternGameTests {
     private static final BlockPos TARGET = new BlockPos(4, 2, 4);
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("unlit_lights", helper -> {
+            for (var item : UnlitLights.ITEMS) {
+                var block = ((BlockItem) item.get()).getBlock();
+                check(helper, block.defaultBlockState().getLightEmission() == 0, "Unlit blocks must emit no light");
+                check(helper, !UnlitLights.isTorch(block.defaultBlockState()) && !UnlitLights.isLantern(block.defaultBlockState()),
+                    "Already extinguished blocks must not be event targets");
+            }
+            var wall = Blocks.SOUL_WALL_TORCH.defaultBlockState()
+                .setValue(net.minecraft.world.level.block.WallTorchBlock.FACING, Direction.WEST);
+            check(helper, UnlitLights.extinguished(wall).getValue(net.minecraft.world.level.block.WallTorchBlock.FACING) == Direction.WEST,
+                "Extinguishing must preserve wall attachment");
+            var lantern = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("waxed_oxidized_copper_lantern")).defaultBlockState()
+                .setValue(LanternBlock.HANGING, true).setValue(LanternBlock.WATERLOGGED, true);
+            var unlit = UnlitLights.extinguished(lantern);
+            check(helper, unlit != lantern && unlit.getValue(LanternBlock.HANGING) && unlit.getValue(LanternBlock.WATERLOGGED),
+                "Extinguishing must preserve suspension and water");
+            var ward = Content.HALLOWED_LANTERN.get().defaultBlockState();
+            check(helper, UnlitLights.extinguished(ward) == ward && !UnlitLights.isLantern(ward),
+                "Hallowed lantern must be excluded");
+            helper.succeed();
+        });
         for (boolean hanging : new boolean[]{false, true}) {
             String name = hanging ? "hanging" : "standing";
             Direction face = hanging ? Direction.DOWN : Direction.UP;

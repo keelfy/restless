@@ -23,14 +23,19 @@ import net.minecraft.world.entity.decoration.painting.Painting;
 import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import net.minecraft.world.entity.monster.zombie.Husk;
 import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.AABB;
 
 /**
@@ -63,6 +68,16 @@ final class BlockEvents {
                         CropBlock crop = (CropBlock) state.getBlock();
                         level.setBlockAndUpdate(pos, crop.getStateForAge(crop.getAge(state) - 1));
                     }
+                }),
+            // 110: one plant back to a seedling; 73 takes a stage from every crop
+            SimpleEvent.light("lost_growth", EventTag.BLOCKS,
+                player -> Nearby.any(player, "lost_growth", BlockEvents::growing),
+                player -> {
+                    BlockPos pos = Nearby.random(player, "lost_growth", BlockEvents::growing);
+                    BlockState state = player.level().getBlockState(pos);
+                    player.level().setBlockAndUpdate(pos, state.setValue(age(state), 0));
+                    Config.Tone tone = Config.event("lost_growth").tone("sound");
+                    player.level().playSound(null, pos, SoundEvents.CROP_BREAK, SoundSource.HOSTILE, tone.volume(), tone.pitch());
                 }),
             // 76
             SimpleEvent.light("turning_frame", EventTag.BLOCKS,
@@ -136,6 +151,17 @@ final class BlockEvents {
 
     private static boolean grown(BlockState state) {
         return state.getBlock() instanceof CropBlock crop && crop.getAge(state) > 0;
+    }
+
+    /** A crop, stem, berry bush or cocoa pod past its first stage. */
+    private static boolean growing(BlockState state) {
+        Block block = state.getBlock();
+        return (block instanceof CropBlock || block instanceof StemBlock || block instanceof SweetBerryBushBlock || block instanceof CocoaBlock)
+            && state.getValue(age(state)) > 0;
+    }
+
+    private static IntegerProperty age(BlockState state) {
+        return (IntegerProperty) state.getBlock().getStateDefinition().getProperty("age");
     }
 
     private static List<ItemFrame> frames(ServerPlayer player) {

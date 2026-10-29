@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.UnlitLights;
 import dev.keelfy.restless.haunt.DimPayload;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
@@ -133,7 +134,7 @@ final class Lights {
     }
 
     private static boolean isTorch(BlockState state) {
-        return state.is(Blocks.TORCH) || state.is(Blocks.WALL_TORCH) || state.is(Blocks.SOUL_TORCH) || state.is(Blocks.SOUL_WALL_TORCH);
+        return UnlitLights.isTorch(state);
     }
 
     private static boolean litLamp(BlockState state) {
@@ -153,7 +154,7 @@ final class Lights {
             ServerLevel level = p.level();
             BlockPos pos = torches.get(n);
             if (isTorch(level.getBlockState(pos))) {
-                level.destroyBlock(pos, true);
+                UnlitLights.extinguish(level, pos);
                 level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, tone.volume(), tone.pitch());
             }
             return n + 1 < Math.min(torches.size(), config.integer("max_torches"));
@@ -180,7 +181,7 @@ final class Lights {
     }
 
     private static boolean isLantern(BlockState state) {
-        return state.is(Blocks.LANTERN) || state.is(Blocks.SOUL_LANTERN);
+        return UnlitLights.isLantern(state);
     }
 
     private static boolean isLight(BlockState state) {
@@ -197,11 +198,12 @@ final class Lights {
         Config.Tone on = config.tone("on_sound");
         ServerLevel level = player.level();
         BlockState lantern = level.getBlockState(pos);
+        BlockState unlit = UnlitLights.extinguished(lantern);
         Restore.after(level, config.integer("restore_ticks"), force -> {
             if (!force && !level.isLoaded(pos)) {
                 return false;
             }
-            if (level.isEmptyBlock(pos)) {
+            if (level.getBlockState(pos) == unlit) {
                 Restore.quiet(level, pos, lantern);
             }
             return true;
@@ -210,9 +212,9 @@ final class Lights {
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
             ServerLevel here = p.level();
             if (n % 2 == 0 && here.getBlockState(pos) == lantern) {
-                Restore.quiet(here, pos, Blocks.AIR.defaultBlockState());
+                Restore.quiet(here, pos, unlit);
                 here.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, off.volume(), off.pitch());
-            } else if (n % 2 == 1 && here.isEmptyBlock(pos)) {
+            } else if (n % 2 == 1 && here.getBlockState(pos) == unlit) {
                 Restore.quiet(here, pos, lantern);
                 here.playSound(null, pos, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, on.volume(), on.pitch());
             }
@@ -275,7 +277,7 @@ final class Lights {
         for (BlockPos pos : Nearby.all(player, "blackout", Lights::isLight)) {
             BlockState state = level.getBlockState(pos);
             if (isTorch(state)) {
-                level.destroyBlock(pos, true);
+                UnlitLights.extinguish(level, pos);
             } else if (AbstractCandleBlock.isLit(state)) {
                 AbstractCandleBlock.extinguish(null, state, level, pos);
             } else if (CampfireBlock.isLitCampfire(state)) {

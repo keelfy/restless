@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "restless:block/unlit_soul_lantern"
+    },
+    "hanging=true": {
+      "model": "restless:block/unlit_soul_lantern_hanging"
+    }
+  }
+}

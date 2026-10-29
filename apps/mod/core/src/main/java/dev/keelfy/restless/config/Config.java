@@ -31,7 +31,7 @@ public final class Config {
     private static final Logger LOGGER = LogUtils.getLogger();
     /** The bundled files, each a slice of the same tree (an {@code events} object in several of them is merged). */
     static final List<String> FILES = List.of(
-        "haunt", "spirits", "lights", "mechanisms", "sounds", "afflictions", "assaults", "items", "blocks", "mobs", "presence");
+        "haunt", "spirits", "lights", "mechanisms", "sounds", "afflictions", "assaults", "items", "blocks", "mobs", "presence", "lies");
     /** The namespace of events that use only vanilla content. */
     static final String DEFAULT_NAMESPACE = "minecraft";
     static final String VERSION = "version";

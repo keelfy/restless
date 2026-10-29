@@ -165,7 +165,7 @@ final class Assaults {
     }
 
     /** Visual only: it lights and sounds like lightning but sets nothing on fire. */
-    private static void strike(ServerLevel level, BlockPos pos) {
+    static void strike(ServerLevel level, BlockPos pos) {
         LightningBolt bolt = EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.EVENT);
         if (bolt != null) {
             bolt.setPos(Vec3.atBottomCenterOf(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos)));
