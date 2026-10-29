@@ -65,6 +65,12 @@ public final class Content {
     public static final Supplier<Item> TELEKINESIS_AMULET = item("telekinesis_amulet", p -> new TelekinesisAmulet(p.stacksTo(1)));
     public static final Supplier<Item> DARK_EYE = item("dark_eye", p -> new DarkEye(p.stacksTo(1)));
 
+    /** Built by the world, never crafted: it drops nothing. */
+    public static final Supplier<Block> GRAVESTONE = block("gravestone",
+        p -> new Gravestone(p.strength(2.0f, 6.0f).sound(SoundType.STONE).noOcclusion()));
+    public static final Supplier<Item> GRAVESTONE_ITEM = blockItem("gravestone", GRAVESTONE);
+    public static final Supplier<Item> JOURNAL = item("journal", p -> new JournalBook(p.stacksTo(1)));
+
     private Content() {
     }
 
@@ -86,7 +92,7 @@ public final class Content {
         Platform.get().registerTab("restless", Component.translatable("itemGroup.restless"), () -> new ItemStack(SPIRIT_CANDLE.get()),
             List.of(SALT, ASH, SPIRIT_CANDLE, SPIRIT_COMPASS, CAMERA_OBSCURA, SPIRIT_BOX_ITEM, OUIJA_BOARD_ITEM,
                 DOOR_CHARM_ITEM, DREAMCATCHER_ITEM, HALLOWED_LANTERN_ITEM, SCARECROW_ITEM, ALTAR_ITEM, HOLY_WATER, MIRROR,
-                POLTERGEIST_ESSENCE, SHADE_ESSENCE, TELEKINESIS_AMULET, DARK_EYE, TEST_ITEM));
+                POLTERGEIST_ESSENCE, SHADE_ESSENCE, TELEKINESIS_AMULET, DARK_EYE, JOURNAL, GRAVESTONE_ITEM, TEST_ITEM));
         Restless.LOGGER.debug("Content declared");
     }
 }

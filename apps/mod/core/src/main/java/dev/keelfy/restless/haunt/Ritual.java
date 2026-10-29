@@ -5,6 +5,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Altar;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.spirit.Focus;
+import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Traits;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,8 +102,9 @@ public final class Ritual {
         item.ifPresent(i -> level.addFreshEntity(new ItemEntity(level, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, new ItemStack(i))));
         level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, 40, 0.5, 1.0, 0.5, 0.05);
         level.playSound(null, altar, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0f, 0.6f);
-        player.sendSystemMessage(Component.translatable("message.restless.banished",
-            Component.translatable("spirit.restless." + spirit.haunting().spirit())), true);
+        Component type = Component.translatable("spirit.restless." + spirit.haunting().spirit());
+        player.sendSystemMessage(Component.translatable("message.restless.banished", type), true);
+        Journal.write(player, Component.translatable("journal.restless.banished", type, Story.of(spirit.haunting().seed()).name()));
     }
 
     private static void fail(ServerPlayer player, ServerLevel level, BlockPos altar, Sense.Spirit spirit) {

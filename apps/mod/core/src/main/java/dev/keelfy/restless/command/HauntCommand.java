@@ -1,6 +1,7 @@
 package dev.keelfy.restless.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -8,10 +9,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import dev.keelfy.restless.debug.DebugMenu;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.Graves;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.Location;
+import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Story;
@@ -23,12 +26,13 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerPlayer;
 
-/** Debug/admin command: /haunt opens the debug screen; info|force|spirit add|spirit remove [player] work from chat. */
+/** Debug/admin command: /haunt opens the debug screen; info|force|sanity|spirit add|spirit remove [player] work from chat. */
 public final class HauntCommand {
     private static final DynamicCommandExceptionType UNKNOWN_EVENT =
         new DynamicCommandExceptionType(id -> Component.literal("Unknown haunt event: " + id));
@@ -54,6 +58,11 @@ public final class HauntCommand {
                     .executes(c -> force(c, c.getSource().getPlayerOrException()))
                     .then(Commands.argument("player", EntityArgument.player())
                         .executes(c -> force(c, EntityArgument.getPlayer(c, "player"))))))
+            .then(Commands.literal("sanity")
+                .then(Commands.argument("value", DoubleArgumentType.doubleArg(0, 1))
+                    .executes(c -> sanity(c, c.getSource().getPlayerOrException()))
+                    .then(Commands.argument("player", EntityArgument.player())
+                        .executes(c -> sanity(c, EntityArgument.getPlayer(c, "player"))))))
             .then(Commands.literal("spirit")
                 .then(Commands.literal("add")
                     .then(Commands.argument("spirit", StringArgumentType.word())
@@ -76,23 +85,33 @@ public final class HauntCommand {
         StringBuilder list = new StringBuilder();
         for (int i = 0; i < spirits.size(); i++) {
             HauntData.Haunting h = spirits.get(i);
-            list.append(describe(i + 1, h, "personal", now, ""));
+            list.append(describe(source, i + 1, h, "personal", now, ""));
         }
         for (int i = 0; i < places.size(); i++) {
             HauntData.Territorial t = places.get(i);
-            list.append(describe(spirits.size() + i + 1, t.haunting(), "territorial", now, String.format(Locale.ROOT,
+            list.append(describe(source, spirits.size() + i + 1, t.haunting(), "territorial", now, String.format(Locale.ROOT,
                 " anchor=%d,%d,%d radius=%d%s", t.anchor().getX(), t.anchor().getY(), t.anchor().getZ(), t.radius(), t.reaches(player) ? " (in range)" : "")));
         }
-        String text = String.format(Locale.ROOT, "%s: spirits=%d%s", player.getName().getString(), spirits.size() + places.size(), list);
+        String text = String.format(Locale.ROOT, "%s: sanity=%.2f spirits=%d%s", player.getName().getString(), Sanity.of(player), spirits.size() + places.size(), list);
         source.sendSuccess(() -> Component.literal(text), false);
         return 1;
     }
 
-    private static String describe(int number, HauntData.Haunting h, String kind, long now, String extra) {
+    private static String describe(CommandSourceStack source, int number, HauntData.Haunting h, String kind, long now, String extra) {
         Vec3 roaming = Location.roaming(h.uuid());
         String at = roaming == null ? "" : String.format(Locale.ROOT, " at=%.0f,%.0f,%.0f", roaming.x, roaming.y, roaming.z);
+        HauntData.Grave grave = HauntData.get(source.getServer()).graves().get(h.uuid());
+        String buried = grave == null ? "" : String.format(Locale.ROOT, " grave=%d,%d,%d%s wants=%s", grave.pos().getX(), grave.pos().getY(), grave.pos().getZ(),
+            grave.built() ? "" : "(unbuilt)", BuiltInRegistries.ITEM.getKey(Graves.wanted(h.seed())));
         return String.format(Locale.ROOT, "%n  %d. %s %s \"%s\" seed=%x traits=%s power=%.2f anger=%.2f next=%ds%s%s", number, h.spirit(), kind, Story.of(h.seed()), h.seed(), String.join(",", h.traits()),
-            Director.power(h, now), h.anger(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND), at, extra);
+            Director.power(h, now), h.anger(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND), at + buried, extra);
+    }
+
+    private static int sanity(CommandContext<CommandSourceStack> c, ServerPlayer player) {
+        double value = DoubleArgumentType.getDouble(c, "value");
+        Sanity.set(player, value);
+        c.getSource().sendSuccess(() -> Component.literal(String.format(Locale.ROOT, "Sanity of %s is now %.2f", player.getName().getString(), value)), true);
+        return 1;
     }
 
     private static int force(CommandContext<CommandSourceStack> c, ServerPlayer player) throws CommandSyntaxException {

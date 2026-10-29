@@ -183,6 +183,7 @@ public final class Director {
     public static void fire(ServerPlayer player, HauntEvent event, @Nullable Vec3 at) {
         Restless.LOGGER.debug("Haunt {} -> {}", event.id(), player.getName().getString());
         Location.during(at, () -> event.run(player));
+        Sanity.shock(player);
     }
 
     /** How harmful and how frequent the spirit is right now; depends only on the spirit. */

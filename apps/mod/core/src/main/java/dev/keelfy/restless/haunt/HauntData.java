@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.spirit.Traits;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -25,7 +28,10 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-/** Per-world state of spirits: personal ones keyed by player UUID, territorial ones tied to an anchor; each keeps its own timer. */
+/**
+ * Per-world state of spirits: personal ones keyed by player UUID, territorial ones tied to an anchor; each keeps its own timer.
+ * Also what belongs to them for good: their graves, and each player's sanity and journal.
+ */
 public final class HauntData extends SavedData {
     /**
      * One spirit. Saves from before identity existed carry only {@code spirit} and {@code nextEventAt}: they get a fresh uuid and
@@ -97,15 +103,30 @@ public final class HauntData extends SavedData {
         }
     }
 
+    /**
+     * Where a spirit's grave stands, always in the overworld; {@code pos} is only a column until the grave is first built.
+     *
+     * @param built whether the block was ever placed; a built grave that has gone is put back where the ground now is
+     */
+    public record Grave(BlockPos pos, boolean built) {
+        static final Codec<Grave> CODEC = RecordCodecBuilder.create(i -> i.group(
+            BlockPos.CODEC.fieldOf("pos").forGetter(Grave::pos),
+            Codec.BOOL.fieldOf("built").forGetter(Grave::built)
+        ).apply(i, Grave::new));
+    }
+
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL = Codec.unboundedMap(UUIDUtil.STRING_CODEC, Haunting.CODEC.listOf());
 
     // Saves from before territorial spirits are the bare player map; "players" is required so that map cannot parse as the new shape.
     private static final Codec<HauntData> CODEC = Codec.withAlternative(
         RecordCodecBuilder.create(i -> i.group(
             PERSONAL.fieldOf("players").forGetter(data -> data.hauntings),
-            Territorial.CODEC.listOf().fieldOf("territorial").forGetter(data -> data.territorial)
+            Territorial.CODEC.listOf().fieldOf("territorial").forGetter(data -> data.territorial),
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Grave.CODEC).optionalFieldOf("graves", Map.of()).forGetter(data -> data.graves),
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.DOUBLE).optionalFieldOf("sanity", Map.of()).forGetter(data -> data.sanity),
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, ComponentSerialization.CODEC.listOf()).optionalFieldOf("journal", Map.of()).forGetter(data -> data.journal)
         ).apply(i, HauntData::new)),
-        PERSONAL.xmap(players -> new HauntData(players, List.of()), data -> data.hauntings));
+        PERSONAL.xmap(players -> new HauntData(players, List.of(), Map.of(), Map.of(), Map.of()), data -> data.hauntings));
 
     // No vanilla data fixer for mod data; NeoForge skips fixing when this is null.
     private static final SavedDataType<HauntData> TYPE = new SavedDataType<>(
@@ -113,14 +134,24 @@ public final class HauntData extends SavedData {
 
     private final Map<UUID, List<Haunting>> hauntings;
     private List<Territorial> territorial;
+    /** Keyed by spirit. */
+    private final Map<UUID, Grave> graves;
+    /** Keyed by player, 0..1; a player not in it is fully sane. */
+    private final Map<UUID, Double> sanity;
+    /** Keyed by player, oldest entry first. */
+    private final Map<UUID, List<Component>> journal;
 
     private HauntData() {
-        this(Map.of(), List.of());
+        this(Map.of(), List.of(), Map.of(), Map.of(), Map.of());
     }
 
-    private HauntData(Map<UUID, List<Haunting>> hauntings, List<Territorial> territorial) {
+    private HauntData(Map<UUID, List<Haunting>> hauntings, List<Territorial> territorial, Map<UUID, Grave> graves,
+                      Map<UUID, Double> sanity, Map<UUID, List<Component>> journal) {
         this.hauntings = new HashMap<>(hauntings);
         this.territorial = List.copyOf(territorial);
+        this.graves = new HashMap<>(graves);
+        this.sanity = new HashMap<>(sanity);
+        this.journal = new HashMap<>(journal);
     }
 
     public static HauntData get(MinecraftServer server) {
@@ -169,5 +200,51 @@ public final class HauntData extends SavedData {
         }
         territorial = List.copyOf(changed);
         setDirty();
+    }
+
+    /** The spirit with this uuid, personal or territorial. */
+    public Optional<Haunting> find(UUID spirit) {
+        return hauntings.values().stream().flatMap(List::stream).filter(h -> h.uuid().equals(spirit)).findFirst()
+            .or(() -> territorial.stream().map(Territorial::haunting).filter(h -> h.uuid().equals(spirit)).findFirst());
+    }
+
+    public Map<UUID, Grave> graves() {
+        return Collections.unmodifiableMap(graves);
+    }
+
+    /** A null grave removes it. */
+    public void putGrave(UUID spirit, @Nullable Grave grave) {
+        if (grave == null) {
+            graves.remove(spirit);
+        } else {
+            graves.put(spirit, grave);
+        }
+        setDirty();
+    }
+
+    public double sanity(UUID player) {
+        return sanity.getOrDefault(player, 1.0);
+    }
+
+    public void putSanity(UUID player, double value) {
+        sanity.put(player, value);
+        setDirty();
+    }
+
+    public List<Component> journal(UUID player) {
+        return journal.getOrDefault(player, List.of());
+    }
+
+    /** @return false when the player already has this exact entry */
+    public boolean write(UUID player, Component entry) {
+        List<Component> entries = journal(player);
+        if (entries.contains(entry)) {
+            return false;
+        }
+        List<Component> grown = new ArrayList<>(entries);
+        grown.add(entry);
+        journal.put(player, List.copyOf(grown));
+        setDirty();
+        return true;
     }
 }

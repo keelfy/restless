@@ -2,6 +2,7 @@ package dev.keelfy.restless.neoforge;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.haunt.Dimming;
+import dev.keelfy.restless.haunt.SanityOverlay;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -18,5 +19,6 @@ public final class RestlessNeoForgeClient {
     public static void registerLayers(RegisterGuiLayersEvent event) {
         // Above the camera overlays but under the crosshair and the HUD, so only the world goes dark.
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Identifier.fromNamespaceAndPath(Restless.MOD_ID, "dimming"), Dimming::render);
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Identifier.fromNamespaceAndPath(Restless.MOD_ID, "sanity"), SanityOverlay::render);
     }
 }

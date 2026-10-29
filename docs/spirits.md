@@ -173,6 +173,38 @@ Altars with nothing to answer, or missing candles or salt, refuse the focus. Emp
 Not built yet: offerings, throwing holy water to end a running event, the essence lure, and the pact enchantment and
 mimic mask (there are no spirit types for them yet). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
 
+## Unfinished business, sanity, journal
+
+### Graves
+
+Every spirit a player in the overworld can sense gets a **gravestone** `grave.min_distance`..`grave.max_distance`
+(100..400) blocks from where that player stood. It is built on the surface once its chunk loads, and built again
+(where the ground now is) if it goes; breaking it angers spirits like any grave (`anger.graves`) and drops nothing.
+
+Using the gravestone reads it: who the spirit was (its story) and what of theirs is missing, one item rolled from the
+seed out of `grave.wants`. Using it with that item lays the spirit to rest: it is gone for good, with no anger, and leaves
+`grave.essence` (2) essences and `grave.experience` XP. A grave whose spirit is gone (banished, removed) stays, quiet.
+
+### Sanity
+
+Each player has sanity 0..1, saved with the world; creative and spectator players keep theirs. Per second it loses
+`sanity.dark_loss` below light `dark_light` (4) and `spirit_loss` inside a territorial spirit's radius, and gains
+`lit_gain` at light `lit_light` (10) or more, `sleep_gain` while sleeping, `fed_gain` with at least `fed_food` food and
+`ward_gain` inside a salt ward. Every event that runs on the player takes `event_loss` at once.
+
+Below `sanity.overlay_below` (0.6) the screen darkens from the edges, up to `overlay_peak` at 0. Below
+`sanity.reveal_below` (0.35) the spirit box, after its answer, also tells roughly (to 10 blocks) where the answering
+spirit's grave is; nothing else gives the place away.
+
+### Journal
+
+The **journal** (book, salt, ink sac) opens as a book of what its reader has learned; the entries are saved per player
+with the world, not on the item, so any journal shows them. Written when a photo names a trait, the spirit box whispers
+of a grave, a gravestone is read, a spirit goes to rest and a spirit is banished. Each new entry turns a page aloud.
+
+Not built yet: diary pages and portraits in chests, the other quest kinds (bury remains, a letter to a descendant, a
+named killer mob, a killer spirit), hallucinations at very low sanity, and research: the journal unlocks no recipes.
+
 ## Spirits
 
 | Id | Description | Activity | Affinity (missing = ×1) |
@@ -338,7 +370,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 
 | File | Holds |
 |---|---|
-| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `restore`, `place` |
+| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `journal`, `restore`, `place` |
 | `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words, hint and weakness), `story` (nickname words, days, causes) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
@@ -367,7 +399,8 @@ the mod, or one that is not valid JSON, is logged and ignored (the defaults run)
 Permission level: gamemaster. `[player]` defaults to the caller.
 
 - `/haunt`: opens the debug screen (needs the mod on the client): your spirits (seed, traits, power), every event with the chance each spirit rolls it next, with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
-- `/haunt info [player]`: the numbered spirit list with each spirit's kind, story, seed, traits, power, anger and time to its next event.
+- `/haunt info [player]`: the player's sanity and the numbered spirit list with each spirit's kind, story, seed, traits, power, anger, time to its next event, and its grave and the item it wants.
+- `/haunt sanity <0..1> [player]`: sets sanity.
 - `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
 - `/haunt spirit add <spirit> [player]`: binds one more personal spirit; for a territorial one, anchors it where the player stands.
 - `/haunt spirit remove <n> [player]`: removes spirit number `n` (1-based, as listed by `info`: the player's personal spirits, then the territorial ones in their dimension).

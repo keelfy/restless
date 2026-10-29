@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -51,6 +52,8 @@ public final class Divination {
             player.sendSystemMessage(Component.translatable("message.restless.camera_empty"), true);
             return Optional.empty();
         }
+        Component type = Component.translatable("spirit.restless." + reading.get().spirit().haunting().spirit());
+        Journal.write(player, Component.translatable("journal.restless.photo", type, reading.get().trait().hint()));
         ItemStack photo = new ItemStack(Content.PHOTO.get());
         photo.set(DataComponents.LORE, new ItemLore(List.of(
             Component.translatable("item.restless.photo.silhouette", Component.translatable("spirit.restless." + reading.get().spirit().haunting().spirit())),
@@ -72,6 +75,15 @@ public final class Divination {
         Component answer = reading.map(r -> Component.translatable("message.restless.spirit_box",
             r.trait().words().get(r.random().nextInt(r.trait().words().size())))).orElse(Component.translatable("message.restless.spirit_box_static"));
         Scheduler.later(player, config.integer("delay_ticks"), p -> p.sendSystemMessage(answer));
+        // Only the shaken hear where the spirit lies; rounded, so the grave still has to be looked for.
+        Optional<BlockPos> grave = reading.filter(r -> Sanity.shaken(player))
+            .flatMap(r -> Graves.of(HauntData.get(player.level().getServer()), r.spirit().haunting().uuid()));
+        grave.ifPresent(pos -> Scheduler.later(player, config.integer("delay_ticks") * 2, p -> {
+            int x = Math.round(pos.getX() / 10f) * 10;
+            int z = Math.round(pos.getZ() / 10f) * 10;
+            p.sendSystemMessage(Component.translatable("message.restless.spirit_box_grave", x, z));
+            Journal.write(p, Component.translatable("journal.restless.grave_whisper", x, z));
+        }));
     }
 
     /** The planchette spells out a trait, one letter at a time on the action bar. */
