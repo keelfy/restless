@@ -60,6 +60,13 @@ class PowerTest {
     }
 
     @Test
+    void nixPrefersWaterOverEverythingElse() {
+        double water = Power.weight(HauntTier.LIGHT, Set.of(EventTag.WATER), 1, Spirits.NIX, List.of(), 0.5);
+        double doors = Power.weight(HauntTier.LIGHT, Set.of(EventTag.DOORS), 1, Spirits.NIX, List.of(), 0.5);
+        assertTrue(water > doors * 5);
+    }
+
+    @Test
     void cooldownShrinksWithPowerAndActivity() {
         long calm = Power.cooldownTicks(0, 1, 0.5, 1);
         long late = Power.cooldownTicks(1, 1, 0.5, 1);

@@ -7,7 +7,7 @@ Update this file when any of them changes. The numbers below are the shipped def
 ## How it works
 
 - A spirit is **personal** (follows one player) or **territorial** (stays at an anchor); the kind is `kind` in `spirits.json`.
-  `shade` and `phantom` are personal, `poltergeist` is territorial.
+  `shade` and `phantom` are personal, `poltergeist` and `nix` are territorial.
 - Each player gets 3 personal spirits (`director.default_spirits`) on first check, each chosen uniformly at random
   (repeats allowed), and keeps them. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`. A poltergeist
   in an older save is dropped.
@@ -180,7 +180,7 @@ Altars with nothing to answer, or missing candles or salt, refuse the focus. Emp
 | Poltergeist | **Telekinesis amulet** (essence, gold ingot, string) | Pulls every dropped item within `artifacts.amulet_radius` to you. |
 | Shade | **Dark eye** (essence, eye of ender) | Night vision, and every living thing within `artifacts.eye_radius` glows, for `artifacts.eye_ticks`. |
 
-A phantom has no essence item or artifact yet, so it drops nothing (graves give no essence for it either).
+A phantom and a nix have no essence item or artifact yet, so they drop nothing (graves give no essence for it either).
 
 Not built yet: offerings, throwing holy water to end a running event, the essence lure, and the pact enchantment and
 mimic mask (there are no spirit types for them yet). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
@@ -242,7 +242,7 @@ left as it is.
 ### Evolution
 
 A spirit `evolution.days` (5) in-game days old grows up, once and for good: a poltergeist turns **raging**, a shade a
-**light-eater**, a phantom a **doppelganger**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
+**light-eater**, a phantom a **doppelganger**, a nix a **drowner**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
 territorial one tries `corruption.evolved_factor` (3) times as many columns. The players it haunts (its own player, or
 those in its radius) hear a heartbeat, are told, and it goes in their journal; from then on it goes by its grown name.
 A personal spirit grows only while its player is online.
@@ -258,6 +258,7 @@ for evolved spirits.
 | `poltergeist` | Noisy and physical. Mostly messes with doors and belongings; rarely hurts at first. | 1.3 | doors ×4, items ×3, blocks ×1.5, afflictions ×0.5, assaults ×0.5, sounds ×0.5, presence ×0.5 |
 | `shade` | Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as its power grows. | 0.8 | lights ×3, sounds ×2.5, afflictions ×2, presence ×2, assaults ×1, doors ×0.3, items ×0.5 |
 | `phantom` | Likes to be seen, as other players: far-off strangers, a name in the player list, someone pillaring or taking the crops. Seldom hurts. | 1.0 | player ×6, presence ×2, doors ×0.5, lights ×0.5, afflictions ×0.5, items ×0.5, assaults ×0.3 |
+| `nix` | Territorial, bound to water. Keeps swimmers under, calls players to the water, kills fish and breaks boats. Place it by a lake or the sea with `/haunt spirit add nix` while standing there. | 1.0 | water ×8, afflictions ×1, assaults ×0.5, sounds ×0.5, blocks ×0.3, presence ×0.3 |
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
@@ -338,6 +339,10 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `thunder_knocks` | 58 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts | Three knocks; 3 s later a bolt strikes nearby; 2 s after that a second bolt hits the player if they have moved less than 2 blocks since (6 HP, never lethal). Bolts set nothing on fire |
 | `embrace` | 60 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts | Growing damage once a second (0.5, 1, 1.5 HP…) until the player is 10 blocks from where it began. Stops at 3 hearts or after 20 hits |
 | `the_call` | 100 | HARMFUL | ASSAULT | 0.3 | Night in the overworld (any time elsewhere), health > 5 hearts, lava within 12 blocks or a bottomless column 10 blocks away | A warden moan, then after 2 s the player on the ground is drawn toward the lava (or void) at about 1.5 blocks/s, felt as a velocity nudge every 0.1 s, with soul particles at the feet. Walking 6 blocks further away than the start breaks it; it also ends on arrival, in lava, at 3 hearts, or after 30 s. Lava itself is not capped |
+| `undertow` | 149 | HARMFUL | WATER | 0.4 | Health > 5 hearts, the player in water | Every 0.1 s the player is pushed down (a 0.12 downward velocity nudge, so at the surface they are kept from coming up). Ends out of the water, at 3 hearts, or after 10 s. Drowning itself is vanilla's and is not capped |
+| `water_call` | 149 | HARMFUL | WATER | 0.3 | Health > 5 hearts, the player out of water, water within 12 blocks | An underwater swell, then after 2 s the player on the ground is drawn toward the nearest water at about 1.5 blocks/s, with splash particles at the feet. Ends on arrival, in water, at 3 hearts, or after 20 s |
+| `drowned_fish` | 149 | LIGHT | WATER | 0.4 | A squid or fish within 24 blocks | An elder guardian's curse sounds, and up to 12 squid and fish within 24 blocks die with a puff of ink. They are lost for good (no drops) |
+| `broken_boat` | 149 | LIGHT | WATER | 0.4 | An empty boat or raft within 24 blocks | A splintering sound and one of them breaks as if hit hard, dropping its item. A boat with anyone aboard is left alone |
 | `shadow` | 61 | HARMFUL | ASSAULT | 0.4 | Not peaceful, no shadow already following the player, health > 7 hearts, standing room 14–20 blocks away | A wither skeleton with no AI and no gear (invulnerable, silent) stands there. Every 0.1 s it takes a 0.3-block stride toward the player, but only while the player is not looking at it (within 45° and in line of sight). Warden heartbeat once a second. A touch (1.2 blocks) deals up to 7 hearts but never below 3 hearts, then it vanishes in smoke; it also vanishes after 60 s or after 40 blocked strides |
 | `double` | 93 | HARMFUL | MOBS | 0.3 | Not peaceful, no double already after the player, health > 7 hearts, standing room 12–18 blocks away | A vanilla mannequin with the player's skin, armor and held item (invulnerable, silent) walks up at 0.2 blocks/tick, slower than a sprint. Within 1.8 blocks it hits every 0.5 s for up to 3 hearts, never below 3 hearts; it vanishes in smoke after 4 hits, 30 s, 40 blocked strides, or when the player is at 3 hearts |
 | `swap_slots` | 62 | LIGHT | ITEMS | 0.5 | Inventory not empty | Two inventory slots swap |

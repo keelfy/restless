@@ -92,6 +92,36 @@
       "free_distance": 6.0,
       "sound": { "volume": 1.0, "pitch": 0.6 },
       "particles": { "count": 2, "dx": 0.3, "dy": 0.1, "dz": 0.3, "speed": 0.01, "offset_y": 0.2 }
+    },
+    "minecraft:undertow": {
+      "weight": 0.4,
+      "margin": 4.0,
+      "interval_ticks": 2,
+      "pull": 0.12,
+      "max_ticks": 200
+    },
+    "minecraft:water_call": {
+      "weight": 0.3,
+      "margin": 4.0,
+      "radius": 12,
+      "delay_ticks": 40,
+      "interval_ticks": 2,
+      "pull": 0.1,
+      "max_ticks": 400,
+      "arrive_distance": 1.5,
+      "sound": { "volume": 1.0, "pitch": 0.6 }
+    },
+    "minecraft:drowned_fish": {
+      "weight": 0.4,
+      "radius": 24.0,
+      "max_animals": 12,
+      "sound": { "volume": 1.0, "pitch": 0.6 }
+    },
+    "minecraft:broken_boat": {
+      "weight": 0.4,
+      "radius": 24.0,
+      "damage": 10.0,
+      "sound": { "volume": 1.0, "pitch": 0.6 }
     }
   }
 }

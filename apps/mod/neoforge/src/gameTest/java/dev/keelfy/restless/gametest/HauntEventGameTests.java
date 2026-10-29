@@ -25,6 +25,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
@@ -101,6 +103,16 @@ final class HauntEventGameTests {
             check(helper, BlockPos.betweenClosedStream(centre.offset(-12, 0, -12), centre.offset(12, 6, 12))
                 .filter(pos -> helper.getLevel().getBlockState(pos).is(BlockTags.LOGS)).count() == 3, "moving_tree must keep the trunk whole");
         }));
+        tests.put("event_drowned_fish", helper -> {
+            Entity[] cod = new Entity[1];
+            runs(helper, "drowned_fish", player -> cod[0] = EntityTypes.COD.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
+                () -> check(helper, !cod[0].isAlive(), "drowned_fish must kill the fish"));
+        });
+        tests.put("event_broken_boat", helper -> {
+            Entity[] boat = new Entity[1];
+            runs(helper, "broken_boat", player -> boat[0] = EntityTypes.OAK_BOAT.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
+                () -> check(helper, !boat[0].isAlive(), "broken_boat must break the boat"));
+        });
         tests.put("event_cracking_floor", helper -> runs(helper, "cracking_floor", player -> {},
             () -> helper.assertBlockPresent(Blocks.STONE, FEET.below())));
         tests.put("event_hostile_animal", helper -> runs(helper, "hostile_animal",
