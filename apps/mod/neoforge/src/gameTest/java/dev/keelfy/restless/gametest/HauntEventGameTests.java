@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
@@ -37,9 +38,17 @@ final class HauntEventGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter",
-            "stranger_joins", "stranger_death")) {
+            "stranger_joins", "stranger_death", "false_night", "false_slot", "turned_head")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
+        tests.put("event_false_advancement", helper -> runs(helper, "false_advancement", player -> {}, () -> {
+            for (String name : List.of("who_are_you", "not_alone", "behind_you")) {
+                AdvancementHolder advancement = helper.getLevel().getServer().getAdvancements().get(Identifier.fromNamespaceAndPath("restless", "whisper/" + name));
+                check(helper, advancement != null, "advancement whisper/" + name + " must load");
+                check(helper, helper.getLevel().players().stream().noneMatch(p -> p.getAdvancements().getOrStartProgress(advancement).isDone()),
+                    "false_advancement must take the advancement back");
+            }
+        }));
         tests.put("event_cracking_floor", helper -> runs(helper, "cracking_floor", player -> {},
             () -> helper.assertBlockPresent(Blocks.STONE, FEET.below())));
         tests.put("event_hostile_animal", helper -> runs(helper, "hostile_animal",

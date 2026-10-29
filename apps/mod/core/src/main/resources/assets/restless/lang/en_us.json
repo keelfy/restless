@@ -75,5 +75,11 @@
   "block.restless.unlit_waxed_copper_lantern": "Unlit waxed copper lantern",
   "block.restless.unlit_waxed_exposed_copper_lantern": "Unlit waxed exposed copper lantern",
   "block.restless.unlit_waxed_weathered_copper_lantern": "Unlit waxed weathered copper lantern",
-  "block.restless.unlit_waxed_oxidized_copper_lantern": "Unlit waxed oxidized copper lantern"
+  "block.restless.unlit_waxed_oxidized_copper_lantern": "Unlit waxed oxidized copper lantern",
+  "advancements.restless.whisper.who_are_you.title": "Who are you?",
+  "advancements.restless.whisper.who_are_you.description": "You were not supposed to see this",
+  "advancements.restless.whisper.not_alone.title": "Not Alone",
+  "advancements.restless.whisper.not_alone.description": "Someone else is here",
+  "advancements.restless.whisper.behind_you.title": "Behind You",
+  "advancements.restless.whisper.behind_you.description": "Do not turn around"
 }

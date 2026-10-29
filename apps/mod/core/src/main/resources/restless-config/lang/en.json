@@ -124,6 +124,10 @@
     "minecraft:false_death": { "name": "False Death", "description": "The player's own death message, \"slain by ???\", seen only by them." },
     "minecraft:private_rain": { "name": "Private Rain", "description": "Rain, sometimes a storm, that only this player sees, for twenty seconds." },
     "minecraft:silent_lightning": { "name": "Silent Lightning", "description": "Lightning strikes nearby and sets nothing on fire." },
+    "minecraft:false_night": { "name": "False Night", "description": "Night falls in the middle of the day, for this player alone, and the sky stops. The real time comes back a moment later." },
+    "minecraft:false_slot": { "name": "False Slot", "description": "An empty inventory slot shows an item that is not there: a skull, a bone, the player's own head. Any click shows the truth." },
+    "minecraft:false_advancement": { "name": "False Advancement", "description": "An advancement toast: \"Who are you?\", \"Not Alone\", \"Behind You\". It is gone from the advancements as soon as it is shown." },
+    "minecraft:turned_head": { "name": "Turned Head", "description": "A step sounds where the spirit is, and the player's head turns toward it, slowly, by itself." },
     "minecraft:stranger_joins": { "name": "Someone Joins", "description": "Someone joins the game: the yellow chat line and a name in the player list, which then opens even in single player. They leave a while later." },
     "minecraft:stranger_death": { "name": "Someone Dies", "description": "A death message about another player in chat, in the player's language." }
   }

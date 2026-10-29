@@ -387,6 +387,10 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `false_death` | 163 | LIGHT | PRESENCE | 0.2 | Always | Their own "was slain by ???" death message, sent only to them |
 | `private_rain` | 167 | LIGHT | PRESENCE | 0.3 | Weather dimension, not raining, sky visible | Rain for this client only, a storm 30% of the time, for 20 s; then the real weather |
 | `silent_lightning` | 168 | LIGHT | PRESENCE | 0.2 | Weather dimension, sky visible | A visual-only bolt 24 blocks away |
+| `false_night` | 159 | LIGHT | PRESENCE | 0.2 | Overworld, daytime | Only this player's client is told it is midnight, with the clock stopped. 15 s later it gets the real time back. Nothing on the server |
+| `false_slot` | 161 | LIGHT | PRESENCE | 0.3 | An empty inventory or hotbar slot | Only this player's client is told that slot holds an item from a list (a player head is their own). 20 s later, or at any click, the real slot comes back. Nothing on the server |
+| `false_advancement` | 165 | LIGHT | PRESENCE | 0.2 | None | Grants a hidden advancement (`restless:whisper/*`, an impossible criterion, no chat line) so the toast shows, and revokes it 2 ticks later |
+| `turned_head` | 166 | HARMFUL | PRESENCE | 0.2 | None | A step sound of the ground at the spirit's position (or 6 blocks away at a random bearing), then the camera turns toward it over 12 ticks by relative rotation packets |
 | `stranger_joins` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets "<name> joined the game" and a player list entry for a name from a list, in a default skin. 40 s later the entry goes and "<name> left the game" follows. Nothing on the server |
 | `stranger_death` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets a vanilla death message (fell, drowned, suffocated, fell out of the world, died) for a name from a list |
 

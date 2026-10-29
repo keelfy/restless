@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import com.mojang.authlib.GameProfile;
+import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
@@ -8,43 +9,65 @@ import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import io.netty.buffer.Unpooled;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket.Action;
+import net.minecraft.network.protocol.game.ClientboundPlayerRotationPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundSetBorderWarningDistancePacket;
 import net.minecraft.network.protocol.game.ClientboundSetHealthPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.clock.ClockNetworkState;
+import net.minecraft.world.clock.ServerClockManager;
+import net.minecraft.world.clock.WorldClock;
+import net.minecraft.world.clock.WorldClocks;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityEvent;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.border.WorldBorder;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * The server tells this one client something untrue, and the truth a moment later. Nothing changes on the server, so a
- * lie that is cut short (the player leaves, dies, changes dimension) is corrected by the resync vanilla does then.
+ * lie that is cut short (the player leaves, dies, changes dimension) is corrected by the resync vanilla does then. The
+ * false advancement is the exception: it is granted for real, for two ticks, so the client shows its toast.
  */
 final class Lies {
+    /** The one criterion of the mod's false advancements, which nothing in the game can meet. */
+    private static final String IMPOSSIBLE = "impossible";
     private static final List<Holder<MobEffect>> FAKE_EFFECTS = List.of(MobEffects.WITHER, MobEffects.POISON);
 
     private Lies() {}
@@ -120,6 +143,53 @@ final class Lies {
             SimpleEvent.light("silent_lightning", EventTag.PRESENCE,
                 player -> player.level().canHaveWeather() && player.level().canSeeSky(player.blockPosition()),
                 player -> Assaults.strike(player.level(), BlockPos.containing(Nearby.randomAround(player, Config.event("silent_lightning").num("distance"))))),
+            // 159: night, with the sky stopped, for this player alone; the real time comes back after
+            SimpleEvent.light("false_night", EventTag.PRESENCE,
+                player -> player.level().dimension() == Level.OVERWORLD && !player.level().isDarkOutside(),
+                player -> {
+                    Config.Section config = Config.event("false_night");
+                    ServerClockManager clocks = player.level().getServer().clockManager();
+                    Holder<WorldClock> clock = player.level().getServer().registryAccess().getOrThrow(WorldClocks.OVERWORLD);
+                    long now = clocks.getInstance(clock).totalTicks();
+                    long night = now - Math.floorMod(now, config.integer("day_ticks")) + config.integer("time_of_day");
+                    player.connection.send(new ClientboundSetTimePacket(player.level().getGameTime(), Map.of(clock, new ClockNetworkState(night, 0.0F, 0.0F))));
+                    Scheduler.later(player, Ticks.SECOND * config.integer("seconds"), p -> p.connection.send(p.level().getServer().clockManager().createFullSyncPacket()));
+                }),
+            // 161: an empty slot shows an item that is not there; any click on the inventory shows the truth sooner
+            SimpleEvent.light("false_slot", EventTag.PRESENCE, player -> !emptySlots(player).isEmpty(), player -> {
+                Config.Section config = Config.event("false_slot");
+                List<Integer> empty = emptySlots(player);
+                int slot = empty.get(player.getRandom().nextInt(empty.size()));
+                ItemStack shown = new ItemStack(BuiltInRegistries.ITEM.getOptional(Identifier.parse(pick(player, config.texts("items")))).orElse(Items.BONE));
+                if (shown.is(Items.PLAYER_HEAD)) {
+                    shown.set(DataComponents.PROFILE, ResolvableProfile.createResolved(player.getGameProfile()));
+                }
+                InventoryMenu menu = player.inventoryMenu;
+                player.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.getStateId(), slot, shown));
+                Scheduler.later(player, Ticks.SECOND * config.integer("seconds"),
+                    p -> p.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.getStateId(), slot, menu.getSlot(slot).getItem().copy())));
+            }),
+            // 165: an advancement toast, gone from the advancements as soon as it is shown
+            SimpleEvent.light("false_advancement", EventTag.PRESENCE, player -> true, player -> {
+                AdvancementHolder advancement = player.level().getServer().getAdvancements()
+                    .get(Identifier.fromNamespaceAndPath(Restless.MOD_ID, pick(player, Config.event("false_advancement").texts("advancements"))));
+                if (advancement != null && player.getAdvancements().award(advancement, IMPOSSIBLE)) {
+                    Scheduler.later(player, Config.event("false_advancement").integer("revoke_ticks"), p -> p.getAdvancements().revoke(advancement, IMPOSSIBLE));
+                }
+            }),
+            // 166: a step where the spirit is, and the head turns toward it, slowly, by itself
+            SimpleEvent.harmful("turned_head", EventTag.PRESENCE, player -> true, player -> {
+                Config.Section config = Config.event("turned_head");
+                Vec3 at = Nearby.source(player, config.num("distance"));
+                Nearby.sound(player, player.level().getBlockState(BlockPos.containing(at).below()).getSoundType().getStepSound(), at, config.tone("sound"));
+                float toward = (float) (Mth.atan2(at.z - player.getZ(), at.x - player.getX()) * Mth.RAD_TO_DEG) - 90.0F;
+                int steps = config.integer("steps");
+                float step = Mth.wrapDegrees(toward - player.getYRot()) / steps;
+                Scheduler.repeat(player, config.integer("delay_ticks"), 1, (p, n) -> {
+                    p.connection.send(new ClientboundPlayerRotationPacket(step, true, 0.0F, true));
+                    return n + 1 < steps;
+                });
+            }),
             // 124: someone joins, is in the player list (which then opens even in single player), and leaves a while later
             stranger("stranger_joins", player -> {
                 Config.Section config = Config.event("stranger_joins");
@@ -142,6 +212,17 @@ final class Lies {
     /** An event that can always run. */
     private static HauntEvent light(String id, EventTag tag, Consumer<ServerPlayer> action) {
         return SimpleEvent.light(id, tag, player -> true, action);
+    }
+
+    /** Inventory and hotbar slots, as the inventory menu numbers them, with nothing in them. */
+    private static List<Integer> emptySlots(ServerPlayer player) {
+        List<Integer> empty = new ArrayList<>();
+        for (int slot = InventoryMenu.INV_SLOT_START; slot < InventoryMenu.USE_ROW_SLOT_END; slot++) {
+            if (player.inventoryMenu.getSlot(slot).getItem().isEmpty()) {
+                empty.add(slot);
+            }
+        }
+        return empty;
     }
 
     /** An event about another player, that can always run. */

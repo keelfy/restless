@@ -1,0 +1,21 @@
+{
+  "parent": "minecraft:story/root",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:ender_eye"
+    },
+    "title": {
+      "translate": "advancements.restless.whisper.not_alone.title"
+    },
+    "description": {
+      "translate": "advancements.restless.whisper.not_alone.description"
+    },
+    "announce_to_chat": false,
+    "hidden": true
+  }
+}
