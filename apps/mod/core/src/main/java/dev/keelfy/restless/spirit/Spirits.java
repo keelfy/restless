@@ -11,8 +11,9 @@ import java.util.Optional;
 public final class Spirits {
     public static final SpiritType POLTERGEIST = of("poltergeist");
     public static final SpiritType SHADE = of("shade");
+    public static final SpiritType PHANTOM = of("phantom");
 
-    private static final List<SpiritType> ALL = List.of(POLTERGEIST, SHADE);
+    private static final List<SpiritType> ALL = List.of(POLTERGEIST, SHADE, PHANTOM);
 
     private Spirits() {}
 

@@ -7,7 +7,7 @@ Update this file when any of them changes. The numbers below are the shipped def
 ## How it works
 
 - A spirit is **personal** (follows one player) or **territorial** (stays at an anchor); the kind is `kind` in `spirits.json`.
-  `shade` is personal, `poltergeist` is territorial.
+  `shade` and `phantom` are personal, `poltergeist` is territorial.
 - Each player gets 3 personal spirits (`director.default_spirits`) on first check, each chosen uniformly at random
   (repeats allowed), and keeps them. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`. A poltergeist
   in an older save is dropped.
@@ -180,6 +180,8 @@ Altars with nothing to answer, or missing candles or salt, refuse the focus. Emp
 | Poltergeist | **Telekinesis amulet** (essence, gold ingot, string) | Pulls every dropped item within `artifacts.amulet_radius` to you. |
 | Shade | **Dark eye** (essence, eye of ender) | Night vision, and every living thing within `artifacts.eye_radius` glows, for `artifacts.eye_ticks`. |
 
+A phantom has no essence item or artifact yet, so it drops nothing (graves give no essence for it either).
+
 Not built yet: offerings, throwing holy water to end a running event, the essence lure, and the pact enchantment and
 mimic mask (there are no spirit types for them yet). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
 
@@ -240,7 +242,7 @@ left as it is.
 ### Evolution
 
 A spirit `evolution.days` (5) in-game days old grows up, once and for good: a poltergeist turns **raging**, a shade a
-**light-eater**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
+**light-eater**, a phantom a **doppelganger**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
 territorial one tries `corruption.evolved_factor` (3) times as many columns. The players it haunts (its own player, or
 those in its radius) hear a heartbeat, are told, and it goes in their journal; from then on it goes by its grown name.
 A personal spirit grows only while its player is online.
@@ -255,6 +257,7 @@ for evolved spirits.
 |---|---|---|---|
 | `poltergeist` | Noisy and physical. Mostly messes with doors and belongings; rarely hurts at first. | 1.3 | doors ×4, items ×3, blocks ×1.5, afflictions ×0.5, assaults ×0.5, sounds ×0.5, presence ×0.5 |
 | `shade` | Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as its power grows. | 0.8 | lights ×3, sounds ×2.5, afflictions ×2, presence ×2, assaults ×1, doors ×0.3, items ×0.5 |
+| `phantom` | Likes to be seen, as other players: far-off strangers, a name in the player list, someone pillaring or taking the crops. Seldom hurts. | 1.0 | player ×6, presence ×2, doors ×0.5, lights ×0.5, afflictions ×0.5, items ×0.5, assaults ×0.3 |
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
@@ -397,6 +400,8 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `stranger_death` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets a vanilla death message (fell, drowned, suffocated, fell out of the world, died) for a name from a list |
 
 ## Chances
+
+Not yet recomputed for `phantom`, the `PLAYER` tag or the events added since.
 
 Share of each tag per roll of one spirit, assuming every event can run (in practice many cannot, and the rest renormalise,
 so a spirit near no doors never rolls a door). Computed from the weights above.

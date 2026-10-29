@@ -19,6 +19,11 @@
       "kind": "personal",
       "activity": 0.8,
       "affinity": { "DOORS": 0.3, "LIGHTS": 3.0, "AFFLICTION": 2.0, "ASSAULT": 1.0, "SOUND": 2.5, "ITEMS": 0.5, "PRESENCE": 2.0 }
+    },
+    "phantom": {
+      "kind": "personal",
+      "activity": 1.0,
+      "affinity": { "PLAYER": 6.0, "PRESENCE": 2.0, "DOORS": 0.5, "LIGHTS": 0.5, "AFFLICTION": 0.5, "ASSAULT": 0.3, "ITEMS": 0.5 }
     }
   },
   "traits": {
