@@ -46,6 +46,8 @@ Total for the seam itself: about 3. The cost is in the per-event real branches.
 | `cracking_floor` (138) | break particles and sound | the block under the feet really breaks, no drop, only where the fall is one block |
 | `false_windows` (105), `false_looks` (106), `ghost_tree` (107) | shown to one client (`FakeBlocks.show`) | placed for real and kept (`FakeBlocks.showOrMake`); a block that holds something (chest, furnace) is still only shown |
 | `hallucination` (126) | packet-only mob | the mob is spawned for real |
+| `disguise` (125) | the real animal hidden, another kind shown in its place | the animal is converted into the other kind (`convertTo`) |
+| `moving_tree` (108) | the tree moves, and moves back after 30 s | the tree stays where it moved |
 | `pillar` (121), `harvest` (122), `lost_growth` (110) | undone later | stay (through `Restore`) |
 | `dragon_flyover` (127), the other-player events (119, 120, 123, 124), the other lies and sounds | — | unchanged |
 

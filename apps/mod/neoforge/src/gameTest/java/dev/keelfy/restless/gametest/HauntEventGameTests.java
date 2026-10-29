@@ -113,6 +113,12 @@ final class HauntEventGameTests {
             runs(helper, "broken_boat", player -> boat[0] = EntityTypes.OAK_BOAT.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
                 () -> check(helper, !boat[0].isAlive(), "broken_boat must break the boat"));
         });
+        tests.put("event_disguise", helper -> {
+            Entity[] cow = new Entity[1];
+            runs(helper, "disguise", player -> cow[0] = EntityTypes.COW.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
+                () -> check(helper, cow[0].isAlive() && helper.getLevel().getEntitiesOfClass(Entity.class, new AABB(helper.absolutePos(FEET)).inflate(10),
+                    e -> e.getType() == EntityTypes.SHEEP).isEmpty(), "disguise must leave the cow a cow on the server"));
+        });
         tests.put("event_cracking_floor", helper -> runs(helper, "cracking_floor", player -> {},
             () -> helper.assertBlockPresent(Blocks.STONE, FEET.below())));
         tests.put("event_hostile_animal", helper -> runs(helper, "hostile_animal",

@@ -22,6 +22,9 @@ import net.minecraft.world.clock.WorldClocks;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.phys.AABB;
 
 /**
@@ -84,6 +87,16 @@ final class HardcoreGameTests {
             check(helper, !helper.getLevel().getBlockState(centre.east(6)).is(BlockTags.LOGS), "moving_tree must stay moved");
         }));
         HauntEventGameTests.PADDING.put("hardcore_moving_tree", 20);
+        hardcore(tests, "hardcore_disguise", helper -> {
+            Entity[] cow = new Entity[1];
+            runs(helper, "disguise", player -> cow[0] = EntityTypes.COW.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND), () -> {
+                check(helper, !cow[0].isAlive(), "disguise must really replace the cow");
+                List<Entity> sheep = helper.getLevel().getEntitiesOfClass(Entity.class, new AABB(helper.absolutePos(FEET)).inflate(10), e -> e.getType() == EntityTypes.SHEEP);
+                check(helper, sheep.size() == 1, "disguise must leave one sheep, found " + sheep.size());
+                sheep.forEach(Entity::discard);
+            });
+        });
+        HauntEventGameTests.PADDING.put("hardcore_disguise", 20);
         hardcore(tests, "hardcore_hallucination", helper -> runs(helper, "hallucination", player -> floor(helper, 22), () -> {
             List<LivingEntity> mobs = helper.getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(helper.absolutePos(FEET)).inflate(30),
                 e -> !(e instanceof ServerPlayer));

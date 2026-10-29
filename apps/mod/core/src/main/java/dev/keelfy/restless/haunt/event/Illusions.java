@@ -15,14 +15,19 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.Level;
@@ -63,6 +68,8 @@ final class Illusions {
             }),
             // 126: a mob standing out in the field that is not there, facing the player; gone when approached
             SimpleEvent.light("hallucination", EventTag.MOBS, player -> mobSpot(player) != null, Illusions::hallucination),
+            // 125: an animal nearby looks like another to this player; under hardcore it is changed for real
+            SimpleEvent.light("disguise", EventTag.MOBS, player -> !disguisable(player).isEmpty(), Illusions::disguise),
             // 127: the ender dragon flies over, high up, for this player alone
             SimpleEvent.light("dragon_flyover", EventTag.PRESENCE,
                 player -> player.level().dimension() == Level.OVERWORLD && player.level().canSeeSky(player.blockPosition()), Illusions::dragonFlyover)
@@ -98,6 +105,53 @@ final class Illusions {
             }
             return !over;
         });
+    }
+
+    private static List<Mob> disguisable(ServerPlayer player) {
+        Config.Section looks = Config.event("disguise").section("looks");
+        double radius = Config.event("disguise").num("radius");
+        return player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(radius),
+            mob -> mob.isAlive() && looks.has(BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString()));
+    }
+
+    /**
+     * The real animal is hidden from this client (only its invisible flag is sent, so no entity data mismatches) and a
+     * packet entity of the other kind follows it about, until {@code ticks} are up or it is gone.
+     */
+    @SuppressWarnings("unchecked")
+    private static void disguise(ServerPlayer player) {
+        Config.Section config = Config.event("disguise");
+        List<Mob> found = disguisable(player);
+        Mob mob = found.get(player.getRandom().nextInt(found.size()));
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(config.section("looks").text(BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString()))).orElse(null);
+        if (type == null) {
+            return;
+        }
+        if (Hardcore.on(player.level())) {
+            // It was that all along.
+            mob.convertTo((EntityType<Mob>) type, ConversionParams.single(mob, true, true), converted -> {});
+            return;
+        }
+        byte flags = (byte) mob.getEntityData().getNonDefaultValues().stream().filter(value -> value.id() == SHARED_FLAGS).map(value -> (Byte) value.value()).findFirst().orElse((byte) 0);
+        player.connection.send(sharedFlags(mob, (byte) (flags | INVISIBLE)));
+        PacketEntity copy = PacketEntity.show(player, type, mob.position(), mob.getYRot());
+        Scheduler.repeat(player, 1, 1, (p, n) -> {
+            boolean over = n >= config.integer("ticks") || !mob.isAlive() || p.level() != mob.level();
+            if (over) {
+                copy.remove(p);
+                p.connection.send(sharedFlags(mob, flags));
+                return false;
+            }
+            copy.move(p, mob.position(), mob.getYRot());
+            return true;
+        });
+    }
+
+    private static final int SHARED_FLAGS = 0;
+    private static final byte INVISIBLE = 1 << 5;
+
+    private static ClientboundSetEntityDataPacket sharedFlags(Mob mob, byte flags) {
+        return new ClientboundSetEntityDataPacket(mob.getId(), List.of(new SynchedEntityData.DataValue<>(SHARED_FLAGS, EntityDataSerializers.BYTE, flags)));
     }
 
     /** A straight line high over the player, at a random bearing and a little to one side, flown in {@code ticks}. */

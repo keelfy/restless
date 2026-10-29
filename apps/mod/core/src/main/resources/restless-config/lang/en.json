@@ -123,6 +123,7 @@
     "minecraft:false_looks": { "name": "False Looks", "description": "Blocks nearby look like others for this player alone: a crafting table like a furnace, a furnace like a chest, a chest like a crafting table. A click on one shows what it is." },
     "minecraft:ghost_tree": { "name": "Ghost Tree", "description": "A pale oak stands where there was none, for this player alone, and they can walk straight through it. Gone after a minute." },
     "minecraft:hallucination": { "name": "Hallucination", "description": "A mob stands out in the field facing the player, an iron golem or a villager, that is not there: nothing can touch it. Gone when approached." },
+    "minecraft:disguise": { "name": "Disguise", "description": "An animal nearby looks like another kind to this player alone: a cow like a sheep, a chicken like a wolf." },
     "minecraft:dragon_flyover": { "name": "Dragon Flyover", "description": "With a growl, the ender dragon flies over high up, for this player alone." },
     "minecraft:moving_tree": { "name": "Moving Tree", "description": "A tree nearby shifts a few blocks to the side, trunk and crown together, and a half-minute later is back." },
     "minecraft:false_wound": { "name": "False Wound", "description": "For a moment the health bar shows four hearts less; the real health is untouched." },
