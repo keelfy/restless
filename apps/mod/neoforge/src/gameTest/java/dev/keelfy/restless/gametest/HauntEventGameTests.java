@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.CropBlock;
 
 /** Each packet-lie and sound event runs on a connected player and leaves the world as it was (or, for 110, as it says). */
 final class HauntEventGameTests {
-    private static final BlockPos FEET = new BlockPos(4, 1, 4);
+    static final BlockPos FEET = new BlockPos(4, 1, 4);
     /** Long enough for every lie to send its truth back. */
     private static final int SETTLE_TICKS = 30;
 
@@ -156,7 +156,7 @@ final class HauntEventGameTests {
     }
 
     /** Sets the scene, checks the event can run, runs it, lets its scheduled steps finish, then checks the result. */
-    private static void runs(GameTestHelper helper, String id, Consumer<ServerPlayer> scene, Runnable after) {
+    static void runs(GameTestHelper helper, String id, Consumer<ServerPlayer> scene, Runnable after) {
         for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 0, 9)) {
             helper.setBlock(pos, Blocks.STONE);
         }
@@ -187,7 +187,7 @@ final class HauntEventGameTests {
         return player;
     }
 
-    private static void check(GameTestHelper helper, boolean condition, String message) {
+    static void check(GameTestHelper helper, boolean condition, String message) {
         if (!condition) throw helper.assertionException(Component.literal(message));
     }
 }

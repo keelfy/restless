@@ -1,7 +1,7 @@
 # Hardcore mode (plan)
 
-Built so far: the setting and `Restore.revert` (see the Where it plugs in table; the existing block events already follow it,
-the per-event real branches are not written). A world setting under which every temporary change stays and every purely visual trick becomes real:
+Built so far: the setting, `Restore.revert`, and the real branches of the second batch's events (see Events with a real
+branch below). Not yet: dimming (7), and an operator command. A world setting under which every temporary change stays and every purely visual trick becomes real:
 a swapped block is not swapped back, a fake block becomes a real one, a hallucinated mob is spawned for real.
 The exact design is decided later; this file only fixes the seams and the rules.
 
@@ -31,6 +31,25 @@ Total for the seam itself: about 3. The cost is in the per-event real branches.
 | `locked_door` | timed lock | stays timed (see rules) |
 | double, shadow, figures | cleanup | unchanged |
 | `map_marker`, item and inventory events | already permanent | unchanged |
+
+## Events with a real branch
+
+| Event | Normal | Hardcore |
+|---|---|---|
+| `false_wound` (153) | health shown lower | real magic damage, never below one heart |
+| `false_hearts` (154) | wither or poison hearts shown | the effect for real, as long |
+| `false_hunger` (155) | empty hunger bar shown | 6 food points really lost, down to `shown_food` |
+| `guardian_face` (156) | the elder guardian face | plus mining fatigue III for 5 min, as the guardian gives |
+| `false_night` (159) | night shown to one client | the world clock really jumps to midnight, for everyone |
+| `false_slot` (161) | an item shown in an empty slot | the item is really put there |
+| `silent_lightning` (168) | visual-only bolt | real lightning (hurts, sets fires) |
+| `cracking_floor` (138) | break particles and sound | the block under the feet really breaks, no drop, only where the fall is one block |
+| `false_windows` (105), `false_looks` (106), `ghost_tree` (107) | shown to one client (`FakeBlocks.show`) | placed for real and kept (`FakeBlocks.showOrMake`); a block that holds something (chest, furnace) is still only shown |
+| `hallucination` (126) | packet-only mob | the mob is spawned for real |
+| `pillar` (121), `harvest` (122), `lost_growth` (110) | undone later | stay (through `Restore`) |
+| `dragon_flyover` (127), the other-player events (119, 120, 123, 124), the other lies and sounds | — | unchanged |
+
+Tests: the hardcore gametests run in a batch of their own, since the switch is one for the whole server.
 
 ## Rules
 

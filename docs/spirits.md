@@ -447,7 +447,9 @@ cobbled. Anything else is left alone. The patch is a scatter (`Place.patch`), no
   glass, holes, floors, crosses and furnace fuel stay as the event left them, and a flickering lantern stays out. The
   `hardcore.mode` setting in `haunt.json` is `auto` (the world's vanilla hardcore flag), `true` or `false`. It is
   decided the first time it is asked and saved in `HauntData`, so editing the config later does not flip a world.
-  Plan and rules: [hardcore.md](hardcore.md).
+  Tricks with a real counterpart come true instead of being shown: a lie's wound, hearts, hunger, night or slot,
+  real lightning, a floor that breaks, fake blocks placed for real (not over a chest or furnace), a hallucinated mob
+  spawned. The list is in [hardcore.md](hardcore.md#events-with-a-real-branch), with the plan and the rules.
 - `haunt/DoorLocks.java`: doors locked by `locked_door`, in memory. `Restless.onUseBlock` cancels the right click on
   both sides; the loader forwards its block-interaction event to it. The server sends `DoorLockPayload` to clients
   within 64 blocks, which the loader registers and hands to `DoorLocks.put`. A client that joins or walks up later

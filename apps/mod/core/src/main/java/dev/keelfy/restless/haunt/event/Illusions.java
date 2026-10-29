@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.Comparator;
@@ -21,6 +22,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.Level;
@@ -32,7 +34,8 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * The player's own view of the world lies to them; see {@link FakeBlocks} and {@link PacketEntity}. Nothing on the
- * server changes. The ghost tree
+ * server changes, except under {@linkplain Hardcore hardcore}, where the blocks and the mob are made real (the dragon
+ * stays a sight). The ghost tree
  * is made of blocks with no collision, so the client lets the player walk through it, as the server does.
  */
 final class Illusions {
@@ -49,13 +52,13 @@ final class Illusions {
                 for (BlockPos pos : nearest(player, Nearby.all(player, "false_looks", state -> look(state).isPresent()), config.integer("max_blocks"))) {
                     look(player.level().getBlockState(pos)).ifPresent(state -> shown.put(pos, state));
                 }
-                FakeBlocks.show(player, shown, config.integer("ticks"));
+                FakeBlocks.showOrMake(player, shown, config.integer("ticks"));
             }),
             // 107: a pale oak where there was none, which the player walks through
             SimpleEvent.light("ghost_tree", EventTag.BLOCKS, player -> treeSpot(player) != null, player -> {
                 BlockPos root = treeSpot(player);
                 if (root != null) {
-                    FakeBlocks.show(player, ghostTree(player.level(), root), Config.event("ghost_tree").integer("ticks"));
+                    FakeBlocks.showOrMake(player, ghostTree(player.level(), root), Config.event("ghost_tree").integer("ticks"));
                 }
             }),
             // 126: a mob standing out in the field that is not there, facing the player; gone when approached
@@ -80,6 +83,11 @@ final class Illusions {
             return;
         }
         Vec3 at = Vec3.atBottomCenterOf(spot);
+        if (Hardcore.on(player.level())) {
+            // It was there after all.
+            type.spawn(player.level(), spot, EntitySpawnReason.EVENT);
+            return;
+        }
         PacketEntity mob = PacketEntity.show(player, type, at, PacketEntity.yawToward(at, player.position()));
         int interval = config.integer("interval_ticks");
         double near = config.num("vanish_distance");
@@ -171,7 +179,7 @@ final class Illusions {
                 default -> Blocks.AIR.defaultBlockState();
             });
         }
-        FakeBlocks.show(player, shown, config.integer("ticks"));
+        FakeBlocks.showOrMake(player, shown, config.integer("ticks"));
     }
 
     /** Glass blocks and panes, plain, stained or tinted. */

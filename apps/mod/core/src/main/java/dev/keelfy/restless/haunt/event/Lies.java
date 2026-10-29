@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -63,7 +64,9 @@ import net.minecraft.world.phys.Vec3;
 /**
  * The server tells this one client something untrue, and the truth a moment later. Nothing changes on the server, so a
  * lie that is cut short (the player leaves, dies, changes dimension) is corrected by the resync vanilla does then. The
- * false advancement is the exception: it is granted for real, for two ticks, so the client shows its toast.
+ * false advancement is the exception: it is granted for real, for two ticks, so the client shows its toast. Under
+ * {@linkplain Hardcore hardcore} the lies that have a real counterpart (a wound, hearts, hunger, night, a slot, lightning)
+ * come true instead.
  */
 final class Lies {
     /** The one criterion of the mod's false advancements, which nothing in the game can meet. */
@@ -80,6 +83,11 @@ final class Lies {
                 player -> {
                     Config.Section config = Config.event("false_wound");
                     float shown = Math.max((float) config.num("min_health"), player.getHealth() - (float) config.num("loss"));
+                    if (Hardcore.on(player.level())) {
+                        // Real, and still never below the floor.
+                        player.hurtServer(player.level(), player.damageSources().magic(), player.getHealth() - shown);
+                        return;
+                    }
                     player.connection.send(new ClientboundSetHealthPacket(shown, player.getFoodData().getFoodLevel(), player.getFoodData().getSaturationLevel()));
                     Scheduler.later(player, config.integer("ticks"), Lies::resendHealth);
                 }),
@@ -89,6 +97,10 @@ final class Lies {
                 player -> {
                     Config.Section config = Config.event("false_hearts");
                     Holder<MobEffect> effect = FAKE_EFFECTS.get(player.getRandom().nextInt(FAKE_EFFECTS.size()));
+                    if (Hardcore.on(player.level())) {
+                        player.addEffect(new MobEffectInstance(effect, config.integer("ticks")));
+                        return;
+                    }
                     player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), new MobEffectInstance(effect, config.integer("ticks")), false));
                     Scheduler.later(player, config.integer("ticks"), p -> {
                         // A real effect of the same kind may have started meanwhile; then the client already has the truth.
@@ -100,11 +112,22 @@ final class Lies {
             // 155
             light("false_hunger", EventTag.AFFLICTION, player -> {
                 Config.Section config = Config.event("false_hunger");
+                if (Hardcore.on(player.level())) {
+                    player.getFoodData().setFoodLevel(Math.max(config.integer("shown_food"), player.getFoodData().getFoodLevel() - config.integer("hardcore_loss")));
+                    return;
+                }
                 player.connection.send(new ClientboundSetHealthPacket(player.getHealth(), config.integer("shown_food"), 0));
                 Scheduler.later(player, config.integer("ticks"), Lies::resendHealth);
             }),
             // 156: the vanilla elder guardian jump scare, far from any monument
-            light("guardian_face", EventTag.PRESENCE, player -> player.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.GUARDIAN_ELDER_EFFECT, 1))),
+            light("guardian_face", EventTag.PRESENCE, player -> {
+                player.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.GUARDIAN_ELDER_EFFECT, 1));
+                // As the elder guardian itself gives.
+                if (Hardcore.on(player.level())) {
+                    Config.Section config = Config.event("guardian_face");
+                    player.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, config.integer("hardcore_fatigue_ticks"), config.integer("hardcore_fatigue_level")));
+                }
+            }),
             // 157: with no totem in the inventory the client shows a plain one
             light("false_totem", EventTag.PRESENCE, player -> player.connection.send(new ClientboundEntityEventPacket(player, EntityEvent.PROTECTED_FROM_DEATH))),
             // 158: a title gone almost before it is read
@@ -142,7 +165,8 @@ final class Lies {
             // 168: lightning that sets nothing on fire
             SimpleEvent.light("silent_lightning", EventTag.PRESENCE,
                 player -> player.level().canHaveWeather() && player.level().canSeeSky(player.blockPosition()),
-                player -> Assaults.strike(player.level(), BlockPos.containing(Nearby.randomAround(player, Config.event("silent_lightning").num("distance"))))),
+                player -> Assaults.strike(player.level(), BlockPos.containing(Nearby.randomAround(player, Config.event("silent_lightning").num("distance"))),
+                    !Hardcore.on(player.level()))),
             // 159: night, with the sky stopped, for this player alone; the real time comes back after
             SimpleEvent.light("false_night", EventTag.PRESENCE,
                 player -> player.level().dimension() == Level.OVERWORLD && !player.level().isDarkOutside(),
@@ -152,6 +176,11 @@ final class Lies {
                     Holder<WorldClock> clock = player.level().getServer().registryAccess().getOrThrow(WorldClocks.OVERWORLD);
                     long now = clocks.getInstance(clock).totalTicks();
                     long night = now - Math.floorMod(now, config.integer("day_ticks")) + config.integer("time_of_day");
+                    if (Hardcore.on(player.level())) {
+                        // For everyone, as lost time is; the cycle goes on from there.
+                        clocks.addTicks(clock, (int) (night - now));
+                        return;
+                    }
                     player.connection.send(new ClientboundSetTimePacket(player.level().getGameTime(), Map.of(clock, new ClockNetworkState(night, 0.0F, 0.0F))));
                     Scheduler.later(player, Ticks.SECOND * config.integer("seconds"), p -> p.connection.send(p.level().getServer().clockManager().createFullSyncPacket()));
                 }),
@@ -165,6 +194,10 @@ final class Lies {
                     shown.set(DataComponents.PROFILE, ResolvableProfile.createResolved(player.getGameProfile()));
                 }
                 InventoryMenu menu = player.inventoryMenu;
+                if (Hardcore.on(player.level())) {
+                    menu.getSlot(slot).set(shown);
+                    return;
+                }
                 player.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.getStateId(), slot, shown));
                 Scheduler.later(player, Ticks.SECOND * config.integer("seconds"),
                     p -> p.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.getStateId(), slot, menu.getSlot(slot).getItem().copy())));

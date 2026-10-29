@@ -197,12 +197,14 @@ public final class AltarGameTests {
         }
 
         DeferredRegister<Consumer<GameTestHelper>> functions = DeferredRegister.create(Registries.TEST_FUNCTION, "restless_tests");
-        TESTS.forEach((name, test) -> functions.register(name, () -> test));
+        TESTS.forEach((name, test) -> functions.register(name, () -> HardcoreGameTests.inItsBatch(name, test)));
         functions.register(bus);
         bus.addListener((RegisterGameTestsEvent event) -> {
             var environment = event.registerEnvironment(id("altar"));
+            // Hardcore is one switch for the whole server, so the tests that need it run in a batch of their own.
+            var hardcore = event.registerEnvironment(id("hardcore"));
             TESTS.forEach((name, test) -> event.registerTest(id(name), new FunctionGameTestInstance(
-                ResourceKey.create(Registries.TEST_FUNCTION, id(name)), new TestData<>(environment, net.minecraft.world.level.Level.OVERWORLD, id("empty"), 40, 0, true, net.minecraft.world.level.block.Rotation.NONE, false, 1, 1, true, HauntEventGameTests.PADDING.getOrDefault(name, 0)))));
+                ResourceKey.create(Registries.TEST_FUNCTION, id(name)), new TestData<>(HardcoreGameTests.BATCH.contains(name) ? hardcore : environment, net.minecraft.world.level.Level.OVERWORLD, id("empty"), 40, 0, true, net.minecraft.world.level.block.Rotation.NONE, false, 1, 1, true, HauntEventGameTests.PADDING.getOrDefault(name, 0)))));
         });
     }
 

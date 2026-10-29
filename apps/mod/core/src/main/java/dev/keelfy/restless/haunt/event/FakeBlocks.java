@@ -1,6 +1,9 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.haunt.Hardcore;
+import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
@@ -15,6 +18,27 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 final class FakeBlocks {
     private FakeBlocks() {}
+
+    /**
+     * As {@link #show}, but under {@linkplain Hardcore hardcore} the blocks are changed for real and stay, except those
+     * that hold something (a chest, a furnace), which are only shown: their contents would have nowhere to go.
+     */
+    static void showOrMake(ServerPlayer player, Map<BlockPos, BlockState> shown, int ticks) {
+        ServerLevel level = player.level();
+        if (!Hardcore.on(level)) {
+            show(player, shown, ticks);
+            return;
+        }
+        Map<BlockPos, BlockState> fake = new LinkedHashMap<>();
+        shown.forEach((pos, state) -> {
+            if (level.getBlockEntity(pos) == null) {
+                Restore.quiet(level, pos, state);
+            } else {
+                fake.put(pos, state);
+            }
+        });
+        show(player, fake, ticks);
+    }
 
     /** Shows {@code shown} to this player alone for {@code ticks}, then the real blocks again. */
     static void show(ServerPlayer player, Map<BlockPos, BlockState> shown, int ticks) {

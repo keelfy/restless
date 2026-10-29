@@ -3,8 +3,8 @@
   "events": {
     "minecraft:false_wound": { "weight": 0.3, "min_health": 2.0, "loss": 8.0, "ticks": 30 },
     "minecraft:false_hearts": { "weight": 0.3, "ticks": 100 },
-    "minecraft:false_hunger": { "weight": 0.3, "shown_food": 0, "ticks": 40 },
-    "minecraft:guardian_face": { "weight": 0.15 },
+    "minecraft:false_hunger": { "weight": 0.3, "shown_food": 0, "ticks": 40, "hardcore_loss": 6 },
+    "minecraft:guardian_face": { "weight": 0.15, "hardcore_fatigue_ticks": 6000, "hardcore_fatigue_level": 2 },
     "minecraft:false_totem": { "weight": 0.15 },
     "minecraft:subliminal_title": { "weight": 0.3, "ticks": 3, "texts": ["BEHIND YOU", "LOOK UP", "NOT ALONE", "I SEE YOU", "WAKE UP"] },
     "minecraft:red_vignette": { "weight": 0.3, "strength": 0.8, "seconds": 5 },
