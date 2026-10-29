@@ -225,8 +225,16 @@ the spirit's own radius over `grow_days` (3) in-game days of its age, and turns 
 `corruption.blocks` says: grass to coarse dirt, grass, ferns and flowers to dead bushes. It stops at `max_blocks` (1500).
 Each spot keeps what stood there, saved with the world.
 
-Once the spirit is gone (banished, at rest, removed) its land heals: `recede` (48) spots a check, wherever their chunk
-is loaded, go back to what they were; a spot something else has changed since is left as it is.
+Each try also turns that column's biome to `restless:blighted` (`data/restless/worldgen/biome/blighted.json`): grey-brown
+grass and leaves, murky water, purple-grey sky and fog that closes in at 64 blocks, a pale sky light and green-tinted
+torchlight, drifting ash, cave moods and no music; only hostile mobs spawn in it. Biomes are 4×4×4 cells, so it goes a
+column of cells at a time, from `biome_depth` (2) cells below the surface to `biome_height` (8) above. A column some
+spirit has already blighted is skipped. Each column keeps the biomes it had, and the chunks are resent to clients at
+once, as `/fillbiome` does. The world generator never places this biome, so `/locate biome` does not find it.
+
+Once the spirit is gone (banished, at rest, removed) its land heals: `recede` (48) spots and as many biome columns a
+check, wherever their chunk is loaded, go back to what they were; a spot or cell something else has changed since is
+left as it is.
 
 ### Evolution
 
@@ -434,7 +442,7 @@ the mod, or one that is not valid JSON, is logged and ignored (the defaults run)
 Permission level: gamemaster. `[player]` defaults to the caller.
 
 - `/haunt`: opens the debug screen (needs the mod on the client): your spirits (seed, traits, power), every event with the chance each spirit rolls it next, with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
-- `/haunt info [player]`: the player's sanity and the numbered spirit list with each spirit's kind, story, seed, traits, power, anger, time to its next event, its grave and the item it wants, whether it has evolved, and how many spots of land it has fouled.
+- `/haunt info [player]`: the player's sanity and the numbered spirit list with each spirit's kind, story, seed, traits, power, anger, time to its next event, its grave and the item it wants, whether it has evolved, and its fouled land as `blight=<spots>/<biome columns>`.
 - `/haunt sanity <0..1> [player]`: sets sanity.
 - `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
 - `/haunt spirit add <spirit> [player]`: binds one more personal spirit; for a territorial one, anchors it where the player stands.

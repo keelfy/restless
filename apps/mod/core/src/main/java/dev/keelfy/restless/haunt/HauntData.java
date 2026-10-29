@@ -15,6 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
@@ -23,6 +24,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
@@ -128,20 +130,35 @@ public final class HauntData extends SavedData {
     }
 
     /**
-     * The land a territorial spirit has fouled: each spot keeps what stood there before, so it can be put back once the
-     * spirit is gone, even after the spirit's own record is.
+     * The land a territorial spirit has fouled: each spot keeps what stood there before and each biome column the biomes it
+     * had, so both can be put back once the spirit is gone, even after the spirit's own record is.
      */
-    public record Blight(ResourceKey<Level> dimension, List<Spot> spots) {
+    public record Blight(ResourceKey<Level> dimension, List<Spot> spots, List<Column> columns) {
         static final Codec<Blight> CODEC = RecordCodecBuilder.create(i -> i.group(
             Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(Blight::dimension),
-            Spot.CODEC.listOf().fieldOf("spots").forGetter(Blight::spots)
+            Spot.CODEC.listOf().fieldOf("spots").forGetter(Blight::spots),
+            Column.CODEC.listOf().optionalFieldOf("columns", List.of()).forGetter(Blight::columns)
         ).apply(i, Blight::new));
+
+        boolean empty() {
+            return spots.isEmpty() && columns.isEmpty();
+        }
 
         public record Spot(BlockPos pos, BlockState was) {
             static final Codec<Spot> CODEC = RecordCodecBuilder.create(i -> i.group(
                 BlockPos.CODEC.fieldOf("pos").forGetter(Spot::pos),
                 BlockState.CODEC.fieldOf("was").forGetter(Spot::was)
             ).apply(i, Spot::new));
+        }
+
+        /** A stack of biome cells in quart coordinates, from {@code y} upward, and the biome each held before. */
+        public record Column(int x, int y, int z, List<ResourceKey<Biome>> was) {
+            static final Codec<Column> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Codec.INT.fieldOf("x").forGetter(Column::x),
+                Codec.INT.fieldOf("y").forGetter(Column::y),
+                Codec.INT.fieldOf("z").forGetter(Column::z),
+                ResourceKey.codec(Registries.BIOME).listOf().fieldOf("was").forGetter(Column::was)
+            ).apply(i, Column::new));
         }
     }
 
@@ -260,12 +277,12 @@ public final class HauntData extends SavedData {
         return Collections.unmodifiableMap(blight);
     }
 
-    /** A null or spotless blight removes it. */
+    /** A null or empty blight removes it. */
     public void putBlight(UUID spirit, @Nullable Blight spread) {
-        if (spread == null || spread.spots().isEmpty()) {
+        if (spread == null || spread.empty()) {
             blight.remove(spirit);
         } else {
-            blight.put(spirit, new Blight(spread.dimension(), List.copyOf(spread.spots())));
+            blight.put(spirit, new Blight(spread.dimension(), List.copyOf(spread.spots()), List.copyOf(spread.columns())));
         }
         setDirty();
     }

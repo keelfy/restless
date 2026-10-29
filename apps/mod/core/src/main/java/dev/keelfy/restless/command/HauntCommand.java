@@ -111,8 +111,8 @@ public final class HauntCommand {
         HauntData.Grave grave = HauntData.get(source.getServer()).graves().get(h.uuid());
         String buried = grave == null ? "" : String.format(Locale.ROOT, " grave=%d,%d,%d%s wants=%s", grave.pos().getX(), grave.pos().getY(), grave.pos().getZ(),
             grave.built() ? "" : "(unbuilt)", BuiltInRegistries.ITEM.getKey(Graves.wanted(h.seed())));
-        int blight = Corruption.size(HauntData.get(source.getServer()), h.uuid());
-        extra += (h.evolved() ? " evolved" : "") + (blight > 0 ? " blight=" + blight : "");
+        String blight = Corruption.size(HauntData.get(source.getServer()), h.uuid());
+        extra += (h.evolved() ? " evolved" : "") + (blight.isEmpty() ? "" : " blight=" + blight);
         return String.format(Locale.ROOT, "%n  %d. %s %s \"%s\" seed=%x traits=%s power=%.2f anger=%.2f next=%ds%s%s", number, h.spirit(), kind, Story.of(h.seed()), h.seed(), String.join(",", h.traits()),
             Director.power(h, now), h.anger(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND), at + buried, extra);
     }

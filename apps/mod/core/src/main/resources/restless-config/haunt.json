@@ -56,6 +56,8 @@
     "grow_days": 3,
     "max_blocks": 1500,
     "recede": 48,
+    "biome_depth": 2,
+    "biome_height": 8,
     "blocks": {
       "minecraft:grass_block": "minecraft:coarse_dirt",
       "minecraft:short_grass": "minecraft:dead_bush",

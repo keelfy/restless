@@ -1,0 +1,85 @@
+{
+  "temperature": 0.8,
+  "downfall": 0.4,
+  "has_precipitation": true,
+  "effects": {
+    "water_color": "#4b4a3a",
+    "grass_color": "#6e6a4c",
+    "foliage_color": "#5f5a44",
+    "dry_foliage_color": "#6b5f4f"
+  },
+  "attributes": {
+    "minecraft:visual/fog_color": "#4a4352",
+    "minecraft:visual/sky_color": "#5d5766",
+    "minecraft:visual/water_fog_color": "#2f2d26",
+    "minecraft:visual/fog_end_distance": 64.0,
+    "minecraft:visual/sky_light_color": "#c9b8d8",
+    "minecraft:visual/block_light_tint": "#9fd3a8",
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:white_ash"
+        },
+        "probability": 0.01
+      }
+    ],
+    "minecraft:audio/background_music": {},
+    "minecraft:audio/music_volume": 0.0,
+    "minecraft:audio/ambient_sounds": {
+      "mood": {
+        "sound": "minecraft:ambient.cave",
+        "tick_delay": 3000,
+        "block_search_extent": 8,
+        "offset": 2.0
+      },
+      "additions": {
+        "sound": "minecraft:ambient.soul_sand_valley.additions",
+        "tick_chance": 0.005
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "monster": [
+            {
+              "type": "minecraft:zombie",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:skeleton",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:spider",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:creeper",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:witch",
+              "count": 1,
+              "weight": 5
+            }
+          ],
+          "ambient": [],
+          "axolotls": [],
+          "creature": [],
+          "misc": [],
+          "underground_water_creature": [],
+          "water_ambient": [],
+          "water_creature": []
+        }
+      },
+      "modifier": "overlay"
+    }
+  },
+  "carvers": [],
+  "features": []
+}
