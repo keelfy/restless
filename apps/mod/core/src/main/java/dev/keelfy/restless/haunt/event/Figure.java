@@ -47,6 +47,14 @@ final class Figure {
         figure.lookAt(EntityAnchorArgument.Anchor.EYES, player.getEyePosition());
     }
 
+    /** Head and body toward {@code yaw}, level, as a walker looks where it goes. */
+    static void turn(Mannequin figure, float yaw) {
+        figure.setYRot(yaw);
+        figure.setYHeadRot(yaw);
+        figure.setYBodyRot(yaw);
+        figure.setXRot(0.0F);
+    }
+
     /** The profile (name and skin) has no setter, so it goes in through the entity's save format; the caption is hidden. */
     private static void dress(Mannequin figure, ResolvableProfile profile, ServerLevel level) {
         TagValueOutput out = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, level.registryAccess());

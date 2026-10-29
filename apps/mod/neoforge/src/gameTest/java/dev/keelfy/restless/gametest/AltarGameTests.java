@@ -202,7 +202,7 @@ public final class AltarGameTests {
         bus.addListener((RegisterGameTestsEvent event) -> {
             var environment = event.registerEnvironment(id("altar"));
             TESTS.forEach((name, test) -> event.registerTest(id(name), new FunctionGameTestInstance(
-                ResourceKey.create(Registries.TEST_FUNCTION, id(name)), new TestData<>(environment, net.minecraft.world.level.Level.OVERWORLD, id("empty"), 40, 0, true, net.minecraft.world.level.block.Rotation.NONE, false, 1, 1, true, 0))));
+                ResourceKey.create(Registries.TEST_FUNCTION, id(name)), new TestData<>(environment, net.minecraft.world.level.Level.OVERWORLD, id("empty"), 40, 0, true, net.minecraft.world.level.block.Rotation.NONE, false, 1, 1, true, HauntEventGameTests.PADDING.getOrDefault(name, 0)))));
         });
     }
 

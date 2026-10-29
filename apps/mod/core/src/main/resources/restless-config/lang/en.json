@@ -69,6 +69,7 @@
     "minecraft:edge_figure": { "name": "Edge Figure", "description": "A figure that looks like the player stands at the edge of their vision. It is gone as soon as the player looks straight at it." },
     "minecraft:fog_silhouette": { "name": "Fog Silhouette", "description": "In rain or at night under open sky, a pale figure stands far away in the fog. It vanishes when the player comes close." },
     "minecraft:distant_player": { "name": "Distant Player", "description": "Another player in a default skin stands far away and keeps looking at the player. It vanishes when the player comes close." },
+    "minecraft:distant_walker": { "name": "Distant Walker", "description": "Another player in a default skin walks past far away, across the player's view. It vanishes when the player comes close, when the ground ends, or after a while." },
     "minecraft:the_call": { "name": "The Call", "description": "At night, a voice draws the player along the ground toward nearby lava or a drop into the void, a little at a time. Walking away breaks it. It never takes the player below three hearts by itself." },
     "minecraft:embrace": { "name": "Embrace", "description": "Growing damage every second until the player is ten blocks from where it began. Stops at three hearts." },
     "minecraft:swap_slots": { "name": "Swapped Slots", "description": "Two inventory slots trade places." },

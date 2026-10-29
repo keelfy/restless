@@ -3,6 +3,7 @@ package dev.keelfy.restless.gametest;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
 import io.netty.channel.embedded.EmbeddedChannel;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -29,6 +30,9 @@ final class HauntEventGameTests {
     /** Long enough for every lie to send its truth back. */
     private static final int SETTLE_TICKS = 30;
 
+    /** Tests whose figures stand far off: they get room around them, so no other test's figure is in their reach. */
+    static final Map<String, Integer> PADDING = new HashMap<>();
+
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter")) {
@@ -46,25 +50,43 @@ final class HauntEventGameTests {
             helper.setBlock(FEET.south(2).below(), Blocks.FARMLAND);
             helper.setBlock(FEET.south(2), ((CropBlock) Blocks.WHEAT).getStateForAge(7));
         }, () -> helper.assertBlockProperty(FEET.south(2), CropBlock.AGE, 0)));
-        tests.put("event_distant_player", helper -> runs(helper, "distant_player", player -> {
-            // Standing room on a ring 60 blocks out, wherever the event picks its side.
+        figureFarOff(tests, "distant_player", 60);
+        figureFarOff(tests, "distant_walker", 45);
+    }
+
+    /** A figure event on a ring of standing room {@code distance} blocks out, wherever it picks its side; one figure stays there. */
+    private static void figureFarOff(Map<String, Consumer<GameTestHelper>> tests, String id, int distance) {
+        PADDING.put("event_" + id, 2 * (distance + 10));
+        tests.put("event_" + id, helper -> runs(helper, id, player -> {
             BlockPos centre = helper.absolutePos(FEET);
-            for (int x = -64; x <= 64; x++) {
-                for (int z = -64; z <= 64; z++) {
+            int reach = distance + 4;
+            // A player's view distance keeps the ring loaded in a game; here only the test's own chunks are.
+            forceChunks(helper, centre, reach, true);
+            for (int x = -reach; x <= reach; x++) {
+                for (int z = -reach; z <= reach; z++) {
                     double ring = Math.hypot(x, z);
-                    if (ring >= 58 && ring <= 62) {
+                    if (ring >= distance - 2 && ring <= distance + 2) {
                         helper.getLevel().setBlock(centre.offset(x, -1, z), Blocks.STONE.defaultBlockState(), 2);
                     }
                 }
             }
         }, () -> {
-            AABB around = new AABB(helper.absolutePos(FEET)).inflate(70);
+            AABB around = new AABB(helper.absolutePos(FEET)).inflate(distance + 10);
             List<Mannequin> figures = helper.getLevel().getEntitiesOfClass(Mannequin.class, around);
-            check(helper, figures.size() == 1, "distant_player must leave one figure standing, found " + figures.size());
+            check(helper, figures.size() == 1, id + " must leave one figure standing, found " + figures.size());
             double away = figures.get(0).distanceToSqr(Vec3.atCenterOf(helper.absolutePos(FEET)));
-            check(helper, away > 50 * 50, "distant_player must stand far off");
+            check(helper, away > (distance - 10) * (distance - 10), id + " must stand far off");
             figures.get(0).discard();
+            forceChunks(helper, helper.absolutePos(FEET), distance + 4, false);
         }));
+    }
+
+    private static void forceChunks(GameTestHelper helper, BlockPos centre, int reach, boolean forced) {
+        for (int x = (centre.getX() - reach) >> 4; x <= (centre.getX() + reach) >> 4; x++) {
+            for (int z = (centre.getZ() - reach) >> 4; z <= (centre.getZ() + reach) >> 4; z++) {
+                helper.getLevel().setChunkForced(x, z, forced);
+            }
+        }
     }
 
     /** Sets the scene, checks the event can run, runs it, lets its scheduled steps finish, then checks the result. */
