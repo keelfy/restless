@@ -38,6 +38,8 @@ final class Presence {
             PresenceFigure.distantPlayer(),
             // 120
             PresenceFigure.distantWalker(),
+            // 121
+            new PillarEvent(),
             // 119
             new SimpleEvent(Identifier.parse("nametag"), HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Presence::nametag),
             // 97: a puff of breath at the face where nobody should be breathing out

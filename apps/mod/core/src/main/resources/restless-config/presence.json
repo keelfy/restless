@@ -80,6 +80,18 @@
       "height": 2.3,
       "ticks": 200,
       "names": ["Steve", "Alex", "Herobrine", "null", "Player", "..."]
+    },
+    "minecraft:pillar": {
+      "weight": 0.3,
+      "distance": 24.0,
+      "max_angle": 40.0,
+      "height": 8,
+      "interval_ticks": 10,
+      "linger_ticks": 60,
+      "vanish_distance": 10.0,
+      "restore_ticks": 2400,
+      "sound": {"volume": 1.0, "pitch": 0.8},
+      "cleanup_ticks": 40
     }
   }
 }

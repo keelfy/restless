@@ -6,6 +6,7 @@ import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
@@ -65,6 +66,8 @@ final class HauntEventGameTests {
         farOff(tests, "distant_player", 60, Mannequin.class);
         farOff(tests, "distant_walker", 45, Mannequin.class);
         farOff(tests, "nametag", 30, Display.TextDisplay.class);
+        farOff(tests, "pillar", 24, Mannequin.class, (helper, figure) ->
+            check(helper, helper.getLevel().getBlockState(figure.blockPosition().below()).is(Blocks.COBBLESTONE), "pillar must stand on its cobblestone"));
     }
 
     /**
@@ -72,6 +75,11 @@ final class HauntEventGameTests {
      * it picks its side; the one is checked and removed.
      */
     private static void farOff(Map<String, Consumer<GameTestHelper>> tests, String id, int distance, Class<? extends Entity> kind) {
+        farOff(tests, id, distance, kind, (helper, found) -> {});
+    }
+
+    private static <T extends Entity> void farOff(Map<String, Consumer<GameTestHelper>> tests, String id, int distance, Class<T> kind,
+                                                  BiConsumer<GameTestHelper, T> also) {
         PADDING.put("event_" + id, 2 * (distance + 10));
         tests.put("event_" + id, helper -> runs(helper, id, player -> {
             BlockPos centre = helper.absolutePos(FEET);
@@ -88,8 +96,9 @@ final class HauntEventGameTests {
             }
         }, () -> {
             AABB around = new AABB(helper.absolutePos(FEET)).inflate(distance + 10);
-            List<? extends Entity> found = helper.getLevel().getEntitiesOfClass(kind, around);
+            List<T> found = helper.getLevel().getEntitiesOfClass(kind, around);
             check(helper, found.size() == 1, id + " must leave one " + kind.getSimpleName() + ", found " + found.size());
+            also.accept(helper, found.get(0));
             found.get(0).discard();
             forceChunks(helper, helper.absolutePos(FEET), distance + 4, false);
         }));
