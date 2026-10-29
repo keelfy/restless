@@ -4,6 +4,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Scheduler;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,17 +14,25 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The player's own view of the world lies to them; see {@link FakeBlocks}. Nothing on the server changes. The ghost tree
+ * The player's own view of the world lies to them; see {@link FakeBlocks} and {@link PacketEntity}. Nothing on the
+ * server changes. The ghost tree
  * is made of blocks with no collision, so the client lets the player walk through it, as the server does.
  */
 final class Illusions {
@@ -48,8 +57,65 @@ final class Illusions {
                 if (root != null) {
                     FakeBlocks.show(player, ghostTree(player.level(), root), Config.event("ghost_tree").integer("ticks"));
                 }
-            })
+            }),
+            // 126: a mob standing out in the field that is not there, facing the player; gone when approached
+            SimpleEvent.light("hallucination", EventTag.MOBS, player -> mobSpot(player) != null, Illusions::hallucination),
+            // 127: the ender dragon flies over, high up, for this player alone
+            SimpleEvent.light("dragon_flyover", EventTag.PRESENCE,
+                player -> player.level().dimension() == Level.OVERWORLD && player.level().canSeeSky(player.blockPosition()), Illusions::dragonFlyover)
         );
+    }
+
+    private static @Nullable BlockPos mobSpot(ServerPlayer player) {
+        Config.Section config = Config.event("hallucination");
+        return Place.standingAt(player, config.num("distance"), (player.getRandom().nextDouble() * 2 - 1) * config.num("max_angle"));
+    }
+
+    private static void hallucination(ServerPlayer player) {
+        Config.Section config = Config.event("hallucination");
+        BlockPos spot = mobSpot(player);
+        List<String> mobs = config.texts("mobs");
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(mobs.get(player.getRandom().nextInt(mobs.size())))).orElse(null);
+        if (spot == null || type == null) {
+            return;
+        }
+        Vec3 at = Vec3.atBottomCenterOf(spot);
+        PacketEntity mob = PacketEntity.show(player, type, at, PacketEntity.yawToward(at, player.position()));
+        int interval = config.integer("interval_ticks");
+        double near = config.num("vanish_distance");
+        Scheduler.repeat(player, interval, interval, (p, n) -> {
+            boolean over = n * interval >= config.integer("max_ticks") || p.position().distanceToSqr(at) <= near * near;
+            if (over) {
+                mob.remove(p);
+            }
+            return !over;
+        });
+    }
+
+    /** A straight line high over the player, at a random bearing and a little to one side, flown in {@code ticks}. */
+    private static void dragonFlyover(ServerPlayer player) {
+        Config.Section config = Config.event("dragon_flyover");
+        double bearing = player.getRandom().nextDouble() * Math.PI * 2;
+        Vec3 along = new Vec3(Math.cos(bearing), 0, Math.sin(bearing));
+        Vec3 side = new Vec3(-along.z, 0, along.x).scale((player.getRandom().nextDouble() * 2 - 1) * config.num("side"));
+        Vec3 over = player.position().add(side).add(0, config.num("height"), 0);
+        Vec3 from = over.subtract(along.scale(config.num("length") / 2));
+        Vec3 to = over.add(along.scale(config.num("length") / 2));
+        // The dragon's yaw is the other way round from other entities'.
+        float yaw = PacketEntity.yawToward(from, to) + 180.0F;
+        PacketEntity dragon = PacketEntity.show(player, EntityTypes.ENDER_DRAGON, from, yaw);
+        Config.Tone growl = config.tone("sound");
+        player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ENDER_DRAGON_GROWL), SoundSource.HOSTILE,
+            over.x, over.y, over.z, growl.volume(), growl.pitch(), player.getRandom().nextLong()));
+        int ticks = config.integer("ticks");
+        Scheduler.repeat(player, 1, 1, (p, n) -> {
+            if (n >= ticks) {
+                dragon.remove(p);
+                return false;
+            }
+            dragon.move(p, from.lerp(to, (n + 1) / (double) ticks), yaw);
+            return true;
+        });
     }
 
     /** Standing room in front of the player, with air for the whole trunk. */

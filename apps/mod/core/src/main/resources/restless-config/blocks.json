@@ -7,6 +7,8 @@
     "minecraft:false_windows": { "weight": 0.4, "radius": 10, "max_blocks": 64, "ticks": 200, "modes": ["air", "fence", "wall"] },
     "minecraft:false_looks": { "weight": 0.4, "radius": 10, "max_blocks": 16, "ticks": 200, "looks": { "minecraft:crafting_table": "minecraft:furnace", "minecraft:furnace": "minecraft:chest", "minecraft:chest": "minecraft:crafting_table", "minecraft:smoker": "minecraft:blast_furnace", "minecraft:blast_furnace": "minecraft:smoker", "minecraft:bookshelf": "minecraft:oak_planks" } },
     "minecraft:ghost_tree": { "weight": 0.3, "distance": 12.0, "max_angle": 40.0, "trunk": 5, "ticks": 1200 },
+    "minecraft:hallucination": { "weight": 0.3, "distance": 20.0, "max_angle": 40.0, "mobs": ["minecraft:iron_golem", "minecraft:villager", "minecraft:wandering_trader", "minecraft:witch", "minecraft:enderman"], "interval_ticks": 5, "max_ticks": 600, "vanish_distance": 10.0 },
+    "minecraft:dragon_flyover": { "weight": 0.15, "height": 40.0, "side": 30.0, "length": 240.0, "ticks": 200, "sound": { "volume": 6.0, "pitch": 0.8 } },
     "minecraft:turning_frame": { "weight": 0.6, "radius": 12, "min_turns": 1, "turn_spread": 3 },
     "minecraft:new_sign": {
       "weight": 0.6,

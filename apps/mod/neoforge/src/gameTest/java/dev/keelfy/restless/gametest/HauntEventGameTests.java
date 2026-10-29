@@ -40,7 +40,7 @@ final class HauntEventGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter",
-            "stranger_joins", "stranger_death", "false_night", "false_slot", "turned_head")) {
+            "stranger_joins", "stranger_death", "false_night", "false_slot", "turned_head", "dragon_flyover")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
         tests.put("event_false_advancement", helper -> runs(helper, "false_advancement", player -> {}, () -> {
@@ -54,6 +54,7 @@ final class HauntEventGameTests {
         // A field off the test floor, past the event's distance from the player, and room enough that no other test's crops are near.
         PADDING.put("event_harvest", 40);
         PADDING.put("event_ghost_tree", 30);
+        PADDING.put("event_hallucination", 50);
         tests.put("event_harvest", helper -> runs(helper, "harvest", player -> {
             BlockPos field = helper.absolutePos(FEET).east(13);
             for (BlockPos pos : BlockPos.betweenClosed(field.offset(-3, -1, -2), field.offset(3, -1, 2))) {
@@ -85,6 +86,13 @@ final class HauntEventGameTests {
                 check(helper, !helper.getLevel().getBlockState(pos).is(Content.GHOST_LOG.get()), "ghost_tree must not be on the server");
             }
         }));
+        tests.put("event_hallucination", helper -> runs(helper, "hallucination", player -> {
+            BlockPos centre = helper.absolutePos(FEET);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-22, -1, -22), centre.offset(22, -1, 22))) {
+                helper.getLevel().setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
+            }
+        }, () -> check(helper, helper.getLevel().getEntitiesOfClass(Entity.class, new AABB(helper.absolutePos(FEET)).inflate(30), e -> !(e instanceof ServerPlayer)).isEmpty(),
+            "hallucination must leave nothing on the server")));
         tests.put("event_cracking_floor", helper -> runs(helper, "cracking_floor", player -> {},
             () -> helper.assertBlockPresent(Blocks.STONE, FEET.below())));
         tests.put("event_hostile_animal", helper -> runs(helper, "hostile_animal",
