@@ -6,8 +6,10 @@ import dev.keelfy.restless.content.AltarRenderer;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.DreamcatcherEntity;
 import dev.keelfy.restless.content.DreamcatcherRenderer;
+import dev.keelfy.restless.content.MistParticle;
 import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.SanityOverlay;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
@@ -15,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /** Client-only wiring; the dedicated server never loads this class. */
@@ -34,5 +37,10 @@ public final class RestlessNeoForgeClient {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer((BlockEntityType<AltarEntity>) Content.ALTAR_ENTITY.get(), AltarRenderer::new);
         event.registerBlockEntityRenderer((BlockEntityType<DreamcatcherEntity>) Content.DREAMCATCHER_ENTITY.get(), context -> new DreamcatcherRenderer());
+    }
+
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet((SimpleParticleType) Content.MIST.get(), MistParticle.Provider::new);
     }
 }

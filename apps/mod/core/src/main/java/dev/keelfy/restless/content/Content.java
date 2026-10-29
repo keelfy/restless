@@ -5,6 +5,8 @@ import dev.keelfy.restless.platform.Platform;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -76,6 +78,9 @@ public final class Content {
         p -> new Gravestone(p.strength(2.0f, 6.0f).sound(SoundType.STONE).noOcclusion()));
     public static final Supplier<Item> GRAVESTONE_ITEM = blockItem("gravestone", GRAVESTONE);
     public static final Supplier<Item> JOURNAL = item("journal", p -> new JournalBook(p.stacksTo(1)));
+
+    /** Ground mist of the blighted biome, see {@link MistParticle}. */
+    public static final Supplier<ParticleType<?>> MIST = Platform.get().register(BuiltInRegistries.PARTICLE_TYPE, "mist", key -> new SimpleParticleType(false) {});
 
     private Content() {
     }

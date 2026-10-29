@@ -9,10 +9,13 @@
     "dry_foliage_color": "#6b5f4f"
   },
   "attributes": {
-    "minecraft:visual/fog_color": "#4a4352",
-    "minecraft:visual/sky_color": "#5d5766",
+    "minecraft:visual/fog_color": "#5e5c58",
+    "minecraft:visual/sky_color": "#6a6864",
     "minecraft:visual/water_fog_color": "#2f2d26",
-    "minecraft:visual/fog_end_distance": 64.0,
+    "minecraft:visual/fog_start_distance": 4.0,
+    "minecraft:visual/fog_end_distance": 40.0,
+    "minecraft:visual/sky_fog_end_distance": 40.0,
+    "minecraft:visual/cloud_color": "#cc6b6a66",
     "minecraft:visual/sky_light_color": "#c9b8d8",
     "minecraft:visual/block_light_tint": "#9fd3a8",
     "minecraft:visual/ambient_particles": [
@@ -20,7 +23,13 @@
         "particle": {
           "type": "minecraft:white_ash"
         },
-        "probability": 0.01
+        "probability": 0.118
+      },
+      {
+        "particle": {
+          "type": "restless:mist"
+        },
+        "probability": 0.002
       }
     ],
     "minecraft:audio/background_music": {},

@@ -226,8 +226,9 @@ the spirit's own radius over `grow_days` (3) in-game days of its age, and turns 
 Each spot keeps what stood there, saved with the world.
 
 Each try also turns that column's biome to `restless:blighted` (`data/restless/worldgen/biome/blighted.json`): grey-brown
-grass and leaves, murky water, purple-grey sky and fog that closes in at 64 blocks, a pale sky light and green-tinted
-torchlight, drifting ash, cave moods and no music; only hostile mobs spawn in it. Biomes are 4×4×4 cells, so it goes a
+grass and leaves, murky water, a thick grey haze like the basalt deltas' (fog from 4 to 40 blocks, sky and clouds
+greyed out, ash as dense as the deltas', and `restless:mist` wisps creeping along the ground), a pale sky light and
+green-tinted torchlight, cave moods and no music; only hostile mobs spawn in it. Biomes are 4×4×4 cells, so it goes a
 column of cells at a time, from `biome_depth` (2) cells below the surface to `biome_height` (8) above. A column some
 spirit has already blighted is skipped. Each column keeps the biomes it had, and the chunks are resent to clients at
 once, as `/fillbiome` does. The world generator never places this biome, so `/locate biome` does not find it.
@@ -245,7 +246,7 @@ those in its radius) hear a heartbeat, are told, and it goes in their journal; f
 A personal spirit grows only while its player is online.
 
 Not built yet: world-born spirits (death spots, abandoned structures, blood moon, deeds), merging, the calendar (full
-moon, blood night, day of the dead), fog and possessed mobs in corrupted land, crops stopping, and new events or clues
+moon, blood night, day of the dead), possessed mobs in corrupted land, crops stopping, and new events or clues
 for evolved spirits.
 
 ## Spirits
