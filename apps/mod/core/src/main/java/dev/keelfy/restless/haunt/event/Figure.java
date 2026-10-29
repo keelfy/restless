@@ -47,7 +47,12 @@ final class Figure {
 
     /** A skin of no one: a fresh id with no textures gets one of the default player skins, Steve, Alex and the rest. */
     static ResolvableProfile stranger(ServerPlayer player) {
-        return ResolvableProfile.createResolved(new GameProfile(new UUID(player.getRandom().nextLong(), player.getRandom().nextLong()), "Steve"));
+        return ResolvableProfile.createResolved(nobody(player, "Steve"));
+    }
+
+    /** A profile of no one, under {@code name}, with a fresh id and no textures. */
+    static GameProfile nobody(ServerPlayer player, String name) {
+        return new GameProfile(new UUID(player.getRandom().nextLong(), player.getRandom().nextLong()), name);
     }
 
     static void face(Mannequin figure, ServerPlayer player) {

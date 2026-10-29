@@ -123,6 +123,8 @@
     "minecraft:own_voice": { "name": "Own Voice", "description": "A chat line in the player's own name that they never wrote, seen only by them." },
     "minecraft:false_death": { "name": "False Death", "description": "The player's own death message, \"slain by ???\", seen only by them." },
     "minecraft:private_rain": { "name": "Private Rain", "description": "Rain, sometimes a storm, that only this player sees, for twenty seconds." },
-    "minecraft:silent_lightning": { "name": "Silent Lightning", "description": "Lightning strikes nearby and sets nothing on fire." }
+    "minecraft:silent_lightning": { "name": "Silent Lightning", "description": "Lightning strikes nearby and sets nothing on fire." },
+    "minecraft:stranger_joins": { "name": "Someone Joins", "description": "Someone joins the game: the yellow chat line and a name in the player list, which then opens even in single player. They leave a while later." },
+    "minecraft:stranger_death": { "name": "Someone Dies", "description": "A death message about another player in chat, in the player's language." }
   }
 }

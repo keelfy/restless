@@ -387,6 +387,8 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `false_death` | 163 | LIGHT | PRESENCE | 0.2 | Always | Their own "was slain by ???" death message, sent only to them |
 | `private_rain` | 167 | LIGHT | PRESENCE | 0.3 | Weather dimension, not raining, sky visible | Rain for this client only, a storm 30% of the time, for 20 s; then the real weather |
 | `silent_lightning` | 168 | LIGHT | PRESENCE | 0.2 | Weather dimension, sky visible | A visual-only bolt 24 blocks away |
+| `stranger_joins` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets "<name> joined the game" and a player list entry for a name from a list, in a default skin. 40 s later the entry goes and "<name> left the game" follows. Nothing on the server |
+| `stranger_death` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets a vanilla death message (fell, drowned, suffocated, fell out of the world, died) for a name from a list |
 
 ## Chances
 

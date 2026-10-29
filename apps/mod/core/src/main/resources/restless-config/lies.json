@@ -11,6 +11,8 @@
     "minecraft:own_voice": { "weight": 0.2, "lines": ["help me", "it is here", "don't turn around", "who is that"] },
     "minecraft:false_death": { "weight": 0.2, "killer": "???" },
     "minecraft:private_rain": { "weight": 0.3, "thunder_chance": 0.3, "seconds": 20 },
-    "minecraft:silent_lightning": { "weight": 0.2, "distance": 24.0 }
+    "minecraft:silent_lightning": { "weight": 0.2, "distance": 24.0 },
+    "minecraft:stranger_joins": { "weight": 0.2, "seconds": 40, "latency": 120, "names": ["Steve", "Alex", "Herobrine", "null", "Player"] },
+    "minecraft:stranger_death": { "weight": 0.2, "names": ["Steve", "Alex", "Herobrine", "null", "Player"], "deaths": ["death.fell.accident.generic", "death.attack.drown", "death.attack.inWall", "death.attack.outOfWorld", "death.attack.generic"] }
   }
 }
