@@ -2,6 +2,9 @@ package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.spirit.SpiritType;
+import dev.keelfy.restless.spirit.Trait;
+import dev.keelfy.restless.spirit.Traits;
+import java.util.List;
 import java.util.Set;
 
 /** Pure progression math: no Minecraft types, so it is unit-testable. */
@@ -22,10 +25,10 @@ public final class Power {
         };
     }
 
-    public static double weight(HauntTier tier, Set<EventTag> tags, double baseWeight, SpiritType spirit, double power) {
+    public static double weight(HauntTier tier, Set<EventTag> tags, double baseWeight, SpiritType spirit, List<Trait> traits, double power) {
         double weight = baseWeight * tierFactor(tier, power);
         for (EventTag tag : tags) {
-            weight *= spirit.affinity(tag);
+            weight *= spirit.affinity(tag) * Traits.affinity(traits, tag);
         }
         return weight;
     }

@@ -196,6 +196,11 @@ public final class Config {
             this.path = path;
         }
 
+        /** For the few values that may be left out; everything else fails loudly when missing. */
+        public boolean has(String key) {
+            return json.has(key);
+        }
+
         public double num(String key) {
             return get(key).getAsDouble();
         }

@@ -4,6 +4,10 @@ import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.Trait;
+import dev.keelfy.restless.spirit.Traits;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,17 +30,21 @@ public final class Director {
         long now = server.overworld().getGameTime();
         HauntData data = HauntData.get(server);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            Reactions.watch(player, now);
             List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
             boolean changed = false;
+            int sounds = Reactions.takeSounds(player.getUUID());
             for (int i = 0; i < spirits.size(); i++) {
-                HauntData.Haunting haunting = spirits.get(i);
+                HauntData.Haunting haunting = Reactions.fed(spirits.get(i), sounds, player.isCrouching());
+                changed |= haunting != spirits.get(i);
+                spirits.set(i, haunting);
                 Vec3 at = Location.roam(haunting.uuid(), player);
                 if (now < haunting.nextEventAt()) {
                     continue;
                 }
                 SpiritType spirit = spirit(haunting);
                 if (canHaunt(player)) {
-                    pick(player, spirit, power(haunting, now)).ifPresent(event -> fire(player, event, at));
+                    pick(player, spirit, Traits.of(haunting.traits()), power(haunting, now)).ifPresent(event -> fire(player, event, at));
                 }
                 spirits.set(i, haunting.rescheduled(now + cooldown(player.level(), player.blockPosition(), haunting, now, player.getRandom())));
                 changed = true;
@@ -61,7 +69,7 @@ public final class Director {
             List<ServerPlayer> near = level.players().stream().filter(p -> canHaunt(p) && territorial.reaches(p)).toList();
             if (!near.isEmpty()) {
                 ServerPlayer player = near.get(level.getRandom().nextInt(near.size()));
-                pick(player, spirit(territorial.haunting()), power(territorial.haunting(), now))
+                pick(player, spirit(territorial.haunting()), Traits.of(territorial.haunting().traits()), power(territorial.haunting(), now))
                     .ifPresent(event -> fire(player, event, Vec3.atCenterOf(territorial.anchor())));
             }
             long next = now + cooldown(level, territorial.anchor(), territorial.haunting(), now, level.getRandom());
@@ -167,16 +175,36 @@ public final class Director {
 
     private static long cooldown(ServerLevel level, BlockPos at, HauntData.Haunting haunting, long now, RandomSource random) {
         double quiet = Power.daylightFactor(level.isBrightOutside(), level.canSeeSky(at), !level.isThundering());
-        return Power.cooldownTicks(power(haunting, now), spirit(haunting).activity(), random.nextDouble(), quiet);
+        double activity = spirit(haunting).activity() * Traits.activity(Traits.of(haunting.traits()), conditions(level, at));
+        return Power.cooldownTicks(power(haunting, now), activity, random.nextDouble(), quiet);
     }
 
-    private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit, double power) {
+    private static Set<Trait.Condition> conditions(ServerLevel level, BlockPos at) {
+        Set<Trait.Condition> now = EnumSet.of(Trait.Condition.ANY);
+        if (level.isRaining()) {
+            now.add(Trait.Condition.RAIN);
+        }
+        if (!level.isBrightOutside()) {
+            now.add(Trait.Condition.NIGHT);
+        }
+        if (level.getMaxLocalRawBrightness(at) < Config.section("director").integer("dark_light_level")) {
+            now.add(Trait.Condition.DARK);
+        }
+        return now;
+    }
+
+    /** An event's weight for this spirit as {@link #pick} rolls it; 0 when the event has nothing to act on. */
+    public static double weight(HauntEvent event, ServerPlayer player, SpiritType spirit, List<Trait> traits, double power) {
+        return event.canRun(player) ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power) : 0.0;
+    }
+
+    private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit, List<Trait> traits, double power) {
         List<HauntEvent> candidates = new ArrayList<>();
         List<Double> weights = new ArrayList<>();
         double total = 0;
         for (HauntEvent event : HauntEvents.all()) {
-            double weight = Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, power);
-            if (weight > 0 && event.canRun(player)) {
+            double weight = weight(event, player, spirit, traits, power);
+            if (weight > 0) {
                 candidates.add(event);
                 weights.add(weight);
                 total += weight;

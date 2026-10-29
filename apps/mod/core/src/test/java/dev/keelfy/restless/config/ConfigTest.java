@@ -127,6 +127,8 @@ class ConfigTest {
     void everyKeyReadInCodeExistsAndNoKeyIsLeftUnused() throws IOException {
         Set<String> defined = new HashSet<>();
         collectKeys(Config.defaults(), defined);
+        // Trait ids are looked up by name from the catalog, never spelled in code.
+        defined.removeAll(Config.defaults().getAsJsonObject("traits").keySet());
         // Spirit affinities are keyed by event tag names (upper case) and read as a whole.
         defined.removeIf(key -> !key.matches("[a-z_]+"));
         // Reached through a prefix (Config.event(id), "spirits." + id), never by their own name.

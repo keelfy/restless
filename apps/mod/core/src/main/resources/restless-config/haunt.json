@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "director": { "check_interval_ticks": 20, "default_spirits": 3, "territorial_radius": 48 },
+  "director": { "check_interval_ticks": 20, "default_spirits": 3, "territorial_radius": 48, "traits_min": 3, "traits_max": 5, "dark_light_level": 8, "react_chance": 0.25, "sneak_delay_ticks": 10 },
   "power": {
     "maturity_days": 30,
     "maturity_share": 0.6,

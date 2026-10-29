@@ -85,6 +85,8 @@ public final class DebugScreen extends Screen {
             DebugPayload.Spirit spirit = data.spirits().get(i);
             graphics.text(font, String.format(Locale.ROOT, "%d. %s%s  seed %x  power %.2f  next in %ds",
                 i + 1, spirit.id(), spirit.territorial() ? " (territorial)" : "", spirit.seed(), spirit.power(), spirit.seconds()), x, y, GRAY);
+            y += LINE;
+            graphics.text(font, "    " + String.join(", ", spirit.traits()), x, y, GRAY);
         }
         y += LINE * 2;
 
@@ -102,7 +104,12 @@ public final class DebugScreen extends Screen {
         graphics.text(font, event.tier().name().toLowerCase(Locale.ROOT) + "   weight " + event.weight() + "   " + tags, x, y, GRAY);
         y += LINE;
         graphics.text(font, event.canRun() ? "can run now" : "nothing to act on here", x, y, event.canRun() ? GREEN : RED);
-        y += LINE * 2;
+        y += LINE;
+        for (int i = 0; i < event.chances().size(); i++) {
+            graphics.text(font, String.format(Locale.ROOT, "%d. %s rolls it next: %.1f%%", i + 1, data.spirits().get(i).id(), event.chances().get(i) * 100), x, y, GRAY);
+            y += LINE;
+        }
+        y += LINE;
         graphics.textWithWordWrap(font, Component.literal(row.description), x, y, width - x - MARGIN, WHITE);
     }
 

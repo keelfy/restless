@@ -15,6 +15,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.PlayLevelSoundEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -37,6 +38,8 @@ public final class RestlessNeoForge {
             Restless.onPlaySound(e.getLevel(), e.getPosition(), e.getSound(), e.getSource(), e.getNewVolume(), e.getNewPitch()));
         NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtEntity e) ->
             Restless.onPlaySound(e.getLevel(), e.getEntity().position(), e.getSound(), e.getSource(), e.getNewVolume(), e.getNewPitch()));
+        NeoForge.EVENT_BUS.addListener((LivingDeathEvent e) ->
+            Restless.onKill(e.getSource().getEntity(), e.getEntity()));
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
             if (Restless.onUseBlock(e.getEntity(), e.getHand(), e.getPos())) {
                 e.setCanceled(true);

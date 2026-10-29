@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.keelfy.restless.spirit.Spirits;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ class PowerTest {
 
     @Test
     void harmfulEventsNeverRollForNewSpirit() {
-        assertEquals(0.0, Power.weight(HauntTier.HARMFUL, Set.of(EventTag.ASSAULT), 1, Spirits.SHADE, 0));
+        assertEquals(0.0, Power.weight(HauntTier.HARMFUL, Set.of(EventTag.ASSAULT), 1, Spirits.SHADE, List.of(), 0));
     }
 
     @Test
@@ -33,8 +34,8 @@ class PowerTest {
 
     @Test
     void poltergeistPrefersDoorsOverAffliction() {
-        double doors = Power.weight(HauntTier.LIGHT, Set.of(EventTag.DOORS), 1, Spirits.POLTERGEIST, 0.5);
-        double affliction = Power.weight(HauntTier.LIGHT, Set.of(EventTag.AFFLICTION), 1, Spirits.POLTERGEIST, 0.5);
+        double doors = Power.weight(HauntTier.LIGHT, Set.of(EventTag.DOORS), 1, Spirits.POLTERGEIST, List.of(), 0.5);
+        double affliction = Power.weight(HauntTier.LIGHT, Set.of(EventTag.AFFLICTION), 1, Spirits.POLTERGEIST, List.of(), 0.5);
         assertTrue(doors > affliction * 4);
     }
 

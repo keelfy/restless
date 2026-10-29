@@ -1,7 +1,7 @@
 # Spirits and haunt events
 
 Reference for the current content. Source of truth is the code:
-`spirit/Spirits.java`, `haunt/HauntEvents.java`, `haunt/event/*`, `haunt/Power.java`, `haunt/Director.java`, `haunt/Scheduler.java`.
+`spirit/Spirits.java`, `haunt/HauntEvents.java`, `haunt/event/*`, `haunt/Power.java`, `haunt/Reactions.java`, `spirit/Traits.java`, `haunt/Director.java`, `haunt/Scheduler.java`.
 Update this file when any of them changes. The numbers below are the shipped defaults; see [Config](#config).
 
 ## How it works
@@ -26,7 +26,7 @@ Update this file when any of them changes. The numbers below are the shipped def
   Spectators and creative players get no event, but the cooldown still resets.
 - The pick is a weighted random choice among events that can run right now (`canRun`):
 
-  `weight = baseWeight × tierFactor(tier, power) × Π affinity(spirit, tag)`
+  `weight = baseWeight × tierFactor(tier, power) × Π affinity(spirit, tag) × Π affinity(trait, tag)`
 
   `chance = weight / Σ weights of runnable events`. An event that cannot run is excluded and the rest are renormalised.
 
@@ -42,9 +42,31 @@ raises it yet. Power depends on the spirit alone, never on the world:
 - Tier factor: `LIGHT = 1 − 0.7 × power`, `HARMFUL = power`. Power moves weight from light to harmful events;
   harmful events are impossible at power 0.
 
+### Traits
+
+Besides its type, every spirit has 3–5 traits (`director.traits_min`/`traits_max`) drawn from the `traits` catalog in
+`spirits.json` by its seed: the same seed gives the same traits, and the ids are saved with the spirit. A save from before
+traits gets them from its seed on load. Ids the catalog no longer has are skipped. So two spirits of one type differ in
+what they pick and when they act. A trait has any of:
+
+- `affinity`: tag multipliers, multiplied into the weight with the type's. `light_eater` (lights ×2.5), `door_slammer`,
+  `restless_hands`, `whisperer`, `cold_touch`, `vengeful`, `meddler`.
+- `activity` + `when` (`rain`, `night`, `dark`; light level below `director.dark_light_level`): the spirit acts that many
+  times as often while the condition holds at the moment it schedules its next event. `rain_walker`, `night_stalker`,
+  `dark_dweller`.
+- `noise`: ticks the next event comes sooner for every sound the player makes (`noise_feeder`: 6 per sound, so sprinting
+  hastens it most). Sneaking instead delays it by `director.sneak_delay_ticks` per check. Sounds are the ones `Echoes` hears.
+- `reacts`: after the player opens a chest or barrel (`chest`), uses a bed (`bed`), goes below y 0 (`deep`) or kills a mob
+  (`kill`), the spirit has a `director.react_chance` to act on the next check. The event is still picked and capped as
+  usual. `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`.
+
+Noise and reactions apply to personal spirits only. The debug screen shows each spirit's traits and, for the selected
+event, the chance each spirit rolls it next.
+
 ### Cooldown
 
 `minutes = (4 − 2.5 × power) × (1 + roll) × quiet / activity`, `roll` uniform in 0..1 (minimum 1 second).
+`activity` is the type's activity times every trait's active modifier.
 
 `quiet = 1.2^n`, where `n` counts the true conditions among: it is day, the player sees the sky, there is no thunderstorm.
 So a player in the open on a clear day waits up to 1.73× longer; in a mine, a house or at night nothing changes.
@@ -215,7 +237,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 | File | Holds |
 |---|---|
 | `haunt.json` | `director`, `power`, `restore`, `place` |
-| `spirits.json` | `spirits` (activity, tag affinities) |
+| `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
 Names and descriptions of events live apart, in `restless-config/lang/en.json` and `ru.json` (copied to `config/restless/lang/` on first run,
@@ -242,8 +264,8 @@ the mod, or one that is not valid JSON, is logged and ignored (the defaults run)
 
 Permission level: gamemaster. `[player]` defaults to the caller.
 
-- `/haunt`: opens the debug screen (needs the mod on the client): your spirits (seed, power), every event with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
-- `/haunt info [player]`: the numbered spirit list with each spirit's kind, seed, power, anger and time to its next event.
+- `/haunt`: opens the debug screen (needs the mod on the client): your spirits (seed, traits, power), every event with the chance each spirit rolls it next, with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
+- `/haunt info [player]`: the numbered spirit list with each spirit's kind, seed, traits, power, anger and time to its next event.
 - `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
 - `/haunt spirit add <spirit> [player]`: binds one more personal spirit; for a territorial one, anchors it where the player stands.
 - `/haunt spirit remove <n> [player]`: removes spirit number `n` (1-based, as listed by `info`: the player's personal spirits, then the territorial ones in their dimension).

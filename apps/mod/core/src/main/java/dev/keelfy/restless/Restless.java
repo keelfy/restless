@@ -10,20 +10,27 @@ import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.DoorLocks;
+import dev.keelfy.restless.haunt.Reactions;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.platform.Platform;
+import dev.keelfy.restless.spirit.Trait;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 /**
@@ -55,11 +62,22 @@ public final class Restless {
     public static void onServerStopping() {
         Restore.flush();
         Location.clear();
+        Reactions.clear();
+    }
+
+    /** Call when a living thing dies; {@code killer} is whoever dealt the blow, if anyone. */
+    public static void onKill(@Nullable Entity killer, LivingEntity dead) {
+        if (killer instanceof ServerPlayer player && dead instanceof Mob) {
+            Reactions.trigger(player, Trait.Trigger.KILL);
+        }
     }
 
     /** Call before a player uses a block; true means the use must be cancelled. */
     public static boolean onUseBlock(Player player, InteractionHand hand, BlockPos pos) {
         Level level = player.level();
+        if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
+            Reactions.used(server, level.getBlockState(pos));
+        }
         if (!DoorLocks.isLocked(level, pos)) {
             return false;
         }

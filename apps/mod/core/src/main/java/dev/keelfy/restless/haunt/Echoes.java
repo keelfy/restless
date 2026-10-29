@@ -33,6 +33,7 @@ public final class Echoes {
         }
         Player player = level.getNearestPlayer(at.x, at.y, at.z, Config.event("echo").num("capture_radius"), false);
         if (player != null) {
+            Reactions.heard(player.getUUID());
             LAST.put(player.getUUID(), new Heard(sound, at, volume, pitch, level.getGameTime()));
         }
     }
