@@ -83,5 +83,7 @@
   "advancements.restless.whisper.not_alone.title": "Not Alone",
   "advancements.restless.whisper.not_alone.description": "Someone else is here",
   "advancements.restless.whisper.behind_you.title": "Behind You",
-  "advancements.restless.whisper.behind_you.description": "Do not turn around"
+  "advancements.restless.whisper.behind_you.description": "Do not turn around",
+  "block.restless.ghost_pale_oak_log": "Ghost pale oak log",
+  "block.restless.ghost_pale_oak_leaves": "Ghost pale oak leaves"
 }

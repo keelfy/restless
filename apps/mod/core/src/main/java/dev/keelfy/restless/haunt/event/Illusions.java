@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import java.util.Comparator;
@@ -19,8 +20,12 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 
-/** The player's own view of the world lies to them; see {@link FakeBlocks}. Nothing on the server changes. */
+/**
+ * The player's own view of the world lies to them; see {@link FakeBlocks}. Nothing on the server changes. The ghost tree
+ * is made of blocks with no collision, so the client lets the player walk through it, as the server does.
+ */
 final class Illusions {
     private Illusions() {}
 
@@ -36,8 +41,54 @@ final class Illusions {
                     look(player.level().getBlockState(pos)).ifPresent(state -> shown.put(pos, state));
                 }
                 FakeBlocks.show(player, shown, config.integer("ticks"));
+            }),
+            // 107: a pale oak where there was none, which the player walks through
+            SimpleEvent.light("ghost_tree", EventTag.BLOCKS, player -> treeSpot(player) != null, player -> {
+                BlockPos root = treeSpot(player);
+                if (root != null) {
+                    FakeBlocks.show(player, ghostTree(player.level(), root), Config.event("ghost_tree").integer("ticks"));
+                }
             })
         );
+    }
+
+    /** Standing room in front of the player, with air for the whole trunk. */
+    private static @Nullable BlockPos treeSpot(ServerPlayer player) {
+        Config.Section config = Config.event("ghost_tree");
+        BlockPos root = Place.standingAt(player, config.num("distance"), (player.getRandom().nextDouble() * 2 - 1) * config.num("max_angle"));
+        if (root == null) {
+            return null;
+        }
+        for (int dy = 0; dy < config.integer("trunk"); dy++) {
+            if (!player.level().isEmptyBlock(root.above(dy))) {
+                return null;
+            }
+        }
+        return root;
+    }
+
+    /** A small round pale oak on {@code root}, of the ghost blocks, only where there is air. */
+    private static Map<BlockPos, BlockState> ghostTree(ServerLevel level, BlockPos root) {
+        int trunk = Config.event("ghost_tree").integer("trunk");
+        Map<BlockPos, BlockState> tree = new LinkedHashMap<>();
+        BlockState leaves = Content.GHOST_LEAVES.get().defaultBlockState();
+        for (int dy = trunk - 3; dy <= trunk; dy++) {
+            int radius = dy < trunk - 1 ? 2 : 1;
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    BlockPos pos = root.offset(dx, dy, dz);
+                    // Rounded: no corners on the wide layers, and none on top.
+                    boolean corner = Math.abs(dx) == radius && Math.abs(dz) == radius;
+                    if (!(corner && (radius == 2 || dy == trunk)) && level.isEmptyBlock(pos)) {
+                        tree.put(pos, leaves);
+                    }
+                }
+            }
+        }
+        for (int dy = 0; dy < trunk; dy++) {
+            tree.put(root.above(dy), Content.GHOST_LOG.get().defaultBlockState());
+        }
+        return tree;
     }
 
     private static void falseWindows(ServerPlayer player) {

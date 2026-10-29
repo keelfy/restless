@@ -1,5 +1,6 @@
 package dev.keelfy.restless.gametest;
 
+import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -52,6 +53,7 @@ final class HauntEventGameTests {
         }));
         // A field off the test floor, past the event's distance from the player, and room enough that no other test's crops are near.
         PADDING.put("event_harvest", 40);
+        PADDING.put("event_ghost_tree", 30);
         tests.put("event_harvest", helper -> runs(helper, "harvest", player -> {
             BlockPos field = helper.absolutePos(FEET).east(13);
             for (BlockPos pos : BlockPos.betweenClosed(field.offset(-3, -1, -2), field.offset(3, -1, 2))) {
@@ -71,6 +73,18 @@ final class HauntEventGameTests {
             player -> helper.setBlock(FEET.north(2), Blocks.GLASS), () -> helper.assertBlockPresent(Blocks.GLASS, FEET.north(2))));
         tests.put("event_false_looks", helper -> runs(helper, "false_looks",
             player -> helper.setBlock(FEET.west(2), Blocks.CRAFTING_TABLE), () -> helper.assertBlockPresent(Blocks.CRAFTING_TABLE, FEET.west(2))));
+        tests.put("event_ghost_tree", helper -> runs(helper, "ghost_tree", player -> {
+            // Ground 12 blocks out on every side; the tree itself is only sent, so the server's air must stay.
+            BlockPos centre = helper.absolutePos(FEET);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-14, -1, -14), centre.offset(14, -1, 14))) {
+                helper.getLevel().setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
+            }
+        }, () -> {
+            BlockPos centre = helper.absolutePos(FEET);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-14, 0, -14), centre.offset(14, 6, 14))) {
+                check(helper, !helper.getLevel().getBlockState(pos).is(Content.GHOST_LOG.get()), "ghost_tree must not be on the server");
+            }
+        }));
         tests.put("event_cracking_floor", helper -> runs(helper, "cracking_floor", player -> {},
             () -> helper.assertBlockPresent(Blocks.STONE, FEET.below())));
         tests.put("event_hostile_animal", helper -> runs(helper, "hostile_animal",

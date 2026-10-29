@@ -13,6 +13,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -78,6 +80,12 @@ public final class Content {
         p -> new Gravestone(p.strength(2.0f, 6.0f).sound(SoundType.STONE).noOcclusion()));
     public static final Supplier<Item> GRAVESTONE_ITEM = blockItem("gravestone", GRAVESTONE);
     public static final Supplier<Item> JOURNAL = item("journal", p -> new JournalBook(p.stacksTo(1)));
+
+    /** A pale oak that is not there, shown by the ghost tree event: it looks the same, has no collision and drops nothing. */
+    public static final Supplier<Block> GHOST_LOG = Platform.get().register(BuiltInRegistries.BLOCK, "ghost_pale_oak_log",
+        key -> new RotatedPillarBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.PALE_OAK_LOG).setId(key).noCollision()));
+    public static final Supplier<Block> GHOST_LEAVES = Platform.get().register(BuiltInRegistries.BLOCK, "ghost_pale_oak_leaves",
+        key -> new Block(BlockBehaviour.Properties.ofLegacyCopy(Blocks.PALE_OAK_LEAVES).setId(key).noCollision()));
 
     /** Ground mist of the blighted biome, see {@link MistParticle}. */
     public static final Supplier<ParticleType<?>> MIST = Platform.get().register(BuiltInRegistries.PARTICLE_TYPE, "mist", key -> new SimpleParticleType(false) {});
