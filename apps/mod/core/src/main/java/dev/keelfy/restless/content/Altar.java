@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -85,7 +86,14 @@ public final class Altar extends ShapedBlock implements EntityBlock {
     public static final EnumProperty<Held> HELD = EnumProperty.create("held", Held.class);
 
     public Altar(BlockBehaviour.Properties properties) {
-        super(properties, Block.box(1, 0, 1, 15, 12, 15));
+        super(properties, Shapes.or(
+            Block.box(1, 0, 1, 15, 3, 15),
+            Block.box(2, 3, 2, 14, 9, 14),
+            Block.box(0, 9, 0, 16, 12, 16),
+            Block.box(0, 12, 0, 3, 13, 3),
+            Block.box(13, 12, 0, 16, 13, 3),
+            Block.box(0, 12, 13, 3, 13, 16),
+            Block.box(13, 12, 13, 16, 13, 16)));
         registerDefaultState(stateDefinition.any().setValue(HELD, Held.EMPTY));
     }
 
@@ -132,6 +140,19 @@ public final class Altar extends ShapedBlock implements EntityBlock {
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(HELD) == Held.EMPTY || random.nextInt(3) != 0) {
+            return;
+        }
+        double angle = random.nextDouble() * Math.PI * 2;
+        double x = pos.getX() + 0.5 + Math.cos(angle) * 0.35;
+        double z = pos.getZ() + 0.5 + Math.sin(angle) * 0.35;
+        boolean blessing = state.getValue(HELD) == Held.WATER || state.getValue(HELD) == Held.HOLY_WATER;
+        level.addParticle(blessing ? ParticleTypes.END_ROD : ParticleTypes.SOUL_FIRE_FLAME,
+            x, pos.getY() + 0.83, z, 0, 0.015, 0);
     }
 
     @Override

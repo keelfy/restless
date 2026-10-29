@@ -19,6 +19,7 @@ import org.jspecify.annotations.Nullable;
 public final class AltarRenderer implements BlockEntityRenderer<AltarEntity, AltarRenderer.State> {
     public static final class State extends BlockEntityRenderState {
         final ItemStackRenderState item = new ItemStackRenderState();
+        float animationTicks;
     }
 
     private final ItemModelResolver items;
@@ -36,6 +37,8 @@ public final class AltarRenderer implements BlockEntityRenderer<AltarEntity, Alt
     public void extractRenderState(AltarEntity altar, State state, float partialTicks, Vec3 cameraPosition,
                                    ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(altar, state, partialTicks, cameraPosition, breakProgress);
+        state.animationTicks = altar.getLevel() == null ? 0 :
+            (altar.getLevel().getGameTime() % 24000) + partialTicks;
         items.updateForTopItem(state.item, altar.getBlockState().getValue(Altar.HELD).stack(), ItemDisplayContext.FIXED,
             altar.getLevel(), null, (int) altar.getBlockPos().asLong());
     }
@@ -46,9 +49,9 @@ public final class AltarRenderer implements BlockEntityRenderer<AltarEntity, Alt
             return;
         }
         pose.pushPose();
-        pose.translate(0.5f, 12 / 16f + 0.01f, 0.5f);
-        pose.rotateDegrees(Axis.XP, -90.0f);
-        pose.scale(0.6f, 0.6f, 0.6f);
+        pose.translate(0.5f, 1.05f + (float) Math.sin(state.animationTicks * 0.06f) * 0.035f, 0.5f);
+        pose.rotateDegrees(Axis.YP, state.animationTicks * 1.5f);
+        pose.scale(0.5f, 0.5f, 0.5f);
         state.item.submit(pose, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
         pose.popPose();
     }
