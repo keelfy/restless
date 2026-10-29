@@ -7,6 +7,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.haunt.Anger;
+import dev.keelfy.restless.haunt.Candle;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Location;
@@ -62,6 +63,7 @@ public final class Restless {
         Scheduler.tick(server);
         Restore.tick(server);
         Director.tick(server);
+        Candle.tick(server);
     }
 
     /** Call when the server starts to stop, before the worlds are saved. */

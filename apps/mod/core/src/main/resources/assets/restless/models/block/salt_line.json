@@ -1,0 +1,1 @@
+{"textures":{"particle":"restless:block/salt_line","all":"restless:block/salt_line"},"elements":[{"from":[0,0,0],"to":[16,1,16],"faces":{"up":{"texture":"#all"},"down":{"texture":"#all","cullface":"down"},"north":{"texture":"#all"},"south":{"texture":"#all"},"west":{"texture":"#all"},"east":{"texture":"#all"}}}]}

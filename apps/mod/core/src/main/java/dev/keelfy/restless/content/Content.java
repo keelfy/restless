@@ -16,6 +16,14 @@ public final class Content {
     public static final Supplier<Item> TEST_ITEM = Platform.get().register(BuiltInRegistries.ITEM, "test_block",
         key -> new BlockItem(TEST_BLOCK.get(), new Item.Properties().setId(key).useBlockDescriptionPrefix()));
 
+    public static final Supplier<Block> SALT_LINE = Platform.get().register(BuiltInRegistries.BLOCK, "salt_line",
+        key -> new SaltLineBlock(BlockBehaviour.Properties.of().setId(key)));
+    /** Salt is the block item of the salt line, placed like redstone dust. */
+    public static final Supplier<Item> SALT = Platform.get().register(BuiltInRegistries.ITEM, "salt",
+        key -> new BlockItem(SALT_LINE.get(), new Item.Properties().setId(key)));
+    public static final Supplier<Item> SPIRIT_CANDLE = Platform.get().register(BuiltInRegistries.ITEM, "spirit_candle",
+        key -> new Item(new Item.Properties().setId(key).stacksTo(1)));
+
     private Content() {
     }
 

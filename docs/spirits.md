@@ -92,6 +92,25 @@ taken from the server's own players would change the story whenever they do.
 `quiet = 1.2^n`, where `n` counts the true conditions among: it is day, the player sees the sky, there is no thunderstorm.
 So a player in the open on a clear day waits up to 1.73× longer; in a mine, a house or at night nothing changes.
 
+## Detection and protection
+
+Three items: **salt**, the **salt line** it places, and the **spirit candle**. Both are crafted (shapeless): sand and dried
+kelp make 2 salt; a candle and soul sand make a spirit candle.
+
+**Spirit candle.** Held in either hand, it shows a flame at the hand. The flame leans toward the spirit whose event comes
+first (a personal spirit's roaming point, or the anchor of a territorial one in reach) and turns blue for the last
+`warning_ticks` before that event. It reads the same timer the director runs, so the warning is never wrong. A personal
+spirit has no point until the director's first check, so its flame then stands straight.
+
+**Salt.** Placed like redstone dust, one flat tile per block, walkable. A player standing inside a closed loop of salt
+cannot be reached: when a spirit's event comes due on them, nothing fires, ash falls around them and a chime sounds. The
+loop is checked on the floor level the player stands on, with walls closing the gaps, only through four-way neighbours
+(a diagonal line closes), and the shut-in area may not exceed `salt.max_cells`. Walls alone do not ward a room; at
+least one salt tile has to border it. The spirit's cooldown still runs, so the event is lost, not postponed.
+
+Not built yet: the other clue items (compass, ash, camera, spirit box, ouija board), the other wards, salt from a
+cauldron, and clues depending on a spirit's traits. Neither new item has a creative tab yet; use `/give`.
+
 ## Spirits
 
 | Id | Description | Activity | Affinity (missing = ×1) |
@@ -257,7 +276,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 
 | File | Holds |
 |---|---|
-| `haunt.json` | `director`, `power`, `anger`, `restore`, `place` |
+| `haunt.json` | `director`, `power`, `anger`, `salt`, `candle`, `restore`, `place` |
 | `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog), `story` (nickname words, days, causes) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 
