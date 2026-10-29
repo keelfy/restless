@@ -87,10 +87,21 @@
       "max_angle": 40.0,
       "height": 8,
       "interval_ticks": 10,
-      "linger_ticks": 60,
+      "max_ticks": 140,
       "vanish_distance": 10.0,
       "restore_ticks": 2400,
-      "sound": {"volume": 1.0, "pitch": 0.8},
+      "sound": { "volume": 1.0, "pitch": 0.8 },
+      "cleanup_ticks": 40
+    },
+    "minecraft:harvest": {
+      "weight": 0.3,
+      "radius": 16,
+      "reach": 4,
+      "min_distance": 8.0,
+      "interval_ticks": 8,
+      "max_ticks": 200,
+      "vanish_distance": 5.0,
+      "restore_ticks": 2400,
       "cleanup_ticks": 40
     }
   }

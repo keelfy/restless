@@ -72,6 +72,7 @@
     "minecraft:distant_walker": { "name": "Distant Walker", "description": "Another player in a default skin walks past far away, across the player's view. It vanishes when the player comes close, when the ground ends, or after a while." },
     "minecraft:nametag": { "name": "Nametag", "description": "A player's nameplate floats with nobody under it: a few blocks under the floor, seen through it, or far off. Gone after a while." },
     "minecraft:pillar": { "name": "Pillar", "description": "Another player in a default skin pillars up on cobblestone some way off: a jump, a block, a swing of the arm. Gone at the top or when approached; the pillar goes later." },
+    "minecraft:harvest": { "name": "Harvest", "description": "Another player in a default skin stands at the edge of the player's field and harvests the ripe crops within reach, with nothing dropped. They grow back later." },
     "minecraft:the_call": { "name": "The Call", "description": "At night, a voice draws the player along the ground toward nearby lava or a drop into the void, a little at a time. Walking away breaks it. It never takes the player below three hearts by itself." },
     "minecraft:embrace": { "name": "Embrace", "description": "Growing damage every second until the player is ten blocks from where it began. Stops at three hearts." },
     "minecraft:swap_slots": { "name": "Swapped Slots", "description": "Two inventory slots trade places." },

@@ -50,6 +50,23 @@ final class HauntEventGameTests {
                     "false_advancement must take the advancement back");
             }
         }));
+        // A field off the test floor, past the event's distance from the player, and room enough that no other test's crops are near.
+        PADDING.put("event_harvest", 40);
+        tests.put("event_harvest", helper -> runs(helper, "harvest", player -> {
+            BlockPos field = helper.absolutePos(FEET).east(13);
+            for (BlockPos pos : BlockPos.betweenClosed(field.offset(-3, -1, -2), field.offset(3, -1, 2))) {
+                helper.getLevel().setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
+            }
+            for (BlockPos crop : List.of(field, field.south())) {
+                helper.getLevel().setBlock(crop.below(), Blocks.FARMLAND.defaultBlockState(), 2);
+                helper.getLevel().setBlock(crop, ((CropBlock) Blocks.WHEAT).getStateForAge(CropBlock.MAX_AGE), 2);
+            }
+        }, () -> {
+            BlockPos field = helper.absolutePos(FEET).east(13);
+            check(helper, helper.getLevel().isEmptyBlock(field) && helper.getLevel().isEmptyBlock(field.south()), "harvest must take the ripe wheat");
+            AABB around = new AABB(field).inflate(8);
+            check(helper, helper.getLevel().getEntitiesOfClass(Mannequin.class, around).isEmpty(), "harvest must leave once the field is bare");
+        }));
         tests.put("event_cracking_floor", helper -> runs(helper, "cracking_floor", player -> {},
             () -> helper.assertBlockPresent(Blocks.STONE, FEET.below())));
         tests.put("event_hostile_animal", helper -> runs(helper, "hostile_animal",
