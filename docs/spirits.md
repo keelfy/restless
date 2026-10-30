@@ -426,6 +426,7 @@ an essence or artifact.
 | `leak` | 183 | LIGHT | BLOCKS | 0.5 | Air just under a ceiling 1–4 above the eyes | Water drips from it for 8 s, particles and sound only, in every mode |
 | `lava_leak` | 183 | LIGHT | BLOCKS | 0.4 | Same | Lava drips from it for 6 s, particles and sound only, in every mode |
 | `mock_grave` | 185 | LIGHT | BLOCKS | 0.4 | Open standing room 5–10 away with a free cell in front | A gravestone with a sign (R.I.P., the player's name, tomorrow's date); removed after 5 min, stays under hardcore |
+| `cave_sign` | 189 | LIGHT | BLOCKS | 0.4 | Underground (no sky above), a wall 4–8 blocks out in one of the four directions | A wall sign with a short warning (go back, turn around, too late); removed after 5 min, stays under hardcore |
 | `animals_stare` | 85 | LIGHT | MOBS | 0.6 | Two animals within 16 | They stop and face the player for 3 s |
 | `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
 | `dog_barks` | 87 | LIGHT | MOBS | 0.6 | A wolf within 16 | Turns away and makes its ambient sound |

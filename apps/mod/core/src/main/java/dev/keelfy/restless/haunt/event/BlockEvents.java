@@ -49,11 +49,13 @@ import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -178,7 +180,8 @@ final class BlockEvents {
             SimpleEvent.light("lava_leak", EventTag.BLOCKS, player -> leaking(player, "lava_leak") != null,
                 player -> drip(player, "lava_leak", ParticleTypes.FALLING_LAVA, SoundEvents.POINTED_DRIPSTONE_DRIP_LAVA)),
             // 185: a gravestone with the player's name and tomorrow's date stands on open ground nearby
-            SimpleEvent.light("mock_grave", EventTag.BLOCKS, player -> marker(player) != null, BlockEvents::markGrave)
+            SimpleEvent.light("mock_grave", EventTag.BLOCKS, player -> marker(player) != null, BlockEvents::markGrave),
+            SimpleEvent.light("cave_sign", EventTag.BLOCKS, player -> caveWall(player) != null, BlockEvents::caveSign)
         );
     }
 
@@ -396,6 +399,64 @@ final class BlockEvents {
         return state.getBlock() instanceof FlowerPotBlock pot && pot.getPotted().defaultBlockState().is(BlockTags.FLOWERS);
     }
 
+    private static void centre(SignText.Mutable text, List<String> lines) {
+        int first = (SIGN_LINES - lines.size()) / 2;
+        for (int i = 0; i < SIGN_LINES; i++) {
+            text.setLine(i, Component.literal(i >= first && i - first < lines.size() ? lines.get(i - first) : ""));
+        }
+    }
+
+    private record WallSign(BlockPos pos, Direction facing) {}
+
+    /** Underground only: the first wall met walking out from the player, 3 to {@code radius} blocks away, at head height. */
+    private static @Nullable WallSign caveWall(ServerPlayer player) {
+        ServerLevel level = player.level();
+        // The heightmap rather than sky light: light is recomputed lazily and a roof placed this tick is not in it yet.
+        if (level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getBlockX(), player.getBlockZ()) <= player.getBlockY() + 2) {
+            return null;
+        }
+        int radius = Config.event("cave_sign").integer("radius");
+        List<Direction> sides = new ArrayList<>(Direction.Plane.HORIZONTAL.stream().toList());
+        Collections.shuffle(sides, new java.util.Random(player.getRandom().nextLong()));
+        for (Direction side : sides) {
+            for (int k = 1; k <= radius; k++) {
+                BlockPos pos = player.blockPosition().above().relative(side, k);
+                if (level.isEmptyBlock(pos)) {
+                    continue;
+                }
+                if (k > 3 && Place.solid(level, pos) && level.isEmptyBlock(pos.relative(side.getOpposite()))) {
+                    return new WallSign(pos.relative(side.getOpposite()), side.getOpposite());
+                }
+                break;
+            }
+        }
+        return null;
+    }
+
+    private static void caveSign(ServerPlayer player) {
+        WallSign found = caveWall(player);
+        if (found == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        level.setBlockAndUpdate(found.pos(), Blocks.OAK_WALL_SIGN.defaultBlockState().setValue(WallSignBlock.FACING, found.facing()));
+        if (level.getBlockEntity(found.pos()) instanceof SignBlockEntity sign) {
+            List<List<String>> signs = Config.event("cave_sign").lines("texts");
+            SignText.Mutable text = sign.getText(SignTextSlot.FRONT).asMutable();
+            centre(text, signs.get(player.getRandom().nextInt(signs.size())));
+            sign.setText(text.asImmutable(), SignTextSlot.FRONT);
+        }
+        Restore.revert(level, restoreTicks("cave_sign"), force -> {
+            if (!force && !level.isLoaded(found.pos())) {
+                return false;
+            }
+            if (level.getBlockState(found.pos()).is(Blocks.OAK_WALL_SIGN)) {
+                level.removeBlock(found.pos(), false);
+            }
+            return true;
+        });
+    }
+
     private static void rewriteSign(ServerPlayer player) {
         BlockPos pos = Nearby.random(player, "new_sign", s -> s.getBlock() instanceof SignBlock);
         ServerLevel level = player.level();
@@ -406,10 +467,7 @@ final class BlockEvents {
         SignText.Mutable edit = original.asMutable();
         List<List<String>> signs = Config.event("new_sign").lines("texts");
         List<String> lines = signs.get(player.getRandom().nextInt(signs.size()));
-        int first = (SIGN_LINES - lines.size()) / 2;
-        for (int i = 0; i < SIGN_LINES; i++) {
-            edit.setLine(i, Component.literal(i >= first && i - first < lines.size() ? lines.get(i - first) : ""));
-        }
+        centre(edit, lines);
         SignText haunted = edit.asImmutable();
         sign.setText(haunted, SignTextSlot.FRONT);
         Restore.revert(level, restoreTicks("new_sign"), force -> {

@@ -192,6 +192,16 @@ final class HauntEventGameTests {
             }
         }, () -> check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-10, -2, -10), helper.absolutePos(FEET).offset(10, 3, 10))
             .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Content.GRAVESTONE.get())), "mock_grave must stand a gravestone")));
+        tests.put("event_cave_sign", helper -> runs(helper, "cave_sign", player -> {
+            for (BlockPos pos : BlockPos.betweenClosed(FEET.offset(-6, 0, -6), FEET.offset(6, 2, 6))) {
+                boolean edge = Math.abs(pos.getX() - FEET.getX()) == 6 || Math.abs(pos.getZ() - FEET.getZ()) == 6;
+                helper.getLevel().setBlockAndUpdate(helper.absolutePos(pos), edge ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState());
+            }
+            for (BlockPos pos : BlockPos.betweenClosed(FEET.offset(-6, 3, -6), FEET.offset(6, 3, 6))) {
+                helper.getLevel().setBlockAndUpdate(helper.absolutePos(pos), Blocks.STONE.defaultBlockState());
+            }
+        }, () -> check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-6, 0, -6), helper.absolutePos(FEET).offset(6, 3, 6))
+            .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Blocks.OAK_WALL_SIGN)), "cave_sign must hang a wall sign")));
         tests.put("event_chest_blast", helper -> runs(helper, "chest_blast",
             player -> helper.setBlock(FEET.west(3), Blocks.CHEST), () -> helper.assertBlockPresent(Blocks.CHEST, FEET.west(3))));
         tests.put("event_wrong_smelt", helper -> runs(helper, "wrong_smelt", player -> {

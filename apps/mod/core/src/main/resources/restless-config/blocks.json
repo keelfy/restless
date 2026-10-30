@@ -41,6 +41,19 @@
     "minecraft:block_blink": { "weight": 0.4, "reach": 5.0, "restore_ticks": 40 },
     "minecraft:leak": { "weight": 0.5, "reach": 4, "ticks": 160, "interval_ticks": 4, "sound_every": 6, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:lava_leak": { "weight": 0.4, "reach": 4, "ticks": 120, "interval_ticks": 4, "sound_every": 8, "sound": { "volume": 1.0, "pitch": 1.0 } },
-    "minecraft:mock_grave": { "weight": 0.4, "min_distance": 5, "max_distance": 10, "tries": 8, "restore_ticks": 6000, "title": "R.I.P." }
+    "minecraft:mock_grave": { "weight": 0.4, "min_distance": 5, "max_distance": 10, "tries": 8, "restore_ticks": 6000, "title": "R.I.P." },
+    "minecraft:cave_sign": {
+      "weight": 0.4,
+      "radius": 8,
+      "restore_ticks": 6000,
+      "texts": [
+        ["go", "back"],
+        ["turn", "around"],
+        ["deeper"],
+        ["not", "this way"],
+        ["we are", "waiting"],
+        ["too", "late"]
+      ]
+    }
   }
 }

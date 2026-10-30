@@ -184,6 +184,7 @@
     "minecraft:block_blink": { "name": "Block Blink", "description": "The block the player looks at breaks with its sound and dust, and is back two seconds later." },
     "minecraft:leak": { "name": "Leak", "description": "Water drips from the ceiling overhead for a few seconds; only seen and heard." },
     "minecraft:lava_leak": { "name": "Lava Leak", "description": "Lava drips from the ceiling overhead for a few seconds; only seen and heard." },
-    "minecraft:mock_grave": { "name": "Mock Grave", "description": "A gravestone with a sign appears on open ground nearby, bearing the player's name and tomorrow's date." }
+    "minecraft:mock_grave": { "name": "Mock Grave", "description": "A gravestone with a sign appears on open ground nearby, bearing the player's name and tomorrow's date." },
+    "minecraft:cave_sign": { "name": "Cave Sign", "description": "A sign appears on a wall of the tunnel nearby with a short warning or beckoning; it is taken down after a few minutes." }
   }
 }
