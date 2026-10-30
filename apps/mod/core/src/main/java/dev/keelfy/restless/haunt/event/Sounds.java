@@ -5,6 +5,7 @@ import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Said;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,9 +111,13 @@ final class Sounds {
             // 102: the game's own background music cuts out; it resumes on its usual schedule
             sound("music_cut", player -> player.connection.send(new ClientboundStopSoundPacket(null, SoundSource.MUSIC))),
             // 35
-            sound("whisper", player -> player.sendSystemMessage(
-                Component.literal(Config.event("whisper").text("format").formatted(player.getName().getString()))
-                    .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))),
+            // Said once, then the spirit rests from it; see Said
+            SimpleEvent.light("whisper", EventTag.SOUND, player -> Said.left(player, "whisper", List.of(Config.event("whisper").text("format"))), player -> {
+                String format = Said.pick(player, "whisper", List.of(Config.event("whisper").text("format")));
+                if (format != null) {
+                    player.sendSystemMessage(Component.literal(format.formatted(player.getName().getString())).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+                }
+            }),
             // 36: the last step or splash the player made comes back from where it was made
             SimpleEvent.light("echo", EventTag.SOUND, Echoes::canReplay, Echoes::replay),
             // 37

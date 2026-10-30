@@ -204,7 +204,7 @@ public final class AltarGameTests {
             // Hardcore is one switch for the whole server, so the tests that need it run in a batch of their own.
             var hardcore = event.registerEnvironment(id("hardcore"));
             TESTS.forEach((name, test) -> event.registerTest(id(name), new FunctionGameTestInstance(
-                ResourceKey.create(Registries.TEST_FUNCTION, id(name)), new TestData<>(HardcoreGameTests.BATCH.contains(name) ? hardcore : environment, net.minecraft.world.level.Level.OVERWORLD, id("empty"), 40, 0, true, net.minecraft.world.level.block.Rotation.NONE, false, 1, 1, true, HauntEventGameTests.PADDING.getOrDefault(name, 0)))));
+                ResourceKey.create(Registries.TEST_FUNCTION, id(name)), new TestData<>(HardcoreGameTests.BATCH.contains(name) ? hardcore : environment, net.minecraft.world.level.Level.OVERWORLD, id("empty"), HauntEventGameTests.TIMEOUT.getOrDefault(name, 40), 0, true, net.minecraft.world.level.block.Rotation.NONE, false, 1, 1, true, HauntEventGameTests.PADDING.getOrDefault(name, 0)))));
         });
     }
 

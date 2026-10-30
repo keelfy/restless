@@ -5,6 +5,7 @@ import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
+import dev.keelfy.restless.haunt.Said;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,10 +66,14 @@ final class ItemEvents {
                 player.connection.send(new ClientboundSetHeldSlotPacket(slot));
             }),
             // 65: adds a page instead of rewriting, so nothing the player wrote is lost
-            SimpleEvent.light("book_page", EventTag.ITEMS, player -> !stacks(player, ItemEvents::isBook).isEmpty(), player -> {
+            SimpleEvent.light("book_page", EventTag.ITEMS,
+                player -> !stacks(player, ItemEvents::isBook).isEmpty() && Said.left(player, "book_page", Config.event("book_page").texts("pages")), player -> {
                 List<ItemStack> books = stacks(player, ItemEvents::isBook);
+                String page = books.isEmpty() ? null : Said.pick(player, "book_page", Config.event("book_page").texts("pages"));
+                if (page == null) {
+                    return;
+                }
                 ItemStack book = books.get(player.getRandom().nextInt(books.size()));
-                String page = pick(player, Config.event("book_page").texts("pages"));
                 if (book.is(Items.WRITABLE_BOOK)) {
                     List<Filterable<String>> pages = new ArrayList<>(book.getOrDefault(DataComponents.WRITABLE_BOOK_CONTENT, WritableBookContent.EMPTY).pages());
                     pages.add(Filterable.passThrough(page));
@@ -269,10 +274,6 @@ final class ItemEvents {
         Config.Tone tone = config.tone("sound");
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
             SoundEvents.ARMOR_EQUIP_GENERIC.value(), SoundSource.HOSTILE, tone.volume(), tone.pitch());
-    }
-
-    private static String pick(ServerPlayer player, List<String> options) {
-        return options.get(player.getRandom().nextInt(options.size()));
     }
 
     private static boolean isBook(ItemStack stack) {

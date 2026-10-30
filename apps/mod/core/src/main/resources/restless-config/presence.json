@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "events": {
     "minecraft:cold_breath": {
       "weight": 0.6,
@@ -65,10 +65,13 @@
       "vanish_degrees": 0.0,
       "vanish_distance": 25.0,
       "stride": 0.2,
+      "run_chance": 0.4,
+      "run_stride": 0.28,
+      "hop_chance": 0.05,
       "climb": 1,
       "drop": 2,
       "interval_ticks": 1,
-      "max_ticks": 400,
+      "max_ticks": 600,
       "cleanup_ticks": 40
     },
     "minecraft:nametag": {

@@ -3,7 +3,9 @@ package dev.keelfy.restless.haunt.event;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import org.jspecify.annotations.Nullable;
 
 /** Moves a figure over the ground by hand: no AI and no pathfinding, only a stride onto standing room. */
 final class Walk {
@@ -21,22 +23,28 @@ final class Walk {
         return to(player.level(), figure, figure.getX() + dx / length * step, figure.getZ() + dz / length * step, climb, drop);
     }
 
-    /** As {@link #toward}, but {@code stride} blocks along the heading {@code yaw}, in degrees as entities face. */
-    static boolean along(ServerLevel level, Entity figure, float yaw, double stride, int climb, int drop) {
-        double radians = Math.toRadians(yaw);
-        return to(level, figure, figure.getX() - Math.sin(radians) * stride, figure.getZ() + Math.cos(radians) * stride, climb, drop);
+    private static boolean to(ServerLevel level, Entity figure, double x, double z, int climb, int drop) {
+        Integer ground = ground(level, x, z, Mth.floor(figure.getY()) + climb, climb + drop);
+        if (ground == null) {
+            return false;
+        }
+        figure.setPos(x, ground, z);
+        return true;
     }
 
-    private static boolean to(ServerLevel level, Entity figure, double x, double z, int climb, int drop) {
-        BlockPos column = BlockPos.containing(x, figure.getY(), z);
-        for (int dy = climb; dy >= -drop; dy--) {
+    /**
+     * The height of the first spot in the column at {@code x}, {@code z}, from {@code top} down through {@code depth} more
+     * blocks, with a floor and two free blocks; null if there is none.
+     */
+    static @Nullable Integer ground(ServerLevel level, double x, double z, int top, int depth) {
+        BlockPos column = BlockPos.containing(x, top, z);
+        for (int dy = 0; dy >= -depth; dy--) {
             BlockPos pos = column.above(dy);
             if (level.isLoaded(pos) && Place.open(level, pos) && Place.open(level, pos.above())
                 && level.getBlockState(pos.below()).isSolidRender()) {
-                figure.setPos(x, pos.getY(), z);
-                return true;
+                return pos.getY();
             }
         }
-        return false;
+        return null;
     }
 }

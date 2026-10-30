@@ -7,9 +7,11 @@ import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
+import dev.keelfy.restless.haunt.Said;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.TurnPayload;
+import dev.keelfy.restless.haunt.VignettePayload;
 import dev.keelfy.restless.platform.Platform;
 import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
@@ -17,7 +19,9 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
@@ -133,18 +137,22 @@ final class Lies {
             // 157: with no totem in the inventory the client shows a plain one
             light("false_totem", EventTag.PRESENCE, player -> player.connection.send(new ClientboundEntityEventPacket(player, EntityEvent.PROTECTED_FROM_DEATH))),
             // 158: a title gone almost before it is read
-            light("subliminal_title", EventTag.PRESENCE, player -> {
+            saying("subliminal_title", EventTag.PRESENCE, config -> config.texts("texts"), (player, text) -> {
                 Config.Section config = Config.event("subliminal_title");
-                List<String> texts = config.texts("texts");
                 player.connection.send(new ClientboundSetTitlesAnimationPacket(0, config.integer("ticks"), 0));
-                player.connection.send(new ClientboundSetTitleTextPacket(
-                    Component.literal(texts.get(player.getRandom().nextInt(texts.size()))).withStyle(ChatFormatting.DARK_RED)));
+                player.connection.send(new ClientboundSetTitleTextPacket(Component.literal(text).withStyle(ChatFormatting.DARK_RED)));
                 // Back to the vanilla fade times once it is gone, so the next real title is not cut short.
                 Scheduler.later(player, config.integer("ticks") + 1, p -> p.connection.send(new ClientboundClearTitlesPacket(true)));
             }),
-            // 160: the world border warning tint, with the border where it always was
+            // 160: the screen's edges go red, as at the world border; see RedVignette. A client without the mod is shown the
+            // border warning tint instead, with the border where it always was.
             light("red_vignette", EventTag.PRESENCE, player -> {
                 Config.Section config = Config.event("red_vignette");
+                if (Platform.get().canReceive(player, VignettePayload.TYPE)) {
+                    player.connection.send(new ClientboundCustomPayloadPacket(
+                        new VignettePayload((float) config.num("strength"), Ticks.SECOND * config.integer("seconds"))));
+                    return;
+                }
                 double distance = player.level().getWorldBorder().getDistanceToBorder(player);
                 WorldBorder fake = new WorldBorder();
                 fake.setWarningBlocks((int) Math.min(Integer.MAX_VALUE, distance / (1 - config.num("strength"))));
@@ -153,13 +161,11 @@ final class Lies {
                     p -> p.connection.send(new ClientboundSetBorderWarningDistancePacket(p.level().getWorldBorder())));
             }),
             // 162: a chat line in their own name that they never wrote
-            light("own_voice", EventTag.SOUND, player -> {
-                List<String> lines = Config.event("own_voice").texts("lines");
-                player.sendSystemMessage(Component.literal("<" + player.getName().getString() + "> " + lines.get(player.getRandom().nextInt(lines.size()))));
-            }),
+            saying("own_voice", EventTag.SOUND, config -> config.texts("lines"),
+                (player, line) -> player.sendSystemMessage(Component.literal("<" + player.getName().getString() + "> " + line))),
             // 163: their own death message, in their own language, killed by nobody
-            light("false_death", EventTag.PRESENCE, player -> player.sendSystemMessage(
-                Component.translatable("death.attack.mob", player.getDisplayName(), Component.literal(Config.event("false_death").text("killer"))))),
+            saying("false_death", EventTag.PRESENCE, config -> List.of(config.text("killer")), (player, killer) -> player.sendSystemMessage(
+                Component.translatable("death.attack.mob", player.getDisplayName(), Component.literal(killer)))),
             // 167: rain or a storm that only this player sees and hears
             SimpleEvent.light("private_rain", EventTag.PRESENCE,
                 player -> player.level().canHaveWeather() && !player.level().isRaining() && player.level().canSeeSky(player.blockPosition()),
@@ -205,9 +211,8 @@ final class Lies {
                     p -> p.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.getStateId(), slot, menu.getSlot(slot).getItem().copy())));
             }),
             // 165: an advancement toast, gone from the advancements as soon as it is shown
-            SimpleEvent.light("false_advancement", EventTag.PRESENCE, player -> true, player -> {
-                AdvancementHolder advancement = player.level().getServer().getAdvancements()
-                    .get(Identifier.fromNamespaceAndPath(Restless.MOD_ID, pick(player, Config.event("false_advancement").texts("advancements"))));
+            saying("false_advancement", EventTag.PRESENCE, config -> config.texts("advancements"), (player, name) -> {
+                AdvancementHolder advancement = player.level().getServer().getAdvancements().get(Identifier.fromNamespaceAndPath(Restless.MOD_ID, name));
                 if (advancement != null && player.getAdvancements().award(advancement, IMPOSSIBLE)) {
                     Scheduler.later(player, Config.event("false_advancement").integer("revoke_ticks"), p -> p.getAdvancements().revoke(advancement, IMPOSSIBLE));
                 }
@@ -238,16 +243,29 @@ final class Lies {
                 });
             }),
             // 124: someone else's death, in the player's own language
-            stranger("stranger_death", player -> {
-                Config.Section config = Config.event("stranger_death");
-                player.sendSystemMessage(Component.translatable(pick(player, config.texts("deaths")), Figure.nickname(player)));
-            })
+            new SimpleEvent(Identifier.parse("stranger_death"), HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER),
+                player -> Said.left(player, "stranger_death", Config.event("stranger_death").texts("deaths")), player -> {
+                    String death = Said.pick(player, "stranger_death", Config.event("stranger_death").texts("deaths"));
+                    if (death != null) {
+                        player.sendSystemMessage(Component.translatable(death, Figure.nickname(player)));
+                    }
+                })
         );
     }
 
     /** An event that can always run. */
     private static HauntEvent light(String id, EventTag tag, Consumer<ServerPlayer> action) {
         return SimpleEvent.light(id, tag, player -> true, action);
+    }
+
+    /** An event that says one of its {@code variants}, never the same one twice for a spirit; see {@link Said}. */
+    private static HauntEvent saying(String id, EventTag tag, Function<Config.Section, List<String>> variants, BiConsumer<ServerPlayer, String> action) {
+        return SimpleEvent.light(id, tag, player -> Said.left(player, id, variants.apply(Config.event(id))), player -> {
+            String said = Said.pick(player, id, variants.apply(Config.event(id)));
+            if (said != null) {
+                action.accept(player, said);
+            }
+        });
     }
 
     /** Inventory and hotbar slots, as the inventory menu numbers them, with nothing in them. */

@@ -1,5 +1,6 @@
 package dev.keelfy.restless.gametest;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;
@@ -73,6 +74,8 @@ final class HauntEventGameTests {
 
     /** Tests whose figures stand far off: they get room around them, so no other test's figure is in their reach. */
     static final Map<String, Integer> PADDING = new HashMap<>();
+    /** Ticks a test may take, where more than the usual 40. */
+    static final Map<String, Integer> TIMEOUT = new HashMap<>();
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
@@ -395,6 +398,51 @@ final class HauntEventGameTests {
             check(helper, look.body().get().id().getPath().contains(look.model().get().getSerializedName()), "the skin must match its arm width");
         });
         farOff(tests, "distant_walker", 45, Mannequin.class);
+        // A spirit, or a player with none behind the event, says each line once; then the event rests.
+        tests.put("event_text_never_repeats", helper -> {
+            ServerPlayer player = connected(helper);
+            HauntEvent voice = HauntEvents.byId(Identifier.withDefaultNamespace("own_voice")).orElseThrow();
+            for (int i = 0; i < Config.event("own_voice").texts("lines").size(); i++) {
+                check(helper, voice.canRun(player), "own_voice must have line " + (i + 1) + " left");
+                voice.run(player);
+            }
+            check(helper, !voice.canRun(player), "own_voice must rest once every line is said");
+            player.discard();
+            helper.succeed();
+        });
+        PADDING.put("event_double_approaches", 50);
+        TIMEOUT.put("event_double_approaches", 120);
+        tests.put("event_double_approaches", helper -> {
+            // The player on a mound one block high and nine across, which the twin has to jump onto.
+            BlockPos centre = helper.absolutePos(FEET);
+            forceChunks(helper, centre, 24, true);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-22, -2, -22), centre.offset(22, -1, 22))) {
+                boolean mound = pos.getY() == centre.getY() - 1 && Math.hypot(pos.getX() - centre.getX(), pos.getZ() - centre.getZ()) <= 9;
+                helper.getLevel().setBlock(pos, pos.getY() == centre.getY() - 2 || mound ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 2);
+            }
+            // The test's own barrier walls would stand in its way.
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-22, -1, -22), centre.offset(22, 2, 22))) {
+                if (helper.getLevel().getBlockState(pos).is(Blocks.BARRIER)) {
+                    helper.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+            ServerPlayer player = connected(helper);
+            player.snapTo(centre.getX() + 0.5, centre.getY(), centre.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("double")).orElseThrow();
+            check(helper, event.canRun(player), "double must be able to run in its scene");
+            event.run(player);
+            List<Mannequin> twins = helper.getLevel().getEntitiesOfClass(Mannequin.class, new AABB(centre).inflate(30));
+            check(helper, twins.size() == 1, "double must bring one twin, found " + twins.size());
+            Mannequin twin = twins.get(0);
+            check(helper, twin.getY() < centre.getY(), "the twin must start below the mound");
+            helper.runAfterDelay(100, () -> {
+                check(helper, twin.distanceTo(player) < 3, "the twin must come up onto the mound to the player, is " + twin.distanceTo(player) + " away");
+                twin.discard();
+                forceChunks(helper, centre, 24, false);
+                player.discard();
+                helper.succeed();
+            });
+        });
         farOff(tests, "nametag", 30, Display.TextDisplay.class);
         farOff(tests, "pillar", 24, Mannequin.class);
         // The cobblestone is in the world only when swaps are real, which hardcore makes them.

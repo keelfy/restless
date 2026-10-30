@@ -112,10 +112,13 @@ public final class DoubleEvent implements HauntEvent {
         private int stuck;
         private int lastHit = Integer.MIN_VALUE / 2;
         private int hits;
+        private final Gait gait;
 
         Chase(Mannequin twin, UUID owner) {
             this.twin = twin;
             this.owner = owner;
+            Config.Section config = Config.event("double");
+            this.gait = new Gait(config.integer("climb"), config.integer("drop"));
         }
 
         /** @return true to keep chasing */
@@ -128,18 +131,30 @@ public final class DoubleEvent implements HauntEvent {
                 return false;
             }
             double reach = config.num("reach");
-            if (player.distanceToSqr(twin) <= reach * reach) {
+            // Within reach it stops and hits, but lands first.
+            if (player.distanceToSqr(twin) <= reach * reach && !gait.airborne()) {
                 if (n - lastHit >= config.integer("attack_steps")) {
                     lastHit = n;
                     hits++;
                     strike(player, config);
                 }
-            } else if (Walk.toward(player, twin, config.num("speed"), config.integer("climb"), config.integer("drop"))) {
+            } else if (walk(player, config)) {
                 stuck = 0;
             } else {
                 stuck++;
             }
             Figure.face(twin, player);
+            return true;
+        }
+
+        /** A step's worth of ticks toward the player, jumping up and round what is in the way. */
+        private boolean walk(ServerPlayer player, Config.Section config) {
+            int ticks = config.integer("interval_ticks");
+            for (int t = 0; t < ticks; t++) {
+                if (!gait.toward(player.level(), twin, player.position(), config.num("speed") / ticks)) {
+                    return false;
+                }
+            }
             return true;
         }
 

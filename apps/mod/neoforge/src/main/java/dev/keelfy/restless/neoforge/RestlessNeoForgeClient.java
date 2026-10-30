@@ -9,6 +9,7 @@ import dev.keelfy.restless.content.DreamcatcherRenderer;
 import dev.keelfy.restless.content.MistParticle;
 import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.HeadTurn;
+import dev.keelfy.restless.haunt.RedVignette;
 import dev.keelfy.restless.haunt.SanityOverlay;
 import java.util.List;
 import net.minecraft.client.color.block.BlockTintSources;
@@ -35,6 +36,7 @@ public final class RestlessNeoForgeClient {
         // Above the camera overlays but under the crosshair and the HUD, so only the world goes dark.
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Identifier.fromNamespaceAndPath(Restless.MOD_ID, "dimming"), Dimming::render);
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Identifier.fromNamespaceAndPath(Restless.MOD_ID, "sanity"), SanityOverlay::render);
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Identifier.fromNamespaceAndPath(Restless.MOD_ID, "red_vignette"), RedVignette::render);
     }
 
     @SubscribeEvent

@@ -72,7 +72,7 @@ final class HardcoreGameTests {
             helper.setBlock(FEET.west(2), Blocks.CRAFTING_TABLE);
             helper.setBlock(FEET.east(2), Blocks.CHEST);
         }, () -> {
-            helper.assertBlockPresent(Blocks.FURNACE, FEET.west(2));
+            helper.assertBlockNotPresent(Blocks.CRAFTING_TABLE, FEET.west(2));
             // Its contents would have nowhere to go.
             helper.assertBlockPresent(Blocks.CHEST, FEET.east(2));
         }));

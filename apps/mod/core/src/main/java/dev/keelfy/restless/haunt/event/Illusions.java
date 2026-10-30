@@ -50,12 +50,12 @@ final class Illusions {
         return List.of(
             // 105: every window nearby is gone, or fenced, or walled up with what is around it
             SimpleEvent.light("false_windows", EventTag.BLOCKS, player -> Nearby.any(player, "false_windows", Illusions::isGlass), Illusions::falseWindows),
-            // 106: blocks look like others: a crafting table like a furnace, a furnace like a chest
-            SimpleEvent.light("false_looks", EventTag.BLOCKS, player -> Nearby.any(player, "false_looks", state -> look(state).isPresent()), player -> {
+            // 106: blocks one uses look like others of the kind: a crafting table like a furnace, a stonecutter like a loom
+            SimpleEvent.light("false_looks", EventTag.BLOCKS, player -> Nearby.any(player, "false_looks", Illusions::lookable), player -> {
                 Config.Section config = Config.event("false_looks");
                 Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
-                for (BlockPos pos : nearest(player, Nearby.all(player, "false_looks", state -> look(state).isPresent()), config.integer("max_blocks"))) {
-                    look(player.level().getBlockState(pos)).ifPresent(state -> shown.put(pos, state));
+                for (BlockPos pos : nearest(player, Nearby.all(player, "false_looks", Illusions::lookable), config.integer("max_blocks"))) {
+                    look(player, player.level().getBlockState(pos)).ifPresent(state -> shown.put(pos, state));
                 }
                 Swaps.show(player, shown, config.integer("ticks"));
             }),
@@ -258,14 +258,19 @@ final class Illusions {
         return counts.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(Blocks.AIR.defaultBlockState());
     }
 
-    /** What {@code state} looks like under {@code false_looks.looks}, keeping what it shares with it (its facing). */
-    private static Optional<BlockState> look(BlockState state) {
-        Config.Section looks = Config.event("false_looks").section("looks");
+    private static boolean lookable(BlockState state) {
+        return Config.event("false_looks").texts("blocks").contains(BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
+    }
+
+    /** {@code state} as another of {@code false_looks.blocks}, at random, keeping what it shares with it (its facing). */
+    private static Optional<BlockState> look(ServerPlayer player, BlockState state) {
         String id = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
-        if (!looks.has(id)) {
+        List<String> others = Config.event("false_looks").texts("blocks").stream().filter(other -> !other.equals(id)).toList();
+        if (others.isEmpty()) {
             return Optional.empty();
         }
-        return BuiltInRegistries.BLOCK.getOptional(Identifier.parse(looks.text(id))).map(to -> to.defaultBlockState().withPropertiesOf(state));
+        return BuiltInRegistries.BLOCK.getOptional(Identifier.parse(others.get(player.getRandom().nextInt(others.size()))))
+            .map(to -> to.defaultBlockState().withPropertiesOf(state));
     }
 
     /** The {@code max} of {@code found} nearest the player. */

@@ -99,8 +99,12 @@ final class PresenceFigure implements HauntEvent {
         }
         UUID owner = player.getUUID();
         active.put(owner, figure);
-        // Across the view: a quarter turn, to either side, from facing the player.
+        // Across the view: a quarter turn, to either side, from facing the player; walking, or now and then running and jumping.
         float heading = Mth.wrapDegrees(figure.getYRot() + (player.getRandom().nextBoolean() ? 90.0F : -90.0F));
+        Gait gait = walks ? new Gait(config.integer("climb"), config.integer("drop")) : null;
+        boolean runs = walks && player.getRandom().nextDouble() < config.num("run_chance");
+        double stride = walks ? config.num(runs ? "run_stride" : "stride") : 0.0;
+        figure.setSprinting(runs);
         // The watch ends itself; this catches the cases where the scheduler drops it (the player died or left).
         Restore.after(player.level(), config.integer("max_ticks") + config.integer("cleanup_ticks"), force -> {
             leave(figure, owner);
@@ -109,16 +113,24 @@ final class PresenceFigure implements HauntEvent {
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
             boolean over = !figure.isAlive() || figure.level() != p.level()
                 || n * config.integer("interval_ticks") >= config.integer("max_ticks") || noticed(p, figure, config)
-                || walks && !Walk.along(p.level(), figure, heading, config.num("stride"), config.integer("climb"), config.integer("drop"));
+                || gait != null && !stride(p, figure, gait, heading, stride, runs, config);
             if (over) {
                 leave(figure, owner);
-            } else if (walks) {
-                Figure.turn(figure, heading);
+            } else if (gait != null) {
+                Figure.turn(figure, gait.heading());
             } else {
                 Figure.face(figure, p);
             }
             return !over;
         });
+    }
+
+    /** One tick of the walk; a runner jumps now and then, as players do. False when the way on is blocked every way. */
+    private static boolean stride(ServerPlayer player, Mannequin figure, Gait gait, float heading, double stride, boolean runs, Config.Section config) {
+        if (runs && player.getRandom().nextDouble() < config.num("hop_chance")) {
+            gait.hop();
+        }
+        return gait.along(player.level(), figure, heading, stride);
     }
 
     private @Nullable BlockPos spot(ServerPlayer player) {

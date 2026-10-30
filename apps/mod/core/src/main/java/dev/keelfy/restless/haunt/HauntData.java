@@ -163,6 +163,18 @@ public final class HauntData extends SavedData {
         }
     }
 
+    /**
+     * What one speaker (a spirit, or the player when no spirit is behind the event) has said through one text event: the
+     * variants used since it last rested, and the overworld game time it rests until. See {@link Said}.
+     */
+    public record Spoken(List<String> used, long restUntil) {
+        static final Spoken NONE = new Spoken(List.of(), 0L);
+        static final Codec<Spoken> CODEC = RecordCodecBuilder.create(i -> i.group(
+            Codec.STRING.listOf().fieldOf("used").forGetter(Spoken::used),
+            Codec.LONG.optionalFieldOf("rest_until", 0L).forGetter(Spoken::restUntil)
+        ).apply(i, Spoken::new));
+    }
+
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL = Codec.unboundedMap(UUIDUtil.STRING_CODEC, Haunting.CODEC.listOf());
 
     // Saves from before territorial spirits are the bare player map; "players" is required so that map cannot parse as the new shape.
@@ -174,10 +186,13 @@ public final class HauntData extends SavedData {
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.DOUBLE).optionalFieldOf("sanity", Map.of()).forGetter(data -> data.sanity),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, ComponentSerialization.CODEC.listOf()).optionalFieldOf("journal", Map.of()).forGetter(data -> data.journal),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Blight.CODEC).optionalFieldOf("blight", Map.of()).forGetter(data -> data.blight),
-            Codec.BOOL.optionalFieldOf("hardcore").forGetter(data -> Optional.ofNullable(data.hardcore))
-        ).apply(i, (players, territorial, graves, sanity, journal, blight, hardcore) -> {
+            Codec.BOOL.optionalFieldOf("hardcore").forGetter(data -> Optional.ofNullable(data.hardcore)),
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.unboundedMap(Codec.STRING, Spoken.CODEC)).optionalFieldOf("said", Map.of())
+                .forGetter(data -> data.said)
+        ).apply(i, (players, territorial, graves, sanity, journal, blight, hardcore, said) -> {
             HauntData data = new HauntData(players, territorial, graves, sanity, journal, blight);
             data.hardcore = hardcore.orElse(null);
+            said.forEach((speaker, events) -> data.said.put(speaker, new HashMap<>(events)));
             return data;
         })),
         PERSONAL.xmap(players -> new HauntData(players, List.of(), Map.of(), Map.of(), Map.of(), Map.of()), data -> data.hauntings));
@@ -196,6 +211,8 @@ public final class HauntData extends SavedData {
     private final Map<UUID, List<Component>> journal;
     /** Keyed by spirit; outlives the spirit until the land has healed. */
     private final Map<UUID, Blight> blight;
+    /** Keyed by speaker, then by event id. */
+    private final Map<UUID, Map<String, Spoken>> said = new HashMap<>();
     /** Decided the first time anyone asks and never again, so changing the config later does not flip a world; null until then. */
     private @Nullable Boolean hardcore;
 
@@ -306,6 +323,15 @@ public final class HauntData extends SavedData {
 
     public void putHardcore(boolean on) {
         hardcore = on;
+        setDirty();
+    }
+
+    public Spoken spoken(UUID speaker, String event) {
+        return said.getOrDefault(speaker, Map.of()).getOrDefault(event, Spoken.NONE);
+    }
+
+    public void putSpoken(UUID speaker, String event, Spoken spoken) {
+        said.computeIfAbsent(speaker, k -> new HashMap<>()).put(event, new Spoken(List.copyOf(spoken.used()), spoken.restUntil()));
         setDirty();
     }
 

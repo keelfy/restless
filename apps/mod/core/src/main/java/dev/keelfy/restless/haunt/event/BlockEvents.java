@@ -5,6 +5,7 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
+import dev.keelfy.restless.haunt.Said;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.ArrayList;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -117,7 +119,9 @@ final class BlockEvents {
                     frame.setRotation(frame.getRotation() + config.integer("min_turns") + player.getRandom().nextInt(config.integer("turn_spread")));
                 }),
             // 74
-            SimpleEvent.light("new_sign", EventTag.BLOCKS, player -> Nearby.any(player, "new_sign", s -> s.getBlock() instanceof SignBlock), BlockEvents::rewriteSign),
+            SimpleEvent.light("new_sign", EventTag.BLOCKS,
+                player -> Nearby.any(player, "new_sign", s -> s.getBlock() instanceof SignBlock) && Said.left(player, "new_sign", signTexts("new_sign"), SIGN_KEY),
+                BlockEvents::rewriteSign),
             // 75: another painting of the same size
             SimpleEvent.light("new_painting", EventTag.BLOCKS, player -> !repaintable(player).isEmpty(), BlockEvents::repaint),
             // 77: a window of glass for a few seconds, someone standing behind it
@@ -181,7 +185,8 @@ final class BlockEvents {
                 player -> drip(player, "lava_leak", ParticleTypes.FALLING_LAVA, SoundEvents.POINTED_DRIPSTONE_DRIP_LAVA)),
             // 185: a gravestone with the player's name and tomorrow's date stands on open ground nearby
             SimpleEvent.light("mock_grave", EventTag.BLOCKS, player -> marker(player) != null, BlockEvents::markGrave),
-            SimpleEvent.light("cave_sign", EventTag.BLOCKS, player -> caveWall(player) != null, BlockEvents::caveSign)
+            SimpleEvent.light("cave_sign", EventTag.BLOCKS,
+                player -> Said.left(player, "cave_sign", signTexts("cave_sign"), SIGN_KEY) && caveWall(player) != null, BlockEvents::caveSign)
         );
     }
 
@@ -433,17 +438,24 @@ final class BlockEvents {
         return null;
     }
 
+    /** A sign's lines as one text, to tell which a spirit has already written. */
+    private static final Function<List<String>, String> SIGN_KEY = lines -> String.join("\n", lines);
+
+    private static List<List<String>> signTexts(String id) {
+        return Config.event(id).lines("texts");
+    }
+
     private static void caveSign(ServerPlayer player) {
         WallSign found = caveWall(player);
-        if (found == null) {
+        List<String> lines = found == null ? null : Said.pick(player, "cave_sign", signTexts("cave_sign"), SIGN_KEY);
+        if (lines == null) {
             return;
         }
         ServerLevel level = player.level();
         level.setBlockAndUpdate(found.pos(), Blocks.OAK_WALL_SIGN.defaultBlockState().setValue(WallSignBlock.FACING, found.facing()));
         if (level.getBlockEntity(found.pos()) instanceof SignBlockEntity sign) {
-            List<List<String>> signs = Config.event("cave_sign").lines("texts");
             SignText.Mutable text = sign.getText(SignTextSlot.FRONT).asMutable();
-            centre(text, signs.get(player.getRandom().nextInt(signs.size())));
+            centre(text, lines);
             sign.setText(text.asImmutable(), SignTextSlot.FRONT);
         }
         Restore.revert(level, restoreTicks("cave_sign"), force -> {
@@ -463,10 +475,12 @@ final class BlockEvents {
         if (pos == null || !(level.getBlockEntity(pos) instanceof SignBlockEntity sign)) {
             return;
         }
+        List<String> lines = Said.pick(player, "new_sign", signTexts("new_sign"), SIGN_KEY);
+        if (lines == null) {
+            return;
+        }
         SignText original = sign.getText(SignTextSlot.FRONT);
         SignText.Mutable edit = original.asMutable();
-        List<List<String>> signs = Config.event("new_sign").lines("texts");
-        List<String> lines = signs.get(player.getRandom().nextInt(signs.size()));
         centre(edit, lines);
         SignText haunted = edit.asImmutable();
         sign.setText(haunted, SignTextSlot.FRONT);
