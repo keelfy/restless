@@ -7,6 +7,7 @@
     "minecraft:shuffle_chest": { "weight": 0.5, "radius": 10 },
     "minecraft:wear": { "weight": 0.5, "fraction": 0.1 },
     "minecraft:rot": { "weight": 0.5 },
+    "minecraft:tool_look": { "weight": 0.5, "restore_ticks": 6000, "models": ["minecraft:wooden_pickaxe", "minecraft:wooden_axe", "minecraft:wooden_shovel", "minecraft:wooden_hoe", "minecraft:wooden_sword", "minecraft:stone_pickaxe", "minecraft:stone_axe", "minecraft:stone_shovel", "minecraft:stone_hoe", "minecraft:stone_sword", "minecraft:iron_pickaxe", "minecraft:iron_axe", "minecraft:iron_shovel", "minecraft:iron_hoe", "minecraft:iron_sword", "minecraft:diamond_pickaxe", "minecraft:diamond_axe", "minecraft:diamond_shovel", "minecraft:diamond_hoe", "minecraft:diamond_sword"] },
     "minecraft:armor_off": { "weight": 0.4, "min_pieces": 1, "max_pieces": 4, "sound": { "volume": 1.0, "pitch": 0.6 } },
     "minecraft:vanishing_item": { "weight": 0.5, "radius": 10, "min_distance": 2 },
     "minecraft:map_marker": { "weight": 0.5, "spread_pixels": 40, "sound": { "volume": 0.8, "pitch": 0.6 } },

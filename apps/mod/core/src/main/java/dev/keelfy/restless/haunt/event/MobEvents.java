@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
@@ -59,6 +60,8 @@ final class MobEvents {
                 List<Cat> cats = near(player, Cat.class, "cat_hiss");
                 cats.get(player.getRandom().nextInt(cats.size())).hiss();
             }),
+            // 129: the cats shy away from the spirit's point, which also tells where it is
+            SimpleEvent.light("cat_flee", EventTag.MOBS, player -> !fleeing(player).isEmpty(), MobEvents::catsFlee),
             // 87
             SimpleEvent.light("dog_barks", EventTag.MOBS, player -> !near(player, Wolf.class, "dog_barks").isEmpty(), player -> {
                 List<Wolf> wolves = near(player, Wolf.class, "dog_barks");
@@ -296,6 +299,28 @@ final class MobEvents {
 
     private static <T extends Entity> List<T> near(ServerPlayer player, Class<T> type, String event) {
         return player.level().getEntitiesOfClass(type, new AABB(player.blockPosition()).inflate(Nearby.radius(event)));
+    }
+
+    private static List<Cat> fleeing(ServerPlayer player) {
+        return near(player, Cat.class, "cat_flee").stream().filter(c -> !c.isInSittingPose()).toList();
+    }
+
+    /** Every pulse the cats run to a point on the far side of themselves from the spirit; the first hisses. */
+    private static void catsFlee(ServerPlayer player) {
+        Config.Section config = Config.event("cat_flee");
+        Vec3 spirit = Location.source(player.position());
+        List<Cat> cats = fleeing(player);
+        cats.get(player.getRandom().nextInt(cats.size())).hiss();
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            for (Cat cat : cats) {
+                Vec3 away = cat.position().subtract(spirit).multiply(1, 0, 1);
+                if (cat.isAlive() && !cat.isInSittingPose() && away.lengthSqr() > 1.0E-4) {
+                    Vec3 to = cat.position().add(away.normalize().scale(config.num("distance")));
+                    cat.getNavigation().moveTo(to.x, to.y, to.z, config.num("speed"));
+                }
+            }
+            return n + 1 < config.integer("pulses");
+        });
     }
 
     /** The mobs stop and face the player for the event's stare time. */

@@ -4,17 +4,21 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Restore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetHeldSlotPacket;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvents;
@@ -25,6 +29,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.LodestoneTracker;
 import net.minecraft.world.item.component.MapDecorations;
 import net.minecraft.world.item.component.WritableBookContent;
@@ -136,6 +141,8 @@ final class ItemEvents {
             }),
             // 71: stays on the map for good; the marker lives in the item, so only a new map gets rid of it
             SimpleEvent.light("map_marker", EventTag.ITEMS, player -> !unmarkedMaps(player).isEmpty(), ItemEvents::markMap),
+            // 146: the tool is drawn as another one but works the same; under hardcore (or real swaps) it truly becomes the other one
+            SimpleEvent.light("tool_look", EventTag.ITEMS, player -> !stacks(player, ItemEvents::lookable).isEmpty(), ItemEvents::changeLook),
             // 70: aims at a point near the player, so it keeps pointing somewhere wrong
             SimpleEvent.harmful("false_compass", EventTag.ITEMS,
                 player -> !stacks(player, s -> s.is(Items.COMPASS) && !s.has(DataComponents.LODESTONE_TRACKER)).isEmpty(),
@@ -168,6 +175,48 @@ final class ItemEvents {
             }
         }
         return found;
+    }
+
+    private static final String LOOK = MARK + "_look";
+
+    private static boolean lookable(ItemStack stack) {
+        return Config.event("tool_look").texts("models").contains(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString())
+            && !disguised(stack);
+    }
+
+    private static boolean disguised(ItemStack stack) {
+        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().contains(LOOK);
+    }
+
+    private static void changeLook(ServerPlayer player) {
+        Config.Section config = Config.event("tool_look");
+        List<ItemStack> tools = stacks(player, ItemEvents::lookable);
+        ItemStack tool = tools.get(player.getRandom().nextInt(tools.size()));
+        Identifier own = BuiltInRegistries.ITEM.getKey(tool.getItem());
+        List<String> others = config.texts("models").stream().filter(id -> !id.equals(own.toString())).toList();
+        Identifier model = Identifier.parse(others.get(player.getRandom().nextInt(others.size())));
+        if (Swaps.real(player.level())) {
+            player.getInventory().setItem(player.getInventory().findSlotMatchingItem(tool), new ItemStack(BuiltInRegistries.ITEM.getValue(model), tool.getCount()));
+            return;
+        }
+        tool.set(DataComponents.ITEM_MODEL, model);
+        CustomData.update(DataComponents.CUSTOM_DATA, tool, tag -> tag.putBoolean(LOOK, true));
+        UUID id = player.getUUID();
+        Restore.revert(player.level(), config.integer("restore_ticks"), force -> {
+            ServerPlayer owner = player.level().getServer().getPlayerList().getPlayer(id);
+            if (owner == null) {
+                return force;
+            }
+            Inventory inventory = owner.getInventory();
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                ItemStack stack = inventory.getItem(i);
+                if (disguised(stack)) {
+                    stack.set(DataComponents.ITEM_MODEL, stack.getItem().components().get(DataComponents.ITEM_MODEL));
+                    CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.remove(LOOK));
+                }
+            }
+            return true;
+        });
     }
 
     private static List<ItemStack> unmarkedMaps(ServerPlayer player) {

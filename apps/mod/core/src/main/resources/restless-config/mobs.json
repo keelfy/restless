@@ -2,6 +2,7 @@
   "version": 2,
   "events": {
     "minecraft:cat_hiss": { "weight": 0.6, "radius": 16 },
+    "minecraft:cat_flee": { "weight": 0.5, "radius": 16, "interval_ticks": 20, "pulses": 5, "distance": 8.0, "speed": 1.4 },
     "minecraft:dog_barks": { "weight": 0.6, "radius": 16 },
     "minecraft:animals_stare": { "weight": 0.6, "radius": 16, "min_animals": 2, "stare_ticks": 60, "look_interval_ticks": 2 },
     "minecraft:villager_stares": { "weight": 0.6, "radius": 16, "stare_ticks": 100, "look_interval_ticks": 2 },

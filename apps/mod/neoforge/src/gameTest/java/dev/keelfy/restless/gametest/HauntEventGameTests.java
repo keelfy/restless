@@ -1,8 +1,11 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
+import dev.keelfy.restless.spirit.Spirits;
 import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +20,7 @@ import net.minecraft.server.network.Filterable;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.animal.cow.Cow;
 import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
 import net.minecraft.world.entity.npc.villager.Villager;
@@ -261,6 +265,14 @@ final class HauntEventGameTests {
             runs(helper, "villager_refuses", player -> villager[0] = EntityTypes.VILLAGER.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
                 () -> check(helper, villager[0].getUnhappyCounter() > 0, "villager_refuses must shake the head"));
         });
+        tests.put("event_cat_flee", helper -> {
+            Cat[] cat = new Cat[1];
+            double[] start = new double[1];
+            runs(helper, "cat_flee", player -> {
+                cat[0] = EntityTypes.CAT.spawn(helper.getLevel(), helper.absolutePos(FEET).east(1), EntitySpawnReason.COMMAND);
+                start[0] = cat[0].getX();
+            }, () -> check(helper, cat[0].getX() > start[0] + 1.5, "cat_flee must send the cat running away from the player"));
+        });
         tests.put("event_golem_flower", helper -> {
             Entity[] golem = new Entity[1];
             runs(helper, "golem_flower", player -> golem[0] = EntityTypes.IRON_GOLEM.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
@@ -305,6 +317,33 @@ final class HauntEventGameTests {
                     "armor_off must take off at least one piece");
                 check(helper, player.getInventory().contains(s -> s.is(Items.IRON_HELMET)) != head,
                     "a piece taken off must be in the inventory, not lost");
+            });
+        });
+        HardcoreGameTests.hardcore(tests, "event_tool_look", helper -> {
+            ServerPlayer[] holder = new ServerPlayer[1];
+            runs(helper, "tool_look", player -> {
+                holder[0] = player;
+                player.getInventory().setItem(0, new ItemStack(Items.IRON_PICKAXE));
+            }, () -> {
+                ItemStack tool = holder[0].getInventory().getItem(0);
+                Identifier model = tool.get(DataComponents.ITEM_MODEL);
+                check(helper, tool.is(Items.IRON_PICKAXE) ? model != null && !model.equals(Identifier.withDefaultNamespace("iron_pickaxe")) : !tool.isEmpty(),
+                    "tool_look must show the tool as another one, or turn it into that one");
+            });
+        });
+        tests.put("event_dream", helper -> {
+            ServerPlayer[] dreamer = new ServerPlayer[1];
+            HauntData data = HauntData.get(helper.getLevel().getServer());
+            runs(helper, "dream", player -> {
+                dreamer[0] = player;
+                Director.add(player, data, Spirits.personal().get(0), helper.getLevel().getGameTime());
+                helper.setBlock(FEET.west(3), Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.HEAD).setValue(BedBlock.FACING, Direction.WEST));
+                helper.setBlock(FEET.west(2), Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.FOOT).setValue(BedBlock.FACING, Direction.WEST));
+                check(helper, player.startSleeping(helper.absolutePos(FEET.west(3))), "the test player must be able to lie in the bed");
+                helper.runAfterDelay(12, player::stopSleeping);
+            }, () -> {
+                check(helper, !data.journal(dreamer[0].getUUID()).isEmpty(), "dream must write the dream in the journal on waking");
+                data.put(dreamer[0].getUUID(), List.of());
             });
         });
         tests.put("event_goat_rams", helper -> {

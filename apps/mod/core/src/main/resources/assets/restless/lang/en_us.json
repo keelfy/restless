@@ -70,6 +70,8 @@
   "item.restless.journal.empty": "Nothing written yet. Photograph a spirit, listen to the spirit box, find a grave.",
   "message.restless.journal_written": "Something new in the journal.",
   "message.restless.grave_quiet": "The name has worn away. Nobody rests here.",
+  "message.restless.dream_story": "You dreamed of %s, who %s.",
+  "message.restless.dream_trait": "You dreamed that %s.",
   "message.restless.epitaph": "Here lies %s, %s days dead: %s. Something of theirs is missing: %s.",
   "message.restless.rested": "%s is at rest.",
   "message.restless.spirit_box_grave": "\"...my bones... near %s, %s...\"",

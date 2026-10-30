@@ -2,11 +2,22 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Journal;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Sense;
 import dev.keelfy.restless.haunt.Ticks;
+import dev.keelfy.restless.spirit.Story;
+import dev.keelfy.restless.spirit.Trait;
+import dev.keelfy.restless.spirit.Traits;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -77,11 +88,45 @@ final class Afflictions {
             light("weaving", MobEffects.WEAVING),
             // 143: a slow pull in one direction, as if by a current
             SimpleEvent.light("drift", EventTag.AFFLICTION, player -> player.onGround(), Afflictions::drift),
+            // 173: no dream until the player sleeps; they wake to a line, in chat and in the journal, from a spirit near them
+            SimpleEvent.light("dream", EventTag.AFFLICTION, player -> !DREAMERS.contains(player.getUUID()) && !Sense.of(player, HauntData.get(player.level().getServer())).isEmpty(), Afflictions::dream),
             // 171: the clock phantoms go by says three days without sleep
             SimpleEvent.harmful("insomnia", EventTag.AFFLICTION,
                 player -> player.level().getDifficulty() != Difficulty.PEACEFUL && player.getStats().getValue(Stats.CUSTOM.get(Stats.TIME_SINCE_REST)) < SLEEPLESS,
                 player -> player.getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), SLEEPLESS))
         );
+    }
+
+    /** Players with a dream waiting, so a second one is not stacked on the first. */
+    private static final Set<UUID> DREAMERS = new HashSet<>();
+
+    private static void dream(ServerPlayer player) {
+        Config.Section config = Config.event("dream");
+        List<Sense.Spirit> spirits = new ArrayList<>(Sense.of(player, HauntData.get(player.level().getServer())));
+        Sense.Spirit spirit = spirits.get(player.getRandom().nextInt(spirits.size()));
+        Story story = Story.of(spirit.haunting().seed());
+        List<Trait> traits = Traits.of(spirit.haunting().traits());
+        Component line = traits.isEmpty() || player.getRandom().nextBoolean()
+            ? Component.translatable("message.restless.dream_story", story.name(), story.cause())
+            : Component.translatable("message.restless.dream_trait", traits.get(player.getRandom().nextInt(traits.size())).hint());
+        DREAMERS.add(player.getUUID());
+        int interval = config.integer("interval_ticks");
+        boolean[] slept = {false};
+        Scheduler.repeat(player, 0, interval, (p, n) -> {
+            if (p.isSleeping()) {
+                slept[0] = true;
+            } else if (slept[0]) {
+                p.sendSystemMessage(line);
+                Journal.write(p, line);
+                DREAMERS.remove(p.getUUID());
+                return false;
+            }
+            if (n * interval >= config.integer("wait_ticks")) {
+                DREAMERS.remove(p.getUUID());
+                return false;
+            }
+            return true;
+        });
     }
 
     private static void drift(ServerPlayer player) {

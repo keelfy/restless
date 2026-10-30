@@ -367,6 +367,7 @@ an essence or artifact.
 | `drained` | 50 | HARMFUL | AFFLICTION | 0.6 | Player has XP | Loses 5–14 XP points |
 | `bad_luck` | 51 | HARMFUL | AFFLICTION | 0.6 | No bad luck | Bad luck 5 min |
 | `insomnia` | 171 | HARMFUL | AFFLICTION | 0.4 | Not peaceful, fewer than 144000 ticks since rest | The player's "time since rest" is set to 144000 (past three days), so phantoms come the next night; sleeping resets it |
+| `dream` | 173 | LIGHT | AFFLICTION | 0.5 | A spirit senses the player, and no dream is waiting | On the next waking (within 1 h) a line in chat and the journal: a nearby spirit's story ("who drowned in a flooded cave") or one of its traits |
 | `ravenous` | 141 | LIGHT | AFFLICTION | 0.5 | No hunger effect | Hunger II for 20 s |
 | `infested` | 141 | HARMFUL | AFFLICTION | 0.4 | No infested effect | Infested for 30 s: silverfish come out when the player is hurt |
 | `oozing` | 141 | LIGHT | AFFLICTION | 0.4 | No oozing effect | Oozing for 30 s: slimes spill out if the player dies |
@@ -394,6 +395,7 @@ an essence or artifact.
 | `shuffle_chest` | 66 | LIGHT | ITEMS | 0.5 | A non-empty chest within 10 | Its contents are shuffled |
 | `wear` | 67 | HARMFUL | ITEMS | 0.5 | A damageable tool with durability to spare | Loses 10% durability, never breaks |
 | `rot` | 68 | HARMFUL | ITEMS | 0.5 | Food in the inventory | One food stack becomes rotten flesh |
+| `tool_look` | 146 | LIGHT | ITEMS | 0.5 | A wooden, stone, iron or diamond tool in the inventory | Drawn as another such tool for 5 min (it still works the same); under hardcore or real swaps it becomes that tool |
 | `armor_off` | — | HARMFUL | ITEMS | 0.4 | Any armor worn | 1–4 random worn pieces come off (a random set, so sometimes all of it). Each goes to the inventory, or to the floor at the player's feet if it is full; nothing is lost |
 | `vanishing_item` | 69 | HARMFUL | ITEMS | 0.5 | Two chests (not halves of one) within 10, one non-empty, one with space | One stack moves to the other chest |
 | `false_compass` | 70 | HARMFUL | ITEMS | 0.5 | A plain compass in the inventory | Points at a spot 30–60 blocks away (stays that way) |
@@ -429,6 +431,7 @@ an essence or artifact.
 | `cave_sign` | 189 | LIGHT | BLOCKS | 0.4 | Underground (no sky above), a wall 4–8 blocks out in one of the four directions | A wall sign with a short warning (go back, turn around, too late); removed after 5 min, stays under hardcore |
 | `animals_stare` | 85 | LIGHT | MOBS | 0.6 | Two animals within 16 | They stop and face the player for 3 s |
 | `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
+| `cat_flee` | 129 | LIGHT | MOBS | 0.5 | A standing cat within 16 | The cats run 8 blocks away from the spirit's point for 5 s; one hisses |
 | `dog_barks` | 87 | LIGHT | MOBS | 0.6 | A wolf within 16 | Turns away and makes its ambient sound |
 | `villager_stares` | 88 | LIGHT | MOBS | 0.6 | A villager within 16 | One villager stops and faces the player for 5 s |
 | `villager_refuses` | 192 | LIGHT | MOBS | 0.5 | A villager within 16 | The villager shakes its head for 2 s with the "no" sound |

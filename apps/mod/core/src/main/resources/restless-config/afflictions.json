@@ -15,6 +15,7 @@
     "minecraft:drained": { "weight": 0.6, "xp_min": 5, "xp_spread": 10 },
     "minecraft:bad_luck": { "weight": 0.6, "seconds": 300, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
     "minecraft:insomnia": { "weight": 0.4 },
+    "minecraft:dream": { "weight": 0.5, "interval_ticks": 10, "wait_ticks": 72000 },
     "minecraft:ravenous": { "weight": 0.5, "seconds": 20, "amplifier": 1, "sound": { "volume": 1.0, "pitch": 0.8 } },
     "minecraft:infested": { "weight": 0.4, "seconds": 30, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
     "minecraft:oozing": { "weight": 0.4, "seconds": 30, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
