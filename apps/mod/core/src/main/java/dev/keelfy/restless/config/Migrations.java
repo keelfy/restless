@@ -20,11 +20,15 @@ public final class Migrations {
     /** Version 2 of haunt: the world-wide {@code danger} section became per-spirit {@code power}; its progression keys are gone. */
     private static final List<UnaryOperator<JsonObject>> POWER = List.of(Migrations::dangerToPower);
 
+    /** Version 2 of lies: strangers' names are made up, not listed; {@code false_slot} has more items; the head turn is timed in ticks. */
+    private static final List<UnaryOperator<JsonObject>> LIES = List.of(Migrations::liesNicknames);
+
     /** Steps per file name (without {@code .json}). A file with no entry has never changed shape: version 1. */
-    static final Migrations BUILT_IN = new Migrations(Map.of(
-        "haunt", POWER, "lights", NAMESPACED_EVENTS, "mechanisms", NAMESPACED_EVENTS, "sounds", NAMESPACED_EVENTS,
-        "afflictions", NAMESPACED_EVENTS, "assaults", NAMESPACED_EVENTS, "items", NAMESPACED_EVENTS,
-        "blocks", NAMESPACED_EVENTS, "mobs", NAMESPACED_EVENTS, "presence", NAMESPACED_EVENTS));
+    static final Migrations BUILT_IN = new Migrations(Map.ofEntries(
+        Map.entry("haunt", POWER), Map.entry("lights", NAMESPACED_EVENTS), Map.entry("mechanisms", NAMESPACED_EVENTS),
+        Map.entry("sounds", NAMESPACED_EVENTS), Map.entry("afflictions", NAMESPACED_EVENTS), Map.entry("assaults", NAMESPACED_EVENTS),
+        Map.entry("items", NAMESPACED_EVENTS), Map.entry("blocks", NAMESPACED_EVENTS), Map.entry("mobs", NAMESPACED_EVENTS),
+        Map.entry("presence", NAMESPACED_EVENTS), Map.entry("lies", LIES)));
 
     private final Map<String, List<UnaryOperator<JsonObject>>> steps;
 
@@ -61,6 +65,14 @@ public final class Migrations {
                 namespaced.add(Config.eventKey(entry.getKey()), entry.getValue());
             }
             root.add("events", namespaced);
+        }
+        return root;
+    }
+
+    private static JsonObject liesNicknames(JsonObject root) {
+        // The old item list goes too, so the longer bundled one is used.
+        for (String gone : List.of("stranger_joins.names", "stranger_death.names", "false_slot.items", "turned_head.steps")) {
+            remove(root, "events.minecraft:" + gone);
         }
         return root;
     }

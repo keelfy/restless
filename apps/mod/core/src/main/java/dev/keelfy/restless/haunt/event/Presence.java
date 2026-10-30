@@ -111,14 +111,13 @@ final class Presence {
         Config.Section config = Config.event("nametag");
         Vec3 at = player.position().subtract(0, config.num("depth"), 0);
         if (player.getRandom().nextDouble() >= config.num("under_chance")) {
-            BlockPos stand = Place.standingAt(player, config.num("distance"), (player.getRandom().nextDouble() * 2 - 1) * config.num("max_angle"));
+            BlockPos stand = Place.standingAhead(player, config.num("distance"), 0.0, config.num("max_angle"));
             if (stand == null) {
                 return;
             }
             at = Vec3.atBottomCenterOf(stand);
         }
-        List<String> names = config.texts("names");
-        Display.TextDisplay plate = Figure.nameplate(player.level(), at.add(0, config.num("height"), 0), names.get(player.getRandom().nextInt(names.size())));
+        Display.TextDisplay plate = Figure.nameplate(player.level(), at.add(0, config.num("height"), 0), Figure.nickname(player));
         if (plate != null) {
             Restore.after(player.level(), config.integer("ticks"), force -> {
                 plate.discard();

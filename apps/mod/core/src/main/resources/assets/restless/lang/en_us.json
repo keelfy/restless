@@ -109,5 +109,9 @@
   "advancements.restless.whisper.behind_you.title": "Behind You",
   "advancements.restless.whisper.behind_you.description": "Do not turn around",
   "block.restless.ghost_pale_oak_log": "Ghost pale oak log",
-  "block.restless.ghost_pale_oak_leaves": "Ghost pale oak leaves"
+  "block.restless.ghost_pale_oak_leaves": "Ghost pale oak leaves",
+  "block.restless.ghost_oak_log": "Ghost oak log",
+  "block.restless.ghost_oak_leaves": "Ghost oak leaves",
+  "block.restless.ghost_birch_log": "Ghost birch log",
+  "block.restless.ghost_birch_leaves": "Ghost birch leaves"
 }

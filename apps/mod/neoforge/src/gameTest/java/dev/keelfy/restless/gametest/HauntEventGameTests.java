@@ -62,6 +62,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.CropBlock;
 
 /** Each packet-lie and sound event runs on a connected player and leaves the world as it was (or, for 110, as it says). */
@@ -120,7 +121,7 @@ final class HauntEventGameTests {
         }, () -> {
             BlockPos centre = helper.absolutePos(FEET);
             for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-14, 0, -14), centre.offset(14, 6, 14))) {
-                check(helper, !helper.getLevel().getBlockState(pos).is(Content.GHOST_LOG.get()), "ghost_tree must not be on the server");
+                check(helper, !ghostLog(helper.getLevel().getBlockState(pos)), "ghost_tree must not be on the server");
             }
         }));
         tests.put("event_hallucination", helper -> runs(helper, "hallucination", player -> {
@@ -451,6 +452,11 @@ final class HauntEventGameTests {
                 helper.getLevel().setChunkForced(x, z, forced);
             }
         }
+    }
+
+    /** A log of any of the ghost tree's woods. */
+    static boolean ghostLog(BlockState state) {
+        return Content.GHOST_WOODS.values().stream().anyMatch(wood -> state.is(wood.log().get()));
     }
 
     /** A three-log oak with a crown, six blocks east of the player, on dirt as far as it can walk. */

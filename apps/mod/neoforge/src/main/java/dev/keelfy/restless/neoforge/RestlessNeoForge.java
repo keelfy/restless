@@ -9,8 +9,10 @@ import dev.keelfy.restless.haunt.DimPayload;
 import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.DoorLockPayload;
 import dev.keelfy.restless.haunt.DoorLocks;
+import dev.keelfy.restless.haunt.HeadTurn;
 import dev.keelfy.restless.haunt.SanityOverlay;
 import dev.keelfy.restless.haunt.SanityPayload;
+import dev.keelfy.restless.haunt.TurnPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -33,6 +35,7 @@ public final class RestlessNeoForge {
             .playToClient(DoorLockPayload.TYPE, DoorLockPayload.CODEC,
                 (payload, context) -> DoorLocks.put(context.player().level(), payload.pos(), payload.ticks()))
             .playToClient(DimPayload.TYPE, DimPayload.CODEC, (payload, context) -> Dimming.start(payload.ticks()))
+            .playToClient(TurnPayload.TYPE, TurnPayload.CODEC, (payload, context) -> HeadTurn.start(payload.degrees(), payload.ticks()))
             .playToClient(SanityPayload.TYPE, SanityPayload.CODEC, (payload, context) -> SanityOverlay.set(payload.sanity()))
             .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))
             .playToServer(FirePayload.TYPE, FirePayload.CODEC, (payload, context) -> DebugMenu.fire((ServerPlayer) context.player(), payload)));

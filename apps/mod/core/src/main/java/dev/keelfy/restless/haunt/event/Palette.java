@@ -15,7 +15,8 @@ import org.jspecify.annotations.Nullable;
 /**
  * For a block, the one next to it in colour: a dyed block (wool, concrete, terracotta, stained glass; stairs and slabs
  * of the first two too) takes a neighbouring dye of the same family, planks turn into the stripped log of their wood,
- * stone bricks into plain stone. The facing, half and shape of the old block carry over to the new one.
+ * stone bricks into plain stone, cobblestone and stone bricks into their mossy or cracked kind, deepslate into another
+ * deepslate. The facing, half and shape of the old block carry over to the new one.
  */
 final class Palette {
     /** Dyes in a ring from light to dark and round the hues, so a step either way stays close to the original colour. */
@@ -47,9 +48,35 @@ final class Palette {
         add(Blocks.WARPED_PLANKS, Blocks.STRIPPED_WARPED_STEM);
         add(Blocks.BAMBOO_PLANKS, Blocks.STRIPPED_BAMBOO_BLOCK);
         add(Blocks.STONE_BRICKS, Blocks.STONE);
+        // Stone that has aged: moss, cracks, the deepslate kinds.
+        alike(Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE);
+        alike(Blocks.COBBLESTONE_STAIRS, Blocks.MOSSY_COBBLESTONE_STAIRS);
+        alike(Blocks.COBBLESTONE_SLAB, Blocks.MOSSY_COBBLESTONE_SLAB);
+        alike(Blocks.COBBLESTONE_WALL, Blocks.MOSSY_COBBLESTONE_WALL);
+        alike(Blocks.STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS, Blocks.CRACKED_STONE_BRICKS);
+        alike(Blocks.STONE_BRICK_STAIRS, Blocks.MOSSY_STONE_BRICK_STAIRS);
+        alike(Blocks.STONE_BRICK_SLAB, Blocks.MOSSY_STONE_BRICK_SLAB);
+        alike(Blocks.STONE_BRICK_WALL, Blocks.MOSSY_STONE_BRICK_WALL);
+        alike(Blocks.COBBLED_DEEPSLATE, Blocks.DEEPSLATE_BRICKS, Blocks.DEEPSLATE_TILES);
+        alike(Blocks.DEEPSLATE_BRICKS, Blocks.CRACKED_DEEPSLATE_BRICKS);
+        alike(Blocks.DEEPSLATE_TILES, Blocks.CRACKED_DEEPSLATE_TILES);
+        alike(Blocks.COBBLED_DEEPSLATE_STAIRS, Blocks.DEEPSLATE_BRICK_STAIRS, Blocks.DEEPSLATE_TILE_STAIRS);
+        alike(Blocks.COBBLED_DEEPSLATE_SLAB, Blocks.DEEPSLATE_BRICK_SLAB, Blocks.DEEPSLATE_TILE_SLAB);
+        alike(Blocks.COBBLED_DEEPSLATE_WALL, Blocks.DEEPSLATE_BRICK_WALL, Blocks.DEEPSLATE_TILE_WALL);
     }
 
     private Palette() {}
+
+    /** Each of {@code blocks} can become any other of them. */
+    private static void alike(Block... blocks) {
+        for (Block from : blocks) {
+            for (Block to : blocks) {
+                if (from != to) {
+                    add(from, to);
+                }
+            }
+        }
+    }
 
     private static void add(Block from, Block to) {
         NEXT.computeIfAbsent(from, k -> new ArrayList<>()).add(to);

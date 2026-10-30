@@ -9,6 +9,8 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
+import dev.keelfy.restless.haunt.TurnPayload;
+import dev.keelfy.restless.platform.Platform;
 import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -25,6 +27,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
@@ -32,7 +35,6 @@ import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket.Action;
-import net.minecraft.network.protocol.game.ClientboundPlayerRotationPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundSetBorderWarningDistancePacket;
 import net.minecraft.network.protocol.game.ClientboundSetHealthPacket;
@@ -215,18 +217,19 @@ final class Lies {
                 Config.Section config = Config.event("turned_head");
                 Vec3 at = Nearby.source(player, config.num("distance"));
                 Nearby.sound(player, player.level().getBlockState(BlockPos.containing(at).below()).getSoundType().getStepSound(), at, config.tone("sound"));
-                float toward = (float) (Mth.atan2(at.z - player.getZ(), at.x - player.getX()) * Mth.RAD_TO_DEG) - 90.0F;
-                int steps = config.integer("steps");
-                float step = Mth.wrapDegrees(toward - player.getYRot()) / steps;
-                Scheduler.repeat(player, config.integer("delay_ticks"), 1, (p, n) -> {
-                    p.connection.send(new ClientboundPlayerRotationPacket(step, true, 0.0F, true));
-                    return n + 1 < steps;
+                // Turned smoothly on the client, see HeadTurn; from wherever the player looks by then.
+                Scheduler.later(player, config.integer("delay_ticks"), p -> {
+                    if (!Platform.get().canReceive(p, TurnPayload.TYPE)) {
+                        return;
+                    }
+                    float toward = (float) (Mth.atan2(at.z - p.getZ(), at.x - p.getX()) * Mth.RAD_TO_DEG) - 90.0F;
+                    p.connection.send(new ClientboundCustomPayloadPacket(new TurnPayload(Mth.wrapDegrees(toward - p.getYRot()), config.integer("ticks"))));
                 });
             }),
             // 124: someone joins, is in the player list (which then opens even in single player), and leaves a while later
             stranger("stranger_joins", player -> {
                 Config.Section config = Config.event("stranger_joins");
-                GameProfile profile = Figure.nobody(player, pick(player, config.texts("names")));
+                GameProfile profile = Figure.nobody(player, Figure.nickname(player));
                 player.connection.send(listed(player, profile, config.integer("latency")));
                 player.sendSystemMessage(Component.translatable("multiplayer.player.joined", profile.name()).withStyle(ChatFormatting.YELLOW));
                 Scheduler.later(player, Ticks.SECOND * config.integer("seconds"), p -> {
@@ -237,7 +240,7 @@ final class Lies {
             // 124: someone else's death, in the player's own language
             stranger("stranger_death", player -> {
                 Config.Section config = Config.event("stranger_death");
-                player.sendSystemMessage(Component.translatable(pick(player, config.texts("deaths")), pick(player, config.texts("names"))));
+                player.sendSystemMessage(Component.translatable(pick(player, config.texts("deaths")), Figure.nickname(player)));
             })
         );
     }

@@ -3,6 +3,7 @@ package dev.keelfy.restless.content;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.platform.Platform;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import net.minecraft.core.particles.ParticleType;
@@ -81,11 +82,14 @@ public final class Content {
     public static final Supplier<Item> GRAVESTONE_ITEM = blockItem("gravestone", GRAVESTONE);
     public static final Supplier<Item> JOURNAL = item("journal", p -> new JournalBook(p.stacksTo(1)));
 
-    /** A pale oak that is not there, shown by the ghost tree event: it looks the same, has no collision and drops nothing. */
-    public static final Supplier<Block> GHOST_LOG = Platform.get().register(BuiltInRegistries.BLOCK, "ghost_pale_oak_log",
-        key -> new RotatedPillarBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.PALE_OAK_LOG).setId(key).noCollision()));
-    public static final Supplier<Block> GHOST_LEAVES = Platform.get().register(BuiltInRegistries.BLOCK, "ghost_pale_oak_leaves",
-        key -> new Block(BlockBehaviour.Properties.ofLegacyCopy(Blocks.PALE_OAK_LEAVES).setId(key).noCollision()));
+    /** A tree that is not there, shown by the ghost tree event: it looks like its wood, has no collision and drops nothing. */
+    public record GhostWood(Supplier<Block> log, Supplier<Block> leaves) {}
+
+    /** By wood name, as the {@code ghost_tree.woods} config lists them. */
+    public static final Map<String, GhostWood> GHOST_WOODS = Map.of(
+        "pale_oak", ghostWood("pale_oak", Blocks.PALE_OAK_LOG, Blocks.PALE_OAK_LEAVES),
+        "oak", ghostWood("oak", Blocks.OAK_LOG, Blocks.OAK_LEAVES),
+        "birch", ghostWood("birch", Blocks.BIRCH_LOG, Blocks.BIRCH_LEAVES));
 
     /** Ground mist of the blighted biome, see {@link MistParticle}. */
     public static final Supplier<ParticleType<?>> MIST = Platform.get().register(BuiltInRegistries.PARTICLE_TYPE, "mist", key -> new SimpleParticleType(false) {});
@@ -99,6 +103,14 @@ public final class Content {
 
     private static Supplier<Block> block(String name, java.util.function.Function<BlockBehaviour.Properties, Block> factory) {
         return Platform.get().register(BuiltInRegistries.BLOCK, name, key -> factory.apply(BlockBehaviour.Properties.of().setId(key)));
+    }
+
+    private static GhostWood ghostWood(String wood, Block log, Block leaves) {
+        return new GhostWood(
+            Platform.get().register(BuiltInRegistries.BLOCK, "ghost_" + wood + "_log",
+                key -> new RotatedPillarBlock(BlockBehaviour.Properties.ofLegacyCopy(log).setId(key).noCollision())),
+            Platform.get().register(BuiltInRegistries.BLOCK, "ghost_" + wood + "_leaves",
+                key -> new Block(BlockBehaviour.Properties.ofLegacyCopy(leaves).setId(key).noCollision())));
     }
 
     private static Supplier<Item> blockItem(String name, Supplier<Block> block) {

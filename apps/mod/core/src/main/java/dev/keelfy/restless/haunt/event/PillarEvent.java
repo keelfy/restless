@@ -43,7 +43,7 @@ final class PillarEvent extends StrangerAct {
     private static boolean climb(ServerPlayer player, Mannequin figure, Config.Section config) {
         ServerLevel level = player.level();
         BlockPos feet = figure.blockPosition();
-        if (!level.isEmptyBlock(feet) || !level.isEmptyBlock(feet.above(2))) {
+        if (!Place.open(level, feet) || !Place.open(level, feet.above(2))) {
             return false;
         }
         figure.setPos(figure.getX(), feet.getY() + 1, figure.getZ());
@@ -58,16 +58,13 @@ final class PillarEvent extends StrangerAct {
     @Override
     @Nullable BlockPos spot(ServerPlayer player) {
         Config.Section config = Config.event(ID);
-        double angle = (player.getRandom().nextDouble() * 2 - 1) * config.num("max_angle");
-        BlockPos spot = Place.standingAt(player, config.num("distance"), angle);
-        if (spot == null) {
-            return null;
-        }
-        for (int dy = 2; dy <= config.integer("height") + 1; dy++) {
-            if (!player.level().isEmptyBlock(spot.above(dy))) {
-                return null;
+        return Place.standingAhead(player, config.num("distance"), 0.0, config.num("max_angle"), spot -> {
+            for (int dy = 2; dy <= config.integer("height") + 1; dy++) {
+                if (!player.level().isEmptyBlock(spot.above(dy))) {
+                    return false;
+                }
             }
-        }
-        return spot;
+            return true;
+        });
     }
 }

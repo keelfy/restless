@@ -12,7 +12,9 @@ import java.util.function.Supplier;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -65,5 +67,10 @@ public final class NeoForgePlatform implements Platform {
         };
         register(BuiltInRegistries.CREATIVE_MODE_TAB, name,
             key -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0).title(title).icon(icon).displayItems(holders).build());
+    }
+
+    @Override
+    public boolean canReceive(ServerPlayer player, CustomPacketPayload.Type<?> type) {
+        return player.connection.hasChannel(type);
     }
 }

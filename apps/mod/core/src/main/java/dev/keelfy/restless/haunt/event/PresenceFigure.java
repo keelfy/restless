@@ -83,13 +83,12 @@ final class PresenceFigure implements HauntEvent {
 
     @Override
     public boolean canRun(ServerPlayer player) {
-        return !active.containsKey(player.getUUID()) && place.test(player) && spot(player, 1.0) != null;
+        return !active.containsKey(player.getUUID()) && place.test(player) && spot(player) != null;
     }
 
     @Override
     public void run(ServerPlayer player) {
-        double side = player.getRandom().nextBoolean() ? 1.0 : -1.0;
-        BlockPos spot = spot(player, side);
+        BlockPos spot = spot(player);
         if (spot == null) {
             return;
         }
@@ -122,10 +121,9 @@ final class PresenceFigure implements HauntEvent {
         });
     }
 
-    private @Nullable BlockPos spot(ServerPlayer player, double side) {
+    private @Nullable BlockPos spot(ServerPlayer player) {
         Config.Section config = Config.event(id);
-        double angle = config.num("min_angle") + player.getRandom().nextDouble() * (config.num("max_angle") - config.num("min_angle"));
-        return Place.standingAt(player, config.num("distance"), side * angle);
+        return Place.standingAhead(player, config.num("distance"), config.num("min_angle"), config.num("max_angle"));
     }
 
     /** The player looks straight at the figure, or has come within the event's vanish distance. */

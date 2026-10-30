@@ -29,14 +29,14 @@ final class Trees {
     static List<HauntEvent> all() {
         return List.of(
             // 108: the tree nearby takes a few steps to the side; under hardcore it stays there
-            SimpleEvent.light("moving_tree", EventTag.BLOCKS, player -> Nearby.any(player, "moving_tree", state -> state.is(BlockTags.LOGS)), Trees::move)
+            SimpleEvent.light("moving_tree", EventTag.BLOCKS, player -> !feet(player).isEmpty(), Trees::move)
         );
     }
 
     private static void move(ServerPlayer player) {
         Config.Section config = Config.event("moving_tree");
         ServerLevel level = player.level();
-        List<BlockPos> logs = Nearby.all(player, "moving_tree", state -> state.is(BlockTags.LOGS));
+        List<BlockPos> logs = feet(player);
         Collections.shuffle(logs, new java.util.Random(player.getRandom().nextLong()));
         for (BlockPos log : logs.subList(0, Math.min(logs.size(), config.integer("tries")))) {
             Map<BlockPos, BlockState> tree = tree(level, log, config.integer("max_blocks"));
@@ -57,39 +57,64 @@ final class Trees {
         }
     }
 
-    /** The logs and the leaves that grew with them, connected to {@code start}; null if it is too big or has no crown. */
+    /** Logs standing on earth: the foot of a tree, and never the logs of a wall or a roof. */
+    private static List<BlockPos> feet(ServerPlayer player) {
+        List<BlockPos> logs = new ArrayList<>(Nearby.all(player, "moving_tree", state -> state.is(BlockTags.LOGS)));
+        logs.removeIf(pos -> !player.level().getBlockState(pos.below()).is(BlockTags.DIRT));
+        return logs;
+    }
+
+    /**
+     * The logs connected to {@code start} and the leaves that grew from them; null if it is too big or has no crown.
+     * A leaf belongs to this tree when it is no further from these logs than the distance it keeps to its nearest log,
+     * so in a forest the crowns that touch this one stay behind.
+     */
     private static @Nullable Map<BlockPos, BlockState> tree(ServerLevel level, BlockPos start, int max) {
         Map<BlockPos, BlockState> found = new LinkedHashMap<>();
         Deque<BlockPos> queue = new ArrayDeque<>(List.of(start));
         found.put(start, level.getBlockState(start));
-        boolean crown = false;
         while (!queue.isEmpty()) {
             BlockPos at = queue.poll();
             for (BlockPos next : BlockPos.betweenClosed(at.offset(-1, -1, -1), at.offset(1, 1, 1))) {
-                if (found.containsKey(next) || !level.isLoaded(next)) {
-                    continue;
-                }
-                BlockState state = level.getBlockState(next);
-                boolean leaves = state.is(BlockTags.LEAVES) && state.hasProperty(LeavesBlock.PERSISTENT) && !state.getValue(LeavesBlock.PERSISTENT);
-                if (state.is(BlockTags.LOGS) || leaves) {
+                if (!found.containsKey(next) && level.isLoaded(next) && level.getBlockState(next).is(BlockTags.LOGS)) {
                     if (found.size() >= max) {
                         return null;
                     }
-                    found.put(next.immutable(), state);
+                    found.put(next.immutable(), level.getBlockState(next));
                     queue.add(next.immutable());
-                    crown |= leaves;
                 }
             }
+        }
+        boolean crown = false;
+        List<BlockPos> ring = List.copyOf(found.keySet());
+        for (int step = 1; step <= LeavesBlock.DECAY_DISTANCE && !ring.isEmpty(); step++) {
+            List<BlockPos> next = new ArrayList<>();
+            for (BlockPos at : ring) {
+                for (Direction d : Direction.values()) {
+                    BlockPos pos = at.relative(d);
+                    BlockState state = found.containsKey(pos) || !level.isLoaded(pos) ? null : level.getBlockState(pos);
+                    if (state != null && state.is(BlockTags.LEAVES) && state.hasProperty(LeavesBlock.PERSISTENT) && !state.getValue(LeavesBlock.PERSISTENT)
+                        && step <= state.getValue(LeavesBlock.DISTANCE)) {
+                        if (found.size() >= max) {
+                            return null;
+                        }
+                        found.put(pos, state);
+                        next.add(pos);
+                        crown = true;
+                    }
+                }
+            }
+            ring = next;
         }
         return crown ? found : null;
     }
 
-    /** Every spot the tree would take is free or its own, and its foot stands on earth. */
+    /** Every spot the tree would take is its own or open (air, grass, flowers), and its foot stands on earth. */
     private static boolean fits(ServerLevel level, Map<BlockPos, BlockState> tree, BlockPos by) {
         int lowest = tree.keySet().stream().mapToInt(BlockPos::getY).min().orElse(0);
         for (Map.Entry<BlockPos, BlockState> part : tree.entrySet()) {
             BlockPos to = part.getKey().offset(by);
-            if (!level.isLoaded(to) || !(tree.containsKey(to) || level.isEmptyBlock(to))) {
+            if (!level.isLoaded(to) || !(tree.containsKey(to) || Place.open(level, to))) {
                 return false;
             }
             boolean foot = part.getKey().getY() == lowest && part.getValue().is(BlockTags.LOGS);
@@ -101,6 +126,14 @@ final class Trees {
     }
 
     private static void shift(ServerLevel level, Map<BlockPos, BlockState> tree, BlockPos by, int restoreTicks) {
+        // The grass and flowers the tree now stands in, put back when it leaves.
+        Map<BlockPos, BlockState> under = new LinkedHashMap<>();
+        for (BlockPos pos : tree.keySet()) {
+            BlockPos to = pos.offset(by);
+            if (!tree.containsKey(to) && !level.isEmptyBlock(to)) {
+                under.put(to, level.getBlockState(to));
+            }
+        }
         move(level, tree, by);
         Map<BlockPos, BlockState> moved = new LinkedHashMap<>();
         tree.forEach((pos, state) -> moved.put(pos.offset(by), state));
@@ -112,6 +145,11 @@ final class Trees {
             if (moved.entrySet().stream().allMatch(e -> level.getBlockState(e.getKey()) == e.getValue())
                 && tree.keySet().stream().allMatch(pos -> moved.containsKey(pos) || level.isEmptyBlock(pos))) {
                 move(level, moved, by.multiply(-1));
+                under.forEach((pos, state) -> {
+                    if (level.isEmptyBlock(pos)) {
+                        Restore.quiet(level, pos, state);
+                    }
+                });
             }
             return true;
         });

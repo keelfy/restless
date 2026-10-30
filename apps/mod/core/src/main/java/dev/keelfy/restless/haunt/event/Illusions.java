@@ -59,11 +59,11 @@ final class Illusions {
                 }
                 Swaps.show(player, shown, config.integer("ticks"));
             }),
-            // 107: a pale oak where there was none, which the player walks through
+            // 107: a tree where there was none, pale oak, oak or birch, which the player walks through
             SimpleEvent.light("ghost_tree", EventTag.BLOCKS, player -> treeSpot(player) != null, player -> {
                 BlockPos root = treeSpot(player);
                 if (root != null) {
-                    Swaps.show(player, ghostTree(player.level(), root), Config.event("ghost_tree").integer("ticks"));
+                    Swaps.show(player, ghostTree(player, root), Config.event("ghost_tree").integer("ticks"));
                 }
             }),
             // 126: a mob standing out in the field that is not there, facing the player; gone when approached
@@ -78,7 +78,7 @@ final class Illusions {
 
     private static @Nullable BlockPos mobSpot(ServerPlayer player) {
         Config.Section config = Config.event("hallucination");
-        return Place.standingAt(player, config.num("distance"), (player.getRandom().nextDouble() * 2 - 1) * config.num("max_angle"));
+        return Place.standingAhead(player, config.num("distance"), 0.0, config.num("max_angle"));
     }
 
     private static void hallucination(ServerPlayer player) {
@@ -180,41 +180,46 @@ final class Illusions {
         });
     }
 
-    /** Standing room in front of the player, with air for the whole trunk. */
+    /** Standing room in front of the player, with room for the tallest trunk. */
     private static @Nullable BlockPos treeSpot(ServerPlayer player) {
         Config.Section config = Config.event("ghost_tree");
-        BlockPos root = Place.standingAt(player, config.num("distance"), (player.getRandom().nextDouble() * 2 - 1) * config.num("max_angle"));
-        if (root == null) {
-            return null;
-        }
-        for (int dy = 0; dy < config.integer("trunk"); dy++) {
-            if (!player.level().isEmptyBlock(root.above(dy))) {
-                return null;
+        int tallest = config.integer("trunk") + config.integer("trunk_extra");
+        return Place.standingAhead(player, config.num("distance"), 0.0, config.num("max_angle"), root -> {
+            for (int dy = 0; dy < tallest; dy++) {
+                if (!Place.open(player.level(), root.above(dy))) {
+                    return false;
+                }
             }
-        }
-        return root;
+            return true;
+        });
     }
 
-    /** A small round pale oak on {@code root}, of the ghost blocks, only where there is air. */
-    private static Map<BlockPos, BlockState> ghostTree(ServerLevel level, BlockPos root) {
-        int trunk = Config.event("ghost_tree").integer("trunk");
+    /**
+     * A small round tree on {@code root}, of the ghost blocks of a random wood, leaves only where there is air. The
+     * crown is the vanilla oak and birch blob: two wide layers and two narrow, corners off at random and always on top.
+     */
+    private static Map<BlockPos, BlockState> ghostTree(ServerPlayer player, BlockPos root) {
+        Config.Section config = Config.event("ghost_tree");
+        ServerLevel level = player.level();
+        List<String> woods = config.texts("woods");
+        Content.GhostWood wood = Content.GHOST_WOODS.getOrDefault(woods.get(player.getRandom().nextInt(woods.size())), Content.GHOST_WOODS.get("pale_oak"));
+        int trunk = config.integer("trunk") + player.getRandom().nextInt(config.integer("trunk_extra") + 1);
         Map<BlockPos, BlockState> tree = new LinkedHashMap<>();
-        BlockState leaves = Content.GHOST_LEAVES.get().defaultBlockState();
+        BlockState leaves = wood.leaves().get().defaultBlockState();
         for (int dy = trunk - 3; dy <= trunk; dy++) {
             int radius = dy < trunk - 1 ? 2 : 1;
             for (int dx = -radius; dx <= radius; dx++) {
                 for (int dz = -radius; dz <= radius; dz++) {
                     BlockPos pos = root.offset(dx, dy, dz);
-                    // Rounded: no corners on the wide layers, and none on top.
                     boolean corner = Math.abs(dx) == radius && Math.abs(dz) == radius;
-                    if (!(corner && (radius == 2 || dy == trunk)) && level.isEmptyBlock(pos)) {
+                    if (!(corner && (dy == trunk || player.getRandom().nextBoolean())) && level.isEmptyBlock(pos)) {
                         tree.put(pos, leaves);
                     }
                 }
             }
         }
         for (int dy = 0; dy < trunk; dy++) {
-            tree.put(root.above(dy), Content.GHOST_LOG.get().defaultBlockState());
+            tree.put(root.above(dy), wood.log().get().defaultBlockState());
         }
         return tree;
     }

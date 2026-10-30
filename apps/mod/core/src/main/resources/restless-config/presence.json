@@ -78,8 +78,7 @@
       "distance": 30.0,
       "max_angle": 40.0,
       "height": 2.3,
-      "ticks": 200,
-      "names": ["Steve", "Alex", "Herobrine", "null", "Player", "..."]
+      "ticks": 200
     },
     "minecraft:pillar": {
       "weight": 0.3,

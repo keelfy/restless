@@ -1,7 +1,9 @@
 package dev.keelfy.restless.haunt.event;
 
 import com.mojang.authlib.GameProfile;
+import dev.keelfy.restless.spirit.Story;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -62,6 +64,19 @@ final class Figure {
                 return ResolvableProfile.CODEC.parse(NbtOps.INSTANCE, data).result().orElse(profile);
             })
             .orElse(profile);
+    }
+
+    /** The longest name a player can have; the client is sent nothing longer. */
+    private static final int NAME_MAX = 16;
+
+    /** A made-up player nickname, as spirits have, short enough to be a real player's. */
+    static String nickname(ServerPlayer player) {
+        Random random = new Random(player.getRandom().nextLong());
+        String name = Story.nickname(random);
+        for (int i = 0; i < 8 && name.length() > NAME_MAX; i++) {
+            name = Story.nickname(random);
+        }
+        return name.length() > NAME_MAX ? name.substring(0, NAME_MAX) : name;
     }
 
     /** A profile of no one, under {@code name}, with a fresh id and no textures. */

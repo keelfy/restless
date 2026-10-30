@@ -16,7 +16,7 @@ public record Story(String name, int daysDead, String cause) {
     public static Story of(long seed) {
         Config.Section config = Config.section("story");
         Random random = new Random(seed ^ SALT);
-        String name = name(config, random);
+        String name = nickname(random);
         int min = config.integer("days_min");
         int days = min + random.nextInt(config.integer("days_max") - min + 1);
         return new Story(name, days, pick(config.texts("causes"), random));
@@ -27,8 +27,9 @@ public record Story(String name, int daysDead, String cause) {
         return name + " (" + daysDead + " days dead, " + cause + ")";
     }
 
-    // Two words, sometimes joined by an underscore and sometimes followed by a number, like a real nickname.
-    private static String name(Config.Section config, Random random) {
+    /** Two words, sometimes joined by an underscore and sometimes followed by a number, like a real nickname. */
+    public static String nickname(Random random) {
+        Config.Section config = Config.section("story");
         String name = pick(config.texts("name_first"), random) + (random.nextBoolean() ? "_" : "")
                 + pick(config.texts("name_second"), random);
         return random.nextBoolean() ? name + random.nextInt(config.integer("name_number_max") + 1) : name;

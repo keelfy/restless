@@ -31,7 +31,7 @@ final class Walk {
         BlockPos column = BlockPos.containing(x, figure.getY(), z);
         for (int dy = climb; dy >= -drop; dy--) {
             BlockPos pos = column.above(dy);
-            if (level.isLoaded(pos) && level.isEmptyBlock(pos) && level.isEmptyBlock(pos.above())
+            if (level.isLoaded(pos) && Place.open(level, pos) && Place.open(level, pos.above())
                 && level.getBlockState(pos.below()).isSolidRender()) {
                 figure.setPos(x, pos.getY(), z);
                 return true;

@@ -79,7 +79,7 @@ final class HardcoreGameTests {
         hardcore(tests, "hardcore_ghost_tree", helper -> runs(helper, "ghost_tree", player -> floor(helper, 14), () -> {
             BlockPos centre = helper.absolutePos(FEET);
             check(helper, BlockPos.betweenClosedStream(centre.offset(-14, 0, -14), centre.offset(14, 6, 14))
-                .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Content.GHOST_LOG.get())), "ghost_tree must really stand");
+                .anyMatch(pos -> HauntEventGameTests.ghostLog(helper.getLevel().getBlockState(pos))), "ghost_tree must really stand");
         }));
         HauntEventGameTests.PADDING.put("hardcore_ghost_tree", 30);
         hardcore(tests, "hardcore_moving_tree", helper -> runs(helper, "moving_tree", player -> HauntEventGameTests.tree(helper), () -> {

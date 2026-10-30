@@ -52,8 +52,29 @@ final class Place {
         return null;
     }
 
+    /**
+     * Standing room {@code distance} blocks away, {@code minAngle} to {@code maxAngle} degrees to either side of where
+     * the player looks, that also passes {@code ok}. A single column often has none (a tree, a hill, water), so several
+     * bearings are tried.
+     */
+    static @Nullable BlockPos standingAhead(ServerPlayer player, double distance, double minAngle, double maxAngle, Predicate<BlockPos> ok) {
+        for (int i = 0; i < config().integer("tries"); i++) {
+            double angle = minAngle + player.getRandom().nextDouble() * (maxAngle - minAngle);
+            double side = player.getRandom().nextBoolean() ? 1.0 : -1.0;
+            BlockPos found = standingAt(player, distance, side * angle);
+            if (found != null && ok.test(found)) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    static @Nullable BlockPos standingAhead(ServerPlayer player, double distance, double minAngle, double maxAngle) {
+        return standingAhead(player, distance, minAngle, maxAngle, pos -> true);
+    }
+
     /** Standing room {@code distance} blocks away, {@code yawOffset} degrees to the side of where the player looks. */
-    static @Nullable BlockPos standingAt(ServerPlayer player, double distance, double yawOffset) {
+    private static @Nullable BlockPos standingAt(ServerPlayer player, double distance, double yawOffset) {
         Vec3 at = Nearby.around(player, distance, yawOffset);
         return standing(player.level(), BlockPos.containing(at.x, player.getY(), at.z));
     }
@@ -140,7 +161,13 @@ final class Place {
     }
 
     private static boolean free(ServerLevel level, BlockPos pos) {
-        return level.isEmptyBlock(pos) && level.isEmptyBlock(pos.above());
+        return open(level, pos) && open(level, pos.above());
+    }
+
+    /** Nothing to bump into: air, or grass, flowers, a torch; not water. Fields are full of plants, so air alone is rare. */
+    static boolean open(ServerLevel level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        return state.getCollisionShape(level, pos).isEmpty() && state.getFluidState().isEmpty() && !state.hasBlockEntity();
     }
 
     private static List<Direction> horizontals(ServerPlayer player) {

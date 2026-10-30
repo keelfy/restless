@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "events": {
     "minecraft:false_wound": { "weight": 0.3, "min_health": 2.0, "loss": 8.0, "ticks": 30 },
     "minecraft:false_hearts": { "weight": 0.3, "ticks": 100 },
@@ -13,10 +13,10 @@
     "minecraft:private_rain": { "weight": 0.3, "thunder_chance": 0.3, "seconds": 20 },
     "minecraft:silent_lightning": { "weight": 0.2, "distance": 24.0 },
     "minecraft:false_night": { "weight": 0.2, "day_ticks": 24000, "time_of_day": 18000, "seconds": 15 },
-    "minecraft:false_slot": { "weight": 0.3, "seconds": 20, "items": ["minecraft:skeleton_skull", "minecraft:bone", "minecraft:player_head", "minecraft:rotten_flesh", "minecraft:wither_rose"] },
+    "minecraft:false_slot": { "weight": 0.3, "seconds": 20, "items": ["minecraft:skeleton_skull", "minecraft:wither_skeleton_skull", "minecraft:zombie_head", "minecraft:player_head", "minecraft:bone", "minecraft:rotten_flesh", "minecraft:wither_rose", "minecraft:spider_eye", "minecraft:fermented_spider_eye", "minecraft:poisonous_potato", "minecraft:string", "minecraft:cobweb", "minecraft:ender_eye", "minecraft:echo_shard", "minecraft:recovery_compass", "minecraft:clock", "minecraft:name_tag", "minecraft:paper", "minecraft:black_candle", "minecraft:soul_lantern", "minecraft:dead_bush", "minecraft:totem_of_undying", "minecraft:music_disc_11", "minecraft:music_disc_13", "restless:ash"] },
     "minecraft:false_advancement": { "weight": 0.2, "revoke_ticks": 2, "advancements": ["whisper/who_are_you", "whisper/not_alone", "whisper/behind_you"] },
-    "minecraft:turned_head": { "weight": 0.2, "distance": 6.0, "sound": { "volume": 0.8, "pitch": 0.9 }, "delay_ticks": 10, "steps": 12 },
-    "minecraft:stranger_joins": { "weight": 0.2, "seconds": 40, "latency": 120, "names": ["Steve", "Alex", "Herobrine", "null", "Player"] },
-    "minecraft:stranger_death": { "weight": 0.2, "names": ["Steve", "Alex", "Herobrine", "null", "Player"], "deaths": ["death.fell.accident.generic", "death.attack.drown", "death.attack.inWall", "death.attack.outOfWorld", "death.attack.generic"] }
+    "minecraft:turned_head": { "weight": 0.2, "distance": 6.0, "sound": { "volume": 0.8, "pitch": 0.9 }, "delay_ticks": 10, "ticks": 30 },
+    "minecraft:stranger_joins": { "weight": 0.2, "seconds": 40, "latency": 120 },
+    "minecraft:stranger_death": { "weight": 0.2, "deaths": ["death.fell.accident.generic", "death.attack.drown", "death.attack.inWall", "death.attack.outOfWorld", "death.attack.generic"] }
   }
 }

@@ -8,7 +8,10 @@ import dev.keelfy.restless.content.DreamcatcherEntity;
 import dev.keelfy.restless.content.DreamcatcherRenderer;
 import dev.keelfy.restless.content.MistParticle;
 import dev.keelfy.restless.haunt.Dimming;
+import dev.keelfy.restless.haunt.HeadTurn;
 import dev.keelfy.restless.haunt.SanityOverlay;
+import java.util.List;
+import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,8 +19,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /** Client-only wiring; the dedicated server never loads this class. */
@@ -37,6 +42,19 @@ public final class RestlessNeoForgeClient {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer((BlockEntityType<AltarEntity>) Content.ALTAR_ENTITY.get(), AltarRenderer::new);
         event.registerBlockEntityRenderer((BlockEntityType<DreamcatcherEntity>) Content.DREAMCATCHER_ENTITY.get(), context -> new DreamcatcherRenderer());
+    }
+
+    /** Ghost leaves are tinted as the leaves they copy; pale oak's are not tinted at all. */
+    @SubscribeEvent
+    public static void registerBlockTints(RegisterColorHandlersEvent.BlockTintSources event) {
+        event.register(List.of(BlockTintSources.foliage()), Content.GHOST_WOODS.get("oak").leaves().get());
+        // The birch colour vanilla gives its leaves, which do not follow the biome.
+        event.register(List.of(BlockTintSources.constant(-8345771)), Content.GHOST_WOODS.get("birch").leaves().get());
+    }
+
+    @SubscribeEvent
+    public static void beforeFrame(RenderFrameEvent.Pre event) {
+        HeadTurn.frame(event.getPartialTick());
     }
 
     @SubscribeEvent
