@@ -3,6 +3,10 @@
   "events": {
     "minecraft:echo": { "weight": 0.4, "capture_radius": 2.0, "max_age_ticks": 100, "delay_ticks": 60, "sound": { "volume": 0.8, "pitch": 0.85 } },
     "minecraft:footsteps": { "weight": 0.4, "distance": 2.0, "sound": { "volume": 1.0, "pitch": 0.9 } },
+    "minecraft:approaching_steps": { "weight": 0.4, "steps": 12, "interval_ticks": 7, "start_distance": 14.0, "end_distance": 3.0, "sound": { "volume": 1.0, "pitch": 0.9 } },
+    "minecraft:distant_mining": { "weight": 0.4, "depth": 8.0, "spread": 4.0, "hits": 6, "interval_ticks": 14, "sound": { "volume": 1.0, "pitch": 0.7 } },
+    "minecraft:many_breaks": { "weight": 0.3, "radius": 14, "min_blocks": 6, "count": 8, "interval_ticks": 3, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:ladder_steps": { "weight": 0.3, "radius": 16, "steps": 8, "interval_ticks": 8, "fallback_distance": 4.0, "sound": { "volume": 0.8, "pitch": 1.0 } },
     "minecraft:creeper_hiss": { "weight": 0.4, "distance": 3.0, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:three_knocks": {
       "weight": 0.4,

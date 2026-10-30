@@ -70,7 +70,8 @@ final class HauntEventGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter",
-            "stranger_joins", "stranger_death", "phantom_heartbeat", "false_night", "false_slot", "turned_head", "dragon_flyover")) {
+            "stranger_joins", "stranger_death", "phantom_heartbeat", "false_night", "false_slot", "turned_head", "dragon_flyover",
+            "approaching_steps", "distant_mining", "ladder_steps")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
         tests.put("event_false_advancement", helper -> runs(helper, "false_advancement", player -> {}, () -> {
@@ -152,6 +153,16 @@ final class HauntEventGameTests {
             player -> helper.spawn(EntityTypes.COW, FEET.east(2)), () -> {}));
         tests.put("event_note_block_voice", helper -> runs(helper, "note_block_voice",
             player -> helper.setBlock(FEET.west(2), Blocks.NOTE_BLOCK), () -> helper.assertBlockPresent(Blocks.NOTE_BLOCK, FEET.west(2))));
+        tests.put("event_many_breaks", helper -> runs(helper, "many_breaks", player -> {
+            for (int i = 0; i < 8; i++) {
+                helper.setBlock(FEET.east(2).north(i - 4).above(), Blocks.GLASS);
+            }
+        }, () -> helper.assertBlockPresent(Blocks.GLASS, FEET.east(2).above())));
+        tests.put("event_ladder_on_ladder", helper -> runs(helper, "ladder_steps", player -> {
+            for (int i = 1; i <= 3; i++) {
+                helper.setBlock(FEET.west(2).above(i), Blocks.LADDER.defaultBlockState().setValue(net.minecraft.world.level.block.LadderBlock.FACING, net.minecraft.core.Direction.EAST));
+            }
+        }, () -> helper.assertBlockPresent(Blocks.LADDER, FEET.west(2).above(2))));
         tests.put("event_spider_overhead", helper -> runs(helper, "spider_overhead",
             player -> helper.setBlock(FEET.above(4), Blocks.STONE), () -> {}));
         tests.put("event_lost_growth", helper -> runs(helper, "lost_growth", player -> {

@@ -341,6 +341,10 @@ an essence or artifact.
 | `dripping` | 38 | LIGHT | SOUND | 0.4 | Always | Water drip nearby |
 | `distant_mob` | 131 | LIGHT | SOUND | 0.4 | Always | A zombie, skeleton, spider, enderman, witch, husk, drowned or pillager sound 2–40 blocks away; louder the farther, so it carries |
 | `hostile_animal` | 132 | LIGHT | SOUND | 0.4 | An animal within 16 | A zombie, creeper, skeleton or witch sound bound to it, sent to this player only |
+| `approaching_steps` | 133 | LIGHT | SOUND | 0.4 | Always | Twelve step sounds of the block underfoot, closing from 14 to 3 blocks on a random bearing |
+| `distant_mining` | 134 | LIGHT | SOUND | 0.4 | Open sky above the player | Six stone hits and a break sound 8 blocks below the surface |
+| `many_breaks` | 137 | LIGHT | SOUND | 0.3 | Six or more glass or stone blocks within 14 | Up to eight of them sound as if they break in turn; under hardcore they do break, with no drops |
+| `ladder_steps` | 205 | LIGHT | SOUND | 0.3 | Always | Step sounds climbing a real ladder within 16, or rising from the spirit's point when there is none |
 | `spider_overhead` | 136 | LIGHT | SOUND | 0.4 | A solid block 2–3 above the head with air below it | A spider sound, then five steps crawling across the ceiling |
 | `cracking_floor` | 138 | HARMFUL | SOUND | 0.3 | Standing on a block | Break particles and sound of the block underfoot; it stays |
 | `bottle_shatter` | 139 | LIGHT | SOUND | 0.4 | Always | A splash potion shatters 4 blocks away (sound and coloured particles) |

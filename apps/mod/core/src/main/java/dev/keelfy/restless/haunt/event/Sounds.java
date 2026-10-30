@@ -6,8 +6,11 @@ import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -72,6 +75,14 @@ final class Sounds {
                     return n + 1 < config.integer("beats");
                 });
             }),
+            // 133: steps closing in from some bearing, walking or running pace
+            sound("approaching_steps", Sounds::approach),
+            // 134: rhythmic hits and a break below the surface, from a tunnel that is not there
+            SimpleEvent.light("distant_mining", EventTag.SOUND, player -> player.level().canSeeSky(player.blockPosition()), Sounds::mine),
+            // 137: one material breaking in quick succession at real blocks nearby; under hardcore they are gone, with no drops
+            SimpleEvent.light("many_breaks", EventTag.SOUND, player -> !breakables(player).isEmpty(), Sounds::breakMany),
+            // 205: someone climbs a ladder nearby, or a point rises out of nowhere when there is none
+            sound("ladder_steps", Sounds::climb),
             // 25
             at("creeper_hiss", SoundEvents.CREEPER_PRIMED),
             // 26
@@ -177,6 +188,93 @@ final class Sounds {
             Nearby.sound(p, SoundEvents.PLAYER_BREATH, Nearby.around(p, config.num("distance"), yaw),
                 new Config.Tone(start.volume() + (float) config.num("volume_step") * n, start.pitch()));
             return n + 1 < config.integer("breaths");
+        });
+    }
+
+    private static void approach(ServerPlayer player) {
+        Config.Section config = Config.event("approaching_steps");
+        double yaw = player.getRandom().nextDouble() * Nearby.FULL_TURN;
+        var below = player.level().getBlockState(player.blockPosition().below());
+        int steps = config.integer("steps");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            double distance = config.num("start_distance") + (config.num("end_distance") - config.num("start_distance")) * n / Math.max(1, steps - 1);
+            Nearby.sound(p, below.getSoundType().getStepSound(), Nearby.around(p, distance, yaw).with(Direction.Axis.Y, p.getY()), config.tone("sound"));
+            return n + 1 < steps;
+        });
+    }
+
+    private static void mine(ServerPlayer player) {
+        Config.Section config = Config.event("distant_mining");
+        Vec3 at = player.position().add(
+            (player.getRandom().nextDouble() - 0.5) * 2 * config.num("spread"), -config.num("depth"), (player.getRandom().nextDouble() - 0.5) * 2 * config.num("spread"));
+        int hits = config.integer("hits");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            Nearby.sound(p, n + 1 < hits ? SoundType.STONE.getHitSound() : SoundType.STONE.getBreakSound(), at, config.tone("sound"));
+            return n + 1 < hits;
+        });
+    }
+
+    /** Glass or stone blocks within reach that nothing stands on or holds; the spot below the player's feet is left alone. */
+    private static List<BlockPos> breakables(ServerPlayer player) {
+        Config.Section config = Config.event("many_breaks");
+        List<BlockPos> glass = blocksOf(player, SoundType.GLASS);
+        List<BlockPos> stone = blocksOf(player, SoundType.STONE);
+        List<BlockPos> best = glass.size() >= stone.size() ? glass : stone;
+        return best.size() >= config.integer("min_blocks") ? best : List.of();
+    }
+
+    private static List<BlockPos> blocksOf(ServerPlayer player, SoundType type) {
+        ServerLevel level = player.level();
+        BlockPos feet = player.blockPosition();
+        return Nearby.all(player, "many_breaks", s -> s.getSoundType() == type && !s.hasBlockEntity()).stream()
+            .filter(pos -> level.getBlockState(pos).getDestroySpeed(level, pos) >= 0
+                && !(Math.abs(pos.getX() - feet.getX()) <= 1 && Math.abs(pos.getZ() - feet.getZ()) <= 1 && pos.getY() < feet.getY()))
+            .toList();
+    }
+
+    private static void breakMany(ServerPlayer player) {
+        Config.Section config = Config.event("many_breaks");
+        ServerLevel level = player.level();
+        List<BlockPos> blocks = new ArrayList<>(breakables(player));
+        Collections.shuffle(blocks, new Random(player.getRandom().nextLong()));
+        List<BlockPos> chosen = blocks.subList(0, Math.min(blocks.size(), config.integer("count")));
+        Config.Tone tone = config.tone("sound");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            BlockPos pos = chosen.get(n);
+            if (Hardcore.on(level)) {
+                level.destroyBlock(pos, false);
+            } else {
+                level.playSound(null, pos, level.getBlockState(pos).getSoundType().getBreakSound(), SoundSource.BLOCKS, tone.volume(), tone.pitch());
+            }
+            return n + 1 < chosen.size();
+        });
+    }
+
+    private static void climb(ServerPlayer player) {
+        Config.Section config = Config.event("ladder_steps");
+        BlockPos ladder = Nearby.random(player, "ladder_steps", s -> s.is(Blocks.LADDER));
+        boolean up = player.getRandom().nextBoolean();
+        Vec3 start;
+        int steps = config.integer("steps");
+        if (ladder != null) {
+            // Along the whole column, capped, from whichever end the climber starts at.
+            BlockPos bottom = ladder;
+            while (player.level().getBlockState(bottom.below()).is(Blocks.LADDER) && ladder.getY() - bottom.getY() < steps) {
+                bottom = bottom.below();
+            }
+            BlockPos top = ladder;
+            while (player.level().getBlockState(top.above()).is(Blocks.LADDER) && top.getY() - ladder.getY() < steps) {
+                top = top.above();
+            }
+            steps = Math.max(1, top.getY() - bottom.getY() + 1);
+            start = Vec3.atCenterOf(up ? bottom : top);
+        } else {
+            start = Nearby.source(player, config.num("fallback_distance"));
+        }
+        int count = steps;
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            Nearby.sound(p, SoundType.LADDER.getStepSound(), start.add(0, up ? n : -n, 0), config.tone("sound"));
+            return n + 1 < count;
         });
     }
 
