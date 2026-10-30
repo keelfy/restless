@@ -38,7 +38,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The player's own view of the world lies to them; see {@link FakeBlocks} and {@link PacketEntity}. Nothing on the
+ * The player's own view of the world lies to them; see {@link Swaps} and {@link PacketEntity}. Nothing on the
  * server changes, except under {@linkplain Hardcore hardcore}, where the blocks and the mob are made real (the dragon
  * stays a sight). The ghost tree
  * is made of blocks with no collision, so the client lets the player walk through it, as the server does.
@@ -57,13 +57,13 @@ final class Illusions {
                 for (BlockPos pos : nearest(player, Nearby.all(player, "false_looks", state -> look(state).isPresent()), config.integer("max_blocks"))) {
                     look(player.level().getBlockState(pos)).ifPresent(state -> shown.put(pos, state));
                 }
-                FakeBlocks.showOrMake(player, shown, config.integer("ticks"));
+                Swaps.show(player, shown, config.integer("ticks"));
             }),
             // 107: a pale oak where there was none, which the player walks through
             SimpleEvent.light("ghost_tree", EventTag.BLOCKS, player -> treeSpot(player) != null, player -> {
                 BlockPos root = treeSpot(player);
                 if (root != null) {
-                    FakeBlocks.showOrMake(player, ghostTree(player.level(), root), Config.event("ghost_tree").integer("ticks"));
+                    Swaps.show(player, ghostTree(player.level(), root), Config.event("ghost_tree").integer("ticks"));
                 }
             }),
             // 126: a mob standing out in the field that is not there, facing the player; gone when approached
@@ -233,7 +233,7 @@ final class Illusions {
                 default -> Blocks.AIR.defaultBlockState();
             });
         }
-        FakeBlocks.showOrMake(player, shown, config.integer("ticks"));
+        Swaps.show(player, shown, config.integer("ticks"));
     }
 
     /** Glass blocks and panes, plain, stained or tinted. */

@@ -4,6 +4,9 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
+import dev.keelfy.restless.haunt.Scheduler;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,21 +15,33 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.inventory.LecternMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.ComparatorBlock;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
+import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.entity.DecoratedPotBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.phys.Vec3;
 
 /** Furniture and redstone parts of a house acting on their own. */
 final class Household {
+    /** A lone book can land in its own slot again; a few shuffles make that vanishingly rare. */
+    private static final int SHUFFLE_TRIES = 8;
+
     private Household() {}
 
     static List<HauntEvent> all() {
@@ -44,7 +59,11 @@ final class Household {
             // 178
             SimpleEvent.harmful("redstone_drift", EventTag.DOORS, player -> Nearby.any(player, "redstone_drift", Household::driftable), Household::drift),
             // 169: vanilla shows its own "This bed is occupied"
-            SimpleEvent.light("occupied_bed", EventTag.DOORS, player -> Nearby.any(player, "occupied_bed", Household::freeBedHead), Household::occupy)
+            SimpleEvent.light("occupied_bed", EventTag.DOORS, player -> Nearby.any(player, "occupied_bed", Household::freeBedHead), Household::occupy),
+            // 176
+            SimpleEvent.light("shuffled_books", EventTag.DOORS, player -> Nearby.any(player, "shuffled_books", Household::shelved), Household::shuffleBooks),
+            // 177: a click first, then the arrow
+            SimpleEvent.harmful("dispenser_shot", EventTag.DOORS, player -> Nearby.any(player, "dispenser_shot", s -> s.is(Blocks.DISPENSER)), Household::shoot)
         );
     }
 
@@ -102,7 +121,7 @@ final class Household {
         BlockState to = state.getBlock() instanceof RepeaterBlock
             ? state.setValue(RepeaterBlock.DELAY, 1 + (state.getValue(RepeaterBlock.DELAY) + player.getRandom().nextInt(3)) % 4)
             : state.cycle(ComparatorBlock.MODE);
-        Restore.swap(level, pos, to, Config.event("redstone_drift").integer("restore_ticks"));
+        Swaps.show(player, pos, to, Config.event("redstone_drift").integer("restore_ticks"));
     }
 
     private static boolean freeBedHead(BlockState state) {
@@ -134,6 +153,88 @@ final class Household {
                 }
             }
             return true;
+        });
+    }
+
+    private static boolean shelved(BlockState state) {
+        return state.is(Blocks.CHISELED_BOOKSHELF) && ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.stream().anyMatch(state::getValue);
+    }
+
+    /** The books take other slots; put back after a while unless somebody touched the shelf, and under hardcore they stay. */
+    private static void shuffleBooks(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "shuffled_books", Household::shelved);
+        if (pos == null || !(player.level().getBlockEntity(pos) instanceof ChiseledBookShelfBlockEntity shelf)) {
+            return;
+        }
+        ServerLevel level = player.level();
+        List<ItemStack> before = copy(shelf);
+        List<ItemStack> after = copy(shelf);
+        for (int tries = 0; tries < SHUFFLE_TRIES && same(before, after); tries++) {
+            Collections.shuffle(after, new java.util.Random(player.getRandom().nextLong()));
+        }
+        if (same(before, after)) {
+            return;
+        }
+        place(shelf, after);
+        Config.Tone tone = Config.event("shuffled_books").tone("sound");
+        level.playSound(null, pos, SoundEvents.CHISELED_BOOKSHELF_PICKUP, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+        Restore.revert(level, Config.event("shuffled_books").integer("restore_ticks"), force -> {
+            if (!force && !level.isLoaded(pos)) {
+                return false;
+            }
+            if (level.getBlockEntity(pos) instanceof ChiseledBookShelfBlockEntity now && same(copy(now), after)) {
+                place(now, before);
+            }
+            return true;
+        });
+    }
+
+    private static List<ItemStack> copy(ChiseledBookShelfBlockEntity shelf) {
+        List<ItemStack> books = new ArrayList<>();
+        for (ItemStack book : shelf.getItems()) {
+            books.add(book.copy());
+        }
+        return books;
+    }
+
+    private static boolean same(List<ItemStack> a, List<ItemStack> b) {
+        for (int i = 0; i < a.size(); i++) {
+            if (!ItemStack.matches(a.get(i), b.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static void place(ChiseledBookShelfBlockEntity shelf, List<ItemStack> books) {
+        for (int i = 0; i < books.size(); i++) {
+            shelf.setItem(i, books.get(i).copy());
+        }
+    }
+
+    /** The dispenser clicks as if empty, then an arrow leaves its face toward the player; nothing is taken from it. */
+    private static void shoot(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "dispenser_shot", s -> s.is(Blocks.DISPENSER));
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        level.levelEvent(LevelEvent.SOUND_DISPENSER_FAIL, pos, 0);
+        Config.Section config = Config.event("dispenser_shot");
+        Scheduler.later(player, config.integer("delay_ticks"), p -> {
+            BlockState state = level.getBlockState(pos);
+            if (!state.is(Blocks.DISPENSER)) {
+                return;
+            }
+            Direction face = state.getValue(DispenserBlock.FACING);
+            Vec3 from = Vec3.atCenterOf(pos).add(face.getStepX() * 0.7, face.getStepY() * 0.7, face.getStepZ() * 0.7);
+            Vec3 to = p.getBoundingBox().getCenter().subtract(from);
+            ItemStack ammo = new ItemStack(Items.ARROW);
+            Arrow arrow = Projectile.spawnProjectileUsingShoot(new Arrow(level, from.x, from.y, from.z, ammo, null), level, ammo,
+                to.x, to.y, to.z, (float) config.num("speed"), (float) config.num("spread"));
+            arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
+            level.levelEvent(LevelEvent.SOUND_DISPENSER_PROJECTILE_LAUNCH, pos, 0);
+            level.levelEvent(LevelEvent.PARTICLES_SHOOT_SMOKE, pos, face.get3DDataValue());
         });
     }
 }

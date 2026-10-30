@@ -20,6 +20,7 @@ import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -108,6 +109,8 @@ final class ItemEvents {
                 int slot = slots.get(player.getRandom().nextInt(slots.size()));
                 inventory.setItem(slot, new ItemStack(Items.ROTTEN_FLESH, inventory.getItem(slot).getCount()));
             }),
+            // takes some of the worn armor off, or all of it; nothing is lost: it goes to the inventory, or to the floor
+            SimpleEvent.harmful("armor_off", EventTag.ITEMS, player -> !worn(player).isEmpty(), ItemEvents::takeArmorOff),
             // 69: moves at once; the "turns up later" part needs delayed tasks
             SimpleEvent.harmful("vanishing_item", EventTag.ITEMS, player -> pair(player) != null, player -> {
                 Transfer transfer = pair(player);
@@ -193,6 +196,30 @@ final class ItemEvents {
         Config.Tone tone = config.tone("sound");
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
             SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.HOSTILE, tone.volume(), tone.pitch());
+    }
+
+    private static final EquipmentSlot[] ARMOR = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+
+    private static List<EquipmentSlot> worn(ServerPlayer player) {
+        return java.util.Arrays.stream(ARMOR).filter(slot -> !player.getItemBySlot(slot).isEmpty()).toList();
+    }
+
+    private static void takeArmorOff(ServerPlayer player) {
+        List<EquipmentSlot> slots = new ArrayList<>(worn(player));
+        Collections.shuffle(slots, new Random(player.getRandom().nextLong()));
+        Config.Section config = Config.event("armor_off");
+        int span = config.integer("max_pieces") - config.integer("min_pieces") + 1;
+        int count = Math.min(slots.size(), config.integer("min_pieces") + player.getRandom().nextInt(span));
+        for (EquipmentSlot slot : slots.subList(0, count)) {
+            ItemStack piece = player.getItemBySlot(slot);
+            player.setItemSlot(slot, ItemStack.EMPTY);
+            if (!player.getInventory().add(piece)) {
+                player.spawnAtLocation(player.level(), piece);
+            }
+        }
+        Config.Tone tone = config.tone("sound");
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+            SoundEvents.ARMOR_EQUIP_GENERIC.value(), SoundSource.HOSTILE, tone.volume(), tone.pitch());
     }
 
     private static String pick(ServerPlayer player, List<String> options) {

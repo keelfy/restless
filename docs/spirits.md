@@ -296,7 +296,7 @@ an essence or artifact.
 | `candles_out` | 1 | LIGHT | LIGHTS | 0.8 | A lit candle within 10 blocks | Every lit candle within 10 blocks goes out |
 | `torch_chain` | 2 | LIGHT | LIGHTS | 0.8 | A torch within 10 | Up to 8 torches knock off one by one, every 0.3 s, nearest to the player last |
 | `lamp_off` | 4 | LIGHT | LIGHTS | 0.8 | A lit redstone lamp within 10 | Switches it off for 1 s, back on if still powered |
-| `lantern_flicker` | 3 | LIGHT | LIGHTS | 0.8 | A lantern or soul lantern within 10 | Removed and put back three times in 1.2 s, ends in place |
+| `lantern_flicker` | 3 | LIGHT | LIGHTS | 0.8 | A lantern or soul lantern within 10 | Out and back on three times in 1.2 s, ends in place (stays out in hardcore) |
 | `campfire_out` | 6 | LIGHT | LIGHTS | 0.8 | A lit campfire within 10 | Snuffs one campfire |
 | `furnace_dies` | 5 | LIGHT | LIGHTS | 0.8 | A burning furnace, blast furnace or smoker within 10 with fuel in the fuel slot | The fire goes out and the fuel is taken out for 5 s, then returned (dropped if the slot was filled meanwhile or the furnace is gone) |
 | `dimming` | 7 | LIGHT | LIGHTS | 0.6 | Always | The player's view fades toward black over 5 s (peak 80%) and back; client-side overlay under the HUD, no block or light level changes |
@@ -320,6 +320,8 @@ an essence or artifact.
 | `bell_swing` | 175 | LIGHT | DOORS | 0.7 | A bell within 20 | It swings and rings toward a random side |
 | `redstone_drift` | 178 | HARMFUL | DOORS | 0.5 | A repeater or comparator within 12 | A repeater gets another delay, a comparator the other mode, with no update. Set back after 2 min if unchanged; under hardcore it stays |
 | `occupied_bed` | 169 | LIGHT | DOORS | 0.6 | An unoccupied bed within 12 | Both halves read as occupied for 1 min, so the vanilla "This bed is occupied" shows. Always put back, hardcore or not |
+| `shuffled_books` | 176 | LIGHT | DOORS | 0.5 | A chiseled bookshelf within 12 with a book | The books take other slots. Put back after 2 min if untouched; under hardcore they stay |
+| `dispenser_shot` | 177 | HARMFUL | DOORS | 0.4 | A dispenser within 12 | It clicks as if empty, then after 1 s an arrow leaves its face toward the player. Takes nothing from its contents, the arrow cannot be picked up |
 | `locked_door` | 19 | HARMFUL | DOORS | 0.7 | A wooden door within 12 | Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back |
 | `footsteps` | 24 | LIGHT | SOUND | 0.4 | Always | A step sound 2 blocks behind the player |
 | `creeper_hiss` | 25 | LIGHT | SOUND | 0.4 | Always | Creeper fuse hiss nearby |
@@ -380,6 +382,7 @@ an essence or artifact.
 | `shuffle_chest` | 66 | LIGHT | ITEMS | 0.5 | A non-empty chest within 10 | Its contents are shuffled |
 | `wear` | 67 | HARMFUL | ITEMS | 0.5 | A damageable tool with durability to spare | Loses 10% durability, never breaks |
 | `rot` | 68 | HARMFUL | ITEMS | 0.5 | Food in the inventory | One food stack becomes rotten flesh |
+| `armor_off` | — | HARMFUL | ITEMS | 0.4 | Any armor worn | 1–4 random worn pieces come off (a random set, so sometimes all of it). Each goes to the inventory, or to the floor at the player's feet if it is full; nothing is lost |
 | `vanishing_item` | 69 | HARMFUL | ITEMS | 0.5 | Two chests (not halves of one) within 10, one non-empty, one with space | One stack moves to the other chest |
 | `false_compass` | 70 | HARMFUL | ITEMS | 0.5 | A plain compass in the inventory | Points at a spot 30–60 blocks away (stays that way) |
 | `map_marker` | 71 | LIGHT | ITEMS | 0.5 | A filled map in the inventory without a marker of this event | A red X appears on it somewhere in its area. Permanent: the marker is stored in the map item |
@@ -407,6 +410,7 @@ an essence or artifact.
 | `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
 | `dog_barks` | 87 | LIGHT | MOBS | 0.6 | A wolf within 16 | Turns away and makes its ambient sound |
 | `villager_stares` | 88 | LIGHT | MOBS | 0.6 | A villager within 16 | One villager stops and faces the player for 5 s |
+| `villager_refuses` | 192 | LIGHT | MOBS | 0.5 | A villager within 16 | The villager shakes its head for 2 s with the "no" sound |
 | `bats` | 89 | LIGHT | MOBS | 0.6 | Free air 4 blocks away | Five bats appear |
 | `open_pen` | 90 | HARMFUL | MOBS | 0.6 | A closed gate with an animal within 5 of it | Opens the gate |
 | `wild_pet` | 91 | HARMFUL | MOBS | 0.6 | A tamed pet of the player within 32 | Loses its owner and targets the player |
@@ -415,6 +419,12 @@ an essence or artifact.
 | `dog_growls` | 194 | LIGHT | MOBS | 0.6 | A tamed standing wolf within 16 | It sits, looks at the empty space 2 blocks from the player and growls for 6 s, then stands |
 | `angry_bees` | 196 | HARMFUL | MOBS | 0.5 | A bee nest or hive within 16 with bees in it | The bees come out angry at the player, as if it had been broken |
 | `leash_snaps` | 181 | HARMFUL | MOBS | 0.5 | A mob tied to a fence post within 16 | The leash comes loose with a snap and drops as an item |
+| `goat_rams` | 197 | HARMFUL | MOBS | 0.4 | An adult goat 4 to 14 blocks away | The goat's ram memory is set to the player's position, so it charges and knocks them back |
+| `boat_drifts` | 180 | LIGHT | WATER | 0.5 | An empty boat floating within 24 | A steady push away from the player for 10 seconds |
+| `minecart_rolls` | 179 | LIGHT | MOBS | 0.5 | An empty minecart on a rail within 24 | A steady push toward the player for 5 seconds; the rail steers it |
+| `enderman_takes` | 198 | HARMFUL | MOBS | 0.4 | An enderman with empty hands and a placed block (planks, wool, stone bricks, bricks, bookshelf) with an open face, both within 16 | The block turns to air and the enderman holds it; after 60 seconds the block is back and the enderman's hands are empty |
+| `torch_swap` | 112 | LIGHT | LIGHTS | 0.6 | A torch, wall torch or lantern within 10 | Becomes another kind (torch, soul, copper; lantern, soul lantern), facing kept; swapped back after 60 seconds |
+| `repaint` | 104 | LIGHT | BLOCKS | 0.5 | A dyed block (wool, concrete, terracotta, stained glass; stairs and slabs of wool and concrete too), planks or stone bricks within 10 | Up to 40 blocks of that one kind turn into the neighbouring colour (dyes form a ring), planks into the stripped log of their wood, stone bricks into stone; swapped back after 60 seconds |
 | `edge_figure` | 94 | LIGHT | PRESENCE | 0.4 | No such figure already, standing room 16 blocks away, 45–65° to a side of where the player looks | A silent, unhurtable mannequin with the player's own skin stands there facing them. Gone, with no sound or particles, when the player looks within 25° of it with a clear line, or after 30 s |
 | `fog_silhouette` | 95 | LIGHT | PRESENCE | 0.3 | Open sky and rain or darkness outside, standing room 40 blocks away within 25° of where the player looks | A mannequin in the default skin stands far off. Gone, silently, when the player comes within 24 blocks, or after 60 s |
 | `distant_player` | 123 | LIGHT | PRESENCE, PLAYER | 0.3 | Standing room 60 blocks away within 40° of where the player looks | A silent, unhurtable mannequin in a random default skin (Steve, Alex and the rest) stands there facing them. Gone, silently, when the player comes within 35 blocks, or after 60 s |
@@ -477,6 +487,10 @@ the same material (`haunt/event/Variants.java`): grass to dirt or coarse dirt, d
 andesite, granite or diorite, cobblestone to mossy, stone and deepslate bricks to cracked or mossy, deepslate to
 cobbled. Anything else is left alone. The patch is a scatter (`Place.patch`), not a disc.
 
+- `haunt/event/Swaps.java`: the one way events show other blocks in place of the real ones. By default an illusion
+  for the haunted player alone (a `ClientboundBlockUpdatePacket`, then the real blocks again after the event's ticks);
+  with `swaps.mode` set to `real` in `haunt.json`, or under hardcore, a change in the world for everyone through
+  `Restore.swap`. Blocks with a block entity are only ever shown. See [hardcore.md](hardcore.md#block-swaps).
 - `haunt/Restore.java`: changes that swap a block or an entity (flowers, sign, painting, glass, hole, floor, cross,
   lantern, furnace fuel) register an undo that runs when due and checks that the thing is still what the
   event left, so a block the player has since changed is not overwritten. Block swaps skip neighbour updates (nothing
@@ -501,7 +515,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 
 | File | Holds |
 |---|---|
-| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `corruption`, `evolution`, `journal`, `hardcore`, `restore`, `place` |
+| `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `corruption`, `evolution`, `journal`, `hardcore`, `restore`, `swaps`, `place` |
 | `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words, hint and weakness), `story` (nickname words, days, causes) |
 | `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence`, `lies` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
 

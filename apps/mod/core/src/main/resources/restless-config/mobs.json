@@ -5,6 +5,7 @@
     "minecraft:dog_barks": { "weight": 0.6, "radius": 16 },
     "minecraft:animals_stare": { "weight": 0.6, "radius": 16, "min_animals": 2, "stare_ticks": 60, "look_interval_ticks": 2 },
     "minecraft:villager_stares": { "weight": 0.6, "radius": 16, "stare_ticks": 100, "look_interval_ticks": 2 },
+    "minecraft:villager_refuses": { "weight": 0.5, "radius": 16, "shake_ticks": 40, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:bats": { "weight": 0.6, "distance": 4.0, "count": 5 },
     "minecraft:open_pen": { "weight": 0.6, "radius": 12, "animal_radius": 5, "sound": { "volume": 1.0, "pitch": 0.9 } },
     "minecraft:wild_pet": { "weight": 0.6, "radius": 32 },
@@ -32,6 +33,10 @@
     "minecraft:golem_flower": { "weight": 0.6, "radius": 24, "hold_ticks": 300 },
     "minecraft:dog_growls": { "weight": 0.6, "radius": 16, "distance": 2.0, "interval_ticks": 4, "growl_steps": 12, "growl_ticks": 120, "sound": { "volume": 1.0, "pitch": 0.9 } },
     "minecraft:angry_bees": { "weight": 0.5, "radius": 16 },
-    "minecraft:leash_snaps": { "weight": 0.5, "radius": 16, "sound": { "volume": 1.0, "pitch": 0.9 } }
+    "minecraft:leash_snaps": { "weight": 0.5, "radius": 16, "sound": { "volume": 1.0, "pitch": 0.9 } },
+    "minecraft:enderman_takes": { "weight": 0.4, "radius": 16, "restore_ticks": 1200, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:goat_rams": { "weight": 0.4, "radius": 14, "min_run": 4.0, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:boat_drifts": { "weight": 0.5, "radius": 24, "speed": 0.02, "push_ticks": 200 },
+    "minecraft:minecart_rolls": { "weight": 0.5, "radius": 24, "speed": 0.04, "push_ticks": 100 }
   }
 }

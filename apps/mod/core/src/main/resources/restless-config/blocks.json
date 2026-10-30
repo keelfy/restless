@@ -30,6 +30,7 @@
     "minecraft:dry_cauldron": { "weight": 0.6, "radius": 10 },
     "minecraft:dead_ground": { "weight": 0.6, "patch_radius": 3, "density": 0.8 },
     "minecraft:shifting_floor": { "weight": 0.5, "patch_radius": 2, "density": 0.6, "restore_ticks": 30, "sound": { "volume": 0.6, "pitch": 0.7 } },
+    "minecraft:repaint": { "weight": 0.5, "radius": 10, "max_blocks": 40, "restore_ticks": 1200, "sound": { "volume": 0.8, "pitch": 0.8 } },
     "minecraft:broken_bed": { "weight": 0.6, "radius": 16, "sound": { "volume": 1.0, "pitch": 0.6 } },
     "minecraft:wall_hole": { "weight": 0.6, "restore_ticks": 600, "sound": { "volume": 1.0, "pitch": 0.6 } },
     "minecraft:cross": { "weight": 0.6, "min_distance": 3, "max_distance": 6, "restore_ticks": 1200, "sound": { "volume": 1.0, "pitch": 0.6 } }

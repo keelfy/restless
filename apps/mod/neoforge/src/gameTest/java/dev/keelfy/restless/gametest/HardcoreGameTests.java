@@ -107,7 +107,7 @@ final class HardcoreGameTests {
     }
 
     /** A test run with the world hardcore, in the hardcore batch. */
-    private static void hardcore(Map<String, Consumer<GameTestHelper>> tests, String name, Consumer<GameTestHelper> test) {
+    static void hardcore(Map<String, Consumer<GameTestHelper>> tests, String name, Consumer<GameTestHelper> test) {
         BATCH.add(name);
         tests.put(name, test);
     }

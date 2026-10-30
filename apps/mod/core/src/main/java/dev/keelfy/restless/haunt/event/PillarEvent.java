@@ -36,17 +36,18 @@ final class PillarEvent extends StrangerAct {
     @Override
     boolean step(ServerPlayer player, Mannequin figure, Config.Section config, int n) {
         Figure.face(figure, player);
-        return n >= config.integer("height") || climb(player.level(), figure, config);
+        return n >= config.integer("height") || climb(player, figure, config);
     }
 
     /** One block up: the figure rises, cobblestone goes where its feet were, the arm swings. False if there is no room. */
-    private static boolean climb(ServerLevel level, Mannequin figure, Config.Section config) {
+    private static boolean climb(ServerPlayer player, Mannequin figure, Config.Section config) {
+        ServerLevel level = player.level();
         BlockPos feet = figure.blockPosition();
         if (!level.isEmptyBlock(feet) || !level.isEmptyBlock(feet.above(2))) {
             return false;
         }
         figure.setPos(figure.getX(), feet.getY() + 1, figure.getZ());
-        Restore.swap(level, feet, COBBLE, config.integer("restore_ticks"));
+        Swaps.show(player, feet, COBBLE, config.integer("restore_ticks"));
         figure.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
         Config.Tone tone = config.tone("sound");
         level.playSound(null, feet, COBBLE.getSoundType().getPlaceSound(), SoundSource.BLOCKS, tone.volume(), tone.pitch());

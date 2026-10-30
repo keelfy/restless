@@ -7,6 +7,7 @@
     "minecraft:shuffle_chest": { "weight": 0.5, "radius": 10 },
     "minecraft:wear": { "weight": 0.5, "fraction": 0.1 },
     "minecraft:rot": { "weight": 0.5 },
+    "minecraft:armor_off": { "weight": 0.4, "min_pieces": 1, "max_pieces": 4, "sound": { "volume": 1.0, "pitch": 0.6 } },
     "minecraft:vanishing_item": { "weight": 0.5, "radius": 10, "min_distance": 2 },
     "minecraft:map_marker": { "weight": 0.5, "spread_pixels": 40, "sound": { "volume": 0.8, "pitch": 0.6 } },
     "minecraft:false_compass": { "weight": 0.5, "min_offset": 30, "offset_spread": 30, "sound": { "volume": 1.0, "pitch": 0.6 } }

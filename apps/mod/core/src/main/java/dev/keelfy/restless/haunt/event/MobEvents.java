@@ -8,6 +8,7 @@ import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -22,6 +23,12 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.animal.goat.Goat;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.tags.BlockTags;
@@ -29,7 +36,9 @@ import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.animal.wolf.WolfSoundVariants;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -64,6 +73,14 @@ final class MobEvents {
             SimpleEvent.light("villager_stares", EventTag.MOBS, player -> !near(player, Villager.class, "villager_stares").isEmpty(), player -> {
                 List<Villager> villagers = near(player, Villager.class, "villager_stares");
                 stare(player, List.of(villagers.get(player.getRandom().nextInt(villagers.size()))), "villager_stares");
+            }),
+            // 192: the villager turns its head from side to side and says no
+            SimpleEvent.light("villager_refuses", EventTag.MOBS, player -> !near(player, Villager.class, "villager_refuses").isEmpty(), player -> {
+                List<Villager> villagers = near(player, Villager.class, "villager_refuses");
+                Villager villager = villagers.get(player.getRandom().nextInt(villagers.size()));
+                villager.setUnhappyCounter(Config.event("villager_refuses").integer("shake_ticks"));
+                Config.Tone tone = Config.event("villager_refuses").tone("sound");
+                villager.level().playSound(null, villager, SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, tone.volume(), tone.pitch());
             }),
             // 89
             SimpleEvent.light("bats", EventTag.MOBS, player -> airSpot(player) != null, player -> {
@@ -126,6 +143,35 @@ final class MobEvents {
                     hive.emptyAllLivingFromHive(player, player.level().getBlockState(pos), BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY);
                 }
             }),
+            // 197: the goat charges at where the player stands, as if its ram cooldown had run out
+            SimpleEvent.harmful("goat_rams", EventTag.MOBS, player -> !goats(player).isEmpty(), player -> {
+                List<Goat> goats = goats(player);
+                Goat goat = goats.get(player.getRandom().nextInt(goats.size()));
+                // A stroll in progress would erase the charge's walk target when it stops, so let it stop first.
+                goat.getNavigation().stop();
+                goat.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+                goat.getBrain().eraseMemory(MemoryModuleType.PATH);
+                goat.getBrain().eraseMemory(MemoryModuleType.RAM_COOLDOWN_TICKS);
+                Scheduler.later(player, 2, p -> {
+                    if (goat.isAlive()) {
+                        goat.getBrain().setMemory(MemoryModuleType.RAM_TARGET, p.position());
+                    }
+                });
+                Config.Tone tone = Config.event("goat_rams").tone("sound");
+                player.level().playSound(null, goat, SoundEvents.GOAT_PREPARE_RAM, SoundSource.NEUTRAL, tone.volume(), tone.pitch());
+            }),
+            // 180: an empty boat in the water slides away from the player
+            SimpleEvent.light("boat_drifts", EventTag.WATER, player -> !boats(player).isEmpty(), player -> {
+                List<AbstractBoat> boats = boats(player);
+                AbstractBoat boat = boats.get(player.getRandom().nextInt(boats.size()));
+                push(player, boat, "boat_drifts", boat.position().subtract(player.position()));
+            }),
+            // 179: an empty minecart on a rail rolls toward the player
+            SimpleEvent.light("minecart_rolls", EventTag.MOBS, player -> !carts(player).isEmpty(), player -> {
+                List<AbstractMinecart> carts = carts(player);
+                AbstractMinecart cart = carts.get(player.getRandom().nextInt(carts.size()));
+                push(player, cart, "minecart_rolls", player.position().subtract(cart.position()));
+            }),
             // 181: the knot is dropped and the animals are loose
             SimpleEvent.harmful("leash_snaps", EventTag.MOBS, player -> !leashed(player).isEmpty(), player -> {
                 List<Mob> mobs = leashed(player);
@@ -133,8 +179,69 @@ final class MobEvents {
                 Config.Tone tone = Config.event("leash_snaps").tone("sound");
                 player.level().playSound(null, mob.blockPosition(), SoundEvents.LEAD_BREAK, SoundSource.NEUTRAL, tone.volume(), tone.pitch());
                 mob.dropLeash();
+            }),
+            // 198: a block of the build ends up in an enderman's hands
+            SimpleEvent.harmful("enderman_takes", EventTag.MOBS, player -> !takers(player).isEmpty() && !builds(player).isEmpty(), player -> {
+                List<Enderman> takers = takers(player);
+                List<BlockPos> builds = builds(player);
+                Enderman taker = takers.get(player.getRandom().nextInt(takers.size()));
+                BlockPos pos = builds.get(player.getRandom().nextInt(builds.size()));
+                ServerLevel level = player.level();
+                BlockState block = level.getBlockState(pos);
+                Swaps.show(player, pos, Blocks.AIR.defaultBlockState(), Config.event("enderman_takes").integer("restore_ticks"));
+                taker.setCarriedBlock(block);
+                Restore.revert(level, Config.event("enderman_takes").integer("restore_ticks"), force -> {
+                    if (taker.getCarriedBlock() != null && taker.getCarriedBlock().is(block.getBlock())) {
+                        taker.setCarriedBlock(null);
+                    }
+                    return true;
+                });
+                Config.Tone tone = Config.event("enderman_takes").tone("sound");
+                level.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.HOSTILE, tone.volume(), tone.pitch());
             })
         );
+    }
+
+    private static List<Enderman> takers(ServerPlayer player) {
+        return near(player, Enderman.class, "enderman_takes").stream().filter(e -> e.getCarriedBlock() == null).toList();
+    }
+
+    /** Exposed blocks that look placed by hand, not part of the land. */
+    private static List<BlockPos> builds(ServerPlayer player) {
+        ServerLevel level = player.level();
+        return Nearby.all(player, "enderman_takes", s -> !s.hasBlockEntity()
+            && (s.is(BlockTags.PLANKS) || s.is(BlockTags.WOOL) || s.is(BlockTags.STONE_BRICKS) || s.is(Blocks.BRICKS) || s.is(Blocks.BOOKSHELF)))
+            .stream().filter(pos -> java.util.Arrays.stream(Direction.values()).anyMatch(d -> level.getBlockState(pos.relative(d)).isAir())).toList();
+    }
+
+    /** Adult goats far enough from the player to get a run-up. */
+    private static List<Goat> goats(ServerPlayer player) {
+        double run = Config.event("goat_rams").num("min_run");
+        return near(player, Goat.class, "goat_rams").stream()
+            .filter(g -> !g.isBaby() && g.distanceToSqr(player) >= run * run).toList();
+    }
+
+    private static List<AbstractBoat> boats(ServerPlayer player) {
+        return near(player, AbstractBoat.class, "boat_drifts").stream()
+            .filter(b -> !b.isVehicle() && b.level().getFluidState(b.blockPosition()).is(FluidTags.WATER)).toList();
+    }
+
+    private static List<AbstractMinecart> carts(ServerPlayer player) {
+        return near(player, AbstractMinecart.class, "minecart_rolls").stream()
+            .filter(c -> !c.isVehicle() && BaseRailBlock.isRail(c.level().getBlockState(c.blockPosition()))).toList();
+    }
+
+    /** A steady horizontal shove along {@code way} for the event's push time; stops early if the vehicle gets a rider. */
+    private static void push(ServerPlayer player, Entity vehicle, String event, Vec3 way) {
+        Config.Section config = Config.event(event);
+        Vec3 heading = new Vec3(way.x, 0.0, way.z).normalize().scale(config.num("speed"));
+        Scheduler.repeat(player, 0, 1, (p, n) -> {
+            if (!vehicle.isAlive() || vehicle.isVehicle()) {
+                return false;
+            }
+            vehicle.setDeltaMovement(vehicle.getDeltaMovement().add(heading));
+            return n < config.integer("push_ticks");
+        });
     }
 
     private static List<IronGolem> golems(ServerPlayer player) {

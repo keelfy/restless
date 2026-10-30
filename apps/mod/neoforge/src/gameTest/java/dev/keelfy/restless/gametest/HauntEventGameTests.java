@@ -19,12 +19,23 @@ import net.minecraft.world.entity.animal.cow.Cow;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.level.block.state.properties.RailShape;
+import net.minecraft.world.level.block.RailBlock;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
+import net.minecraft.world.entity.animal.goat.Goat;
+import net.minecraft.world.entity.monster.Enderman;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -158,7 +169,7 @@ final class HauntEventGameTests {
             player -> helper.setBlock(FEET.west(2), Blocks.DECORATED_POT), () -> helper.assertBlockPresent(Blocks.DECORATED_POT, FEET.west(2))));
         tests.put("event_bell_swing", helper -> runs(helper, "bell_swing",
             player -> helper.setBlock(FEET.west(2), Blocks.BELL), () -> helper.assertBlockPresent(Blocks.BELL, FEET.west(2))));
-        tests.put("event_redstone_drift", helper -> runs(helper, "redstone_drift",
+        HardcoreGameTests.hardcore(tests, "event_redstone_drift", helper -> runs(helper, "redstone_drift",
             player -> helper.setBlock(FEET.west(2), Blocks.REPEATER),
             () -> check(helper, helper.getBlockState(FEET.west(2)).getValue(RepeaterBlock.DELAY) != 1, "redstone_drift must change the delay")));
         tests.put("event_occupied_bed", helper -> runs(helper, "occupied_bed", player -> {
@@ -168,6 +179,26 @@ final class HauntEventGameTests {
             check(helper, helper.getBlockState(FEET.west(3)).getValue(BedBlock.OCCUPIED), "occupied_bed must mark the head taken");
             check(helper, helper.getBlockState(FEET.west(2)).getValue(BedBlock.OCCUPIED), "occupied_bed must mark the foot taken");
         }));
+        tests.put("event_shuffled_books", helper -> {
+            BlockPos shelf = helper.absolutePos(FEET.west(2));
+            runs(helper, "shuffled_books", player -> {
+                helper.setBlock(FEET.west(2), Blocks.CHISELED_BOOKSHELF);
+                ChiseledBookShelfBlockEntity entity = (ChiseledBookShelfBlockEntity) helper.getLevel().getBlockEntity(shelf);
+                entity.setItem(0, new ItemStack(Items.BOOK));
+                entity.setItem(1, new ItemStack(Items.ENCHANTED_BOOK));
+            }, () -> check(helper, ((ChiseledBookShelfBlockEntity) helper.getLevel().getBlockEntity(shelf)).getItem(0).getItem() != Items.BOOK
+                || ((ChiseledBookShelfBlockEntity) helper.getLevel().getBlockEntity(shelf)).getItem(1).getItem() != Items.ENCHANTED_BOOK,
+                "shuffled_books must move the books"));
+        });
+        tests.put("event_dispenser_shot", helper -> runs(helper, "dispenser_shot",
+            player -> helper.setBlock(FEET.west(3), Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.EAST)),
+            () -> check(helper, !helper.getLevel().getEntitiesOfClass(Arrow.class, new AABB(helper.absolutePos(FEET)).inflate(6)).isEmpty(),
+                "dispenser_shot must fire an arrow")));
+        tests.put("event_villager_refuses", helper -> {
+            Villager[] villager = new Villager[1];
+            runs(helper, "villager_refuses", player -> villager[0] = EntityTypes.VILLAGER.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
+                () -> check(helper, villager[0].getUnhappyCounter() > 0, "villager_refuses must shake the head"));
+        });
         tests.put("event_golem_flower", helper -> {
             Entity[] golem = new Entity[1];
             runs(helper, "golem_flower", player -> golem[0] = EntityTypes.IRON_GOLEM.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
@@ -179,6 +210,68 @@ final class HauntEventGameTests {
                 wolf[0] = EntityTypes.WOLF.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND);
                 wolf[0].setTame(true, false);
             }, () -> check(helper, wolf[0].isInSittingPose(), "dog_growls must sit the dog"));
+        });
+        HardcoreGameTests.hardcore(tests, "event_enderman_takes", helper -> {
+            Enderman[] man = new Enderman[1];
+            runs(helper, "enderman_takes", player -> {
+                helper.setBlock(FEET.west(2), Blocks.OAK_PLANKS);
+                man[0] = EntityTypes.ENDERMAN.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND);
+            }, () -> check(helper, man[0].getCarriedBlock() != null && helper.getBlockState(FEET.west(2)).isAir(),
+                "enderman_takes must move the block into the enderman's hands"));
+        });
+        HardcoreGameTests.hardcore(tests, "event_torch_swap", helper -> runs(helper, "torch_swap",
+            player -> helper.setBlock(FEET.west(2), Blocks.TORCH),
+            () -> check(helper, (helper.getBlockState(FEET.west(2)).is(Blocks.SOUL_TORCH) || helper.getBlockState(FEET.west(2)).is(Blocks.COPPER_TORCH)),
+                "torch_swap must turn the torch into another kind")));
+        HardcoreGameTests.hardcore(tests, "event_repaint", helper -> runs(helper, "repaint",
+            player -> {
+                helper.setBlock(FEET.west(2), Blocks.WOOL.red());
+                helper.setBlock(FEET.west(3), Blocks.WOOL.red());
+            },
+            () -> check(helper, !helper.getBlockState(FEET.west(2)).is(Blocks.WOOL.red()) && !helper.getBlockState(FEET.west(3)).is(Blocks.WOOL.red()),
+                "repaint must change every block of the kind")));
+        tests.put("event_armor_off", helper -> {
+            ServerPlayer[] worn = new ServerPlayer[1];
+            runs(helper, "armor_off", player -> {
+                worn[0] = player;
+                player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+                player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.IRON_CHESTPLATE));
+            }, () -> {
+                ServerPlayer player = worn[0];
+                boolean head = !player.getItemBySlot(EquipmentSlot.HEAD).isEmpty();
+                check(helper, !head || player.getItemBySlot(EquipmentSlot.CHEST).getCount() == 0,
+                    "armor_off must take off at least one piece");
+                check(helper, player.getInventory().contains(s -> s.is(Items.IRON_HELMET)) != head,
+                    "a piece taken off must be in the inventory, not lost");
+            });
+        });
+        tests.put("event_goat_rams", helper -> {
+            Goat[] goat = new Goat[1];
+            double[] start = new double[1];
+            runs(helper, "goat_rams", player -> {
+                goat[0] = EntityTypes.GOAT.spawn(helper.getLevel(), helper.absolutePos(FEET).east(5), EntitySpawnReason.COMMAND);
+                start[0] = goat[0].getX();
+            }, () -> check(helper, goat[0].getX() < start[0] - 1.0, "goat_rams must send the goat at the player"));
+        });
+        tests.put("event_boat_drifts", helper -> {
+            AbstractBoat[] boat = new AbstractBoat[1];
+            double[] start = new double[1];
+            runs(helper, "boat_drifts", player -> {
+                helper.setBlock(FEET.east(3), Blocks.WATER);
+                boat[0] = EntityTypes.OAK_BOAT.spawn(helper.getLevel(), helper.absolutePos(FEET).east(3), EntitySpawnReason.COMMAND);
+                start[0] = boat[0].getX();
+            }, () -> check(helper, boat[0].getX() > start[0] + 0.1, "boat_drifts must push the boat away"));
+        });
+        tests.put("event_minecart_rolls", helper -> {
+            AbstractMinecart[] cart = new AbstractMinecart[1];
+            double[] start = new double[1];
+            runs(helper, "minecart_rolls", player -> {
+                for (int x = 5; x <= 9; x++) {
+                    helper.setBlock(new BlockPos(x, FEET.getY(), FEET.getZ()), Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST));
+                }
+                cart[0] = EntityTypes.MINECART.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND);
+                start[0] = cart[0].getX();
+            }, () -> check(helper, cart[0].getX() < start[0] - 0.3, "minecart_rolls must roll the cart toward the player"));
         });
         tests.put("event_leash_snaps", helper -> {
             Cow[] cow = new Cow[1];
@@ -201,8 +294,20 @@ final class HauntEventGameTests {
         });
         farOff(tests, "distant_walker", 45, Mannequin.class);
         farOff(tests, "nametag", 30, Display.TextDisplay.class);
-        farOff(tests, "pillar", 24, Mannequin.class, (helper, figure) ->
+        farOff(tests, "pillar", 24, Mannequin.class);
+        // The cobblestone is in the world only when swaps are real, which hardcore makes them.
+        Map<String, Consumer<GameTestHelper>> real = new HashMap<>();
+        farOff(real, "pillar", 24, Mannequin.class, (helper, figure) ->
             check(helper, helper.getLevel().getBlockState(figure.blockPosition().below()).is(Blocks.COBBLESTONE), "pillar must stand on its cobblestone"));
+        HardcoreGameTests.hardcore(tests, "hardcore_pillar", real.get("event_pillar"));
+        PADDING.put("hardcore_pillar", PADDING.get("event_pillar"));
+        tests.put("event_repaint_is_an_illusion", helper -> runs(helper, "repaint",
+            player -> {
+                helper.setBlock(FEET.west(2), Blocks.WOOL.red());
+                helper.setBlock(FEET.west(3), Blocks.WOOL.red());
+            },
+            () -> check(helper, helper.getBlockState(FEET.west(2)).is(Blocks.WOOL.red()) && helper.getBlockState(FEET.west(3)).is(Blocks.WOOL.red()),
+                "an illusion must leave the server's blocks alone")));
     }
 
     /**

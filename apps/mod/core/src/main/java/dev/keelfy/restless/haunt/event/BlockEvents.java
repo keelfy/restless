@@ -4,7 +4,10 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -52,9 +55,7 @@ final class BlockEvents {
         return List.of(
             // 72
             SimpleEvent.light("wilted_flowers", EventTag.BLOCKS, player -> Nearby.any(player, "wilted_flowers", BlockEvents::pottedFlower), player -> {
-                for (BlockPos pos : Nearby.all(player, "wilted_flowers", BlockEvents::pottedFlower)) {
-                    Restore.swap(player.level(), pos, Blocks.POTTED_DEAD_BUSH.defaultBlockState(), restoreTicks("wilted_flowers"));
-                }
+                Swaps.show(player, Nearby.all(player, "wilted_flowers", BlockEvents::pottedFlower), Blocks.POTTED_DEAD_BUSH.defaultBlockState(), restoreTicks("wilted_flowers"));
                 Config.Tone tone = Config.event("wilted_flowers").tone("sound");
                 player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GRASS_BREAK, SoundSource.HOSTILE, tone.volume(), tone.pitch());
             }),
@@ -118,6 +119,8 @@ final class BlockEvents {
                 }),
             // 80: the floor flickers into another kind of the same material for a moment
             SimpleEvent.harmful("shifting_floor", EventTag.BLOCKS, player -> player.onGround() && shiftable(player.level(), player.blockPosition().below()), BlockEvents::shiftFloor),
+            // 104: a build changes colour: every block of one kind nearby takes the same neighbouring colour
+            SimpleEvent.light("repaint", EventTag.BLOCKS, player -> Nearby.any(player, "repaint", Palette::has), BlockEvents::shiftColours),
             // 81
             SimpleEvent.harmful("broken_bed", EventTag.BLOCKS,
                 player -> Nearby.any(player, "broken_bed", s -> s.getBlock() instanceof BedBlock),
@@ -242,8 +245,7 @@ final class BlockEvents {
             return;
         }
         ServerLevel level = player.level();
-        Restore.swap(level, wall.low(), Blocks.GLASS.defaultBlockState(), restoreTicks("glass_wall"));
-        Restore.swap(level, wall.high(), Blocks.GLASS.defaultBlockState(), restoreTicks("glass_wall"));
+        Swaps.show(player, List.of(wall.low(), wall.high()), Blocks.GLASS.defaultBlockState(), restoreTicks("glass_wall"));
         Config.Tone tone = Config.event("glass_wall").tone("sound");
         level.playSound(null, wall.low(), SoundEvents.GLASS_PLACE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
         Husk figure = EntityTypes.HUSK.spawn(level, wall.behind(), EntitySpawnReason.EVENT);
@@ -273,17 +275,39 @@ final class BlockEvents {
     private static void shiftFloor(ServerPlayer player) {
         ServerLevel level = player.level();
         List<BlockPos> floor = floorUnder(player);
+        Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
         for (BlockPos pos : floor) {
             BlockState to = Variants.of(level.getBlockState(pos), player.getRandom());
             if (to != null) {
-                Restore.swap(level, pos, to, restoreTicks("shifting_floor"));
+                shown.put(pos, to);
             }
         }
+        Swaps.show(player, shown, restoreTicks("shifting_floor"));
         if (!floor.isEmpty()) {
             Config.Tone tone = Config.event("shifting_floor").tone("sound");
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 level.getBlockState(floor.get(0)).getSoundType().getBreakSound(), SoundSource.BLOCKS, tone.volume(), tone.pitch());
         }
+    }
+
+    private static void shiftColours(ServerPlayer player) {
+        ServerLevel level = player.level();
+        BlockPos first = Nearby.random(player, "repaint", Palette::has);
+        if (first == null) {
+            return;
+        }
+        Block from = level.getBlockState(first).getBlock();
+        Block to = Palette.of(from, player.getRandom());
+        Config.Section config = Config.event("repaint");
+        List<BlockPos> blocks = Nearby.all(player, "repaint", s -> s.is(from)).stream()
+            .sorted(Comparator.comparingDouble((BlockPos pos) -> pos.distToCenterSqr(player.position())))
+            .limit(config.integer("max_blocks"))
+            .toList();
+        Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
+        blocks.forEach(pos -> shown.put(pos, to.withPropertiesOf(level.getBlockState(pos))));
+        Swaps.show(player, shown, restoreTicks("repaint"));
+        Config.Tone tone = config.tone("sound");
+        level.playSound(null, first, to.defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, tone.volume(), tone.pitch());
     }
 
     private static void wallHole(ServerPlayer player) {
@@ -294,8 +318,7 @@ final class BlockEvents {
         ServerLevel level = player.level();
         Config.Tone tone = Config.event("wall_hole").tone("sound");
         level.playSound(null, wall.low(), level.getBlockState(wall.low()).getSoundType().getBreakSound(), SoundSource.BLOCKS, tone.volume(), tone.pitch());
-        Restore.swap(level, wall.low(), Blocks.AIR.defaultBlockState(), restoreTicks("wall_hole"));
-        Restore.swap(level, wall.high(), Blocks.AIR.defaultBlockState(), restoreTicks("wall_hole"));
+        Swaps.show(player, List.of(wall.low(), wall.high()), Blocks.AIR.defaultBlockState(), restoreTicks("wall_hole"));
     }
 
     private static void cross(ServerPlayer player) {
@@ -303,9 +326,7 @@ final class BlockEvents {
         if (centre == null) {
             return;
         }
-        for (BlockPos pos : Place.crossCells(centre)) {
-            Restore.swap(player.level(), pos, Blocks.BONE_BLOCK.defaultBlockState(), restoreTicks("cross"));
-        }
+        Swaps.show(player, Place.crossCells(centre), Blocks.BONE_BLOCK.defaultBlockState(), restoreTicks("cross"));
         Config.Tone tone = Config.event("cross").tone("sound");
         player.level().playSound(null, centre, SoundEvents.BONE_BLOCK_PLACE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
     }

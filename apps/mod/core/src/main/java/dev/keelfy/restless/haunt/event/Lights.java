@@ -108,6 +108,20 @@ final class Lights {
                         level.playSound(null, pos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
                     }
                 }),
+            // 112: another kind of torch or lantern in the same place, facing and hanging kept
+            SimpleEvent.light("torch_swap", EventTag.LIGHTS, player -> Nearby.any(player, "torch_swap", Lights::swappable), player -> {
+                ServerLevel level = player.level();
+                BlockPos pos = Nearby.random(player, "torch_swap", Lights::swappable);
+                if (pos != null) {
+                    BlockState state = level.getBlockState(pos);
+                    List<Block> kinds = KINDS.stream().filter(k -> k.contains(state.getBlock())).findFirst().orElseThrow().stream()
+                        .filter(b -> b != state.getBlock()).toList();
+                    Block to = kinds.get(player.getRandom().nextInt(kinds.size()));
+                    Swaps.show(player, pos, to.withPropertiesOf(state), Config.event("torch_swap").integer("restore_ticks"));
+                    Config.Tone tone = Config.event("torch_swap").tone("sound");
+                    level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+                }
+            }),
             // 10
             SimpleEvent.harmful("blackout", EventTag.LIGHTS,
                 player -> player.level().getDifficulty() != Difficulty.PEACEFUL
@@ -128,6 +142,16 @@ final class Lights {
                     SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.HOSTILE, tone.volume(), tone.pitch());
             })
         );
+    }
+
+    /** Interchangeable kinds; a wall torch only turns into a wall torch, so the properties carry over. */
+    private static final List<List<Block>> KINDS = List.of(
+        List.of(Blocks.TORCH, Blocks.SOUL_TORCH, Blocks.COPPER_TORCH),
+        List.of(Blocks.WALL_TORCH, Blocks.SOUL_WALL_TORCH, Blocks.COPPER_WALL_TORCH),
+        List.of(Blocks.LANTERN, Blocks.SOUL_LANTERN));
+
+    private static boolean swappable(BlockState state) {
+        return KINDS.stream().anyMatch(k -> k.contains(state.getBlock()));
     }
 
     private static boolean isHot(ItemStack stack) {
@@ -200,24 +224,14 @@ final class Lights {
         ServerLevel level = player.level();
         BlockState lantern = level.getBlockState(pos);
         BlockState unlit = UnlitLights.extinguished(lantern);
-        Restore.revert(level, config.integer("restore_ticks"), force -> {
-            if (!force && !level.isLoaded(pos)) {
-                return false;
-            }
-            if (level.getBlockState(pos) == unlit) {
-                Restore.quiet(level, pos, lantern);
-            }
-            return true;
-        });
-        boolean stays = Hardcore.on(level);
-        // Out on even steps, back on odd ones (never back in hardcore); each step reads the world afresh, so a lantern the player replaced is left alone.
-        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+        int interval = config.integer("interval_ticks");
+        // Out for one interval on even steps, then back on its own (never in hardcore); each step reads the world afresh, so a lantern the player replaced is left alone.
+        Scheduler.repeat(player, 0, interval, (p, n) -> {
             ServerLevel here = p.level();
             if (n % 2 == 0 && here.getBlockState(pos) == lantern) {
-                Restore.quiet(here, pos, unlit);
+                Swaps.show(p, pos, unlit, interval);
                 here.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, off.volume(), off.pitch());
-            } else if (n % 2 == 1 && !stays && here.getBlockState(pos) == unlit) {
-                Restore.quiet(here, pos, lantern);
+            } else if (n % 2 == 1 && !Hardcore.on(here)) {
                 here.playSound(null, pos, SoundEvents.LANTERN_PLACE, SoundSource.BLOCKS, on.volume(), on.pitch());
             }
             return n + 1 < config.integer("steps");

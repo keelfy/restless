@@ -74,6 +74,7 @@
   "candle": { "step_ticks": 4, "warning_ticks": 60, "lean": 0.5 },
   "hardcore": { "mode": "auto" },
   "restore": { "retry_ticks": 20 },
+  "swaps": { "mode": "illusion" },
   "location": { "min_distance": 6.0, "max_distance": 14.0, "step": 3.0, "height": 0.5 },
   "place": {
     "tries": 16,
