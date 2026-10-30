@@ -175,6 +175,23 @@ final class HauntEventGameTests {
             player -> helper.setBlock(FEET.above(4), Blocks.STONE), () -> helper.assertBlockPresent(Blocks.STONE, FEET.above(4))));
         tests.put("event_ice_over", helper -> runs(helper, "ice_over",
             player -> helper.setBlock(FEET.east(2), Blocks.WATER), () -> helper.assertBlockPresent(Blocks.WATER, FEET.east(2))));
+        tests.put("event_portal_out", helper -> runs(helper, "portal_out",
+            player -> helper.setBlock(FEET.east(2), Blocks.NETHER_PORTAL), () -> helper.assertBlockPresent(Blocks.AIR, FEET.east(2))));
+        tests.put("event_block_blink", helper -> runs(helper, "block_blink", player -> {
+            player.setXRot(0);
+            player.setYRot(0);
+            helper.setBlock(FEET.south(2).above(), Blocks.STONE);
+        }, () -> helper.assertBlockPresent(Blocks.STONE, FEET.south(2).above())));
+        tests.put("event_leak", helper -> runs(helper, "leak",
+            player -> helper.setBlock(FEET.above(3), Blocks.STONE), () -> helper.assertBlockPresent(Blocks.STONE, FEET.above(3))));
+        tests.put("event_lava_leak", helper -> runs(helper, "lava_leak",
+            player -> helper.setBlock(FEET.above(3), Blocks.STONE), () -> helper.assertBlockPresent(Blocks.STONE, FEET.above(3))));
+        tests.put("event_mock_grave", helper -> runs(helper, "mock_grave", player -> {
+            for (BlockPos pos : BlockPos.betweenClosed(-12, 0, -12, 21, 0, 21)) {
+                helper.getLevel().setBlockAndUpdate(helper.absolutePos(pos), Blocks.STONE.defaultBlockState());
+            }
+        }, () -> check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-10, -2, -10), helper.absolutePos(FEET).offset(10, 3, 10))
+            .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Content.GRAVESTONE.get())), "mock_grave must stand a gravestone")));
         tests.put("event_chest_blast", helper -> runs(helper, "chest_blast",
             player -> helper.setBlock(FEET.west(3), Blocks.CHEST), () -> helper.assertBlockPresent(Blocks.CHEST, FEET.west(3))));
         tests.put("event_wrong_smelt", helper -> runs(helper, "wrong_smelt", player -> {

@@ -1,26 +1,33 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -37,7 +44,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -155,18 +164,32 @@ final class BlockEvents {
             // 191: the stone the player looks at turns out to be infested
             SimpleEvent.harmful("infested_stone", EventTag.BLOCKS, player -> infestable(player) != null, BlockEvents::infest),
             // 118: a block overhead cracks as if someone were mining it from above, silently
-            SimpleEvent.light("ceiling_crack", EventTag.BLOCKS, player -> ceiling(player) != null, BlockEvents::crackCeiling),
+            SimpleEvent.light("ceiling_crack", EventTag.BLOCKS, player -> ceiling(player, "ceiling_crack") != null, BlockEvents::crackCeiling),
             // 142: water nearby freezes over
-            SimpleEvent.light("ice_over", EventTag.BLOCKS, player -> Nearby.any(player, "ice_over", BlockEvents::sourceWater), BlockEvents::freeze)
+            SimpleEvent.light("ice_over", EventTag.BLOCKS, player -> Nearby.any(player, "ice_over", BlockEvents::sourceWater), BlockEvents::freeze),
+            // 114: the portal the player is near goes dark, frame and all left standing
+            SimpleEvent.harmful("portal_out", EventTag.BLOCKS, player -> Nearby.any(player, "portal_out", s -> s.is(Blocks.NETHER_PORTAL)), BlockEvents::portalOut),
+            // 109: the block the player looks at breaks, with its sound and dust, and is back a moment later
+            SimpleEvent.light("block_blink", EventTag.BLOCKS, player -> blinking(player) != null, BlockEvents::blink),
+            // 183: water drips from the ceiling, only seen and heard, in every mode
+            SimpleEvent.light("leak", EventTag.BLOCKS, player -> leaking(player, "leak") != null,
+                player -> drip(player, "leak", ParticleTypes.FALLING_WATER, SoundEvents.POINTED_DRIPSTONE_DRIP_WATER)),
+            // 183: the same from the ceiling, but it is lava
+            SimpleEvent.light("lava_leak", EventTag.BLOCKS, player -> leaking(player, "lava_leak") != null,
+                player -> drip(player, "lava_leak", ParticleTypes.FALLING_LAVA, SoundEvents.POINTED_DRIPSTONE_DRIP_LAVA)),
+            // 185: a gravestone with the player's name and tomorrow's date stands on open ground nearby
+            SimpleEvent.light("mock_grave", EventTag.BLOCKS, player -> marker(player) != null, BlockEvents::markGrave)
         );
     }
 
+    /** The block the player looks at within {@code reach}, if any. */
+    private static @Nullable BlockPos looked(ServerPlayer player, double reach) {
+        return player.pick(reach, 1.0F, false) instanceof BlockHitResult hit && hit.getType() == HitResult.Type.BLOCK ? hit.getBlockPos() : null;
+    }
+
     private static @Nullable BlockPos infestable(ServerPlayer player) {
-        if (player.pick(Config.event("infested_stone").num("reach"), 1.0F, false) instanceof BlockHitResult hit && hit.getType() == HitResult.Type.BLOCK
-            && INFESTED.containsKey(player.level().getBlockState(hit.getBlockPos()).getBlock())) {
-            return hit.getBlockPos();
-        }
-        return null;
+        BlockPos pos = looked(player, Config.event("infested_stone").num("reach"));
+        return pos != null && INFESTED.containsKey(player.level().getBlockState(pos).getBlock()) ? pos : null;
     }
 
     private static void infest(ServerPlayer player) {
@@ -178,9 +201,9 @@ final class BlockEvents {
     }
 
     /** The first solid block straight above the player's head within reach of the sight, with air between. */
-    private static @Nullable BlockPos ceiling(ServerPlayer player) {
+    private static @Nullable BlockPos ceiling(ServerPlayer player, String event) {
         ServerLevel level = player.level();
-        int reach = Config.event("ceiling_crack").integer("reach");
+        int reach = Config.event(event).integer("reach");
         BlockPos head = BlockPos.containing(player.getX(), player.getEyeY(), player.getZ());
         for (int up = 1; up <= reach; up++) {
             BlockPos pos = head.above(up);
@@ -192,7 +215,7 @@ final class BlockEvents {
     }
 
     private static void crackCeiling(ServerPlayer player) {
-        BlockPos pos = ceiling(player);
+        BlockPos pos = ceiling(player, "ceiling_crack");
         if (pos == null) {
             return;
         }
@@ -206,6 +229,122 @@ final class BlockEvents {
             p.connection.send(new ClientboundBlockDestructionPacket(id, pos, last ? -1 : stage));
             level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 6, 0.3, 0.0, 0.3, 0.05);
             return !last;
+        });
+    }
+
+    /** The whole portal breaks for good in every mode, with no swap and no restoring; the frame stays and can be lit again. */
+    private static void portalOut(ServerPlayer player) {
+        ServerLevel level = player.level();
+        BlockPos first = Nearby.random(player, "portal_out", s -> s.is(Blocks.NETHER_PORTAL));
+        if (first == null) {
+            return;
+        }
+        List<BlockPos> open = new ArrayList<>(List.of(first));
+        Set<BlockPos> portal = new HashSet<>(open);
+        while (!open.isEmpty()) {
+            BlockPos at = open.removeLast();
+            for (Direction side : Direction.values()) {
+                BlockPos next = at.relative(side);
+                if (level.getBlockState(next).is(Blocks.NETHER_PORTAL) && portal.add(next)) {
+                    open.add(next);
+                }
+            }
+        }
+        portal.forEach(pos -> level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL));
+        Config.Tone tone = Config.event("portal_out").tone("sound");
+        level.playSound(null, first, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+    }
+
+    /** A plain block at or above the player's feet (so a break under hardcore never drops them), with nothing inside it. */
+    private static @Nullable BlockPos blinking(ServerPlayer player) {
+        BlockPos pos = looked(player, Config.event("block_blink").num("reach"));
+        if (pos == null || pos.getY() < player.getBlockY()) {
+            return null;
+        }
+        ServerLevel level = player.level();
+        return level.getBlockEntity(pos) == null && Place.solid(level, pos) ? pos : null;
+    }
+
+    private static void blink(ServerPlayer player) {
+        BlockPos pos = blinking(player);
+        if (pos != null) {
+            ServerLevel level = player.level();
+            level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_DESTROY_BLOCK, pos, Block.getId(level.getBlockState(pos)));
+            Swaps.show(player, pos, Blocks.AIR.defaultBlockState(), restoreTicks("block_blink"));
+        }
+    }
+
+    /** The air just under a ceiling within reach, where the drip would come from. */
+    private static @Nullable BlockPos leaking(ServerPlayer player, String event) {
+        BlockPos roof = ceiling(player, event);
+        return roof != null && player.level().isEmptyBlock(roof.below()) ? roof.below() : null;
+    }
+
+    /** Drops fall from the ceiling for a while, with their sound; nothing is placed, in any mode. */
+    private static void drip(ServerPlayer player, String event, ParticleOptions drop, SoundEvent sound) {
+        BlockPos spot = leaking(player, event);
+        if (spot == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        Config.Section config = Config.event(event);
+        Config.Tone tone = config.tone("sound");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            level.sendParticles(drop, spot.getX() + 0.5, spot.getY() + 0.9, spot.getZ() + 0.5, 2, 0.1, 0.0, 0.1, 0.0);
+            if (n % config.integer("sound_every") == 0) {
+                level.playSound(null, spot, sound, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+            }
+            return (n + 1) * config.integer("interval_ticks") < config.integer("ticks");
+        });
+    }
+
+    private record Marker(BlockPos stone, BlockPos sign, int rotation) {}
+
+    /** Room for a gravestone with a sign in front of it on open ground, where the player can see it. */
+    private static @Nullable Marker marker(ServerPlayer player) {
+        ServerLevel level = player.level();
+        Config.Section config = Config.event("mock_grave");
+        for (int i = 0; i < config.integer("tries"); i++) {
+            BlockPos stone = Place.spawnSpot(player, config.integer("min_distance"), config.integer("max_distance"));
+            if (stone == null) {
+                continue;
+            }
+            for (Direction front : List.of(Direction.SOUTH, Direction.NORTH)) {
+                BlockPos sign = stone.relative(front);
+                if (level.isEmptyBlock(sign) && level.getBlockState(sign.below()).isSolidRender()) {
+                    return new Marker(stone, sign, front.get2DDataValue() * 4);
+                }
+            }
+        }
+        return null;
+    }
+
+    private static void markGrave(ServerPlayer player) {
+        Marker marker = marker(player);
+        if (marker == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        level.setBlockAndUpdate(marker.stone(), Content.GRAVESTONE.get().defaultBlockState());
+        level.setBlockAndUpdate(marker.sign(), Blocks.OAK_SIGN.defaultBlockState().setValue(StandingSignBlock.ROTATION, marker.rotation()));
+        if (level.getBlockEntity(marker.sign()) instanceof SignBlockEntity sign) {
+            SignText.Mutable text = sign.getText(SignTextSlot.FRONT).asMutable();
+            text.setLine(0, Component.literal(Config.event("mock_grave").text("title")));
+            text.setLine(1, player.getName());
+            text.setLine(2, Component.literal(LocalDate.now().plusDays(1).toString()));
+            sign.setText(text.asImmutable(), SignTextSlot.FRONT);
+        }
+        Restore.revert(level, restoreTicks("mock_grave"), force -> {
+            if (!force && !level.isLoaded(marker.stone())) {
+                return false;
+            }
+            if (level.getBlockState(marker.stone()).is(Content.GRAVESTONE.get())) {
+                level.removeBlock(marker.stone(), false);
+            }
+            if (level.getBlockState(marker.sign()).is(Blocks.OAK_SIGN)) {
+                level.removeBlock(marker.sign(), false);
+            }
+            return true;
         });
     }
 

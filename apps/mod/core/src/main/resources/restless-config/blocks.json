@@ -36,6 +36,11 @@
     "minecraft:cross": { "weight": 0.6, "min_distance": 3, "max_distance": 6, "restore_ticks": 1200, "sound": { "volume": 1.0, "pitch": 0.6 } },
     "minecraft:infested_stone": { "weight": 0.4, "reach": 6.0, "restore_ticks": 600 },
     "minecraft:ceiling_crack": { "weight": 0.5, "reach": 4, "stages": 8, "interval_ticks": 8 },
-    "minecraft:ice_over": { "weight": 0.5, "radius": 8, "max_blocks": 24, "restore_ticks": 600, "sound": { "volume": 1.0, "pitch": 0.7 } }
+    "minecraft:ice_over": { "weight": 0.5, "radius": 8, "max_blocks": 24, "restore_ticks": 600, "sound": { "volume": 1.0, "pitch": 0.7 } },
+    "minecraft:portal_out": { "weight": 0.4, "radius": 12, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:block_blink": { "weight": 0.4, "reach": 5.0, "restore_ticks": 40 },
+    "minecraft:leak": { "weight": 0.5, "reach": 4, "ticks": 160, "interval_ticks": 4, "sound_every": 6, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:lava_leak": { "weight": 0.4, "reach": 4, "ticks": 120, "interval_ticks": 4, "sound_every": 8, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:mock_grave": { "weight": 0.4, "min_distance": 5, "max_distance": 10, "tries": 8, "restore_ticks": 6000, "title": "R.I.P." }
   }
 }

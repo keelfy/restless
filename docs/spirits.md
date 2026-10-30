@@ -421,6 +421,11 @@ an essence or artifact.
 | `infested_stone` | 191 | HARMFUL | BLOCKS | 0.4 | Stone, cobblestone, deepslate or stone bricks in sight within 6 | The block is shown as its infested kind (a swap, see `swaps.mode`); restored after 30 s |
 | `ceiling_crack` | 118 | LIGHT | BLOCKS | 0.5 | A solid block 1–4 above the eyes | Crack progress and particles on it, as if mined from above, silent; the block never breaks |
 | `ice_over` | 142 | LIGHT | BLOCKS | 0.5 | Source water within 8 | Up to 24 of them become ice (a swap); restored after 30 s |
+| `portal_out` | 114 | HARMFUL | BLOCKS | 0.4 | Nether portal blocks within 12 | The whole portal (every connected block) is broken for good in every mode, with a fizzle; the frame stays |
+| `block_blink` | 109 | LIGHT | BLOCKS | 0.4 | The block looked at within 5, no block entity, not below the feet | Breaks with its sound and dust (a swap to air), back after 2 s; under hardcore it stays gone, no drop |
+| `leak` | 183 | LIGHT | BLOCKS | 0.5 | Air just under a ceiling 1–4 above the eyes | Water drips from it for 8 s, particles and sound only, in every mode |
+| `lava_leak` | 183 | LIGHT | BLOCKS | 0.4 | Same | Lava drips from it for 6 s, particles and sound only, in every mode |
+| `mock_grave` | 185 | LIGHT | BLOCKS | 0.4 | Open standing room 5–10 away with a free cell in front | A gravestone with a sign (R.I.P., the player's name, tomorrow's date); removed after 5 min, stays under hardcore |
 | `animals_stare` | 85 | LIGHT | MOBS | 0.6 | Two animals within 16 | They stop and face the player for 3 s |
 | `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
 | `dog_barks` | 87 | LIGHT | MOBS | 0.6 | A wolf within 16 | Turns away and makes its ambient sound |
