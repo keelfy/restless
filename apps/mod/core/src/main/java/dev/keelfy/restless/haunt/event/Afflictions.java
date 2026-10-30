@@ -8,6 +8,8 @@ import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.Difficulty;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
@@ -17,6 +19,9 @@ import net.minecraft.world.phys.Vec3;
 
 /** Status effects and other things done to the player's body. None of them can kill. */
 final class Afflictions {
+    /** Ticks without sleep set by insomnia: past the three days after which phantoms come, about half the time. */
+    private static final int SLEEPLESS = 144000;
+
     private Afflictions() {}
 
     static List<HauntEvent> all() {
@@ -63,7 +68,11 @@ final class Afflictions {
                     player.giveExperiencePoints(-Math.min(player.totalExperience, config.integer("xp_min") + player.getRandom().nextInt(config.integer("xp_spread"))));
                 }),
             // 51
-            harmful("bad_luck", MobEffects.UNLUCK)
+            harmful("bad_luck", MobEffects.UNLUCK),
+            // 171: the clock phantoms go by says three days without sleep
+            SimpleEvent.harmful("insomnia", EventTag.AFFLICTION,
+                player -> player.level().getDifficulty() != Difficulty.PEACEFUL && player.getStats().getValue(Stats.CUSTOM.get(Stats.TIME_SINCE_REST)) < SLEEPLESS,
+                player -> player.getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), SLEEPLESS))
         );
     }
 

@@ -48,7 +48,7 @@ Total for the seam itself: about 3. The cost is in the per-event real branches.
 | `hallucination` (126) | packet-only mob | the mob is spawned for real |
 | `disguise` (125) | the real animal hidden, another kind shown in its place | the animal is converted into the other kind (`convertTo`) |
 | `moving_tree` (108) | the tree moves, and moves back after 30 s | the tree stays where it moved |
-| `pillar` (121), `harvest` (122), `lost_growth` (110) | undone later | stay (through `Restore`) |
+| `pillar` (121), `harvest` (122), `lost_growth` (110), `redstone_drift` (178) | undone later | stay (through `Restore`) |
 | `dragon_flyover` (127), the other-player events (119, 120, 123, 124), the other lies and sounds | — | unchanged |
 
 Tests: the hardcore gametests run in a batch of their own, since the switch is one for the whole server.

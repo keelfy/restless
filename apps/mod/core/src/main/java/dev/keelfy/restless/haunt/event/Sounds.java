@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.SculkShriekerBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -55,6 +56,21 @@ final class Sounds {
                 Vec3 at = Nearby.around(player, config.num("distance"), BEHIND);
                 var below = player.level().getBlockState(player.blockPosition().below());
                 Nearby.sound(player, below.getSoundType().getStepSound(), at.with(Direction.Axis.Y, player.getY()), config.tone("sound"));
+            }),
+            // 199: the shrieker's own call, which a vibration would normally cause; no player is given, so nothing is warned
+            SimpleEvent.light("shrieker", EventTag.SOUND, player -> Nearby.any(player, "shrieker", s -> s.is(Blocks.SCULK_SHRIEKER)), player -> {
+                BlockPos pos = Nearby.random(player, "shrieker", s -> s.is(Blocks.SCULK_SHRIEKER));
+                if (pos != null && player.level().getBlockEntity(pos) instanceof SculkShriekerBlockEntity shrieker) {
+                    shrieker.tryShriek(player.level(), null);
+                }
+            }),
+            // 199: a heart with no warden, quickening
+            SimpleEvent.light("phantom_heartbeat", EventTag.SOUND, player -> true, player -> {
+                Config.Section config = Config.event("phantom_heartbeat");
+                Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+                    Nearby.sound(p, SoundEvents.WARDEN_HEARTBEAT, p.position(), config.tone("sound"));
+                    return n + 1 < config.integer("beats");
+                });
             }),
             // 25
             at("creeper_hiss", SoundEvents.CREEPER_PRIMED),

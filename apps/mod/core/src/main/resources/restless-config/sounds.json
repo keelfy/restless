@@ -42,6 +42,8 @@
     "minecraft:spider_overhead": { "weight": 0.4, "interval_ticks": 8, "steps": 6, "step_blocks": 0.4, "sound": { "volume": 0.6, "pitch": 1.0 } },
     "minecraft:cracking_floor": { "weight": 0.3 },
     "minecraft:bottle_shatter": { "weight": 0.4, "distance": 4.0 },
-    "minecraft:note_block_voice": { "weight": 0.5, "radius": 16, "sound": { "volume": 1.0, "pitch": 1.0 } }
+    "minecraft:note_block_voice": { "weight": 0.5, "radius": 16, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:shrieker": { "weight": 0.4, "radius": 16 },
+    "minecraft:phantom_heartbeat": { "weight": 0.4, "interval_ticks": 18, "beats": 8, "sound": { "volume": 1.0, "pitch": 1.0 } }
   }
 }

@@ -193,7 +193,8 @@ public final class Director {
 
     private static long cooldown(ServerLevel level, BlockPos at, HauntData.Haunting haunting, long now, RandomSource random) {
         double quiet = Power.daylightFactor(level.isBrightOutside(), level.canSeeSky(at), !level.isThundering());
-        double activity = spirit(haunting).activity() * Traits.activity(Traits.of(haunting.traits()), conditions(level, at));
+        Set<Trait.Condition> around = conditions(level, at);
+        double activity = spirit(haunting).activity(around) * Traits.activity(Traits.of(haunting.traits()), around);
         return Power.cooldownTicks(power(haunting, now), activity, random.nextDouble(), quiet);
     }
 

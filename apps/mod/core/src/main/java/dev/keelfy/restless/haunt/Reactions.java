@@ -75,14 +75,14 @@ public final class Reactions {
         trigger(player, trigger, player.level().getServer().overworld().getGameTime());
     }
 
-    /** Each of the player's spirits with a trait for this trigger has a chance to act on the next check. */
+    /** Each of the player's spirits whose type or a trait has this trigger has a chance to act on the next check. */
     private static void trigger(ServerPlayer player, Trait.Trigger trigger, long now) {
         HauntData data = HauntData.get(player.level().getServer());
         List<HauntData.Haunting> spirits = new ArrayList<>(Director.hauntings(player, data, now));
         boolean changed = false;
         for (int i = 0; i < spirits.size(); i++) {
             HauntData.Haunting haunting = spirits.get(i);
-            if (haunting.nextEventAt() > now && Traits.reacts(Traits.of(haunting.traits()), trigger)
+            if (haunting.nextEventAt() > now && (Director.spirit(haunting).reacts().contains(trigger) || Traits.reacts(Traits.of(haunting.traits()), trigger))
                 && player.getRandom().nextDouble() < Config.section("director").num("react_chance")) {
                 spirits.set(i, haunting.rescheduled(now));
                 changed = true;

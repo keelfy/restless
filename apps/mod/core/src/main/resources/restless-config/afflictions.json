@@ -13,6 +13,7 @@
     "minecraft:levitation": { "weight": 0.6, "seconds": 2, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
     "minecraft:frostbite": { "weight": 0.6, "min_health": 6.0, "extra_freeze_ticks": 60, "sound": { "volume": 1.0, "pitch": 0.6 } },
     "minecraft:drained": { "weight": 0.6, "xp_min": 5, "xp_spread": 10 },
-    "minecraft:bad_luck": { "weight": 0.6, "seconds": 300, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } }
+    "minecraft:bad_luck": { "weight": 0.6, "seconds": 300, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:insomnia": { "weight": 0.4 }
   }
 }

@@ -11,6 +11,22 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.network.Filterable;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.entity.animal.cow.Cow;
+import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.animal.wolf.Wolf;
+import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.WritableBookContent;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.LecternBlock;
+import net.minecraft.world.level.block.RepeaterBlock;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
+import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -43,7 +59,7 @@ final class HauntEventGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter",
-            "stranger_joins", "stranger_death", "false_night", "false_slot", "turned_head", "dragon_flyover")) {
+            "stranger_joins", "stranger_death", "phantom_heartbeat", "false_night", "false_slot", "turned_head", "dragon_flyover")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
         tests.put("event_false_advancement", helper -> runs(helper, "false_advancement", player -> {}, () -> {
@@ -132,6 +148,52 @@ final class HauntEventGameTests {
             helper.setBlock(FEET.south(2), ((CropBlock) Blocks.WHEAT).getStateForAge(7));
             // Random ticks may grow it a stage again before the check, so "lost" is: no longer ripe.
         }, () -> check(helper, helper.getBlockState(FEET.south(2)).getValue(CropBlock.AGE) < CropBlock.MAX_AGE, "lost_growth must take the growth")));
+        tests.put("event_lectern_pages", helper -> runs(helper, "lectern_pages", player -> {
+            helper.setBlock(FEET.west(2), Blocks.LECTERN.defaultBlockState().setValue(LecternBlock.HAS_BOOK, true));
+            ItemStack book = new ItemStack(Items.WRITABLE_BOOK);
+            book.set(DataComponents.WRITABLE_BOOK_CONTENT, new WritableBookContent(List.of(Filterable.passThrough("a"), Filterable.passThrough("b"), Filterable.passThrough("c"))));
+            ((LecternBlockEntity) helper.getBlockEntity(FEET.west(2), LecternBlockEntity.class)).setBook(book);
+        }, () -> check(helper, ((LecternBlockEntity) helper.getBlockEntity(FEET.west(2), LecternBlockEntity.class)).getPage() != 0, "lectern_pages must turn the page")));
+        tests.put("event_pot_wobble", helper -> runs(helper, "pot_wobble",
+            player -> helper.setBlock(FEET.west(2), Blocks.DECORATED_POT), () -> helper.assertBlockPresent(Blocks.DECORATED_POT, FEET.west(2))));
+        tests.put("event_bell_swing", helper -> runs(helper, "bell_swing",
+            player -> helper.setBlock(FEET.west(2), Blocks.BELL), () -> helper.assertBlockPresent(Blocks.BELL, FEET.west(2))));
+        tests.put("event_redstone_drift", helper -> runs(helper, "redstone_drift",
+            player -> helper.setBlock(FEET.west(2), Blocks.REPEATER),
+            () -> check(helper, helper.getBlockState(FEET.west(2)).getValue(RepeaterBlock.DELAY) != 1, "redstone_drift must change the delay")));
+        tests.put("event_occupied_bed", helper -> runs(helper, "occupied_bed", player -> {
+            helper.setBlock(FEET.west(3), Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.HEAD).setValue(BedBlock.FACING, Direction.WEST));
+            helper.setBlock(FEET.west(2), Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.FOOT).setValue(BedBlock.FACING, Direction.WEST));
+        }, () -> {
+            check(helper, helper.getBlockState(FEET.west(3)).getValue(BedBlock.OCCUPIED), "occupied_bed must mark the head taken");
+            check(helper, helper.getBlockState(FEET.west(2)).getValue(BedBlock.OCCUPIED), "occupied_bed must mark the foot taken");
+        }));
+        tests.put("event_golem_flower", helper -> {
+            Entity[] golem = new Entity[1];
+            runs(helper, "golem_flower", player -> golem[0] = EntityTypes.IRON_GOLEM.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
+                () -> check(helper, ((IronGolem) golem[0]).getOfferFlowerTick() > 0, "golem_flower must offer the flower"));
+        });
+        tests.put("event_dog_growls", helper -> {
+            Wolf[] wolf = new Wolf[1];
+            runs(helper, "dog_growls", player -> {
+                wolf[0] = EntityTypes.WOLF.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND);
+                wolf[0].setTame(true, false);
+            }, () -> check(helper, wolf[0].isInSittingPose(), "dog_growls must sit the dog"));
+        });
+        tests.put("event_leash_snaps", helper -> {
+            Cow[] cow = new Cow[1];
+            runs(helper, "leash_snaps", player -> {
+                cow[0] = EntityTypes.COW.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND);
+                cow[0].setLeashedTo(LeashFenceKnotEntity.getOrCreateKnot(helper.getLevel(), helper.absolutePos(FEET).east(3)), true);
+            }, () -> check(helper, !cow[0].isLeashed(), "leash_snaps must free the animal"));
+        });
+        tests.put("event_shrieker", helper -> runs(helper, "shrieker",
+            player -> helper.setBlock(FEET.west(2), Blocks.SCULK_SHRIEKER), () -> helper.assertBlockPresent(Blocks.SCULK_SHRIEKER, FEET.west(2))));
+        tests.put("event_insomnia", helper -> {
+            ServerPlayer[] who = new ServerPlayer[1];
+            runs(helper, "insomnia", player -> who[0] = player,
+                () -> check(helper, who[0].getStats().getValue(Stats.CUSTOM.get(Stats.TIME_SINCE_REST)) >= 72000, "insomnia must count the days without sleep"));
+        });
         farOff(tests, "distant_player", 60, Mannequin.class, (helper, figure) -> {
             var look = figure.getProfile().skinPatch();
             check(helper, look.body().isPresent() && look.model().isPresent(), "the stranger must wear one of the default skins");

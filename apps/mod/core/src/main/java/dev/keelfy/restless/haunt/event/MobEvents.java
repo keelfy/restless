@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -20,8 +21,13 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
+import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.animal.wolf.Wolf;
+import net.minecraft.world.entity.animal.wolf.WolfSoundVariants;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -103,8 +109,82 @@ final class MobEvents {
                         zombie.setDropChance(slot, 0.0F);
                     }
                     zombie.setTarget(player);
-                })
+                }),
+            // 193: the flower is offered for a while, to nobody
+            SimpleEvent.light("golem_flower", EventTag.MOBS, player -> !golems(player).isEmpty(), player -> {
+                List<IronGolem> golems = golems(player);
+                IronGolem golem = golems.get(player.getRandom().nextInt(golems.size()));
+                golem.offerFlower(true);
+                Scheduler.later(player, Config.event("golem_flower").integer("hold_ticks"), p -> golem.offerFlower(false));
+            }),
+            // 194: sits, looks at the empty space beside the player and growls; stands again when it is over
+            SimpleEvent.light("dog_growls", EventTag.MOBS, player -> !standingDogs(player).isEmpty(), MobEvents::growl),
+            // 196: the bees come out as if the hive had been broken
+            SimpleEvent.harmful("angry_bees", EventTag.MOBS, player -> hive(player) != null, player -> {
+                BlockPos pos = hive(player);
+                if (pos != null && player.level().getBlockEntity(pos) instanceof BeehiveBlockEntity hive) {
+                    hive.emptyAllLivingFromHive(player, player.level().getBlockState(pos), BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY);
+                }
+            }),
+            // 181: the knot is dropped and the animals are loose
+            SimpleEvent.harmful("leash_snaps", EventTag.MOBS, player -> !leashed(player).isEmpty(), player -> {
+                List<Mob> mobs = leashed(player);
+                Mob mob = mobs.get(player.getRandom().nextInt(mobs.size()));
+                Config.Tone tone = Config.event("leash_snaps").tone("sound");
+                player.level().playSound(null, mob.blockPosition(), SoundEvents.LEAD_BREAK, SoundSource.NEUTRAL, tone.volume(), tone.pitch());
+                mob.dropLeash();
+            })
         );
+    }
+
+    private static List<IronGolem> golems(ServerPlayer player) {
+        return near(player, IronGolem.class, "golem_flower").stream().filter(g -> g.getTarget() == null && g.getOfferFlowerTick() == 0).toList();
+    }
+
+    private static List<Wolf> standingDogs(ServerPlayer player) {
+        return near(player, Wolf.class, "dog_growls").stream().filter(w -> w.isTame() && !w.isOrderedToSit() && !w.isInSittingPose()).toList();
+    }
+
+    private static void growl(ServerPlayer player) {
+        List<Wolf> dogs = standingDogs(player);
+        if (dogs.isEmpty()) {
+            return;
+        }
+        Wolf dog = dogs.get(player.getRandom().nextInt(dogs.size()));
+        Config.Section config = Config.event("dog_growls");
+        Vec3 empty = Nearby.around(player, config.num("distance"), player.getRandom().nextDouble() * Nearby.FULL_TURN);
+        dog.getNavigation().stop();
+        dog.setOrderedToSit(true);
+        dog.setInSittingPose(true);
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            if (!dog.isAlive() || !dog.isOrderedToSit()) {
+                return false;
+            }
+            dog.lookAt(EntityAnchorArgument.Anchor.EYES, empty);
+            if (n % config.integer("growl_steps") == 0) {
+                Config.Tone tone = config.tone("sound");
+                dog.level().playSound(null, dog.blockPosition(), SoundEvents.WOLF_SOUNDS.get(WolfSoundVariants.SoundSet.CLASSIC).adultSounds().growlSound().value(), SoundSource.NEUTRAL, tone.volume(), tone.pitch());
+            }
+            return n * config.integer("interval_ticks") < config.integer("growl_ticks");
+        });
+        Restore.after(player.level(), config.integer("growl_ticks"), force -> {
+            if (dog.isAlive() && dog.isOrderedToSit()) {
+                dog.setOrderedToSit(false);
+                dog.setInSittingPose(false);
+            }
+            return true;
+        });
+    }
+
+    private static @Nullable BlockPos hive(ServerPlayer player) {
+        return Nearby.all(player, "angry_bees", s -> s.is(BlockTags.BEEHIVES)).stream()
+            .filter(pos -> player.level().getBlockEntity(pos) instanceof BeehiveBlockEntity hive && !hive.isEmpty())
+            .findFirst().orElse(null);
+    }
+
+    /** Mobs tied to a fence post. */
+    private static List<Mob> leashed(ServerPlayer player) {
+        return near(player, Mob.class, "leash_snaps").stream().filter(m -> m.getLeashHolder() instanceof LeashFenceKnotEntity).toList();
     }
 
     private static <T extends Entity> List<T> near(ServerPlayer player, Class<T> type, String event) {

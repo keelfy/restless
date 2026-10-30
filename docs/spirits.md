@@ -7,7 +7,8 @@ Update this file when any of them changes. The numbers below are the shipped def
 ## How it works
 
 - A spirit is **personal** (follows one player) or **territorial** (stays at an anchor); the kind is `kind` in `spirits.json`.
-  `shade` and `phantom` are personal, `poltergeist` and `nix` are territorial.
+  `shade`, `phantom`, `mimic`, `wraith`, `mara`, `banshee`, `revenant` and `lost_one` are personal; `poltergeist`, `nix`,
+  `domovoi`, `hoarder`, `demon` and `trickster` are territorial.
 - Each player gets 3 personal spirits (`director.default_spirits`) on first check, each chosen uniformly at random
   (repeats allowed), and keeps them. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`. A poltergeist
   in an older save is dropped.
@@ -59,6 +60,9 @@ what they pick and when they act. A trait has any of:
   (`kill`), the spirit has a `director.react_chance` to act on the next check. The event is still picked and capped as
   usual. `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`.
 
+A type can carry `when` and `reacts` too (see [Spirits](#spirits)): its `activity` then holds only under that condition
+(1 otherwise), and its triggers work like a trait's.
+
 Noise and reactions apply to personal spirits only. The debug screen shows each spirit's traits and, for the selected
 event, the chance each spirit rolls it next.
 
@@ -87,7 +91,7 @@ taken from the server's own players would change the story whenever they do.
 ### Cooldown
 
 `minutes = (4 − 2.5 × power) × (1 + roll) × quiet / activity`, `roll` uniform in 0..1 (minimum 1 second).
-`activity` is the type's activity times every trait's active modifier.
+`activity` is the type's activity (if its `when` holds) times every trait's active modifier.
 
 `quiet = 1.2^n`, where `n` counts the true conditions among: it is day, the player sees the sky, there is no thunderstorm.
 So a player in the open on a clear day waits up to 1.73× longer; in a mine, a house or at night nothing changes.
@@ -180,7 +184,7 @@ Altars with nothing to answer, or missing candles or salt, refuse the focus. Emp
 | Poltergeist | **Telekinesis amulet** (essence, gold ingot, string) | Pulls every dropped item within `artifacts.amulet_radius` to you. |
 | Shade | **Dark eye** (essence, eye of ender) | Night vision, and every living thing within `artifacts.eye_radius` glows, for `artifacts.eye_ticks`. |
 
-A phantom and a nix have no essence item or artifact yet, so they drop nothing (graves give no essence for it either).
+Only the poltergeist and the shade have an essence; every other type drops nothing (graves give no essence for it either).
 
 Not built yet: offerings, throwing holy water to end a running event, the essence lure, and the pact enchantment and
 mimic mask (there are no spirit types for them yet). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
@@ -242,7 +246,9 @@ left as it is.
 ### Evolution
 
 A spirit `evolution.days` (5) in-game days old grows up, once and for good: a poltergeist turns **raging**, a shade a
-**light-eater**, a phantom a **doppelganger**, a nix a **drowner**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
+**light-eater**, a phantom a **doppelganger**, a nix a **drowner**, a mimic a **skinwalker**, a wraith a **dread wraith**, a mara a
+**night hag**, a banshee a **keening banshee**, a revenant an **avenger**, a lost one the **forsaken**, a domovoi a **house master**,
+a hoarder a **glutton**, a demon an **archdemon** and a trickster a **jester**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
 territorial one tries `corruption.evolved_factor` (3) times as many columns. The players it haunts (its own player, or
 those in its radius) hear a heartbeat, are told, and it goes in their journal; from then on it goes by its grown name.
 A personal spirit grows only while its player is online.
@@ -259,8 +265,23 @@ for evolved spirits.
 | `shade` | Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as its power grows. | 0.8 | lights ×3, sounds ×2.5, afflictions ×2, presence ×2, assaults ×1, doors ×0.3, items ×0.5 |
 | `phantom` | Likes to be seen, as other players: far-off strangers, a name in the player list, someone pillaring or taking the crops. Seldom hurts. | 1.0 | player ×6, presence ×2, doors ×0.5, lights ×0.5, afflictions ×0.5, items ×0.5, assaults ×0.3 |
 | `nix` | Territorial, bound to water. Keeps swimmers under, calls players to the water, kills fish and breaks boats. Place it by a lake or the sea with `/haunt spirit add nix` while standing there. | 1.0 | water ×8, afflictions ×1, assaults ×0.5, sounds ×0.5, blocks ×0.3, presence ×0.3 |
+| `mimic` | Fakes things: blocks that are not there, strangers, mobs that vanish. | 1.0 | blocks ×3, player ×2, presence ×1.5, mobs ×1.5, lights ×0.5, doors ×0.5, assaults ×0.5 |
+| `wraith` | Hunts in the dark: snuffs lights and hurts. | 2.0 in the dark (`when: dark`), 1 elsewhere | assaults ×2.5, lights ×2, afflictions ×1.5, presence ×1.5, doors ×0.5, blocks ×0.5, items ×0.3 |
+| `mara` | Rides the sleeper: afflictions and presence at night, may act when the player uses a bed (`reacts: bed`). | 1.8 at night (`when: night`), 1 by day | afflictions ×3, presence ×2, sounds ×1.5, doors ×0.5, items ×0.3, blocks ×0.3 |
+| `banshee` | A voice: mostly sounds, rarely touches anything. | 0.9 | sounds ×5, presence ×1.5, doors ×0.5, items ×0.3, blocks ×0.3, assaults ×0.3 |
+| `revenant` | Vengeful: hurts and sends mobs, may act after the player kills a mob (`reacts: kill`). | 1.0 | assaults ×3, mobs ×2.5, afflictions ×1, lights ×0.5, doors ×0.3, items ×0.3 |
+| `lost_one` | Wanders: figures, strangers and steps, may act when the player goes below y 0 (`reacts: deep`). | 0.9 | presence ×3, player ×2, sounds ×1.5, blocks ×0.5, items ×0.5, assaults ×0.2 |
+| `domovoi` | Territorial house spirit: doors, belongings and household noises, hardly harmful. | 0.7 | doors ×2, items ×2, sounds ×1.5, mobs ×0.5, afflictions ×0.3, assaults ×0.2 |
+| `hoarder` | Territorial: takes and moves items. | 1.2 | items ×5, blocks ×1.5, doors ×1.5, lights ×0.5, presence ×0.5, assaults ×0.3 |
+| `demon` | Territorial and dangerous: assaults, afflictions and mobs. | 1.1 | assaults ×3, afflictions ×2, mobs ×2, lights ×1.5, doors ×0.5, items ×0.5 |
+| `trickster` | Territorial prankster: changes blocks and items, shows things. | 1.2 | blocks ×2.5, items ×2, mobs ×1.5, presence ×1.5, assaults ×0.2 |
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
+
+The ten types after `nix` only pick from the existing events. Their own gimmicks from [design.md](design.md) are not built:
+fake chat (mimic), the nightmare room (mara), honest warnings (banshee), birth from killing (revenant), replaying a death
+path (lost one), winning a domovoi with offerings, the nest (hoarder), pacts (demon) and fake gifts (trickster). None has
+an essence or artifact.
 
 ## Events
 
@@ -294,6 +315,11 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `chest_lid` | 21 | LIGHT | DOORS | 0.7 | A chest or trapped chest within 10 | Lid opens and closes with sound, contents untouched |
 | `barrel_opens` | 22 | LIGHT | DOORS | 0.7 | A closed barrel within 10 | Opens for 1.5 s, then closes |
 | `jukebox_pop` | 101 | LIGHT | DOORS | 0.7 | A jukebox within 20 is playing a disc | The music cuts out and the disc pops out of it |
+| `lectern_pages` | 174 | LIGHT | DOORS | 0.7 | A lectern within 12 holds a book of more than one page | The book turns to another page with a page-turn sound, through the lectern's own menu so a comparator sees the change |
+| `pot_wobble` | 175 | LIGHT | DOORS | 0.7 | A decorated pot within 12 | It wobbles as if an item were refused |
+| `bell_swing` | 175 | LIGHT | DOORS | 0.7 | A bell within 20 | It swings and rings toward a random side |
+| `redstone_drift` | 178 | HARMFUL | DOORS | 0.5 | A repeater or comparator within 12 | A repeater gets another delay, a comparator the other mode, with no update. Set back after 2 min if unchanged; under hardcore it stays |
+| `occupied_bed` | 169 | LIGHT | DOORS | 0.6 | An unoccupied bed within 12 | Both halves read as occupied for 1 min, so the vanilla "This bed is occupied" shows. Always put back, hardcore or not |
 | `locked_door` | 19 | HARMFUL | DOORS | 0.7 | A wooden door within 12 | Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back |
 | `footsteps` | 24 | LIGHT | SOUND | 0.4 | Always | A step sound 2 blocks behind the player |
 | `creeper_hiss` | 25 | LIGHT | SOUND | 0.4 | Always | Creeper fuse hiss nearby |
@@ -316,6 +342,8 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `spider_overhead` | 136 | LIGHT | SOUND | 0.4 | A solid block 2–3 above the head with air below it | A spider sound, then five steps crawling across the ceiling |
 | `cracking_floor` | 138 | HARMFUL | SOUND | 0.3 | Standing on a block | Break particles and sound of the block underfoot; it stays |
 | `bottle_shatter` | 139 | LIGHT | SOUND | 0.4 | Always | A splash potion shatters 4 blocks away (sound and coloured particles) |
+| `shrieker` | 199 | LIGHT | SOUND | 0.4 | A sculk shrieker within 16 | It shrieks. No player is given to it, so nobody is warned and no warden is called |
+| `phantom_heartbeat` | 199 | LIGHT | SOUND | 0.4 | Always | Eight warden heartbeats at the player, one every 0.9 s |
 | `note_block_voice` | 140 | LIGHT | SOUND | 0.5 | A note block within 16 | It plays a villager or player hurt, ghast scream, zombie villager or vex sound, with a note particle |
 | `nausea` | 39 | LIGHT | AFFLICTION | 0.6 | No nausea | Nausea 5 s |
 | `heaviness` | 40 | LIGHT | AFFLICTION | 0.6 | No slowness | Slowness II 8 s |
@@ -329,6 +357,7 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `frostbite` | 49 | HARMFUL | AFFLICTION | 0.6 | Health > 3 hearts, not freezing | Powder-snow freeze for about 3 s |
 | `drained` | 50 | HARMFUL | AFFLICTION | 0.6 | Player has XP | Loses 5–14 XP points |
 | `bad_luck` | 51 | HARMFUL | AFFLICTION | 0.6 | No bad luck | Bad luck 5 min |
+| `insomnia` | 171 | HARMFUL | AFFLICTION | 0.4 | Not peaceful, fewer than 144000 ticks since rest | The player's "time since rest" is set to 144000 (past three days), so phantoms come the next night; sleeping resets it |
 | `trip` | 53 | HARMFUL | ASSAULT | 0.7 | Not slowed | Stops dead for 1 s |
 | `scorch` | 54 | HARMFUL | ASSAULT | 0.6 | Health > 3 hearts, dry, not burning | On fire for 1 s |
 | `wrath` | 55 | HARMFUL | ASSAULT | 0.6 | Health > 4 hearts | 2–3.5 hearts of magic damage, never lethal |
@@ -382,6 +411,10 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `open_pen` | 90 | HARMFUL | MOBS | 0.6 | A closed gate with an animal within 5 of it | Opens the gate |
 | `wild_pet` | 91 | HARMFUL | MOBS | 0.6 | A tamed pet of the player within 32 | Loses its owner and targets the player |
 | `copycat` | 92 | HARMFUL | MOBS | 0.6 | Not peaceful, standing room 3 blocks behind | A zombie in a copy of the player's armor, targeting them |
+| `golem_flower` | 193 | LIGHT | MOBS | 0.6 | An iron golem within 24 with no target | It holds out its poppy for 15 s, to nobody |
+| `dog_growls` | 194 | LIGHT | MOBS | 0.6 | A tamed standing wolf within 16 | It sits, looks at the empty space 2 blocks from the player and growls for 6 s, then stands |
+| `angry_bees` | 196 | HARMFUL | MOBS | 0.5 | A bee nest or hive within 16 with bees in it | The bees come out angry at the player, as if it had been broken |
+| `leash_snaps` | 181 | HARMFUL | MOBS | 0.5 | A mob tied to a fence post within 16 | The leash comes loose with a snap and drops as an item |
 | `edge_figure` | 94 | LIGHT | PRESENCE | 0.4 | No such figure already, standing room 16 blocks away, 45–65° to a side of where the player looks | A silent, unhurtable mannequin with the player's own skin stands there facing them. Gone, with no sound or particles, when the player looks within 25° of it with a clear line, or after 30 s |
 | `fog_silhouette` | 95 | LIGHT | PRESENCE | 0.3 | Open sky and rain or darkness outside, standing room 40 blocks away within 25° of where the player looks | A mannequin in the default skin stands far off. Gone, silently, when the player comes within 24 blocks, or after 60 s |
 | `distant_player` | 123 | LIGHT | PRESENCE, PLAYER | 0.3 | Standing room 60 blocks away within 40° of where the player looks | A silent, unhurtable mannequin in a random default skin (Steve, Alex and the rest) stands there facing them. Gone, silently, when the player comes within 35 blocks, or after 60 s |

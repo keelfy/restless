@@ -142,6 +142,18 @@
     "minecraft:false_advancement": { "name": "False Advancement", "description": "An advancement toast: \"Who are you?\", \"Not Alone\", \"Behind You\". It is gone from the advancements as soon as it is shown." },
     "minecraft:turned_head": { "name": "Turned Head", "description": "A step sounds where the spirit is, and the player's head turns toward it, slowly, by itself." },
     "minecraft:stranger_joins": { "name": "Someone Joins", "description": "Someone joins the game: the yellow chat line and a name in the player list, which then opens even in single player. They leave a while later." },
-    "minecraft:stranger_death": { "name": "Someone Dies", "description": "A death message about another player in chat, in the player's language." }
+    "minecraft:stranger_death": { "name": "Someone Dies", "description": "A death message about another player in chat, in the player's language." },
+    "minecraft:lectern_pages": { "name": "Lectern Pages", "description": "A book on a lectern turns to another page by itself." },
+    "minecraft:pot_wobble": { "name": "Pot Wobble", "description": "A decorated pot wobbles as if something were pushed into it." },
+    "minecraft:bell_swing": { "name": "Bell Swing", "description": "A bell swings and rings with nobody near it." },
+    "minecraft:redstone_drift": { "name": "Redstone Drift", "description": "A repeater gets another delay or a comparator the other mode, silently, until it is set back." },
+    "minecraft:occupied_bed": { "name": "Occupied Bed", "description": "A bed reads as occupied for a while, with nobody in it." },
+    "minecraft:golem_flower": { "name": "Golem Flower", "description": "An iron golem holds out a poppy to empty air." },
+    "minecraft:dog_growls": { "name": "Dog Growls", "description": "A tamed dog sits, stares at the empty space beside the player and growls." },
+    "minecraft:angry_bees": { "name": "Angry Bees", "description": "The bees of a nearby hive pour out angry at the player." },
+    "minecraft:leash_snaps": { "name": "Leash Snaps", "description": "A leash on a fence post comes loose and the animal runs free." },
+    "minecraft:shrieker": { "name": "Shrieker", "description": "A sculk shrieker shrieks with nothing near it; nobody is warned." },
+    "minecraft:phantom_heartbeat": { "name": "Phantom Heartbeat", "description": "A warden heartbeat with no warden." },
+    "minecraft:insomnia": { "name": "Insomnia", "description": "The player is counted as three days without sleep, so phantoms come the next night." }
   }
 }

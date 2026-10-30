@@ -29,6 +29,61 @@
       "kind": "personal",
       "activity": 1.0,
       "affinity": { "PLAYER": 6.0, "PRESENCE": 2.0, "DOORS": 0.5, "LIGHTS": 0.5, "AFFLICTION": 0.5, "ASSAULT": 0.3, "ITEMS": 0.5 }
+    },
+    "mimic": {
+      "kind": "personal",
+      "activity": 1.0,
+      "affinity": { "BLOCKS": 3.0, "PLAYER": 2.0, "PRESENCE": 1.5, "MOBS": 1.5, "LIGHTS": 0.5, "DOORS": 0.5, "ASSAULT": 0.5 }
+    },
+    "wraith": {
+      "kind": "personal",
+      "activity": 2.0,
+      "when": "dark",
+      "affinity": { "ASSAULT": 2.5, "LIGHTS": 2.0, "AFFLICTION": 1.5, "PRESENCE": 1.5, "DOORS": 0.5, "ITEMS": 0.3, "BLOCKS": 0.5 }
+    },
+    "mara": {
+      "kind": "personal",
+      "activity": 1.8,
+      "when": "night",
+      "reacts": ["bed"],
+      "affinity": { "AFFLICTION": 3.0, "PRESENCE": 2.0, "SOUND": 1.5, "DOORS": 0.5, "ITEMS": 0.3, "BLOCKS": 0.3 }
+    },
+    "banshee": {
+      "kind": "personal",
+      "activity": 0.9,
+      "affinity": { "SOUND": 5.0, "PRESENCE": 1.5, "DOORS": 0.5, "ITEMS": 0.3, "BLOCKS": 0.3, "ASSAULT": 0.3 }
+    },
+    "revenant": {
+      "kind": "personal",
+      "activity": 1.0,
+      "reacts": ["kill"],
+      "affinity": { "ASSAULT": 3.0, "MOBS": 2.5, "AFFLICTION": 1.0, "LIGHTS": 0.5, "DOORS": 0.3, "ITEMS": 0.3 }
+    },
+    "lost_one": {
+      "kind": "personal",
+      "activity": 0.9,
+      "reacts": ["deep"],
+      "affinity": { "PRESENCE": 3.0, "PLAYER": 2.0, "SOUND": 1.5, "BLOCKS": 0.5, "ITEMS": 0.5, "ASSAULT": 0.2 }
+    },
+    "domovoi": {
+      "kind": "territorial",
+      "activity": 0.7,
+      "affinity": { "DOORS": 2.0, "ITEMS": 2.0, "SOUND": 1.5, "MOBS": 0.5, "AFFLICTION": 0.3, "ASSAULT": 0.2 }
+    },
+    "hoarder": {
+      "kind": "territorial",
+      "activity": 1.2,
+      "affinity": { "ITEMS": 5.0, "BLOCKS": 1.5, "DOORS": 1.5, "LIGHTS": 0.5, "ASSAULT": 0.3, "PRESENCE": 0.5 }
+    },
+    "demon": {
+      "kind": "territorial",
+      "activity": 1.1,
+      "affinity": { "ASSAULT": 3.0, "AFFLICTION": 2.0, "MOBS": 2.0, "LIGHTS": 1.5, "DOORS": 0.5, "ITEMS": 0.5 }
+    },
+    "trickster": {
+      "kind": "territorial",
+      "activity": 1.2,
+      "affinity": { "BLOCKS": 2.5, "ITEMS": 2.0, "MOBS": 1.5, "PRESENCE": 1.5, "ASSAULT": 0.2 }
     }
   },
   "traits": {

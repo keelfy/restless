@@ -252,7 +252,7 @@ Can go in any time after the stage they depend on.
 | Track | Needs | Content |
 |---|---|---|
 | Haunted structures | 1, 3 | Generated houses, lighthouses, asylums with one strong spirit; events 5× as often inside; harder farther from spawn |
-| New spirit types | 1 (+ the stage of their gimmick) | mimic (fake blocks, fake chat), wraith (stronger in the dark), demon (pacts), mara (sleep, nightmare room), hoarder (nest you can raid), banshee (honest warnings), revenant (born from killing), lost one (replays a death path), trickster (fake gifts) |
+| New spirit types | 1 (+ the stage of their gimmick) | All ten exist as types on the existing events (see [spirits.md](spirits.md)); the gimmicks remain: mimic (fake blocks, fake chat), wraith (stronger in the dark), demon (pacts), mara (sleep, nightmare room), hoarder (nest you can raid), banshee (honest warnings), revenant (born from killing), lost one (replays a death path), trickster (fake gifts) |
 | Visible spirit entity | 0 | Translucent model per type, visible through the camera or the candle; a spirit's position gets a body |
 | Possession | entity | A mob or a player is possessed for 1–2 min; killing a possessed mob stuns the spirit |
 | Multiplayer | 2, 4 | Roles (medium, exorcist, scholar), spirits hopping between players, playing as a ghost for 5 min after death |

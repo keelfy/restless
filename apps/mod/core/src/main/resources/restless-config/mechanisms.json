@@ -20,6 +20,11 @@
       "slam_sound": { "volume": 1.0, "pitch": 0.7 },
       "denied_sound": { "volume": 1.0, "pitch": 0.8 }
     },
-    "minecraft:open_house": { "weight": 0.7, "radius": 20 }
+    "minecraft:open_house": { "weight": 0.7, "radius": 20 },
+    "minecraft:lectern_pages": { "weight": 0.7, "radius": 12, "sound": { "volume": 1.0, "pitch": 0.9 } },
+    "minecraft:pot_wobble": { "weight": 0.7, "radius": 12, "sound": { "volume": 0.8, "pitch": 0.8 } },
+    "minecraft:bell_swing": { "weight": 0.7, "radius": 20 },
+    "minecraft:redstone_drift": { "weight": 0.5, "radius": 12, "restore_ticks": 2400 },
+    "minecraft:occupied_bed": { "weight": 0.6, "radius": 12, "restore_ticks": 1200 }
   }
 }
