@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import com.mojang.authlib.GameProfile;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -45,9 +46,22 @@ final class Figure {
         return figure;
     }
 
-    /** A skin of no one: a fresh id with no textures gets one of the default player skins, Steve, Alex and the rest. */
+    /** The vanilla default player skins, each in both arm widths. */
+    private static final List<String> SKINS = List.of("alex", "ari", "efe", "kai", "makena", "noor", "steve", "sunny", "zuri");
+
+    /** A skin of no one: a fresh id with no textures, dressed in a random default skin, Steve, Alex and the rest, wide or slim. */
     static ResolvableProfile stranger(ServerPlayer player) {
-        return ResolvableProfile.createResolved(nobody(player, "Steve"));
+        ResolvableProfile profile = ResolvableProfile.createResolved(nobody(player, "Steve"));
+        String model = player.getRandom().nextBoolean() ? "wide" : "slim";
+        String skin = SKINS.get(player.getRandom().nextInt(SKINS.size()));
+        return ResolvableProfile.CODEC.encodeStart(NbtOps.INSTANCE, profile).result()
+            .map(tag -> {
+                CompoundTag data = (CompoundTag) tag;
+                data.putString("texture", "entity/player/" + model + "/" + skin);
+                data.putString("model", model);
+                return ResolvableProfile.CODEC.parse(NbtOps.INSTANCE, data).result().orElse(profile);
+            })
+            .orElse(profile);
     }
 
     /** A profile of no one, under {@code name}, with a fresh id and no textures. */

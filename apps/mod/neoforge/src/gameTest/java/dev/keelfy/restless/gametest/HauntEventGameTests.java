@@ -132,7 +132,11 @@ final class HauntEventGameTests {
             helper.setBlock(FEET.south(2), ((CropBlock) Blocks.WHEAT).getStateForAge(7));
             // Random ticks may grow it a stage again before the check, so "lost" is: no longer ripe.
         }, () -> check(helper, helper.getBlockState(FEET.south(2)).getValue(CropBlock.AGE) < CropBlock.MAX_AGE, "lost_growth must take the growth")));
-        farOff(tests, "distant_player", 60, Mannequin.class);
+        farOff(tests, "distant_player", 60, Mannequin.class, (helper, figure) -> {
+            var look = figure.getProfile().skinPatch();
+            check(helper, look.body().isPresent() && look.model().isPresent(), "the stranger must wear one of the default skins");
+            check(helper, look.body().get().id().getPath().contains(look.model().get().getSerializedName()), "the skin must match its arm width");
+        });
         farOff(tests, "distant_walker", 45, Mannequin.class);
         farOff(tests, "nametag", 30, Display.TextDisplay.class);
         farOff(tests, "pillar", 24, Mannequin.class, (helper, figure) ->
