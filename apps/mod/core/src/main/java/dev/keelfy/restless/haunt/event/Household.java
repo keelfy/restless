@@ -11,36 +11,49 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.inventory.LecternMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.ComparatorBlock;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.entity.DecoratedPotBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /** Furniture and redstone parts of a house acting on their own. */
 final class Household {
     /** A lone book can land in its own slot again; a few shuffles make that vanishingly rare. */
     private static final int SHUFFLE_TRIES = 8;
+
+    private static final int OUTPUT_SLOT = 2;
 
     private Household() {}
 
@@ -63,8 +76,87 @@ final class Household {
             // 176
             SimpleEvent.light("shuffled_books", EventTag.DOORS, player -> Nearby.any(player, "shuffled_books", Household::shelved), Household::shuffleBooks),
             // 177: a click first, then the arrow
-            SimpleEvent.harmful("dispenser_shot", EventTag.DOORS, player -> Nearby.any(player, "dispenser_shot", s -> s.is(Blocks.DISPENSER)), Household::shoot)
+            SimpleEvent.harmful("dispenser_shot", EventTag.DOORS, player -> Nearby.any(player, "dispenser_shot", s -> s.is(Blocks.DISPENSER)), Household::shoot),
+            // 117: a hiss from a chest, then a blast that breaks no blocks
+            SimpleEvent.harmful("chest_blast", EventTag.DOORS,
+                player -> player.getHealth() > Config.event("chest_blast").num("min_health") && Nearby.any(player, "chest_blast", s -> s.getBlock() instanceof ChestBlock),
+                Household::blast),
+            // 182: what came out of the furnace is not what went in
+            SimpleEvent.light("wrong_smelt", EventTag.DOORS, player -> !smelted(player).isEmpty(), Household::swapOutput),
+            // 186: something left on the outer side of a door
+            SimpleEvent.light("doorstep_gift", EventTag.DOORS, player -> doorstep(player) != null, Household::leaveGift)
         );
+    }
+
+    private static void blast(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "chest_blast", s -> s.getBlock() instanceof ChestBlock);
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        Config.Section config = Config.event("chest_blast");
+        Config.Tone tone = config.tone("sound");
+        level.playSound(null, pos, SoundEvents.CREEPER_PRIMED, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+        Scheduler.later(player, config.integer("delay_ticks"), p -> {
+            if (level.getBlockState(pos).getBlock() instanceof ChestBlock) {
+                level.explode(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, (float) config.num("power"), Level.ExplosionInteraction.NONE);
+            }
+        });
+    }
+
+    private static List<BlockPos> smelted(ServerPlayer player) {
+        return Nearby.all(player, "wrong_smelt", s -> s.getBlock() instanceof AbstractFurnaceBlock).stream()
+            .filter(pos -> player.level().getBlockEntity(pos) instanceof AbstractFurnaceBlockEntity furnace && !furnace.getItem(OUTPUT_SLOT).isEmpty())
+            .toList();
+    }
+
+    /** The output becomes charcoal or rotten flesh; if nobody took it, the real output comes back (under hardcore it stays). */
+    private static void swapOutput(ServerPlayer player) {
+        List<BlockPos> furnaces = smelted(player);
+        if (furnaces.isEmpty()) {
+            return;
+        }
+        ServerLevel level = player.level();
+        BlockPos pos = furnaces.get(player.getRandom().nextInt(furnaces.size()));
+        AbstractFurnaceBlockEntity furnace = (AbstractFurnaceBlockEntity) level.getBlockEntity(pos);
+        ItemStack before = furnace.getItem(OUTPUT_SLOT).copy();
+        ItemStack after = new ItemStack(player.getRandom().nextBoolean() ? Items.CHARCOAL : Items.ROTTEN_FLESH, before.getCount());
+        furnace.setItem(OUTPUT_SLOT, after);
+        Restore.revert(level, Config.event("wrong_smelt").integer("restore_ticks"), force -> {
+            if (!force && !level.isLoaded(pos)) {
+                return false;
+            }
+            if (level.getBlockEntity(pos) instanceof AbstractFurnaceBlockEntity now && ItemStack.matches(now.getItem(OUTPUT_SLOT), after)) {
+                now.setItem(OUTPUT_SLOT, before);
+            }
+            return true;
+        });
+    }
+
+    /** The free spot just outside a door nearby, on the side away from the player. */
+    private static @Nullable BlockPos doorstep(ServerPlayer player) {
+        ServerLevel level = player.level();
+        List<BlockPos> steps = new ArrayList<>();
+        for (BlockPos pos : Nearby.all(player, "doorstep_gift", s -> s.getBlock() instanceof DoorBlock && s.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER)) {
+            Direction facing = level.getBlockState(pos).getValue(DoorBlock.FACING);
+            BlockPos far = pos.relative(facing);
+            BlockPos near = pos.relative(facing.getOpposite());
+            BlockPos step = far.distToCenterSqr(player.position()) > near.distToCenterSqr(player.position()) ? far : near;
+            if (Place.solid(level, step.below()) && !Place.solid(level, step)) {
+                steps.add(step);
+            }
+        }
+        return steps.isEmpty() ? null : steps.get(player.getRandom().nextInt(steps.size()));
+    }
+
+    private static void leaveGift(ServerPlayer player) {
+        BlockPos step = doorstep(player);
+        if (step == null) {
+            return;
+        }
+        List<String> gifts = Config.event("doorstep_gift").texts("items");
+        Item gift = BuiltInRegistries.ITEM.getValue(Identifier.parse(gifts.get(player.getRandom().nextInt(gifts.size()))));
+        player.level().addFreshEntity(new ItemEntity(player.level(), step.getX() + 0.5, step.getY() + 0.2, step.getZ() + 0.5, new ItemStack(gift), 0, 0, 0));
     }
 
     private static List<BlockPos> turnable(ServerPlayer player) {

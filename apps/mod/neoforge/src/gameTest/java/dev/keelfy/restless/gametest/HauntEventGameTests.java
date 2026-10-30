@@ -28,6 +28,7 @@ import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.WritableBookContent;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -71,7 +73,7 @@ final class HauntEventGameTests {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter",
             "stranger_joins", "stranger_death", "phantom_heartbeat", "false_night", "false_slot", "turned_head", "dragon_flyover",
-            "approaching_steps", "distant_mining", "ladder_steps")) {
+            "approaching_steps", "distant_mining", "ladder_steps", "ravenous", "infested", "oozing", "weaving")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
         tests.put("event_false_advancement", helper -> runs(helper, "false_advancement", player -> {}, () -> {
@@ -163,6 +165,28 @@ final class HauntEventGameTests {
                 helper.setBlock(FEET.west(2).above(i), Blocks.LADDER.defaultBlockState().setValue(net.minecraft.world.level.block.LadderBlock.FACING, net.minecraft.core.Direction.EAST));
             }
         }, () -> helper.assertBlockPresent(Blocks.LADDER, FEET.west(2).above(2))));
+        tests.put("event_drift", helper -> runs(helper, "drift", player -> player.setOnGround(true), () -> {}));
+        tests.put("event_infested_stone", helper -> runs(helper, "infested_stone", player -> {
+            player.setXRot(0);
+            player.setYRot(0);
+            helper.setBlock(FEET.south(2).above(), Blocks.STONE);
+        }, () -> helper.assertBlockPresent(Blocks.STONE, FEET.south(2).above())));
+        tests.put("event_ceiling_crack", helper -> runs(helper, "ceiling_crack",
+            player -> helper.setBlock(FEET.above(4), Blocks.STONE), () -> helper.assertBlockPresent(Blocks.STONE, FEET.above(4))));
+        tests.put("event_ice_over", helper -> runs(helper, "ice_over",
+            player -> helper.setBlock(FEET.east(2), Blocks.WATER), () -> helper.assertBlockPresent(Blocks.WATER, FEET.east(2))));
+        tests.put("event_chest_blast", helper -> runs(helper, "chest_blast",
+            player -> helper.setBlock(FEET.west(3), Blocks.CHEST), () -> helper.assertBlockPresent(Blocks.CHEST, FEET.west(3))));
+        tests.put("event_wrong_smelt", helper -> runs(helper, "wrong_smelt", player -> {
+            helper.setBlock(FEET.west(2), Blocks.FURNACE);
+            helper.getBlockEntity(FEET.west(2), AbstractFurnaceBlockEntity.class).setItem(2, new ItemStack(Items.IRON_INGOT, 3));
+        }, () -> {
+            ItemStack output = helper.getBlockEntity(FEET.west(2), AbstractFurnaceBlockEntity.class).getItem(2);
+            check(helper, (output.is(Items.CHARCOAL) || output.is(Items.ROTTEN_FLESH)) && output.getCount() == 3, "wrong_smelt must change the output and keep its count");
+        }));
+        tests.put("event_doorstep_gift", helper -> runs(helper, "doorstep_gift", player -> helper.setBlock(FEET.west(3), Blocks.OAK_DOOR),
+            () -> check(helper, !helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(FEET)).inflate(6)).isEmpty(),
+                "doorstep_gift must leave an item")));
         tests.put("event_spider_overhead", helper -> runs(helper, "spider_overhead",
             player -> helper.setBlock(FEET.above(4), Blocks.STONE), () -> {}));
         tests.put("event_lost_growth", helper -> runs(helper, "lost_growth", player -> {

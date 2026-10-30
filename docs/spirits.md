@@ -322,6 +322,9 @@ an essence or artifact.
 | `occupied_bed` | 169 | LIGHT | DOORS | 0.6 | An unoccupied bed within 12 | Both halves read as occupied for 1 min, so the vanilla "This bed is occupied" shows. Always put back, hardcore or not |
 | `shuffled_books` | 176 | LIGHT | DOORS | 0.5 | A chiseled bookshelf within 12 with a book | The books take other slots. Put back after 2 min if untouched; under hardcore they stay |
 | `dispenser_shot` | 177 | HARMFUL | DOORS | 0.4 | A dispenser within 12 | It clicks as if empty, then after 1 s an arrow leaves its face toward the player. Takes nothing from its contents, the arrow cannot be picked up |
+| `chest_blast` | 117 | HARMFUL | DOORS | 0.3 | A chest within 10, health above 10 | A creeper hiss from the chest, then after 1 s an explosion of power 1 that breaks no blocks |
+| `wrong_smelt` | 182 | LIGHT | DOORS | 0.5 | A furnace within 10 with something in its output | The output becomes charcoal or rotten flesh of the same count; put back after 2 min unless taken or changed (stays under hardcore) |
+| `doorstep_gift` | 186 | LIGHT | DOORS | 0.4 | A door within 12 with free floor on its far side | A poppy, dandelion, bone or raw rabbit lies outside, on the side away from the player; a real item |
 | `locked_door` | 19 | HARMFUL | DOORS | 0.7 | A wooden door within 12 | Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back |
 | `footsteps` | 24 | LIGHT | SOUND | 0.4 | Always | A step sound 2 blocks behind the player |
 | `creeper_hiss` | 25 | LIGHT | SOUND | 0.4 | Always | Creeper fuse hiss nearby |
@@ -364,6 +367,11 @@ an essence or artifact.
 | `drained` | 50 | HARMFUL | AFFLICTION | 0.6 | Player has XP | Loses 5–14 XP points |
 | `bad_luck` | 51 | HARMFUL | AFFLICTION | 0.6 | No bad luck | Bad luck 5 min |
 | `insomnia` | 171 | HARMFUL | AFFLICTION | 0.4 | Not peaceful, fewer than 144000 ticks since rest | The player's "time since rest" is set to 144000 (past three days), so phantoms come the next night; sleeping resets it |
+| `ravenous` | 141 | LIGHT | AFFLICTION | 0.5 | No hunger effect | Hunger II for 20 s |
+| `infested` | 141 | HARMFUL | AFFLICTION | 0.4 | No infested effect | Infested for 30 s: silverfish come out when the player is hurt |
+| `oozing` | 141 | LIGHT | AFFLICTION | 0.4 | No oozing effect | Oozing for 30 s: slimes spill out if the player dies |
+| `weaving` | 141 | LIGHT | AFFLICTION | 0.4 | No weaving effect | Weaving for 30 s: cobwebs form if the player dies |
+| `drift` | 143 | LIGHT | AFFLICTION | 0.5 | On the ground | For 3 s a small push each tick in one random direction, as by a current |
 | `trip` | 53 | HARMFUL | ASSAULT | 0.7 | Not slowed | Stops dead for 1 s |
 | `scorch` | 54 | HARMFUL | ASSAULT | 0.6 | Health > 3 hearts, dry, not burning | On fire for 1 s |
 | `wrath` | 55 | HARMFUL | ASSAULT | 0.6 | Health > 4 hearts | 2–3.5 hearts of magic damage, never lethal |
@@ -410,6 +418,9 @@ an essence or artifact.
 | `broken_bed` | 81 | HARMFUL | BLOCKS | 0.6 | A bed within 16 | Breaks it; it drops as an item |
 | `wall_hole` | 82 | HARMFUL | BLOCKS | 0.6 | A one-block wall 2–6 blocks away with standing room behind it | Two blocks vanish for 30 s, no drops |
 | `cross` | 83 | LIGHT | BLOCKS | 0.6 | Room for a plus of five free blocks on solid ground 3–6 blocks away | A plus of bone blocks for 1 min |
+| `infested_stone` | 191 | HARMFUL | BLOCKS | 0.4 | Stone, cobblestone, deepslate or stone bricks in sight within 6 | The block is shown as its infested kind (a swap, see `swaps.mode`); restored after 30 s |
+| `ceiling_crack` | 118 | LIGHT | BLOCKS | 0.5 | A solid block 1–4 above the eyes | Crack progress and particles on it, as if mined from above, silent; the block never breaks |
+| `ice_over` | 142 | LIGHT | BLOCKS | 0.5 | Source water within 8 | Up to 24 of them become ice (a swap); restored after 30 s |
 | `animals_stare` | 85 | LIGHT | MOBS | 0.6 | Two animals within 16 | They stop and face the player for 3 s |
 | `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
 | `dog_barks` | 87 | LIGHT | MOBS | 0.6 | A wolf within 16 | Turns away and makes its ambient sound |

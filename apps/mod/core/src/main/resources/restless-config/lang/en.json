@@ -168,6 +168,17 @@
     "minecraft:minecart_rolls": { "name": "Minecart Rolls", "description": "An empty minecart on a rail rolls toward the player." },
     "minecraft:shrieker": { "name": "Shrieker", "description": "A sculk shrieker shrieks with nothing near it; nobody is warned." },
     "minecraft:phantom_heartbeat": { "name": "Phantom Heartbeat", "description": "A warden heartbeat with no warden." },
-    "minecraft:insomnia": { "name": "Insomnia", "description": "The player is counted as three days without sleep, so phantoms come the next night." }
+    "minecraft:insomnia": { "name": "Insomnia", "description": "The player is counted as three days without sleep, so phantoms come the next night." },
+    "minecraft:ravenous": { "name": "Ravenous", "description": "Hunger II for twenty seconds." },
+    "minecraft:infested": { "name": "Infested", "description": "Infested for thirty seconds: silverfish crawl out when the player is hurt." },
+    "minecraft:oozing": { "name": "Oozing", "description": "Oozing for thirty seconds: slimes spill out if the player dies." },
+    "minecraft:weaving": { "name": "Weaving", "description": "Weaving for thirty seconds: cobwebs form if the player dies." },
+    "minecraft:drift": { "name": "Drift", "description": "A slow pull in one direction for three seconds, as if by a current." },
+    "minecraft:infested_stone": { "name": "Infested Stone", "description": "The stone the player looks at is shown as its infested kind for thirty seconds." },
+    "minecraft:ceiling_crack": { "name": "Ceiling Crack", "description": "A block overhead cracks as if someone were mining it from above, silently." },
+    "minecraft:ice_over": { "name": "Ice Over", "description": "Up to 24 source water blocks nearby freeze for thirty seconds." },
+    "minecraft:chest_blast": { "name": "Chest Blast", "description": "A chest hisses, then blasts; no blocks break." },
+    "minecraft:wrong_smelt": { "name": "Wrong Smelt", "description": "The output of a furnace turns into charcoal or rotten flesh, and comes back after two minutes unless taken." },
+    "minecraft:doorstep_gift": { "name": "Doorstep Gift", "description": "A flower, a bone or raw rabbit lies outside a nearby door." }
   }
 }

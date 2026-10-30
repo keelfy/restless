@@ -4,6 +4,9 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
+import dev.keelfy.restless.haunt.Scheduler;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,7 +14,10 @@ import java.util.Map;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,6 +46,9 @@ import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Small changes to blocks. The ones that swap a block or an entity put it back after a while through {@link Restore};
@@ -48,6 +57,13 @@ import net.minecraft.world.phys.AABB;
 final class BlockEvents {
     /** A sign has four lines; the config's texts are shorter and get centred. */
     private static final int SIGN_LINES = 4;
+    /** Offset to the player's id for the crack progress packets, so they do not collide with the ones of real miners. */
+    private static final int CRACK_ID = 1_000_000;
+    private static final Map<Block, Block> INFESTED = Map.of(
+        Blocks.STONE, Blocks.INFESTED_STONE,
+        Blocks.COBBLESTONE, Blocks.INFESTED_COBBLESTONE,
+        Blocks.DEEPSLATE, Blocks.INFESTED_DEEPSLATE,
+        Blocks.STONE_BRICKS, Blocks.INFESTED_STONE_BRICKS);
 
     private BlockEvents() {}
 
@@ -135,8 +151,74 @@ final class BlockEvents {
             // 82: two blocks of an outer wall vanish for a while
             SimpleEvent.harmful("wall_hole", EventTag.BLOCKS, player -> Place.wall(player) != null, BlockEvents::wallHole),
             // 83: a plus of bone blocks lies on the ground a few blocks away
-            SimpleEvent.light("cross", EventTag.BLOCKS, player -> Place.cross(player, crossMin(), crossMax()) != null, BlockEvents::cross)
+            SimpleEvent.light("cross", EventTag.BLOCKS, player -> Place.cross(player, crossMin(), crossMax()) != null, BlockEvents::cross),
+            // 191: the stone the player looks at turns out to be infested
+            SimpleEvent.harmful("infested_stone", EventTag.BLOCKS, player -> infestable(player) != null, BlockEvents::infest),
+            // 118: a block overhead cracks as if someone were mining it from above, silently
+            SimpleEvent.light("ceiling_crack", EventTag.BLOCKS, player -> ceiling(player) != null, BlockEvents::crackCeiling),
+            // 142: water nearby freezes over
+            SimpleEvent.light("ice_over", EventTag.BLOCKS, player -> Nearby.any(player, "ice_over", BlockEvents::sourceWater), BlockEvents::freeze)
         );
+    }
+
+    private static @Nullable BlockPos infestable(ServerPlayer player) {
+        if (player.pick(Config.event("infested_stone").num("reach"), 1.0F, false) instanceof BlockHitResult hit && hit.getType() == HitResult.Type.BLOCK
+            && INFESTED.containsKey(player.level().getBlockState(hit.getBlockPos()).getBlock())) {
+            return hit.getBlockPos();
+        }
+        return null;
+    }
+
+    private static void infest(ServerPlayer player) {
+        BlockPos pos = infestable(player);
+        if (pos != null) {
+            Block block = player.level().getBlockState(pos).getBlock();
+            Swaps.show(player, pos, INFESTED.get(block).defaultBlockState(), restoreTicks("infested_stone"));
+        }
+    }
+
+    /** The first solid block straight above the player's head within reach of the sight, with air between. */
+    private static @Nullable BlockPos ceiling(ServerPlayer player) {
+        ServerLevel level = player.level();
+        int reach = Config.event("ceiling_crack").integer("reach");
+        BlockPos head = BlockPos.containing(player.getX(), player.getEyeY(), player.getZ());
+        for (int up = 1; up <= reach; up++) {
+            BlockPos pos = head.above(up);
+            if (Place.solid(level, pos)) {
+                return pos;
+            }
+        }
+        return null;
+    }
+
+    private static void crackCeiling(ServerPlayer player) {
+        BlockPos pos = ceiling(player);
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        BlockState state = level.getBlockState(pos);
+        Config.Section config = Config.event("ceiling_crack");
+        int id = player.getId() + CRACK_ID;
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            int stage = n + 1;
+            boolean last = stage >= config.integer("stages");
+            p.connection.send(new ClientboundBlockDestructionPacket(id, pos, last ? -1 : stage));
+            level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 6, 0.3, 0.0, 0.3, 0.05);
+            return !last;
+        });
+    }
+
+    private static boolean sourceWater(BlockState state) {
+        return state.is(Blocks.WATER) && state.getFluidState().isSource();
+    }
+
+    private static void freeze(ServerPlayer player) {
+        List<BlockPos> water = new ArrayList<>(Nearby.all(player, "ice_over", BlockEvents::sourceWater));
+        Collections.shuffle(water, new java.util.Random(player.getRandom().nextLong()));
+        Swaps.show(player, water.subList(0, Math.min(water.size(), Config.event("ice_over").integer("max_blocks"))), Blocks.ICE.defaultBlockState(), restoreTicks("ice_over"));
+        Config.Tone tone = Config.event("ice_over").tone("sound");
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_HURT_FREEZE, SoundSource.HOSTILE, tone.volume(), tone.pitch());
     }
 
     /** How long an event's change lasts before it is put back. */

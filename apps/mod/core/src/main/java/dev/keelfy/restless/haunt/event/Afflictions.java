@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import java.util.List;
 import net.minecraft.core.Holder;
@@ -69,11 +70,29 @@ final class Afflictions {
                 }),
             // 51
             harmful("bad_luck", MobEffects.UNLUCK),
+            // 141: more of the same, none of which can kill
+            light("ravenous", MobEffects.HUNGER),
+            harmful("infested", MobEffects.INFESTED),
+            light("oozing", MobEffects.OOZING),
+            light("weaving", MobEffects.WEAVING),
+            // 143: a slow pull in one direction, as if by a current
+            SimpleEvent.light("drift", EventTag.AFFLICTION, player -> player.onGround(), Afflictions::drift),
             // 171: the clock phantoms go by says three days without sleep
             SimpleEvent.harmful("insomnia", EventTag.AFFLICTION,
                 player -> player.level().getDifficulty() != Difficulty.PEACEFUL && player.getStats().getValue(Stats.CUSTOM.get(Stats.TIME_SINCE_REST)) < SLEEPLESS,
                 player -> player.getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), SLEEPLESS))
         );
+    }
+
+    private static void drift(ServerPlayer player) {
+        Config.Section config = Config.event("drift");
+        double angle = player.getRandom().nextDouble() * Math.PI * 2;
+        double push = config.num("push");
+        Scheduler.repeat(player, 0, 1, (p, n) -> {
+            p.push(Math.cos(angle) * push, 0, Math.sin(angle) * push);
+            p.connection.send(new ClientboundSetEntityMotionPacket(p));
+            return n + 1 < config.integer("ticks");
+        });
     }
 
     private static HauntEvent light(String id, Holder<MobEffect> effect) {
