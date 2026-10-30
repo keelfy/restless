@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -44,10 +45,14 @@ final class Nearby {
 
     /** Every loaded block within a cube of the given radius around the player that matches. */
     static List<BlockPos> all(ServerPlayer player, int radius, Predicate<BlockState> match) {
-        BlockPos center = player.blockPosition();
+        return all(player.level(), player.blockPosition(), radius, match);
+    }
+
+    /** Every loaded block within a cube of the given radius around {@code center} that matches. */
+    static List<BlockPos> all(ServerLevel level, BlockPos center, int radius, Predicate<BlockState> match) {
         List<BlockPos> hits = new ArrayList<>();
         for (BlockPos pos : BlockPos.betweenClosed(center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius))) {
-            if (player.level().isLoaded(pos) && match.test(player.level().getBlockState(pos))) {
+            if (level.isLoaded(pos) && match.test(level.getBlockState(pos))) {
                 hits.add(pos.immutable());
             }
         }

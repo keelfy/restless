@@ -12,5 +12,7 @@ public enum EventTag {
     MOBS,
     PRESENCE,
     /** Something that looks like another player. */
-    PLAYER
+    PLAYER,
+    /** The water, and whoever is in or beside it. */
+    WATER
 }

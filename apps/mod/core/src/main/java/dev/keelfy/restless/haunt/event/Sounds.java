@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.Comparator;
@@ -16,6 +17,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -112,7 +114,13 @@ final class Sounds {
             // 138: the floor sounds and looks as if it gives way, and holds
             SimpleEvent.harmful("cracking_floor", EventTag.SOUND, player -> !player.level().getBlockState(player.blockPosition().below()).isAir(), player -> {
                 BlockPos below = player.blockPosition().below();
-                player.level().levelEvent(LevelEvent.PARTICLES_AND_SOUND_DESTROY_BLOCK, below, Block.getId(player.level().getBlockState(below)));
+                ServerLevel level = player.level();
+                // Under hardcore it gives way for real, with nothing dropped, but only where the fall is one block.
+                if (Hardcore.on(level) && Place.solid(level, below) && level.getBlockState(below.below()).isSolidRender()) {
+                    level.destroyBlock(below, false);
+                } else {
+                    level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_DESTROY_BLOCK, below, Block.getId(level.getBlockState(below)));
+                }
             }),
             // 139
             sound("bottle_shatter", player -> player.level().levelEvent(LevelEvent.PARTICLES_SPELL_POTION_SPLASH,

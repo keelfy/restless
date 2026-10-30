@@ -56,6 +56,53 @@
       "interval_ticks": 1,
       "max_ticks": 1200,
       "cleanup_ticks": 40
+    },
+    "minecraft:distant_walker": {
+      "weight": 0.3,
+      "distance": 45.0,
+      "min_angle": 0.0,
+      "max_angle": 40.0,
+      "vanish_degrees": 0.0,
+      "vanish_distance": 25.0,
+      "stride": 0.2,
+      "climb": 1,
+      "drop": 2,
+      "interval_ticks": 1,
+      "max_ticks": 400,
+      "cleanup_ticks": 40
+    },
+    "minecraft:nametag": {
+      "weight": 0.3,
+      "under_chance": 0.5,
+      "depth": 3.0,
+      "distance": 30.0,
+      "max_angle": 40.0,
+      "height": 2.3,
+      "ticks": 200,
+      "names": ["Steve", "Alex", "Herobrine", "null", "Player", "..."]
+    },
+    "minecraft:pillar": {
+      "weight": 0.3,
+      "distance": 24.0,
+      "max_angle": 40.0,
+      "height": 8,
+      "interval_ticks": 10,
+      "max_ticks": 140,
+      "vanish_distance": 10.0,
+      "restore_ticks": 2400,
+      "sound": { "volume": 1.0, "pitch": 0.8 },
+      "cleanup_ticks": 40
+    },
+    "minecraft:harvest": {
+      "weight": 0.3,
+      "radius": 16,
+      "reach": 4,
+      "min_distance": 8.0,
+      "interval_ticks": 8,
+      "max_ticks": 200,
+      "vanish_distance": 5.0,
+      "restore_ticks": 2400,
+      "cleanup_ticks": 40
     }
   }
 }

@@ -51,6 +51,22 @@ class PowerTest {
     }
 
     @Test
+    void phantomPrefersOtherPlayersOverOtherPresence() {
+        double player = Power.weight(HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), 1, Spirits.PHANTOM, List.of(), 0.5);
+        double presence = Power.weight(HauntTier.LIGHT, Set.of(EventTag.PRESENCE), 1, Spirits.PHANTOM, List.of(), 0.5);
+        double shade = Power.weight(HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), 1, Spirits.SHADE, List.of(), 0.5);
+        assertTrue(player > presence * 5);
+        assertTrue(player > shade * 5);
+    }
+
+    @Test
+    void nixPrefersWaterOverEverythingElse() {
+        double water = Power.weight(HauntTier.LIGHT, Set.of(EventTag.WATER), 1, Spirits.NIX, List.of(), 0.5);
+        double doors = Power.weight(HauntTier.LIGHT, Set.of(EventTag.DOORS), 1, Spirits.NIX, List.of(), 0.5);
+        assertTrue(water > doors * 5);
+    }
+
+    @Test
     void cooldownShrinksWithPowerAndActivity() {
         long calm = Power.cooldownTicks(0, 1, 0.5, 1);
         long late = Power.cooldownTicks(1, 1, 0.5, 1);

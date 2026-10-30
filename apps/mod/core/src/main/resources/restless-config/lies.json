@@ -3,14 +3,20 @@
   "events": {
     "minecraft:false_wound": { "weight": 0.3, "min_health": 2.0, "loss": 8.0, "ticks": 30 },
     "minecraft:false_hearts": { "weight": 0.3, "ticks": 100 },
-    "minecraft:false_hunger": { "weight": 0.3, "shown_food": 0, "ticks": 40 },
-    "minecraft:guardian_face": { "weight": 0.15 },
+    "minecraft:false_hunger": { "weight": 0.3, "shown_food": 0, "ticks": 40, "hardcore_loss": 6 },
+    "minecraft:guardian_face": { "weight": 0.15, "hardcore_fatigue_ticks": 6000, "hardcore_fatigue_level": 2 },
     "minecraft:false_totem": { "weight": 0.15 },
     "minecraft:subliminal_title": { "weight": 0.3, "ticks": 3, "texts": ["BEHIND YOU", "LOOK UP", "NOT ALONE", "I SEE YOU", "WAKE UP"] },
     "minecraft:red_vignette": { "weight": 0.3, "strength": 0.8, "seconds": 5 },
     "minecraft:own_voice": { "weight": 0.2, "lines": ["help me", "it is here", "don't turn around", "who is that"] },
     "minecraft:false_death": { "weight": 0.2, "killer": "???" },
     "minecraft:private_rain": { "weight": 0.3, "thunder_chance": 0.3, "seconds": 20 },
-    "minecraft:silent_lightning": { "weight": 0.2, "distance": 24.0 }
+    "minecraft:silent_lightning": { "weight": 0.2, "distance": 24.0 },
+    "minecraft:false_night": { "weight": 0.2, "day_ticks": 24000, "time_of_day": 18000, "seconds": 15 },
+    "minecraft:false_slot": { "weight": 0.3, "seconds": 20, "items": ["minecraft:skeleton_skull", "minecraft:bone", "minecraft:player_head", "minecraft:rotten_flesh", "minecraft:wither_rose"] },
+    "minecraft:false_advancement": { "weight": 0.2, "revoke_ticks": 2, "advancements": ["whisper/who_are_you", "whisper/not_alone", "whisper/behind_you"] },
+    "minecraft:turned_head": { "weight": 0.2, "distance": 6.0, "sound": { "volume": 0.8, "pitch": 0.9 }, "delay_ticks": 10, "steps": 12 },
+    "minecraft:stranger_joins": { "weight": 0.2, "seconds": 40, "latency": 120, "names": ["Steve", "Alex", "Herobrine", "null", "Player"] },
+    "minecraft:stranger_death": { "weight": 0.2, "names": ["Steve", "Alex", "Herobrine", "null", "Player"], "deaths": ["death.fell.accident.generic", "death.attack.drown", "death.attack.inWall", "death.attack.outOfWorld", "death.attack.generic"] }
   }
 }

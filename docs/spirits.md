@@ -7,7 +7,7 @@ Update this file when any of them changes. The numbers below are the shipped def
 ## How it works
 
 - A spirit is **personal** (follows one player) or **territorial** (stays at an anchor); the kind is `kind` in `spirits.json`.
-  `shade` is personal, `poltergeist` is territorial.
+  `shade` and `phantom` are personal, `poltergeist` and `nix` are territorial.
 - Each player gets 3 personal spirits (`director.default_spirits`) on first check, each chosen uniformly at random
   (repeats allowed), and keeps them. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`. A poltergeist
   in an older save is dropped.
@@ -180,6 +180,8 @@ Altars with nothing to answer, or missing candles or salt, refuse the focus. Emp
 | Poltergeist | **Telekinesis amulet** (essence, gold ingot, string) | Pulls every dropped item within `artifacts.amulet_radius` to you. |
 | Shade | **Dark eye** (essence, eye of ender) | Night vision, and every living thing within `artifacts.eye_radius` glows, for `artifacts.eye_ticks`. |
 
+A phantom and a nix have no essence item or artifact yet, so they drop nothing (graves give no essence for it either).
+
 Not built yet: offerings, throwing holy water to end a running event, the essence lure, and the pact enchantment and
 mimic mask (there are no spirit types for them yet). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
 
@@ -240,7 +242,7 @@ left as it is.
 ### Evolution
 
 A spirit `evolution.days` (5) in-game days old grows up, once and for good: a poltergeist turns **raging**, a shade a
-**light-eater**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
+**light-eater**, a phantom a **doppelganger**, a nix a **drowner**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
 territorial one tries `corruption.evolved_factor` (3) times as many columns. The players it haunts (its own player, or
 those in its radius) hear a heartbeat, are told, and it goes in their journal; from then on it goes by its grown name.
 A personal spirit grows only while its player is online.
@@ -255,6 +257,8 @@ for evolved spirits.
 |---|---|---|---|
 | `poltergeist` | Noisy and physical. Mostly messes with doors and belongings; rarely hurts at first. | 1.3 | doors ×4, items ×3, blocks ×1.5, afflictions ×0.5, assaults ×0.5, sounds ×0.5, presence ×0.5 |
 | `shade` | Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as its power grows. | 0.8 | lights ×3, sounds ×2.5, afflictions ×2, presence ×2, assaults ×1, doors ×0.3, items ×0.5 |
+| `phantom` | Likes to be seen, as other players: far-off strangers, a name in the player list, someone pillaring or taking the crops. Seldom hurts. | 1.0 | player ×6, presence ×2, doors ×0.5, lights ×0.5, afflictions ×0.5, items ×0.5, assaults ×0.3 |
+| `nix` | Territorial, bound to water. Keeps swimmers under, calls players to the water, kills fish and breaks boats. Place it by a lake or the sea with `/haunt spirit add nix` while standing there. | 1.0 | water ×8, afflictions ×1, assaults ×0.5, sounds ×0.5, blocks ×0.3, presence ×0.3 |
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
@@ -335,6 +339,10 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `thunder_knocks` | 58 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts | Three knocks; 3 s later a bolt strikes nearby; 2 s after that a second bolt hits the player if they have moved less than 2 blocks since (6 HP, never lethal). Bolts set nothing on fire |
 | `embrace` | 60 | HARMFUL | ASSAULT | 0.5 | Health > 5 hearts | Growing damage once a second (0.5, 1, 1.5 HP…) until the player is 10 blocks from where it began. Stops at 3 hearts or after 20 hits |
 | `the_call` | 100 | HARMFUL | ASSAULT | 0.3 | Night in the overworld (any time elsewhere), health > 5 hearts, lava within 12 blocks or a bottomless column 10 blocks away | A warden moan, then after 2 s the player on the ground is drawn toward the lava (or void) at about 1.5 blocks/s, felt as a velocity nudge every 0.1 s, with soul particles at the feet. Walking 6 blocks further away than the start breaks it; it also ends on arrival, in lava, at 3 hearts, or after 30 s. Lava itself is not capped |
+| `undertow` | 149 | HARMFUL | WATER | 0.4 | Health > 5 hearts, the player in water | Every 0.1 s the player is pushed down (a 0.12 downward velocity nudge, so at the surface they are kept from coming up). Ends out of the water, at 3 hearts, or after 10 s. Drowning itself is vanilla's and is not capped |
+| `water_call` | 149 | HARMFUL | WATER | 0.3 | Health > 5 hearts, the player out of water, water within 12 blocks | An underwater swell, then after 2 s the player on the ground is drawn toward the nearest water at about 1.5 blocks/s, with splash particles at the feet. Ends on arrival, in water, at 3 hearts, or after 20 s |
+| `drowned_fish` | 149 | LIGHT | WATER | 0.4 | A squid or fish within 24 blocks | An elder guardian's curse sounds, and up to 12 squid and fish within 24 blocks die with a puff of ink. They are lost for good (no drops) |
+| `broken_boat` | 149 | LIGHT | WATER | 0.4 | An empty boat or raft within 24 blocks | A splintering sound and one of them breaks as if hit hard, dropping its item. A boat with anyone aboard is left alone |
 | `shadow` | 61 | HARMFUL | ASSAULT | 0.4 | Not peaceful, no shadow already following the player, health > 7 hearts, standing room 14–20 blocks away | A wither skeleton with no AI and no gear (invulnerable, silent) stands there. Every 0.1 s it takes a 0.3-block stride toward the player, but only while the player is not looking at it (within 45° and in line of sight). Warden heartbeat once a second. A touch (1.2 blocks) deals up to 7 hearts but never below 3 hearts, then it vanishes in smoke; it also vanishes after 60 s or after 40 blocked strides |
 | `double` | 93 | HARMFUL | MOBS | 0.3 | Not peaceful, no double already after the player, health > 7 hearts, standing room 12–18 blocks away | A vanilla mannequin with the player's skin, armor and held item (invulnerable, silent) walks up at 0.2 blocks/tick, slower than a sprint. Within 1.8 blocks it hits every 0.5 s for up to 3 hearts, never below 3 hearts; it vanishes in smoke after 4 hits, 30 s, 40 blocked strides, or when the player is at 3 hearts |
 | `swap_slots` | 62 | LIGHT | ITEMS | 0.5 | Inventory not empty | Two inventory slots swap |
@@ -349,6 +357,13 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `wilted_flowers` | 72 | LIGHT | BLOCKS | 0.6 | A potted flower within 10 | Every one becomes a potted dead bush; restored after 2 min |
 | `withering_crops` | 73 | LIGHT | BLOCKS | 0.6 | A grown crop within 6 | Every crop within 6 loses one growth stage |
 | `lost_growth` | 110 | LIGHT | BLOCKS | 0.5 | A crop, stem, berry bush or cocoa past its first stage within 8 | One of them is set back to age 0 |
+| `false_windows` | 105 | LIGHT | BLOCKS | 0.4 | Glass or a glass pane within 10 | Only this player's client is told that the 64 nearest glass blocks and panes are, all alike, air, an oak fence (connected to the walls) or the full block most of its neighbours are. 10 s later it gets the real blocks back. Nothing on the server |
+| `false_looks` | 106 | LIGHT | BLOCKS | 0.4 | A block from `looks` within 10 | Only this player's client is told that the 16 nearest of them are their look-alike (crafting table → furnace → chest → crafting table, smoker ↔ blast furnace, bookshelf → oak planks), keeping the facing. 10 s later it gets the real blocks back. Nothing on the server |
+| `ghost_tree` | 107 | LIGHT | BLOCKS | 0.3 | Standing room 12 blocks away within 40° of where the player looks, with air for a 5-block trunk | Only this player's client is told of a small round pale oak there, of `ghost_pale_oak_log` and `ghost_pale_oak_leaves` (same look, no collision, no drops; leaves only on air), so they walk through it. A minute later it gets the real blocks back. Nothing on the server |
+| `hallucination` | 126 | LIGHT | MOBS | 0.3 | Standing room 20 blocks away within 40° of where the player looks | Only this player's client is told of a mob from a list (iron golem, villager, wandering trader, witch, enderman) standing there facing them, with an id no server entity has, so attacks on it do nothing. Gone when the player comes within 10 blocks, or after 30 s. Nothing on the server |
+| `disguise` | 125 | LIGHT | MOBS | 0.3 | A cow, sheep, pig, chicken or horse within 24 blocks | One of them is hidden from this player's client (only its invisible flag is sent) and an entity of another kind (cow→sheep, sheep→pig, pig→cow, chicken→wolf, horse→cow; `looks`) is shown in its place, following it about for 30 s, when the real one is shown again. Sounds and hitbox stay the real animal's; the head turn and limb poses of the copy are the client's own. Under hardcore the animal is really converted into the other kind |
+| `dragon_flyover` | 127 | LIGHT | PRESENCE | 0.15 | Overworld, sky visible | Only this player's client is told of an ender dragon flying a straight 240-block line 40 blocks above them, up to 30 to one side, at a random bearing, in 10 s, with its growl at the start (its wing flaps are the client's own). Nothing on the server |
+| `moving_tree` | 108 | LIGHT | BLOCKS | 0.3 | A log within 16 blocks | Takes a log, the logs and non-persistent leaves joined to it (up to 300 blocks, with a crown), and moves them 2 to 4 blocks in a random direction if every spot is air and the foot stands on dirt; a rustle sounds. 30 s later it moves back unless it was cut or built on meanwhile. Under hardcore it stays |
 | `turning_frame` | 76 | LIGHT | BLOCKS | 0.6 | A filled item frame within 12 | Rotates its item |
 | `new_sign` | 74 | LIGHT | BLOCKS | 0.6 | A sign within 10 | The front text becomes one creepy phrase of up to three short lines (at most eight letters each, so it fits a hanging sign); restored after 1 min unless the player has edited it |
 | `new_painting` | 75 | LIGHT | BLOCKS | 0.6 | A painting within 12 with another variant of the same size | Becomes another painting; restored after 1 min |
@@ -370,6 +385,10 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `edge_figure` | 94 | LIGHT | PRESENCE | 0.4 | No such figure already, standing room 16 blocks away, 45–65° to a side of where the player looks | A silent, unhurtable mannequin with the player's own skin stands there facing them. Gone, with no sound or particles, when the player looks within 25° of it with a clear line, or after 30 s |
 | `fog_silhouette` | 95 | LIGHT | PRESENCE | 0.3 | Open sky and rain or darkness outside, standing room 40 blocks away within 25° of where the player looks | A mannequin in the default skin stands far off. Gone, silently, when the player comes within 24 blocks, or after 60 s |
 | `distant_player` | 123 | LIGHT | PRESENCE, PLAYER | 0.3 | Standing room 60 blocks away within 40° of where the player looks | A silent, unhurtable mannequin in a random default skin (Steve, Alex and the rest) stands there facing them. Gone, silently, when the player comes within 35 blocks, or after 60 s |
+| `distant_walker` | 120 | LIGHT | PRESENCE, PLAYER | 0.3 | Standing room 45 blocks away within 40° of where the player looks | A silent, unhurtable mannequin in a random default skin walks across the player's view at walking pace, climbing one block and dropping two. Gone, silently, when the player comes within 25 blocks, when it has no ground ahead, or after 20 s |
+| `nametag` | 119 | LIGHT | PRESENCE, PLAYER | 0.3 | Half the time standing room 30 blocks away within 40° of where the player looks; otherwise none | A nameplate (text display, seen through walls) with a name from a list floats 3 blocks under the player's feet or at head height over that standing room, with nobody under it. Gone after 10 s |
+| `pillar` | 121 | LIGHT | PRESENCE, PLAYER | 0.3 | Standing room 24 blocks away within 40° of where the player looks, open for 8 blocks above | A silent, unhurtable mannequin in a random default skin, cobblestone in hand, faces the player and every 0.5 s rises a block, puts cobblestone (place sound) where its feet were and swings its arm, 8 times. It waits at the top and is gone 7 s after it appeared; sooner if the player comes within 10 blocks or the way up is blocked. Each block goes back to air after 2 min if still cobblestone; under hardcore the pillar stays |
+| `harvest` | 122 | LIGHT | PRESENCE, PLAYER | 0.3 | A ripe crop within 16 blocks with standing room within 4 blocks of it, at least 8 blocks from the player | A silent, unhurtable mannequin in a random default skin stands there and every 0.4 s turns to the nearest ripe crop within 4 blocks, swings and breaks it (particles and sound, no drops). Gone when none is left, when the player comes within 5 blocks, or after 10 s. Each crop comes back at its age after 2 min if its spot is still empty; under hardcore they stay gone |
 | `footprints` | 96 | LIGHT | PRESENCE | 0.6 | Standing on or in sand or snow | For 6 s, puffs of the ground and a step sound appear where the player stood a second ago. Particles only, nothing is placed |
 | `cold_breath` | 97 | LIGHT | PRESENCE | 0.6 | Warm biome | A breath puff at the face |
 | `local_rain` | 98 | LIGHT | PRESENCE | 0.6 | Sky visible, not raining | Rain particles and sound over the player for 6 s |
@@ -385,8 +404,16 @@ Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often
 | `false_death` | 163 | LIGHT | PRESENCE | 0.2 | Always | Their own "was slain by ???" death message, sent only to them |
 | `private_rain` | 167 | LIGHT | PRESENCE | 0.3 | Weather dimension, not raining, sky visible | Rain for this client only, a storm 30% of the time, for 20 s; then the real weather |
 | `silent_lightning` | 168 | LIGHT | PRESENCE | 0.2 | Weather dimension, sky visible | A visual-only bolt 24 blocks away |
+| `false_night` | 159 | LIGHT | PRESENCE | 0.2 | Overworld, daytime | Only this player's client is told it is midnight, with the clock stopped. 15 s later it gets the real time back. Nothing on the server |
+| `false_slot` | 161 | LIGHT | PRESENCE | 0.3 | An empty inventory or hotbar slot | Only this player's client is told that slot holds an item from a list (a player head is their own). 20 s later, or at any click, the real slot comes back. Nothing on the server |
+| `false_advancement` | 165 | LIGHT | PRESENCE | 0.2 | None | Grants a hidden advancement (`restless:whisper/*`, an impossible criterion, no chat line) so the toast shows, and revokes it 2 ticks later |
+| `turned_head` | 166 | HARMFUL | PRESENCE | 0.2 | None | A step sound of the ground at the spirit's position (or 6 blocks away at a random bearing), then the camera turns toward it over 12 ticks by relative rotation packets |
+| `stranger_joins` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets "<name> joined the game" and a player list entry for a name from a list, in a default skin. 40 s later the entry goes and "<name> left the game" follows. Nothing on the server |
+| `stranger_death` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets a vanilla death message (fell, drowned, suffocated, fell out of the world, died) for a name from a list |
 
 ## Chances
+
+Not yet recomputed for `phantom`, the `PLAYER` tag or the events added since.
 
 Share of each tag per roll of one spirit, assuming every event can run (in practice many cannot, and the rest renormalise,
 so a spirit near no doors never rolls a door). Computed from the weights above.
@@ -427,7 +454,9 @@ cobbled. Anything else is left alone. The patch is a scatter (`Place.patch`), no
   glass, holes, floors, crosses and furnace fuel stay as the event left them, and a flickering lantern stays out. The
   `hardcore.mode` setting in `haunt.json` is `auto` (the world's vanilla hardcore flag), `true` or `false`. It is
   decided the first time it is asked and saved in `HauntData`, so editing the config later does not flip a world.
-  Plan and rules: [hardcore.md](hardcore.md).
+  Tricks with a real counterpart come true instead of being shown: a lie's wound, hearts, hunger, night or slot,
+  real lightning, a floor that breaks, fake blocks placed for real (not over a chest or furnace), a hallucinated mob
+  spawned. The list is in [hardcore.md](hardcore.md#events-with-a-real-branch), with the plan and the rules.
 - `haunt/DoorLocks.java`: doors locked by `locked_door`, in memory. `Restless.onUseBlock` cancels the right click on
   both sides; the loader forwards its block-interaction event to it. The server sends `DoorLockPayload` to clients
   within 64 blocks, which the loader registers and hands to `DoorLocks.put`. A client that joins or walks up later

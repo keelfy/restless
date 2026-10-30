@@ -1,0 +1,21 @@
+{
+  "parent": "minecraft:story/root",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:skeleton_skull"
+    },
+    "title": {
+      "translate": "advancements.restless.whisper.who_are_you.title"
+    },
+    "description": {
+      "translate": "advancements.restless.whisper.who_are_you.description"
+    },
+    "announce_to_chat": false,
+    "hidden": true
+  }
+}

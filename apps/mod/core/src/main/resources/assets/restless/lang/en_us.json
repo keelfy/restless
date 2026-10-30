@@ -17,6 +17,9 @@
   "itemGroup.restless": "Restless",
   "spirit.restless.shade": "shade",
   "spirit.restless.poltergeist": "poltergeist",
+  "spirit.restless.nix": "nix",
+  "spirit.restless.nix_evolved": "drowner",
+  "spirit.restless.phantom": "phantom",
   "item.restless.photo.silhouette": "A silhouette of a %s",
   "item.restless.photo.hint": "Something about it: %s",
   "message.restless.camera_empty": "The photograph shows nothing.",
@@ -59,6 +62,7 @@
   "message.restless.altar_rebuild": "Break and place the altar again to build its 3×3 platform.",
   "spirit.restless.poltergeist_evolved": "raging poltergeist",
   "spirit.restless.shade_evolved": "light-eater",
+  "spirit.restless.phantom_evolved": "doppelganger",
   "message.restless.evolved": "The %s has grown into a %s.",
   "journal.restless.evolved": "%s, a %s, was left alone too long and grew into a %s.",
   "biome.restless.blighted": "Blighted Land",
@@ -75,5 +79,13 @@
   "block.restless.unlit_waxed_copper_lantern": "Unlit waxed copper lantern",
   "block.restless.unlit_waxed_exposed_copper_lantern": "Unlit waxed exposed copper lantern",
   "block.restless.unlit_waxed_weathered_copper_lantern": "Unlit waxed weathered copper lantern",
-  "block.restless.unlit_waxed_oxidized_copper_lantern": "Unlit waxed oxidized copper lantern"
+  "block.restless.unlit_waxed_oxidized_copper_lantern": "Unlit waxed oxidized copper lantern",
+  "advancements.restless.whisper.who_are_you.title": "Who are you?",
+  "advancements.restless.whisper.who_are_you.description": "You were not supposed to see this",
+  "advancements.restless.whisper.not_alone.title": "Not Alone",
+  "advancements.restless.whisper.not_alone.description": "Someone else is here",
+  "advancements.restless.whisper.behind_you.title": "Behind You",
+  "advancements.restless.whisper.behind_you.description": "Do not turn around",
+  "block.restless.ghost_pale_oak_log": "Ghost pale oak log",
+  "block.restless.ghost_pale_oak_leaves": "Ghost pale oak leaves"
 }

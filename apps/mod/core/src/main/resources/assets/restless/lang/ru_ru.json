@@ -12,5 +12,13 @@
   "block.restless.unlit_waxed_copper_lantern": "Потухший вощёный медный фонарь",
   "block.restless.unlit_waxed_exposed_copper_lantern": "Потухший вощёный потемневший медный фонарь",
   "block.restless.unlit_waxed_weathered_copper_lantern": "Потухший вощёный состаренный медный фонарь",
-  "block.restless.unlit_waxed_oxidized_copper_lantern": "Потухший вощёный окисленный медный фонарь"
+  "block.restless.unlit_waxed_oxidized_copper_lantern": "Потухший вощёный окисленный медный фонарь",
+  "advancements.restless.whisper.who_are_you.title": "Кто ты?",
+  "advancements.restless.whisper.who_are_you.description": "Тебе не следовало этого видеть",
+  "advancements.restless.whisper.not_alone.title": "Не один",
+  "advancements.restless.whisper.not_alone.description": "Здесь кто-то ещё",
+  "advancements.restless.whisper.behind_you.title": "За спиной",
+  "advancements.restless.whisper.behind_you.description": "Не оборачивайся",
+  "block.restless.ghost_pale_oak_log": "Призрачное бревно бледного дуба",
+  "block.restless.ghost_pale_oak_leaves": "Призрачная листва бледного дуба"
 }

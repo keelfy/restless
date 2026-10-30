@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
-/** Moves a figure over the ground by hand: no AI and no pathfinding, only a stride onto standing room toward the player. */
+/** Moves a figure over the ground by hand: no AI and no pathfinding, only a stride onto standing room. */
 final class Walk {
     private Walk() {}
 
@@ -18,9 +18,16 @@ final class Walk {
         double dz = player.getZ() - figure.getZ();
         double length = Math.max(Math.hypot(dx, dz), 1.0E-4);
         double step = Math.min(stride, length);
-        double x = figure.getX() + dx / length * step;
-        double z = figure.getZ() + dz / length * step;
-        ServerLevel level = player.level();
+        return to(player.level(), figure, figure.getX() + dx / length * step, figure.getZ() + dz / length * step, climb, drop);
+    }
+
+    /** As {@link #toward}, but {@code stride} blocks along the heading {@code yaw}, in degrees as entities face. */
+    static boolean along(ServerLevel level, Entity figure, float yaw, double stride, int climb, int drop) {
+        double radians = Math.toRadians(yaw);
+        return to(level, figure, figure.getX() - Math.sin(radians) * stride, figure.getZ() + Math.cos(radians) * stride, climb, drop);
+    }
+
+    private static boolean to(ServerLevel level, Entity figure, double x, double z, int climb, int drop) {
         BlockPos column = BlockPos.containing(x, figure.getY(), z);
         for (int dy = climb; dy >= -drop; dy--) {
             BlockPos pos = column.above(dy);

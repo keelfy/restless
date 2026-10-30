@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.phys.Vec3;
@@ -30,31 +31,39 @@ final class PresenceFigure implements HauntEvent {
     private final Set<EventTag> tags;
     private final Predicate<ServerPlayer> place;
     private final Function<ServerPlayer, ResolvableProfile> skin;
+    /** Walks across the player's view instead of standing and watching. */
+    private final boolean walks;
     /** The figure each player has now; one per event at a time. */
     private final Map<UUID, Mannequin> active = new ConcurrentHashMap<>();
 
-    private PresenceFigure(String id, Set<EventTag> tags, Predicate<ServerPlayer> place, Function<ServerPlayer, ResolvableProfile> skin) {
+    private PresenceFigure(String id, Set<EventTag> tags, Predicate<ServerPlayer> place, Function<ServerPlayer, ResolvableProfile> skin, boolean walks) {
         this.id = id;
         this.tags = tags;
         this.place = place;
         this.skin = skin;
+        this.walks = walks;
     }
 
     /** 94: the player's own likeness at the edge of vision. */
     static HauntEvent edge() {
-        return new PresenceFigure("edge_figure", Set.of(EventTag.PRESENCE), player -> true, player -> ResolvableProfile.createResolved(player.getGameProfile()));
+        return new PresenceFigure("edge_figure", Set.of(EventTag.PRESENCE), player -> true, player -> ResolvableProfile.createResolved(player.getGameProfile()), false);
     }
 
     /** 95: a pale stranger far off in the fog, which is rain or darkness under open sky. */
     static HauntEvent fog() {
         return new PresenceFigure("fog_silhouette", Set.of(EventTag.PRESENCE),
             player -> player.level().canSeeSky(player.blockPosition()) && (player.level().isRaining() || player.level().isDarkOutside()),
-            player -> Mannequin.DEFAULT_PROFILE);
+            player -> Mannequin.DEFAULT_PROFILE, false);
     }
 
     /** 123: another player, in a default skin, far off and turned toward the player until approached. */
     static HauntEvent distantPlayer() {
-        return new PresenceFigure("distant_player", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Figure::stranger);
+        return new PresenceFigure("distant_player", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Figure::stranger, false);
+    }
+
+    /** 120: another player, in a default skin, walking past far off; gone when approached or when the ground runs out. */
+    static HauntEvent distantWalker() {
+        return new PresenceFigure("distant_walker", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Figure::stranger, true);
     }
 
     @Override
@@ -91,6 +100,8 @@ final class PresenceFigure implements HauntEvent {
         }
         UUID owner = player.getUUID();
         active.put(owner, figure);
+        // Across the view: a quarter turn, to either side, from facing the player.
+        float heading = Mth.wrapDegrees(figure.getYRot() + (player.getRandom().nextBoolean() ? 90.0F : -90.0F));
         // The watch ends itself; this catches the cases where the scheduler drops it (the player died or left).
         Restore.after(player.level(), config.integer("max_ticks") + config.integer("cleanup_ticks"), force -> {
             leave(figure, owner);
@@ -98,9 +109,12 @@ final class PresenceFigure implements HauntEvent {
         });
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
             boolean over = !figure.isAlive() || figure.level() != p.level()
-                || n * config.integer("interval_ticks") >= config.integer("max_ticks") || noticed(p, figure, config);
+                || n * config.integer("interval_ticks") >= config.integer("max_ticks") || noticed(p, figure, config)
+                || walks && !Walk.along(p.level(), figure, heading, config.num("stride"), config.integer("climb"), config.integer("drop"));
             if (over) {
                 leave(figure, owner);
+            } else if (walks) {
+                Figure.turn(figure, heading);
             } else {
                 Figure.face(figure, p);
             }

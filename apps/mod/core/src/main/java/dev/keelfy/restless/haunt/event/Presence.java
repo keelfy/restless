@@ -3,17 +3,22 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.HauntTier;
+import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.clock.WorldClocks;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -31,6 +36,14 @@ final class Presence {
             PresenceFigure.fog(),
             // 123
             PresenceFigure.distantPlayer(),
+            // 120
+            PresenceFigure.distantWalker(),
+            // 121
+            new PillarEvent(),
+            // 122
+            new HarvestEvent(),
+            // 119
+            new SimpleEvent(Identifier.parse("nametag"), HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Presence::nametag),
             // 97: a puff of breath at the face where nobody should be breathing out
             SimpleEvent.light("cold_breath", EventTag.PRESENCE, Presence::warm, player -> {
                 Config.Section config = Config.event("cold_breath");
@@ -88,6 +101,30 @@ final class Presence {
             }
             return n + 1 < config.integer("steps");
         });
+    }
+
+    /**
+     * A player's nameplate with no player: a few blocks under the floor, seen through it as nameplates are, or above
+     * standing room further off. Gone after a while.
+     */
+    private static void nametag(ServerPlayer player) {
+        Config.Section config = Config.event("nametag");
+        Vec3 at = player.position().subtract(0, config.num("depth"), 0);
+        if (player.getRandom().nextDouble() >= config.num("under_chance")) {
+            BlockPos stand = Place.standingAt(player, config.num("distance"), (player.getRandom().nextDouble() * 2 - 1) * config.num("max_angle"));
+            if (stand == null) {
+                return;
+            }
+            at = Vec3.atBottomCenterOf(stand);
+        }
+        List<String> names = config.texts("names");
+        Display.TextDisplay plate = Figure.nameplate(player.level(), at.add(0, config.num("height"), 0), names.get(player.getRandom().nextInt(names.size())));
+        if (plate != null) {
+            Restore.after(player.level(), config.integer("ticks"), force -> {
+                plate.discard();
+                return true;
+            });
+        }
     }
 
     /** Rain falling on nothing but the player. */

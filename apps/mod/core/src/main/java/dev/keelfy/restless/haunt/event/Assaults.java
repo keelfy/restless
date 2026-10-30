@@ -166,10 +166,15 @@ final class Assaults {
 
     /** Visual only: it lights and sounds like lightning but sets nothing on fire. */
     static void strike(ServerLevel level, BlockPos pos) {
+        strike(level, pos, true);
+    }
+
+    /** Lightning at the surface over {@code pos}; unless {@code visualOnly}, it hurts and sets fires as weather does. */
+    static void strike(ServerLevel level, BlockPos pos, boolean visualOnly) {
         LightningBolt bolt = EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.EVENT);
         if (bolt != null) {
             bolt.setPos(Vec3.atBottomCenterOf(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos)));
-            bolt.setVisualOnly(true);
+            bolt.setVisualOnly(visualOnly);
             level.addFreshEntity(bolt);
         }
     }
