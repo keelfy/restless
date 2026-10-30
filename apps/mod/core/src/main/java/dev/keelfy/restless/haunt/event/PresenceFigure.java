@@ -53,7 +53,7 @@ final class PresenceFigure implements HauntEvent {
     static HauntEvent fog() {
         return new PresenceFigure("fog_silhouette", Set.of(EventTag.PRESENCE),
             player -> player.level().canSeeSky(player.blockPosition()) && (player.level().isRaining() || player.level().isDarkOutside()),
-            player -> Mannequin.DEFAULT_PROFILE, false);
+            Figure::stranger, false);
     }
 
     /** 123: another player, in a default skin, far off and turned toward the player until approached. */
