@@ -55,9 +55,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.entity.EntityType;
@@ -137,6 +140,13 @@ final class HauntEventGameTests {
                 check(helper, !ghostLog(helper.getLevel().getBlockState(pos)), "ghost_tree must not be on the server");
             }
         }));
+        PADDING.put("event_torch_line", 40);
+        tests.put("event_torch_line", helper -> runs(helper, "torch_line", player -> darkWood(helper), () -> {
+            // Only sent: the server's air along the line must stay.
+            BlockPos centre = helper.absolutePos(FEET);
+            check(helper, BlockPos.betweenClosedStream(centre.offset(-2, 0, 0), centre.offset(2, 0, 34))
+                .noneMatch(pos -> helper.getLevel().getBlockState(pos).is(Blocks.TORCH)), "torch_line must not be on the server");
+        }));
         tests.put("event_hallucination", helper -> runs(helper, "hallucination", player -> {
             BlockPos centre = helper.absolutePos(FEET);
             for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-22, -1, -22), centre.offset(22, -1, 22))) {
@@ -200,6 +210,42 @@ final class HauntEventGameTests {
             player.setYRot(0);
             helper.setBlock(FEET.south(2).above(), Blocks.STONE);
         }, () -> helper.assertBlockPresent(Blocks.STONE, FEET.south(2).above())));
+        tests.put("event_walled_in", helper -> {
+            ServerPlayer[] walled = new ServerPlayer[1];
+            runs(helper, "walled_in", player -> {
+                player.setOnGround(true);
+                walled[0] = player;
+            }, () -> {
+                for (Direction side : Direction.Plane.HORIZONTAL) {
+                    helper.assertBlockPresent(Blocks.STONE, FEET.relative(side));
+                    helper.assertBlockPresent(Blocks.STONE, FEET.above().relative(side));
+                }
+                helper.assertBlockPresent(Blocks.STONE, FEET.above(2));
+                helper.assertBlockPresent(Blocks.AIR, FEET);
+                helper.assertBlockPresent(Blocks.AIR, FEET.above());
+                check(helper, walled[0].hasEffect(MobEffects.MINING_FATIGUE), "walled_in must give mining fatigue");
+            });
+        });
+        // A tunnel two wide and two high running north to south, roofed; the player looks south, so the way back is north.
+        tests.put("event_sealed_tunnel", helper -> runs(helper, "sealed_tunnel", player -> {
+            for (int z = 0; z <= 9; z++) {
+                for (int y = 1; y <= 2; y++) {
+                    helper.setBlock(new BlockPos(2, y, z), Blocks.STONE);
+                    helper.setBlock(new BlockPos(5, y, z), Blocks.STONE);
+                }
+                for (int x = 2; x <= 5; x++) {
+                    helper.setBlock(new BlockPos(x, 3, z), Blocks.STONE);
+                }
+            }
+            player.setYRot(0);
+            player.setOnGround(true);
+        }, () -> {
+            for (BlockPos pos : BlockPos.betweenClosed(FEET.north(2).west(), FEET.north(2).above())) {
+                helper.assertBlockPresent(Blocks.STONE, pos);
+            }
+            helper.assertBlockPresent(Blocks.AIR, FEET.north());
+            helper.assertBlockPresent(Blocks.AIR, FEET.south(2));
+        }));
         tests.put("event_leak", helper -> runs(helper, "leak",
             player -> helper.setBlock(FEET.above(3), Blocks.STONE), () -> helper.assertBlockPresent(Blocks.STONE, FEET.above(3))));
         tests.put("event_lava_leak", helper -> runs(helper, "lava_leak",
@@ -232,8 +278,20 @@ final class HauntEventGameTests {
             check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-17, -2, -17), helper.absolutePos(FEET).offset(17, 3, 17))
                 .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Blocks.OAK_SIGN)), "item_trail must stand a sign");
         }));
-        tests.put("event_chest_blast", helper -> runs(helper, "chest_blast",
-            player -> helper.setBlock(FEET.west(3), Blocks.CHEST), () -> helper.assertBlockPresent(Blocks.CHEST, FEET.west(3))));
+        tests.put("event_chest_blast", helper -> runs(helper, "chest_blast", player -> {
+            helper.setBlock(FEET.west(3), Blocks.CHEST);
+            player.openMenu(helper.getBlockEntity(FEET.west(3), ChestBlockEntity.class));
+        }, () -> helper.assertBlockPresent(Blocks.CHEST, FEET.west(3))));
+        tests.put("event_chest_blast_closed", helper -> {
+            helper.setBlock(FEET.west(3), Blocks.CHEST);
+            ServerPlayer player = connected(helper);
+            BlockPos feet = helper.absolutePos(FEET);
+            player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+            check(helper, !HauntEvents.byId(Identifier.withDefaultNamespace("chest_blast")).orElseThrow().canRun(player),
+                "chest_blast must wait for the player to open the chest");
+            player.discard();
+            helper.succeed();
+        });
         tests.put("event_wrong_smelt", helper -> runs(helper, "wrong_smelt", player -> {
             helper.setBlock(FEET.west(2), Blocks.FURNACE);
             helper.getBlockEntity(FEET.west(2), AbstractFurnaceBlockEntity.class).setItem(2, new ItemStack(Items.IRON_INGOT, 3));
@@ -395,6 +453,88 @@ final class HauntEventGameTests {
                 data.put(dreamer[0].getUUID(), List.of());
             });
         });
+        PADDING.put("event_sleepwalk", 60);
+        TIMEOUT.put("event_sleepwalk", 200);
+        tests.put("event_sleepwalk", helper -> {
+            BlockPos centre = helper.absolutePos(FEET);
+            forceChunks(helper, centre, 24, true);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-22, -1, -22), centre.offset(22, -1, 22))) {
+                helper.getLevel().setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
+            }
+            helper.setBlock(FEET.west(3), Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.HEAD).setValue(BedBlock.FACING, Direction.WEST));
+            helper.setBlock(FEET.west(2), Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.FOOT).setValue(BedBlock.FACING, Direction.WEST));
+            ServerPlayer player = connected(helper);
+            player.snapTo(centre.getX() + 0.5, centre.getY(), centre.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("sleepwalk")).orElseThrow();
+            check(helper, event.canRun(player), "sleepwalk must be able to run in its scene");
+            event.run(player);
+            check(helper, player.startSleeping(helper.absolutePos(FEET.west(3))), "the test player must be able to lie in the bed");
+            // Longer than a night counts for: five seconds in bed.
+            helper.runAfterDelay(120, player::stopSleeping);
+            helper.runAfterDelay(150, () -> {
+                BlockPos bed = helper.absolutePos(FEET.west(3));
+                BlockPos at = player.blockPosition();
+                check(helper, Math.sqrt(at.distSqr(bed)) >= 3.0, "sleepwalk must wake the player away from the bed, is " + Math.sqrt(at.distSqr(bed)) + " from it");
+                check(helper, helper.getLevel().getBlockState(at.below()).isSolidRender() && helper.getLevel().isEmptyBlock(at) && helper.getLevel().isEmptyBlock(at.above()),
+                    "sleepwalk must leave the player standing on solid ground with room overhead");
+                check(helper, event.canRun(player), "the walk must be spent on waking");
+                forceChunks(helper, centre, 24, false);
+                player.discard();
+                helper.succeed();
+            });
+        });
+        TIMEOUT.put("event_pen_corner", 120);
+        tests.put("event_pen_corner", helper -> {
+            for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 0, 9)) {
+                helper.setBlock(pos, Blocks.STONE);
+            }
+            // A pen with x and z from 2 to 7 inside.
+            for (int i = 1; i <= 8; i++) {
+                for (BlockPos pos : List.of(new BlockPos(1, 1, i), new BlockPos(8, 1, i), new BlockPos(i, 1, 1), new BlockPos(i, 1, 8))) {
+                    helper.setBlock(pos, Blocks.OAK_FENCE);
+                }
+            }
+            Cow[] cows = {
+                EntityTypes.COW.spawn(helper.getLevel(), helper.absolutePos(new BlockPos(4, 1, 3)), EntitySpawnReason.COMMAND),
+                EntityTypes.COW.spawn(helper.getLevel(), helper.absolutePos(new BlockPos(5, 1, 5)), EntitySpawnReason.COMMAND)
+            };
+            ServerPlayer player = connected(helper);
+            BlockPos feet = helper.absolutePos(FEET);
+            player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("pen_corner")).orElseThrow();
+            check(helper, event.canRun(player), "pen_corner must be able to run in its scene");
+            event.run(player);
+            helper.runAfterDelay(100, () -> {
+                // The inside corner nearest the farther of the two cows is the one they were sent to.
+                int cx = 2;
+                int cz = 2;
+                double best = Double.MAX_VALUE;
+                for (int x : new int[] {2, 7}) {
+                    for (int z : new int[] {2, 7}) {
+                        BlockPos corner = helper.absolutePos(new BlockPos(x, 1, z));
+                        double far = Math.max(cows[0].distanceToSqr(corner.getX() + 0.5, corner.getY(), corner.getZ() + 0.5), cows[1].distanceToSqr(corner.getX() + 0.5, corner.getY(), corner.getZ() + 0.5));
+                        if (far < best) {
+                            best = far;
+                            cx = x;
+                            cz = z;
+                        }
+                    }
+                }
+                for (Cow cow : cows) {
+                    BlockPos at = helper.relativePos(cow.blockPosition());
+                    BlockPos corner = helper.absolutePos(new BlockPos(cx, 1, cz));
+                    check(helper, Math.hypot(cow.getX() - corner.getX() - 0.5, cow.getZ() - corner.getZ() - 0.5) <= Config.event("pen_corner").num("reach"),
+                        "pen_corner must bring every cow to the same corner, one is at " + at);
+                    // The point it looks at: diagonally past the corner block, into the fence.
+                    BlockPos wall = helper.absolutePos(new BlockPos(cx == 2 ? 1 : 8, 1, cz == 2 ? 1 : 8));
+                    float facing = (float) Math.toDegrees(Math.atan2(-(wall.getX() + 0.5 - cow.getX()), wall.getZ() + 0.5 - cow.getZ()));
+                    check(helper, Math.abs(Mth.wrapDegrees(cow.getYRot() - facing)) < 30.0F, "a cornered cow must face the corner, faces " + cow.getYRot());
+                    cow.discard();
+                }
+                player.discard();
+                helper.succeed();
+            });
+        });
         tests.put("event_goat_rams", helper -> {
             Goat[] goat = new Goat[1];
             double[] start = new double[1];
@@ -443,6 +583,47 @@ final class HauntEventGameTests {
             check(helper, look.body().get().id().getPath().contains(look.model().get().getSerializedName()), "the skin must match its arm width");
         });
         farOff(tests, "distant_walker", 45, Mannequin.class);
+        // Mock players are not in the player list, so the friend's double can only be shown not to come with nobody there.
+        tests.put("event_friend_double_needs_a_friend", helper -> {
+            ServerPlayer player = connected(helper);
+            ServerPlayer other = connected(helper);
+            BlockPos feet = helper.absolutePos(FEET);
+            player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+            other.snapTo(feet.getX() + 2.5, feet.getY(), feet.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("friend_double")).orElseThrow();
+            check(helper, !event.canRun(player), "friend_double must not run with nobody else in the player list");
+            other.discard();
+            player.discard();
+            helper.succeed();
+        });
+        PADDING.put("event_armor_stand", 30);
+        TIMEOUT.put("event_armor_stand", 80);
+        tests.put("event_armor_stand", helper -> {
+            // Open floor 12 blocks round, the test's barrier walls gone; a fresh player faces south, so behind is north.
+            BlockPos centre = helper.absolutePos(FEET);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-12, -1, -12), centre.offset(12, 2, 12))) {
+                helper.getLevel().setBlock(pos, pos.getY() < centre.getY() ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 2);
+            }
+            ServerPlayer player = connected(helper);
+            player.snapTo(centre.getX() + 0.5, centre.getY(), centre.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("armor_stand")).orElseThrow();
+            check(helper, event.canRun(player), "armor_stand must be able to run in its scene");
+            event.run(player);
+            List<ArmorStand> stands = helper.getLevel().getEntitiesOfClass(ArmorStand.class, new AABB(centre).inflate(12));
+            check(helper, stands.size() == 1, "armor_stand must put up one stand, found " + stands.size());
+            ArmorStand stand = stands.get(0);
+            check(helper, stand.getZ() < centre.getZ() && stand.showArms(), "the stand must have arms and stand behind the player");
+            float start = stand.distanceTo(player);
+            helper.runAfterDelay(40, () -> {
+                check(helper, stand.distanceTo(player) < start - 2, "the stand must follow the player who is not looking, is " + stand.distanceTo(player) + " away");
+                check(helper, stand.hurtServer(helper.getLevel(), player.damageSources().playerAttack(player), 1.0F) && !stand.isAlive(),
+                    "one blow must break the stand");
+                check(helper, helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(stand.blockPosition()).inflate(3)).isEmpty(),
+                    "the broken stand must drop nothing");
+                player.discard();
+                helper.succeed();
+            });
+        });
         // A spirit, or a player with none behind the event, says each line once; then the event rests.
         tests.put("event_text_never_repeats", helper -> {
             ServerPlayer player = connected(helper);
@@ -569,8 +750,24 @@ final class HauntEventGameTests {
         }
     }
 
+    /**
+     * Under leaves with a log beside the player, and ground far enough south (where a fresh player faces) for the line.
+     */
+    static void darkWood(GameTestHelper helper) {
+        BlockPos centre = helper.absolutePos(FEET);
+        for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-3, -1, -3), centre.offset(3, -1, 34))) {
+            helper.getLevel().setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
+        }
+        helper.getLevel().setBlock(centre.above(3), Blocks.OAK_LEAVES.defaultBlockState(), 2);
+        helper.getLevel().setBlock(centre.west(2), Blocks.OAK_LOG.defaultBlockState(), 2);
+    }
+
     /** Sets the scene, checks the event can run, runs it, lets its scheduled steps finish, then checks the result. */
     static void runs(GameTestHelper helper, String id, Consumer<ServerPlayer> scene, Runnable after) {
+        runs(helper, id, scene, SETTLE_TICKS, after);
+    }
+
+    static void runs(GameTestHelper helper, String id, Consumer<ServerPlayer> scene, int settle, Runnable after) {
         for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 0, 9)) {
             helper.setBlock(pos, Blocks.STONE);
         }
@@ -581,7 +778,7 @@ final class HauntEventGameTests {
         HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace(id)).orElseThrow();
         check(helper, event.canRun(player), id + " must be able to run in its scene");
         event.run(player);
-        helper.runAfterDelay(SETTLE_TICKS, () -> {
+        helper.runAfterDelay(settle, () -> {
             after.run();
             check(helper, player.isAlive(), id + " must not kill");
             player.discard();

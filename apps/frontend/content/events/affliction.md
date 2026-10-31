@@ -103,6 +103,13 @@ On the next waking (within 1 h) a line in chat and the journal: a nearby spirit'
 
 Runs when: A spirit senses the player, and no dream is waiting
 
+## `sleepwalk`
+
+**Harmful.**
+On the next waking after at least 5 s in bed (within 1 h) the player is moved to standing room 4–20 blocks away (solid floor, not magma, no lava next to it), outdoors if one of 4 tries finds sky
+
+Runs when: No walk is waiting
+
 ## `ravenous`
 
 Hunger II for 20 s

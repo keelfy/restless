@@ -44,13 +44,18 @@ Total for the seam itself: about 3. The cost is in the per-event real branches.
 | `false_slot` (161) | an item shown in an empty slot | the item is really put there |
 | `silent_lightning` (168) | visual-only bolt | real lightning (hurts, sets fires) |
 | `cracking_floor` (138) | break particles and sound | the block under the feet really breaks, no drop, only where the fall is one block |
-| `false_windows` (105), `false_looks` (106), `ghost_tree` (107) | shown to one client (`Swaps.show`) | placed for real and kept (`Swaps.show` makes every swap real in hardcore); a block that holds something (chest, furnace) is still only shown |
+| `ceiling_crack` (118) | crack shown, the block stays | the block breaks at the last stage, no drop, unless fluid or sand would come down |
+| `dispenser_shot` (177) | an arrow from nowhere, nothing spent | only a dispenser with arrows; it fires one of them for real |
+| `portal_out` (114) | — | unchanged: for good outside the Nether, back after 60 s in the Nether |
+| `false_windows` (105), `false_looks` (106), `ghost_tree` (107), `torch_line` (190) | shown to one client (`Swaps.show`) | placed for real and kept (`Swaps.show` makes every swap real in hardcore); a block that holds something (chest, furnace) is still only shown |
 | `hallucination` (126) | packet-only mob | the mob is spawned for real |
 | `disguise` (125) | the real animal hidden, another kind shown in its place | the animal is converted into the other kind (`convertTo`) |
 | `moving_tree` (108) | the tree moves, and moves back after 30 s | the tree stays where it moved |
 | `wilted_flowers` (72), `glass_wall`, `wall_hole`, `cross`, `shifting_floor`, `lantern_flicker`, `pillar` (121), `redstone_drift` (178), `enderman_takes` (198), `torch_swap` (112), `repaint` (104) | shown to the haunted player only, then the real blocks again | real swaps that stay (`Swaps.show`); see [block swaps](#block-swaps) |
 | `harvest` (122), `lost_growth` (110), `shuffled_books` (176) | undone later | stay (through `Restore`) |
-| `dragon_flyover` (127), the other-player events (119, 120, 123, 124), the other lies and sounds | — | unchanged |
+| `walled_in` (116), `sealed_tunnel` (188) | walls put up for real, taken down later | stay; the player digs out (the player's own two blocks are never filled, so there is always air) |
+| `armor_stand` (128) | the stand is gone after 2 min | it stays where it ended up (a vanilla armor stand once its chunk reloads) |
+| `dragon_flyover` (127), the other-player events (119, 120, 123, 124, 201), the other lies and sounds | — | unchanged |
 
 ## Block swaps
 

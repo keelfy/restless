@@ -7,6 +7,7 @@
     "minecraft:false_windows": { "weight": 0.4, "radius": 10, "max_blocks": 64, "ticks": 200, "modes": ["air", "fence", "wall"] },
     "minecraft:false_looks": { "weight": 0.4, "radius": 10, "max_blocks": 16, "ticks": 200, "blocks": ["minecraft:crafting_table", "minecraft:furnace", "minecraft:smoker", "minecraft:blast_furnace", "minecraft:chest", "minecraft:trapped_chest", "minecraft:barrel", "minecraft:ender_chest", "minecraft:stonecutter", "minecraft:fletching_table", "minecraft:smithing_table", "minecraft:cartography_table", "minecraft:loom", "minecraft:grindstone", "minecraft:anvil", "minecraft:enchanting_table", "minecraft:brewing_stand", "minecraft:lectern", "minecraft:composter", "minecraft:cauldron", "minecraft:jukebox", "minecraft:note_block", "minecraft:bookshelf", "minecraft:chiseled_bookshelf", "minecraft:crafter", "minecraft:dispenser", "minecraft:dropper", "minecraft:hopper", "minecraft:bell", "minecraft:beacon"] },
     "minecraft:ghost_tree": { "weight": 0.3, "distance": 12.0, "max_angle": 40.0, "woods": ["pale_oak", "oak", "birch"], "trunk": 4, "trunk_extra": 2, "ticks": 1200 },
+    "minecraft:torch_line": { "weight": 0.3, "radius": 8, "start": 10.0, "spacing": 3.0, "torches": 8, "min_torches": 3, "vanish_distance": 4.0, "interval_ticks": 5, "ticks": 1200 },
     "minecraft:hallucination": { "weight": 0.3, "distance": 20.0, "max_angle": 40.0, "mobs": ["minecraft:iron_golem", "minecraft:villager", "minecraft:wandering_trader", "minecraft:witch", "minecraft:enderman"], "interval_ticks": 5, "max_ticks": 600, "vanish_distance": 10.0 },
     "minecraft:disguise": { "weight": 0.3, "radius": 24.0, "ticks": 600, "looks": { "minecraft:cow": "minecraft:sheep", "minecraft:sheep": "minecraft:pig", "minecraft:pig": "minecraft:cow", "minecraft:chicken": "minecraft:wolf", "minecraft:horse": "minecraft:cow" } },
     "minecraft:dragon_flyover": { "weight": 0.15, "height": 40.0, "side": 30.0, "length": 240.0, "ticks": 200, "sound": { "volume": 6.0, "pitch": 0.8 } },
@@ -37,7 +38,7 @@
     "minecraft:infested_stone": { "weight": 0.4, "reach": 6.0, "restore_ticks": 600 },
     "minecraft:ceiling_crack": { "weight": 0.5, "reach": 4, "stages": 8, "interval_ticks": 8 },
     "minecraft:ice_over": { "weight": 0.5, "radius": 8, "max_blocks": 24, "restore_ticks": 600, "sound": { "volume": 1.0, "pitch": 0.7 } },
-    "minecraft:portal_out": { "weight": 0.4, "radius": 12, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:portal_out": { "weight": 0.4, "radius": 12, "nether_restore_ticks": 1200, "sound": { "volume": 1.0, "pitch": 0.8 } },
     "minecraft:block_blink": { "weight": 0.4, "reach": 5.0, "restore_ticks": 40 },
     "minecraft:leak": { "weight": 0.5, "reach": 4, "ticks": 160, "interval_ticks": 4, "sound_every": 6, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:lava_leak": { "weight": 0.4, "reach": 4, "ticks": 120, "interval_ticks": 4, "sound_every": 8, "sound": { "volume": 1.0, "pitch": 1.0 } },
@@ -70,6 +71,8 @@
         ["I left", "these", "for you"],
         ["follow", "no further"]
       ]
-    }
+    },
+    "minecraft:walled_in": { "weight": 0.3, "min_blocks": 5, "knocks": 4, "knock_ticks": 5, "restore_ticks": 400, "fatigue_seconds": 20, "amplifier": 2, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "minecraft:sealed_tunnel": { "weight": 0.3, "min_distance": 2, "max_distance": 5, "max_blocks": 6, "restore_ticks": 1200, "sound": { "volume": 1.0, "pitch": 0.7 } }
   }
 }

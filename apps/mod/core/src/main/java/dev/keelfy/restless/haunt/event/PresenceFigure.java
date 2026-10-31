@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,15 +35,23 @@ final class PresenceFigure implements HauntEvent {
     private final Function<ServerPlayer, ResolvableProfile> skin;
     /** Walks across the player's view instead of standing and watching. */
     private final boolean walks;
+    /** Shows its profile's name over its head, as a player's nameplate. */
+    private final boolean named;
     /** The figure each player has now; one per event at a time. */
     private final Map<UUID, Mannequin> active = new ConcurrentHashMap<>();
 
-    private PresenceFigure(String id, Set<EventTag> tags, Predicate<ServerPlayer> place, Function<ServerPlayer, ResolvableProfile> skin, boolean walks) {
+    private PresenceFigure(String id, Set<EventTag> tags, Predicate<ServerPlayer> place, Function<ServerPlayer, ResolvableProfile> skin, boolean walks,
+                           boolean named) {
         this.id = id;
         this.tags = tags;
         this.place = place;
         this.skin = skin;
         this.walks = walks;
+        this.named = named;
+    }
+
+    private PresenceFigure(String id, Set<EventTag> tags, Predicate<ServerPlayer> place, Function<ServerPlayer, ResolvableProfile> skin, boolean walks) {
+        this(id, tags, place, skin, walks, false);
     }
 
     /** 94: the player's own likeness at the edge of vision. */
@@ -64,6 +74,23 @@ final class PresenceFigure implements HauntEvent {
     /** 120: another player, in a default skin, walking past far off; gone when approached or when the ground runs out. */
     static HauntEvent distantWalker() {
         return new PresenceFigure("distant_walker", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Figure::stranger, true);
+    }
+
+    /** 201: a player who stands near the player is also far off, in their skin and under their name, watching. */
+    static HauntEvent friendDouble() {
+        return new PresenceFigure("friend_double", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> friend(player) != null, player -> {
+            ServerPlayer friend = friend(player);
+            return friend == null ? Figure.stranger(player) : ResolvableProfile.createResolved(friend.getGameProfile());
+        }, false, true);
+    }
+
+    /** Another player in the world within the event's friend distance; null if there is none. */
+    private static @Nullable ServerPlayer friend(ServerPlayer player) {
+        double near = Config.event("friend_double").num("friend_distance");
+        List<ServerPlayer> friends = player.level().getServer().getPlayerList().getPlayers().stream()
+            .filter(p -> p != player && p.level() == player.level() && !p.isSpectator() && p.distanceToSqr(player) <= near * near)
+            .toList();
+        return friends.isEmpty() ? null : friends.get(player.getRandom().nextInt(friends.size()));
     }
 
     @Override
@@ -93,9 +120,16 @@ final class PresenceFigure implements HauntEvent {
             return;
         }
         Config.Section config = Config.event(id);
-        Mannequin figure = Figure.spawn(player, spot, skin.apply(player));
+        ResolvableProfile profile = skin.apply(player);
+        Mannequin figure = Figure.spawn(player, spot, profile);
         if (figure == null) {
             return;
+        }
+        if (named) {
+            profile.name().ifPresent(name -> {
+                figure.setCustomName(Component.literal(name));
+                figure.setCustomNameVisible(true);
+            });
         }
         UUID owner = player.getUUID();
         active.put(owner, figure);

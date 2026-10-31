@@ -115,5 +115,11 @@
   "block.restless.ghost_birch_log": "Ghost birch log",
   "block.restless.ghost_birch_leaves": "Ghost birch leaves",
   "block.restless.footprints": "Muddy footprints",
-  "subtitles.restless.behind_you": "Something breathes behind you"
+  "subtitles.restless.behind_you": "Something breathes behind you",
+  "subtitles.restless.scream": "Distant scream",
+  "subtitles.restless.moan": "Ghostly moan",
+  "subtitles.restless.whisper": "Whispering",
+  "subtitles.restless.laugh": "Ghostly laughter",
+  "subtitles.restless.breath": "Cold breath",
+  "subtitles.restless.screech": "Ghostly shriek"
 }

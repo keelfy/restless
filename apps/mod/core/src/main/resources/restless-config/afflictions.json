@@ -20,6 +20,7 @@
     "minecraft:infested": { "weight": 0.4, "seconds": 30, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
     "minecraft:oozing": { "weight": 0.4, "seconds": 30, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
     "minecraft:weaving": { "weight": 0.4, "seconds": 30, "amplifier": 0, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "minecraft:drift": { "weight": 0.5, "push": 0.05, "ticks": 60 }
+    "minecraft:drift": { "weight": 0.5, "push": 0.05, "ticks": 60 },
+    "minecraft:sleepwalk": { "weight": 0.3, "interval_ticks": 10, "min_sleep_ticks": 100, "wait_ticks": 72000, "tries": 4, "min_distance": 4, "max_distance": 20 }
   }
 }

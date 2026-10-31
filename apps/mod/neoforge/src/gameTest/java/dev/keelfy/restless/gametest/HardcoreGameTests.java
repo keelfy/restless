@@ -13,6 +13,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -66,6 +72,15 @@ final class HardcoreGameTests {
         hardcore(tests, "hardcore_cracking_floor", helper -> runs(helper, "cracking_floor",
             player -> helper.getLevel().setBlock(helper.absolutePos(FEET.below(2)), Blocks.STONE.defaultBlockState(), Block.UPDATE_CLIENTS),
             () -> helper.assertBlockPresent(Blocks.AIR, FEET.below())));
+        hardcore(tests, "hardcore_ceiling_crack", helper -> runs(helper, "ceiling_crack",
+            player -> helper.setBlock(FEET.above(3), Blocks.STONE), 90, () -> helper.assertBlockPresent(Blocks.AIR, FEET.above(3))));
+        HauntEventGameTests.TIMEOUT.put("hardcore_ceiling_crack", 120);
+        hardcore(tests, "hardcore_dispenser_shot", helper -> runs(helper, "dispenser_shot", player -> {
+            helper.setBlock(FEET.west(3), Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.EAST));
+            helper.getBlockEntity(FEET.west(3), DispenserBlockEntity.class).setItem(0, new ItemStack(Items.ARROW, 2));
+        }, () -> check(helper, helper.getBlockEntity(FEET.west(3), DispenserBlockEntity.class).getItem(0).getCount() == 1
+            && !helper.getLevel().getEntitiesOfClass(Arrow.class, new AABB(helper.absolutePos(FEET)).inflate(6)).isEmpty(),
+            "dispenser_shot must really spend an arrow")));
         hardcore(tests, "hardcore_false_windows", helper -> runs(helper, "false_windows",
             player -> helper.setBlock(FEET.north(2), Blocks.GLASS), () -> helper.assertBlockNotPresent(Blocks.GLASS, FEET.north(2))));
         hardcore(tests, "hardcore_false_looks", helper -> runs(helper, "false_looks", player -> {
@@ -82,6 +97,13 @@ final class HardcoreGameTests {
                 .anyMatch(pos -> HauntEventGameTests.ghostLog(helper.getLevel().getBlockState(pos))), "ghost_tree must really stand");
         }));
         HauntEventGameTests.PADDING.put("hardcore_ghost_tree", 30);
+        hardcore(tests, "hardcore_torch_line", helper -> runs(helper, "torch_line", player -> HauntEventGameTests.darkWood(helper), () -> {
+            BlockPos centre = helper.absolutePos(FEET);
+            long torches = BlockPos.betweenClosedStream(centre.offset(-2, 0, 0), centre.offset(2, 0, 34))
+                .filter(pos -> helper.getLevel().getBlockState(pos).is(Blocks.TORCH)).count();
+            check(helper, torches >= 3, "torch_line must really place its torches, found " + torches);
+        }));
+        HauntEventGameTests.PADDING.put("hardcore_torch_line", 40);
         hardcore(tests, "hardcore_moving_tree", helper -> runs(helper, "moving_tree", player -> HauntEventGameTests.tree(helper), () -> {
             BlockPos centre = helper.absolutePos(FEET);
             check(helper, !helper.getLevel().getBlockState(centre.east(6)).is(BlockTags.LOGS), "moving_tree must stay moved");

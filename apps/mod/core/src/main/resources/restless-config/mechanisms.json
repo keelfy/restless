@@ -28,7 +28,7 @@
     "minecraft:occupied_bed": { "weight": 0.6, "radius": 12, "restore_ticks": 1200 },
     "minecraft:shuffled_books": { "weight": 0.5, "radius": 12, "restore_ticks": 2400, "sound": { "volume": 1.0, "pitch": 0.9 } },
     "minecraft:dispenser_shot": { "weight": 0.4, "radius": 12, "delay_ticks": 20, "speed": 1.6, "spread": 6.0 },
-    "minecraft:chest_blast": { "weight": 0.3, "radius": 10, "min_health": 10.0, "delay_ticks": 20, "power": 1.0, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:chest_blast": { "weight": 0.3, "radius": 6, "min_health": 10.0, "delay_ticks": 20, "power": 1.0, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:wrong_smelt": { "weight": 0.5, "radius": 10, "restore_ticks": 2400 },
     "minecraft:furniture_moves": { "weight": 0.3, "radius": 12, "min_distance": 2, "max_distance": 5, "restore_ticks": 6000 },
     "minecraft:doorstep_gift": { "weight": 0.4, "radius": 12, "items": ["minecraft:poppy", "minecraft:bone", "minecraft:rabbit", "minecraft:dandelion"] },
