@@ -59,6 +59,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.entity.EntityType;
@@ -499,6 +500,47 @@ final class HauntEventGameTests {
             check(helper, look.body().get().id().getPath().contains(look.model().get().getSerializedName()), "the skin must match its arm width");
         });
         farOff(tests, "distant_walker", 45, Mannequin.class);
+        // Mock players are not in the player list, so the friend's double can only be shown not to come with nobody there.
+        tests.put("event_friend_double_needs_a_friend", helper -> {
+            ServerPlayer player = connected(helper);
+            ServerPlayer other = connected(helper);
+            BlockPos feet = helper.absolutePos(FEET);
+            player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+            other.snapTo(feet.getX() + 2.5, feet.getY(), feet.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("friend_double")).orElseThrow();
+            check(helper, !event.canRun(player), "friend_double must not run with nobody else in the player list");
+            other.discard();
+            player.discard();
+            helper.succeed();
+        });
+        PADDING.put("event_armor_stand", 30);
+        TIMEOUT.put("event_armor_stand", 80);
+        tests.put("event_armor_stand", helper -> {
+            // Open floor 12 blocks round, the test's barrier walls gone; a fresh player faces south, so behind is north.
+            BlockPos centre = helper.absolutePos(FEET);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-12, -1, -12), centre.offset(12, 2, 12))) {
+                helper.getLevel().setBlock(pos, pos.getY() < centre.getY() ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 2);
+            }
+            ServerPlayer player = connected(helper);
+            player.snapTo(centre.getX() + 0.5, centre.getY(), centre.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("armor_stand")).orElseThrow();
+            check(helper, event.canRun(player), "armor_stand must be able to run in its scene");
+            event.run(player);
+            List<ArmorStand> stands = helper.getLevel().getEntitiesOfClass(ArmorStand.class, new AABB(centre).inflate(12));
+            check(helper, stands.size() == 1, "armor_stand must put up one stand, found " + stands.size());
+            ArmorStand stand = stands.get(0);
+            check(helper, stand.getZ() < centre.getZ() && stand.showArms(), "the stand must have arms and stand behind the player");
+            float start = stand.distanceTo(player);
+            helper.runAfterDelay(40, () -> {
+                check(helper, stand.distanceTo(player) < start - 2, "the stand must follow the player who is not looking, is " + stand.distanceTo(player) + " away");
+                check(helper, stand.hurtServer(helper.getLevel(), player.damageSources().playerAttack(player), 1.0F) && !stand.isAlive(),
+                    "one blow must break the stand");
+                check(helper, helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(stand.blockPosition()).inflate(3)).isEmpty(),
+                    "the broken stand must drop nothing");
+                player.discard();
+                helper.succeed();
+            });
+        });
         // A spirit, or a player with none behind the event, says each line once; then the event rests.
         tests.put("event_text_never_repeats", helper -> {
             ServerPlayer player = connected(helper);

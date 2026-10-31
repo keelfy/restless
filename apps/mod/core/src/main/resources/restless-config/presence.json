@@ -57,6 +57,18 @@
       "max_ticks": 1200,
       "cleanup_ticks": 40
     },
+    "minecraft:friend_double": {
+      "weight": 0.3,
+      "friend_distance": 16.0,
+      "distance": 50.0,
+      "min_angle": 0.0,
+      "max_angle": 40.0,
+      "vanish_degrees": 0.0,
+      "vanish_distance": 30.0,
+      "interval_ticks": 1,
+      "max_ticks": 1200,
+      "cleanup_ticks": 40
+    },
     "minecraft:distant_walker": {
       "weight": 0.3,
       "distance": 45.0,
@@ -93,6 +105,21 @@
       "vanish_distance": 10.0,
       "restore_ticks": 2400,
       "sound": { "volume": 1.0, "pitch": 0.8 },
+      "cleanup_ticks": 40
+    },
+    "minecraft:armor_stand": {
+      "weight": 0.2,
+      "distance": 8.0,
+      "min_angle": 150.0,
+      "max_angle": 180.0,
+      "interval_ticks": 4,
+      "speed": 0.6,
+      "climb": 1,
+      "drop": 3,
+      "stop_distance": 2.0,
+      "watch_degrees": 50.0,
+      "pose_chance": 0.25,
+      "max_ticks": 2400,
       "cleanup_ticks": 40
     },
     "minecraft:harvest": {

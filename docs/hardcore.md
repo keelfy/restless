@@ -54,7 +54,8 @@ Total for the seam itself: about 3. The cost is in the per-event real branches.
 | `wilted_flowers` (72), `glass_wall`, `wall_hole`, `cross`, `shifting_floor`, `lantern_flicker`, `pillar` (121), `redstone_drift` (178), `enderman_takes` (198), `torch_swap` (112), `repaint` (104) | shown to the haunted player only, then the real blocks again | real swaps that stay (`Swaps.show`); see [block swaps](#block-swaps) |
 | `harvest` (122), `lost_growth` (110), `shuffled_books` (176) | undone later | stay (through `Restore`) |
 | `walled_in` (116), `sealed_tunnel` (188) | walls put up for real, taken down later | stay; the player digs out (the player's own two blocks are never filled, so there is always air) |
-| `dragon_flyover` (127), the other-player events (119, 120, 123, 124), the other lies and sounds | — | unchanged |
+| `armor_stand` (128) | the stand is gone after 2 min | it stays where it ended up (a vanilla armor stand once its chunk reloads) |
+| `dragon_flyover` (127), the other-player events (119, 120, 123, 124, 201), the other lies and sounds | — | unchanged |
 
 ## Block swaps
 
