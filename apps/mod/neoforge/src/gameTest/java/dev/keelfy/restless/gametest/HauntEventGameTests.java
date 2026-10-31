@@ -210,6 +210,18 @@ final class HauntEventGameTests {
             }
         }, () -> check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-6, 0, -6), helper.absolutePos(FEET).offset(6, 3, 6))
             .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Blocks.OAK_WALL_SIGN)), "cave_sign must hang a wall sign")));
+        // The sign stands up to 16 blocks out, past the usual test floor.
+        PADDING.put("event_item_trail", 20);
+        tests.put("event_item_trail", helper -> runs(helper, "item_trail", player -> {
+            for (BlockPos pos : BlockPos.betweenClosed(-14, 0, -14, 22, 0, 22)) {
+                helper.getLevel().setBlockAndUpdate(helper.absolutePos(pos), Blocks.STONE.defaultBlockState());
+            }
+        }, () -> {
+            check(helper, !helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(FEET)).inflate(17)).isEmpty(),
+                "item_trail must lay items");
+            check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-17, -2, -17), helper.absolutePos(FEET).offset(17, 3, 17))
+                .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Blocks.OAK_SIGN)), "item_trail must stand a sign");
+        }));
         tests.put("event_chest_blast", helper -> runs(helper, "chest_blast",
             player -> helper.setBlock(FEET.west(3), Blocks.CHEST), () -> helper.assertBlockPresent(Blocks.CHEST, FEET.west(3))));
         tests.put("event_wrong_smelt", helper -> runs(helper, "wrong_smelt", player -> {

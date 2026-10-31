@@ -292,7 +292,7 @@ an essence or artifact.
 `Idea` is the number in [event-ideas.md](event-ideas.md).
 
 Text events (`whisper`, `own_voice`, `subliminal_title`, `false_death`, `false_advancement`, `stranger_death`, `book_page`,
-`new_sign`, `cave_sign`) never repeat a variant for the same spirit: each spirit remembers what it has said through each of
+`new_sign`, `cave_sign`, `item_trail`) never repeat a variant for the same spirit: each spirit remembers what it has said through each of
 them. Once every variant is used, the event cannot run for that spirit for `said.rest_ticks` (7 in-game days), then starts
 over. A text event with no spirit behind it (command, debug menu) counts against the player instead. Saved with the world.
 
@@ -439,6 +439,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `lava_leak` | 183 | LIGHT | BLOCKS | 0.4 | Same | Lava drips from it for 6 s, particles and sound only, in every mode |
 | `mock_grave` | 185 | LIGHT | BLOCKS | 0.4 | Open standing room 5–10 away with a free cell in front | A gravestone with a sign (R.I.P., the player's name, tomorrow's date); removed after 5 min, stays under hardcore |
 | `cave_sign` | 189 | LIGHT | BLOCKS | 0.4 | Underground (no sky above), a wall 4–8 blocks out in one of the four directions | A wall sign with a short warning (go back, turn around, too late); removed after 5 min, stays under hardcore |
+| `item_trail` | 115 | LIGHT | BLOCKS | 0.3 | Standing room 10–16 away | Bones, rotten flesh and string every 3 blocks along the ground from the player to a standing sign with a short note; the items cannot be picked up. Items cleared and sign removed (if unedited) after 5 min; under hardcore the items can be taken and the sign stays |
 | `animals_stare` | 85 | LIGHT | MOBS | 0.6 | Two animals within 16 | They stop and face the player for 3 s |
 | `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
 | `cat_flee` | 129 | LIGHT | MOBS | 0.5 | A standing cat within 16 | The cats run 8 blocks away from the spirit's point for 5 s; one hisses |
