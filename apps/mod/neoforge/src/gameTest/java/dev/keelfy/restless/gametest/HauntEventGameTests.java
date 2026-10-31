@@ -482,6 +482,61 @@ final class HauntEventGameTests {
             player.discard();
             helper.succeed();
         });
+        PADDING.put("event_wolf_rage", 32);
+        TIMEOUT.put("event_wolf_rage", 80);
+        tests.put("event_wolf_rage", helper -> {
+            Wolf[] wolves = new Wolf[3];
+            ServerPlayer[] victim = new ServerPlayer[1];
+            runs(helper, "wolf_rage", player -> {
+                victim[0] = player;
+                // Allow the mock player to take real melee damage after loading.
+                player.connection.handleAcceptPlayerLoad(new net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket());
+                wolves[0] = EntityTypes.WOLF.spawn(helper.getLevel(), helper.absolutePos(FEET).east(1), EntitySpawnReason.COMMAND);
+                wolves[1] = EntityTypes.WOLF.spawn(helper.getLevel(), helper.absolutePos(FEET).west(3), EntitySpawnReason.COMMAND);
+                wolves[2] = EntityTypes.WOLF.spawn(helper.getLevel(), helper.absolutePos(FEET).north(2), EntitySpawnReason.COMMAND);
+                wolves[2].setTame(true, false);
+                for (Wolf wolf : wolves) wolf.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(1.0);
+            }, 40, () -> {
+                for (int i = 0; i < 2; i++) {
+                    check(helper, wolves[i].getTarget() == victim[0] && wolves[i].isAngry(), "each wild wolf must remain angry at the player");
+                    check(helper, wolves[i].getPersistentAngerTarget().matches(victim[0]), "wolf anger must remember this player");
+                }
+                check(helper, wolves[2].getTarget() == null && !wolves[2].isAngry(), "tamed wolves must remain friendly");
+                check(helper, victim[0].getHealth() < victim[0].getMaxHealth(), "wolves must actually attack and damage the player");
+                for (Wolf wolf : wolves) wolf.discard();
+            });
+        });
+        PADDING.put("event_wolf_rage_conditions", 32);
+        tests.put("event_wolf_rage_conditions", helper -> {
+            ServerPlayer player = connected(helper);
+            BlockPos feet = helper.absolutePos(FEET);
+            player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("wolf_rage")).orElseThrow();
+            check(helper, !event.canRun(player), "wolf_rage needs existing wolves");
+            event.run(player);
+            Wolf wolf = EntityTypes.WOLF.spawn(helper.getLevel(), feet.east(2), EntitySpawnReason.COMMAND);
+            wolf.setTame(true, false);
+            check(helper, !event.canRun(player), "tamed wolves must be excluded");
+            wolf.setTame(false, false);
+            check(helper, event.canRun(player), "an idle wild wolf must be eligible");
+            wolf.setTarget(player);
+            check(helper, !event.canRun(player), "busy wolves must be excluded");
+            wolf.setTarget(null);
+            wolf.setNoAi(true);
+            check(helper, !event.canRun(player), "wolves without AI cannot attack");
+            wolf.setNoAi(false);
+            for (GameType mode : List.of(GameType.CREATIVE, GameType.SPECTATOR)) {
+                ServerPlayer excluded = (ServerPlayer) helper.makeMockServerPlayer(mode);
+                excluded.setPos(player.getX(), player.getY(), player.getZ());
+                check(helper, !event.canRun(excluded), mode + " players must be excluded");
+                excluded.discard();
+            }
+            wolf.snapTo(player.getX() + 13, player.getY(), player.getZ() + 13);
+            check(helper, !event.canRun(player), "wolves outside the radius must be excluded even inside the search box");
+            wolf.discard();
+            player.discard();
+            helper.succeed();
+        });
         tests.put("event_dog_growls", helper -> {
             Wolf[] wolf = new Wolf[1];
             runs(helper, "dog_growls", player -> {

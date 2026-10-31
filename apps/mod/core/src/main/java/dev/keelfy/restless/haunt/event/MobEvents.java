@@ -148,6 +148,13 @@ final class MobEvents {
                     golem.setTarget(player);
                 }
             }),
+            SimpleEvent.harmful("wolf_rage", EventTag.MOBS, player -> !hostileWolves(player).isEmpty(), player -> {
+                for (Wolf wolf : hostileWolves(player)) {
+                    wolf.setPersistentAngerTarget(EntityReference.of(player));
+                    wolf.startPersistentAngerTimer();
+                    wolf.setTarget(player);
+                }
+            }),
             // 194: sits, looks at the empty space beside the player and growls; stands again when it is over
             SimpleEvent.light("dog_growls", EventTag.MOBS, player -> !standingDogs(player).isEmpty(), MobEvents::growl),
             // 195: the pen's animals crowd into one corner and stand facing it
@@ -273,6 +280,17 @@ final class MobEvents {
             .filter(g -> g.isAlive() && !g.isNoAi() && g.getTarget() == null && g.canAttack(player)
                 && g.distanceToSqr(player) <= radius * radius)
             .min(Comparator.comparingDouble(g -> g.distanceToSqr(player))).orElse(null);
+    }
+
+    private static List<Wolf> hostileWolves(ServerPlayer player) {
+        if (player.isCreative() || player.isSpectator() || player.level().getDifficulty() == Difficulty.PEACEFUL) {
+            return List.of();
+        }
+        double radius = Nearby.radius("wolf_rage");
+        return near(player, Wolf.class, "wolf_rage").stream()
+            .filter(w -> !w.isTame() && w.isAlive() && !w.isNoAi() && w.getTarget() == null && w.canAttack(player)
+                && w.distanceToSqr(player) <= radius * radius)
+            .toList();
     }
 
     private static List<Wolf> standingDogs(ServerPlayer player) {

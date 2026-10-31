@@ -496,6 +496,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `copycat` | 92 | HARMFUL | MOBS | 0.6 | Not peaceful, standing room 3 blocks behind | A zombie in a copy of the player's armor, targeting them |
 | `golem_rage` | — | HARMFUL | MOBS | 0.4 | A living iron golem within 24 with AI, no target and able to attack this player; no creative, spectator or peaceful | The nearest eligible golem stops offering its flower and attacks the player, with vanilla persistent anger. Player-built golems remain friendly |
 | `golem_flower` | 193 | LIGHT | MOBS | 0.6 | An iron golem within 24 with no target | It holds out its poppy for 15 s, to nobody |
+| `wolf_rage` | — | HARMFUL | MOBS | 0.4 | Living wild wolves within 16 with AI, no target and able to attack this player; no creative, spectator or peaceful | All eligible wolves attack the player with vanilla persistent anger. Tamed wolves remain friendly |
 | `dog_growls` | 194 | LIGHT | MOBS | 0.6 | A tamed standing wolf within 16 | It sits, looks at the empty space 2 blocks from the player and growls for 6 s, then stands |
 | `angry_bees` | 196 | HARMFUL | MOBS | 0.5 | A bee nest or hive within 16 with bees in it | The bees come out angry at the player, as if it had been broken |
 | `leash_snaps` | 181 | HARMFUL | MOBS | 0.5 | A mob tied to a fence post within 16 | The leash comes loose with a snap and drops as an item |

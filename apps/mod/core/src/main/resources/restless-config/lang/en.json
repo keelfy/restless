@@ -176,6 +176,7 @@
     "minecraft:dispenser_shot": { "name": "Dispenser Shot", "description": "A dispenser clicks, then shoots an arrow at the player." },
     "minecraft:golem_rage": { "name": "Golem Rage", "description": "The nearest idle iron golem within 24 blocks turns on the player. Player-built golems remain friendly; anger follows vanilla rules." },
     "minecraft:golem_flower": { "name": "Golem Flower", "description": "An iron golem holds out a poppy to empty air." },
+    "minecraft:wolf_rage": { "name": "Wolf Rage", "description": "Idle wild wolves within 16 blocks turn on the player with vanilla persistent anger. Tamed wolves remain friendly." },
     "minecraft:dog_growls": { "name": "Dog Growls", "description": "A tamed dog sits, stares at the empty space beside the player and growls." },
     "minecraft:angry_bees": { "name": "Angry Bees", "description": "The bees of a nearby hive pour out angry at the player." },
     "minecraft:leash_snaps": { "name": "Leash Snaps", "description": "A leash on a fence post comes loose and the animal runs free." },
