@@ -67,6 +67,11 @@ public final class Location {
         }
     }
 
+    /** The point set by {@link #during}, if any; to carry it into a later step. */
+    static @Nullable Vec3 current() {
+        return current;
+    }
+
     /** The running event's spirit point, or {@code fallback} when the event was not started by a spirit. */
     public static Vec3 source(Vec3 fallback) {
         return current != null ? current : fallback;

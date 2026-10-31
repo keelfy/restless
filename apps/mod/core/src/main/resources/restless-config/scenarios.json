@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:lights_out": { "weight": 0.3, "min_power": 0.7, "evolved": false },
+    "minecraft:playing_with_candles": { "weight": 0.3, "min_power": 0.4, "evolved": false },
+    "minecraft:hearth_dies": { "weight": 0.3, "min_power": 0.7, "evolved": false },
+    "minecraft:lamp_code": { "weight": 0.3, "min_power": 0.4, "evolved": false },
+    "minecraft:the_debt": { "weight": 0.3, "min_power": 0.7, "evolved": true }
+  }
+}

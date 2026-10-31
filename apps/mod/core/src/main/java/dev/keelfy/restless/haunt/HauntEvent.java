@@ -21,6 +21,11 @@ public interface HauntEvent {
         return Config.event(id().toString()).num("weight");
     }
 
+    /** Whether a spirit this strong may roll the event at all; only {@link Scenario}s are gated. */
+    default boolean opensAt(double power, boolean evolved) {
+        return true;
+    }
+
     /** Cheap check whether the event has anything to act on right now. */
     boolean canRun(ServerPlayer player);
 

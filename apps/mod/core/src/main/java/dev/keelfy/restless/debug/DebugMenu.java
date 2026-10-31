@@ -41,7 +41,12 @@ public final class DebugMenu {
         double[][] weights = shown.stream()
                 .map(h -> HauntEvents.all().stream()
                         .mapToDouble(e -> Director.weight(
-                                e, viewer, Director.spirit(h), Traits.of(h.traits()), Director.power(h, now)))
+                                e,
+                                viewer,
+                                Director.spirit(h),
+                                Traits.of(h.traits()),
+                                Director.power(h, now),
+                                h.evolved()))
                         .toArray())
                 .toArray(double[][]::new);
         double[] totals = Arrays.stream(weights)

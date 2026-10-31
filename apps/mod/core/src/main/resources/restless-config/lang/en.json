@@ -213,6 +213,11 @@
     "minecraft:cave_sign": { "name": "Cave Sign", "description": "A sign appears on a wall of the tunnel nearby with a short warning or beckoning; it is taken down after a few minutes." },
     "minecraft:item_trail": { "name": "Item Trail", "description": "A trail of bones, flesh and string that cannot be picked up leads to a sign with a short note; both are cleared after a few minutes." },
     "minecraft:walled_in": { "name": "Walled In", "description": "Knocking on every side, then walls of the surrounding stone close around the player and over their head, with mining fatigue; they crumble after twenty seconds." },
-    "minecraft:sealed_tunnel": { "name": "Sealed Tunnel", "description": "The tunnel a few blocks behind the player is filled in, wall to wall, with the stone around it; it opens again after a minute." }
+    "minecraft:sealed_tunnel": { "name": "Sealed Tunnel", "description": "The tunnel a few blocks behind the player is filled in, wall to wall, with the stone around it; it opens again after a minute." },
+    "minecraft:lights_out": { "name": "Lights Out, One by One", "description": "Scenario: a lantern flickers, the torches go out one by one, something breathes beside the player, then the dark fills with monsters." },
+    "minecraft:playing_with_candles": { "name": "Playing with Candles", "description": "Scenario: the candles go out, light again, go out once more, and something laughs." },
+    "minecraft:hearth_dies": { "name": "The Hearth Dies", "description": "Scenario: the furnace and the campfire die together, a cold breath follows, then frost bites." },
+    "minecraft:lamp_code": { "name": "Lamp Code", "description": "Scenario: a redstone lamp goes out three times, three knocks answer, then a lever flips." },
+    "minecraft:the_debt": { "name": "The Debt", "description": "Scenario of an evolved spirit: the screen reddens, the lights die, wrath strikes, then a voice draws the player toward lava or the void." }
   }
 }

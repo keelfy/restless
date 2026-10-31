@@ -51,6 +51,7 @@ public final class AltarGameTests {
         HardcoreGameTests.register(TESTS);
         JournalGameTests.register(TESTS);
         SanityGameTests.register(TESTS);
+        ScenarioGameTests.register(TESTS);
         TESTS.put("placement", helper -> {
             place(helper);
             check(

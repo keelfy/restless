@@ -28,6 +28,11 @@ public final class Said {
         }
     }
 
+    /** The spirit set by {@link #during}, if any; to carry it into a later step. */
+    static @Nullable UUID current() {
+        return speaker;
+    }
+
     /** Whether the speaker has a variant of event {@code id} left to say. */
     public static <T> boolean left(ServerPlayer player, String id, List<T> variants, Function<T, String> key) {
         return !unsaid(player, id, variants, key).isEmpty();

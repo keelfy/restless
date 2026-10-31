@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import net.minecraft.resources.Identifier;
 
 public final class HauntEvents {
-    private static final List<HauntEvent> ALL = Stream.concat(
+    private static final List<HauntEvent> EVENTS = Stream.concat(
                     Stream.of(
                             new ExtinguishLightEvent(),
                             new DoorEvent(),
@@ -23,6 +23,9 @@ public final class HauntEvents {
                             new DoubleEvent()),
                     Catalog.all().stream())
             .toList();
+    /** The plain events, then the scenarios made of them. */
+    private static final List<HauntEvent> ALL =
+            Stream.concat(EVENTS.stream(), Scenarios.all(EVENTS).stream()).toList();
 
     private HauntEvents() {}
 

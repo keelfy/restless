@@ -49,7 +49,13 @@ public final class Director {
                 if (canHaunt(player)) {
                     Said.during(
                             haunting.uuid(),
-                            () -> pick(player, spirit, Traits.of(haunting.traits()), power(haunting, now), null)
+                            () -> pick(
+                                            player,
+                                            spirit,
+                                            Traits.of(haunting.traits()),
+                                            power(haunting, now),
+                                            haunting.evolved(),
+                                            null)
                                     .ifPresent(event -> fireUnlessWarded(player, event, at)));
                 }
                 spirits.set(
@@ -89,6 +95,7 @@ public final class Director {
                                         spirit(territorial.haunting()),
                                         Traits.of(territorial.haunting().traits()),
                                         power(territorial.haunting(), now),
+                                        territorial.haunting().evolved(),
                                         null)
                                 .ifPresent(event ->
                                         fireUnlessWarded(player, event, Vec3.atCenterOf(territorial.anchor()))));
@@ -199,7 +206,13 @@ public final class Director {
         long now = player.level().getServer().overworld().getGameTime();
         Said.during(
                 haunting.uuid(),
-                () -> pick(player, spirit(haunting), Traits.of(haunting.traits()), power(haunting, now), tier)
+                () -> pick(
+                                player,
+                                spirit(haunting),
+                                Traits.of(haunting.traits()),
+                                power(haunting, now),
+                                haunting.evolved(),
+                                tier)
                         .ifPresent(event -> {
                             fire(player, event, at);
                             Journal.unlock(player, Notebook.Chapter.HAUNTED);
@@ -263,15 +276,24 @@ public final class Director {
         return now;
     }
 
-    /** An event's weight for this spirit as {@link #pick} rolls it; 0 when the event has nothing to act on. */
+    /**
+     * An event's weight for this spirit as {@link #pick} rolls it; 0 when the event has nothing to act on or the spirit
+     * is not past its gate.
+     */
     public static double weight(
-            HauntEvent event, ServerPlayer player, SpiritType spirit, List<Trait> traits, double power) {
-        return weight(event, event.canRun(player), spirit, traits, power);
+            HauntEvent event,
+            ServerPlayer player,
+            SpiritType spirit,
+            List<Trait> traits,
+            double power,
+            boolean evolved) {
+        return weight(event, event.canRun(player), spirit, traits, power, evolved);
     }
 
     /** Boosted by {@link Rarity}: an event that seldom has anything to act on is likelier when it does. */
-    private static double weight(HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power) {
-        return ready
+    private static double weight(
+            HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power, boolean evolved) {
+        return ready && event.opensAt(power, evolved)
                 ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power)
                         * Rarity.boost(event.id().toString())
                 : 0.0;
@@ -279,7 +301,12 @@ public final class Director {
 
     /** Events the player went through lately ({@link Recent}) are left out, unless they are all that can run. */
     private static Optional<HauntEvent> pick(
-            ServerPlayer player, SpiritType spirit, List<Trait> traits, double power, @Nullable HauntTier tier) {
+            ServerPlayer player,
+            SpiritType spirit,
+            List<Trait> traits,
+            double power,
+            boolean evolved,
+            @Nullable HauntTier tier) {
         List<HauntEvent> candidates = new ArrayList<>();
         List<Double> weights = new ArrayList<>();
         List<Boolean> stale = new ArrayList<>();
@@ -291,7 +318,7 @@ public final class Director {
             String id = event.id().toString();
             boolean ready = event.canRun(player);
             Rarity.observe(id, ready);
-            double weight = weight(event, ready, spirit, traits, power);
+            double weight = weight(event, ready, spirit, traits, power, evolved);
             if (weight > 0) {
                 boolean repeat = Recent.blocks(player.getUUID(), id);
                 candidates.add(event);

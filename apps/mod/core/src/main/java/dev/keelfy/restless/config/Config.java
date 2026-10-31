@@ -42,7 +42,8 @@ public final class Config {
             "blocks",
             "mobs",
             "presence",
-            "lies");
+            "lies",
+            "scenarios");
     /** The namespace of events that use only vanilla content. */
     static final String DEFAULT_NAMESPACE = "minecraft";
 

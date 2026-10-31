@@ -24,7 +24,8 @@ import org.junit.jupiter.api.io.TempDir;
 
 class ConfigTest {
     private static final Path SOURCES = Path.of("src/main/java");
-    private static final Pattern EVENT_ID = Pattern.compile("\\b(?:light|harmful|sound|at|on)\\(\"([a-z_:]+)\"");
+    private static final Pattern EVENT_ID =
+            Pattern.compile("\\b(?:light|harmful|sound|at|on|scenario)\\(\"([a-z_:]+)\"");
     private static final Pattern OWN_ID =
             Pattern.compile("public Identifier id\\(\\) \\{\\s*return Identifier\\.parse\\(\"([a-z_:]+)\"\\);");
     private static final Pattern KEY =
