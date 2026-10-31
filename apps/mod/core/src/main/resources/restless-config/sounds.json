@@ -33,7 +33,7 @@
     "minecraft:phantom_jukebox": { "weight": 0.4, "distance": 8.0, "sound": { "volume": 2.0, "pitch": 1.0 } },
     "minecraft:music_cut": { "weight": 0.4 },
     "minecraft:whisper": { "weight": 0.4, "format": "<???> %s" },
-    "minecraft:death_cry": { "weight": 0.4, "distance": 7.0, "sound": { "volume": 0.8, "pitch": 0.95 } },
+    "minecraft:death_cry": { "weight": 0.4, "distance": 7.0, "sound": { "volume": 0.5, "pitch": 0.95 } },
     "minecraft:dripping": { "weight": 0.4, "distance": 3.0, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:distant_mob": {
       "weight": 0.4,
@@ -50,11 +50,11 @@
     "minecraft:shrieker": { "weight": 0.4, "radius": 16 },
     "minecraft:fake_subtitle": { "weight": 0.3, "distance": 3.0, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:phantom_heartbeat": { "weight": 0.4, "interval_ticks": 18, "beats": 8, "sound": { "volume": 1.0, "pitch": 1.0 } },
-    "minecraft:ghost_laugh": { "weight": 0.3, "distance": 9.0, "sound": { "volume": 1.0, "pitch": 0.85 } },
-    "minecraft:ghost_breath": { "weight": 0.3, "distance": 0.8, "sound": { "volume": 0.7, "pitch": 0.8 } },
-    "minecraft:close_whispers": { "weight": 0.3, "distance": 1.5, "whispers": 3, "interval_ticks": 50, "sound": { "volume": 0.8, "pitch": 1.0 } },
-    "minecraft:circling_moan": { "weight": 0.25, "distance": 6.0, "moans": 4, "step_degrees": 90.0, "interval_ticks": 45, "sound": { "volume": 1.0, "pitch": 0.9 } },
-    "minecraft:cut_off_scream": { "weight": 0.25, "distance": 12.0, "cut_ticks": 14, "sound": { "volume": 1.2, "pitch": 1.0 } },
-    "minecraft:banshee": { "weight": 0.15, "distance": 30.0, "height": 12.0, "sound": { "volume": 3.0, "pitch": 1.0 } }
+    "minecraft:ghost_laugh": { "weight": 0.3, "distance": 9.0, "sound": { "volume": 0.5, "pitch": 0.85 } },
+    "minecraft:ghost_breath": { "weight": 0.3, "distance": 0.8, "sound": { "volume": 0.35, "pitch": 0.8 } },
+    "minecraft:close_whispers": { "weight": 0.3, "distance": 1.5, "whispers": 3, "interval_ticks": 50, "sound": { "volume": 0.4, "pitch": 1.0 } },
+    "minecraft:circling_moan": { "weight": 0.25, "distance": 6.0, "moans": 4, "step_degrees": 90.0, "interval_ticks": 45, "sound": { "volume": 0.5, "pitch": 0.9 } },
+    "minecraft:cut_off_scream": { "weight": 0.25, "distance": 12.0, "cut_ticks": 14, "sound": { "volume": 0.6, "pitch": 1.0 } },
+    "minecraft:banshee": { "weight": 0.15, "distance": 30.0, "height": 12.0, "sound": { "volume": 2.5, "pitch": 1.0 } }
   }
 }
