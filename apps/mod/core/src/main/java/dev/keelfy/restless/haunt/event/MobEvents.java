@@ -139,6 +139,8 @@ final class MobEvents {
             }),
             // 194: sits, looks at the empty space beside the player and growls; stands again when it is over
             SimpleEvent.light("dog_growls", EventTag.MOBS, player -> !standingDogs(player).isEmpty(), MobEvents::growl),
+            // 195: the pen's animals crowd into one corner and stand facing it
+            SimpleEvent.light("pen_corner", EventTag.MOBS, player -> pen(player) != null, MobEvents::cornered),
             // 196: the bees come out as if the hive had been broken
             SimpleEvent.harmful("angry_bees", EventTag.MOBS, player -> hive(player) != null, player -> {
                 BlockPos pos = hive(player);
@@ -283,6 +285,86 @@ final class MobEvents {
                 dog.setInSittingPose(false);
             }
             return true;
+        });
+    }
+
+    /** Fenced on four sides, from {@code minX, minZ} to {@code maxX, maxZ} inside, with the farm animals in it. */
+    private record Pen(int minX, int minZ, int maxX, int maxZ, int y, List<Animal> animals) {}
+
+    /** The first pen with enough farm animals in it (none tamable), read off the fences in line with one of them. */
+    private static @Nullable Pen pen(ServerPlayer player) {
+        Config.Section config = Config.event("pen_corner");
+        List<Animal> farm = near(player, Animal.class, "pen_corner").stream().filter(a -> !(a instanceof TamableAnimal) && !a.isLeashed()).toList();
+        for (Animal animal : farm) {
+            BlockPos at = animal.blockPosition();
+            int[] reach = new int[4];
+            boolean fenced = true;
+            for (Direction d : Direction.Plane.HORIZONTAL) {
+                int k = fence(player.level(), at, d, config.integer("max_size"));
+                if (k < 0) {
+                    fenced = false;
+                    break;
+                }
+                reach[d.get2DDataValue()] = k - 1;
+            }
+            if (!fenced) {
+                continue;
+            }
+            int minX = at.getX() - reach[Direction.WEST.get2DDataValue()];
+            int maxX = at.getX() + reach[Direction.EAST.get2DDataValue()];
+            int minZ = at.getZ() - reach[Direction.NORTH.get2DDataValue()];
+            int maxZ = at.getZ() + reach[Direction.SOUTH.get2DDataValue()];
+            List<Animal> in = farm.stream().filter(a -> a.getBlockX() >= minX && a.getBlockX() <= maxX && a.getBlockZ() >= minZ && a.getBlockZ() <= maxZ
+                && Math.abs(a.getBlockY() - at.getY()) <= 1).toList();
+            if (in.size() >= config.integer("min_animals")) {
+                return new Pen(minX, minZ, maxX, maxZ, at.getY(), in);
+            }
+        }
+        return null;
+    }
+
+    /** Blocks from {@code from} to a fence, wall or gate along {@code d}, or -1 if something else or nothing comes first. */
+    private static int fence(ServerLevel level, BlockPos from, Direction d, int max) {
+        for (int k = 1; k <= max; k++) {
+            BlockPos pos = from.relative(d, k);
+            BlockState state = level.getBlockState(pos);
+            if (state.is(BlockTags.FENCES) || state.is(BlockTags.WALLS) || state.getBlock() instanceof FenceGateBlock) {
+                return k;
+            }
+            if (!Place.open(level, pos)) {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    /** Each animal walks to the corner; once there it stops and keeps looking into it. Let go when the time is up. */
+    private static void cornered(ServerPlayer player) {
+        Pen pen = pen(player);
+        if (pen == null) {
+            return;
+        }
+        Config.Section config = Config.event("pen_corner");
+        boolean east = player.getRandom().nextBoolean();
+        boolean south = player.getRandom().nextBoolean();
+        Vec3 corner = new Vec3((east ? pen.maxX() : pen.minX()) + 0.5, pen.y(), (south ? pen.maxZ() : pen.minZ()) + 0.5);
+        Vec3 wall = corner.add(east ? 1.0 : -1.0, 0.0, south ? 1.0 : -1.0);
+        double reach = config.num("reach");
+        int interval = config.integer("interval_ticks");
+        Scheduler.repeat(player, 0, interval, (p, n) -> {
+            for (Animal animal : pen.animals()) {
+                if (!animal.isAlive()) {
+                    continue;
+                }
+                if (animal.position().multiply(1, 0, 1).distanceTo(corner.multiply(1, 0, 1)) > reach) {
+                    animal.getNavigation().moveTo(corner.x, corner.y, corner.z, config.num("speed"));
+                } else {
+                    animal.getNavigation().stop();
+                    animal.lookAt(EntityAnchorArgument.Anchor.EYES, wall.add(0.0, animal.getEyeHeight(), 0.0));
+                    animal.setYBodyRot(animal.getYRot());
+                }
+            }
+            return n * interval < config.integer("ticks");
         });
     }
 

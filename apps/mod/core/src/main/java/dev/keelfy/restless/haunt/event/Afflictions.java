@@ -16,18 +16,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /** Status effects and other things done to the player's body. None of them can kill. */
 final class Afflictions {
@@ -93,7 +98,9 @@ final class Afflictions {
             // 171: the clock phantoms go by says three days without sleep
             SimpleEvent.harmful("insomnia", EventTag.AFFLICTION,
                 player -> player.level().getDifficulty() != Difficulty.PEACEFUL && player.getStats().getValue(Stats.CUSTOM.get(Stats.TIME_SINCE_REST)) < SLEEPLESS,
-                player -> player.getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), SLEEPLESS))
+                player -> player.getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), SLEEPLESS)),
+            // 172: no walk until the player sleeps through; they wake on safe ground some way off, outdoors if it can be found
+            SimpleEvent.harmful("sleepwalk", EventTag.AFFLICTION, player -> !SLEEPWALKERS.contains(player.getUUID()), Afflictions::sleepwalk)
         );
     }
 
@@ -127,6 +134,54 @@ final class Afflictions {
             }
             return true;
         });
+    }
+
+    /** Players with a walk waiting. */
+    private static final Set<UUID> SLEEPWALKERS = new HashSet<>();
+
+    private static void sleepwalk(ServerPlayer player) {
+        Config.Section config = Config.event("sleepwalk");
+        SLEEPWALKERS.add(player.getUUID());
+        int interval = config.integer("interval_ticks");
+        int[] slept = {0};
+        Scheduler.repeat(player, 0, interval, (p, n) -> {
+            if (p.isSleeping()) {
+                slept[0] += interval;
+            } else if (slept[0] >= config.integer("min_sleep_ticks")) {
+                BlockPos to = wakeSpot(p, config);
+                if (to != null) {
+                    p.teleportTo(p.level(), to.getX() + 0.5, to.getY(), to.getZ() + 0.5, Set.of(), p.getRandom().nextFloat() * 360.0F, p.getXRot(), true);
+                }
+                SLEEPWALKERS.remove(p.getUUID());
+                return false;
+            } else {
+                // Up too soon: a night not slept through does not count.
+                slept[0] = 0;
+            }
+            if (n * interval >= config.integer("wait_ticks")) {
+                SLEEPWALKERS.remove(p.getUUID());
+                return false;
+            }
+            return true;
+        });
+    }
+
+    /** Standing room a few blocks off on a floor that does not burn, away from lava; under open sky if any try finds it. */
+    private static @Nullable BlockPos wakeSpot(ServerPlayer player, Config.Section config) {
+        ServerLevel level = player.level();
+        BlockPos found = null;
+        for (int i = 0; i < config.integer("tries"); i++) {
+            BlockPos pos = Place.spawnSpot(player, config.integer("min_distance"), config.integer("max_distance"));
+            if (pos == null || level.getBlockState(pos.below()).is(Blocks.MAGMA_BLOCK)
+                || BlockPos.betweenClosedStream(pos.offset(-1, -1, -1), pos.offset(1, 2, 1)).anyMatch(near -> level.getFluidState(near).is(FluidTags.LAVA))) {
+                continue;
+            }
+            if (level.canSeeSky(pos)) {
+                return pos;
+            }
+            found = pos;
+        }
+        return found;
     }
 
     private static void drift(ServerPlayer player) {
