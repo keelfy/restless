@@ -63,6 +63,7 @@ final class ScenarioGameTests {
                     scenario.tags().equals(Set.of(EventTag.SOUND, EventTag.ITEMS, EventTag.ASSAULT)),
                     "A scenario must carry every beat's tags");
             ServerPlayer player = connected(helper);
+            check(helper, !scenario.canRun(player), "A scenario with a beat that cannot run must not be rolled");
             int start = helper.getLevel().getServer().getTickCount();
             scenario.run(player);
             check(helper, knock.ran().equals(List.of(start)), "The first beat must run at once");

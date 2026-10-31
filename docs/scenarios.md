@@ -9,10 +9,10 @@ code, only a sequencer on top of `Scheduler`.
 - **Gate.** A scenario is picked only when the spirit's `power` is at least the gate (`0.4`, `0.6`, `0.7`, `0.8`),
   or once it has evolved (`evo`). Below the gate it never runs, so early haunts stay single events.
 - **Pick.** The `Director` rolls a scenario like an event: weight from the spirit's affinity for the beats' tags, the
-  `Where` condition must hold, and the first beat's `canRun` must pass. It counts as one event for the cooldown and
+  `Where` condition must hold, and every beat's `canRun` must pass at the start. It counts as one event for the cooldown and
   for `Recent`.
 - **Beats.** `+N` is seconds after the previous beat; `∥` runs with the previous beat; `×N` repeats; `→` waits for a
-  condition (the player waking, reaching water). A later beat whose `canRun` fails is skipped, not retried.
+  condition (the player waking, reaching water). A beat whose `canRun` fails when its turn comes (the player moved) is skipped, not retried.
 - **Harm last.** A harmful beat never opens a scenario: an earlier light beat always announces it, as the single
   harmful events already do. The existing stops (3 hearts, light, water) still apply.
 - **Abort.** Steps live in `Scheduler`, so death, logout or a closed world drops the rest of the scenario.
@@ -30,7 +30,7 @@ To add one: a line in `haunt/Scenarios.java` (script in the notation below), an 
 delayed opening, or an id taken by an event fails at startup. Done: all. `→` is written `>gone`, `>waking` or `>water` before the event. Scenario 12 has the id `unlocked_house` (`open_house` is an event).
 
 The script knows `+N` and the waits; write `∥` as `+0` and `×N` as the beat N times. Not built yet, add when a scenario needs
-it: `Where` beyond the first beat's `canRun`, the ×3 weight of a signature for its evolved type.
+it: the `Where` column beyond what the beats' `canRun` already check, the ×3 weight of a signature for its evolved type.
 
 ## Darkness
 

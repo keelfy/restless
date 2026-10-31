@@ -17,8 +17,9 @@ import org.jspecify.annotations.Nullable;
  * A scripted mix of existing events played as one haunt (see {@code docs/scenarios.md}). The director rolls it like any
  * event, so it counts once for the cooldown and for {@link Recent}; it is only rolled by a spirit past its gate
  * ({@code min_power}, and {@code evolved}). The first beat runs at once and must be light, so harm is always announced;
- * the rest follow through {@link Scheduler}, as the same spirit, from the same point. A later beat with nothing to act
- * on is skipped; death or logout drops the rest.
+ * the rest follow through {@link Scheduler}, as the same spirit, from the same point. The scenario is only rolled when
+ * every beat can run; a later beat that has nothing to act on by its turn is skipped, and death or logout drops the
+ * rest.
  */
 public final class Scenario implements HauntEvent {
     /**
@@ -139,10 +140,13 @@ public final class Scenario implements HauntEvent {
         return power >= config.num("min_power") && (evolved || !config.flag("evolved"));
     }
 
-    /** Only the opening beat is checked: the rest may find nothing to act on and are skipped. */
+    /**
+     * Every beat must have something to act on when the scenario starts. Each is checked again when its turn comes: the
+     * player may have moved by then, and a beat that no longer fits is just skipped.
+     */
     @Override
     public boolean canRun(ServerPlayer player) {
-        return beats.getFirst().event().canRun(player);
+        return beats.stream().allMatch(b -> b.event().canRun(player));
     }
 
     @Override
