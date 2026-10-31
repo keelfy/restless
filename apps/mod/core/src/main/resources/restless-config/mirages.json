@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:bricked_door": { "weight": 0.4, "radius": 10, "ticks": 200, "fallback": "minecraft:bricks" },
+    "minecraft:boarded_windows": { "weight": 0.3, "radius": 12, "max_blocks": 48, "ticks": 300, "board": "minecraft:oak_planks" },
+    "minecraft:stair_wall": { "weight": 0.3, "radius": 10, "ticks": 300 },
+    "minecraft:yard_pit": { "weight": 0.3, "min_distance": 8, "max_distance": 14, "radius": 1, "depth": 2, "ticks": 300 },
+    "minecraft:unlit_torches": { "weight": 0.4, "radius": 12, "max_blocks": 24, "ticks": 600 },
+    "minecraft:fake_ore": { "weight": 0.3, "radius": 8, "ticks": 1200, "ores": { "minecraft:stone": "minecraft:diamond_ore", "minecraft:deepslate": "minecraft:deepslate_diamond_ore" } },
+    "minecraft:ladder_stub": { "weight": 0.3, "radius": 10, "min_length": 3, "ticks": 400 },
+    "minecraft:second_door": { "weight": 0.3, "ticks": 400 },
+    "minecraft:false_harvest": { "weight": 0.3, "radius": 10, "max_blocks": 40, "ticks": 400 },
+    "minecraft:lava_pond": { "weight": 0.2, "radius": 12, "max_blocks": 200, "ticks": 20 },
+    "minecraft:lava_as_water": { "weight": 0.2, "margin": 4.0, "radius": 16, "min_blocks": 6, "max_blocks": 300, "trigger_distance": 8.0, "interval_ticks": 2, "max_ticks": 600, "sound": { "volume": 0.8, "pitch": 1.2 } },
+    "minecraft:roof_snow": { "weight": 0.3, "radius": 8, "min_height": 2, "max_blocks": 80, "layers": 2, "ticks": 1200, "roofs": ["minecraft:cobblestone", "minecraft:stone_bricks", "minecraft:bricks", "minecraft:terracotta", "minecraft:deepslate_tiles", "minecraft:deepslate_bricks"] },
+    "minecraft:black_glass": { "weight": 0.3, "radius": 10, "max_blocks": 48, "ticks": 300 }
+  }
+}

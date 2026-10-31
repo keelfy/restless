@@ -43,6 +43,11 @@ public final class Config {
             "mobs",
             "presence",
             "lies",
+            "creatures",
+            "mirages",
+            "veils",
+            "hallucinations",
+            "apparitions",
             "scenarios");
     /** The namespace of events that use only vanilla content. */
     static final String DEFAULT_NAMESPACE = "minecraft";

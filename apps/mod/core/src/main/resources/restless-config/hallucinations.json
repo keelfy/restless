@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:creeper_behind": { "weight": 0.3, "distance": 3.0, "min_angle": 140.0, "max_angle": 180.0, "interval_ticks": 1, "max_ticks": 200, "look_angle": 35.0, "look_ticks": 4 },
+    "minecraft:drowned_rises": { "weight": 0.25, "radius": 16, "min_distance": 4.0, "low": -2.2, "high": -0.1, "ticks": 80 },
+    "minecraft:ghost_horse": { "weight": 0.25, "distance": 16.0, "angle": 60.0, "climb": 3, "drop": 4, "ticks": 50 },
+    "minecraft:bed_cat": { "weight": 0.3, "radius": 12, "min_distance": 3.0, "height": 0.5625, "interval_ticks": 5, "max_ticks": 600, "vanish_distance": 2.5 },
+    "minecraft:child_runs": { "weight": 0.25, "distance": 5.0, "angle": 70.0, "climb": 2, "drop": 3, "ticks": 30 },
+    "minecraft:doorway_enderman": { "weight": 0.2, "radius": 14, "min_distance": 4.0, "interval_ticks": 1, "max_ticks": 400, "look_angle": 30.0, "look_ticks": 3, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:forest_wolves": { "weight": 0.25, "wolves": 4, "min_wolves": 2, "distance": 22.0, "spread": 6.0, "max_angle": 45.0, "interval_ticks": 5, "max_ticks": 400, "vanish_distance": 10.0 },
+    "minecraft:ceiling_spider": { "weight": 0.3, "min_distance": 3, "max_distance": 8, "max_height": 5, "name": "Dinnerbone", "interval_ticks": 5, "max_ticks": 400, "vanish_distance": 3.0 },
+    "minecraft:bat_swarm": { "weight": 0.3, "bats": 6, "height": 1.0, "length": 30.0, "spread": 1.5, "lag": 6.0, "ticks": 40 },
+    "minecraft:window_zombie": { "weight": 0.25, "radius": 10, "min_distance": 3.0, "interval_ticks": 5, "max_ticks": 400, "vanish_distance": 1.5 },
+    "minecraft:ghast_drift": { "weight": 0.15, "height": 45.0, "side": 40.0, "length": 160.0, "ticks": 600, "sound": { "volume": 6.0, "pitch": 0.8 } }
+  }
+}

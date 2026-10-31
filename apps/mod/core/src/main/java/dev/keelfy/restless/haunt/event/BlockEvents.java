@@ -23,6 +23,9 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -33,6 +36,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -47,30 +51,42 @@ import net.minecraft.world.entity.decoration.painting.Painting;
 import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Husk;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractBannerBlock;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CocoaBlock;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.GlazedTerracottaBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
+import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.entity.BannerBlockEntity;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
+import net.minecraft.world.level.block.entity.BannerPatterns;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -346,7 +362,152 @@ final class BlockEvents {
                         EventTag.BLOCKS,
                         player -> Said.left(player, "item_trail", signTexts("item_trail"), SIGN_KEY)
                                 && trailEnd(player) != null,
-                        BlockEvents::layTrail));
+                        BlockEvents::layTrail),
+                // 212: an empty one looks full, anything else looks emptied
+                SimpleEvent.light(
+                        "composter_swing",
+                        EventTag.BLOCKS,
+                        player -> Nearby.any(player, "composter_swing", s -> s.is(Blocks.COMPOSTER)),
+                        BlockEvents::swingComposter),
+                // 213: a skull on top of the pattern, taken off again after a while
+                SimpleEvent.light(
+                        "banner_skull",
+                        EventTag.BLOCKS,
+                        player -> Nearby.any(player, "banner_skull", BlockEvents::skullable),
+                        BlockEvents::skullBanner),
+                // 236: only stairs the player is not looking at, a few at a time
+                SimpleEvent.light(
+                        "stairs_flip",
+                        EventTag.BLOCKS,
+                        player -> !unseenStairs(player).isEmpty(),
+                        BlockEvents::flipStairs),
+                // 242: the book on a lectern is another one, signed by the spirit; the first comes back
+                SimpleEvent.light(
+                        "lectern_swap",
+                        EventTag.BLOCKS,
+                        player -> Nearby.any(
+                                player, "lectern_swap", s -> s.is(Blocks.LECTERN) && s.getValue(LecternBlock.HAS_BOOK)),
+                        BlockEvents::swapBook));
+    }
+
+    private static void swingComposter(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "composter_swing", s -> s.is(Blocks.COMPOSTER));
+        if (pos == null) {
+            return;
+        }
+        BlockState state = player.level().getBlockState(pos);
+        int level = state.getValue(ComposterBlock.LEVEL) == 0 ? ComposterBlock.MAX_LEVEL : 0;
+        Swaps.show(player, pos, state.setValue(ComposterBlock.LEVEL, level), restoreTicks("composter_swing"));
+    }
+
+    private static boolean skullable(BlockState state) {
+        return state.getBlock() instanceof AbstractBannerBlock;
+    }
+
+    private static void skullBanner(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "banner_skull", BlockEvents::skullable);
+        ServerLevel level = player.level();
+        if (pos == null
+                || !(level.getBlockEntity(pos) instanceof BannerBlockEntity banner)
+                || banner.getPatterns().layers().size() >= BannerBlockEntity.MAX_PATTERNS) {
+            return;
+        }
+        Config.Section config = Config.event("banner_skull");
+        BannerPatternLayers before = banner.getPatterns();
+        List<BannerPatternLayers.Layer> layers = new ArrayList<>(before.layers());
+        layers.add(new BannerPatternLayers.Layer(
+                level.registryAccess().getOrThrow(BannerPatterns.SKULL),
+                DyeColor.byName(config.text("colour"), DyeColor.BLACK)));
+        BannerPatternLayers after = new BannerPatternLayers(layers);
+        setPatterns(level, pos, after);
+        Restore.revert(level, restoreTicks("banner_skull"), force -> {
+            if (!force && !level.isLoaded(pos)) {
+                return false;
+            }
+            if (level.getBlockEntity(pos) instanceof BannerBlockEntity now
+                    && now.getPatterns().equals(after)) {
+                setPatterns(level, pos, before);
+            }
+            return true;
+        });
+    }
+
+    private static void setPatterns(ServerLevel level, BlockPos pos, BannerPatternLayers patterns) {
+        BannerBlockEntity banner = (BannerBlockEntity) level.getBlockEntity(pos);
+        banner.applyComponents(
+                DataComponentMap.builder()
+                        .addAll(banner.collectComponents())
+                        .set(DataComponents.BANNER_PATTERNS, patterns)
+                        .build(),
+                DataComponentPatch.EMPTY);
+        banner.setChanged();
+        BlockState state = level.getBlockState(pos);
+        level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
+    }
+
+    /** Right-way-up stairs behind the player's back. */
+    private static List<BlockPos> unseenStairs(ServerPlayer player) {
+        Vec3 look = player.getLookAngle();
+        Vec3 eye = player.getEyePosition();
+        return Nearby.all(
+                        player,
+                        "stairs_flip",
+                        s -> s.getBlock() instanceof StairBlock && s.getValue(StairBlock.HALF) == Half.BOTTOM)
+                .stream()
+                .filter(pos -> look.dot(Vec3.atCenterOf(pos).subtract(eye)) < 0)
+                .toList();
+    }
+
+    private static void flipStairs(ServerPlayer player) {
+        List<BlockPos> stairs = new ArrayList<>(unseenStairs(player));
+        Collections.shuffle(stairs, new java.util.Random(player.getRandom().nextLong()));
+        Map<BlockPos, BlockState> flipped = new LinkedHashMap<>();
+        for (BlockPos pos : stairs.subList(
+                0, Math.min(stairs.size(), Config.event("stairs_flip").integer("max_stairs")))) {
+            flipped.put(pos, player.level().getBlockState(pos).setValue(StairBlock.HALF, Half.TOP));
+        }
+        Swaps.show(player, flipped, restoreTicks("stairs_flip"));
+    }
+
+    private static void swapBook(ServerPlayer player) {
+        BlockPos pos =
+                Nearby.random(player, "lectern_swap", s -> s.is(Blocks.LECTERN) && s.getValue(LecternBlock.HAS_BOOK));
+        ServerLevel level = player.level();
+        if (pos == null || !(level.getBlockEntity(pos) instanceof LecternBlockEntity lectern)) {
+            return;
+        }
+        Config.Section config = Config.event("lectern_swap");
+        List<String> texts = config.texts("pages");
+        ItemStack original = lectern.getBook().copy();
+        ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
+        book.set(
+                DataComponents.WRITTEN_BOOK_CONTENT,
+                new WrittenBookContent(
+                        Filterable.passThrough(config.text("title")),
+                        config.text("author"),
+                        0,
+                        texts.stream()
+                                .map(text -> Filterable.passThrough((Component) Component.literal(text)))
+                                .toList(),
+                        true));
+        lectern.setBook(book, player);
+        Restore.revert(level, restoreTicks("lectern_swap"), force -> {
+            if (!force && !level.isLoaded(pos)) {
+                return false;
+            }
+            if (level.getBlockEntity(pos) instanceof LecternBlockEntity now
+                    && now.getBook().has(DataComponents.WRITTEN_BOOK_CONTENT)
+                    && now.getBook()
+                            .get(DataComponents.WRITTEN_BOOK_CONTENT)
+                            .author()
+                            .equals(config.text("author"))) {
+                now.setBook(original);
+            } else {
+                // The spirit's book was taken or the lectern is gone: the first book is not lost with it.
+                Block.popResource(level, pos, original);
+            }
+            return true;
+        });
     }
 
     /** The block the player looks at within {@code reach}, if any. */

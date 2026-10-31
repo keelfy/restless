@@ -4,7 +4,7 @@ title: Doors
 
 # Doors
 
-34 events.
+40 events.
 
 ## `door`
 
@@ -215,3 +215,39 @@ Runs when: A block of TNT, or a chest holding TNT, within 12
 A bone, a skull sherd or an echo shard sits in it with a wobble; taken out again after two minutes
 
 Runs when: An empty decorated pot within 12
+
+## `piston_twitch`
+
+A piston twitches out and back, only on your screen, and pushes nothing
+
+Runs when: A piston within 12 with air in front
+
+## `hopper_swallows`
+
+An item lying near a hopper slides over it and the hopper takes it
+
+Runs when: A hopper within 12 with a dropped item near it
+
+## `sculk_chain`
+
+Sculk sensors click one after another, the farthest first, toward you
+
+Runs when: Two or more sculk sensors within 16
+
+## `observer_pulse`
+
+An observer pulses a few times and runs whatever it is wired to
+
+Runs when: An observer within 12
+
+## `bed_missing`
+
+"Your home bed was missing or obstructed", while the spawn point stays as it is
+
+Runs when: You have a respawn point
+
+## `ender_note`
+
+A note you never wrote shows in an empty slot of the open ender chest, gone at the first click
+
+Runs when: An ender chest is open with an empty slot

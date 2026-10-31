@@ -146,6 +146,7 @@ final class HauntEventGameTests {
                 "bubble_columns",
                 "lava_pops",
                 "chain_rattle",
+                "bat_swarm",
                 "pumpkin_head",
                 "false_boss_bar",
                 "action_bar_whisper",

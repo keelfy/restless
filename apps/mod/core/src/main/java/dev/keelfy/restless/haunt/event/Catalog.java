@@ -24,7 +24,12 @@ public final class Catalog {
                         Trees.all(),
                         Waters.all(),
                         Household.all(),
-                        Seals.all())
+                        Seals.all(),
+                        Creatures.all(),
+                        Mirages.all(),
+                        Veils.all(),
+                        Hallucinations.all(),
+                        Apparitions.all())
                 .flatMap(List::stream)
                 .toList();
     }

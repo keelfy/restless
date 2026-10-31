@@ -4,7 +4,7 @@ title: Blocks
 
 # Blocks
 
-32 events.
+59 events.
 
 ## `wilted_flowers`
 
@@ -202,3 +202,165 @@ Runs when: Glazed terracotta within 10
 One rod turns to point at the player and stands back after a minute
 
 Runs when: An end rod within 12 that does not already face the player
+
+## `bricked_door`
+
+Only this player's client is told that the door's two blocks are the full block most of the blocks around it are (bricks if none are). 10 s later it gets the real blocks back. Nothing on the server
+
+Runs when: A wooden door within 10
+
+## `boarded_windows`
+
+Only this player's client is told that the 48 nearest glass blocks and panes are oak planks. 15 s later it gets the real blocks back. Nothing on the server
+
+Runs when: Sky visible at the player's feet, and glass or a glass pane within 12
+
+## `stair_wall`
+
+Only this player's client is told that the two blocks above that step are the floor block ahead of it, so the stairs lead into a wall. 15 s later it gets the real blocks back. Nothing on the server
+
+Runs when: The last step of a flight of stairs within 10: a bottom stair with another below it behind, solid floor ahead and open space above
+
+## `yard_pit`
+
+Only this player's client is told that a 3×3 patch of ground two blocks deep there is air (and the plants over it). 15 s later it gets the real blocks back. Nothing on the server
+
+Runs when: Standing room under open sky 8 to 14 blocks away
+
+## `unlit_torches`
+
+Only this player's client is told that the 24 nearest torches are the burnt-out `unlit_` ones. 30 s later it gets the real blocks back. Nothing on the server
+
+Runs when: A torch within 12
+
+## `fake_ore`
+
+Only this player's client is told that one such block is a diamond ore (deepslate diamond ore in deepslate). A click on it shows the stone. After 1 min it gets the real block back. Nothing on the server
+
+Runs when: No sky overhead, and stone or deepslate touching air within 8
+
+## `ladder_stub`
+
+Only this player's client is told that the upper half of the column is air. 20 s later it gets the real blocks back. Nothing on the server
+
+Runs when: A column of at least 3 ladders within 10
+
+## `second_door`
+
+Only this player's client is told of an oak door in the wall. 20 s later it gets the real blocks back. Nothing on the server
+
+Runs when: A wall one block thick and two high in front of the player with free room behind it
+
+## `false_harvest`
+
+Only this player's client is told that the 40 nearest such crops are fully grown. 20 s later it gets the real blocks back. Nothing on the server
+
+Runs when: A crop not fully grown within 10
+
+## `lava_pond`
+
+Only this player's client is told that the 200 nearest such water blocks are lava. 1 s later it gets the real blocks back. Nothing on the server
+
+Runs when: A source of water with open air above within 12
+
+## `lava_as_water`
+
+A sizzle sounds at the lava, and only this player's client is told that the 300 nearest lava blocks are water. They show as lava again when the player comes within 8 blocks, or after 30 s, or at once on a click. Always an illusion, never real, in any swaps mode
+
+Runs when: Health > 5 hearts, at least 6 lava blocks within 16 and none within 9
+
+## `roof_snow`
+
+Only this player's client is told of two layers of snow on the 80 nearest roof blocks. 1 min later it gets the real blocks back. Nothing on the server
+
+Runs when: Sky visible at the player's feet, and a roof of planks, cobblestone, stone bricks, bricks, terracotta or deepslate within 8, at least 2 blocks above the player
+
+## `black_glass`
+
+Only this player's client is told that the 48 nearest glass blocks are tinted glass and the panes black stained glass panes. 15 s later it gets the real blocks back. Nothing on the server
+
+Runs when: Glass or a glass pane within 10
+
+## `red_wool`
+
+Only this player's client is told that the 64 nearest wool blocks and carpets are red. 15 s later it gets the real blocks back. Nothing on the server
+
+Runs when: Wool or a carpet within 10 that is not red
+
+## `sign_whisper`
+
+Only this player's client gets the sign's block entity with one of the listed texts on its front. 15 s later it gets the real text. Nothing on the server
+
+Runs when: A sign within 10
+
+## `wither_roses`
+
+Only this player's client is told that the 48 nearest small flowers are wither roses. 15 s later it gets the real flowers back. Nothing on the server
+
+Runs when: A small flower within 12 that is not a wither rose
+
+## `block_flicker`
+
+Only this player's client is told that up to 200 nearest blocks of one kind found there are one random block of the list `to`. One tick later it gets the real blocks back. Nothing on the server
+
+Runs when: A block of the list `from` (stone, dirt, grass, cobblestone, deepslate, sand, oak planks) within 8
+
+## `lone_gravestone`
+
+Only this player's client is told of a gravestone there. 30 s later it gets the real block back. Nothing on the server
+
+Runs when: Standing room 9 blocks ahead (within 40 degrees) under the open sky
+
+## `broken_portal`
+
+Only this player's client is told that 3 random obsidian blocks touching the portal are air. 15 s later it gets the real blocks back. Nothing on the server
+
+Runs when: A nether portal block within 16
+
+## `dark_circle`
+
+Only this player's client is told of light blocks (level 12) in a ring of radius 3 and in its middle. They go out when the player comes within 3 blocks of the middle, or after 30 s. Nothing on the server
+
+Runs when: Underground (no sky) with block light 5 or less at the player, and standing room 8 blocks ahead with at least 6 of 12 ring points free
+
+## `fence_gaps`
+
+Only this player's client is told that 3 random fence posts there are air. 20 s later it gets the real posts back. Nothing on the server
+
+Runs when: At least 4 fence posts within 12
+
+## `corner_cobwebs`
+
+Only this player's client is told that up to 12 random such corners hold a cobweb. 20 s later it gets the real blocks back. Nothing on the server
+
+Runs when: At least 3 empty corners within 8 where the ceiling meets two walls
+
+## `redstone_trail`
+
+Only this player's client is told of the dust, following the ground up and down. 20 s later it gets the real blocks back. Nothing on the server
+
+Runs when: Room on the floor for at least 5 blocks of a straight line in one of the four directions, 3 to 15 blocks away
+
+## `composter_swing`
+
+An empty composter looks full, or a full one looks emptied, for about a minute
+
+Runs when: A composter within 12
+
+## `banner_skull`
+
+A black skull appears on a banner, and is taken off again after a couple of minutes
+
+Runs when: A banner within 12 with room for another pattern
+
+## `stairs_flip`
+
+A few stairs behind your back turn upside down, then right again after a minute
+
+Runs when: Stairs within 12 behind where you are looking
+
+## `lectern_swap`
+
+The book on a lectern is another one, signed by the spirit; the first comes back later
+
+Runs when: A lectern with a book within 12

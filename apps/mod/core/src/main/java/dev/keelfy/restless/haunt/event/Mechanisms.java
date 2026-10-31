@@ -6,14 +6,29 @@ import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundBlockEventPacket;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -21,18 +36,25 @@ import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DaylightDetectorBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.HopperBlock;
 import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.LightningRodBlock;
+import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.RedstoneTorchBlock;
+import net.minecraft.world.level.block.SculkSensorBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.SculkSensorPhase;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /** Doors, gates, buttons and the like acting on their own. */
 final class Mechanisms {
@@ -140,7 +162,220 @@ final class Mechanisms {
                                 && Nearby.all(player, "chests_open", Mechanisms::chest)
                                                 .size()
                                         >= Config.event("chests_open").integer("min_chests"),
-                        Mechanisms::openChests));
+                        Mechanisms::openChests),
+                // 217: only the player's client sees it, which also keeps it from pushing anything
+                SimpleEvent.light(
+                        "piston_twitch",
+                        EventTag.DOORS,
+                        player -> !twitchers(player).isEmpty(),
+                        Mechanisms::twitchPiston),
+                // 218: an item lying beside a hopper slides over it, and the hopper takes it
+                SimpleEvent.harmful(
+                        "hopper_swallows", EventTag.DOORS, player -> gulp(player) != null, Mechanisms::swallow),
+                // 225: toward the player, farthest sensor first
+                SimpleEvent.light(
+                        "sculk_chain",
+                        EventTag.DOORS,
+                        player -> Nearby.all(player, "sculk_chain", Mechanisms::idleSensor)
+                                        .size()
+                                >= Config.event("sculk_chain").integer("min_sensors"),
+                        Mechanisms::chainSensors),
+                // 241: pulses on and off, and ends off
+                SimpleEvent.harmful(
+                        "observer_pulse",
+                        EventTag.DOORS,
+                        player -> Nearby.any(player, "observer_pulse", Mechanisms::idleObserver),
+                        Mechanisms::pulseObserver),
+                // 215: the vanilla message, the spawn point untouched
+                SimpleEvent.harmful(
+                        "bed_missing",
+                        EventTag.PRESENCE,
+                        player -> player.getRespawnConfig() != null,
+                        player -> player.connection.send(new ClientboundGameEventPacket(
+                                ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0))),
+                // 244: shown in an empty slot of the open ender chest; the next click shows the truth
+                SimpleEvent.light(
+                        "ender_note",
+                        EventTag.PRESENCE,
+                        player -> !enderSlots(player).isEmpty(),
+                        Mechanisms::leaveNote));
+    }
+
+    private record Gulp(BlockPos hopper, ItemEntity item) {}
+
+    private static List<BlockPos> twitchers(ServerPlayer player) {
+        ServerLevel level = player.level();
+        return Nearby.all(
+                        player,
+                        "piston_twitch",
+                        s -> s.getBlock() instanceof PistonBaseBlock && !s.getValue(PistonBaseBlock.EXTENDED))
+                .stream()
+                .filter(pos -> {
+                    Direction facing = level.getBlockState(pos).getValue(PistonBaseBlock.FACING);
+                    return level.getBlockState(pos.relative(facing)).isAir()
+                            && level.getBlockState(pos.relative(facing, 2)).isAir();
+                })
+                .toList();
+    }
+
+    /** Extend and retract events sent to this client only; the retract is type 2, which pulls nothing back. */
+    private static void twitchPiston(ServerPlayer player) {
+        List<BlockPos> pistons = twitchers(player);
+        if (pistons.isEmpty()) {
+            return;
+        }
+        BlockPos pos = pistons.get(player.getRandom().nextInt(pistons.size()));
+        ServerLevel level = player.level();
+        Block block = level.getBlockState(pos).getBlock();
+        Direction direction = level.getBlockState(pos).getValue(PistonBaseBlock.FACING);
+        int facing = direction.get3DDataValue();
+        Config.Section config = Config.event("piston_twitch");
+        int steps = config.integer("twitches") * 2;
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            p.connection.send(new ClientboundBlockEventPacket(pos, block, n % 2 == 0 ? 0 : 2, facing));
+            if (n + 1 < steps) {
+                return true;
+            }
+            // Whatever the client made of it, it is told the real blocks again.
+            Scheduler.later(p, config.integer("interval_ticks"), q -> {
+                if (q.level() == level) {
+                    q.connection.send(new ClientboundBlockUpdatePacket(level, pos));
+                    q.connection.send(new ClientboundBlockUpdatePacket(level, pos.relative(direction)));
+                }
+            });
+            return false;
+        });
+    }
+
+    private static boolean idleObserver(BlockState state) {
+        return state.is(Blocks.OBSERVER) && !state.getValue(ObserverBlock.POWERED);
+    }
+
+    private static void pulseObserver(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "observer_pulse", Mechanisms::idleObserver);
+        if (pos == null) {
+            return;
+        }
+        Config.Section config = Config.event("observer_pulse");
+        int steps = config.integer("pulses") * 2;
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            ServerLevel level = p.level();
+            BlockState state = level.getBlockState(pos);
+            if (!state.is(Blocks.OBSERVER)) {
+                return false;
+            }
+            level.setBlock(pos, state.setValue(ObserverBlock.POWERED, n % 2 == 0), Block.UPDATE_CLIENTS);
+            level.updateNeighborsAt(
+                    pos.relative(state.getValue(ObserverBlock.FACING).getOpposite()), state.getBlock());
+            return n + 1 < steps;
+        });
+    }
+
+    private static boolean idleSensor(BlockState state) {
+        return state.getBlock() instanceof SculkSensorBlock
+                && SculkSensorBlock.getPhase(state) == SculkSensorPhase.INACTIVE;
+    }
+
+    private static void chainSensors(ServerPlayer player) {
+        Config.Section config = Config.event("sculk_chain");
+        Vec3 from = player.position();
+        List<BlockPos> sensors = Nearby.all(player, "sculk_chain", Mechanisms::idleSensor).stream()
+                .sorted(Comparator.comparingDouble((BlockPos pos) -> pos.distToCenterSqr(from))
+                        .reversed())
+                .limit(config.integer("max_sensors"))
+                .toList();
+        Scheduler.repeat(player, 0, config.integer("step_ticks"), (p, n) -> {
+            ServerLevel level = p.level();
+            BlockPos pos = sensors.get(n);
+            BlockState state = level.getBlockState(pos);
+            if (idleSensor(state)) {
+                ((SculkSensorBlock) state.getBlock())
+                        .activate(null, level, pos, state, config.integer("power"), config.integer("frequency"));
+            }
+            return n + 1 < sensors.size();
+        });
+    }
+
+    private static @Nullable Gulp gulp(ServerPlayer player) {
+        ServerLevel level = player.level();
+        Config.Section config = Config.event("hopper_swallows");
+        double reach = config.num("reach");
+        List<BlockPos> hoppers =
+                Nearby.all(player, "hopper_swallows", s -> s.is(Blocks.HOPPER) && s.getValue(HopperBlock.ENABLED));
+        if (hoppers.isEmpty()) {
+            return null;
+        }
+        List<Gulp> found = new ArrayList<>();
+        for (ItemEntity item : level.getEntitiesOfClass(
+                ItemEntity.class, player.getBoundingBox().inflate(Nearby.radius("hopper_swallows")), Entity::isAlive)) {
+            for (BlockPos hopper : hoppers) {
+                double distance = item.position().distanceToSqr(Vec3.atCenterOf(hopper));
+                if (distance <= reach * reach && distance > 1.5 * 1.5) {
+                    found.add(new Gulp(hopper, item));
+                    break;
+                }
+            }
+        }
+        return found.isEmpty() ? null : found.get(player.getRandom().nextInt(found.size()));
+    }
+
+    private static void swallow(ServerPlayer player) {
+        Gulp gulp = gulp(player);
+        if (gulp == null) {
+            return;
+        }
+        ItemEntity item = gulp.item();
+        BlockPos hopper = gulp.hopper();
+        Config.Section config = Config.event("hopper_swallows");
+        item.setNoGravity(true);
+        Scheduler.repeat(player, 0, 1, (p, n) -> {
+            ServerLevel level = p.level();
+            Vec3 target = Vec3.atBottomCenterOf(hopper).add(0, config.num("mouth_height"), 0);
+            Vec3 left = target.subtract(item.position());
+            boolean over = left.length() < config.num("arrive_distance");
+            if (item.isAlive() && level.getBlockState(hopper).is(Blocks.HOPPER) && n < config.integer("max_ticks")) {
+                Vec3 next = over ? target : item.position().add(left.scale(config.num("speed")));
+                item.setPos(next.x, next.y, next.z);
+                item.setDeltaMovement(Vec3.ZERO);
+            }
+            if (over || !item.isAlive() || n >= config.integer("max_ticks")) {
+                item.setNoGravity(false);
+                return false;
+            }
+            return true;
+        });
+    }
+
+    private static List<Integer> enderSlots(ServerPlayer player) {
+        if (!(player.containerMenu instanceof ChestMenu menu)
+                || menu.getContainer() != player.getEnderChestInventory()) {
+            return List.of();
+        }
+        List<Integer> empty = new ArrayList<>();
+        for (int slot = 0; slot < menu.getContainer().getContainerSize(); slot++) {
+            if (menu.getContainer().getItem(slot).isEmpty()) {
+                empty.add(slot);
+            }
+        }
+        return empty;
+    }
+
+    private static void leaveNote(ServerPlayer player) {
+        List<Integer> empty = enderSlots(player);
+        if (empty.isEmpty()) {
+            return;
+        }
+        ItemStack note = new ItemStack(Items.PAPER);
+        List<String> texts = Config.event("ender_note").texts("texts");
+        note.set(
+                DataComponents.CUSTOM_NAME,
+                Component.literal(texts.get(player.getRandom().nextInt(texts.size()))));
+        AbstractContainerMenu menu = player.containerMenu;
+        player.connection.send(new ClientboundContainerSetSlotPacket(
+                menu.containerId,
+                menu.getStateId(),
+                empty.get(player.getRandom().nextInt(empty.size())),
+                note));
     }
 
     private interface Action {

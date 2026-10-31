@@ -4,6 +4,7 @@ import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.Hardcore;
+import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Said;
@@ -19,6 +20,7 @@ import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -31,14 +33,21 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.DyedItemColor;
@@ -51,6 +60,7 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -548,12 +558,197 @@ final class ItemEvents {
                                 show(p, menuSlot, now.copy());
                                 return false;
                             });
+                        }),
+                // 422: a lodestone compass points at the anchor of the spirit around; put back after a while, but it
+                // stays under hardcore
+                SimpleEvent.light(
+                        "lodestone_lure",
+                        EventTag.ITEMS,
+                        player -> anchor(player) != null
+                                && !stacks(player, ItemEvents::lodestoneCompass).isEmpty(),
+                        player -> {
+                            BlockPos anchor = anchor(player);
+                            List<ItemStack> found = stacks(player, ItemEvents::lodestoneCompass);
+                            if (anchor == null || found.isEmpty()) {
+                                return;
+                            }
+                            ItemStack compass = found.get(player.getRandom().nextInt(found.size()));
+                            LodestoneTracker was = compass.get(DataComponents.LODESTONE_TRACKER);
+                            temporarily(
+                                    player,
+                                    compass,
+                                    LURE,
+                                    Config.event("lodestone_lure").integer("restore_ticks"),
+                                    true,
+                                    stack -> {
+                                        stack.set(
+                                                DataComponents.LODESTONE_TRACKER,
+                                                new LodestoneTracker(
+                                                        Optional.of(GlobalPos.of(
+                                                                player.level().dimension(), anchor)),
+                                                        false));
+                                        return 0;
+                                    },
+                                    (stack, ignored) -> stack.set(DataComponents.LODESTONE_TRACKER, was));
+                        }),
+                // 423: a written book signed with the player's own name turns up in the inventory
+                SimpleEvent.light(
+                        "ghost_author",
+                        EventTag.ITEMS,
+                        player -> player.getInventory().getFreeSlot() != -1
+                                && stacks(player, s -> signedBy(s, player)).isEmpty()
+                                && Said.left(
+                                        player,
+                                        "ghost_author",
+                                        Config.event("ghost_author").texts("pages")),
+                        player -> {
+                            Config.Section config = Config.event("ghost_author");
+                            String page = Said.pick(player, "ghost_author", config.texts("pages"));
+                            if (page == null || player.getInventory().getFreeSlot() == -1) {
+                                return;
+                            }
+                            List<String> titles = config.texts("titles");
+                            ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
+                            book.set(
+                                    DataComponents.WRITTEN_BOOK_CONTENT,
+                                    new WrittenBookContent(
+                                            Filterable.passThrough(titles.get(
+                                                    player.getRandom().nextInt(titles.size()))),
+                                            player.getGameProfile().name(),
+                                            0,
+                                            List.of(Filterable.passThrough(Component.literal(page))),
+                                            true));
+                            player.getInventory().add(book);
+                        }),
+                // 425: a potion turns into another one; put back after a while, but it stays under hardcore
+                SimpleEvent.light(
+                        "potion_swap",
+                        EventTag.ITEMS,
+                        player -> !stacks(player, ItemEvents::swappable).isEmpty(),
+                        player -> {
+                            Config.Section config = Config.event("potion_swap");
+                            List<ItemStack> found = stacks(player, ItemEvents::swappable);
+                            ItemStack bottle = found.get(player.getRandom().nextInt(found.size()));
+                            PotionContents was = bottle.get(DataComponents.POTION_CONTENTS);
+                            List<Holder.Reference<Potion>> others = config.texts("potions").stream()
+                                    .map(id -> BuiltInRegistries.POTION.get(Identifier.parse(id)))
+                                    .flatMap(Optional::stream)
+                                    .filter(potion -> !was.is(potion))
+                                    .toList();
+                            if (others.isEmpty()) {
+                                return;
+                            }
+                            Holder<Potion> next = others.get(player.getRandom().nextInt(others.size()));
+                            temporarily(
+                                    player,
+                                    bottle,
+                                    POTION,
+                                    config.integer("restore_ticks"),
+                                    true,
+                                    stack -> {
+                                        stack.set(DataComponents.POTION_CONTENTS, new PotionContents(next));
+                                        return 0;
+                                    },
+                                    (stack, ignored) -> stack.set(DataComponents.POTION_CONTENTS, was));
+                        }),
+                // 426: arrows leave the inventory one by one and turn up again later; under hardcore they stay gone
+                SimpleEvent.harmful(
+                        "vanishing_arrows",
+                        EventTag.ITEMS,
+                        player -> !slots(player, ItemEvents::arrow).isEmpty(),
+                        ItemEvents::takeArrows),
+                // 431: a loaded crossbow in a hand fires straight up
+                SimpleEvent.harmful("crossbow_misfire", EventTag.ITEMS, player -> loadedIn(player) != null, player -> {
+                    Config.Section config = Config.event("crossbow_misfire");
+                    InteractionHand hand = loadedIn(player);
+                    if (hand == null) {
+                        return;
+                    }
+                    ItemStack crossbow = player.getItemInHand(hand);
+                    float pitch = player.getXRot();
+                    player.setXRot(-90.0F);
+                    try {
+                        ((CrossbowItem) crossbow.getItem())
+                                .performShooting(
+                                        player.level(),
+                                        player,
+                                        hand,
+                                        crossbow,
+                                        (float) config.num("power"),
+                                        (float) config.num("uncertainty"),
+                                        null);
+                    } finally {
+                        player.setXRot(pitch);
+                    }
+                }),
+                // 432: the map in a hand shows the area of the anchor of the spirit around; put back after a while, but
+                // it stays under hardcore
+                SimpleEvent.light(
+                        "map_elsewhere",
+                        EventTag.ITEMS,
+                        player -> anchor(player) != null && mapIn(player) != null,
+                        player -> {
+                            BlockPos anchor = anchor(player);
+                            ItemStack map = mapIn(player);
+                            ServerLevel level = player.level();
+                            if (anchor == null || map == null) {
+                                return;
+                            }
+                            MapItemSavedData data = MapItem.getSavedData(map, level);
+                            if (data == null) {
+                                return;
+                            }
+                            MapId was = map.get(DataComponents.MAP_ID);
+                            temporarily(
+                                    player,
+                                    map,
+                                    ELSEWHERE,
+                                    Config.event("map_elsewhere").integer("restore_ticks"),
+                                    true,
+                                    stack -> {
+                                        MapItem.applyNewSavedData(
+                                                level, stack, anchor.getX(), anchor.getZ(), data.scale, false, false);
+                                        MapItem.renderBiomePreviewMap(level, stack);
+                                        return 0;
+                                    },
+                                    (stack, ignored) -> stack.set(DataComponents.MAP_ID, was));
+                        }),
+                // 434: an item lying close slides away from the player
+                SimpleEvent.light(
+                        "shy_item",
+                        EventTag.ITEMS,
+                        player -> !around(player, ItemEntity.class, "shy_item").isEmpty(),
+                        player -> {
+                            Config.Section config = Config.event("shy_item");
+                            List<ItemEntity> items = around(player, ItemEntity.class, "shy_item");
+                            if (!items.isEmpty()) {
+                                shove(
+                                        player,
+                                        items.get(player.getRandom().nextInt(items.size())),
+                                        config.num("speed"),
+                                        config.num("lift"));
+                            }
+                        }),
+                // 435: experience orbs nearby fly away from the player
+                SimpleEvent.light(
+                        "orb_scatter",
+                        EventTag.ITEMS,
+                        player -> !around(player, ExperienceOrb.class, "orb_scatter")
+                                .isEmpty(),
+                        player -> {
+                            Config.Section config = Config.event("orb_scatter");
+                            for (ExperienceOrb orb : around(player, ExperienceOrb.class, "orb_scatter")) {
+                                shove(player, orb, config.num("speed"), config.num("lift"));
+                            }
                         }));
     }
 
     private static final String DYE = MARK + "_dye";
     private static final String GLINT = MARK + "_glint";
     private static final String LORE = MARK + "_lore";
+    private static final String LURE = MARK + "_lure";
+    private static final String POTION = MARK + "_potion";
+    private static final String ELSEWHERE = MARK + "_elsewhere";
     private static final int BLACK = 0xFF111111;
     private static final int NO_DYE = 0;
 
@@ -642,13 +837,124 @@ final class ItemEvents {
     }
 
     private static List<ItemEntity> lying(ServerPlayer player) {
-        Config.Section config = Config.event("item_throwback");
+        return around(player, ItemEntity.class, "item_throwback");
+    }
+
+    /** Entities of a kind between the event's {@code min_distance} and {@code radius} of the player. */
+    private static <T extends Entity> List<T> around(ServerPlayer player, Class<T> type, String event) {
+        Config.Section config = Config.event(event);
         double near = config.num("min_distance");
         return player.level()
                 .getEntitiesOfClass(
-                        ItemEntity.class,
+                        type,
                         player.getBoundingBox().inflate(config.num("radius")),
-                        item -> item.isAlive() && item.distanceToSqr(player) >= near * near);
+                        entity -> entity.isAlive() && entity.distanceToSqr(player) >= near * near);
+    }
+
+    /** Pushes the entity away from the player, for the player's client as well. */
+    private static void shove(ServerPlayer player, Entity entity, double speed, double lift) {
+        Vec3 away = entity.position().subtract(player.position()).multiply(1, 0, 1);
+        if (away.lengthSqr() < 1.0E-4) {
+            double angle = player.getRandom().nextDouble() * Math.PI * 2;
+            away = new Vec3(Math.cos(angle), 0, Math.sin(angle));
+        }
+        entity.setDeltaMovement(away.normalize().scale(speed).add(0, lift, 0));
+        player.connection.send(new ClientboundSetEntityMotionPacket(entity));
+    }
+
+    /** The anchor of the nearest territorial spirit whose reach holds the player. */
+    private static @Nullable BlockPos anchor(ServerPlayer player) {
+        BlockPos nearest = null;
+        double best = Double.MAX_VALUE;
+        for (HauntData.Territorial spirit :
+                HauntData.get(player.level().getServer()).territorial()) {
+            double distance = spirit.anchor().distSqr(player.blockPosition());
+            if (spirit.reaches(player) && distance < best) {
+                nearest = spirit.anchor();
+                best = distance;
+            }
+        }
+        return nearest;
+    }
+
+    private static boolean lodestoneCompass(ItemStack stack) {
+        LodestoneTracker tracker = stack.get(DataComponents.LODESTONE_TRACKER);
+        return stack.is(Items.COMPASS) && tracker != null && tracker.target().isPresent() && !marked(stack, LURE);
+    }
+
+    private static boolean signedBy(ItemStack stack, ServerPlayer player) {
+        WrittenBookContent content = stack.get(DataComponents.WRITTEN_BOOK_CONTENT);
+        return content != null
+                && content.author().equals(player.getGameProfile().name());
+    }
+
+    /** A potion with a plain base potion (no custom effects to lose) that is not mid-change. */
+    private static boolean swappable(ItemStack stack) {
+        PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
+        return (stack.is(Items.POTION) || stack.is(Items.SPLASH_POTION) || stack.is(Items.LINGERING_POTION))
+                && contents != null
+                && contents.potion().isPresent()
+                && contents.customEffects().isEmpty()
+                && !marked(stack, POTION);
+    }
+
+    private static boolean arrow(ItemStack stack) {
+        return stack.is(ItemTags.ARROWS);
+    }
+
+    /** One arrow at a time leaves the inventory; what was taken is handed back later (or left on the floor). */
+    private static void takeArrows(ServerPlayer player) {
+        Config.Section config = Config.event("vanishing_arrows");
+        ServerLevel level = player.level();
+        UUID id = player.getUUID();
+        Vec3 spot = player.position();
+        List<ItemStack> taken = new ArrayList<>();
+        Scheduler.repeat(player, config.integer("interval"), config.integer("interval"), (p, n) -> {
+            List<Integer> found = slots(p, ItemEvents::arrow);
+            if (found.isEmpty()) {
+                return false;
+            }
+            taken.add(p.getInventory()
+                    .getItem(found.get(p.getRandom().nextInt(found.size())))
+                    .split(1));
+            return taken.size() < config.integer("count");
+        });
+        Restore.revert(level, config.integer("return_ticks"), force -> {
+            ServerPlayer owner = level.getServer().getPlayerList().getPlayer(id);
+            if (owner == null && !force) {
+                return false;
+            }
+            for (ItemStack arrow : taken) {
+                if (owner == null) {
+                    level.addFreshEntity(new ItemEntity(level, spot.x, spot.y, spot.z, arrow));
+                } else if (!owner.getInventory().add(arrow)) {
+                    owner.spawnAtLocation(owner.level(), arrow);
+                }
+            }
+            return true;
+        });
+    }
+
+    private static @Nullable InteractionHand loadedIn(ServerPlayer player) {
+        for (InteractionHand hand : InteractionHand.values()) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (stack.getItem() instanceof CrossbowItem && CrossbowItem.isCharged(stack)) {
+                return hand;
+            }
+        }
+        return null;
+    }
+
+    private static @Nullable ItemStack mapIn(ServerPlayer player) {
+        for (InteractionHand hand : InteractionHand.values()) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (stack.is(Items.FILLED_MAP)
+                    && !marked(stack, ELSEWHERE)
+                    && MapItem.getSavedData(stack, player.level()) != null) {
+                return stack;
+            }
+        }
+        return null;
     }
 
     private static boolean horn(ItemStack stack) {

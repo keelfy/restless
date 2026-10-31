@@ -41,6 +41,12 @@
     "minecraft:cake_bite": { "weight": 0.5, "radius": 12, "restore_ticks": 1200, "sound": { "volume": 1.0, "pitch": 0.9 } },
     "minecraft:tnt_hiss": { "weight": 0.4, "radius": 12, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:pot_holds": { "weight": 0.5, "radius": 12, "restore_ticks": 2400, "items": ["minecraft:bone", "minecraft:skull_pottery_sherd", "minecraft:echo_shard"], "sound": { "volume": 0.8, "pitch": 0.9 } },
-    "minecraft:muddy_footprints": { "weight": 0.4, "radius": 10, "max_steps": 24, "min_prints": 2, "step_ticks": 6, "restore_ticks": 2400, "sound": { "volume": 0.6, "pitch": 0.9 } }
+    "minecraft:muddy_footprints": { "weight": 0.4, "radius": 10, "max_steps": 24, "min_prints": 2, "step_ticks": 6, "restore_ticks": 2400, "sound": { "volume": 0.6, "pitch": 0.9 } },
+    "minecraft:piston_twitch": { "weight": 0.5, "radius": 12, "twitches": 2, "interval_ticks": 6 },
+    "minecraft:hopper_swallows": { "weight": 0.3, "radius": 12, "reach": 4.0, "mouth_height": 1.1, "arrive_distance": 0.3, "speed": 0.3, "max_ticks": 60 },
+    "minecraft:sculk_chain": { "weight": 0.5, "radius": 16, "min_sensors": 2, "max_sensors": 8, "step_ticks": 6, "power": 8, "frequency": 1 },
+    "minecraft:observer_pulse": { "weight": 0.3, "radius": 12, "pulses": 3, "interval_ticks": 4 },
+    "minecraft:bed_missing": { "weight": 0.2 },
+    "minecraft:ender_note": { "weight": 0.3, "texts": ["it is not yours", "do not open the lid", "I was here first", "give it back", "look behind you"] }
   }
 }

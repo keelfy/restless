@@ -4,7 +4,7 @@ title: Items
 
 # Items
 
-23 events.
+31 events.
 
 ## `swap_slots`
 
@@ -151,3 +151,53 @@ Runs when: Any item in the inventory or worn
 A tool shows full durability, then almost broken, then the truth (only shown to the player); under hardcore it is worn down for real
 
 Runs when: A damageable tool with durability to spare
+
+## `lodestone_lure`
+
+A lodestone compass points at the anchor of the spirit nearby for 5 min; under hardcore it stays that way
+
+Runs when: A compass with a lodestone target in the inventory, with a territorial spirit's reach around the player
+
+## `ghost_author`
+
+A written book signed with the player's own name turns up, with one creepy page
+
+Runs when: A free inventory slot and no book signed by the player yet
+
+## `potion_swap`
+
+A potion becomes another one for 5 min; under hardcore it stays
+
+Runs when: A potion, splash or lingering potion with a base potion and no custom effects
+
+## `vanishing_arrows`
+
+**Harmful.**
+Up to 6 arrows leave the inventory one by one and come back after 3 min; under hardcore they stay gone
+
+Runs when: An arrow in the inventory
+
+## `crossbow_misfire`
+
+**Harmful.**
+A loaded crossbow fires straight up with reduced power
+
+Runs when: A loaded crossbow in either hand
+
+## `map_elsewhere`
+
+The map in the hand shows the area around the anchor of the spirit nearby for 5 min; under hardcore it stays
+
+Runs when: A map in either hand, with a territorial spirit's reach around the player
+
+## `shy_item`
+
+One dropped item slides away from the player
+
+Runs when: A dropped item within 5
+
+## `orb_scatter`
+
+Experience orbs fly away from the player
+
+Runs when: An experience orb within 8
