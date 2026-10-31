@@ -332,8 +332,8 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `redstone_drift` | 178 | HARMFUL | DOORS | 0.5 | A repeater or comparator within 12 | A repeater gets another delay, a comparator the other mode, with no update. Set back after 2 min if unchanged; under hardcore it stays |
 | `occupied_bed` | 169 | LIGHT | DOORS | 0.6 | An unoccupied bed within 12 | Both halves read as occupied for 1 min, so the vanilla "This bed is occupied" shows. Always put back, hardcore or not |
 | `shuffled_books` | 176 | LIGHT | DOORS | 0.5 | A chiseled bookshelf within 12 with a book | The books take other slots. Put back after 2 min if untouched; under hardcore they stay |
-| `dispenser_shot` | 177 | HARMFUL | DOORS | 0.4 | A dispenser within 12 | It clicks as if empty, then after 1 s an arrow leaves its face toward the player. Takes nothing from its contents, the arrow cannot be picked up |
-| `chest_blast` | 117 | HARMFUL | DOORS | 0.3 | A chest within 10, health above 10 | A creeper hiss from the chest, then after 1 s an explosion of power 1 that breaks no blocks |
+| `dispenser_shot` | 177 | HARMFUL | DOORS | 0.4 | A dispenser within 12 | It clicks as if empty, then after 1 s an arrow leaves its face toward the player. Takes nothing from its contents, the arrow cannot be picked up. Under hardcore it needs an arrow inside and fires that one, which can be picked up |
+| `chest_blast` | 117 | HARMFUL | DOORS | 0.3 | The player has a chest open (within 6), health above 10 | A creeper hiss from the chest, then after 1 s an explosion of power 1 that breaks no blocks |
 | `wrong_smelt` | 182 | LIGHT | DOORS | 0.5 | A furnace within 10 with something in its output | The output becomes charcoal or rotten flesh of the same count; put back after 2 min unless taken or changed (stays under hardcore) |
 | `furniture_moves` | 103 | HARMFUL | DOORS | 0.3 | A single chest, crafting table, furnace or empty bed within 12 | It stands 2 to 5 blocks away on free floor, block entity and contents carried through its save format, a bed both halves. Moved back after 5 min if both spots are unchanged; under hardcore it stays |
 | `doorstep_gift` | 186 | LIGHT | DOORS | 0.4 | A door within 12 with free floor on its far side | A poppy, dandelion, bone or raw rabbit lies outside, on the side away from the player; a real item |
@@ -435,9 +435,9 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `wall_hole` | 82 | HARMFUL | BLOCKS | 0.6 | A one-block wall 2–6 blocks away with standing room behind it | Two blocks vanish for 30 s, no drops |
 | `cross` | 83 | LIGHT | BLOCKS | 0.6 | Room for a plus of five free blocks on solid ground 3–6 blocks away | A plus of bone blocks for 1 min |
 | `infested_stone` | 191 | HARMFUL | BLOCKS | 0.4 | Stone, cobblestone, deepslate or stone bricks in sight within 6 | The block is shown as its infested kind (a swap, see `swaps.mode`); restored after 30 s |
-| `ceiling_crack` | 118 | LIGHT | BLOCKS | 0.5 | A solid block 1–4 above the eyes | Crack progress and particles on it, as if mined from above, silent; the block never breaks |
+| `ceiling_crack` | 118 | LIGHT | BLOCKS | 0.5 | A solid block 1–4 above the eyes | Crack progress and particles on it, as if mined from above, silent; the block never breaks, but under hardcore it breaks at the last stage (no drop) unless it holds something, is unbreakable, or has fluid beside it or sand above |
 | `ice_over` | 142 | LIGHT | BLOCKS | 0.5 | Source water within 8 | Up to 24 of them become ice (a swap); restored after 30 s |
-| `portal_out` | 114 | HARMFUL | BLOCKS | 0.4 | Nether portal blocks within 12 | The whole portal (every connected block) is broken for good in every mode, with a fizzle; the frame stays |
+| `portal_out` | 114 | HARMFUL | BLOCKS | 0.4 | Nether portal blocks within 12 | The whole portal (every connected block) is broken with a fizzle; the frame stays. Outside the Nether it is for good in every mode; in the Nether it comes back after 60 s in every mode, so nobody is stranded |
 | `block_blink` | 109 | LIGHT | BLOCKS | 0.4 | The block looked at within 5, no block entity, not below the feet | Breaks with its sound and dust (a swap to air), back after 2 s; under hardcore it stays gone, no drop |
 | `leak` | 183 | LIGHT | BLOCKS | 0.5 | Air just under a ceiling 1–4 above the eyes | Water drips from it for 8 s, particles and sound only, in every mode |
 | `lava_leak` | 183 | LIGHT | BLOCKS | 0.4 | Same | Lava drips from it for 6 s, particles and sound only, in every mode |

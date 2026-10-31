@@ -232,8 +232,20 @@ final class HauntEventGameTests {
             check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-17, -2, -17), helper.absolutePos(FEET).offset(17, 3, 17))
                 .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Blocks.OAK_SIGN)), "item_trail must stand a sign");
         }));
-        tests.put("event_chest_blast", helper -> runs(helper, "chest_blast",
-            player -> helper.setBlock(FEET.west(3), Blocks.CHEST), () -> helper.assertBlockPresent(Blocks.CHEST, FEET.west(3))));
+        tests.put("event_chest_blast", helper -> runs(helper, "chest_blast", player -> {
+            helper.setBlock(FEET.west(3), Blocks.CHEST);
+            player.openMenu(helper.getBlockEntity(FEET.west(3), ChestBlockEntity.class));
+        }, () -> helper.assertBlockPresent(Blocks.CHEST, FEET.west(3))));
+        tests.put("event_chest_blast_closed", helper -> {
+            helper.setBlock(FEET.west(3), Blocks.CHEST);
+            ServerPlayer player = connected(helper);
+            BlockPos feet = helper.absolutePos(FEET);
+            player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+            check(helper, !HauntEvents.byId(Identifier.withDefaultNamespace("chest_blast")).orElseThrow().canRun(player),
+                "chest_blast must wait for the player to open the chest");
+            player.discard();
+            helper.succeed();
+        });
         tests.put("event_wrong_smelt", helper -> runs(helper, "wrong_smelt", player -> {
             helper.setBlock(FEET.west(2), Blocks.FURNACE);
             helper.getBlockEntity(FEET.west(2), AbstractFurnaceBlockEntity.class).setItem(2, new ItemStack(Items.IRON_INGOT, 3));
@@ -571,6 +583,10 @@ final class HauntEventGameTests {
 
     /** Sets the scene, checks the event can run, runs it, lets its scheduled steps finish, then checks the result. */
     static void runs(GameTestHelper helper, String id, Consumer<ServerPlayer> scene, Runnable after) {
+        runs(helper, id, scene, SETTLE_TICKS, after);
+    }
+
+    static void runs(GameTestHelper helper, String id, Consumer<ServerPlayer> scene, int settle, Runnable after) {
         for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 0, 9)) {
             helper.setBlock(pos, Blocks.STONE);
         }
@@ -581,7 +597,7 @@ final class HauntEventGameTests {
         HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace(id)).orElseThrow();
         check(helper, event.canRun(player), id + " must be able to run in its scene");
         event.run(player);
-        helper.runAfterDelay(SETTLE_TICKS, () -> {
+        helper.runAfterDelay(settle, () -> {
             after.run();
             check(helper, player.isAlive(), id + " must not kill");
             player.discard();

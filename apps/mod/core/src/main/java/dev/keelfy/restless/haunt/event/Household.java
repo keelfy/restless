@@ -4,6 +4,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.Footprints;
 import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -21,10 +22,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.arrow.Arrow;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.LecternMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -45,8 +48,10 @@ import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.entity.DecoratedPotBlockEntity;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
@@ -89,10 +94,10 @@ final class Household {
             // 176
             SimpleEvent.light("shuffled_books", EventTag.DOORS, player -> Nearby.any(player, "shuffled_books", Household::shelved), Household::shuffleBooks),
             // 177: a click first, then the arrow
-            SimpleEvent.harmful("dispenser_shot", EventTag.DOORS, player -> Nearby.any(player, "dispenser_shot", s -> s.is(Blocks.DISPENSER)), Household::shoot),
-            // 117: a hiss from a chest, then a blast that breaks no blocks
+            SimpleEvent.harmful("dispenser_shot", EventTag.DOORS, player -> dispenser(player) != null, Household::shoot),
+            // 117: a hiss from the chest the player has open, then a blast that breaks no blocks
             SimpleEvent.harmful("chest_blast", EventTag.DOORS,
-                player -> player.getHealth() > Config.event("chest_blast").num("min_health") && Nearby.any(player, "chest_blast", s -> s.getBlock() instanceof ChestBlock),
+                player -> player.getHealth() > Config.event("chest_blast").num("min_health") && opened(player) != null,
                 Household::blast),
             // 182: what came out of the furnace is not what went in
             SimpleEvent.light("wrong_smelt", EventTag.DOORS, player -> !smelted(player).isEmpty(), Household::swapOutput),
@@ -105,8 +110,16 @@ final class Household {
         );
     }
 
+    /** A chest this player has open right now. */
+    private static @Nullable BlockPos opened(ServerPlayer player) {
+        return Nearby.all(player, "chest_blast", s -> s.getBlock() instanceof ChestBlock).stream()
+            .filter(pos -> player.level().getBlockEntity(pos) instanceof ChestBlockEntity chest && player.containerMenu instanceof ChestMenu menu
+                && (menu.getContainer() == chest || menu.getContainer() instanceof CompoundContainer both && both.contains(chest)))
+            .findFirst().orElse(null);
+    }
+
     private static void blast(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, "chest_blast", s -> s.getBlock() instanceof ChestBlock);
+        BlockPos pos = opened(player);
         if (pos == null) {
             return;
         }
@@ -403,9 +416,33 @@ final class Household {
         }
     }
 
-    /** The dispenser clicks as if empty, then an arrow leaves its face toward the player; nothing is taken from it. */
+    /** Any dispenser nearby; under hardcore only one loaded with an arrow, which it really spends. */
+    private static @Nullable BlockPos dispenser(ServerPlayer player) {
+        boolean real = Hardcore.on(player.level());
+        List<BlockPos> hits = Nearby.all(player, "dispenser_shot", s -> s.is(Blocks.DISPENSER)).stream()
+            .filter(pos -> !real || arrowSlot(player.level(), pos) >= 0)
+            .toList();
+        return hits.isEmpty() ? null : hits.get(player.getRandom().nextInt(hits.size()));
+    }
+
+    private static int arrowSlot(ServerLevel level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof DispenserBlockEntity dispenser) {
+            for (int slot = 0; slot < dispenser.getContainerSize(); slot++) {
+                ItemStack stack = dispenser.getItem(slot);
+                if (stack.is(Items.ARROW) || stack.is(Items.TIPPED_ARROW)) {
+                    return slot;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * The dispenser clicks as if empty, then an arrow leaves its face toward the player; nothing is taken from it. Under
+     * hardcore it fires one of its own arrows, which can be picked up.
+     */
     private static void shoot(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, "dispenser_shot", s -> s.is(Blocks.DISPENSER));
+        BlockPos pos = dispenser(player);
         if (pos == null) {
             return;
         }
@@ -420,10 +457,16 @@ final class Household {
             Direction face = state.getValue(DispenserBlock.FACING);
             Vec3 from = Vec3.atCenterOf(pos).add(face.getStepX() * 0.7, face.getStepY() * 0.7, face.getStepZ() * 0.7);
             Vec3 to = p.getBoundingBox().getCenter().subtract(from);
-            ItemStack ammo = new ItemStack(Items.ARROW);
+            boolean real = Hardcore.on(level);
+            int slot = real ? arrowSlot(level, pos) : -1;
+            if (real && slot < 0) {
+                return;
+            }
+            ItemStack ammo = real && level.getBlockEntity(pos) instanceof DispenserBlockEntity dispenser
+                ? dispenser.removeItem(slot, 1) : new ItemStack(Items.ARROW);
             Arrow arrow = Projectile.spawnProjectileUsingShoot(new Arrow(level, from.x, from.y, from.z, ammo, null), level, ammo,
                 to.x, to.y, to.z, (float) config.num("speed"), (float) config.num("spread"));
-            arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
+            arrow.pickup = real ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
             level.levelEvent(LevelEvent.SOUND_DISPENSER_PROJECTILE_LAUNCH, pos, 0);
             level.levelEvent(LevelEvent.PARTICLES_SHOOT_SMOKE, pos, face.get3DDataValue());
         });

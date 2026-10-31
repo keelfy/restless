@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +49,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Husk;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.SignBlock;
@@ -249,11 +252,31 @@ final class BlockEvents {
             boolean last = stage >= config.integer("stages");
             p.connection.send(new ClientboundBlockDestructionPacket(id, pos, last ? -1 : stage));
             level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 6, 0.3, 0.0, 0.3, 0.05);
+            if (last && Hardcore.on(level) && level.getBlockState(pos) == state && breakable(level, pos)) {
+                level.destroyBlock(pos, false);
+            }
             return !last;
         });
     }
 
-    /** The whole portal breaks for good in every mode, with no swap and no restoring; the frame stays and can be lit again. */
+    /** Under hardcore the cracked ceiling really goes, but only a plain block with no fluid or sand behind it to come down. */
+    private static boolean breakable(ServerLevel level, BlockPos pos) {
+        if (level.getBlockEntity(pos) != null || level.getBlockState(pos).getDestroySpeed(level, pos) < 0
+            || level.getBlockState(pos.above()).getBlock() instanceof FallingBlock) {
+            return false;
+        }
+        for (Direction side : Direction.values()) {
+            if (!level.getFluidState(pos.relative(side)).isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * The whole portal breaks; the frame stays and can be lit again. Outside the Nether it is for good in every mode; in the
+     * Nether, where the player may have no way to relight it, it comes back after a while in every mode, hardcore too.
+     */
     private static void portalOut(ServerPlayer player) {
         ServerLevel level = player.level();
         BlockPos first = Nearby.random(player, "portal_out", s -> s.is(Blocks.NETHER_PORTAL));
@@ -271,7 +294,22 @@ final class BlockEvents {
                 }
             }
         }
+        Map<BlockPos, BlockState> states = new HashMap<>();
+        portal.forEach(pos -> states.put(pos, level.getBlockState(pos)));
         portal.forEach(pos -> level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL));
+        if (level.dimension() == Level.NETHER) {
+            Restore.after(level, Config.event("portal_out").integer("nether_restore_ticks"), force -> {
+                if (!force && !level.isLoaded(first)) {
+                    return false;
+                }
+                states.forEach((pos, state) -> {
+                    if (level.getBlockState(pos).isAir()) {
+                        Restore.quiet(level, pos, state);
+                    }
+                });
+                return true;
+            });
+        }
         Config.Tone tone = Config.event("portal_out").tone("sound");
         level.playSound(null, first, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, tone.volume(), tone.pitch());
     }
