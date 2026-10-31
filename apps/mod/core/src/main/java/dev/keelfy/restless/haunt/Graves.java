@@ -89,6 +89,7 @@ public final class Graves {
     }
 
     /** What the spirit wants back, the same for its whole life. */
+    @SuppressWarnings("java:S2245") // Seeded so the wish is reproducible; not security-sensitive.
     public static Item wanted(long seed) {
         List<String> wants = Config.section("grave").texts("wants");
         String id = wants.get(new Random(seed ^ SALT).nextInt(wants.size()));

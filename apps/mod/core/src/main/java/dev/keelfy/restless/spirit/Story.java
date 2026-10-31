@@ -13,6 +13,7 @@ public record Story(String name, int daysDead, String cause) {
     // Keeps the story's rolls apart from the trait roll, which also starts from the bare seed.
     private static final long SALT = 0x5DEECE66DL;
 
+    @SuppressWarnings("java:S2245") // Seeded so the story is reproducible; not security-sensitive.
     public static Story of(long seed) {
         Config.Section config = Config.section("story");
         Random random = new Random(seed ^ SALT);

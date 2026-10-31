@@ -10,6 +10,13 @@ sonar {
 		property 'sonar.organization', 'keelfy'
 		property 'sonar.projectKey', 'keelfy_restless'
 		property 'sonar.projectName', 'Restless'
+		// NeoForge payloads need the TYPE/CODEC constants next to the type()/codec() accessors, and GameTests are
+		// annotated methods rather than JUnit tests, so these two rules only produce noise there.
+		property 'sonar.issue.ignore.multicriteria', 'payloads,gametests'
+		property 'sonar.issue.ignore.multicriteria.payloads.ruleKey', 'java:S1845'
+		property 'sonar.issue.ignore.multicriteria.payloads.resourceKey', '**/*Payload.java'
+		property 'sonar.issue.ignore.multicriteria.gametests.ruleKey', 'java:S2187'
+		property 'sonar.issue.ignore.multicriteria.gametests.resourceKey', '**/gametest/**'
 	}
 }
 // The scanner reads compiled classes and the coverage report but does not build them itself.
