@@ -2,5 +2,51 @@
   "subtitle.behind_you": {
     "subtitle": "subtitles.restless.behind_you",
     "sounds": [{ "name": "minecraft:block.wool.step", "type": "event", "volume": 0.001 }]
+  },
+  "haunt.scream": {
+    "subtitle": "subtitles.restless.scream",
+    "sounds": [
+      { "name": "restless:haunt/scream_1" },
+      { "name": "restless:haunt/scream_2" },
+      { "name": "restless:haunt/scream_3" },
+      { "name": "restless:haunt/scream_4" }
+    ]
+  },
+  "haunt.moan": {
+    "subtitle": "subtitles.restless.moan",
+    "sounds": [
+      { "name": "restless:haunt/moan_1" },
+      { "name": "restless:haunt/moan_2" },
+      { "name": "restless:haunt/moan_3" },
+      { "name": "restless:haunt/moan_4" },
+      { "name": "restless:haunt/moan_5" }
+    ]
+  },
+  "haunt.whisper": {
+    "subtitle": "subtitles.restless.whisper",
+    "sounds": [
+      { "name": "restless:haunt/whisper_1" },
+      { "name": "restless:haunt/whisper_2" },
+      { "name": "restless:haunt/whisper_3" },
+      { "name": "restless:haunt/whisper_4" }
+    ]
+  },
+  "haunt.laugh": {
+    "subtitle": "subtitles.restless.laugh",
+    "sounds": [
+      { "name": "restless:haunt/laugh" }
+    ]
+  },
+  "haunt.breath": {
+    "subtitle": "subtitles.restless.breath",
+    "sounds": [
+      { "name": "restless:haunt/breath" }
+    ]
+  },
+  "haunt.screech": {
+    "subtitle": "subtitles.restless.screech",
+    "sounds": [
+      { "name": "restless:haunt/screech" }
+    ]
   }
 }

@@ -28,3 +28,16 @@ mise run wiki:build   # static wiki build
 
 With Java 25, run `./gradlew :neoforge:runGameTestServer` from `apps/mod` to verify altar placement,
 dismantling, offerings and salt rings in a dedicated test world. Test code is excluded from the mod jar.
+
+## Credits
+
+Haunt sounds in `assets/restless/sounds/haunt` are CC0 recordings from [OpenGameArt](https://opengameart.org), cut, mixed down to mono and re-encoded:
+
+| Sound | Source | Author |
+|---|---|---|
+| `scream_*` | [Female high pitched scream SFX](https://opengameart.org/content/female-high-pitched-scream-sfx) | wuxiascrub |
+| `moan_*` | [Ghost / monster voice moaning, growling](https://opengameart.org/content/ghost-monster-voice-moaning-growling) | qubodup |
+| `breath` | [Ghost breath](https://opengameart.org/content/ghost-breath) | qubodup |
+| `laugh` | [Ghostly cackle laugh 1](https://opengameart.org/content/ghostly-cackle-laugh-1) | nocturnalvanguard (AuraVoice) |
+| `screech` | [Scary high pitched ghost](https://opengameart.org/content/scary-high-pitched-ghost) | fupi |
+| `whisper_*` | [Voices of Madness](https://opengameart.org/content/voices-of-madness) | eugeneloza |
