@@ -137,6 +137,13 @@ final class HauntEventGameTests {
                 check(helper, !ghostLog(helper.getLevel().getBlockState(pos)), "ghost_tree must not be on the server");
             }
         }));
+        PADDING.put("event_torch_line", 40);
+        tests.put("event_torch_line", helper -> runs(helper, "torch_line", player -> darkWood(helper), () -> {
+            // Only sent: the server's air along the line must stay.
+            BlockPos centre = helper.absolutePos(FEET);
+            check(helper, BlockPos.betweenClosedStream(centre.offset(-2, 0, 0), centre.offset(2, 0, 34))
+                .noneMatch(pos -> helper.getLevel().getBlockState(pos).is(Blocks.TORCH)), "torch_line must not be on the server");
+        }));
         tests.put("event_hallucination", helper -> runs(helper, "hallucination", player -> {
             BlockPos centre = helper.absolutePos(FEET);
             for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-22, -1, -22), centre.offset(22, -1, 22))) {
@@ -567,6 +574,18 @@ final class HauntEventGameTests {
                 helper.getLevel().setBlock(pos, Blocks.OAK_LEAVES.defaultBlockState(), 2);
             }
         }
+    }
+
+    /**
+     * Under leaves with a log beside the player, and ground far enough south (where a fresh player faces) for the line.
+     */
+    static void darkWood(GameTestHelper helper) {
+        BlockPos centre = helper.absolutePos(FEET);
+        for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-3, -1, -3), centre.offset(3, -1, 34))) {
+            helper.getLevel().setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
+        }
+        helper.getLevel().setBlock(centre.above(3), Blocks.OAK_LEAVES.defaultBlockState(), 2);
+        helper.getLevel().setBlock(centre.west(2), Blocks.OAK_LOG.defaultBlockState(), 2);
     }
 
     /** Sets the scene, checks the event can run, runs it, lets its scheduled steps finish, then checks the result. */

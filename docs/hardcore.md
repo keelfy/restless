@@ -44,7 +44,7 @@ Total for the seam itself: about 3. The cost is in the per-event real branches.
 | `false_slot` (161) | an item shown in an empty slot | the item is really put there |
 | `silent_lightning` (168) | visual-only bolt | real lightning (hurts, sets fires) |
 | `cracking_floor` (138) | break particles and sound | the block under the feet really breaks, no drop, only where the fall is one block |
-| `false_windows` (105), `false_looks` (106), `ghost_tree` (107) | shown to one client (`Swaps.show`) | placed for real and kept (`Swaps.show` makes every swap real in hardcore); a block that holds something (chest, furnace) is still only shown |
+| `false_windows` (105), `false_looks` (106), `ghost_tree` (107), `torch_line` (190) | shown to one client (`Swaps.show`) | placed for real and kept (`Swaps.show` makes every swap real in hardcore); a block that holds something (chest, furnace) is still only shown |
 | `hallucination` (126) | packet-only mob | the mob is spawned for real |
 | `disguise` (125) | the real animal hidden, another kind shown in its place | the animal is converted into the other kind (`convertTo`) |
 | `moving_tree` (108) | the tree moves, and moves back after 30 s | the tree stays where it moved |

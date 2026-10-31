@@ -82,6 +82,13 @@ final class HardcoreGameTests {
                 .anyMatch(pos -> HauntEventGameTests.ghostLog(helper.getLevel().getBlockState(pos))), "ghost_tree must really stand");
         }));
         HauntEventGameTests.PADDING.put("hardcore_ghost_tree", 30);
+        hardcore(tests, "hardcore_torch_line", helper -> runs(helper, "torch_line", player -> HauntEventGameTests.darkWood(helper), () -> {
+            BlockPos centre = helper.absolutePos(FEET);
+            long torches = BlockPos.betweenClosedStream(centre.offset(-2, 0, 0), centre.offset(2, 0, 34))
+                .filter(pos -> helper.getLevel().getBlockState(pos).is(Blocks.TORCH)).count();
+            check(helper, torches >= 3, "torch_line must really place its torches, found " + torches);
+        }));
+        HauntEventGameTests.PADDING.put("hardcore_torch_line", 40);
         hardcore(tests, "hardcore_moving_tree", helper -> runs(helper, "moving_tree", player -> HauntEventGameTests.tree(helper), () -> {
             BlockPos centre = helper.absolutePos(FEET);
             check(helper, !helper.getLevel().getBlockState(centre.east(6)).is(BlockTags.LOGS), "moving_tree must stay moved");

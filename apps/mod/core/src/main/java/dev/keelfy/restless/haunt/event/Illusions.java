@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -34,6 +36,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -66,6 +69,8 @@ final class Illusions {
                     Swaps.show(player, ghostTree(player, root), Config.event("ghost_tree").integer("ticks"));
                 }
             }),
+            // 190: a line of torches in the dark leads away from the player, each gone when they come near it
+            SimpleEvent.light("torch_line", EventTag.BLOCKS, player -> inTheDark(player) && !torchSpots(player).isEmpty(), Illusions::torchLine),
             // 126: a mob standing out in the field that is not there, facing the player; gone when approached
             SimpleEvent.light("hallucination", EventTag.MOBS, player -> mobSpot(player) != null, Illusions::hallucination),
             // 125: an animal nearby looks like another to this player; under hardcore it is changed for real
@@ -222,6 +227,68 @@ final class Illusions {
             tree.put(root.above(dy), wood.log().get().defaultBlockState());
         }
         return tree;
+    }
+
+    /** Outdoors at night, or under a forest's leaves. */
+    private static boolean inTheDark(ServerPlayer player) {
+        ServerLevel level = player.level();
+        BlockPos at = player.blockPosition();
+        if (level.isDarkOutside() && level.canSeeSky(at)) {
+            return true;
+        }
+        // Only leaves overhead, and trees around.
+        boolean underLeaves = level.getHeight(Heightmap.Types.MOTION_BLOCKING, at.getX(), at.getZ()) > at.getY()
+            && level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, at.getX(), at.getZ()) <= at.getY();
+        return underLeaves && Nearby.any(player, "torch_line", state -> state.is(BlockTags.LOGS));
+    }
+
+    /** Ground for a torch every {@code spacing} blocks along where the player looks, from {@code start} on, following the ground up and down. */
+    private static List<BlockPos> torchSpots(ServerPlayer player) {
+        Config.Section config = Config.event("torch_line");
+        ServerLevel level = player.level();
+        List<BlockPos> line = new ArrayList<>();
+        int y = player.getBlockY();
+        for (int i = 0; i < config.integer("torches"); i++) {
+            Vec3 at = Nearby.around(player, config.num("start") + i * config.num("spacing"), 0.0);
+            BlockPos spot = Place.standing(level, BlockPos.containing(at.x, y, at.z));
+            if (spot == null || !Blocks.TORCH.defaultBlockState().canSurvive(level, spot)) {
+                break;
+            }
+            line.add(spot);
+            y = spot.getY();
+        }
+        return line.size() >= config.integer("min_torches") ? line : List.of();
+    }
+
+    /** Shown to the player for {@code ticks}; as an illusion each torch is gone for them once they come within {@code vanish_distance}. */
+    private static void torchLine(ServerPlayer player) {
+        Config.Section config = Config.event("torch_line");
+        List<BlockPos> line = torchSpots(player);
+        if (line.isEmpty()) {
+            return;
+        }
+        int ticks = config.integer("ticks");
+        Swaps.show(player, line, Blocks.TORCH.defaultBlockState(), ticks);
+        ServerLevel level = player.level();
+        if (Swaps.real(level)) {
+            return;
+        }
+        List<BlockPos> left = new ArrayList<>(line);
+        int interval = config.integer("interval_ticks");
+        double near = config.num("vanish_distance");
+        Scheduler.repeat(player, interval, interval, (p, n) -> {
+            if (p.level() != level) {
+                return false;
+            }
+            left.removeIf(pos -> {
+                boolean close = p.position().distanceToSqr(Vec3.atBottomCenterOf(pos)) <= near * near;
+                if (close) {
+                    p.connection.send(new ClientboundBlockUpdatePacket(level, pos));
+                }
+                return close;
+            });
+            return !left.isEmpty() && n * interval < ticks;
+        });
     }
 
     private static void falseWindows(ServerPlayer player) {
