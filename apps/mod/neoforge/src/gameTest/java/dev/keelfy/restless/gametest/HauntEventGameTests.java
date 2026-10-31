@@ -60,6 +60,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.phys.AABB;
@@ -423,6 +424,63 @@ final class HauntEventGameTests {
             Entity[] golem = new Entity[1];
             runs(helper, "golem_flower", player -> golem[0] = EntityTypes.IRON_GOLEM.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
                 () -> check(helper, ((IronGolem) golem[0]).getOfferFlowerTick() > 0, "golem_flower must offer the flower"));
+        });
+        PADDING.put("event_golem_rage", 32);
+        TIMEOUT.put("event_golem_rage", 80);
+        tests.put("event_golem_rage", helper -> {
+            IronGolem[] golems = new IronGolem[2];
+            ServerPlayer[] victim = new ServerPlayer[1];
+            runs(helper, "golem_rage", player -> {
+                victim[0] = player;
+                // A newly connected player is immune to damage until its client acknowledges loading.
+                player.connection.handleAcceptPlayerLoad(new net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket());
+                golems[0] = EntityTypes.IRON_GOLEM.spawn(helper.getLevel(), helper.absolutePos(FEET).west(4), EntitySpawnReason.COMMAND);
+                golems[1] = EntityTypes.IRON_GOLEM.spawn(helper.getLevel(), helper.absolutePos(FEET).east(1), EntitySpawnReason.COMMAND);
+                // Exercise a real melee attack without risking a lethal golem hit on the test player.
+                golems[1].getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(1.0);
+                golems[1].offerFlower(true);
+            }, 40, () -> {
+                check(helper, golems[1].getTarget() == victim[0] && golems[1].isAngry(), "the nearest golem must remain angry at the player");
+                check(helper, golems[1].getPersistentAngerTarget().matches(victim[0]), "anger must remember this player");
+                check(helper, golems[1].getOfferFlowerTick() == 0, "the angry golem must stop offering a flower");
+                check(helper, golems[0].getTarget() == null && !golems[0].isAngry(), "the farther golem must remain idle");
+                check(helper, victim[0].getHealth() < victim[0].getMaxHealth(), "the golem must actually attack and damage the player; position="
+                    + golems[1].position() + ", ticks=" + golems[1].tickCount + ", target=" + victim[0].position()
+                    + ", path=" + golems[1].getNavigation().getPath() + ", aggressive=" + golems[1].isAggressive());
+                for (IronGolem golem : golems) golem.discard();
+            });
+        });
+        PADDING.put("event_golem_rage_conditions", 32);
+        tests.put("event_golem_rage_conditions", helper -> {
+            ServerPlayer player = connected(helper);
+            BlockPos feet = helper.absolutePos(FEET);
+            player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("golem_rage")).orElseThrow();
+            check(helper, !event.canRun(player), "golem_rage needs an existing golem");
+            event.run(player);
+            IronGolem golem = EntityTypes.IRON_GOLEM.spawn(helper.getLevel(), feet.east(2), EntitySpawnReason.COMMAND);
+            golem.setPlayerCreated(true);
+            check(helper, !event.canRun(player), "player-built golems must remain friendly");
+            golem.setPlayerCreated(false);
+            check(helper, event.canRun(player), "a nearby natural golem must be eligible");
+            golem.setTarget(player);
+            check(helper, !event.canRun(player), "a busy golem must not be selected");
+            golem.setTarget(null);
+            golem.setNoAi(true);
+            check(helper, !event.canRun(player), "a golem without AI cannot attack");
+            golem.setNoAi(false);
+            // Mock players fix their game mode at construction, so use a separate mock for each mode.
+            for (GameType mode : List.of(GameType.CREATIVE, GameType.SPECTATOR)) {
+                ServerPlayer excluded = (ServerPlayer) helper.makeMockServerPlayer(mode);
+                excluded.setPos(player.getX(), player.getY(), player.getZ());
+                check(helper, !event.canRun(excluded), mode + " players must be excluded");
+                excluded.discard();
+            }
+            golem.snapTo(player.getX() + 20, player.getY(), player.getZ() + 20);
+            check(helper, !event.canRun(player), "golems outside the radius must be excluded even inside the search box");
+            golem.discard();
+            player.discard();
+            helper.succeed();
         });
         tests.put("event_dog_growls", helper -> {
             Wolf[] wolf = new Wolf[1];

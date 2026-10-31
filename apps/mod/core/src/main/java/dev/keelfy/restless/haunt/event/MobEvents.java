@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
@@ -16,6 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -137,6 +139,15 @@ final class MobEvents {
                 golem.offerFlower(true);
                 Scheduler.later(player, Config.event("golem_flower").integer("hold_ticks"), p -> golem.offerFlower(false));
             }),
+            SimpleEvent.harmful("golem_rage", EventTag.MOBS, player -> hostileGolem(player) != null, player -> {
+                IronGolem golem = hostileGolem(player);
+                if (golem != null) {
+                    golem.offerFlower(false);
+                    golem.setPersistentAngerTarget(EntityReference.of(player));
+                    golem.startPersistentAngerTimer();
+                    golem.setTarget(player);
+                }
+            }),
             // 194: sits, looks at the empty space beside the player and growls; stands again when it is over
             SimpleEvent.light("dog_growls", EventTag.MOBS, player -> !standingDogs(player).isEmpty(), MobEvents::growl),
             // 195: the pen's animals crowd into one corner and stand facing it
@@ -251,6 +262,17 @@ final class MobEvents {
 
     private static List<IronGolem> golems(ServerPlayer player) {
         return near(player, IronGolem.class, "golem_flower").stream().filter(g -> g.getTarget() == null && g.getOfferFlowerTick() == 0).toList();
+    }
+
+    private static @Nullable IronGolem hostileGolem(ServerPlayer player) {
+        if (player.isCreative() || player.isSpectator() || player.level().getDifficulty() == Difficulty.PEACEFUL) {
+            return null;
+        }
+        double radius = Nearby.radius("golem_rage");
+        return near(player, IronGolem.class, "golem_rage").stream()
+            .filter(g -> g.isAlive() && !g.isNoAi() && g.getTarget() == null && g.canAttack(player)
+                && g.distanceToSqr(player) <= radius * radius)
+            .min(Comparator.comparingDouble(g -> g.distanceToSqr(player))).orElse(null);
     }
 
     private static List<Wolf> standingDogs(ServerPlayer player) {
