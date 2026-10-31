@@ -1,28 +1,28 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Footer, Layout, Navbar } from "nextra-theme-docs";
+import { Head } from "nextra/components";
+import { getPageMap } from "nextra/page-map";
 
-import "./globals.css";
+import "nextra-theme-docs/style.css";
 
 export const metadata: Metadata = {
-  title: "Restless",
+  title: { default: "Restless", template: "%s - Restless" },
   description: "Wiki for Restless, a Minecraft horror mod",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-US">
+    <html lang="en-US" dir="ltr" suppressHydrationWarning>
+      <Head />
       <body>
-        <header className="border-b">
-          <nav className="mx-auto flex h-14 max-w-3xl items-center gap-6 px-6 text-sm">
-            <Link href="/" className="font-semibold tracking-wide">
-              Restless
-            </Link>
-            <Link href="/spirits" className="text-muted-foreground hover:text-foreground">
-              Spirits
-            </Link>
-          </nav>
-        </header>
-        <main className="mx-auto max-w-3xl px-6 py-12">{children}</main>
+        <Layout
+          navbar={<Navbar logo={<b>Restless</b>} projectLink="https://github.com/keelfy/restless" />}
+          pageMap={await getPageMap()}
+          docsRepositoryBase="https://github.com/keelfy/restless/tree/master/apps/frontend"
+          footer={<Footer>Restless wiki</Footer>}
+        >
+          {children}
+        </Layout>
       </body>
     </html>
   );
