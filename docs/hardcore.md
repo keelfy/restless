@@ -47,7 +47,7 @@ Total for the seam itself: about 3. The cost is in the per-event real branches.
 | `ceiling_crack` (118) | crack shown, the block stays | the block breaks at the last stage, no drop, unless fluid or sand would come down |
 | `dispenser_shot` (177) | an arrow from nowhere, nothing spent | only a dispenser with arrows; it fires one of them for real |
 | `portal_out` (114) | — | unchanged: for good outside the Nether, back after 60 s in the Nether |
-| `false_windows` (105), `false_looks` (106), `ghost_tree` (107) | shown to one client (`Swaps.show`) | placed for real and kept (`Swaps.show` makes every swap real in hardcore); a block that holds something (chest, furnace) is still only shown |
+| `false_windows` (105), `false_looks` (106), `ghost_tree` (107), `torch_line` (190) | shown to one client (`Swaps.show`) | placed for real and kept (`Swaps.show` makes every swap real in hardcore); a block that holds something (chest, furnace) is still only shown |
 | `hallucination` (126) | packet-only mob | the mob is spawned for real |
 | `disguise` (125) | the real animal hidden, another kind shown in its place | the animal is converted into the other kind (`convertTo`) |
 | `moving_tree` (108) | the tree moves, and moves back after 30 s | the tree stays where it moved |
