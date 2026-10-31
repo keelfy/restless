@@ -9,7 +9,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
  * here rather than through the border warning, which shows only with the vignette setting on and is faint in daylight.
  */
 public final class RedVignette {
-    private static final int BANDS = 16;
     private static final int RED = 0x9A0000;
     /** Shares of the duration spent coming in and going out. */
     private static final double IN = 0.15;
@@ -30,7 +29,7 @@ public final class RedVignette {
         }
     }
 
-    /** Draws as a HUD layer: nested frames, so the very edge stacks the most and is reddest. */
+    /** Draws as a HUD layer: one-pixel frames from the edge inward, each fainter than the last, so the fall-off is smooth. */
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
         Minecraft minecraft = Minecraft.getInstance();
         if (total == 0 || minecraft.level == null) {
@@ -44,14 +43,19 @@ public final class RedVignette {
         double depth = Math.min(1.0, Math.min(progress / IN, (1 - progress) / OUT));
         int width = graphics.guiWidth();
         int height = graphics.guiHeight();
-        int step = Math.max(1, Math.min(width, height) / (BANDS * 3));
-        int color = (int) (255 * strength * depth / BANDS) << 24 | RED;
-        for (int i = 1; i <= BANDS; i++) {
-            int t = step * i;
-            graphics.fill(0, 0, width, t, color);
-            graphics.fill(0, height - t, width, height, color);
-            graphics.fill(0, t, t, height - t, color);
-            graphics.fill(width - t, t, width, height - t, color);
+        int reach = Math.max(1, Math.min(width, height) / 3);
+        double peak = Math.min(1.0, strength * depth);
+        for (int i = 0; i < reach; i++) {
+            double fade = 1.0 - (double) i / reach;
+            int alpha = (int) Math.round(255 * peak * fade * fade);
+            if (alpha == 0) {
+                break;
+            }
+            int color = alpha << 24 | RED;
+            graphics.fill(i, i, width - i, i + 1, color);
+            graphics.fill(i, height - i - 1, width - i, height - i, color);
+            graphics.fill(i, i + 1, i + 1, height - i - 1, color);
+            graphics.fill(width - i - 1, i + 1, width - i, height - i - 1, color);
         }
     }
 }
