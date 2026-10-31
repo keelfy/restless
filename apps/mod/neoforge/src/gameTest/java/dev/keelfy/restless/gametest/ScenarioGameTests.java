@@ -21,10 +21,16 @@ final class ScenarioGameTests {
     private ScenarioGameTests() {}
 
     /** Records the server tick each time it runs. */
-    private record Probe(Identifier id, HauntTier tier, Set<EventTag> tags, boolean ready, List<Integer> ran)
+    private record Probe(
+            Identifier id, HauntTier tier, Set<EventTag> tags, boolean ready, List<Integer> ran, boolean[] held)
             implements HauntEvent {
         Probe(String id, HauntTier tier, EventTag tag, boolean ready) {
-            this(Identifier.withDefaultNamespace(id), tier, Set.of(tag), ready, new ArrayList<>());
+            this(Identifier.withDefaultNamespace(id), tier, Set.of(tag), ready, new ArrayList<>(), new boolean[1]);
+        }
+
+        @Override
+        public boolean busy(ServerPlayer player) {
+            return held[0];
         }
 
         @Override
@@ -85,6 +91,33 @@ final class ScenarioGameTests {
                 helper.succeed();
             });
         });
+        HauntEventGameTests.TIMEOUT.put("scenario_waits", 120);
+        tests.put("scenario_waits", helper -> {
+            Probe knock = new Probe("probe_knock", HauntTier.LIGHT, EventTag.SOUND, true);
+            Probe after = new Probe("probe_after", HauntTier.LIGHT, EventTag.SOUND, true);
+            Probe last = new Probe("probe_last", HauntTier.LIGHT, EventTag.SOUND, true);
+            Scenario scenario = Scenario.parse(
+                    Identifier.withDefaultNamespace("probe"),
+                    "probe_knock >gone +1 probe_after +1 probe_last",
+                    id -> List.of(knock, after, last).stream()
+                            .filter(e -> e.id().equals(id))
+                            .findFirst()
+                            .orElseThrow());
+            check(helper, scenario.beats().get(1).until() == Scenario.Wait.GONE, "A wait must be read from the script");
+            ServerPlayer player = connected(helper);
+            knock.held()[0] = true;
+            scenario.run(player);
+            helper.runAfterDelay(40, () -> {
+                check(helper, after.ran().isEmpty(), "A waiting beat must hold until the wait is met");
+                knock.held()[0] = false;
+            });
+            helper.runAfterDelay(100, () -> {
+                check(helper, after.ran().size() == 1, "A waiting beat must run once the wait is met");
+                check(helper, last.ran().size() == 1, "Beats after a wait must follow it");
+                player.discard();
+                helper.succeed();
+            });
+        });
         tests.put("scenario_rules", helper -> {
             Probe hit = new Probe("probe_hit", HauntTier.HARMFUL, EventTag.ASSAULT, true);
             boolean refused;
@@ -95,6 +128,17 @@ final class ScenarioGameTests {
                 refused = true;
             }
             check(helper, refused, "A scenario must not open with harm");
+            Probe calm = new Probe("probe_calm", HauntTier.LIGHT, EventTag.SOUND, true);
+            boolean waited;
+            try {
+                new Scenario(
+                        Identifier.withDefaultNamespace("probe"),
+                        List.of(new Scenario.Beat(0, Scenario.Wait.GONE, calm)));
+                waited = false;
+            } catch (IllegalArgumentException expected) {
+                waited = true;
+            }
+            check(helper, waited, "A scenario must not open with a wait");
             Scenario lights = (Scenario) HauntEvents.byId(Identifier.withDefaultNamespace("lights_out"))
                     .orElseThrow();
             check(helper, lights.beats().size() == 4, "lights_out must have its four beats");

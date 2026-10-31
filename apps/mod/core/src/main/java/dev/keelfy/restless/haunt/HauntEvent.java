@@ -26,6 +26,11 @@ public interface HauntEvent {
         return true;
     }
 
+    /** Whether something this event raised for the player is still going; only {@code >gone} waits ask. */
+    default boolean busy(ServerPlayer player) {
+        return false;
+    }
+
     /** Cheap check whether the event has anything to act on right now. */
     boolean canRun(ServerPlayer player);
 

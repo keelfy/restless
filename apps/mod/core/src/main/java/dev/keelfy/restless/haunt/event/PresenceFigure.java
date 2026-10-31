@@ -142,6 +142,11 @@ final class PresenceFigure implements HauntEvent {
     }
 
     @Override
+    public boolean busy(ServerPlayer player) {
+        return active.containsKey(player.getUUID());
+    }
+
+    @Override
     public boolean canRun(ServerPlayer player) {
         return !active.containsKey(player.getUUID()) && place.test(player) && spot(player) != null;
     }

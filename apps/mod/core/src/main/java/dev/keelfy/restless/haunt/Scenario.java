@@ -4,6 +4,7 @@ import dev.keelfy.restless.config.Config;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
@@ -20,8 +21,46 @@ import org.jspecify.annotations.Nullable;
  * on is skipped; death or logout drops the rest.
  */
 public final class Scenario implements HauntEvent {
-    /** One event of the script, {@code after} seconds after the one before it (0: together with it). */
-    public record Beat(int after, HauntEvent event) {}
+    /**
+     * What a beat may wait for before its {@code after} count starts; the rest of the scenario is dropped on timeout.
+     */
+    public enum Wait {
+        /** The figure the previous beat raised is gone. */
+        GONE(60),
+        /** The player has slept and got up again. */
+        WAKING(10 * 60),
+        /** The player is in water. */
+        WATER(60);
+
+        private final int timeout;
+
+        Wait(int timeout) {
+            this.timeout = timeout;
+        }
+
+        private boolean met(ServerPlayer player, HauntEvent before, boolean[] slept) {
+            return switch (this) {
+                case GONE -> !before.busy(player);
+                case WAKING -> {
+                    slept[0] |= player.isSleeping();
+                    yield slept[0] && !player.isSleeping();
+                }
+                case WATER -> player.isInWater();
+            };
+        }
+    }
+
+    /**
+     * One event of the script, {@code after} seconds after the one before it (0: together with it) and after its wait.
+     */
+    public record Beat(int after, @Nullable Wait until, HauntEvent event) {
+        public Beat(int after, HauntEvent event) {
+            this(after, null, event);
+        }
+    }
+
+    /** Ticks between looks at a wait. */
+    private static final int POLL = 10;
 
     private final Identifier id;
     private final List<Beat> beats;
@@ -32,7 +71,9 @@ public final class Scenario implements HauntEvent {
         if (beats.isEmpty() || beats.getFirst().event().tier() != HauntTier.LIGHT) {
             throw new IllegalArgumentException("Scenario " + id + " must open with a light event");
         }
-        if (beats.getFirst().after() != 0 || beats.stream().anyMatch(b -> b.after() < 0)) {
+        if (beats.getFirst().after() != 0
+                || beats.getFirst().until() != null
+                || beats.stream().anyMatch(b -> b.after() < 0)) {
             throw new IllegalArgumentException("Scenario " + id + " must start at once and only move forward");
         }
         if (beats.stream().anyMatch(b -> b.event() instanceof Scenario)) {
@@ -50,17 +91,22 @@ public final class Scenario implements HauntEvent {
 
     /**
      * Reads a script written as in the docs: event ids with {@code +N} (seconds) between them, {@code +0} for "at the
-     * same time"; no {@code +N} means 0.
+     * same time"; no {@code +N} means 0. {@code >gone}, {@code >waking} or {@code >water} before an event makes it
+     * wait.
      */
     public static Scenario parse(Identifier id, String script, Function<Identifier, HauntEvent> events) {
         List<Beat> beats = new ArrayList<>();
         int after = 0;
+        Wait wait = null;
         for (String token : script.trim().split("\\s+")) {
             if (token.startsWith("+")) {
                 after += Integer.parseInt(token.substring(1));
+            } else if (token.startsWith(">")) {
+                wait = Wait.valueOf(token.substring(1).toUpperCase(Locale.ROOT));
             } else {
-                beats.add(new Beat(after, events.apply(Identifier.parse(token))));
+                beats.add(new Beat(after, wait, events.apply(Identifier.parse(token))));
                 after = 0;
+                wait = null;
             }
         }
         return new Scenario(id, beats);
@@ -104,11 +150,37 @@ public final class Scenario implements HauntEvent {
         Vec3 at = Location.current();
         UUID spirit = Said.current();
         beats.getFirst().event().run(player);
-        int delay = 0;
-        for (Beat beat : beats.subList(1, beats.size())) {
+        follow(player, 1, 0, at, spirit);
+    }
+
+    /** Schedules the beats from {@code from} on; a waiting beat schedules the ones after it once its wait is over. */
+    private void follow(ServerPlayer player, int from, int start, @Nullable Vec3 at, @Nullable UUID spirit) {
+        int delay = start;
+        for (int i = from; i < beats.size(); i++) {
+            Beat beat = beats.get(i);
+            if (beat.until() != null) {
+                wait(player, i, delay, at, spirit);
+                return;
+            }
             delay += beat.after() * Ticks.SECOND;
             Scheduler.later(player, delay, p -> play(p, beat.event(), at, spirit));
         }
+    }
+
+    private void wait(ServerPlayer player, int index, int delay, @Nullable Vec3 at, @Nullable UUID spirit) {
+        Beat beat = beats.get(index);
+        Wait wait = beat.until();
+        HauntEvent before = beats.get(index - 1).event();
+        boolean[] slept = {false};
+        int hold = beat.after() * Ticks.SECOND;
+        Scheduler.repeat(player, delay, POLL, (p, n) -> {
+            if (!wait.met(p, before, slept)) {
+                return n * POLL < wait.timeout * Ticks.SECOND;
+            }
+            Scheduler.later(p, hold, q -> play(q, beat.event(), at, spirit));
+            follow(p, index + 1, hold, at, spirit);
+            return false;
+        });
     }
 
     private static void play(ServerPlayer player, HauntEvent event, @Nullable Vec3 at, @Nullable UUID spirit) {

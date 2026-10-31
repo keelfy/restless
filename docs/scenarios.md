@@ -27,10 +27,10 @@ as one event. Tier is harmful if any beat is; tags are every beat's. Beats keep 
 
 To add one: a line in `haunt/Scenarios.java` (script in the notation below), an entry in `scenarios.json`
 (`weight`, `min_power`, `evolved`) and a name in `lang/en.json` and `lang/ru.json`. An unknown id, a harmful or
-delayed opening, or an id taken by an event fails at startup. Done so far: 1, 2, 4, 6, 99.
+delayed opening, or an id taken by an event fails at startup. Done: all. `→` is written `>gone`, `>waking` or `>water` before the event. Scenario 12 has the id `unlocked_house` (`open_house` is an event).
 
-The script knows only `+N`; write `∥` as `+0` and `×N` as the beat N times. Not built yet, add when a scenario needs
-it: `→` waits, `Where` beyond the first beat's `canRun`, the ×3 weight of a signature for its evolved type.
+The script knows `+N` and the waits; write `∥` as `+0` and `×N` as the beat N times. Not built yet, add when a scenario needs
+it: `Where` beyond the first beat's `canRun`, the ×3 weight of a signature for its evolved type.
 
 ## Darkness
 
@@ -75,7 +75,7 @@ it: `→` waits, `Where` beyond the first beat's `canRun`, the ×3 weight of a s
 | 27 | Died out there | `distant_walker` +10 `cut_off_scream` +2 `stranger_death` +5 `mock_grave` | 0.7 | outdoors | banshee, phantom |
 | 28 | The dead party | `stranger_joins` ×3 (5 s apart) +10 `distant_player` ∥ `fog_silhouette` +20 `stranger_death` ×3 | 0.8 | night | phantom |
 | 29 | Friend far off | `friend_double` +4 `whisper` +3 `fake_subtitle` | 0.6 | another player near | phantom, mimic |
-| 30 | Statue game | `armor_stand` +6 `footsteps` +4 `turned_head` | 0.7 | any | mimic, phantom |
+| 30 | Statue game | `footsteps` +3 `armor_stand` +6 `footsteps` +4 `turned_head` | 0.7 | any | mimic, phantom |
 
 ## The double
 
