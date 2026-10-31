@@ -58,7 +58,14 @@ final class HardcoreGameTests {
             },
                 () -> check(helper, who[0].getHealth() < who[0].getMaxHealth() && who[0].getHealth() >= 2.0F, "false_wound must really wound, above a heart"));
         });
-        hardcore(tests, "hardcore_false_night", helper -> runs(helper, "false_night", player -> {}, () -> {
+        hardcore(tests, "hardcore_false_night", helper -> runs(helper, "false_night", player -> {
+            // The earlier batch may leave a different world time; this event requires daylight.
+            var level = helper.getLevel();
+            var clock = level.registryAccess().getOrThrow(WorldClocks.OVERWORLD);
+            level.getServer().clockManager().moveToTimeMarker(clock, ClockTimeMarkers.NOON);
+            level.environmentAttributes().invalidateTickCache();
+            level.updateSkyBrightness();
+        }, () -> {
             check(helper, helper.getLevel().isDarkOutside(), "false_night must really make it night");
             // Back to day, for the tests that need daylight.
             var clock = helper.getLevel().registryAccess().getOrThrow(WorldClocks.OVERWORLD);

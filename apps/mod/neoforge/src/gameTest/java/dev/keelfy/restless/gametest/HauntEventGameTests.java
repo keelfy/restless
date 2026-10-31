@@ -400,13 +400,24 @@ final class HauntEventGameTests {
             runs(helper, "villager_refuses", player -> villager[0] = EntityTypes.VILLAGER.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),
                 () -> check(helper, villager[0].getUnhappyCounter() > 0, "villager_refuses must shake the head"));
         });
+        // Keep the 16-block event radius and 8-block escape route clear of neighboring mob tests.
+        PADDING.put("event_cat_flee", 24);
         tests.put("event_cat_flee", helper -> {
             Cat[] cat = new Cat[1];
             double[] start = new double[1];
             runs(helper, "cat_flee", player -> {
+                // The destination is eight blocks away, beyond the default ten-block test floor.
+                for (BlockPos pos : BlockPos.betweenClosed(FEET.offset(0, -1, -2), FEET.offset(11, -1, 2))) {
+                    helper.setBlock(pos, Blocks.STONE);
+                }
                 cat[0] = EntityTypes.CAT.spawn(helper.getLevel(), helper.absolutePos(FEET).east(1), EntitySpawnReason.COMMAND);
+                // Measure the event's navigation, without random strolls replacing its path between pulses.
+                cat[0].goalSelector.removeAllGoals(goal -> goal instanceof net.minecraft.world.entity.ai.goal.RandomStrollGoal);
+                cat[0].setOnGround(true);
                 start[0] = cat[0].getX();
-            }, () -> check(helper, cat[0].getX() > start[0] + 1.5, "cat_flee must send the cat running away from the player"));
+            }, () -> check(helper, cat[0].getX() > start[0] + 1.5, "cat_flee must send the cat running away from the player; start="
+                + start[0] + ", position=" + cat[0].position() + ", target=" + cat[0].getNavigation().getTargetPos()
+                + ", path=" + cat[0].getNavigation().getPath()));
         });
         tests.put("event_golem_flower", helper -> {
             Entity[] golem = new Entity[1];
@@ -450,8 +461,15 @@ final class HauntEventGameTests {
                 boolean head = !player.getItemBySlot(EquipmentSlot.HEAD).isEmpty();
                 check(helper, !head || player.getItemBySlot(EquipmentSlot.CHEST).getCount() == 0,
                     "armor_off must take off at least one piece");
-                check(helper, player.getInventory().contains(s -> s.is(Items.IRON_HELMET)) != head,
-                    "a piece taken off must be in the inventory, not lost");
+                // Inventory.contains also searches equipped slots; count only the 36 storage slots.
+                for (EquipmentSlot slot : List.of(EquipmentSlot.HEAD, EquipmentSlot.CHEST)) {
+                    var item = slot == EquipmentSlot.HEAD ? Items.IRON_HELMET : Items.IRON_CHESTPLATE;
+                    int stored = java.util.stream.IntStream.range(0, net.minecraft.world.entity.player.Inventory.INVENTORY_SIZE)
+                        .map(index -> player.getInventory().getItem(index).is(item)
+                            ? player.getInventory().getItem(index).getCount() : 0).sum();
+                    check(helper, stored == (player.getItemBySlot(slot).isEmpty() ? 1 : 0),
+                        "Each armor piece must be either worn or stored exactly once");
+                }
             });
         });
         HardcoreGameTests.hardcore(tests, "event_tool_look", helper -> {
