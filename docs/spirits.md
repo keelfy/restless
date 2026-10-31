@@ -353,9 +353,9 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `music_cut` | 102 | LIGHT | SOUND | 0.4 | Always | Stops the game's background music for the player; it resumes on its usual schedule |
 | `whisper` | 35 | LIGHT | SOUND | 0.4 | Always | Chat line `<???> <player name>`, only to the player |
 | `echo` | 36 | LIGHT | SOUND | 0.4 | The player made a sound (step, splash, bite) in the last 5 s | That sound plays again 3 s later from where it was made, quieter and lower. Recorded through the loader's sound hook, `Restless.onPlaySound`; only sounds in the player category within 2 blocks of the player count |
-| `death_cry` | 37 | LIGHT | SOUND | 0.4 | Always | Player death sound nearby |
+| `death_cry` | 37 | LIGHT | SOUND | 0.4 | Always | A scream (custom sound) nearby |
 | `dripping` | 38 | LIGHT | SOUND | 0.4 | Always | Water drip nearby |
-| `distant_mob` | 131 | LIGHT | SOUND | 0.4 | Always | A zombie, skeleton, spider, enderman, witch, husk, drowned or pillager sound 2–40 blocks away; louder the farther, so it carries |
+| `distant_mob` | 131 | LIGHT | SOUND | 0.4 | Always | A zombie, skeleton, spider, enderman, witch, husk, drowned, pillager or ghostly moan sound 2–40 blocks away; louder the farther, so it carries |
 | `hostile_animal` | 132 | LIGHT | SOUND | 0.4 | An animal within 16 | A zombie, creeper, skeleton or witch sound bound to it, sent to this player only |
 | `approaching_steps` | 133 | LIGHT | SOUND | 0.4 | Always | Twelve step sounds of the block underfoot, closing from 14 to 3 blocks on a random bearing |
 | `distant_mining` | 134 | LIGHT | SOUND | 0.4 | Open sky above the player | Six stone hits and a break sound 8 blocks below the surface |
@@ -367,7 +367,13 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `shrieker` | 199 | LIGHT | SOUND | 0.4 | A sculk shrieker within 16 | It shrieks. No player is given to it, so nobody is warned and no warden is called |
 | `fake_subtitle` | 164 | LIGHT | SOUND | 0.3 | Always | A sound with no audio that shows the subtitle "Something breathes behind you" from 3 blocks behind the player. Only seen with subtitles on |
 | `phantom_heartbeat` | 199 | LIGHT | SOUND | 0.4 | Always | Eight warden heartbeats at the player, one every 0.9 s |
-| `note_block_voice` | 140 | LIGHT | SOUND | 0.5 | A note block within 16 | It plays a villager or player hurt, ghast scream, zombie villager or vex sound, with a note particle |
+| `note_block_voice` | 140 | LIGHT | SOUND | 0.5 | A note block within 16 | It plays a villager or player hurt, ghast scream, zombie villager, vex or ghostly moan sound, with a note particle |
+| `ghost_laugh` | 135 | LIGHT | SOUND | 0.3 | Always | A ghostly laugh (custom sound) 9 blocks away |
+| `ghost_breath` | 135 | LIGHT | SOUND | 0.3 | Always | A cold breath (custom sound) 0.8 blocks behind the player |
+| `close_whispers` | 135 | LIGHT | SOUND | 0.3 | Always | Three whispers (custom sound) 1.5 blocks away at the player's ears, left and right in turn, one every 2.5 s |
+| `circling_moan` | 135 | LIGHT | SOUND | 0.25 | Always | Four moans (custom sound) 6 blocks away, each 90° further round the player than the last, one every 2.25 s |
+| `cut_off_scream` | 135 | LIGHT | SOUND | 0.25 | Always | A scream (custom sound) 12 blocks away that is stopped dead 0.7 s in |
+| `banshee` | 150 | LIGHT | SOUND | 0.15 | Always | A 14 s shriek (custom sound) from 30 blocks away and 12 above, loud enough to carry |
 | `nausea` | 39 | LIGHT | AFFLICTION | 0.6 | No nausea | Nausea 5 s |
 | `heaviness` | 40 | LIGHT | AFFLICTION | 0.6 | No slowness | Slowness II 8 s |
 | `fatigue` | 41 | LIGHT | AFFLICTION | 0.6 | No mining fatigue | Mining fatigue II 10 s |

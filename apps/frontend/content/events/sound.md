@@ -4,7 +4,7 @@ title: Sound
 
 # Sound
 
-30 events.
+36 events.
 
 ## `footsteps`
 
@@ -92,7 +92,7 @@ Runs when: The player made a sound (step, splash, bite) in the last 5 s
 
 ## `death_cry`
 
-Player death sound nearby
+A scream (custom sound) nearby
 
 Runs when: Always
 
@@ -104,7 +104,7 @@ Runs when: Always
 
 ## `distant_mob`
 
-A zombie, skeleton, spider, enderman, witch, husk, drowned or pillager sound 2–40 blocks away; louder the farther, so it carries
+A zombie, skeleton, spider, enderman, witch, husk, drowned, pillager or ghostly moan sound 2–40 blocks away; louder the farther, so it carries
 
 Runs when: Always
 
@@ -177,9 +177,45 @@ Runs when: Always
 
 ## `note_block_voice`
 
-It plays a villager or player hurt, ghast scream, zombie villager or vex sound, with a note particle
+It plays a villager or player hurt, ghast scream, zombie villager, vex or ghostly moan sound, with a note particle
 
 Runs when: A note block within 16
+
+## `ghost_laugh`
+
+A ghostly laugh (custom sound) 9 blocks away
+
+Runs when: Always
+
+## `ghost_breath`
+
+A cold breath (custom sound) 0.8 blocks behind the player
+
+Runs when: Always
+
+## `close_whispers`
+
+Three whispers (custom sound) 1.5 blocks away at the player's ears, left and right in turn, one every 2.5 s
+
+Runs when: Always
+
+## `circling_moan`
+
+Four moans (custom sound) 6 blocks away, each 90° further round the player than the last, one every 2.25 s
+
+Runs when: Always
+
+## `cut_off_scream`
+
+A scream (custom sound) 12 blocks away that is stopped dead 0.7 s in
+
+Runs when: Always
+
+## `banshee`
+
+A 14 s shriek (custom sound) from 30 blocks away and 12 above, loud enough to carry
+
+Runs when: Always
 
 ## `own_voice`
 

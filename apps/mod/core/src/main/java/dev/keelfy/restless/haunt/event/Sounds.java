@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Said;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.ArrayList;
@@ -45,10 +46,10 @@ final class Sounds {
     private static final SoundType[] BREAKS = {SoundType.STONE, SoundType.WOOD, SoundType.GLASS, SoundType.GRAVEL};
     private static final SoundEvent[] MOBS = {
         SoundEvents.ZOMBIE_AMBIENT, SoundEvents.SKELETON_AMBIENT, SoundEvents.SPIDER_AMBIENT, SoundEvents.ENDERMAN_AMBIENT,
-        SoundEvents.WITCH_AMBIENT, SoundEvents.HUSK_AMBIENT, SoundEvents.DROWNED_AMBIENT, SoundEvents.PILLAGER_AMBIENT};
+        SoundEvents.WITCH_AMBIENT, SoundEvents.HUSK_AMBIENT, SoundEvents.DROWNED_AMBIENT, SoundEvents.PILLAGER_AMBIENT, HauntSounds.MOAN};
     private static final SoundEvent[] HOSTILE = {SoundEvents.ZOMBIE_AMBIENT, SoundEvents.CREEPER_PRIMED, SoundEvents.SKELETON_AMBIENT, SoundEvents.WITCH_AMBIENT};
     private static final SoundEvent[] VOICES = {
-        SoundEvents.VILLAGER_HURT, SoundEvents.PLAYER_HURT, SoundEvents.GHAST_SCREAM, SoundEvents.ZOMBIE_VILLAGER_AMBIENT, SoundEvents.VEX_AMBIENT};
+        SoundEvents.VILLAGER_HURT, SoundEvents.PLAYER_HURT, SoundEvents.GHAST_SCREAM, SoundEvents.ZOMBIE_VILLAGER_AMBIENT, SoundEvents.VEX_AMBIENT, HauntSounds.MOAN};
     /** Splash colours of a few potions, so the shatter reads as a real one. */
     private static final int[] POTION_COLORS = {0x8889A6, 0x87A363, 0x4E9331, 0x1F1FA1, 0xF82423, 0x484D48};
 
@@ -131,7 +132,7 @@ final class Sounds {
             // 36: the last step or splash the player made comes back from where it was made
             SimpleEvent.light("echo", EventTag.SOUND, Echoes::canReplay, Echoes::replay),
             // 37
-            at("death_cry", SoundEvents.PLAYER_DEATH),
+            at("death_cry", HauntSounds.SCREAM),
             // 38
             at("dripping", SoundEvents.POINTED_DRIPSTONE_DRIP_WATER),
             // 131: some monster, anywhere from right beside the player to the edge of hearing
@@ -174,6 +175,24 @@ final class Sounds {
                 Config.Tone tone = Config.event("note_block_voice").tone("sound");
                 player.level().playSound(null, block, VOICES[player.getRandom().nextInt(VOICES.length)], SoundSource.RECORDS, tone.volume(), tone.pitch());
                 player.level().sendParticles(ParticleTypes.NOTE, block.getX() + 0.5, block.getY() + 1.2, block.getZ() + 0.5, 0, player.getRandom().nextInt(25) / 24.0, 0, 0, 1);
+            }),
+            // 135: a laugh from nowhere
+            at("ghost_laugh", HauntSounds.LAUGH),
+            // 135: a breath at the nape of the neck
+            sound("ghost_breath", player -> {
+                Config.Section config = Config.event("ghost_breath");
+                Nearby.sound(player, HauntSounds.BREATH, Nearby.around(player, config.num("distance"), BEHIND), config.tone("sound"));
+            }),
+            // 135: whispers at one ear, then the other
+            sound("close_whispers", Sounds::whisperEars),
+            // 135: a moan that comes round the player from one bearing to the next
+            sound("circling_moan", Sounds::circle),
+            // 135: a scream, and then nothing, as if a hand closed over it
+            sound("cut_off_scream", Sounds::cutOffScream),
+            // 150: a shriek from far off and high up, loud enough to carry
+            sound("banshee", player -> {
+                Config.Section config = Config.event("banshee");
+                Nearby.sound(player, HauntSounds.SCREECH, Nearby.source(player, config.num("distance")).add(0, config.num("height"), 0), config.tone("sound"));
             })
         );
     }
@@ -204,6 +223,32 @@ final class Sounds {
                 new Config.Tone(start.volume() + (float) config.num("volume_step") * n, start.pitch()));
             return n + 1 < config.integer("breaths");
         });
+    }
+
+    private static void whisperEars(ServerPlayer player) {
+        Config.Section config = Config.event("close_whispers");
+        double side = player.getRandom().nextBoolean() ? 90.0 : -90.0;
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            Nearby.sound(p, HauntSounds.WHISPER, Nearby.around(p, config.num("distance"), n % 2 == 0 ? side : -side), config.tone("sound"));
+            return n + 1 < config.integer("whispers");
+        });
+    }
+
+    private static void circle(ServerPlayer player) {
+        Config.Section config = Config.event("circling_moan");
+        double start = player.getRandom().nextDouble() * Nearby.FULL_TURN;
+        double turn = player.getRandom().nextBoolean() ? config.num("step_degrees") : -config.num("step_degrees");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            Nearby.sound(p, HauntSounds.MOAN, Nearby.around(p, config.num("distance"), start + turn * n), config.tone("sound"));
+            return n + 1 < config.integer("moans");
+        });
+    }
+
+    private static void cutOffScream(ServerPlayer player) {
+        Config.Section config = Config.event("cut_off_scream");
+        Nearby.sound(player, HauntSounds.SCREAM, Nearby.source(player, config.num("distance")), config.tone("sound"));
+        Scheduler.later(player, config.integer("cut_ticks"),
+            p -> p.connection.send(new ClientboundStopSoundPacket(HauntSounds.SCREAM.location(), SoundSource.HOSTILE)));
     }
 
     private static void approach(ServerPlayer player) {

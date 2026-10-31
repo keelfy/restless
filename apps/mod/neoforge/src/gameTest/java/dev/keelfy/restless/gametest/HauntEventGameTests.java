@@ -85,7 +85,7 @@ final class HauntEventGameTests {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter",
             "stranger_joins", "stranger_death", "phantom_heartbeat", "fake_subtitle", "blinking", "dimming", "false_night", "false_slot", "turned_head", "dragon_flyover",
-            "approaching_steps", "distant_mining", "ladder_steps", "ravenous", "infested", "oozing", "weaving")) {
+            "approaching_steps", "ghost_laugh", "ghost_breath", "close_whispers", "circling_moan", "cut_off_scream", "banshee", "distant_mining", "ladder_steps", "ravenous", "infested", "oozing", "weaving")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
         tests.put("event_false_advancement", helper -> runs(helper, "false_advancement", player -> {}, () -> {

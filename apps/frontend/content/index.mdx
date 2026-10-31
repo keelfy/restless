@@ -47,7 +47,7 @@ export const Roster = ({ title, note, spirits }) => (
 
 export const EventLinks = () => (
   <p>
-    <Link href="/events">195 events</Link>, sorted by what they touch:{' '}
+    <Link href="/events">201 events</Link>, sorted by what they touch:{' '}
     {events.map(([name, id], i) => (
       <span key={id}>{i > 0 && ', '}<Link href={`/events/${id}`}>{name.toLowerCase()}</Link></span>
     ))}.
