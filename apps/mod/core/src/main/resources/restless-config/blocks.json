@@ -70,6 +70,8 @@
         ["I left", "these", "for you"],
         ["follow", "no further"]
       ]
-    }
+    },
+    "minecraft:walled_in": { "weight": 0.3, "min_blocks": 5, "knocks": 4, "knock_ticks": 5, "restore_ticks": 400, "fatigue_seconds": 20, "amplifier": 2, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "minecraft:sealed_tunnel": { "weight": 0.3, "min_distance": 2, "max_distance": 5, "max_blocks": 6, "restore_ticks": 1200, "sound": { "volume": 1.0, "pitch": 0.7 } }
   }
 }

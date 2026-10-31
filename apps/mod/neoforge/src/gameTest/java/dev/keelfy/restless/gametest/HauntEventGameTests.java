@@ -55,6 +55,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
@@ -200,6 +201,42 @@ final class HauntEventGameTests {
             player.setYRot(0);
             helper.setBlock(FEET.south(2).above(), Blocks.STONE);
         }, () -> helper.assertBlockPresent(Blocks.STONE, FEET.south(2).above())));
+        tests.put("event_walled_in", helper -> {
+            ServerPlayer[] walled = new ServerPlayer[1];
+            runs(helper, "walled_in", player -> {
+                player.setOnGround(true);
+                walled[0] = player;
+            }, () -> {
+                for (Direction side : Direction.Plane.HORIZONTAL) {
+                    helper.assertBlockPresent(Blocks.STONE, FEET.relative(side));
+                    helper.assertBlockPresent(Blocks.STONE, FEET.above().relative(side));
+                }
+                helper.assertBlockPresent(Blocks.STONE, FEET.above(2));
+                helper.assertBlockPresent(Blocks.AIR, FEET);
+                helper.assertBlockPresent(Blocks.AIR, FEET.above());
+                check(helper, walled[0].hasEffect(MobEffects.MINING_FATIGUE), "walled_in must give mining fatigue");
+            });
+        });
+        // A tunnel two wide and two high running north to south, roofed; the player looks south, so the way back is north.
+        tests.put("event_sealed_tunnel", helper -> runs(helper, "sealed_tunnel", player -> {
+            for (int z = 0; z <= 9; z++) {
+                for (int y = 1; y <= 2; y++) {
+                    helper.setBlock(new BlockPos(2, y, z), Blocks.STONE);
+                    helper.setBlock(new BlockPos(5, y, z), Blocks.STONE);
+                }
+                for (int x = 2; x <= 5; x++) {
+                    helper.setBlock(new BlockPos(x, 3, z), Blocks.STONE);
+                }
+            }
+            player.setYRot(0);
+            player.setOnGround(true);
+        }, () -> {
+            for (BlockPos pos : BlockPos.betweenClosed(FEET.north(2).west(), FEET.north(2).above())) {
+                helper.assertBlockPresent(Blocks.STONE, pos);
+            }
+            helper.assertBlockPresent(Blocks.AIR, FEET.north());
+            helper.assertBlockPresent(Blocks.AIR, FEET.south(2));
+        }));
         tests.put("event_leak", helper -> runs(helper, "leak",
             player -> helper.setBlock(FEET.above(3), Blocks.STONE), () -> helper.assertBlockPresent(Blocks.STONE, FEET.above(3))));
         tests.put("event_lava_leak", helper -> runs(helper, "lava_leak",
