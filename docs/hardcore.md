@@ -50,7 +50,8 @@ Total for the seam itself: about 3. The cost is in the per-event real branches.
 | `moving_tree` (108) | the tree moves, and moves back after 30 s | the tree stays where it moved |
 | `wilted_flowers` (72), `glass_wall`, `wall_hole`, `cross`, `shifting_floor`, `lantern_flicker`, `pillar` (121), `redstone_drift` (178), `enderman_takes` (198), `torch_swap` (112), `repaint` (104) | shown to the haunted player only, then the real blocks again | real swaps that stay (`Swaps.show`); see [block swaps](#block-swaps) |
 | `harvest` (122), `lost_growth` (110), `shuffled_books` (176) | undone later | stay (through `Restore`) |
-| `dragon_flyover` (127), the other-player events (119, 120, 123, 124), the other lies and sounds | — | unchanged |
+| `armor_stand` (128) | the stand is gone after 2 min | it stays where it ended up (a vanilla armor stand once its chunk reloads) |
+| `dragon_flyover` (127), the other-player events (119, 120, 123, 124, 201), the other lies and sounds | — | unchanged |
 
 ## Block swaps
 
