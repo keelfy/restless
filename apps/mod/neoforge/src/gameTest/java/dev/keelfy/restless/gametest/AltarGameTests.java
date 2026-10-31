@@ -49,6 +49,7 @@ public final class AltarGameTests {
         HauntEventGameTests.register(TESTS);
         HardcoreGameTests.register(TESTS);
         JournalGameTests.register(TESTS);
+        SanityGameTests.register(TESTS);
         TESTS.put("placement", helper -> {
             place(helper);
             check(helper, Altar.isComplete(helper.getLevel(), helper.absolutePos(CENTER)), "All nine parts must be present");

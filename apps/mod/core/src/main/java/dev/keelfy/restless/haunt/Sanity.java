@@ -6,6 +6,9 @@ import java.util.WeakHashMap;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 /**
  * Each player's grip, 0..1. It slips in the dark, inside a territorial spirit's reach and with every event; light, sleep,
@@ -49,7 +52,8 @@ public final class Sanity {
         int light = player.level().getMaxLocalRawBrightness(player.blockPosition());
         double drift = 0;
         if (light < config.integer("dark_light")) {
-            drift -= config.num("dark_loss");
+            boolean heldLight = emitsLight(player.getMainHandItem()) || emitsLight(player.getOffhandItem());
+            drift -= config.num("dark_loss") * (heldLight ? config.num("held_light_loss_multiplier") : 1.0);
         } else if (light >= config.integer("lit_light")) {
             drift += config.num("lit_gain");
         }
@@ -66,6 +70,12 @@ public final class Sanity {
             drift += config.num("ward_gain");
         }
         return drift;
+    }
+
+    /** Server-side light sources work even when held lighting is rendered only by a shader. */
+    private static boolean emitsLight(ItemStack stack) {
+        return !stack.isEmpty() && (stack.is(Items.LAVA_BUCKET)
+            || stack.getItem() instanceof BlockItem block && block.getBlock().defaultBlockState().getLightEmission() > 0);
     }
 
     /** An event just ran on the player. */

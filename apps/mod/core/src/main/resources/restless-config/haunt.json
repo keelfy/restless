@@ -38,6 +38,7 @@
     "lit_light": 10,
     "fed_food": 18,
     "dark_loss": 0.002,
+    "held_light_loss_multiplier": 0.5,
     "spirit_loss": 0.002,
     "event_loss": 0.04,
     "lit_gain": 0.001,
