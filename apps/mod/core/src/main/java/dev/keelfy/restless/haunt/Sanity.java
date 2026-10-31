@@ -80,6 +80,9 @@ public final class Sanity {
         if (clamped != of(player)) {
             HauntData.get(player.level().getServer()).putSanity(player.getUUID(), clamped);
         }
+        if (clamped < Config.section("sanity").num("overlay_below")) {
+            Journal.unlock(player, Notebook.Chapter.SANITY);
+        }
         sync(player, clamped);
     }
 

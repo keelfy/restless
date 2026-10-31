@@ -17,7 +17,6 @@ import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -184,13 +183,21 @@ public final class HauntData extends SavedData {
             Territorial.CODEC.listOf().fieldOf("territorial").forGetter(data -> data.territorial),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Grave.CODEC).optionalFieldOf("graves", Map.of()).forGetter(data -> data.graves),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.DOUBLE).optionalFieldOf("sanity", Map.of()).forGetter(data -> data.sanity),
-            Codec.unboundedMap(UUIDUtil.STRING_CODEC, ComponentSerialization.CODEC.listOf()).optionalFieldOf("journal", Map.of()).forGetter(data -> data.journal),
+            // Entries from before the journal kept notes; read once into OLD notes and never written again.
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, ComponentSerialization.CODEC.listOf()).optionalFieldOf("journal", Map.of()).forGetter(data -> Map.of()),
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Notebook.CODEC).optionalFieldOf("notebooks", Map.of()).forGetter(data -> data.notebooks),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Blight.CODEC).optionalFieldOf("blight", Map.of()).forGetter(data -> data.blight),
             Codec.BOOL.optionalFieldOf("hardcore").forGetter(data -> Optional.ofNullable(data.hardcore)),
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.unboundedMap(Codec.STRING, Spoken.CODEC)).optionalFieldOf("said", Map.of())
                 .forGetter(data -> data.said)
-        ).apply(i, (players, territorial, graves, sanity, journal, blight, hardcore, said) -> {
-            HauntData data = new HauntData(players, territorial, graves, sanity, journal, blight);
+        ).apply(i, (players, territorial, graves, sanity, journal, notebooks, blight, hardcore, said) -> {
+            HauntData data = new HauntData(players, territorial, graves, sanity, notebooks, blight);
+            journal.forEach((player, entries) -> {
+                List<Notebook.Note> notes = new ArrayList<>();
+                entries.forEach(e -> notes.add(new Notebook.Note(Notebook.Kind.OLD, Optional.empty(), Optional.empty(), List.of(e))));
+                notes.addAll(data.notebook(player).notes());
+                data.notebooks.put(player, new Notebook(List.copyOf(notes), data.notebook(player).chapters()));
+            });
             data.hardcore = hardcore.orElse(null);
             said.forEach((speaker, events) -> data.said.put(speaker, new HashMap<>(events)));
             return data;
@@ -207,8 +214,8 @@ public final class HauntData extends SavedData {
     private final Map<UUID, Grave> graves;
     /** Keyed by player, 0..1; a player not in it is fully sane. */
     private final Map<UUID, Double> sanity;
-    /** Keyed by player, oldest entry first. */
-    private final Map<UUID, List<Component>> journal;
+    /** Keyed by player. */
+    private final Map<UUID, Notebook> notebooks;
     /** Keyed by spirit; outlives the spirit until the land has healed. */
     private final Map<UUID, Blight> blight;
     /** Keyed by speaker, then by event id. */
@@ -221,12 +228,12 @@ public final class HauntData extends SavedData {
     }
 
     private HauntData(Map<UUID, List<Haunting>> hauntings, List<Territorial> territorial, Map<UUID, Grave> graves,
-                      Map<UUID, Double> sanity, Map<UUID, List<Component>> journal, Map<UUID, Blight> blight) {
+                      Map<UUID, Double> sanity, Map<UUID, Notebook> notebooks, Map<UUID, Blight> blight) {
         this.hauntings = new HashMap<>(hauntings);
         this.territorial = List.copyOf(territorial);
         this.graves = new HashMap<>(graves);
         this.sanity = new HashMap<>(sanity);
-        this.journal = new HashMap<>(journal);
+        this.notebooks = new HashMap<>(notebooks);
         this.blight = new HashMap<>(blight);
     }
 
@@ -344,20 +351,12 @@ public final class HauntData extends SavedData {
         setDirty();
     }
 
-    public List<Component> journal(UUID player) {
-        return journal.getOrDefault(player, List.of());
+    public Notebook notebook(UUID player) {
+        return notebooks.getOrDefault(player, Notebook.EMPTY);
     }
 
-    /** @return false when the player already has this exact entry */
-    public boolean write(UUID player, Component entry) {
-        List<Component> entries = journal(player);
-        if (entries.contains(entry)) {
-            return false;
-        }
-        List<Component> grown = new ArrayList<>(entries);
-        grown.add(entry);
-        journal.put(player, List.copyOf(grown));
+    public void putNotebook(UUID player, Notebook notebook) {
+        notebooks.put(player, notebook);
         setDirty();
-        return true;
     }
 }

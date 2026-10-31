@@ -51,7 +51,7 @@ public final class Evolution {
         Component now = Component.translatable("spirit.restless." + spirit.spirit() + "_evolved");
         player.level().playSound(null, player.blockPosition(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.HOSTILE, 1.0f, 0.6f);
         player.sendSystemMessage(Component.translatable("message.restless.evolved", was, now), true);
-        Journal.write(player, Component.translatable("journal.restless.evolved", Story.of(spirit.seed()).name(), was, now));
+        Journal.note(player, Notebook.Kind.EVOLVED, spirit, Story.of(spirit.seed()).name(), was, now);
     }
 
     /** The spirit's type as players read it: the grown-up name once it has evolved. */

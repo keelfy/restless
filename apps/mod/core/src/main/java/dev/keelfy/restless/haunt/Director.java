@@ -97,6 +97,7 @@ public final class Director {
                 rolled.add(bind(player, all.get(player.getRandom().nextInt(all.size())), now));
             }
             data.put(player.getUUID(), rolled);
+            Journal.begin(player);
             return data.get(player.getUUID());
         }
         // Drop spirits whose type no longer exists (renamed/removed between versions) or became territorial.
@@ -165,7 +166,10 @@ public final class Director {
      */
     public static void act(ServerPlayer player, HauntData.Haunting haunting, @Nullable Vec3 at, @Nullable HauntTier tier) {
         long now = player.level().getServer().overworld().getGameTime();
-        Said.during(haunting.uuid(), () -> pick(player, spirit(haunting), Traits.of(haunting.traits()), power(haunting, now), tier).ifPresent(event -> fire(player, event, at)));
+        Said.during(haunting.uuid(), () -> pick(player, spirit(haunting), Traits.of(haunting.traits()), power(haunting, now), tier).ifPresent(event -> {
+            fire(player, event, at);
+            Journal.unlock(player, Notebook.Chapter.HAUNTED);
+        }));
     }
 
     private static void fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
@@ -173,6 +177,7 @@ public final class Director {
             Wards.blocked(player);
         } else {
             fire(player, event, at);
+            Journal.unlock(player, Notebook.Chapter.HAUNTED);
         }
     }
 

@@ -114,7 +114,7 @@ public final class Graves {
         }
         Component thing = wanted.getDefaultInstance().getHoverName();
         player.sendSystemMessage(Component.translatable("message.restless.epitaph", story.name(), story.daysDead(), story.cause(), thing));
-        Journal.write(player, Component.translatable("journal.restless.grave", story.name(), pos.getX(), pos.getZ(), thing));
+        Journal.note(player, Notebook.Kind.GRAVE, spirit, story.name(), pos.getX(), pos.getZ(), thing);
         return false;
     }
 
@@ -133,6 +133,6 @@ public final class Graves {
         level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.BLOCKS, 1.0f, 0.7f);
         Component type = Evolution.name(spirit);
         player.sendSystemMessage(Component.translatable("message.restless.rested", story.name()), true);
-        Journal.write(player, Component.translatable("journal.restless.rested", story.name(), type));
+        Journal.note(player, Notebook.Kind.RESTED, spirit, story.name(), type);
     }
 }

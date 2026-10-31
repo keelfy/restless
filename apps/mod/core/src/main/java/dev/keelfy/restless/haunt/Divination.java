@@ -52,14 +52,16 @@ public final class Divination {
             player.sendSystemMessage(Component.translatable("message.restless.camera_empty"), true);
             return Optional.empty();
         }
-        Component type = Evolution.name(reading.get().spirit().haunting());
-        Journal.write(player, Component.translatable("journal.restless.photo", type, reading.get().trait().hint()));
+        HauntData.Haunting spirit = reading.get().spirit().haunting();
+        Component type = Evolution.name(spirit);
+        String hint = reading.get().trait().hint();
+        Component weakness = Component.translatable("focus.restless." + reading.get().trait().weakness().name().toLowerCase(java.util.Locale.ROOT));
+        Journal.note(player, Notebook.Kind.PHOTO, spirit, spirit.spirit() + (spirit.evolved() ? "_evolved" : ""), type, hint, weakness);
         ItemStack photo = new ItemStack(Content.PHOTO.get());
         photo.set(DataComponents.LORE, new ItemLore(List.of(
-            Component.translatable("item.restless.photo.silhouette", Evolution.name(reading.get().spirit().haunting())),
-            Component.translatable("item.restless.photo.hint", reading.get().trait().hint()),
-            Component.translatable("item.restless.photo.weakness",
-                Component.translatable("focus.restless." + reading.get().trait().weakness().name().toLowerCase(java.util.Locale.ROOT))))));
+            Component.translatable("item.restless.photo.silhouette", type),
+            Component.translatable("item.restless.photo.hint", hint),
+            Component.translatable("item.restless.photo.weakness", weakness))));
         return Optional.of(photo);
     }
 
@@ -72,9 +74,13 @@ public final class Divination {
             return;
         }
         Optional<Reading> reading = read(player, Clue.VOICE);
-        Component answer = reading.map(r -> Component.translatable("message.restless.spirit_box",
-            r.trait().words().get(r.random().nextInt(r.trait().words().size())))).orElse(Component.translatable("message.restless.spirit_box_static"));
-        Scheduler.later(player, config.integer("delay_ticks"), p -> p.sendSystemMessage(answer));
+        Optional<String> word = reading.map(r -> r.trait().words().get(r.random().nextInt(r.trait().words().size())));
+        Component answer = word.<Component>map(w -> Component.translatable("message.restless.spirit_box", w))
+            .orElse(Component.translatable("message.restless.spirit_box_static"));
+        Scheduler.later(player, config.integer("delay_ticks"), p -> {
+            p.sendSystemMessage(answer);
+            word.ifPresent(w -> Journal.note(p, Notebook.Kind.VOICE, reading.get().spirit().haunting(), w));
+        });
         // Only the shaken hear where the spirit lies; rounded, so the grave still has to be looked for.
         Optional<BlockPos> grave = reading.filter(r -> Sanity.shaken(player))
             .flatMap(r -> Graves.of(HauntData.get(player.level().getServer()), r.spirit().haunting().uuid()));
@@ -82,7 +88,7 @@ public final class Divination {
             int x = Math.round(pos.getX() / 10f) * 10;
             int z = Math.round(pos.getZ() / 10f) * 10;
             p.sendSystemMessage(Component.translatable("message.restless.spirit_box_grave", x, z));
-            Journal.write(p, Component.translatable("journal.restless.grave_whisper", x, z));
+            Journal.note(p, Notebook.Kind.GRAVE_WHISPER, reading.get().spirit().haunting(), x, z);
         }));
     }
 
@@ -98,7 +104,11 @@ public final class Divination {
         Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("letter_ticks"), (p, n) -> {
             p.sendSystemMessage(Component.literal(text.substring(0, n + 1)), true);
             p.level().playSound(null, p.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.BLOCKS, 0.4f, 1.5f);
-            return n + 1 < text.length();
+            if (n + 1 >= text.length()) {
+                Journal.note(p, Notebook.Kind.PLANCHETTE, reading.get().spirit().haunting(), reading.get().trait().hint());
+                return false;
+            }
+            return true;
         });
     }
 }

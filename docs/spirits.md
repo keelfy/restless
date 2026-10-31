@@ -214,12 +214,36 @@ spirit's grave is; nothing else gives the place away.
 
 ### Journal
 
-The **journal** (book, salt, ink sac) opens as a book of what its reader has learned; the entries are saved per player
-with the world, not on the item, so any journal shows them. Written when a photo names a trait, the spirit box whispers
-of a grave, a gravestone is read, a spirit goes to rest and a spirit is banished. Each new entry turns a page aloud.
+The **journal** (book, salt, ink sac) is put in every new player's inventory (`journal.give_on_join`) and can be crafted
+again. It opens as a book; its notebook is saved per player with the world (`notebooks` in the haunt data), not on the
+item, so any journal shows it. It keeps what the player saw, never conclusions: it does not work out a weakness or a type.
 
-Not built yet: diary pages and portraits in chests, the other quest kinds (bury remains, a letter to a descendant, a
-named killer mob, a killer spirit), hallucinations at very low sanity, and research: the journal unlocks no recipes.
+Notes are typed (`Notebook.Kind`) and tied to the spirit they came from: a photo (type, hint, weakness), a print in ash
+(every player within `ash.reach` of it), a spirit box word, the planchette's letters, the spirit box's word of a grave, a
+read gravestone, a dream, and the chronicle kinds: rested, banished, evolved. Each new note turns a page aloud; the same
+note is never written twice. `JournalPages` lays the notebook out as:
+
+- **Contents**: one clickable line per non-empty section.
+- **The last owner's notes**: the guide, chapters opened as the player runs into what each is about (`Notebook.Chapter`):
+  `start` with the journal, `haunted` at the first event a spirit runs on them, `clues` at the first clue, `weakness` at
+  the first photo, `graves` at the first grave or word of one, `sanity` when sanity first drops below
+  `sanity.overlay_below`, `evolution` at the first grown spirit, `essence` at the first spirit gone for good. Opening one
+  says so on the action bar.
+- **Spirits**: a dossier per spirit the player has *met* (photographed, or its grave read), named once its grave is
+  read and otherwise "an unnamed <type>", numbered when several share a type. It lists every note about that spirit,
+  including ones written before they met. Spirit box words and the planchette are marked "(it may lie)".
+- **Loose notes**: clues of spirits not met yet, without saying whose. They move to the dossier on meeting.
+- **Bestiary**: a page per type the player has photographed, with its grown name once a grown one was photographed, and
+  every trait hint a photo showed with what it shrinks from.
+- **Chronicle**: rested, banished, evolved, and entries from saves before typed notes (read once from the old `journal`
+  field).
+
+`journal.entries_per_page` notes fit on a page, `journal.traits_per_page` bestiary traits. Texts are `journal.restless.*`
+in the item lang files.
+
+Not built yet: a journal screen of its own (the book is a vanilla written book), diary pages and portraits in chests,
+the other quest kinds (bury remains, a letter to a descendant, a named killer mob, a killer spirit), hallucinations at
+very low sanity, and research: the journal unlocks no recipes.
 
 ## Spread and evolution
 

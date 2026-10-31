@@ -5,6 +5,7 @@ import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Journal;
+import dev.keelfy.restless.haunt.Notebook;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Sense;
 import dev.keelfy.restless.haunt.Ticks;
@@ -124,7 +125,7 @@ final class Afflictions {
                 slept[0] = true;
             } else if (slept[0]) {
                 p.sendSystemMessage(line);
-                Journal.write(p, line);
+                Journal.note(p, Notebook.Kind.DREAM, spirit.haunting(), line);
                 DREAMERS.remove(p.getUUID());
                 return false;
             }

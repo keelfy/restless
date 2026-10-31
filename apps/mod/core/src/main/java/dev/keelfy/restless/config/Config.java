@@ -209,6 +209,10 @@ public final class Config {
             return get(key).getAsInt();
         }
 
+        public boolean flag(String key) {
+            return get(key).getAsBoolean();
+        }
+
         public String text(String key) {
             return get(key).getAsString();
         }

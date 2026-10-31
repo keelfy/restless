@@ -3,11 +3,14 @@ package dev.keelfy.restless.content;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Clues;
 import dev.keelfy.restless.haunt.HauntData;
+import dev.keelfy.restless.haunt.Journal;
+import dev.keelfy.restless.haunt.Notebook;
 import dev.keelfy.restless.haunt.Sense;
 import dev.keelfy.restless.spirit.Clue;
 import dev.keelfy.restless.spirit.Traits;
 import java.util.Random;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -51,7 +54,11 @@ public final class AshBlock extends CarpetBlock {
         for (Sense.Spirit spirit : Sense.around(level, pos, Config.section("ash").integer("reach"), data)) {
             HauntData.Haunting haunting = spirit.haunting();
             if (Clues.reveal(Traits.of(haunting.traits()), Traits.all(), Clue.FOOTPRINTS, new Random(haunting.seed())).isPresent()) {
-                level.setBlock(pos, state.setValue(PRINT, 1 + (int) Math.floorMod(haunting.seed(), (long) PRINTS)), 3);
+                int print = 1 + (int) Math.floorMod(haunting.seed(), (long) PRINTS);
+                level.setBlock(pos, state.setValue(PRINT, print), 3);
+                int reach = Config.section("ash").integer("reach");
+                level.players().stream().filter(p -> p.blockPosition().closerThan(pos, reach))
+                    .forEach(p -> Journal.note(p, Notebook.Kind.FOOTPRINTS, haunting, Component.translatable("journal.restless.print." + print)));
                 return;
             }
         }

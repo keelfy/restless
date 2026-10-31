@@ -477,7 +477,7 @@ final class HauntEventGameTests {
                 check(helper, player.startSleeping(helper.absolutePos(FEET.west(3))), "the test player must be able to lie in the bed");
                 helper.runAfterDelay(12, player::stopSleeping);
             }, () -> {
-                check(helper, !data.journal(dreamer[0].getUUID()).isEmpty(), "dream must write the dream in the journal on waking");
+                check(helper, !data.notebook(dreamer[0].getUUID()).notes().isEmpty(), "dream must write the dream in the journal on waking");
                 data.put(dreamer[0].getUUID(), List.of());
             });
         });
@@ -819,7 +819,7 @@ final class HauntEventGameTests {
      * A survival player with a connection that swallows packets. Kept out of the player list, which would send it the
      * mod's payloads, and a mock connection has no channels for them.
      */
-    private static ServerPlayer connected(GameTestHelper helper) {
+    static ServerPlayer connected(GameTestHelper helper) {
         ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
         Connection connection = new Connection(PacketFlow.SERVERBOUND);
         new EmbeddedChannel(connection);
