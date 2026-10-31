@@ -11,17 +11,19 @@ public final class HeadTurn {
     private static long start;
     private static int total;
     private static float degrees;
+    private static float pitch;
     /** The eased share of the turn already made. */
     private static double done;
 
     private HeadTurn() {}
 
-    public static void start(float yaw, int ticks) {
+    public static void start(float yaw, float up, int ticks) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.level != null && ticks > 0) {
             start = minecraft.level.getGameTime();
             total = ticks;
             degrees = yaw;
+            pitch = up;
             done = 0;
         }
     }
@@ -35,10 +37,14 @@ public final class HeadTurn {
         double progress = Math.clamp((minecraft.level.getGameTime() - start + delta.getGameTimeDeltaPartialTick(false)) / total, 0.0, 1.0);
         double eased = progress * progress * (3 - 2 * progress);
         float step = (float) (degrees * (eased - done));
+        double before = done;
         done = eased;
         // Both the rotation and the one the frame interpolates from, as a mouse turn does, so nothing snaps back.
         minecraft.player.setYRot(minecraft.player.getYRot() + step);
         minecraft.player.yRotO += step;
+        float tilt = (float) (pitch * (eased - before));
+        minecraft.player.setXRot(Math.clamp(minecraft.player.getXRot() + tilt, -90.0F, 90.0F));
+        minecraft.player.xRotO = Math.clamp(minecraft.player.xRotO + tilt, -90.0F, 90.0F);
         if (progress >= 1.0) {
             total = 0;
         }

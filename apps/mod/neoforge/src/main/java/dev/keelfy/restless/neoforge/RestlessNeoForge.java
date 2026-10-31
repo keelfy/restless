@@ -37,7 +37,7 @@ public final class RestlessNeoForge {
             .playToClient(DoorLockPayload.TYPE, DoorLockPayload.CODEC,
                 (payload, context) -> DoorLocks.put(context.player().level(), payload.pos(), payload.ticks()))
             .playToClient(DimPayload.TYPE, DimPayload.CODEC, (payload, context) -> Dimming.start(payload))
-            .playToClient(TurnPayload.TYPE, TurnPayload.CODEC, (payload, context) -> HeadTurn.start(payload.degrees(), payload.ticks()))
+            .playToClient(TurnPayload.TYPE, TurnPayload.CODEC, (payload, context) -> HeadTurn.start(payload.degrees(), payload.pitch(), payload.ticks()))
             .playToClient(VignettePayload.TYPE, VignettePayload.CODEC, (payload, context) -> RedVignette.start(payload.strength(), payload.ticks()))
             .playToClient(SanityPayload.TYPE, SanityPayload.CODEC, (payload, context) -> SanityOverlay.set(payload.sanity()))
             .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))

@@ -228,7 +228,10 @@ final class Lies {
                         return;
                     }
                     float toward = (float) (Mth.atan2(at.z - p.getZ(), at.x - p.getX()) * Mth.RAD_TO_DEG) - 90.0F;
-                    p.connection.send(new ClientboundCustomPayloadPacket(new TurnPayload(Mth.wrapDegrees(toward - p.getYRot()), config.integer("ticks"))));
+                    // Up or down as well, so a player looking at the floor ends up looking at the spirit, not at the floor.
+                    double flat = Math.hypot(at.x - p.getX(), at.z - p.getZ());
+                    float up = (float) (-Mth.atan2(at.y + 1.0 - p.getEyeY(), flat) * Mth.RAD_TO_DEG) - p.getXRot();
+                    p.connection.send(new ClientboundCustomPayloadPacket(new TurnPayload(Mth.wrapDegrees(toward - p.getYRot()), up, config.integer("ticks"))));
                 });
             }),
             // 124: someone joins, is in the player list (which then opens even in single player), and leaves a while later
