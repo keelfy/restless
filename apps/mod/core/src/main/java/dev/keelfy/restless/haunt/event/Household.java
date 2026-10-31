@@ -12,11 +12,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
@@ -29,6 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.ChestBlock;
@@ -39,12 +42,16 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.entity.DecoratedPotBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -54,6 +61,9 @@ final class Household {
     private static final int SHUFFLE_TRIES = 8;
 
     private static final int OUTPUT_SLOT = 2;
+
+    /** No drops, no neighbour or shape updates: a moved chest keeps its items and a bed half does not break off. */
+    private static final int CARRY = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
 
     private Household() {}
 
@@ -84,7 +94,9 @@ final class Household {
             // 182: what came out of the furnace is not what went in
             SimpleEvent.light("wrong_smelt", EventTag.DOORS, player -> !smelted(player).isEmpty(), Household::swapOutput),
             // 186: something left on the outer side of a door
-            SimpleEvent.light("doorstep_gift", EventTag.DOORS, player -> doorstep(player) != null, Household::leaveGift)
+            SimpleEvent.light("doorstep_gift", EventTag.DOORS, player -> doorstep(player) != null, Household::leaveGift),
+            // 103: moved back only if both spots are as it left them
+            SimpleEvent.harmful("furniture_moves", EventTag.DOORS, player -> Nearby.any(player, "furniture_moves", Household::furniture), Household::moveFurniture)
         );
     }
 
@@ -328,5 +340,69 @@ final class Household {
             level.levelEvent(LevelEvent.SOUND_DISPENSER_PROJECTILE_LAUNCH, pos, 0);
             level.levelEvent(LevelEvent.PARTICLES_SHOOT_SMOKE, pos, face.get3DDataValue());
         });
+    }
+
+    /** A lone chest, a crafting table, any furnace, or the foot of a bed nobody lies in. */
+    private static boolean furniture(BlockState state) {
+        return state.getBlock() instanceof ChestBlock && state.getValue(ChestBlock.TYPE) == ChestType.SINGLE
+            || state.is(Blocks.CRAFTING_TABLE)
+            || state.getBlock() instanceof AbstractFurnaceBlock
+            || state.getBlock() instanceof BedBlock && state.getValue(BedBlock.PART) == BedPart.FOOT && !state.getValue(BedBlock.OCCUPIED);
+    }
+
+    /** What it fills from {@code pos}: the block, and for a bed's foot the head too. */
+    private static List<BlockPos> cells(BlockState state, BlockPos pos) {
+        return state.getBlock() instanceof BedBlock ? List.of(pos, pos.relative(state.getValue(BedBlock.FACING))) : List.of(pos);
+    }
+
+    /** It stands somewhere else nearby; moved back after a while if nothing took either spot, and under hardcore it stays. */
+    private static void moveFurniture(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "furniture_moves", Household::furniture);
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        Config.Section config = Config.event("furniture_moves");
+        BlockState state = level.getBlockState(pos);
+        BlockPos spot = Place.near(player, pos, config.integer("min_distance"), config.integer("max_distance"),
+            at -> cells(state, at).stream().allMatch(cell -> Place.floored(level, cell) && !player.getBoundingBox().intersects(new AABB(cell))));
+        if (spot == null) {
+            return;
+        }
+        List<BlockPos> from = cells(state, pos);
+        List<BlockPos> to = cells(state, spot);
+        carry(level, from, to);
+        Restore.revert(level, config.integer("restore_ticks"), force -> {
+            if (!force && !(level.isLoaded(pos) && level.isLoaded(spot))) {
+                return false;
+            }
+            if (to.stream().allMatch(cell -> level.getBlockState(cell).is(state.getBlock())) && from.stream().allMatch(level::isEmptyBlock)) {
+                carry(level, to, from);
+            }
+            return true;
+        });
+    }
+
+    /** Each cell's state goes to the matching cell, its block entity through the entity's own save format. */
+    private static void carry(ServerLevel level, List<BlockPos> from, List<BlockPos> to) {
+        List<BlockState> states = new ArrayList<>();
+        List<@Nullable CompoundTag> data = new ArrayList<>();
+        for (BlockPos cell : from) {
+            states.add(level.getBlockState(cell));
+            BlockEntity entity = level.getBlockEntity(cell);
+            data.add(entity == null ? null : entity.saveWithoutMetadata(level.registryAccess()));
+        }
+        for (BlockPos cell : from) {
+            level.setBlock(cell, Blocks.AIR.defaultBlockState(), CARRY);
+        }
+        for (int i = 0; i < to.size(); i++) {
+            level.setBlock(to.get(i), states.get(i), CARRY);
+            CompoundTag tag = data.get(i);
+            BlockEntity entity = level.getBlockEntity(to.get(i));
+            if (tag != null && entity != null) {
+                entity.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag));
+                entity.setChanged();
+            }
+        }
     }
 }

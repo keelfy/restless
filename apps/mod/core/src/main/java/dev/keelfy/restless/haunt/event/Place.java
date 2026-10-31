@@ -90,6 +90,24 @@ final class Place {
         return null;
     }
 
+    /** An empty block {@code min} to {@code max} blocks from {@code centre}, a layer up or down, that passes {@code ok}. */
+    static @Nullable BlockPos near(ServerPlayer player, BlockPos centre, int min, int max, Predicate<BlockPos> ok) {
+        for (int i = 0; i < config().integer("tries"); i++) {
+            BlockPos base = scatter(player, Vec3.atBottomCenterOf(centre), min, max);
+            for (int dy = 1; dy >= -1; dy--) {
+                if (ok.test(base.above(dy))) {
+                    return base.above(dy);
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Loaded air on a solid floor. */
+    static boolean floored(ServerLevel level, BlockPos pos) {
+        return level.isLoaded(pos) && level.isEmptyBlock(pos) && level.getBlockState(pos.below()).isSolidRender();
+    }
+
     /** The centre of a plus of five free blocks lying on solid ground, {@code min} to {@code max} blocks away. */
     static @Nullable BlockPos cross(ServerPlayer player, int min, int max) {
         ServerLevel level = player.level();
@@ -181,8 +199,12 @@ final class Place {
     }
 
     private static BlockPos scatter(ServerPlayer player, int min, int max) {
+        return scatter(player, player.position(), min, max);
+    }
+
+    private static BlockPos scatter(ServerPlayer player, Vec3 around, int min, int max) {
         double angle = player.getRandom().nextDouble() * Math.PI * 2;
         double distance = min + player.getRandom().nextDouble() * (max - min);
-        return BlockPos.containing(player.getX() + Math.cos(angle) * distance, player.getY(), player.getZ() + Math.sin(angle) * distance);
+        return BlockPos.containing(around.x + Math.cos(angle) * distance, around.y, around.z + Math.sin(angle) * distance);
     }
 }

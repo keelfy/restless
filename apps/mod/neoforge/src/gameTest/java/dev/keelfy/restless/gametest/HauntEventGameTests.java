@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
@@ -227,6 +228,16 @@ final class HauntEventGameTests {
         }, () -> {
             ItemStack output = helper.getBlockEntity(FEET.west(2), AbstractFurnaceBlockEntity.class).getItem(2);
             check(helper, (output.is(Items.CHARCOAL) || output.is(Items.ROTTEN_FLESH)) && output.getCount() == 3, "wrong_smelt must change the output and keep its count");
+        }));
+        tests.put("event_furniture_moves", helper -> runs(helper, "furniture_moves", player -> {
+            helper.setBlock(FEET.west(2), Blocks.CHEST);
+            helper.getBlockEntity(FEET.west(2), ChestBlockEntity.class).setItem(0, new ItemStack(Items.DIAMOND, 5));
+        }, () -> {
+            helper.assertBlockPresent(Blocks.AIR, FEET.west(2));
+            check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-9, -2, -9), helper.absolutePos(FEET).offset(9, 2, 9))
+                .anyMatch(pos -> helper.getLevel().getBlockEntity(pos) instanceof ChestBlockEntity chest && ItemStack.matches(chest.getItem(0), new ItemStack(Items.DIAMOND, 5))),
+                "furniture_moves must carry the chest and its item elsewhere");
+            check(helper, helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(FEET.west(2))).inflate(2)).isEmpty(), "furniture_moves must drop nothing");
         }));
         tests.put("event_doorstep_gift", helper -> runs(helper, "doorstep_gift", player -> helper.setBlock(FEET.west(3), Blocks.OAK_DOOR),
             () -> check(helper, !helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(FEET)).inflate(6)).isEmpty(),
