@@ -48,19 +48,6 @@ public final class RedVignette {
         double depth = Math.min(1.0, Math.min(progress / IN, (1 - progress) / OUT));
         int width = graphics.guiWidth();
         int height = graphics.guiHeight();
-        int reach = Math.max(1, Math.min(width, height) / 3);
-        double peak = Math.min(1.0, strength * depth);
-        for (int i = 0; i < reach; i++) {
-            double fade = 1.0 - (double) i / reach;
-            int alpha = (int) Math.round(255 * peak * fade * fade);
-            if (alpha == 0) {
-                break;
-            }
-            int color = alpha << 24 | RED;
-            graphics.fill(i, i, width - i, i + 1, color);
-            graphics.fill(i, height - i - 1, width - i, height - i, color);
-            graphics.fill(i, i + 1, i + 1, height - i - 1, color);
-            graphics.fill(width - i - 1, i + 1, width - i, height - i - 1, color);
-        }
+        EdgeFade.draw(graphics, RED, Math.max(1, Math.min(width, height) / 3), strength * depth);
     }
 }

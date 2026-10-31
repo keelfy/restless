@@ -9,8 +9,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
  * falls.
  */
 public final class SanityOverlay {
-    private static final int BANDS = 8;
-
     private static float sanity = 1.0f;
 
     private SanityOverlay() {}
@@ -19,7 +17,7 @@ public final class SanityOverlay {
         sanity = value;
     }
 
-    /** Draws as a HUD layer: nested frames, so the edges stack the most layers and are darkest. */
+    /** Draws as a HUD layer: smooth fade, see EdgeFade. */
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
         Config.Section config = Config.section("sanity");
         double below = config.num("overlay_below");
@@ -29,14 +27,6 @@ public final class SanityOverlay {
         }
         int width = graphics.guiWidth();
         int height = graphics.guiHeight();
-        int step = Math.max(1, Math.min(width, height) / (BANDS * 3));
-        int color = (int) (255 * config.num("overlay_peak") * depth / BANDS) << 24;
-        for (int i = 1; i <= BANDS; i++) {
-            int t = (int) (step * i * depth);
-            graphics.fill(0, 0, width, t, color);
-            graphics.fill(0, height - t, width, height, color);
-            graphics.fill(0, t, t, height - t, color);
-            graphics.fill(width - t, t, width, height - t, color);
-        }
+        EdgeFade.draw(graphics, 0, (int) (Math.min(width, height) / 3 * depth), config.num("overlay_peak") * depth);
     }
 }
