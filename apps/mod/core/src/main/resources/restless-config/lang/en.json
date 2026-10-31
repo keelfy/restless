@@ -188,6 +188,7 @@
     "minecraft:wrong_smelt": { "name": "Wrong Smelt", "description": "The output of a furnace turns into charcoal or rotten flesh, and comes back after two minutes unless taken." },
     "minecraft:furniture_moves": { "name": "Moved Furniture", "description": "A chest, crafting table, furnace or bed nearby now stands a few blocks away, contents and all; it is moved back after five minutes if both spots are untouched." },
     "minecraft:doorstep_gift": { "name": "Doorstep Gift", "description": "A flower, a bone or raw rabbit lies outside a nearby door." },
+    "minecraft:muddy_footprints": { "name": "Muddy Footprints", "description": "Muddy footprints cross the room to a bed or a chest, until they are gone." },
     "minecraft:portal_out": { "name": "Portal Out", "description": "The nether portal nearby breaks for good, every block of it, with a fizzle; the frame is left standing." },
     "minecraft:block_blink": { "name": "Block Blink", "description": "The block the player looks at breaks with its sound and dust, and is back two seconds later." },
     "minecraft:leak": { "name": "Leak", "description": "Water drips from the ceiling overhead for a few seconds; only seen and heard." },

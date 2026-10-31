@@ -1,6 +1,8 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.Footprints;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
@@ -50,6 +52,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -96,7 +99,9 @@ final class Household {
             // 186: something left on the outer side of a door
             SimpleEvent.light("doorstep_gift", EventTag.DOORS, player -> doorstep(player) != null, Household::leaveGift),
             // 103: moved back only if both spots are as it left them
-            SimpleEvent.harmful("furniture_moves", EventTag.DOORS, player -> Nearby.any(player, "furniture_moves", Household::furniture), Household::moveFurniture)
+            SimpleEvent.harmful("furniture_moves", EventTag.DOORS, player -> Nearby.any(player, "furniture_moves", Household::furniture), Household::moveFurniture),
+            // 184: prints from where the player stands to a bed or a chest, one pair at a time
+            SimpleEvent.light("muddy_footprints", EventTag.DOORS, player -> !trail(player).isEmpty(), Household::walkMud)
         );
     }
 
@@ -169,6 +174,88 @@ final class Household {
         List<String> gifts = Config.event("doorstep_gift").texts("items");
         Item gift = BuiltInRegistries.ITEM.getValue(Identifier.parse(gifts.get(player.getRandom().nextInt(gifts.size()))));
         player.level().addFreshEntity(new ItemEntity(player.level(), step.getX() + 0.5, step.getY() + 0.2, step.getZ() + 0.5, new ItemStack(gift), 0, 0, 0));
+    }
+
+    /** One pair of prints: where it lies and the way it points. */
+    private record Print(BlockPos pos, Direction facing) {}
+
+    private static boolean mudTarget(BlockState state) {
+        return state.getBlock() instanceof BedBlock || state.getBlock() instanceof ChestBlock;
+    }
+
+    /** Indoors only (a roof overhead, read off the heightmap since sky light lags): the floor path from the player up to a bed or chest on their level, or nothing if none is reachable. */
+    private static List<Print> trail(ServerPlayer player) {
+        ServerLevel level = player.level();
+        BlockPos from = player.blockPosition();
+        if (level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, from.getX(), from.getZ()) <= from.getY() + 2) {
+            return List.of();
+        }
+        Config.Section config = Config.event("muddy_footprints");
+        List<BlockPos> targets = new ArrayList<>(Nearby.all(player, "muddy_footprints", Household::mudTarget).stream().filter(pos -> pos.getY() == from.getY()).toList());
+        Collections.shuffle(targets, new java.util.Random(player.getRandom().nextLong()));
+        for (BlockPos target : targets) {
+            List<Print> path = walk(level, from, target, config.integer("max_steps"));
+            if (path.size() >= config.integer("min_prints")) {
+                return path;
+            }
+        }
+        return List.of();
+    }
+
+    /** Each step goes to the free floor beside it that is closest to the target; the walk ends next to it, or fails at a wall. */
+    private static List<Print> walk(ServerLevel level, BlockPos from, BlockPos target, int maxSteps) {
+        List<Print> path = new ArrayList<>();
+        BlockPos at = from;
+        for (int i = 0; i < maxSteps && steps(at, target) > 1; i++) {
+            Print next = null;
+            for (Direction d : Direction.Plane.HORIZONTAL) {
+                BlockPos to = at.relative(d);
+                if (steps(to, target) < steps(at, target) && level.isEmptyBlock(to) && Place.solid(level, to.below())
+                    && (next == null || steps(to, target) < steps(next.pos(), target))) {
+                    next = new Print(to, d);
+                }
+            }
+            if (next == null) {
+                return List.of();
+            }
+            path.add(next);
+            at = next.pos();
+        }
+        return steps(at, target) <= 1 ? path : List.of();
+    }
+
+    private static int steps(BlockPos a, BlockPos b) {
+        return Math.abs(a.getX() - b.getX()) + Math.abs(a.getZ() - b.getZ());
+    }
+
+    /** Every first or second step of the path gets a pair of prints with a squelch; each is wiped later unless hardcore. */
+    private static void walkMud(ServerPlayer player) {
+        List<Print> path = trail(player);
+        ServerLevel level = player.level();
+        Config.Section config = Config.event("muddy_footprints");
+        Config.Tone tone = config.tone("sound");
+        int delay = 0;
+        for (int i = 0; i < path.size(); i += 1 + player.getRandom().nextInt(2)) {
+            Print print = path.get(i);
+            BlockState state = Content.FOOTPRINTS.get().defaultBlockState().setValue(Footprints.FACING, print.facing());
+            Scheduler.later(player, delay, p -> {
+                if (!level.isEmptyBlock(print.pos())) {
+                    return;
+                }
+                level.setBlock(print.pos(), state, Block.UPDATE_ALL);
+                level.playSound(null, print.pos(), SoundEvents.MUD_STEP, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+                Restore.revert(level, config.integer("restore_ticks"), force -> {
+                    if (!force && !level.isLoaded(print.pos())) {
+                        return false;
+                    }
+                    if (level.getBlockState(print.pos()).is(Content.FOOTPRINTS.get())) {
+                        level.removeBlock(print.pos(), false);
+                    }
+                    return true;
+                });
+            });
+            delay += config.integer("step_ticks");
+        }
     }
 
     private static List<BlockPos> turnable(ServerPlayer player) {
