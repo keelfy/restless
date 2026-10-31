@@ -1,47 +1,185 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
+/* Restless theme on top of nextra-theme-docs. Dark only: deepslate, bone text, soul fire. */
 
 :root {
-  --radius: 0.5rem;
-  --background: oklch(0.145 0.01 280);
-  --foreground: oklch(0.93 0.01 280);
-  --card: oklch(0.19 0.012 280);
-  --card-foreground: oklch(0.93 0.01 280);
-  --primary: oklch(0.55 0.2 25);
-  --primary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.24 0.012 280);
-  --muted-foreground: oklch(0.7 0.015 280);
-  --accent: oklch(0.26 0.015 280);
-  --accent-foreground: oklch(0.93 0.01 280);
-  --border: oklch(0.28 0.012 280);
-  --input: oklch(0.32 0.012 280);
-  --ring: oklch(0.55 0.2 25);
+  --deepslate: #202226;
+  --deepslate-raised: #2a2c31;
+  --bone: #ddd6c6;
+  --ash: #948e82;
+  --soul: #4fd1cb;
+  --blood: #c4594e;
+
+  --x-font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --radius-md: calc(var(--radius) - 2px);
+body {
+  color: var(--bone);
+  font-size: 1.0625rem;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground antialiased;
-  }
+/* Grimoire headings */
+.logo,
+article h1,
+article h2,
+article h3 {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  color: var(--bone);
+}
+
+article h1 {
+  font-size: 2.75rem;
+  line-height: 1.1;
+}
+
+article h2 {
+  font-size: 1.85rem;
+  border-color: var(--deepslate-raised);
+}
+
+article h3 {
+  font-size: 1.45rem;
+}
+
+article p,
+article li {
+  line-height: 1.65;
+  max-width: 68ch;
+}
+
+/* Event ids in headings read as names, not code */
+article h2 code.nextra-code,
+.nextra-toc code.nextra-code {
+  font-size: 0.8em;
+  color: var(--soul);
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.nextra-toc code.nextra-code {
+  color: inherit;
+}
+
+/* "Harmful." marker on events */
+article p > strong:first-child {
+  color: var(--blood);
+  font-weight: 700;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--soul) 35%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--soul);
+  outline-offset: 2px;
+}
+
+/* Home */
+
+.home {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 6rem;
+}
+
+.home-hero h1 {
+  font-size: clamp(4rem, 14vw, 9.5rem);
+  line-height: 0.9;
+  margin: 0 0 2rem;
+  color: var(--bone);
+  text-shadow: 0 0 0.4em color-mix(in srgb, var(--soul) 45%, transparent);
+  animation: kindle 2.4s ease-out both;
+}
+
+.home-lede {
+  font-size: 1.3rem;
+  line-height: 1.55;
+  max-width: 34em;
+  color: var(--bone);
+}
+
+.home-rosters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: 3rem 4rem;
+  margin-top: 5rem;
+}
+
+.roster h2 {
+  font-size: 1.6rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.roster-note {
+  color: var(--ash);
+  margin: 0.25rem 0 1.25rem;
+}
+
+.roster ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.roster li {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--deepslate-raised);
+  max-width: none;
+}
+
+.roster li a {
+  font-family: var(--font-display), serif;
+  font-size: 1.5rem;
+  color: var(--bone);
+  text-decoration: none;
+}
+
+.roster li a:hover {
+  color: var(--soul);
+}
+
+.roster li span {
+  color: var(--ash);
+}
+
+.home-events {
+  margin-top: 4.5rem;
+  font-size: 1.2rem;
+  color: var(--ash);
+}
+
+.home-events a {
+  color: var(--soul);
+  text-underline-offset: 0.2em;
+}
+
+/* A torch catching: dark, two failed sparks, then steady */
+@keyframes kindle {
+  0% { opacity: 0; text-shadow: none; }
+  18% { opacity: 0.7; }
+  24% { opacity: 0.15; }
+  40% { opacity: 0.85; }
+  46% { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero h1 { animation: none; }
+}
+
+@media (max-width: 30rem) {
+  .home { padding: 3rem 0.5rem 4rem; }
+  .roster li { grid-template-columns: 1fr; gap: 0; }
 }

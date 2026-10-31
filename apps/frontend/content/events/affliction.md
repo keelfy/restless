@@ -50,49 +50,49 @@ Runs when: Always
 
 ## `poison`
 
-Harmful.
+**Harmful.**
 Poison 5 s (cannot kill)
 
 Runs when: Not poisoned
 
 ## `weakness`
 
-Harmful.
+**Harmful.**
 Weakness 30 s
 
 Runs when: No weakness
 
 ## `levitation`
 
-Harmful.
+**Harmful.**
 Levitation 2 s, then the fall
 
 Runs when: No levitation
 
 ## `frostbite`
 
-Harmful.
+**Harmful.**
 Powder-snow freeze for about 3 s
 
 Runs when: Health > 3 hearts, not freezing
 
 ## `drained`
 
-Harmful.
+**Harmful.**
 Loses 5–14 XP points
 
 Runs when: Player has XP
 
 ## `bad_luck`
 
-Harmful.
+**Harmful.**
 Bad luck 5 min
 
 Runs when: No bad luck
 
 ## `insomnia`
 
-Harmful.
+**Harmful.**
 The player's "time since rest" is set to 144000 (past three days), so phantoms come the next night; sleeping resets it
 
 Runs when: Not peaceful, fewer than 144000 ticks since rest
@@ -111,7 +111,7 @@ Runs when: No hunger effect
 
 ## `infested`
 
-Harmful.
+**Harmful.**
 Infested for 30 s: silverfish come out when the player is hurt
 
 Runs when: No infested effect

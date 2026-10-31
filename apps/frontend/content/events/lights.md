@@ -80,14 +80,14 @@ Runs when: A jack o'lantern within 10
 
 ## `blackout`
 
-Harmful.
+**Harmful.**
 Torches break, candles, campfires and lit lamps within 16 go out; 0.75 s later a zombie or skeleton appears 5–9 blocks away and targets the player
 
 Runs when: Not peaceful, not daylight under open sky, a light within 16, standing room 5–9 blocks away
 
 ## `burning_hand`
 
-Harmful.
+**Harmful.**
 The item drops out of the hand
 
 Runs when: Torch or lantern in main hand

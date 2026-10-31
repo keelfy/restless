@@ -1,0 +1,71 @@
+---
+title: Restless
+---
+
+import Link from 'next/link'
+
+export const personal = [
+  ['Shade', 'shade', 'puts out lights and whispers'],
+  ['Phantom', 'phantom', 'pretends to be other players'],
+  ['Mimic', 'mimic', 'shows things that are not there'],
+  ['Wraith', 'wraith', 'hunts in the dark'],
+  ['Mara', 'mara', 'comes while you sleep'],
+  ['Banshee', 'banshee', 'a voice, rarely more'],
+  ['Revenant', 'revenant', 'pays back every kill'],
+  ['Lost one', 'lost-one', 'wanders the deep'],
+]
+
+export const territorial = [
+  ['Poltergeist', 'poltergeist', 'doors and belongings'],
+  ['Nix', 'nix', 'lives in the water'],
+  ['Domovoi', 'domovoi', 'keeps the house'],
+  ['Hoarder', 'hoarder', 'takes your items'],
+  ['Demon', 'demon', 'the dangerous one'],
+  ['Trickster', 'trickster', 'changes blocks and items'],
+]
+
+export const events = [
+  ['Lights', 'lights'], ['Doors', 'doors'], ['Affliction', 'affliction'],
+  ['Assault', 'assault'], ['Sound', 'sound'], ['Water', 'water'],
+  ['Mobs', 'mobs'], ['Items', 'items'], ['Blocks', 'blocks'], ['Presence', 'presence'],
+]
+
+export const Roster = ({ title, note, spirits }) => (
+  <section className="roster">
+    <h2>{title}</h2>
+    <p className="roster-note">{note}</p>
+    <ul>
+      {spirits.map(([name, id, line]) => (
+        <li key={id}>
+          <Link href={`/spirits#${id}`}>{name}</Link>
+          <span>{line}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+)
+
+export const EventLinks = () => (
+  <p>
+    <Link href="/events">195 events</Link>, sorted by what they touch:{' '}
+    {events.map(([name, id], i) => (
+      <span key={id}>{i > 0 && ', '}<Link href={`/events/${id}`}>{name.toLowerCase()}</Link></span>
+    ))}.
+  </p>
+)
+
+<div className="home">
+  <header className="home-hero">
+    <h1>Restless</h1>
+    <div className="home-lede">{'A horror mod for Minecraft. Spirits settle near you and act on their own: a torch goes out, a door opens behind you, footsteps follow you home. The older and angrier a spirit gets, the more it can hurt.'}</div>
+  </header>
+
+  <div className="home-rosters">
+    <Roster title="Spirits that follow you" note="Each player has their own." spirits={personal} />
+    <Roster title="Spirits bound to a place" note="They act on anyone who comes near." spirits={territorial} />
+  </div>
+
+  <footer className="home-events">
+    <EventLinks />
+  </footer>
+</div>

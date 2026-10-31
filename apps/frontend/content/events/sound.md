@@ -146,7 +146,7 @@ Runs when: A solid block 2–3 above the head with air below it
 
 ## `cracking_floor`
 
-Harmful.
+**Harmful.**
 Break particles and sound of the block underfoot; it stays
 
 Runs when: Standing on a block

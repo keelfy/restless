@@ -56,7 +56,7 @@ Runs when: An iron door within 12
 
 ## `open_house`
 
-Harmful.
+**Harmful.**
 Opens every such door
 
 Runs when: Night, and a closed wooden door within 20
@@ -99,7 +99,7 @@ Runs when: A bell within 20
 
 ## `redstone_drift`
 
-Harmful.
+**Harmful.**
 A repeater gets another delay, a comparator the other mode, with no update. Set back after 2 min if unchanged; under hardcore it stays
 
 Runs when: A repeater or comparator within 12
@@ -118,14 +118,14 @@ Runs when: A chiseled bookshelf within 12 with a book
 
 ## `dispenser_shot`
 
-Harmful.
+**Harmful.**
 It clicks as if empty, then after 1 s an arrow leaves its face toward the player. Takes nothing from its contents, the arrow cannot be picked up
 
 Runs when: A dispenser within 12
 
 ## `chest_blast`
 
-Harmful.
+**Harmful.**
 A creeper hiss from the chest, then after 1 s an explosion of power 1 that breaks no blocks
 
 Runs when: A chest within 10, health above 10
@@ -138,7 +138,7 @@ Runs when: A furnace within 10 with something in its output
 
 ## `furniture_moves`
 
-Harmful.
+**Harmful.**
 It stands 2 to 5 blocks away on free floor, block entity and contents carried through its save format, a bed both halves. Moved back after 5 min if both spots are unchanged; under hardcore it stays
 
 Runs when: A single chest, crafting table, furnace or empty bed within 12
@@ -157,7 +157,7 @@ Runs when: Indoors, a bed or chest within 10 on the player's level, reachable ov
 
 ## `locked_door`
 
-Harmful.
+**Harmful.**
 Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back
 
 Runs when: A wooden door within 12

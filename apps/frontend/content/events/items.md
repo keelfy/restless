@@ -32,14 +32,14 @@ Runs when: A non-empty chest within 10
 
 ## `wear`
 
-Harmful.
+**Harmful.**
 Loses 10% durability, never breaks
 
 Runs when: A damageable tool with durability to spare
 
 ## `rot`
 
-Harmful.
+**Harmful.**
 One food stack becomes rotten flesh
 
 Runs when: Food in the inventory
@@ -52,21 +52,21 @@ Runs when: A wooden, stone, iron or diamond tool in the inventory
 
 ## `armor_off`
 
-Harmful.
+**Harmful.**
 1–4 random worn pieces come off (a random set, so sometimes all of it). Each goes to the inventory, or to the floor at the player's feet if it is full; nothing is lost
 
 Runs when: Any armor worn
 
 ## `vanishing_item`
 
-Harmful.
+**Harmful.**
 One stack moves to the other chest
 
 Runs when: Two chests (not halves of one) within 10, one non-empty, one with space
 
 ## `false_compass`
 
-Harmful.
+**Harmful.**
 Points at a spot 30–60 blocks away (stays that way)
 
 Runs when: A plain compass in the inventory

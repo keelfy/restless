@@ -8,7 +8,7 @@ title: Mobs
 
 ## `double`
 
-Harmful.
+**Harmful.**
 A vanilla mannequin with the player's skin, armor and held item (invulnerable, silent) walks up at 0.2 blocks/tick, slower than a sprint, jumping up one-block steps, falling off ledges up to 3 deep and turning up to 80° off to go round what is in its way. Within 1.8 blocks it hits every 0.5 s for up to 3 hearts, never below 3 hearts; it vanishes in smoke after 4 hits, 30 s, 40 blocked strides, or when the player is at 3 hearts
 
 Runs when: Not peaceful, no double already after the player, health > 7 hearts, standing room 12–18 blocks away
@@ -69,21 +69,21 @@ Runs when: Free air 4 blocks away
 
 ## `open_pen`
 
-Harmful.
+**Harmful.**
 Opens the gate
 
 Runs when: A closed gate with an animal within 5 of it
 
 ## `wild_pet`
 
-Harmful.
+**Harmful.**
 Loses its owner and targets the player
 
 Runs when: A tamed pet of the player within 32
 
 ## `copycat`
 
-Harmful.
+**Harmful.**
 A zombie in a copy of the player's armor, targeting them
 
 Runs when: Not peaceful, standing room 3 blocks behind
@@ -102,21 +102,21 @@ Runs when: A tamed standing wolf within 16
 
 ## `angry_bees`
 
-Harmful.
+**Harmful.**
 The bees come out angry at the player, as if it had been broken
 
 Runs when: A bee nest or hive within 16 with bees in it
 
 ## `leash_snaps`
 
-Harmful.
+**Harmful.**
 The leash comes loose with a snap and drops as an item
 
 Runs when: A mob tied to a fence post within 16
 
 ## `goat_rams`
 
-Harmful.
+**Harmful.**
 The goat's ram memory is set to the player's position, so it charges and knocks them back
 
 Runs when: An adult goat 4 to 14 blocks away
@@ -129,7 +129,7 @@ Runs when: An empty minecart on a rail within 24
 
 ## `enderman_takes`
 
-Harmful.
+**Harmful.**
 The block turns to air and the enderman holds it; after 60 seconds the block is back and the enderman's hands are empty
 
 Runs when: An enderman with empty hands and a placed block (planks, wool, stone bricks, bricks, bookshelf) with an open face, both within 16

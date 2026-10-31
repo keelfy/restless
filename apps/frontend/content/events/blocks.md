@@ -86,21 +86,21 @@ Runs when: Player on grass
 
 ## `shifting_floor`
 
-Harmful.
+**Harmful.**
 A ragged patch of the floor (radius 2, a handful of blocks, always the one underfoot) turns into another kind of the same material for 1.5 s
 
 Runs when: On the ground, and the block under the player has a variant (see below)
 
 ## `broken_bed`
 
-Harmful.
+**Harmful.**
 Breaks it; it drops as an item
 
 Runs when: A bed within 16
 
 ## `wall_hole`
 
-Harmful.
+**Harmful.**
 Two blocks vanish for 30 s, no drops
 
 Runs when: A one-block wall 2–6 blocks away with standing room behind it
@@ -113,7 +113,7 @@ Runs when: Room for a plus of five free blocks on solid ground 3–6 blocks away
 
 ## `infested_stone`
 
-Harmful.
+**Harmful.**
 The block is shown as its infested kind (a swap, see `swaps.mode`); restored after 30 s
 
 Runs when: Stone, cobblestone, deepslate or stone bricks in sight within 6
@@ -132,7 +132,7 @@ Runs when: Source water within 8
 
 ## `portal_out`
 
-Harmful.
+**Harmful.**
 The whole portal (every connected block) is broken for good in every mode, with a fizzle; the frame stays
 
 Runs when: Nether portal blocks within 12

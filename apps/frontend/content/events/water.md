@@ -8,14 +8,14 @@ title: Water
 
 ## `undertow`
 
-Harmful.
+**Harmful.**
 Every 0.1 s the player is pushed down (a 0.12 downward velocity nudge, so at the surface they are kept from coming up). Ends out of the water, at 3 hearts, or after 10 s. Drowning itself is vanilla's and is not capped
 
 Runs when: Health > 5 hearts, the player in water
 
 ## `water_call`
 
-Harmful.
+**Harmful.**
 An underwater swell, then after 2 s the player on the ground is drawn toward the nearest water at about 1.5 blocks/s, with splash particles at the feet. Ends on arrival, in water, at 3 hearts, or after 20 s
 
 Runs when: Health > 5 hearts, the player out of water, water within 12 blocks

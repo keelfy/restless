@@ -74,7 +74,7 @@ Runs when: Sky visible, not raining
 
 ## `lost_time`
 
-Harmful.
+**Harmful.**
 The overworld clock jumps 1000 ticks (affects everyone)
 
 Runs when: Night
@@ -141,7 +141,7 @@ Runs when: None
 
 ## `turned_head`
 
-Harmful.
+**Harmful.**
 A step sound of the ground at the spirit's position (or 6 blocks away at a random bearing), then the camera turns toward it over 30 ticks, eased, a little every frame on the client (`TurnPayload`, `HeadTurn`); the mouse still works meanwhile
 
 Runs when: None
