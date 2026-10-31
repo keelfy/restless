@@ -46,6 +46,7 @@
     "minecraft:death_cry": { "name": "Предсмертный крик", "description": "Где-то рядом раздаётся крик." },
     "minecraft:dripping": { "name": "Капель", "description": "Рядом капает вода." },
     "minecraft:blindness": { "name": "Слепота", "description": "Слепота на шесть секунд и тихий звук пещеры." },
+    "minecraft:sanity_crash": { "name": "Сломленный рассудок", "description": "Снимает 90 процентных пунктов рассудка сверх обычного шока события, но не ниже нуля. Не действует в творческом режиме и режиме наблюдателя." },
     "minecraft:nausea": { "name": "Тошнота", "description": "Тошнота на пять секунд." },
     "minecraft:heaviness": { "name": "Тяжесть", "description": "Замедление II на восемь секунд." },
     "minecraft:fatigue": { "name": "Усталость", "description": "Утомление II на десять секунд." },

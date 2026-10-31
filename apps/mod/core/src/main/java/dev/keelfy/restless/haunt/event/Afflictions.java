@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Journal;
 import dev.keelfy.restless.haunt.Notebook;
+import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Sense;
 import dev.keelfy.restless.haunt.Ticks;
@@ -87,6 +88,13 @@ final class Afflictions {
                 }),
             // 51
             harmful("bad_luck", MobEffects.UNLUCK),
+            SimpleEvent.harmful("sanity_crash", EventTag.AFFLICTION,
+                player -> !player.isCreative() && !player.isSpectator() && Sanity.of(player) > 0,
+                player -> {
+                    if (!player.isCreative() && !player.isSpectator()) {
+                        Sanity.set(player, Sanity.of(player) - Config.event("sanity_crash").num("loss"));
+                    }
+                }),
             // 141: more of the same, none of which can kill
             light("ravenous", MobEffects.HUNGER),
             harmful("infested", MobEffects.INFESTED),

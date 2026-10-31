@@ -3,20 +3,65 @@ package dev.keelfy.restless.gametest;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.UnlitLights;
+import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;
+import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.Sanity;
+import dev.keelfy.restless.haunt.SanityPayload;
 import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.network.registration.ChannelAttributes;
 
 final class SanityGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("event_sanity_crash", helper -> {
+            var player = HauntEventGameTests.connected(helper);
+            // The mock client must accept the same sanity updates as a connected modded client.
+            ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
+                .add(SanityPayload.TYPE.id());
+            var event = HauntEvents.byId(Identifier.withDefaultNamespace("sanity_crash")).orElseThrow();
+            Sanity.set(player, 1.0);
+            HauntEventGameTests.check(helper, event.canRun(player), "The event must run at full sanity");
+            Director.fire(player, event, null);
+            double expected = Math.max(0, 1 - Config.event("sanity_crash").num("loss")
+                - Config.section("sanity").num("event_loss"));
+            HauntEventGameTests.check(helper, Math.abs(Sanity.of(player) - expected) < 1e-9,
+                "The event must remove its configured loss plus ordinary event shock");
+            HauntEventGameTests.check(helper,
+                HauntData.get(player.level().getServer()).notebook(player.getUUID()).chapters().contains("sanity"),
+                "The sanity chapter must unlock when sanity crashes");
+            Sanity.set(player, 0.2);
+            Director.fire(player, event, null);
+            HauntEventGameTests.check(helper, Sanity.of(player) == 0, "Low sanity must clamp at zero");
+            HauntEventGameTests.check(helper, !event.canRun(player), "The event must skip players already at zero");
+            event.run(player);
+            HauntEventGameTests.check(helper, Sanity.of(player) == 0, "Repeating the event must never restore sanity");
+            player.discard();
+            helper.succeed();
+        });
+        tests.put("event_sanity_crash_modes", helper -> {
+            var event = HauntEvents.byId(Identifier.withDefaultNamespace("sanity_crash")).orElseThrow();
+            for (var mode : new GameType[]{GameType.CREATIVE, GameType.SPECTATOR}) {
+                var player = (ServerPlayer) helper.makeMockServerPlayer(mode);
+                double before = Sanity.of(player);
+                HauntEventGameTests.check(helper, !event.canRun(player), "Protected game modes must be excluded");
+                Director.fire(player, event, null);
+                HauntEventGameTests.check(helper, Sanity.of(player) == before,
+                    "Even a forced sanity crash must preserve creative and spectator sanity");
+                player.discard();
+            }
+            helper.succeed();
+        });
         tests.put("sanity_held_light", helper -> {
             var player = HauntEventGameTests.connected(helper);
             var feet = new BlockPos(4, 2, 4);
