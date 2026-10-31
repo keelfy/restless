@@ -189,8 +189,14 @@ public final class Director {
     /** @param at where the spirit is; free-source events come from there */
     public static void fire(ServerPlayer player, HauntEvent event, @Nullable Vec3 at) {
         Restless.LOGGER.debug("Haunt {} -> {}", event.id(), player.getName().getString());
+        Recent.record(player.getUUID(), event.id().toString(), repeatGap());
         Location.during(at, () -> event.run(player));
         Sanity.shock(player);
+    }
+
+    /** Events that must happen before one repeats: {@code director.repeat_share} of all registered events, at least 1. */
+    private static int repeatGap() {
+        return Math.max(1, (int) Math.ceil(Config.section("director").num("repeat_share") * HauntEvents.all().size()));
     }
 
     /** How harmful and how frequent the spirit is right now; depends only on the spirit. */
@@ -229,21 +235,35 @@ public final class Director {
         return ready ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power) * Rarity.boost(event.id().toString()) : 0.0;
     }
 
+    /** Events the player went through lately ({@link Recent}) are left out, unless they are all that can run. */
     private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit, List<Trait> traits, double power, @Nullable HauntTier tier) {
         List<HauntEvent> candidates = new ArrayList<>();
         List<Double> weights = new ArrayList<>();
-        double total = 0;
+        List<Boolean> stale = new ArrayList<>();
+        boolean anyFresh = false;
         for (HauntEvent event : HauntEvents.all()) {
             if (tier != null && event.tier() != tier) {
                 continue;
             }
+            String id = event.id().toString();
             boolean ready = event.canRun(player);
-            Rarity.observe(event.id().toString(), ready);
+            Rarity.observe(id, ready);
             double weight = weight(event, ready, spirit, traits, power);
             if (weight > 0) {
+                boolean repeat = Recent.blocks(player.getUUID(), id);
                 candidates.add(event);
                 weights.add(weight);
-                total += weight;
+                stale.add(repeat);
+                anyFresh |= !repeat;
+            }
+        }
+        double total = 0;
+        for (int i = candidates.size() - 1; i >= 0; i--) {
+            if (anyFresh && stale.get(i)) {
+                candidates.remove(i);
+                weights.remove(i);
+            } else {
+                total += weights.get(i);
             }
         }
         RandomSource random = player.getRandom();
