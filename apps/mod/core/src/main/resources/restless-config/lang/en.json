@@ -47,6 +47,7 @@
     "minecraft:dripping": { "name": "Dripping", "description": "Water drips nearby." },
     "minecraft:blindness": { "name": "Blindness", "description": "Blindness for six seconds, with a low cave sound." },
     "minecraft:sanity_crash": { "name": "Shattered Sanity", "description": "Takes 90 percentage points of sanity, plus the usual event shock. Never goes below zero; creative and spectator players are unaffected." },
+    "minecraft:sanity_drain": { "name": "Slipping Sanity", "description": "Takes a random 10–25 percentage points of sanity, plus the usual event shock. Never goes below zero; creative and spectator players are unaffected." },
     "minecraft:nausea": { "name": "Nausea", "description": "Nausea for five seconds." },
     "minecraft:heaviness": { "name": "Heaviness", "description": "Slowness II for eight seconds." },
     "minecraft:fatigue": { "name": "Fatigue", "description": "Mining fatigue II for ten seconds." },

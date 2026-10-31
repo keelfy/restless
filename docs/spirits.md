@@ -331,6 +331,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `door` | | LIGHT | DOORS | 1.0 | A wooden door is within 12 blocks | Opens a closed door or slams an open one |
 | `blindness` | | LIGHT | AFFLICTION | 0.6 | Player is not already blind | Blindness for 6 s and a low cave ambient sound |
 | `sanity_crash` | — | HARMFUL | AFFLICTION | 0.3 | Survival or adventure player with sanity above zero | Removes 0.9 sanity plus normal event shock (0.04), leaving at most 0.06 with defaults; clamped at zero. Uses normal sanity sync and journal unlock. Mara favors it through AFFLICTION affinity |
+| `sanity_drain` | — | HARMFUL | AFFLICTION | 0.6 | Survival or adventure player with sanity above zero | Removes a uniformly random 0.1–0.25 sanity plus normal event shock (0.04); clamped at zero. Range is configured by min_loss and max_loss. Uses normal sanity sync and journal unlock |
 | `cold_touch` | | HARMFUL | ASSAULT | 1.0 | Player health > 1 heart | 1–2 hearts of magic damage (2–4 HP), never lethal (leaves at least 0.5 heart), freezing sound |
 | `candles_out` | 1 | LIGHT | LIGHTS | 0.8 | A lit candle within 10 blocks | Every lit candle within 10 blocks goes out |
 | `torch_chain` | 2 | LIGHT | LIGHTS | 0.8 | A torch within 10 | Up to 8 torches knock off one by one, every 0.3 s, nearest to the player last |

@@ -95,6 +95,16 @@ final class Afflictions {
                         Sanity.set(player, Sanity.of(player) - Config.event("sanity_crash").num("loss"));
                     }
                 }),
+            SimpleEvent.harmful("sanity_drain", EventTag.AFFLICTION,
+                player -> !player.isCreative() && !player.isSpectator() && Sanity.of(player) > 0,
+                player -> {
+                    if (!player.isCreative() && !player.isSpectator()) {
+                        Config.Section config = Config.event("sanity_drain");
+                        double loss = config.num("min_loss")
+                            + player.getRandom().nextDouble() * (config.num("max_loss") - config.num("min_loss"));
+                        Sanity.set(player, Sanity.of(player) - loss);
+                    }
+                }),
             // 141: more of the same, none of which can kill
             light("ravenous", MobEffects.HUNGER),
             harmful("infested", MobEffects.INFESTED),

@@ -8,6 +8,8 @@ import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.SanityPayload;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
@@ -49,19 +51,50 @@ final class SanityGameTests {
             player.discard();
             helper.succeed();
         });
-        tests.put("event_sanity_crash_modes", helper -> {
-            var event = HauntEvents.byId(Identifier.withDefaultNamespace("sanity_crash")).orElseThrow();
-            for (var mode : new GameType[]{GameType.CREATIVE, GameType.SPECTATOR}) {
-                var player = (ServerPlayer) helper.makeMockServerPlayer(mode);
-                double before = Sanity.of(player);
-                HauntEventGameTests.check(helper, !event.canRun(player), "Protected game modes must be excluded");
+        tests.put("event_sanity_drain", helper -> {
+            var player = HauntEventGameTests.connected(helper);
+            ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
+                .add(SanityPayload.TYPE.id());
+            var event = HauntEvents.byId(Identifier.withDefaultNamespace("sanity_drain")).orElseThrow();
+            var config = Config.event("sanity_drain");
+            double shock = Config.section("sanity").num("event_loss");
+            var outcomes = new HashSet<Double>();
+            player.getRandom().setSeed(1234L);
+            for (int i = 0; i < 32; i++) {
+                Sanity.set(player, 1.0);
+                HauntEventGameTests.check(helper, event.canRun(player), "The drain must run at full sanity");
                 Director.fire(player, event, null);
-                HauntEventGameTests.check(helper, Sanity.of(player) == before,
-                    "Even a forced sanity crash must preserve creative and spectator sanity");
-                player.discard();
+                double lost = 1 - Sanity.of(player);
+                HauntEventGameTests.check(helper,
+                    lost >= config.num("min_loss") + shock - 1e-9 && lost <= config.num("max_loss") + shock + 1e-9,
+                    "Every drain must stay within its configured range plus ordinary event shock");
+                outcomes.add(lost);
             }
+            HauntEventGameTests.check(helper, outcomes.size() > 1, "Repeated drains must vary in strength");
+            Sanity.set(player, 0.05);
+            Director.fire(player, event, null);
+            HauntEventGameTests.check(helper, Sanity.of(player) == 0, "The drain must clamp low sanity at zero");
+            HauntEventGameTests.check(helper, !event.canRun(player), "The drain must skip zero sanity");
+            event.run(player);
+            HauntEventGameTests.check(helper, Sanity.of(player) == 0, "The drain must never restore sanity at zero");
+            player.discard();
             helper.succeed();
         });
+        for (String id : List.of("sanity_crash", "sanity_drain")) {
+            tests.put("event_" + id + "_modes", helper -> {
+                var event = HauntEvents.byId(Identifier.withDefaultNamespace(id)).orElseThrow();
+                for (var mode : new GameType[]{GameType.CREATIVE, GameType.SPECTATOR}) {
+                    var player = (ServerPlayer) helper.makeMockServerPlayer(mode);
+                    double before = Sanity.of(player);
+                    HauntEventGameTests.check(helper, !event.canRun(player), "Protected game modes must be excluded");
+                    Director.fire(player, event, null);
+                    HauntEventGameTests.check(helper, Sanity.of(player) == before,
+                        "Even a forced sanity loss must preserve creative and spectator sanity");
+                    player.discard();
+                }
+                helper.succeed();
+            });
+        }
         tests.put("sanity_held_light", helper -> {
             var player = HauntEventGameTests.connected(helper);
             var feet = new BlockPos(4, 2, 4);
