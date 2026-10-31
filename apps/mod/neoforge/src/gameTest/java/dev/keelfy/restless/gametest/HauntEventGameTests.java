@@ -222,6 +222,19 @@ final class HauntEventGameTests {
         tests.put("event_doorstep_gift", helper -> runs(helper, "doorstep_gift", player -> helper.setBlock(FEET.west(3), Blocks.OAK_DOOR),
             () -> check(helper, !helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(FEET)).inflate(6)).isEmpty(),
                 "doorstep_gift must leave an item")));
+        tests.put("event_muddy_footprints", helper -> runs(helper, "muddy_footprints", player -> {
+            for (BlockPos pos : BlockPos.betweenClosed(0, 4, 0, 9, 4, 9)) {
+                helper.setBlock(pos, Blocks.STONE);
+            }
+            helper.setBlock(FEET.west(4), Blocks.CHEST);
+        }, () -> {
+            for (int k = 1; k <= 3; k++) {
+                if (helper.getBlockState(FEET.west(k)).is(Content.FOOTPRINTS.get())) {
+                    return;
+                }
+            }
+            check(helper, false, "muddy_footprints must leave prints toward the chest");
+        }));
         tests.put("event_spider_overhead", helper -> runs(helper, "spider_overhead",
             player -> helper.setBlock(FEET.above(4), Blocks.STONE), () -> {}));
         tests.put("event_lost_growth", helper -> runs(helper, "lost_growth", player -> {

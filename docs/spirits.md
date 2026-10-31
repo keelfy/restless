@@ -334,6 +334,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `chest_blast` | 117 | HARMFUL | DOORS | 0.3 | A chest within 10, health above 10 | A creeper hiss from the chest, then after 1 s an explosion of power 1 that breaks no blocks |
 | `wrong_smelt` | 182 | LIGHT | DOORS | 0.5 | A furnace within 10 with something in its output | The output becomes charcoal or rotten flesh of the same count; put back after 2 min unless taken or changed (stays under hardcore) |
 | `doorstep_gift` | 186 | LIGHT | DOORS | 0.4 | A door within 12 with free floor on its far side | A poppy, dandelion, bone or raw rabbit lies outside, on the side away from the player; a real item |
+| `muddy_footprints` | 184 | LIGHT | DOORS | 0.4 | Indoors, a bed or chest within 10 on the player's level, reachable over free floor | Pairs of muddy prints appear one by one on every first or second block from the player to it, each with a mud step. Each is wiped after 2 min if still there; under hardcore they stay |
 | `locked_door` | 19 | HARMFUL | DOORS | 0.7 | A wooden door within 12 | Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back |
 | `footsteps` | 24 | LIGHT | SOUND | 0.4 | Always | A step sound 2 blocks behind the player |
 | `creeper_hiss` | 25 | LIGHT | SOUND | 0.4 | Always | Creeper fuse hiss nearby |
