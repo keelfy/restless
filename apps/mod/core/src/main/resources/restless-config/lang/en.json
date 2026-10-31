@@ -170,6 +170,7 @@
     "minecraft:boat_drifts": { "name": "Boat Drifts", "description": "An empty boat in the water slides slowly away from the player." },
     "minecraft:minecart_rolls": { "name": "Minecart Rolls", "description": "An empty minecart on a rail rolls toward the player." },
     "minecraft:shrieker": { "name": "Shrieker", "description": "A sculk shrieker shrieks with nothing near it; nobody is warned." },
+    "minecraft:fake_subtitle": { "name": "Fake Subtitle", "description": "A silent sound that shows the subtitle \"Something breathes behind you\", from behind the player. Only seen with subtitles on." },
     "minecraft:phantom_heartbeat": { "name": "Phantom Heartbeat", "description": "A warden heartbeat with no warden." },
     "minecraft:insomnia": { "name": "Insomnia", "description": "The player is counted as three days without sleep, so phantoms come the next night." },
     "minecraft:ravenous": { "name": "Ravenous", "description": "Hunger II for twenty seconds." },

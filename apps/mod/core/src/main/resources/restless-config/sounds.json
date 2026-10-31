@@ -48,6 +48,7 @@
     "minecraft:bottle_shatter": { "weight": 0.4, "distance": 4.0 },
     "minecraft:note_block_voice": { "weight": 0.5, "radius": 16, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:shrieker": { "weight": 0.4, "radius": 16 },
+    "minecraft:fake_subtitle": { "weight": 0.3, "distance": 3.0, "sound": { "volume": 1.0, "pitch": 1.0 } },
     "minecraft:phantom_heartbeat": { "weight": 0.4, "interval_ticks": 18, "beats": 8, "sound": { "volume": 1.0, "pitch": 1.0 } }
   }
 }

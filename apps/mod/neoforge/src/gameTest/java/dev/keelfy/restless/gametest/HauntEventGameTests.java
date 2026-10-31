@@ -80,7 +80,7 @@ final class HauntEventGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter",
-            "stranger_joins", "stranger_death", "phantom_heartbeat", "false_night", "false_slot", "turned_head", "dragon_flyover",
+            "stranger_joins", "stranger_death", "phantom_heartbeat", "fake_subtitle", "false_night", "false_slot", "turned_head", "dragon_flyover",
             "approaching_steps", "distant_mining", "ladder_steps", "ravenous", "infested", "oozing", "weaving")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
