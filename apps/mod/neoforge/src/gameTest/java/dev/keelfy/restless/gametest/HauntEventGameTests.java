@@ -55,6 +55,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -450,6 +451,88 @@ final class HauntEventGameTests {
             }, () -> {
                 check(helper, !data.journal(dreamer[0].getUUID()).isEmpty(), "dream must write the dream in the journal on waking");
                 data.put(dreamer[0].getUUID(), List.of());
+            });
+        });
+        PADDING.put("event_sleepwalk", 60);
+        TIMEOUT.put("event_sleepwalk", 200);
+        tests.put("event_sleepwalk", helper -> {
+            BlockPos centre = helper.absolutePos(FEET);
+            forceChunks(helper, centre, 24, true);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-22, -1, -22), centre.offset(22, -1, 22))) {
+                helper.getLevel().setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
+            }
+            helper.setBlock(FEET.west(3), Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.HEAD).setValue(BedBlock.FACING, Direction.WEST));
+            helper.setBlock(FEET.west(2), Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.FOOT).setValue(BedBlock.FACING, Direction.WEST));
+            ServerPlayer player = connected(helper);
+            player.snapTo(centre.getX() + 0.5, centre.getY(), centre.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("sleepwalk")).orElseThrow();
+            check(helper, event.canRun(player), "sleepwalk must be able to run in its scene");
+            event.run(player);
+            check(helper, player.startSleeping(helper.absolutePos(FEET.west(3))), "the test player must be able to lie in the bed");
+            // Longer than a night counts for: five seconds in bed.
+            helper.runAfterDelay(120, player::stopSleeping);
+            helper.runAfterDelay(150, () -> {
+                BlockPos bed = helper.absolutePos(FEET.west(3));
+                BlockPos at = player.blockPosition();
+                check(helper, Math.sqrt(at.distSqr(bed)) >= 3.0, "sleepwalk must wake the player away from the bed, is " + Math.sqrt(at.distSqr(bed)) + " from it");
+                check(helper, helper.getLevel().getBlockState(at.below()).isSolidRender() && helper.getLevel().isEmptyBlock(at) && helper.getLevel().isEmptyBlock(at.above()),
+                    "sleepwalk must leave the player standing on solid ground with room overhead");
+                check(helper, event.canRun(player), "the walk must be spent on waking");
+                forceChunks(helper, centre, 24, false);
+                player.discard();
+                helper.succeed();
+            });
+        });
+        TIMEOUT.put("event_pen_corner", 120);
+        tests.put("event_pen_corner", helper -> {
+            for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 0, 9)) {
+                helper.setBlock(pos, Blocks.STONE);
+            }
+            // A pen with x and z from 2 to 7 inside.
+            for (int i = 1; i <= 8; i++) {
+                for (BlockPos pos : List.of(new BlockPos(1, 1, i), new BlockPos(8, 1, i), new BlockPos(i, 1, 1), new BlockPos(i, 1, 8))) {
+                    helper.setBlock(pos, Blocks.OAK_FENCE);
+                }
+            }
+            Cow[] cows = {
+                EntityTypes.COW.spawn(helper.getLevel(), helper.absolutePos(new BlockPos(4, 1, 3)), EntitySpawnReason.COMMAND),
+                EntityTypes.COW.spawn(helper.getLevel(), helper.absolutePos(new BlockPos(5, 1, 5)), EntitySpawnReason.COMMAND)
+            };
+            ServerPlayer player = connected(helper);
+            BlockPos feet = helper.absolutePos(FEET);
+            player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace("pen_corner")).orElseThrow();
+            check(helper, event.canRun(player), "pen_corner must be able to run in its scene");
+            event.run(player);
+            helper.runAfterDelay(100, () -> {
+                // The inside corner nearest the farther of the two cows is the one they were sent to.
+                int cx = 2;
+                int cz = 2;
+                double best = Double.MAX_VALUE;
+                for (int x : new int[] {2, 7}) {
+                    for (int z : new int[] {2, 7}) {
+                        BlockPos corner = helper.absolutePos(new BlockPos(x, 1, z));
+                        double far = Math.max(cows[0].distanceToSqr(corner.getX() + 0.5, corner.getY(), corner.getZ() + 0.5), cows[1].distanceToSqr(corner.getX() + 0.5, corner.getY(), corner.getZ() + 0.5));
+                        if (far < best) {
+                            best = far;
+                            cx = x;
+                            cz = z;
+                        }
+                    }
+                }
+                for (Cow cow : cows) {
+                    BlockPos at = helper.relativePos(cow.blockPosition());
+                    BlockPos corner = helper.absolutePos(new BlockPos(cx, 1, cz));
+                    check(helper, Math.hypot(cow.getX() - corner.getX() - 0.5, cow.getZ() - corner.getZ() - 0.5) <= Config.event("pen_corner").num("reach"),
+                        "pen_corner must bring every cow to the same corner, one is at " + at);
+                    // The point it looks at: diagonally past the corner block, into the fence.
+                    BlockPos wall = helper.absolutePos(new BlockPos(cx == 2 ? 1 : 8, 1, cz == 2 ? 1 : 8));
+                    float facing = (float) Math.toDegrees(Math.atan2(-(wall.getX() + 0.5 - cow.getX()), wall.getZ() + 0.5 - cow.getZ()));
+                    check(helper, Math.abs(Mth.wrapDegrees(cow.getYRot() - facing)) < 30.0F, "a cornered cow must face the corner, faces " + cow.getYRot());
+                    cow.discard();
+                }
+                player.discard();
+                helper.succeed();
             });
         });
         tests.put("event_goat_rams", helper -> {

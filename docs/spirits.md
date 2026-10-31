@@ -382,6 +382,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `bad_luck` | 51 | HARMFUL | AFFLICTION | 0.6 | No bad luck | Bad luck 5 min |
 | `insomnia` | 171 | HARMFUL | AFFLICTION | 0.4 | Not peaceful, fewer than 144000 ticks since rest | The player's "time since rest" is set to 144000 (past three days), so phantoms come the next night; sleeping resets it |
 | `dream` | 173 | LIGHT | AFFLICTION | 0.5 | A spirit senses the player, and no dream is waiting | On the next waking (within 1 h) a line in chat and the journal: a nearby spirit's story ("who drowned in a flooded cave") or one of its traits |
+| `sleepwalk` | 172 | HARMFUL | AFFLICTION | 0.3 | No walk is waiting | On the next waking after at least 5 s in bed (within 1 h) the player is moved to standing room 4–20 blocks away (solid floor, not magma, no lava next to it), outdoors if one of 4 tries finds sky |
 | `ravenous` | 141 | LIGHT | AFFLICTION | 0.5 | No hunger effect | Hunger II for 20 s |
 | `infested` | 141 | HARMFUL | AFFLICTION | 0.4 | No infested effect | Infested for 30 s: silverfish come out when the player is hurt |
 | `oozing` | 141 | LIGHT | AFFLICTION | 0.4 | No oozing effect | Oozing for 30 s: slimes spill out if the player dies |
@@ -448,6 +449,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `walled_in` | 116 | HARMFUL | BLOCKS | 0.3 | On the ground, not in water, at least 5 free cells around the feet, head and over the head | Four knocks on the walls, a second apart, then the player is pulled to the middle of their block and every free cell beside the feet and head and over the head becomes the commonest plain block around (no falling blocks, ores or mineral blocks; stone if none), with mining fatigue III for 20 s. The player's own two blocks always stay open. Removed after 20 s; under hardcore the walls stay and the player digs out |
 | `sealed_tunnel` | 188 | HARMFUL | BLOCKS | 0.3 | On the ground, a roof above (heightmap), open tunnel straight behind | The tunnel 2–5 blocks behind the player (the first cross-section of at most 6 air cells shut in by full blocks, with nobody in it) is filled with the commonest plain block of its walls (stone if none); opened again after 1 min, stays under hardcore |
 | `animals_stare` | 85 | LIGHT | MOBS | 0.6 | Two animals within 16 | They stop and face the player for 3 s |
+| `pen_corner` | 195 | LIGHT | MOBS | 0.5 | Two farm animals (not tamable, not leashed) within 16 in a pen fenced on four sides, up to 16 across each way | They walk to a random inside corner and, within 2.5 blocks of it, stand facing into it; let go after 15 s |
 | `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
 | `cat_flee` | 129 | LIGHT | MOBS | 0.5 | A standing cat within 16 | The cats run 8 blocks away from the spirit's point for 5 s; one hisses |
 | `dog_barks` | 87 | LIGHT | MOBS | 0.6 | A wolf within 16 | Turns away and makes its ambient sound |

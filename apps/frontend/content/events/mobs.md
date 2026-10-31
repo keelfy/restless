@@ -31,6 +31,12 @@ They stop and face the player for 3 s
 
 Runs when: Two animals within 16
 
+## `pen_corner`
+
+They walk to a random inside corner and, within 2.5 blocks of it, stand facing into it; let go after 15 s
+
+Runs when: Two farm animals (not tamable, not leashed) within 16 in a pen fenced on four sides, up to 16 across each way
+
 ## `cat_hiss`
 
 The cat hisses
