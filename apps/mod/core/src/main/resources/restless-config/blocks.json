@@ -54,6 +54,22 @@
         ["we are", "waiting"],
         ["too", "late"]
       ]
+    },
+    "minecraft:item_trail": {
+      "weight": 0.3,
+      "min_distance": 10,
+      "max_distance": 16,
+      "start": 2.0,
+      "spacing": 3.0,
+      "restore_ticks": 6000,
+      "items": ["minecraft:bone", "minecraft:rotten_flesh", "minecraft:string"],
+      "texts": [
+        ["you found", "me"],
+        ["this is", "where I", "stopped"],
+        ["dig", "here"],
+        ["I left", "these", "for you"],
+        ["follow", "no further"]
+      ]
     }
   }
 }

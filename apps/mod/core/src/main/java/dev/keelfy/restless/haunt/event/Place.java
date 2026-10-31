@@ -80,7 +80,7 @@ final class Place {
     }
 
     /** The first spot in the column of {@code base}, a few blocks up to a few down, with a floor and two free blocks. */
-    private static @Nullable BlockPos standing(ServerLevel level, BlockPos base) {
+    static @Nullable BlockPos standing(ServerLevel level, BlockPos base) {
         for (int dy = config().integer("spawn_climb"); dy >= -config().integer("spawn_drop"); dy--) {
             BlockPos pos = base.above(dy);
             if (level.isLoaded(pos) && free(level, pos) && level.getBlockState(pos.below()).isSolidRender()) {

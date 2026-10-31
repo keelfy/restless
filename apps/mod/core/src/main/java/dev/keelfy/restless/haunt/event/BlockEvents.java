@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Said;
@@ -25,21 +26,28 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.decoration.painting.Painting;
 import net.minecraft.world.entity.decoration.painting.PaintingVariant;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Husk;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -57,10 +65,12 @@ import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.RotationSegment;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -186,7 +196,10 @@ final class BlockEvents {
             // 185: a gravestone with the player's name and tomorrow's date stands on open ground nearby
             SimpleEvent.light("mock_grave", EventTag.BLOCKS, player -> marker(player) != null, BlockEvents::markGrave),
             SimpleEvent.light("cave_sign", EventTag.BLOCKS,
-                player -> Said.left(player, "cave_sign", signTexts("cave_sign"), SIGN_KEY) && caveWall(player) != null, BlockEvents::caveSign)
+                player -> Said.left(player, "cave_sign", signTexts("cave_sign"), SIGN_KEY) && caveWall(player) != null, BlockEvents::caveSign),
+            // 115: a trail of bones and string leads from the player to a sign
+            SimpleEvent.light("item_trail", EventTag.BLOCKS,
+                player -> Said.left(player, "item_trail", signTexts("item_trail"), SIGN_KEY) && trailEnd(player) != null, BlockEvents::layTrail)
         );
     }
 
@@ -464,6 +477,74 @@ final class BlockEvents {
             }
             if (level.getBlockState(found.pos()).is(Blocks.OAK_WALL_SIGN)) {
                 level.removeBlock(found.pos(), false);
+            }
+            return true;
+        });
+    }
+
+    private static @Nullable BlockPos trailEnd(ServerPlayer player) {
+        Config.Section config = Config.event("item_trail");
+        return Place.spawnSpot(player, config.integer("min_distance"), config.integer("max_distance"));
+    }
+
+    /** Items every few blocks along the ground towards a sign that faces the player; under hardcore they can be taken and the sign stays. */
+    private static void layTrail(ServerPlayer player) {
+        BlockPos end = trailEnd(player);
+        List<String> lines = end == null ? null : Said.pick(player, "item_trail", signTexts("item_trail"), SIGN_KEY);
+        if (lines == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        Config.Section config = Config.event("item_trail");
+        List<String> items = config.texts("items");
+        boolean hardcore = Hardcore.on(level);
+        Vec3 from = player.position();
+        Vec3 to = Vec3.atBottomCenterOf(end);
+        double length = to.subtract(from).horizontalDistance();
+        List<ItemEntity> laid = new ArrayList<>();
+        for (double d = config.num("start"); d < length - 1.0; d += config.num("spacing")) {
+            BlockPos at = Place.standing(level, BlockPos.containing(from.lerp(to, d / length)));
+            if (at == null) {
+                continue;
+            }
+            Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(items.get(player.getRandom().nextInt(items.size()))));
+            ItemEntity entity = new ItemEntity(level, at.getX() + 0.5, at.getY(), at.getZ() + 0.5, new ItemStack(item), 0, 0, 0);
+            if (!hardcore) {
+                entity.setNeverPickUp();
+                entity.setUnlimitedLifetime();
+                laid.add(entity);
+            }
+            level.addFreshEntity(entity);
+        }
+        // A placed sign faces whoever placed it, who looked along the trail.
+        float yaw = (float) (Mth.atan2(to.z - from.z, to.x - from.x) * Mth.RAD_TO_DEG) - 90.0F;
+        level.setBlockAndUpdate(end, Blocks.OAK_SIGN.defaultBlockState().setValue(StandingSignBlock.ROTATION, RotationSegment.convertToSegment(yaw + 180.0F)));
+        SignText written = null;
+        if (level.getBlockEntity(end) instanceof SignBlockEntity sign) {
+            SignText.Mutable text = sign.getText(SignTextSlot.FRONT).asMutable();
+            centre(text, lines);
+            written = text.asImmutable();
+            sign.setText(written, SignTextSlot.FRONT);
+        }
+        Restore.after(level, restoreTicks("item_trail"), force -> {
+            // An item whose chunk was unloaded comes back as a new entity, found again by its id.
+            laid.removeIf(item -> {
+                Entity now = level.getEntity(item.getUUID());
+                if (now != null) {
+                    now.discard();
+                }
+                return now != null || force || level.isLoaded(item.blockPosition());
+            });
+            return laid.isEmpty();
+        });
+        SignText haunted = written;
+        Restore.revert(level, restoreTicks("item_trail"), force -> {
+            if (!force && !level.isLoaded(end)) {
+                return false;
+            }
+            // A sign the player has since edited is theirs now.
+            if (level.getBlockEntity(end) instanceof SignBlockEntity now && now.getText(SignTextSlot.FRONT).equals(haunted)) {
+                level.removeBlock(end, false);
             }
             return true;
         });
