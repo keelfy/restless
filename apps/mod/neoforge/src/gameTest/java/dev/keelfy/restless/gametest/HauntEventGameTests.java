@@ -66,6 +66,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.CropBlock;
@@ -671,10 +672,11 @@ final class HauntEventGameTests {
         });
         farOff(tests, "nametag", 30, Display.TextDisplay.class);
         farOff(tests, "pillar", 24, Mannequin.class);
-        // The cobblestone is in the world only when swaps are real, which hardcore makes them.
+        // The block it puts down is in the world only when swaps are real, which hardcore makes them.
         Map<String, Consumer<GameTestHelper>> real = new HashMap<>();
         farOff(real, "pillar", 24, Mannequin.class, (helper, figure) ->
-            check(helper, helper.getLevel().getBlockState(figure.blockPosition().below()).is(Blocks.COBBLESTONE), "pillar must stand on its cobblestone"));
+            check(helper, helper.getLevel().getBlockState(figure.blockPosition().below()).getBlock() == Block.byItem(figure.getMainHandItem().getItem()),
+                "pillar must stand on the block it holds"));
         HardcoreGameTests.hardcore(tests, "hardcore_pillar", real.get("event_pillar"));
         PADDING.put("hardcore_pillar", PADDING.get("event_pillar"));
         tests.put("event_repaint_is_an_illusion", helper -> runs(helper, "repaint",

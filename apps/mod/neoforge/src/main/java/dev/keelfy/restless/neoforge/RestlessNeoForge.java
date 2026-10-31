@@ -57,6 +57,11 @@ public final class RestlessNeoForge {
             }
         });
         NeoForge.EVENT_BUS.addListener((ServerChatEvent e) -> Restless.onChat(e.getPlayer()));
+        NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.LeftClickBlock e) -> {
+            if (e.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START && e.getEntity() instanceof ServerPlayer player) {
+                Restless.onStartBreak(player, e.getPos());
+            }
+        });
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
             if (Restless.onUseBlock(e.getEntity(), e.getHand(), e.getPos())) {
                 e.setCanceled(true);

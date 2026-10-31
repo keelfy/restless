@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@link Restore#swap}; under {@linkplain Hardcore hardcore} they are changed for good. A block that holds something
  * (a chest, a furnace) is never changed for real, since its contents would have nowhere to go: it is only shown.
  */
-final class Swaps {
+public final class Swaps {
     private Swaps() {}
 
     /** Whether swaps are made in the world rather than shown: the config says so, or the world is hardcore. */
@@ -35,6 +35,14 @@ final class Swaps {
             case "real" -> true;
             default -> throw new IllegalStateException("swaps.mode must be illusion or real");
         };
+    }
+
+    /**
+     * The player starts to break the block at {@code pos}: their client is told the real block, so a shown one that is not
+     * there is gone at the click instead of standing until its time is up.
+     */
+    public static void reveal(ServerPlayer player, BlockPos pos) {
+        player.connection.send(new ClientboundBlockUpdatePacket(player.level(), pos));
     }
 
     /** One block shown as {@code to} for {@code ticks}. */

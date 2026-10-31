@@ -44,7 +44,7 @@ Runs when: Half the time standing room 30 blocks away within 40° of where the p
 
 ## `pillar`
 
-A silent, unhurtable mannequin in a random default skin, cobblestone in hand, every 0.5 s looks down at its feet and jumps (a player's jump arc), puts cobblestone (place sound) where its feet were once above it, swings its arm and lands on it, 8 times; at the top it faces the player. It waits at the top and is gone 7 s after it appeared; sooner if the player comes within 10 blocks or the way up is blocked. Each block goes back to air after 2 min if still cobblestone; under hardcore the pillar stays
+A silent, unhurtable mannequin in a random default skin, a block in hand (cobblestone, stone, dirt or any planks), every 0.5 s looks down at its feet and jumps (a player's jump arc), puts that block (its place sound) where its feet were once above it, swings its arm and lands on it, 8 times; at the top it faces the player. It waits at the top and is gone 7 s after it appeared; sooner if the player comes within 10 blocks or the way up is blocked. Each block goes back to air after 2 min if still that block; under hardcore the pillar stays
 
 Runs when: Standing room 24 blocks away within 40° of where the player looks, open for 8 blocks above
 

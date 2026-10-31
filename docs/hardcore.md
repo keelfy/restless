@@ -64,7 +64,9 @@ modes:
 
 1. **Illusion** (the default, `swaps.mode` is `illusion` in `haunt.json`): only the haunted player's client is told of the
    other blocks, and after the event's ticks it is told the real ones again. The server's world is not touched, so other
-   players see nothing and nothing needs undoing. The player's own movement is still checked against the real blocks.
+   players see nothing and nothing needs undoing. The player's own movement is still checked against the real blocks. Starting to
+   break a shown block tells the client the real one at once (`Swaps.reveal`), so a shown block that is not there cannot be
+   dug at but is gone at the click.
 2. **Real for a time** (`swaps.mode` is `real`): the blocks are changed in the world for everyone and put back through
    `Restore.swap` when due (and at server stop), so every player sees the event.
 3. **Hardcore**: as real, but the change stays, whatever `swaps.mode` says.

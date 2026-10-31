@@ -15,6 +15,7 @@ import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.Graves;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.haunt.event.Swaps;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Location;
@@ -107,6 +108,11 @@ public final class Restless {
     /** Call when a player says something in chat. */
     public static void onChat(ServerPlayer player) {
         Divination.ask(player);
+    }
+
+    /** Call when a player starts to break a block. */
+    public static void onStartBreak(ServerPlayer player, BlockPos pos) {
+        Swaps.reveal(player, pos);
     }
 
     /** Call before a player uses a block; true means the use must be cancelled. */
