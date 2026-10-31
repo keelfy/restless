@@ -195,6 +195,8 @@
     "minecraft:lava_leak": { "name": "Lava Leak", "description": "Lava drips from the ceiling overhead for a few seconds; only seen and heard." },
     "minecraft:mock_grave": { "name": "Mock Grave", "description": "A gravestone with a sign appears on open ground nearby, bearing the player's name and tomorrow's date." },
     "minecraft:cave_sign": { "name": "Cave Sign", "description": "A sign appears on a wall of the tunnel nearby with a short warning or beckoning; it is taken down after a few minutes." },
-    "minecraft:item_trail": { "name": "Item Trail", "description": "A trail of bones, flesh and string that cannot be picked up leads to a sign with a short note; both are cleared after a few minutes." }
+    "minecraft:item_trail": { "name": "Item Trail", "description": "A trail of bones, flesh and string that cannot be picked up leads to a sign with a short note; both are cleared after a few minutes." },
+    "minecraft:walled_in": { "name": "Walled In", "description": "Knocking on every side, then walls of the surrounding stone close around the player and over their head, with mining fatigue; they crumble after twenty seconds." },
+    "minecraft:sealed_tunnel": { "name": "Sealed Tunnel", "description": "The tunnel a few blocks behind the player is filled in, wall to wall, with the stone around it; it opens again after a minute." }
   }
 }
