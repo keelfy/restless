@@ -81,6 +81,8 @@ public final class Content {
         p -> new Gravestone(p.strength(2.0f, 6.0f).sound(SoundType.STONE).noOcclusion()));
     public static final Supplier<Item> GRAVESTONE_ITEM = blockItem("gravestone", GRAVESTONE);
     public static final Supplier<Item> JOURNAL = item("journal", p -> new JournalBook(p.stacksTo(1)));
+    /** Left by the muddy footprints event, never crafted: no item, it drops nothing. */
+    public static final Supplier<Block> FOOTPRINTS = block("footprints", Footprints::new);
 
     /** A tree that is not there, shown by the ghost tree event: it looks like its wood, has no collision and drops nothing. */
     public record GhostWood(Supplier<Block> log, Supplier<Block> leaves) {}

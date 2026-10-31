@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
@@ -80,7 +81,7 @@ final class HauntEventGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter",
-            "stranger_joins", "stranger_death", "phantom_heartbeat", "false_night", "false_slot", "turned_head", "dragon_flyover",
+            "stranger_joins", "stranger_death", "phantom_heartbeat", "fake_subtitle", "blinking", "dimming", "false_night", "false_slot", "turned_head", "dragon_flyover",
             "approaching_steps", "distant_mining", "ladder_steps", "ravenous", "infested", "oozing", "weaving")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
@@ -110,6 +111,15 @@ final class HauntEventGameTests {
             check(helper, helper.getLevel().isEmptyBlock(field) && helper.getLevel().isEmptyBlock(field.south()), "harvest must take the ripe wheat");
             AABB around = new AABB(field).inflate(8);
             check(helper, helper.getLevel().getEntitiesOfClass(Mannequin.class, around).isEmpty(), "harvest must leave once the field is bare");
+        }));
+        tests.put("event_torches_behind", helper -> runs(helper, "torches_behind", player -> {
+            // A roof over the player, and a torch behind them: a fresh player faces south.
+            helper.setBlock(FEET.above(2), Blocks.STONE);
+            helper.setBlock(FEET.north(3), Blocks.TORCH);
+            helper.setBlock(FEET.south(3), Blocks.TORCH);
+        }, () -> {
+            check(helper, !helper.getBlockState(FEET.north(3)).is(Blocks.TORCH), "torches_behind must put out the torch behind");
+            helper.assertBlockPresent(Blocks.TORCH, FEET.south(3));
         }));
         tests.put("event_false_windows", helper -> runs(helper, "false_windows",
             player -> helper.setBlock(FEET.north(2), Blocks.GLASS), () -> helper.assertBlockPresent(Blocks.GLASS, FEET.north(2))));
@@ -210,6 +220,18 @@ final class HauntEventGameTests {
             }
         }, () -> check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-6, 0, -6), helper.absolutePos(FEET).offset(6, 3, 6))
             .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Blocks.OAK_WALL_SIGN)), "cave_sign must hang a wall sign")));
+        // The sign stands up to 16 blocks out, past the usual test floor.
+        PADDING.put("event_item_trail", 20);
+        tests.put("event_item_trail", helper -> runs(helper, "item_trail", player -> {
+            for (BlockPos pos : BlockPos.betweenClosed(-14, 0, -14, 22, 0, 22)) {
+                helper.getLevel().setBlockAndUpdate(helper.absolutePos(pos), Blocks.STONE.defaultBlockState());
+            }
+        }, () -> {
+            check(helper, !helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(FEET)).inflate(17)).isEmpty(),
+                "item_trail must lay items");
+            check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-17, -2, -17), helper.absolutePos(FEET).offset(17, 3, 17))
+                .anyMatch(pos -> helper.getLevel().getBlockState(pos).is(Blocks.OAK_SIGN)), "item_trail must stand a sign");
+        }));
         tests.put("event_chest_blast", helper -> runs(helper, "chest_blast",
             player -> helper.setBlock(FEET.west(3), Blocks.CHEST), () -> helper.assertBlockPresent(Blocks.CHEST, FEET.west(3))));
         tests.put("event_wrong_smelt", helper -> runs(helper, "wrong_smelt", player -> {
@@ -219,9 +241,32 @@ final class HauntEventGameTests {
             ItemStack output = helper.getBlockEntity(FEET.west(2), AbstractFurnaceBlockEntity.class).getItem(2);
             check(helper, (output.is(Items.CHARCOAL) || output.is(Items.ROTTEN_FLESH)) && output.getCount() == 3, "wrong_smelt must change the output and keep its count");
         }));
+        tests.put("event_furniture_moves", helper -> runs(helper, "furniture_moves", player -> {
+            helper.setBlock(FEET.west(2), Blocks.CHEST);
+            helper.getBlockEntity(FEET.west(2), ChestBlockEntity.class).setItem(0, new ItemStack(Items.DIAMOND, 5));
+        }, () -> {
+            helper.assertBlockPresent(Blocks.AIR, FEET.west(2));
+            check(helper, BlockPos.betweenClosedStream(helper.absolutePos(FEET).offset(-9, -2, -9), helper.absolutePos(FEET).offset(9, 2, 9))
+                .anyMatch(pos -> helper.getLevel().getBlockEntity(pos) instanceof ChestBlockEntity chest && ItemStack.matches(chest.getItem(0), new ItemStack(Items.DIAMOND, 5))),
+                "furniture_moves must carry the chest and its item elsewhere");
+            check(helper, helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(FEET.west(2))).inflate(2)).isEmpty(), "furniture_moves must drop nothing");
+        }));
         tests.put("event_doorstep_gift", helper -> runs(helper, "doorstep_gift", player -> helper.setBlock(FEET.west(3), Blocks.OAK_DOOR),
             () -> check(helper, !helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(FEET)).inflate(6)).isEmpty(),
                 "doorstep_gift must leave an item")));
+        tests.put("event_muddy_footprints", helper -> runs(helper, "muddy_footprints", player -> {
+            for (BlockPos pos : BlockPos.betweenClosed(0, 4, 0, 9, 4, 9)) {
+                helper.setBlock(pos, Blocks.STONE);
+            }
+            helper.setBlock(FEET.west(4), Blocks.CHEST);
+        }, () -> {
+            for (int k = 1; k <= 3; k++) {
+                if (helper.getBlockState(FEET.west(k)).is(Content.FOOTPRINTS.get())) {
+                    return;
+                }
+            }
+            check(helper, false, "muddy_footprints must leave prints toward the chest");
+        }));
         tests.put("event_spider_overhead", helper -> runs(helper, "spider_overhead",
             player -> helper.setBlock(FEET.above(4), Blocks.STONE), () -> {}));
         tests.put("event_lost_growth", helper -> runs(helper, "lost_growth", player -> {

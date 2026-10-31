@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
+import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.EventTag;
@@ -19,6 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -50,6 +52,9 @@ final class Sounds {
     /** Splash colours of a few potions, so the shatter reads as a real one. */
     private static final int[] POTION_COLORS = {0x8889A6, 0x87A363, 0x4E9331, 0x1F1FA1, 0xF82423, 0x484D48};
 
+    /** Not registered: the packet carries it whole, and the client's {@code sounds.json} gives it no audible sound and a subtitle. */
+    private static final SoundEvent BEHIND_YOU = SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "subtitle.behind_you"));
+
     private Sounds() {}
 
     static List<HauntEvent> all() {
@@ -75,6 +80,11 @@ final class Sounds {
                     Nearby.sound(p, SoundEvents.WARDEN_HEARTBEAT, p.position(), config.tone("sound"));
                     return n + 1 < config.integer("beats");
                 });
+            }),
+            // 164: nothing to hear, but with subtitles on, something breathes behind the player
+            sound("fake_subtitle", player -> {
+                Config.Section config = Config.event("fake_subtitle");
+                Nearby.sound(player, BEHIND_YOU, Nearby.around(player, config.num("distance"), BEHIND), config.tone("sound"));
             }),
             // 133: steps closing in from some bearing, walking or running pace
             sound("approaching_steps", Sounds::approach),

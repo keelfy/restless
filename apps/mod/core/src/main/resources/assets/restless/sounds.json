@@ -1,0 +1,6 @@
+{
+  "subtitle.behind_you": {
+    "subtitle": "subtitles.restless.behind_you",
+    "sounds": [{ "name": "minecraft:block.wool.step", "type": "event", "volume": 0.001 }]
+  }
+}

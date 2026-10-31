@@ -292,7 +292,7 @@ an essence or artifact.
 `Idea` is the number in [event-ideas.md](event-ideas.md).
 
 Text events (`whisper`, `own_voice`, `subliminal_title`, `false_death`, `false_advancement`, `stranger_death`, `book_page`,
-`new_sign`, `cave_sign`) never repeat a variant for the same spirit: each spirit remembers what it has said through each of
+`new_sign`, `cave_sign`, `item_trail`) never repeat a variant for the same spirit: each spirit remembers what it has said through each of
 them. Once every variant is used, the event cannot run for that spirit for `said.rest_ticks` (7 in-game days), then starts
 over. A text event with no spirit behind it (command, debug menu) counts against the player instead. Saved with the world.
 
@@ -304,11 +304,13 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `cold_touch` | | HARMFUL | ASSAULT | 1.0 | Player health > 1 heart | 1–2 hearts of magic damage (2–4 HP), never lethal (leaves at least 0.5 heart), freezing sound |
 | `candles_out` | 1 | LIGHT | LIGHTS | 0.8 | A lit candle within 10 blocks | Every lit candle within 10 blocks goes out |
 | `torch_chain` | 2 | LIGHT | LIGHTS | 0.8 | A torch within 10 | Up to 8 torches knock off one by one, every 0.3 s, nearest to the player last |
+| `torches_behind` | 187 | LIGHT | LIGHTS | 0.5 | Underground, a torch within 16 behind the player | Up to 8 torches behind the player's facing turn unlit one by one, every 0.75 s, farthest first; relit after 2 min unless changed (hardcore: stay out) |
 | `lamp_off` | 4 | LIGHT | LIGHTS | 0.8 | A lit redstone lamp within 10 | Switches it off for 1 s, back on if still powered |
 | `lantern_flicker` | 3 | LIGHT | LIGHTS | 0.8 | A lantern or soul lantern within 10 | Out and back on three times in 1.2 s, ends in place (stays out in hardcore) |
 | `campfire_out` | 6 | LIGHT | LIGHTS | 0.8 | A lit campfire within 10 | Snuffs one campfire |
 | `furnace_dies` | 5 | LIGHT | LIGHTS | 0.8 | A burning furnace, blast furnace or smoker within 10 with fuel in the fuel slot | The fire goes out and the fuel is taken out for 5 s, then returned (dropped if the slot was filled meanwhile or the furnace is gone) |
-| `dimming` | 7 | LIGHT | LIGHTS | 0.6 | Always | The player's view fades toward black over 5 s (peak 80%) and back; client-side overlay under the HUD, no block or light level changes |
+| `dimming` | 7 | LIGHT | LIGHTS | 0.6 | Always | The player's view fades toward black over 9 s (peak 80%) and back over 6 s; client-side overlay under the HUD, no block or light level changes |
+| `blinking` | 144 | LIGHT | LIGHTS | 0.4 | Always | The dimming overlay, 3–6 quick cycles (0.15 s down, 0.2 s held at 95%, 0.25 s up) |
 | `candles_light` | 8 | LIGHT | LIGHTS | 0.8 | An unlit candle within 10 | Lights one candle |
 | `new_face` | 9 | LIGHT | LIGHTS | 0.6 | A jack o'lantern within 10 | Turns it to face another way |
 | `blackout` | 10 | HARMFUL | LIGHTS | 0.5 | Not peaceful, not daylight under open sky, a light within 16, standing room 5–9 blocks away | Torches break, candles, campfires and lit lamps within 16 go out; 0.75 s later a zombie or skeleton appears 5–9 blocks away and targets the player |
@@ -333,7 +335,9 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `dispenser_shot` | 177 | HARMFUL | DOORS | 0.4 | A dispenser within 12 | It clicks as if empty, then after 1 s an arrow leaves its face toward the player. Takes nothing from its contents, the arrow cannot be picked up |
 | `chest_blast` | 117 | HARMFUL | DOORS | 0.3 | A chest within 10, health above 10 | A creeper hiss from the chest, then after 1 s an explosion of power 1 that breaks no blocks |
 | `wrong_smelt` | 182 | LIGHT | DOORS | 0.5 | A furnace within 10 with something in its output | The output becomes charcoal or rotten flesh of the same count; put back after 2 min unless taken or changed (stays under hardcore) |
+| `furniture_moves` | 103 | HARMFUL | DOORS | 0.3 | A single chest, crafting table, furnace or empty bed within 12 | It stands 2 to 5 blocks away on free floor, block entity and contents carried through its save format, a bed both halves. Moved back after 5 min if both spots are unchanged; under hardcore it stays |
 | `doorstep_gift` | 186 | LIGHT | DOORS | 0.4 | A door within 12 with free floor on its far side | A poppy, dandelion, bone or raw rabbit lies outside, on the side away from the player; a real item |
+| `muddy_footprints` | 184 | LIGHT | DOORS | 0.4 | Indoors, a bed or chest within 10 on the player's level, reachable over free floor | Pairs of muddy prints appear one by one on every first or second block from the player to it, each with a mud step. Each is wiped after 2 min if still there; under hardcore they stay |
 | `locked_door` | 19 | HARMFUL | DOORS | 0.7 | A wooden door within 12 | Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back |
 | `footsteps` | 24 | LIGHT | SOUND | 0.4 | Always | A step sound 2 blocks behind the player |
 | `creeper_hiss` | 25 | LIGHT | SOUND | 0.4 | Always | Creeper fuse hiss nearby |
@@ -361,6 +365,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `cracking_floor` | 138 | HARMFUL | SOUND | 0.3 | Standing on a block | Break particles and sound of the block underfoot; it stays |
 | `bottle_shatter` | 139 | LIGHT | SOUND | 0.4 | Always | A splash potion shatters 4 blocks away (sound and coloured particles) |
 | `shrieker` | 199 | LIGHT | SOUND | 0.4 | A sculk shrieker within 16 | It shrieks. No player is given to it, so nobody is warned and no warden is called |
+| `fake_subtitle` | 164 | LIGHT | SOUND | 0.3 | Always | A sound with no audio that shows the subtitle "Something breathes behind you" from 3 blocks behind the player. Only seen with subtitles on |
 | `phantom_heartbeat` | 199 | LIGHT | SOUND | 0.4 | Always | Eight warden heartbeats at the player, one every 0.9 s |
 | `note_block_voice` | 140 | LIGHT | SOUND | 0.5 | A note block within 16 | It plays a villager or player hurt, ghast scream, zombie villager or vex sound, with a note particle |
 | `nausea` | 39 | LIGHT | AFFLICTION | 0.6 | No nausea | Nausea 5 s |
@@ -438,6 +443,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `lava_leak` | 183 | LIGHT | BLOCKS | 0.4 | Same | Lava drips from it for 6 s, particles and sound only, in every mode |
 | `mock_grave` | 185 | LIGHT | BLOCKS | 0.4 | Open standing room 5–10 away with a free cell in front | A gravestone with a sign (R.I.P., the player's name, tomorrow's date); removed after 5 min, stays under hardcore |
 | `cave_sign` | 189 | LIGHT | BLOCKS | 0.4 | Underground (no sky above), a wall 4–8 blocks out in one of the four directions | A wall sign with a short warning (go back, turn around, too late); removed after 5 min, stays under hardcore |
+| `item_trail` | 115 | LIGHT | BLOCKS | 0.3 | Standing room 10–16 away | Bones, rotten flesh and string every 3 blocks along the ground from the player to a standing sign with a short note; the items cannot be picked up. Items cleared and sign removed (if unedited) after 5 min; under hardcore the items can be taken and the sign stays |
 | `animals_stare` | 85 | LIGHT | MOBS | 0.6 | Two animals within 16 | They stop and face the player for 3 s |
 | `cat_hiss` | 86 | LIGHT | MOBS | 0.6 | A cat within 16 | The cat hisses |
 | `cat_flee` | 129 | LIGHT | MOBS | 0.5 | A standing cat within 16 | The cats run 8 blocks away from the spirit's point for 5 s; one hisses |
@@ -486,6 +492,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `turned_head` | 166 | HARMFUL | PRESENCE | 0.2 | None | A step sound of the ground at the spirit's position (or 6 blocks away at a random bearing), then the camera turns toward it over 30 ticks, eased, a little every frame on the client (`TurnPayload`, `HeadTurn`); the mouse still works meanwhile |
 | `stranger_joins` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets "<name> joined the game" and a player list entry for a made-up nickname (as spirits get, at most 16 characters), in a default skin. 40 s later the entry goes and "<name> left the game" follows. Nothing on the server |
 | `stranger_death` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets a vanilla death message (fell, drowned, suffocated, fell out of the world, died) for a made-up nickname |
+| `false_whisper` | 202 | LIGHT | PRESENCE, PLAYER | 0.0 | Another player online | A gray italic "X whispers to you" line from a real online player; off by default since it impersonates a real person |
 
 ## Chances
 
