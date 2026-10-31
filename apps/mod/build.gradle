@@ -1,5 +1,20 @@
 plugins {
 	id 'com.diffplug.spotless'
+	id 'org.sonarqube'
+}
+
+// SonarQube Cloud analysis; CI runs `sonar` with SONAR_TOKEN. Coverage comes from :core's JaCoCo report.
+sonar {
+	properties {
+		property 'sonar.host.url', 'https://sonarcloud.io'
+		property 'sonar.organization', 'keelfy'
+		property 'sonar.projectKey', 'keelfy_restless'
+		property 'sonar.projectName', 'Restless'
+	}
+}
+// The scanner reads compiled classes and the coverage report but does not build them itself.
+tasks.named('sonar') {
+	dependsOn ':core:jacocoTestReport', ':neoforge:gameTestClasses'
 }
 
 // Build scripts and git metadata of the whole build live under the root project.

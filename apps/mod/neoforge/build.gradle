@@ -50,6 +50,15 @@ dependencies {
 	gameTestCompileOnly core
 }
 
+// GameTests are this project's only tests; Sonar only picks up the `test` source set by itself.
+sonar {
+	properties {
+		property 'sonar.tests', sourceSets.gameTest.java.srcDirs
+		property 'sonar.java.test.binaries', sourceSets.gameTest.output.classesDirs
+		property 'sonar.java.test.libraries', sourceSets.gameTest.compileClasspath
+	}
+}
+
 // Core is bundled into this jar: its sources and resources are compiled here.
 tasks.named('compileJava', JavaCompile) {
 	source(core.sourceSets.main.allJava)
