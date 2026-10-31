@@ -242,6 +242,17 @@ final class Lies {
                     p.sendSystemMessage(Component.translatable("multiplayer.player.left", profile.name()).withStyle(ChatFormatting.YELLOW));
                 });
             }),
+            // 202: a whisper, styled as /msg, from a real player online who never sent it; off by default, as it puts words in a real person's mouth
+            new SimpleEvent(Identifier.parse("false_whisper"), HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER),
+                player -> !others(player).isEmpty() && Said.left(player, "false_whisper", Config.event("false_whisper").texts("lines")), player -> {
+                    List<ServerPlayer> others = others(player);
+                    String line = Said.pick(player, "false_whisper", Config.event("false_whisper").texts("lines"));
+                    if (line != null && !others.isEmpty()) {
+                        ServerPlayer from = others.get(player.getRandom().nextInt(others.size()));
+                        player.sendSystemMessage(Component.translatable("commands.message.display.incoming", from.getDisplayName(), Component.literal(line))
+                            .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+                    }
+                }),
             // 124: someone else's death, in the player's own language
             new SimpleEvent(Identifier.parse("stranger_death"), HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER),
                 player -> Said.left(player, "stranger_death", Config.event("stranger_death").texts("deaths")), player -> {
@@ -251,6 +262,10 @@ final class Lies {
                     }
                 })
         );
+    }
+
+    private static List<ServerPlayer> others(ServerPlayer player) {
+        return player.level().getServer().getPlayerList().getPlayers().stream().filter(p -> p != player).toList();
     }
 
     /** An event that can always run. */

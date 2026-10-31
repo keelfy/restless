@@ -17,6 +17,7 @@
     "minecraft:false_advancement": { "weight": 0.2, "revoke_ticks": 2, "advancements": ["whisper/who_are_you", "whisper/not_alone", "whisper/behind_you"] },
     "minecraft:turned_head": { "weight": 0.2, "distance": 6.0, "sound": { "volume": 0.8, "pitch": 0.9 }, "delay_ticks": 10, "ticks": 30 },
     "minecraft:stranger_joins": { "weight": 0.2, "seconds": 40, "latency": 120 },
+    "minecraft:false_whisper": { "weight": 0.0, "lines": ["behind you", "why did you leave me there", "it followed me to you", "don't go to sleep"] },
     "minecraft:stranger_death": { "weight": 0.2, "deaths": ["death.fell.accident.generic", "death.attack.drown", "death.attack.inWall", "death.attack.outOfWorld", "death.attack.generic"] }
   }
 }

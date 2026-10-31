@@ -80,7 +80,7 @@ final class HauntEventGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         for (String id : List.of("false_wound", "false_hearts", "false_hunger", "guardian_face", "false_totem", "subliminal_title",
             "red_vignette", "own_voice", "false_death", "private_rain", "silent_lightning", "distant_mob", "bottle_shatter",
-            "stranger_joins", "stranger_death", "phantom_heartbeat", "fake_subtitle", "false_night", "false_slot", "turned_head", "dragon_flyover",
+            "stranger_joins", "stranger_death", "phantom_heartbeat", "fake_subtitle", "blinking", "dimming", "false_night", "false_slot", "turned_head", "dragon_flyover",
             "approaching_steps", "distant_mining", "ladder_steps", "ravenous", "infested", "oozing", "weaving")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
@@ -110,6 +110,15 @@ final class HauntEventGameTests {
             check(helper, helper.getLevel().isEmptyBlock(field) && helper.getLevel().isEmptyBlock(field.south()), "harvest must take the ripe wheat");
             AABB around = new AABB(field).inflate(8);
             check(helper, helper.getLevel().getEntitiesOfClass(Mannequin.class, around).isEmpty(), "harvest must leave once the field is bare");
+        }));
+        tests.put("event_torches_behind", helper -> runs(helper, "torches_behind", player -> {
+            // A roof over the player, and a torch behind them: a fresh player faces south.
+            helper.setBlock(FEET.above(2), Blocks.STONE);
+            helper.setBlock(FEET.north(3), Blocks.TORCH);
+            helper.setBlock(FEET.south(3), Blocks.TORCH);
+        }, () -> {
+            check(helper, !helper.getBlockState(FEET.north(3)).is(Blocks.TORCH), "torches_behind must put out the torch behind");
+            helper.assertBlockPresent(Blocks.TORCH, FEET.south(3));
         }));
         tests.put("event_false_windows", helper -> runs(helper, "false_windows",
             player -> helper.setBlock(FEET.north(2), Blocks.GLASS), () -> helper.assertBlockPresent(Blocks.GLASS, FEET.north(2))));

@@ -8,6 +8,7 @@ import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.platform.Platform;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -37,6 +38,8 @@ import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 
 /** Fire and light sources misbehaving. The older {@code extinguish_light} event lives in its own class. */
 final class Lights {
@@ -56,6 +59,9 @@ final class Lights {
             // 2: the torches go out one by one, the nearest last
             SimpleEvent.light("torch_chain", EventTag.LIGHTS,
                 player -> Nearby.any(player, "torch_chain", Lights::isTorch), Lights::torchChain),
+            // 187: underground, the torches behind the player go out one by one, the farthest first, so the way back is dark
+            SimpleEvent.light("torches_behind", EventTag.LIGHTS,
+                player -> roofed(player) && !behind(player).isEmpty(), Lights::torchesBehind),
             // 3: gone and back a few times; Restore finishes it if the player is gone before the last step
             SimpleEvent.light("lantern_flicker", EventTag.LIGHTS,
                 player -> Nearby.any(player, "lantern_flicker", Lights::isLantern), Lights::flicker),
@@ -79,8 +85,9 @@ final class Lights {
             SimpleEvent.light("furnace_dies", EventTag.LIGHTS,
                 player -> !fueled(player).isEmpty(), Lights::douse),
             // 7: the view fades on this player's client only; see Dimming
-            SimpleEvent.light("dimming", EventTag.LIGHTS, player -> true,
-                player -> player.connection.send(new ClientboundCustomPayloadPacket(new DimPayload(Config.event("dimming").integer("duration_ticks"))))),
+            SimpleEvent.light("dimming", EventTag.LIGHTS, player -> true, player -> dim(player, "dimming")),
+            // 144: the same, quick and over and over, like eyes that will not stay open
+            SimpleEvent.light("blinking", EventTag.LIGHTS, player -> true, player -> dim(player, "blinking")),
             // 8
             SimpleEvent.light("candles_light", EventTag.LIGHTS,
                 player -> Nearby.any(player, "candles_light", CandleBlock::canLight),
@@ -184,6 +191,48 @@ final class Lights {
             }
             return n + 1 < Math.min(torches.size(), config.integer("max_torches"));
         });
+    }
+
+    /** Something solid overhead; sky light would lag behind a roof just built. */
+    private static boolean roofed(ServerPlayer player) {
+        BlockPos feet = player.blockPosition();
+        return player.level().getHeight(Heightmap.Types.MOTION_BLOCKING, feet.getX(), feet.getZ()) > feet.getY() + 1;
+    }
+
+    /** Torches in range behind the player's facing, farthest first. */
+    private static List<BlockPos> behind(ServerPlayer player) {
+        Vec3 look = player.getLookAngle().multiply(1, 0, 1);
+        return Nearby.all(player, "torches_behind", Lights::isTorch).stream()
+            .filter(pos -> Vec3.atCenterOf(pos).subtract(player.position()).dot(look) < 0)
+            .sorted(Comparator.comparingDouble((BlockPos pos) -> pos.distToCenterSqr(player.position())).reversed())
+            .toList();
+    }
+
+    /** Back on after a while, each torch only if it is still the one put out; under hardcore they stay out. */
+    private static void torchesBehind(ServerPlayer player) {
+        List<BlockPos> torches = behind(player);
+        Config.Section config = Config.event("torches_behind");
+        Config.Tone tone = config.tone("sound");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            ServerLevel level = p.level();
+            BlockPos pos = torches.get(n);
+            BlockState state = level.getBlockState(pos);
+            if (isTorch(state)) {
+                Restore.swap(level, pos, UnlitLights.extinguished(state), config.integer("restore_ticks"));
+                level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+            }
+            return n + 1 < Math.min(torches.size(), config.integer("max_torches"));
+        });
+    }
+
+    private static void dim(ServerPlayer player, String id) {
+        if (!Platform.get().canReceive(player, DimPayload.TYPE)) {
+            return;
+        }
+        Config.Section config = Config.event(id);
+        int times = config.integer("times_min") + player.getRandom().nextInt(config.integer("times_max") - config.integer("times_min") + 1);
+        player.connection.send(new ClientboundCustomPayloadPacket(new DimPayload(
+            config.integer("fall_ticks"), config.integer("hold_ticks"), config.integer("rise_ticks"), times, (float) config.num("peak"))));
     }
 
     /** The lamp is lit again afterwards only if it is still powered; a lamp left off then is simply a lamp with no power. */
