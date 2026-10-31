@@ -28,9 +28,9 @@ final class Trees {
 
     static List<HauntEvent> all() {
         return List.of(
-            // 108: the tree nearby takes a few steps to the side; under hardcore it stays there
-            SimpleEvent.light("moving_tree", EventTag.BLOCKS, player -> !feet(player).isEmpty(), Trees::move)
-        );
+                // 108: the tree nearby takes a few steps to the side; under hardcore it stays there
+                SimpleEvent.light(
+                        "moving_tree", EventTag.BLOCKS, player -> !feet(player).isEmpty(), Trees::move));
     }
 
     private static void move(ServerPlayer player) {
@@ -43,9 +43,11 @@ final class Trees {
             if (tree == null) {
                 continue;
             }
-            List<Direction> ways = new ArrayList<>(Direction.Plane.HORIZONTAL.stream().toList());
+            List<Direction> ways =
+                    new ArrayList<>(Direction.Plane.HORIZONTAL.stream().toList());
             Collections.shuffle(ways, new java.util.Random(player.getRandom().nextLong()));
-            int shift = config.integer("min_shift") + player.getRandom().nextInt(config.integer("max_shift") - config.integer("min_shift") + 1);
+            int shift = config.integer("min_shift")
+                    + player.getRandom().nextInt(config.integer("max_shift") - config.integer("min_shift") + 1);
             for (Direction way : ways) {
                 BlockPos by = BlockPos.ZERO.relative(way, shift);
                 if (fits(level, tree, by)) {
@@ -65,9 +67,9 @@ final class Trees {
     }
 
     /**
-     * The logs connected to {@code start} and the leaves that grew from them; null if it is too big or has no crown.
-     * A leaf belongs to this tree when it is no further from these logs than the distance it keeps to its nearest log,
-     * so in a forest the crowns that touch this one stay behind.
+     * The logs connected to {@code start} and the leaves that grew from them; null if it is too big or has no crown. A
+     * leaf belongs to this tree when it is no further from these logs than the distance it keeps to its nearest log, so
+     * in a forest the crowns that touch this one stay behind.
      */
     private static @Nullable Map<BlockPos, BlockState> tree(ServerLevel level, BlockPos start, int max) {
         Map<BlockPos, BlockState> found = new LinkedHashMap<>();
@@ -76,7 +78,9 @@ final class Trees {
         while (!queue.isEmpty()) {
             BlockPos at = queue.poll();
             for (BlockPos next : BlockPos.betweenClosed(at.offset(-1, -1, -1), at.offset(1, 1, 1))) {
-                if (!found.containsKey(next) && level.isLoaded(next) && level.getBlockState(next).is(BlockTags.LOGS)) {
+                if (!found.containsKey(next)
+                        && level.isLoaded(next)
+                        && level.getBlockState(next).is(BlockTags.LOGS)) {
                     if (found.size() >= max) {
                         return null;
                     }
@@ -93,8 +97,11 @@ final class Trees {
                 for (Direction d : Direction.values()) {
                     BlockPos pos = at.relative(d);
                     BlockState state = found.containsKey(pos) || !level.isLoaded(pos) ? null : level.getBlockState(pos);
-                    if (state != null && state.is(BlockTags.LEAVES) && state.hasProperty(LeavesBlock.PERSISTENT) && !state.getValue(LeavesBlock.PERSISTENT)
-                        && step <= state.getValue(LeavesBlock.DISTANCE)) {
+                    if (state != null
+                            && state.is(BlockTags.LEAVES)
+                            && state.hasProperty(LeavesBlock.PERSISTENT)
+                            && !state.getValue(LeavesBlock.PERSISTENT)
+                            && step <= state.getValue(LeavesBlock.DISTANCE)) {
                         if (found.size() >= max) {
                             return null;
                         }
@@ -143,7 +150,7 @@ final class Trees {
             }
             // A tree that has been cut or built on meanwhile stays as it is.
             if (moved.entrySet().stream().allMatch(e -> level.getBlockState(e.getKey()) == e.getValue())
-                && tree.keySet().stream().allMatch(pos -> moved.containsKey(pos) || level.isEmptyBlock(pos))) {
+                    && tree.keySet().stream().allMatch(pos -> moved.containsKey(pos) || level.isEmptyBlock(pos))) {
                 move(level, moved, by.multiply(-1));
                 under.forEach((pos, state) -> {
                     if (level.isEmptyBlock(pos)) {
@@ -156,7 +163,9 @@ final class Trees {
     }
 
     private static void move(ServerLevel level, Map<BlockPos, BlockState> parts, BlockPos by) {
-        parts.keySet().forEach(pos -> Restore.quiet(level, pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState()));
+        parts.keySet()
+                .forEach(pos ->
+                        Restore.quiet(level, pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState()));
         parts.forEach((pos, state) -> Restore.quiet(level, pos.offset(by), state));
     }
 }

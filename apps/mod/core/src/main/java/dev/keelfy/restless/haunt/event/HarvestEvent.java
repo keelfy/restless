@@ -34,7 +34,8 @@ final class HarvestEvent extends StrangerAct {
     boolean step(ServerPlayer player, Mannequin figure, Config.Section config, int n) {
         ServerLevel level = player.level();
         BlockPos crop = ripe(level, figure.blockPosition(), config.integer("reach")).stream()
-            .min(Comparator.comparingDouble(pos -> pos.distToCenterSqr(figure.position()))).orElse(null);
+                .min(Comparator.comparingDouble(pos -> pos.distToCenterSqr(figure.position())))
+                .orElse(null);
         if (crop == null) {
             return false;
         }
@@ -68,8 +69,10 @@ final class HarvestEvent extends StrangerAct {
         double min = config.num("min_distance");
         int reach = config.integer("reach");
         for (BlockPos pos : BlockPos.betweenClosed(crop.offset(-reach, -1, -reach), crop.offset(reach, 1, reach))) {
-            if (level.isEmptyBlock(pos) && level.isEmptyBlock(pos.above()) && level.getBlockState(pos.below()).isSolidRender()
-                && player.distanceToSqr(Vec3.atBottomCenterOf(pos)) >= min * min) {
+            if (level.isEmptyBlock(pos)
+                    && level.isEmptyBlock(pos.above())
+                    && level.getBlockState(pos.below()).isSolidRender()
+                    && player.distanceToSqr(Vec3.atBottomCenterOf(pos)) >= min * min) {
                 return pos.immutable();
             }
         }

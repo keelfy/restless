@@ -37,7 +37,8 @@ public final class AshBlock extends CarpetBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
+    protected void createBlockStateDefinition(
+            StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
         builder.add(PRINT);
     }
 
@@ -51,14 +52,21 @@ public final class AshBlock extends CarpetBlock {
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         HauntData data = HauntData.get(level.getServer());
-        for (Sense.Spirit spirit : Sense.around(level, pos, Config.section("ash").integer("reach"), data)) {
+        for (Sense.Spirit spirit :
+                Sense.around(level, pos, Config.section("ash").integer("reach"), data)) {
             HauntData.Haunting haunting = spirit.haunting();
-            if (Clues.reveal(Traits.of(haunting.traits()), Traits.all(), Clue.FOOTPRINTS, new Random(haunting.seed())).isPresent()) {
+            if (Clues.reveal(Traits.of(haunting.traits()), Traits.all(), Clue.FOOTPRINTS, new Random(haunting.seed()))
+                    .isPresent()) {
                 int print = 1 + (int) Math.floorMod(haunting.seed(), (long) PRINTS);
                 level.setBlock(pos, state.setValue(PRINT, print), 3);
                 int reach = Config.section("ash").integer("reach");
-                level.players().stream().filter(p -> p.blockPosition().closerThan(pos, reach))
-                    .forEach(p -> Journal.note(p, Notebook.Kind.FOOTPRINTS, haunting, Component.translatable("journal.restless.print." + print)));
+                level.players().stream()
+                        .filter(p -> p.blockPosition().closerThan(pos, reach))
+                        .forEach(p -> Journal.note(
+                                p,
+                                Notebook.Kind.FOOTPRINTS,
+                                haunting,
+                                Component.translatable("journal.restless.print." + print)));
                 return;
             }
         }

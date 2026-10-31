@@ -10,13 +10,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * What angers spirits. A player's own spirits take offence at everything that player does; a territorial spirit takes it
- * only when it happens inside its radius, and also when its anchor is torn up. Anger feeds {@link Power}.
+ * What angers spirits. A player's own spirits take offence at everything that player does; a territorial spirit takes
+ * it only when it happens inside its radius, and also when its anchor is torn up. Anger feeds {@link Power}.
  */
 public final class Anger {
     /** What spirits hate; {@code key} names the amount in the {@code anger} config. */
     public enum Source {
-        KILL_CAT("kill_cat"), BREAK_GRAVE("break_grave"), BURN_FOREST("burn_forest");
+        KILL_CAT("kill_cat"),
+        BREAK_GRAVE("break_grave"),
+        BURN_FOREST("burn_forest");
 
         private final String key;
 
@@ -36,7 +38,8 @@ public final class Anger {
         MinecraftServer server = player.level().getServer();
         HauntData data = HauntData.get(server);
         double by = source.amount();
-        List<HauntData.Haunting> own = new ArrayList<>(Director.hauntings(player, data, server.overworld().getGameTime()));
+        List<HauntData.Haunting> own = new ArrayList<>(
+                Director.hauntings(player, data, server.overworld().getGameTime()));
         if (!own.isEmpty()) {
             own.replaceAll(h -> h.angered(by));
             data.put(player.getUUID(), own);
@@ -44,10 +47,14 @@ public final class Anger {
         raiseTerritorial(data, player, at, by, Integer.MAX_VALUE);
     }
 
-    /** Call when a player breaks a block: graves anger like any source, and breaking a territorial spirit's anchor angers that spirit. */
+    /**
+     * Call when a player breaks a block: graves anger like any source, and breaking a territorial spirit's anchor
+     * angers that spirit.
+     */
     public static void broke(ServerPlayer player, BlockState state, BlockPos at) {
         Config.Section config = Config.section("anger");
-        if (config.texts("graves").contains(BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString())) {
+        if (config.texts("graves")
+                .contains(BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString())) {
             provoke(player, Source.BREAK_GRAVE, at);
         }
         int reach = config.integer("anchor_reach");

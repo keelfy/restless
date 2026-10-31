@@ -9,18 +9,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseTorchBlock;
@@ -30,10 +28,13 @@ import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
 
 /** Non-emitting counterparts retain placement, support and waterlogging properties. */
 public final class UnlitLights {
     private record Entry(Block source, Supplier<Block> unlit) {}
+
     private static final List<Entry> ENTRIES = new ArrayList<>();
     public static final List<Supplier<Item>> ITEMS = new ArrayList<>();
 
@@ -42,16 +43,35 @@ public final class UnlitLights {
             String wall = type.replace("torch", "wall_torch");
             Supplier<Block> standing = register(type, false, false);
             Supplier<Block> mounted = register(wall, true, false);
-            ITEMS.add(Platform.get().register(BuiltInRegistries.ITEM, "unlit_" + type,
-                key -> new StandingAndWallBlockItem(standing.get(), mounted.get(), Direction.DOWN,
-                    new Item.Properties().setId(key).useBlockDescriptionPrefix())));
+            ITEMS.add(Platform.get()
+                    .register(
+                            BuiltInRegistries.ITEM,
+                            "unlit_" + type,
+                            key -> new StandingAndWallBlockItem(
+                                    standing.get(),
+                                    mounted.get(),
+                                    Direction.DOWN,
+                                    new Item.Properties().setId(key).useBlockDescriptionPrefix())));
         }
-        for (String type : List.of("lantern", "soul_lantern", "copper_lantern", "exposed_copper_lantern",
-                "weathered_copper_lantern", "oxidized_copper_lantern", "waxed_copper_lantern",
-                "waxed_exposed_copper_lantern", "waxed_weathered_copper_lantern", "waxed_oxidized_copper_lantern")) {
+        for (String type : List.of(
+                "lantern",
+                "soul_lantern",
+                "copper_lantern",
+                "exposed_copper_lantern",
+                "weathered_copper_lantern",
+                "oxidized_copper_lantern",
+                "waxed_copper_lantern",
+                "waxed_exposed_copper_lantern",
+                "waxed_weathered_copper_lantern",
+                "waxed_oxidized_copper_lantern")) {
             Supplier<Block> block = register(type, false, true);
-            ITEMS.add(Platform.get().register(BuiltInRegistries.ITEM, "unlit_" + type,
-                key -> new BlockItem(block.get(), new Item.Properties().setId(key).useBlockDescriptionPrefix())));
+            ITEMS.add(Platform.get()
+                    .register(
+                            BuiltInRegistries.ITEM,
+                            "unlit_" + type,
+                            key -> new BlockItem(
+                                    block.get(),
+                                    new Item.Properties().setId(key).useBlockDescriptionPrefix())));
         }
     }
 
@@ -60,7 +80,8 @@ public final class UnlitLights {
     private static Supplier<Block> register(String name, boolean wall, boolean lantern) {
         Block original = BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(name));
         Supplier<Block> result = Platform.get().register(BuiltInRegistries.BLOCK, "unlit_" + name, key -> {
-            var properties = BlockBehaviour.Properties.ofLegacyCopy(original).setId(key).lightLevel(state -> 0);
+            var properties =
+                    BlockBehaviour.Properties.ofLegacyCopy(original).setId(key).lightLevel(state -> 0);
             if (lantern) return new Lantern(properties);
             return wall ? new Wall(properties) : new Standing(properties);
         });
@@ -91,7 +112,8 @@ public final class UnlitLights {
     public static ItemStack extinguished(ItemStack stack) {
         if (!stack.isEmpty()) {
             for (Entry entry : ENTRIES) {
-                if (stack.is(entry.source().asItem())) return stack.transmuteCopy(entry.unlit().get());
+                if (stack.is(entry.source().asItem()))
+                    return stack.transmuteCopy(entry.unlit().get());
             }
         }
         return stack;
@@ -119,12 +141,13 @@ public final class UnlitLights {
 
     public static boolean canIgnite(Item source) {
         return source == Items.FLINT_AND_STEEL
-            || (source instanceof BlockItem item && isTorch(item.getBlock().defaultBlockState())
-                && item.getBlock().defaultBlockState().getLightEmission() > 0);
+                || (source instanceof BlockItem item
+                        && isTorch(item.getBlock().defaultBlockState())
+                        && item.getBlock().defaultBlockState().getLightEmission() > 0);
     }
 
-    private static InteractionResult relight(ItemStack stack, BlockState state, Level level, BlockPos pos,
-            Player player, InteractionHand hand) {
+    private static InteractionResult relight(
+            ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand) {
         boolean flint = stack.is(Items.FLINT_AND_STEEL);
         if (!canIgnite(stack)) return InteractionResult.TRY_WITH_EMPTY_HAND;
         if (state.hasProperty(LanternBlock.WATERLOGGED) && state.getValue(LanternBlock.WATERLOGGED)) {
@@ -141,31 +164,62 @@ public final class UnlitLights {
     }
 
     private static final class Lantern extends LanternBlock {
-        Lantern(BlockBehaviour.Properties properties) { super(properties); }
+        Lantern(BlockBehaviour.Properties properties) {
+            super(properties);
+        }
+
         @Override
-        protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
-                Player player, InteractionHand hand, BlockHitResult hit) {
+        protected InteractionResult useItemOn(
+                ItemStack stack,
+                BlockState state,
+                Level level,
+                BlockPos pos,
+                Player player,
+                InteractionHand hand,
+                BlockHitResult hit) {
             return relight(stack, state, level, pos, player, hand);
         }
     }
 
     private static final class Standing extends TorchBlock {
-        Standing(BlockBehaviour.Properties properties) { super(ParticleTypes.FLAME, properties); }
+        Standing(BlockBehaviour.Properties properties) {
+            super(ParticleTypes.FLAME, properties);
+        }
+
         @Override
-        protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
-                Player player, InteractionHand hand, BlockHitResult hit) {
+        protected InteractionResult useItemOn(
+                ItemStack stack,
+                BlockState state,
+                Level level,
+                BlockPos pos,
+                Player player,
+                InteractionHand hand,
+                BlockHitResult hit) {
             return relight(stack, state, level, pos, player, hand);
         }
-        @Override public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {}
+
+        @Override
+        public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {}
     }
 
     private static final class Wall extends WallTorchBlock {
-        Wall(BlockBehaviour.Properties properties) { super(ParticleTypes.FLAME, properties); }
+        Wall(BlockBehaviour.Properties properties) {
+            super(ParticleTypes.FLAME, properties);
+        }
+
         @Override
-        protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
-                Player player, InteractionHand hand, BlockHitResult hit) {
+        protected InteractionResult useItemOn(
+                ItemStack stack,
+                BlockState state,
+                Level level,
+                BlockPos pos,
+                Player player,
+                InteractionHand hand,
+                BlockHitResult hit) {
             return relight(stack, state, level, pos, player, hand);
         }
-        @Override public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {}
+
+        @Override
+        public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {}
     }
 }

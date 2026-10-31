@@ -26,7 +26,8 @@ public final class DarkEye extends Item {
         Config.Section config = Config.section("artifacts");
         int ticks = config.integer("eye_ticks");
         player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, ticks));
-        for (LivingEntity seen : level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(config.num("eye_radius")), e -> e != player)) {
+        for (LivingEntity seen : level.getEntitiesOfClass(
+                LivingEntity.class, player.getBoundingBox().inflate(config.num("eye_radius")), e -> e != player)) {
             seen.addEffect(new MobEffectInstance(MobEffects.GLOWING, ticks));
         }
         level.playSound(null, player.blockPosition(), SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 0.8f, 0.6f);

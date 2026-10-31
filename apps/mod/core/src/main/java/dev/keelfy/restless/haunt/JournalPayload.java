@@ -12,13 +12,16 @@ import net.minecraft.resources.Identifier;
 /** Only discovered, displayable text is sent; hidden spirit state stays on the server. */
 public record JournalPayload(List<JournalPages.Section> sections) implements CustomPacketPayload {
     public static final Type<JournalPayload> TYPE =
-        new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "journal"));
-    private static final StreamCodec<RegistryFriendlyByteBuf, JournalPages.Section> SECTION_CODEC = StreamCodec.composite(
-        ByteBufCodecs.STRING_UTF8, JournalPages.Section::key,
-        ComponentSerialization.STREAM_CODEC.apply(ByteBufCodecs.list()), JournalPages.Section::pages,
-        JournalPages.Section::new);
+            new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "journal"));
+    private static final StreamCodec<RegistryFriendlyByteBuf, JournalPages.Section> SECTION_CODEC =
+            StreamCodec.composite(
+                    ByteBufCodecs.STRING_UTF8,
+                    JournalPages.Section::key,
+                    ComponentSerialization.STREAM_CODEC.apply(ByteBufCodecs.list()),
+                    JournalPages.Section::pages,
+                    JournalPages.Section::new);
     public static final StreamCodec<RegistryFriendlyByteBuf, JournalPayload> CODEC = StreamCodec.composite(
-        SECTION_CODEC.apply(ByteBufCodecs.list()), JournalPayload::sections, JournalPayload::new);
+            SECTION_CODEC.apply(ByteBufCodecs.list()), JournalPayload::sections, JournalPayload::new);
 
     @Override
     public Type<JournalPayload> type() {

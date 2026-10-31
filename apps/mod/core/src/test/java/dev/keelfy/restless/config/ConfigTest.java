@@ -25,8 +25,10 @@ import org.junit.jupiter.api.io.TempDir;
 class ConfigTest {
     private static final Path SOURCES = Path.of("src/main/java");
     private static final Pattern EVENT_ID = Pattern.compile("\\b(?:light|harmful|sound|at|on)\\(\"([a-z_:]+)\"");
-    private static final Pattern OWN_ID = Pattern.compile("public Identifier id\\(\\) \\{\\s*return Identifier\\.parse\\(\"([a-z_:]+)\"\\);");
-    private static final Pattern KEY = Pattern.compile("\\.(?:num|integer|text|texts|lines|section|tone|burst)\\(\"([a-z_]+)\"\\)");
+    private static final Pattern OWN_ID =
+            Pattern.compile("public Identifier id\\(\\) \\{\\s*return Identifier\\.parse\\(\"([a-z_:]+)\"\\);");
+    private static final Pattern KEY =
+            Pattern.compile("\\.(?:num|integer|text|texts|lines|section|tone|burst)\\(\"([a-z_]+)\"\\)");
     private static final Pattern LITERAL = Pattern.compile("\"([a-z_]+)\"");
 
     @Test
@@ -57,7 +59,8 @@ class ConfigTest {
         int leaves = 0;
         for (String name : Config.FILES) {
             JsonObject file = JsonParser.parseString(Config.bundledText(name)).getAsJsonObject();
-            assertEquals(Migrations.BUILT_IN.latest(name), file.get(Config.VERSION).getAsInt(), name + " version");
+            assertEquals(
+                    Migrations.BUILT_IN.latest(name), file.get(Config.VERSION).getAsInt(), name + " version");
             file.remove(Config.VERSION);
             leaves += leaves(file);
         }
@@ -66,28 +69,36 @@ class ConfigTest {
 
     @Test
     void oldFileIsMigratedAndTheOldOneKept(@TempDir Path dir) throws IOException {
-        Files.writeString(dir.resolve("haunt.json"), "{\"version\":1,\"director\":{\"check_interval_ticks\":7,\"gone\":1}}");
+        Files.writeString(
+                dir.resolve("haunt.json"), "{\"version\":1,\"director\":{\"check_interval_ticks\":7,\"gone\":1}}");
         Migrations migrations = Migrations.BUILT_IN.plus("haunt", List.<UnaryOperator<JsonObject>>of(json -> {
             Migrations.move(json, "director.check_interval_ticks", "director.check_interval");
             Migrations.remove(json, "director.gone");
             return json;
         }));
-        JsonObject tree = Config.read(dir, name -> name.equals("haunt")
-            ? "{\"version\":2,\"director\":{\"check_interval\":20,\"default_spirits\":3}}" : Config.bundledText(name), migrations);
+        JsonObject tree = Config.read(
+                dir,
+                name -> name.equals("haunt")
+                        ? "{\"version\":2,\"director\":{\"check_interval\":20,\"default_spirits\":3}}"
+                        : Config.bundledText(name),
+                migrations);
         JsonObject director = tree.getAsJsonObject("director");
         assertEquals(7, director.get("check_interval").getAsInt());
         assertEquals(3, director.get("default_spirits").getAsInt());
         assertFalse(director.has("check_interval_ticks") || director.has("gone"));
-        JsonObject written = JsonParser.parseString(Files.readString(dir.resolve("haunt.json"))).getAsJsonObject();
+        JsonObject written = JsonParser.parseString(Files.readString(dir.resolve("haunt.json")))
+                .getAsJsonObject();
         assertEquals(2, written.get(Config.VERSION).getAsInt());
-        assertEquals(7, written.getAsJsonObject("director").get("check_interval").getAsInt());
+        assertEquals(
+                7, written.getAsJsonObject("director").get("check_interval").getAsInt());
         assertTrue(Files.readString(dir.resolve("haunt.json.v1.bak")).contains("check_interval_ticks"));
     }
 
     @Test
     void dangerSectionBecomesPower(@TempDir Path dir) throws IOException {
-        Files.writeString(dir.resolve("haunt.json"),
-            "{\"version\":1,\"danger\":{\"days_to_max\":9,\"days_share\":1,\"cooldown_calm_minutes\":7}}");
+        Files.writeString(
+                dir.resolve("haunt.json"),
+                "{\"version\":1,\"danger\":{\"days_to_max\":9,\"days_share\":1,\"cooldown_calm_minutes\":7}}");
         JsonObject tree = Config.read(dir, Config::bundledText, Migrations.BUILT_IN);
         assertFalse(tree.has("danger") && tree.getAsJsonObject("danger").has("days_to_max"));
         JsonObject power = tree.getAsJsonObject("power");
@@ -102,7 +113,8 @@ class ConfigTest {
         Files.writeString(dir.resolve("haunt.json"), newer);
         Files.writeString(dir.resolve("spirits.json"), "{ not json");
         JsonObject tree = Config.read(dir, Config::bundledText, Migrations.BUILT_IN);
-        assertEquals(20, tree.getAsJsonObject("director").get("check_interval_ticks").getAsInt());
+        assertEquals(
+                20, tree.getAsJsonObject("director").get("check_interval_ticks").getAsInt());
         assertTrue(tree.has("spirits"));
         assertEquals(newer, Files.readString(dir.resolve("haunt.json")));
         assertEquals("{ not json", Files.readString(dir.resolve("spirits.json")));
@@ -180,7 +192,9 @@ class ConfigTest {
 
     private static List<String> sources() throws IOException {
         try (Stream<Path> files = Files.walk(SOURCES)) {
-            return files.filter(p -> p.toString().endsWith(".java")).map(ConfigTest::read).collect(Collectors.toList());
+            return files.filter(p -> p.toString().endsWith(".java"))
+                    .map(ConfigTest::read)
+                    .collect(Collectors.toList());
         }
     }
 

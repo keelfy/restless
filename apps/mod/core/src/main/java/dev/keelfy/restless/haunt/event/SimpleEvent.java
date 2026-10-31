@@ -11,17 +11,19 @@ import net.minecraft.server.level.ServerPlayer;
 
 /** Event defined by two lambdas; for effects too small to deserve a class. */
 record SimpleEvent(
-    Identifier id,
-    HauntTier tier,
-    Set<EventTag> tags,
-    Predicate<ServerPlayer> condition,
-    Consumer<ServerPlayer> action
-) implements HauntEvent {
-    static SimpleEvent light(String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
+        Identifier id,
+        HauntTier tier,
+        Set<EventTag> tags,
+        Predicate<ServerPlayer> condition,
+        Consumer<ServerPlayer> action)
+        implements HauntEvent {
+    static SimpleEvent light(
+            String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
         return new SimpleEvent(Identifier.parse(id), HauntTier.LIGHT, Set.of(tag), condition, action);
     }
 
-    static SimpleEvent harmful(String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
+    static SimpleEvent harmful(
+            String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
         return new SimpleEvent(Identifier.parse(id), HauntTier.HARMFUL, Set.of(tag), condition, action);
     }
 

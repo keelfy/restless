@@ -20,8 +20,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /**
- * Lays a {@link Notebook} out as book pages: contents, the guide, a few pages per met spirit, loose notes, the
- * bestiary and the chronicle. It only arranges what the player saw; it draws no conclusions for them.
+ * Lays a {@link Notebook} out as book pages: contents, the guide, a few pages per met spirit, loose notes, the bestiary
+ * and the chronicle. It only arranges what the player saw; it draws no conclusions for them.
  */
 public final class JournalPages {
     private static final String EVOLVED = "_evolved";
@@ -54,9 +54,13 @@ public final class JournalPages {
         pages.add(contents);
         for (Section section : sections) {
             int page = pages.size() + 1;
-            contents.append("\n\n").append(Component.translatable("journal.restless.contents.line",
-                    Component.translatable("journal.restless.section." + section.key()), page)
-                .withStyle(s -> s.withColor(ChatFormatting.DARK_BLUE).withClickEvent(new ClickEvent.ChangePage(page))));
+            contents.append("\n\n")
+                    .append(Component.translatable(
+                                    "journal.restless.contents.line",
+                                    Component.translatable("journal.restless.section." + section.key()),
+                                    page)
+                            .withStyle(s -> s.withColor(ChatFormatting.DARK_BLUE)
+                                    .withClickEvent(new ClickEvent.ChangePage(page))));
             pages.addAll(section.pages());
         }
         return pages;
@@ -82,36 +86,55 @@ public final class JournalPages {
         Map<String, Integer> unnamed = new HashMap<>();
         for (UUID spirit : notebook.met()) {
             List<Note> notes = notebook.notes().stream()
-                .filter(n -> !n.kind().chronicle() && n.spirit().filter(spirit::equals).isPresent()).toList();
-            pages.addAll(paged(heading(who(notes, unnamed)), notes.stream().map(JournalPages::line).toList(), perPage()));
+                    .filter(n -> !n.kind().chronicle()
+                            && n.spirit().filter(spirit::equals).isPresent())
+                    .toList();
+            pages.addAll(paged(
+                    heading(who(notes, unnamed)),
+                    notes.stream().map(JournalPages::line).toList(),
+                    perPage()));
         }
         return pages;
     }
 
-    /** Its name once its grave was read; until then its kind, numbered when the player has met several of one kind unnamed. */
+    /**
+     * Its name once its grave was read; until then its kind, numbered when the player has met several of one kind
+     * unnamed.
+     */
     private static Component who(List<Note> notes, Map<String, Integer> unnamed) {
         Optional<Note> photo = last(notes, Kind.PHOTO);
-        Component kind = photo.map(n -> n.args().getFirst()).orElse(Component.translatable("journal.restless.unknown_kind"));
+        Component kind =
+                photo.map(n -> n.args().getFirst()).orElse(Component.translatable("journal.restless.unknown_kind"));
         Optional<Component> name = last(notes, Kind.GRAVE).map(n -> n.args().getFirst());
         if (name.isPresent()) {
             return Component.translatable("journal.restless.named", name.get(), kind);
         }
         int number = unnamed.merge(photo.flatMap(Note::tag).orElse(""), 1, Integer::sum);
-        return number == 1 ? Component.translatable("journal.restless.unnamed", kind)
-            : Component.translatable("journal.restless.unnamed_numbered", kind, number);
+        return number == 1
+                ? Component.translatable("journal.restless.unnamed", kind)
+                : Component.translatable("journal.restless.unnamed_numbered", kind, number);
     }
 
     /** What was seen of spirits the player has not met yet, or of nobody in particular: it stays theirs to sort out. */
     private static List<Component> loose(Notebook notebook) {
         Set<UUID> met = Set.copyOf(notebook.met());
         List<Component> lines = notebook.notes().stream()
-            .filter(n -> !n.kind().chronicle() && n.spirit().filter(met::contains).isEmpty())
-            .map(JournalPages::line).toList();
-        return paged(heading(Component.translatable("journal.restless.section.loose")).append("\n\n")
-            .append(Component.translatable("journal.restless.loose.intro").withStyle(ChatFormatting.ITALIC)), lines, perPage());
+                .filter(n -> !n.kind().chronicle()
+                        && n.spirit().filter(met::contains).isEmpty())
+                .map(JournalPages::line)
+                .toList();
+        return paged(
+                heading(Component.translatable("journal.restless.section.loose"))
+                        .append("\n\n")
+                        .append(Component.translatable("journal.restless.loose.intro")
+                                .withStyle(ChatFormatting.ITALIC)),
+                lines,
+                perPage());
     }
 
-    /** A page per kind of spirit the player has photographed, and every trait a photo named with what it shrinks from. */
+    /**
+     * A page per kind of spirit the player has photographed, and every trait a photo named with what it shrinks from.
+     */
     private static List<Component> bestiary(Notebook notebook) {
         Map<String, Boolean> kinds = new LinkedHashMap<>();
         Set<Component> traits = new LinkedHashSet<>();
@@ -122,24 +145,34 @@ public final class JournalPages {
             String tag = note.tag().get();
             boolean grown = tag.endsWith(EVOLVED);
             kinds.merge(grown ? tag.substring(0, tag.length() - EVOLVED.length()) : tag, grown, Boolean::logicalOr);
-            traits.add(Component.translatable("journal.restless.bestiary.trait", note.args().get(1), note.args().get(2)));
+            traits.add(Component.translatable(
+                    "journal.restless.bestiary.trait",
+                    note.args().get(1),
+                    note.args().get(2)));
         }
         List<Component> pages = new ArrayList<>();
         kinds.forEach((kind, grown) -> {
             MutableComponent page = Component.translatable("journal.restless.bestiary." + kind);
             if (grown) {
-                page.append("\n\n").append(Component.translatable("journal.restless.bestiary.grown",
-                    Component.translatable("spirit.restless." + kind + EVOLVED)));
+                page.append("\n\n")
+                        .append(Component.translatable(
+                                "journal.restless.bestiary.grown",
+                                Component.translatable("spirit.restless." + kind + EVOLVED)));
             }
             pages.add(page);
         });
-        pages.addAll(paged(heading(Component.translatable("journal.restless.bestiary.traits")), List.copyOf(traits),
-            Config.section("journal").integer("traits_per_page")));
+        pages.addAll(paged(
+                heading(Component.translatable("journal.restless.bestiary.traits")),
+                List.copyOf(traits),
+                Config.section("journal").integer("traits_per_page")));
         return pages;
     }
 
     private static List<Component> chronicle(Notebook notebook) {
-        List<Component> lines = notebook.notes().stream().filter(n -> n.kind().chronicle()).map(JournalPages::line).toList();
+        List<Component> lines = notebook.notes().stream()
+                .filter(n -> n.kind().chronicle())
+                .map(JournalPages::line)
+                .toList();
         return paged(heading(Component.translatable("journal.restless.section.chronicle")), lines, perPage());
     }
 
@@ -147,13 +180,20 @@ public final class JournalPages {
         if (note.kind() == Kind.OLD) {
             return note.args().getFirst();
         }
-        MutableComponent line = Component.translatable("journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT),
-            note.args().toArray());
-        return note.kind().reliable ? line
-            : line.append(" ").append(Component.translatable("journal.restless.may_lie").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+        MutableComponent line = Component.translatable(
+                "journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT),
+                note.args().toArray());
+        return note.kind().reliable
+                ? line
+                : line.append(" ")
+                        .append(Component.translatable("journal.restless.may_lie")
+                                .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
 
-    /** {@code lines}, {@code perPage} to a page and a blank line apart, under {@code heading} on the first; no pages when there are no lines. */
+    /**
+     * {@code lines}, {@code perPage} to a page and a blank line apart, under {@code heading} on the first; no pages
+     * when there are no lines.
+     */
     private static List<Component> paged(Component heading, List<Component> lines, int perPage) {
         List<Component> pages = new ArrayList<>();
         for (int i = 0; i < lines.size(); i += perPage) {

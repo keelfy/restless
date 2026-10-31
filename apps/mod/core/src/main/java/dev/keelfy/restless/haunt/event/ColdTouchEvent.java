@@ -35,11 +35,20 @@ public final class ColdTouchEvent implements HauntEvent {
     @Override
     public void run(ServerPlayer player) {
         Config.Section config = Config.event("cold_touch");
-        float damage = Math.min(config.integer("damage_min") + player.getRandom().nextInt(config.integer("damage_spread")),
-            player.getHealth() - (float) config.num("keep_health"));
+        float damage = Math.min(
+                config.integer("damage_min") + player.getRandom().nextInt(config.integer("damage_spread")),
+                player.getHealth() - (float) config.num("keep_health"));
         Config.Tone tone = config.tone("sound");
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-            SoundEvents.PLAYER_HURT_FREEZE, SoundSource.HOSTILE, tone.volume(), tone.pitch());
+        player.level()
+                .playSound(
+                        null,
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        SoundEvents.PLAYER_HURT_FREEZE,
+                        SoundSource.HOSTILE,
+                        tone.volume(),
+                        tone.pitch());
         player.hurtServer(player.level(), player.damageSources().magic(), damage);
     }
 }

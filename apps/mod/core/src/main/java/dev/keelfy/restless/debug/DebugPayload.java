@@ -11,37 +11,57 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
 /** What the debug screen shows: the viewer's haunt state and every event, as the server sees them when it opens. */
-public record DebugPayload(String player, List<Spirit> spirits, List<Event> events)
-    implements CustomPacketPayload {
+public record DebugPayload(String player, List<Spirit> spirits, List<Event> events) implements CustomPacketPayload {
     /** @param seconds time to the spirit's next roll */
     public record Spirit(String id, boolean territorial, long seed, List<String> traits, double power, int seconds) {
         static final StreamCodec<ByteBuf, Spirit> CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8, Spirit::id, ByteBufCodecs.BOOL, Spirit::territorial, ByteBufCodecs.VAR_LONG, Spirit::seed,
-            ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), Spirit::traits, ByteBufCodecs.DOUBLE, Spirit::power,
-            ByteBufCodecs.VAR_INT, Spirit::seconds, Spirit::new);
+                ByteBufCodecs.STRING_UTF8,
+                Spirit::id,
+                ByteBufCodecs.BOOL,
+                Spirit::territorial,
+                ByteBufCodecs.VAR_LONG,
+                Spirit::seed,
+                ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
+                Spirit::traits,
+                ByteBufCodecs.DOUBLE,
+                Spirit::power,
+                ByteBufCodecs.VAR_INT,
+                Spirit::seconds,
+                Spirit::new);
     }
 
     /**
      * @param canRun whether the event has something to act on near the viewer right now
      * @param chances per spirit, in the order of {@code spirits}: the chance 0..1 this event is the one rolled next
      */
-    public record Event(Identifier id, HauntTier tier, List<EventTag> tags, double weight, boolean canRun, List<Double> chances) {
+    public record Event(
+            Identifier id, HauntTier tier, List<EventTag> tags, double weight, boolean canRun, List<Double> chances) {
         static final StreamCodec<ByteBuf, Event> CODEC = StreamCodec.composite(
-            Identifier.STREAM_CODEC, Event::id,
-            ByteBufCodecs.idMapper(i -> HauntTier.values()[i], HauntTier::ordinal), Event::tier,
-            ByteBufCodecs.idMapper(i -> EventTag.values()[i], EventTag::ordinal).apply(ByteBufCodecs.list()), Event::tags,
-            ByteBufCodecs.DOUBLE, Event::weight,
-            ByteBufCodecs.BOOL, Event::canRun,
-            ByteBufCodecs.DOUBLE.apply(ByteBufCodecs.list()), Event::chances,
-            Event::new);
+                Identifier.STREAM_CODEC,
+                Event::id,
+                ByteBufCodecs.idMapper(i -> HauntTier.values()[i], HauntTier::ordinal),
+                Event::tier,
+                ByteBufCodecs.idMapper(i -> EventTag.values()[i], EventTag::ordinal)
+                        .apply(ByteBufCodecs.list()),
+                Event::tags,
+                ByteBufCodecs.DOUBLE,
+                Event::weight,
+                ByteBufCodecs.BOOL,
+                Event::canRun,
+                ByteBufCodecs.DOUBLE.apply(ByteBufCodecs.list()),
+                Event::chances,
+                Event::new);
     }
 
     public static final Type<DebugPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "debug"));
     public static final StreamCodec<ByteBuf, DebugPayload> CODEC = StreamCodec.composite(
-        ByteBufCodecs.STRING_UTF8, DebugPayload::player,
-        Spirit.CODEC.apply(ByteBufCodecs.list()), DebugPayload::spirits,
-        Event.CODEC.apply(ByteBufCodecs.list()), DebugPayload::events,
-        DebugPayload::new);
+            ByteBufCodecs.STRING_UTF8,
+            DebugPayload::player,
+            Spirit.CODEC.apply(ByteBufCodecs.list()),
+            DebugPayload::spirits,
+            Event.CODEC.apply(ByteBufCodecs.list()),
+            DebugPayload::events,
+            DebugPayload::new);
 
     @Override
     public Type<DebugPayload> type() {

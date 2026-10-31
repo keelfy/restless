@@ -34,24 +34,40 @@ public final class RestlessNeoForgeClient {
     @SubscribeEvent
     public static void registerLayers(RegisterGuiLayersEvent event) {
         // Above the camera overlays but under the crosshair and the HUD, so only the world goes dark.
-        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Identifier.fromNamespaceAndPath(Restless.MOD_ID, "dimming"), Dimming::render);
-        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Identifier.fromNamespaceAndPath(Restless.MOD_ID, "sanity"), SanityOverlay::render);
-        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Identifier.fromNamespaceAndPath(Restless.MOD_ID, "red_vignette"), RedVignette::render);
+        event.registerAbove(
+                VanillaGuiLayers.CAMERA_OVERLAYS,
+                Identifier.fromNamespaceAndPath(Restless.MOD_ID, "dimming"),
+                Dimming::render);
+        event.registerAbove(
+                VanillaGuiLayers.CAMERA_OVERLAYS,
+                Identifier.fromNamespaceAndPath(Restless.MOD_ID, "sanity"),
+                SanityOverlay::render);
+        event.registerAbove(
+                VanillaGuiLayers.CAMERA_OVERLAYS,
+                Identifier.fromNamespaceAndPath(Restless.MOD_ID, "red_vignette"),
+                RedVignette::render);
     }
 
     @SubscribeEvent
     @SuppressWarnings("unchecked") // the registry is typed BlockEntityType<?>; this one is built for AltarEntity
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer((BlockEntityType<AltarEntity>) Content.ALTAR_ENTITY.get(), AltarRenderer::new);
-        event.registerBlockEntityRenderer((BlockEntityType<DreamcatcherEntity>) Content.DREAMCATCHER_ENTITY.get(), context -> new DreamcatcherRenderer());
+        event.registerBlockEntityRenderer(
+                (BlockEntityType<AltarEntity>) Content.ALTAR_ENTITY.get(), AltarRenderer::new);
+        event.registerBlockEntityRenderer(
+                (BlockEntityType<DreamcatcherEntity>) Content.DREAMCATCHER_ENTITY.get(),
+                context -> new DreamcatcherRenderer());
     }
 
     /** Ghost leaves are tinted as the leaves they copy; pale oak's are not tinted at all. */
     @SubscribeEvent
     public static void registerBlockTints(RegisterColorHandlersEvent.BlockTintSources event) {
-        event.register(List.of(BlockTintSources.foliage()), Content.GHOST_WOODS.get("oak").leaves().get());
+        event.register(
+                List.of(BlockTintSources.foliage()),
+                Content.GHOST_WOODS.get("oak").leaves().get());
         // The birch colour vanilla gives its leaves, which do not follow the biome.
-        event.register(List.of(BlockTintSources.constant(-8345771)), Content.GHOST_WOODS.get("birch").leaves().get());
+        event.register(
+                List.of(BlockTintSources.constant(-8345771)),
+                Content.GHOST_WOODS.get("birch").leaves().get());
     }
 
     @SubscribeEvent

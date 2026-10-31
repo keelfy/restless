@@ -49,21 +49,30 @@ final class Figure {
     }
 
     /** The vanilla default player skins, each in both arm widths. */
-    private static final List<String> SKINS = List.of("alex", "ari", "efe", "kai", "makena", "noor", "steve", "sunny", "zuri");
+    private static final List<String> SKINS =
+            List.of("alex", "ari", "efe", "kai", "makena", "noor", "steve", "sunny", "zuri");
 
-    /** A skin of no one: a fresh id with no textures, dressed in a random default skin, Steve, Alex and the rest, wide or slim. */
+    /**
+     * A skin of no one: a fresh id with no textures, dressed in a random default skin, Steve, Alex and the rest, wide
+     * or slim.
+     */
     static ResolvableProfile stranger(ServerPlayer player) {
         ResolvableProfile profile = ResolvableProfile.createResolved(nobody(player, "Steve"));
         String model = player.getRandom().nextBoolean() ? "wide" : "slim";
         String skin = SKINS.get(player.getRandom().nextInt(SKINS.size()));
-        return ResolvableProfile.CODEC.encodeStart(NbtOps.INSTANCE, profile).result()
-            .map(tag -> {
-                CompoundTag data = (CompoundTag) tag;
-                data.putString("texture", "entity/player/" + model + "/" + skin);
-                data.putString("model", model);
-                return ResolvableProfile.CODEC.parse(NbtOps.INSTANCE, data).result().orElse(profile);
-            })
-            .orElse(profile);
+        return ResolvableProfile.CODEC
+                .encodeStart(NbtOps.INSTANCE, profile)
+                .result()
+                .map(tag -> {
+                    CompoundTag data = (CompoundTag) tag;
+                    data.putString("texture", "entity/player/" + model + "/" + skin);
+                    data.putString("model", model);
+                    return ResolvableProfile.CODEC
+                            .parse(NbtOps.INSTANCE, data)
+                            .result()
+                            .orElse(profile);
+                })
+                .orElse(profile);
     }
 
     /** The longest name a player can have; the client is sent nothing longer. */
@@ -81,7 +90,8 @@ final class Figure {
 
     /** A profile of no one, under {@code name}, with a fresh id and no textures. */
     static GameProfile nobody(ServerPlayer player, String name) {
-        return new GameProfile(new UUID(player.getRandom().nextLong(), player.getRandom().nextLong()), name);
+        return new GameProfile(
+                new UUID(player.getRandom().nextLong(), player.getRandom().nextLong()), name);
     }
 
     static void face(Mannequin figure, ServerPlayer player) {
@@ -96,7 +106,9 @@ final class Figure {
         figure.setXRot(0.0F);
     }
 
-    /** A name with nobody under it: a text display that looks like a player's nameplate, seen through walls as one is. */
+    /**
+     * A name with nobody under it: a text display that looks like a player's nameplate, seen through walls as one is.
+     */
     static Display.@Nullable TextDisplay nameplate(ServerLevel level, Vec3 at, String name) {
         Display.TextDisplay plate = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.EVENT);
         if (plate == null) {
@@ -113,15 +125,22 @@ final class Figure {
         return plate;
     }
 
-    /** The profile (name and skin) has no setter, so it goes in through the entity's save format; the caption is hidden. */
+    /**
+     * The profile (name and skin) has no setter, so it goes in through the entity's save format; the caption is hidden.
+     */
     private static void dress(Mannequin figure, ResolvableProfile profile, ServerLevel level) {
         rewrite(figure, level, data -> {
-            ResolvableProfile.CODEC.encodeStart(NbtOps.INSTANCE, profile).result().ifPresent(tag -> data.put("profile", tag));
+            ResolvableProfile.CODEC
+                    .encodeStart(NbtOps.INSTANCE, profile)
+                    .result()
+                    .ifPresent(tag -> data.put("profile", tag));
             data.putBoolean("hide_description", true);
         });
     }
 
-    /** Sets what has no setter: the entity is saved, {@code edit} changes the saved data, and the entity loads it back. */
+    /**
+     * Sets what has no setter: the entity is saved, {@code edit} changes the saved data, and the entity loads it back.
+     */
     private static void rewrite(Entity entity, ServerLevel level, Consumer<CompoundTag> edit) {
         TagValueOutput out = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, level.registryAccess());
         entity.saveWithoutId(out);

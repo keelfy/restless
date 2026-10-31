@@ -33,7 +33,8 @@ import org.jspecify.annotations.Nullable;
  */
 public final class DoubleEvent implements HauntEvent {
     private static final EquipmentSlot[] WORN = {
-        EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.MAINHAND};
+        EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.MAINHAND
+    };
 
     /** The double each player has now; one at a time. */
     private static final Map<UUID, Mannequin> ACTIVE = new ConcurrentHashMap<>();
@@ -56,9 +57,9 @@ public final class DoubleEvent implements HauntEvent {
     @Override
     public boolean canRun(ServerPlayer player) {
         return player.level().getDifficulty() != Difficulty.PEACEFUL
-            && !ACTIVE.containsKey(player.getUUID())
-            && Assaults.healthy(player, "double")
-            && spot(player) != null;
+                && !ACTIVE.containsKey(player.getUUID())
+                && Assaults.healthy(player, "double")
+                && spot(player) != null;
     }
 
     @Override
@@ -95,15 +96,33 @@ public final class DoubleEvent implements HauntEvent {
     private static void vanish(Mannequin twin, UUID owner) {
         if (twin.isAlive()) {
             Config.Burst smoke = Config.event("double").burst("particles");
-            ((ServerLevel) twin.level()).sendParticles(ParticleTypes.LARGE_SMOKE, twin.getX(), twin.getY() + smoke.offsetY(), twin.getZ(),
-                smoke.count(), smoke.dx(), smoke.dy(), smoke.dz(), smoke.speed());
+            ((ServerLevel) twin.level())
+                    .sendParticles(
+                            ParticleTypes.LARGE_SMOKE,
+                            twin.getX(),
+                            twin.getY() + smoke.offsetY(),
+                            twin.getZ(),
+                            smoke.count(),
+                            smoke.dx(),
+                            smoke.dy(),
+                            smoke.dz(),
+                            smoke.speed());
             twin.discard();
         }
         ACTIVE.remove(owner, twin);
     }
 
     private static void play(ServerPlayer player, SoundEvent sound, Config.Tone tone) {
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), sound, SoundSource.HOSTILE, tone.volume(), tone.pitch());
+        player.level()
+                .playSound(
+                        null,
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        sound,
+                        SoundSource.HOSTILE,
+                        tone.volume(),
+                        tone.pitch());
     }
 
     private static final class Chase {
@@ -124,9 +143,12 @@ public final class DoubleEvent implements HauntEvent {
         /** @return true to keep chasing */
         boolean step(ServerPlayer player, int n) {
             Config.Section config = Config.event("double");
-            if (!twin.isAlive() || twin.level() != player.level() || stuck >= config.integer("stuck_steps")
-                || hits >= config.integer("max_hits") || player.getHealth() <= Assaults.safeHealth()
-                || n * config.integer("interval_ticks") >= config.integer("max_ticks")) {
+            if (!twin.isAlive()
+                    || twin.level() != player.level()
+                    || stuck >= config.integer("stuck_steps")
+                    || hits >= config.integer("max_hits")
+                    || player.getHealth() <= Assaults.safeHealth()
+                    || n * config.integer("interval_ticks") >= config.integer("max_ticks")) {
                 vanish(twin, owner);
                 return false;
             }
@@ -162,7 +184,10 @@ public final class DoubleEvent implements HauntEvent {
             twin.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
             play(player, SoundEvents.PLAYER_ATTACK_STRONG, config.tone("hit_sound"));
             float room = player.getHealth() - Assaults.safeHealth();
-            player.hurtServer(player.level(), player.damageSources().mobAttack(twin), Math.min((float) config.num("damage"), room));
+            player.hurtServer(
+                    player.level(),
+                    player.damageSources().mobAttack(twin),
+                    Math.min((float) config.num("damage"), room));
         }
     }
 }

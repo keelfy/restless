@@ -22,7 +22,8 @@ public final class Traits {
      */
     public static List<String> roll(long seed) {
         Config.Section director = Config.section("director");
-        List<String> pool = new ArrayList<>(Config.section("traits").keys().stream().sorted().toList());
+        List<String> pool = new ArrayList<>(
+                Config.section("traits").keys().stream().sorted().toList());
         Random random = new Random(seed);
         int min = director.integer("traits_min");
         int count = Math.min(pool.size(), min + random.nextInt(director.integer("traits_max") - min + 1));
@@ -41,7 +42,10 @@ public final class Traits {
 
     /** Every trait in the catalog. */
     public static List<Trait> all() {
-        return Config.section("traits").keys().stream().sorted().map(Traits::byId).toList();
+        return Config.section("traits").keys().stream()
+                .sorted()
+                .map(Traits::byId)
+                .toList();
     }
 
     public static double affinity(List<Trait> traits, EventTag tag) {
@@ -89,14 +93,30 @@ public final class Traits {
         for (String tag : affinity.keys()) {
             tags.put(EventTag.valueOf(tag), affinity.num(tag));
         }
-        Trait.Condition when = config.has("when") ? Trait.Condition.valueOf(config.text("when").toUpperCase(Locale.ROOT)) : Trait.Condition.ANY;
+        Trait.Condition when = config.has("when")
+                ? Trait.Condition.valueOf(config.text("when").toUpperCase(Locale.ROOT))
+                : Trait.Condition.ANY;
         List<Trait.Trigger> reacts = config.has("reacts")
-            ? config.texts("reacts").stream().map(t -> Trait.Trigger.valueOf(t.toUpperCase(Locale.ROOT))).toList() : List.of();
+                ? config.texts("reacts").stream()
+                        .map(t -> Trait.Trigger.valueOf(t.toUpperCase(Locale.ROOT)))
+                        .toList()
+                : List.of();
         Set<Clue> clues = config.has("clues")
-            ? config.texts("clues").stream().map(c -> Clue.valueOf(c.toUpperCase(Locale.ROOT))).collect(Collectors.toCollection(() -> EnumSet.noneOf(Clue.class)))
-            : EnumSet.noneOf(Clue.class);
-        return new Trait(id, Map.copyOf(tags), config.has("activity") ? config.num("activity") : 1.0, when,
-            config.has("noise") ? config.num("noise") : 0.0, reacts, Set.copyOf(clues), config.texts("words"), config.text("hint"),
-            config.has("lies") && config.num("lies") > 0, Focus.valueOf(config.text("weakness").toUpperCase(Locale.ROOT)));
+                ? config.texts("clues").stream()
+                        .map(c -> Clue.valueOf(c.toUpperCase(Locale.ROOT)))
+                        .collect(Collectors.toCollection(() -> EnumSet.noneOf(Clue.class)))
+                : EnumSet.noneOf(Clue.class);
+        return new Trait(
+                id,
+                Map.copyOf(tags),
+                config.has("activity") ? config.num("activity") : 1.0,
+                when,
+                config.has("noise") ? config.num("noise") : 0.0,
+                reacts,
+                Set.copyOf(clues),
+                config.texts("words"),
+                config.text("hint"),
+                config.has("lies") && config.num("lies") > 0,
+                Focus.valueOf(config.text("weakness").toUpperCase(Locale.ROOT)));
     }
 }

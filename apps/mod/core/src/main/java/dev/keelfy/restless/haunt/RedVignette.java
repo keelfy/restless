@@ -5,13 +5,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 /**
- * The client side of the {@code red_vignette} event: the screen's edges go red, as near the world border, and back. Drawn
- * here rather than through the border warning, which shows only with the vignette setting on and is faint in daylight.
+ * The client side of the {@code red_vignette} event: the screen's edges go red, as near the world border, and back.
+ * Drawn here rather than through the border warning, which shows only with the vignette setting on and is faint in
+ * daylight.
  */
 public final class RedVignette {
     private static final int RED = 0x9A0000;
     /** Shares of the duration spent coming in and going out. */
     private static final double IN = 0.15;
+
     private static final double OUT = 0.35;
 
     private static long start;
@@ -29,7 +31,10 @@ public final class RedVignette {
         }
     }
 
-    /** Draws as a HUD layer: one-pixel frames from the edge inward, each fainter than the last, so the fall-off is smooth. */
+    /**
+     * Draws as a HUD layer: one-pixel frames from the edge inward, each fainter than the last, so the fall-off is
+     * smooth.
+     */
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
         Minecraft minecraft = Minecraft.getInstance();
         if (total == 0 || minecraft.level == null) {

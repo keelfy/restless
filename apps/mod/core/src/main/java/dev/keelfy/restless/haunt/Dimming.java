@@ -6,8 +6,8 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The client side of the {@code dimming} and {@code blinking} events. Lighting is computed on the client, so the fade is
- * drawn over the world (under the HUD) instead of changing any light level. State is per client and in memory only.
+ * The client side of the {@code dimming} and {@code blinking} events. Lighting is computed on the client, so the fade
+ * is drawn over the world (under the HUD) instead of changing any light level. State is per client and in memory only.
  */
 public final class Dimming {
     private static long start;
@@ -36,9 +36,9 @@ public final class Dimming {
             return;
         }
         double t = elapsed % now.cycle();
-        double depth = t < now.fall() ? t / Math.max(1, now.fall())
-            : t < now.fall() + now.hold() ? 1
-            : (now.cycle() - t) / Math.max(1, now.rise());
+        double depth = t < now.fall()
+                ? t / Math.max(1, now.fall())
+                : t < now.fall() + now.hold() ? 1 : (now.cycle() - t) / Math.max(1, now.rise());
         int alpha = (int) (255 * now.peak() * depth);
         graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), alpha << 24);
     }

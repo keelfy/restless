@@ -71,204 +71,333 @@ import net.minecraft.world.phys.Vec3;
  * The server tells this one client something untrue, and the truth a moment later. Nothing changes on the server, so a
  * lie that is cut short (the player leaves, dies, changes dimension) is corrected by the resync vanilla does then. The
  * false advancement is the exception: it is granted for real, for two ticks, so the client shows its toast. Under
- * {@linkplain Hardcore hardcore} the lies that have a real counterpart (a wound, hearts, hunger, night, a slot, lightning)
- * come true instead.
+ * {@linkplain Hardcore hardcore} the lies that have a real counterpart (a wound, hearts, hunger, night, a slot,
+ * lightning) come true instead.
  */
 final class Lies {
     /** The one criterion of the mod's false advancements, which nothing in the game can meet. */
     private static final String IMPOSSIBLE = "impossible";
+
     private static final List<Holder<MobEffect>> FAKE_EFFECTS = List.of(MobEffects.WITHER, MobEffects.POISON);
 
     private Lies() {}
 
     static List<HauntEvent> all() {
         return List.of(
-            // 153: never shown below one heart, or the client would open the death screen
-            SimpleEvent.light("false_wound", EventTag.AFFLICTION,
-                player -> player.getHealth() > Config.event("false_wound").num("min_health"),
-                player -> {
-                    Config.Section config = Config.event("false_wound");
-                    float shown = Math.max((float) config.num("min_health"), player.getHealth() - (float) config.num("loss"));
+                // 153: never shown below one heart, or the client would open the death screen
+                SimpleEvent.light(
+                        "false_wound",
+                        EventTag.AFFLICTION,
+                        player ->
+                                player.getHealth() > Config.event("false_wound").num("min_health"),
+                        player -> {
+                            Config.Section config = Config.event("false_wound");
+                            float shown = Math.max(
+                                    (float) config.num("min_health"), player.getHealth() - (float) config.num("loss"));
+                            if (Hardcore.on(player.level())) {
+                                // Real, and still never below the floor.
+                                player.hurtServer(
+                                        player.level(), player.damageSources().magic(), player.getHealth() - shown);
+                                return;
+                            }
+                            player.connection.send(new ClientboundSetHealthPacket(
+                                    shown,
+                                    player.getFoodData().getFoodLevel(),
+                                    player.getFoodData().getSaturationLevel()));
+                            Scheduler.later(player, config.integer("ticks"), Lies::resendHealth);
+                        }),
+                // 154: wither or poison hearts with no effect behind them
+                SimpleEvent.light(
+                        "false_hearts",
+                        EventTag.AFFLICTION,
+                        player -> FAKE_EFFECTS.stream().noneMatch(player::hasEffect),
+                        player -> {
+                            Config.Section config = Config.event("false_hearts");
+                            Holder<MobEffect> effect =
+                                    FAKE_EFFECTS.get(player.getRandom().nextInt(FAKE_EFFECTS.size()));
+                            if (Hardcore.on(player.level())) {
+                                player.addEffect(new MobEffectInstance(effect, config.integer("ticks")));
+                                return;
+                            }
+                            player.connection.send(new ClientboundUpdateMobEffectPacket(
+                                    player.getId(), new MobEffectInstance(effect, config.integer("ticks")), false));
+                            Scheduler.later(player, config.integer("ticks"), p -> {
+                                // A real effect of the same kind may have started meanwhile; then the client already
+                                // has the truth.
+                                if (!p.hasEffect(effect)) {
+                                    p.connection.send(new ClientboundRemoveMobEffectPacket(p.getId(), effect));
+                                }
+                            });
+                        }),
+                // 155
+                light("false_hunger", EventTag.AFFLICTION, player -> {
+                    Config.Section config = Config.event("false_hunger");
                     if (Hardcore.on(player.level())) {
-                        // Real, and still never below the floor.
-                        player.hurtServer(player.level(), player.damageSources().magic(), player.getHealth() - shown);
+                        player.getFoodData()
+                                .setFoodLevel(Math.max(
+                                        config.integer("shown_food"),
+                                        player.getFoodData().getFoodLevel() - config.integer("hardcore_loss")));
                         return;
                     }
-                    player.connection.send(new ClientboundSetHealthPacket(shown, player.getFoodData().getFoodLevel(), player.getFoodData().getSaturationLevel()));
+                    player.connection.send(
+                            new ClientboundSetHealthPacket(player.getHealth(), config.integer("shown_food"), 0));
                     Scheduler.later(player, config.integer("ticks"), Lies::resendHealth);
                 }),
-            // 154: wither or poison hearts with no effect behind them
-            SimpleEvent.light("false_hearts", EventTag.AFFLICTION,
-                player -> FAKE_EFFECTS.stream().noneMatch(player::hasEffect),
-                player -> {
-                    Config.Section config = Config.event("false_hearts");
-                    Holder<MobEffect> effect = FAKE_EFFECTS.get(player.getRandom().nextInt(FAKE_EFFECTS.size()));
+                // 156: the vanilla elder guardian jump scare, far from any monument
+                light("guardian_face", EventTag.PRESENCE, player -> {
+                    player.connection.send(
+                            new ClientboundGameEventPacket(ClientboundGameEventPacket.GUARDIAN_ELDER_EFFECT, 1));
+                    // As the elder guardian itself gives.
                     if (Hardcore.on(player.level())) {
-                        player.addEffect(new MobEffectInstance(effect, config.integer("ticks")));
+                        Config.Section config = Config.event("guardian_face");
+                        player.addEffect(new MobEffectInstance(
+                                MobEffects.MINING_FATIGUE,
+                                config.integer("hardcore_fatigue_ticks"),
+                                config.integer("hardcore_fatigue_level")));
+                    }
+                }),
+                // 157: with no totem in the inventory the client shows a plain one
+                light(
+                        "false_totem",
+                        EventTag.PRESENCE,
+                        player -> player.connection.send(
+                                new ClientboundEntityEventPacket(player, EntityEvent.PROTECTED_FROM_DEATH))),
+                // 158: a title gone almost before it is read
+                saying("subliminal_title", EventTag.PRESENCE, config -> config.texts("texts"), (player, text) -> {
+                    Config.Section config = Config.event("subliminal_title");
+                    player.connection.send(new ClientboundSetTitlesAnimationPacket(0, config.integer("ticks"), 0));
+                    player.connection.send(new ClientboundSetTitleTextPacket(
+                            Component.literal(text).withStyle(ChatFormatting.DARK_RED)));
+                    // Back to the vanilla fade times once it is gone, so the next real title is not cut short.
+                    Scheduler.later(
+                            player,
+                            config.integer("ticks") + 1,
+                            p -> p.connection.send(new ClientboundClearTitlesPacket(true)));
+                }),
+                // 160: the screen's edges go red, as at the world border; see RedVignette. A client without the mod is
+                // shown the
+                // border warning tint instead, with the border where it always was.
+                light("red_vignette", EventTag.PRESENCE, player -> {
+                    Config.Section config = Config.event("red_vignette");
+                    if (Platform.get().canReceive(player, VignettePayload.TYPE)) {
+                        player.connection.send(new ClientboundCustomPayloadPacket(new VignettePayload(
+                                (float) config.num("strength"), Ticks.SECOND * config.integer("seconds"))));
                         return;
                     }
-                    player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), new MobEffectInstance(effect, config.integer("ticks")), false));
-                    Scheduler.later(player, config.integer("ticks"), p -> {
-                        // A real effect of the same kind may have started meanwhile; then the client already has the truth.
-                        if (!p.hasEffect(effect)) {
-                            p.connection.send(new ClientboundRemoveMobEffectPacket(p.getId(), effect));
+                    double distance = player.level().getWorldBorder().getDistanceToBorder(player);
+                    WorldBorder fake = new WorldBorder();
+                    fake.setWarningBlocks((int) Math.min(Integer.MAX_VALUE, distance / (1 - config.num("strength"))));
+                    player.connection.send(new ClientboundSetBorderWarningDistancePacket(fake));
+                    Scheduler.later(
+                            player,
+                            Ticks.SECOND * config.integer("seconds"),
+                            p -> p.connection.send(new ClientboundSetBorderWarningDistancePacket(
+                                    p.level().getWorldBorder())));
+                }),
+                // 162: a chat line in their own name that they never wrote
+                saying(
+                        "own_voice",
+                        EventTag.SOUND,
+                        config -> config.texts("lines"),
+                        (player, line) -> player.sendSystemMessage(
+                                Component.literal("<" + player.getName().getString() + "> " + line))),
+                // 163: their own death message, in their own language, killed by nobody
+                saying(
+                        "false_death",
+                        EventTag.PRESENCE,
+                        config -> List.of(config.text("killer")),
+                        (player, killer) -> player.sendSystemMessage(Component.translatable(
+                                "death.attack.mob", player.getDisplayName(), Component.literal(killer)))),
+                // 167: rain or a storm that only this player sees and hears
+                SimpleEvent.light(
+                        "private_rain",
+                        EventTag.PRESENCE,
+                        player -> player.level().canHaveWeather()
+                                && !player.level().isRaining()
+                                && player.level().canSeeSky(player.blockPosition()),
+                        Lies::privateRain),
+                // 168: lightning that sets nothing on fire
+                SimpleEvent.light(
+                        "silent_lightning",
+                        EventTag.PRESENCE,
+                        player -> player.level().canHaveWeather()
+                                && player.level().canSeeSky(player.blockPosition()),
+                        player -> Assaults.strike(
+                                player.level(),
+                                BlockPos.containing(Nearby.randomAround(
+                                        player, Config.event("silent_lightning").num("distance"))),
+                                !Hardcore.on(player.level()))),
+                // 159: night, with the sky stopped, for this player alone; the real time comes back after
+                SimpleEvent.light(
+                        "false_night",
+                        EventTag.PRESENCE,
+                        player -> player.level().dimension() == Level.OVERWORLD
+                                && !player.level().isDarkOutside(),
+                        player -> {
+                            Config.Section config = Config.event("false_night");
+                            ServerClockManager clocks =
+                                    player.level().getServer().clockManager();
+                            Holder<WorldClock> clock =
+                                    player.level().getServer().registryAccess().getOrThrow(WorldClocks.OVERWORLD);
+                            long now = clocks.getInstance(clock).totalTicks();
+                            long night = now
+                                    - Math.floorMod(now, config.integer("day_ticks"))
+                                    + config.integer("time_of_day");
+                            if (Hardcore.on(player.level())) {
+                                // For everyone, as lost time is; the cycle goes on from there.
+                                clocks.addTicks(clock, (int) (night - now));
+                                return;
+                            }
+                            player.connection.send(new ClientboundSetTimePacket(
+                                    player.level().getGameTime(),
+                                    Map.of(clock, new ClockNetworkState(night, 0.0F, 0.0F))));
+                            Scheduler.later(
+                                    player,
+                                    Ticks.SECOND * config.integer("seconds"),
+                                    p -> p.connection.send(
+                                            p.level().getServer().clockManager().createFullSyncPacket()));
+                        }),
+                // 161: an empty slot shows an item that is not there; any click on the inventory shows the truth sooner
+                SimpleEvent.light(
+                        "false_slot",
+                        EventTag.PRESENCE,
+                        player -> !emptySlots(player).isEmpty(),
+                        player -> {
+                            Config.Section config = Config.event("false_slot");
+                            List<Integer> empty = emptySlots(player);
+                            int slot = empty.get(player.getRandom().nextInt(empty.size()));
+                            ItemStack shown = new ItemStack(BuiltInRegistries.ITEM
+                                    .getOptional(Identifier.parse(pick(player, config.texts("items"))))
+                                    .orElse(Items.BONE));
+                            if (shown.is(Items.PLAYER_HEAD)) {
+                                shown.set(
+                                        DataComponents.PROFILE,
+                                        ResolvableProfile.createResolved(player.getGameProfile()));
+                            }
+                            InventoryMenu menu = player.inventoryMenu;
+                            if (Hardcore.on(player.level())) {
+                                menu.getSlot(slot).set(shown);
+                                return;
+                            }
+                            player.connection.send(new ClientboundContainerSetSlotPacket(
+                                    menu.containerId, menu.getStateId(), slot, shown));
+                            Scheduler.later(
+                                    player,
+                                    Ticks.SECOND * config.integer("seconds"),
+                                    p -> p.connection.send(new ClientboundContainerSetSlotPacket(
+                                            menu.containerId,
+                                            menu.getStateId(),
+                                            slot,
+                                            menu.getSlot(slot).getItem().copy())));
+                        }),
+                // 165: an advancement toast, gone from the advancements as soon as it is shown
+                saying(
+                        "false_advancement",
+                        EventTag.PRESENCE,
+                        config -> config.texts("advancements"),
+                        (player, name) -> {
+                            AdvancementHolder advancement = player.level()
+                                    .getServer()
+                                    .getAdvancements()
+                                    .get(Identifier.fromNamespaceAndPath(Restless.MOD_ID, name));
+                            if (advancement != null && player.getAdvancements().award(advancement, IMPOSSIBLE)) {
+                                Scheduler.later(
+                                        player,
+                                        Config.event("false_advancement").integer("revoke_ticks"),
+                                        p -> p.getAdvancements().revoke(advancement, IMPOSSIBLE));
+                            }
+                        }),
+                // 166: a step where the spirit is, and the head turns toward it, slowly, by itself
+                SimpleEvent.harmful("turned_head", EventTag.PRESENCE, player -> true, player -> {
+                    Config.Section config = Config.event("turned_head");
+                    Vec3 at = Nearby.source(player, config.num("distance"));
+                    Nearby.sound(
+                            player,
+                            player.level()
+                                    .getBlockState(BlockPos.containing(at).below())
+                                    .getSoundType()
+                                    .getStepSound(),
+                            at,
+                            config.tone("sound"));
+                    // Turned smoothly on the client, see HeadTurn; from wherever the player looks by then.
+                    Scheduler.later(player, config.integer("delay_ticks"), p -> {
+                        if (!Platform.get().canReceive(p, TurnPayload.TYPE)) {
+                            return;
                         }
+                        float toward = (float) (Mth.atan2(at.z - p.getZ(), at.x - p.getX()) * Mth.RAD_TO_DEG) - 90.0F;
+                        // Up or down as well, so a player looking at the floor ends up looking at the spirit, not at
+                        // the floor.
+                        double flat = Math.hypot(at.x - p.getX(), at.z - p.getZ());
+                        float up = (float) (-Mth.atan2(at.y + 1.0 - p.getEyeY(), flat) * Mth.RAD_TO_DEG) - p.getXRot();
+                        p.connection.send(new ClientboundCustomPayloadPacket(
+                                new TurnPayload(Mth.wrapDegrees(toward - p.getYRot()), up, config.integer("ticks"))));
                     });
                 }),
-            // 155
-            light("false_hunger", EventTag.AFFLICTION, player -> {
-                Config.Section config = Config.event("false_hunger");
-                if (Hardcore.on(player.level())) {
-                    player.getFoodData().setFoodLevel(Math.max(config.integer("shown_food"), player.getFoodData().getFoodLevel() - config.integer("hardcore_loss")));
-                    return;
-                }
-                player.connection.send(new ClientboundSetHealthPacket(player.getHealth(), config.integer("shown_food"), 0));
-                Scheduler.later(player, config.integer("ticks"), Lies::resendHealth);
-            }),
-            // 156: the vanilla elder guardian jump scare, far from any monument
-            light("guardian_face", EventTag.PRESENCE, player -> {
-                player.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.GUARDIAN_ELDER_EFFECT, 1));
-                // As the elder guardian itself gives.
-                if (Hardcore.on(player.level())) {
-                    Config.Section config = Config.event("guardian_face");
-                    player.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, config.integer("hardcore_fatigue_ticks"), config.integer("hardcore_fatigue_level")));
-                }
-            }),
-            // 157: with no totem in the inventory the client shows a plain one
-            light("false_totem", EventTag.PRESENCE, player -> player.connection.send(new ClientboundEntityEventPacket(player, EntityEvent.PROTECTED_FROM_DEATH))),
-            // 158: a title gone almost before it is read
-            saying("subliminal_title", EventTag.PRESENCE, config -> config.texts("texts"), (player, text) -> {
-                Config.Section config = Config.event("subliminal_title");
-                player.connection.send(new ClientboundSetTitlesAnimationPacket(0, config.integer("ticks"), 0));
-                player.connection.send(new ClientboundSetTitleTextPacket(Component.literal(text).withStyle(ChatFormatting.DARK_RED)));
-                // Back to the vanilla fade times once it is gone, so the next real title is not cut short.
-                Scheduler.later(player, config.integer("ticks") + 1, p -> p.connection.send(new ClientboundClearTitlesPacket(true)));
-            }),
-            // 160: the screen's edges go red, as at the world border; see RedVignette. A client without the mod is shown the
-            // border warning tint instead, with the border where it always was.
-            light("red_vignette", EventTag.PRESENCE, player -> {
-                Config.Section config = Config.event("red_vignette");
-                if (Platform.get().canReceive(player, VignettePayload.TYPE)) {
-                    player.connection.send(new ClientboundCustomPayloadPacket(
-                        new VignettePayload((float) config.num("strength"), Ticks.SECOND * config.integer("seconds"))));
-                    return;
-                }
-                double distance = player.level().getWorldBorder().getDistanceToBorder(player);
-                WorldBorder fake = new WorldBorder();
-                fake.setWarningBlocks((int) Math.min(Integer.MAX_VALUE, distance / (1 - config.num("strength"))));
-                player.connection.send(new ClientboundSetBorderWarningDistancePacket(fake));
-                Scheduler.later(player, Ticks.SECOND * config.integer("seconds"),
-                    p -> p.connection.send(new ClientboundSetBorderWarningDistancePacket(p.level().getWorldBorder())));
-            }),
-            // 162: a chat line in their own name that they never wrote
-            saying("own_voice", EventTag.SOUND, config -> config.texts("lines"),
-                (player, line) -> player.sendSystemMessage(Component.literal("<" + player.getName().getString() + "> " + line))),
-            // 163: their own death message, in their own language, killed by nobody
-            saying("false_death", EventTag.PRESENCE, config -> List.of(config.text("killer")), (player, killer) -> player.sendSystemMessage(
-                Component.translatable("death.attack.mob", player.getDisplayName(), Component.literal(killer)))),
-            // 167: rain or a storm that only this player sees and hears
-            SimpleEvent.light("private_rain", EventTag.PRESENCE,
-                player -> player.level().canHaveWeather() && !player.level().isRaining() && player.level().canSeeSky(player.blockPosition()),
-                Lies::privateRain),
-            // 168: lightning that sets nothing on fire
-            SimpleEvent.light("silent_lightning", EventTag.PRESENCE,
-                player -> player.level().canHaveWeather() && player.level().canSeeSky(player.blockPosition()),
-                player -> Assaults.strike(player.level(), BlockPos.containing(Nearby.randomAround(player, Config.event("silent_lightning").num("distance"))),
-                    !Hardcore.on(player.level()))),
-            // 159: night, with the sky stopped, for this player alone; the real time comes back after
-            SimpleEvent.light("false_night", EventTag.PRESENCE,
-                player -> player.level().dimension() == Level.OVERWORLD && !player.level().isDarkOutside(),
-                player -> {
-                    Config.Section config = Config.event("false_night");
-                    ServerClockManager clocks = player.level().getServer().clockManager();
-                    Holder<WorldClock> clock = player.level().getServer().registryAccess().getOrThrow(WorldClocks.OVERWORLD);
-                    long now = clocks.getInstance(clock).totalTicks();
-                    long night = now - Math.floorMod(now, config.integer("day_ticks")) + config.integer("time_of_day");
-                    if (Hardcore.on(player.level())) {
-                        // For everyone, as lost time is; the cycle goes on from there.
-                        clocks.addTicks(clock, (int) (night - now));
-                        return;
-                    }
-                    player.connection.send(new ClientboundSetTimePacket(player.level().getGameTime(), Map.of(clock, new ClockNetworkState(night, 0.0F, 0.0F))));
-                    Scheduler.later(player, Ticks.SECOND * config.integer("seconds"), p -> p.connection.send(p.level().getServer().clockManager().createFullSyncPacket()));
+                // 124: someone joins, is in the player list (which then opens even in single player), and leaves a
+                // while later
+                stranger("stranger_joins", player -> {
+                    Config.Section config = Config.event("stranger_joins");
+                    GameProfile profile = Figure.nobody(player, Figure.nickname(player));
+                    player.connection.send(listed(player, profile, config.integer("latency")));
+                    player.sendSystemMessage(Component.translatable("multiplayer.player.joined", profile.name())
+                            .withStyle(ChatFormatting.YELLOW));
+                    Scheduler.later(player, Ticks.SECOND * config.integer("seconds"), p -> {
+                        p.connection.send(new ClientboundPlayerInfoRemovePacket(List.of(profile.id())));
+                        p.sendSystemMessage(Component.translatable("multiplayer.player.left", profile.name())
+                                .withStyle(ChatFormatting.YELLOW));
+                    });
                 }),
-            // 161: an empty slot shows an item that is not there; any click on the inventory shows the truth sooner
-            SimpleEvent.light("false_slot", EventTag.PRESENCE, player -> !emptySlots(player).isEmpty(), player -> {
-                Config.Section config = Config.event("false_slot");
-                List<Integer> empty = emptySlots(player);
-                int slot = empty.get(player.getRandom().nextInt(empty.size()));
-                ItemStack shown = new ItemStack(BuiltInRegistries.ITEM.getOptional(Identifier.parse(pick(player, config.texts("items")))).orElse(Items.BONE));
-                if (shown.is(Items.PLAYER_HEAD)) {
-                    shown.set(DataComponents.PROFILE, ResolvableProfile.createResolved(player.getGameProfile()));
-                }
-                InventoryMenu menu = player.inventoryMenu;
-                if (Hardcore.on(player.level())) {
-                    menu.getSlot(slot).set(shown);
-                    return;
-                }
-                player.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.getStateId(), slot, shown));
-                Scheduler.later(player, Ticks.SECOND * config.integer("seconds"),
-                    p -> p.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.getStateId(), slot, menu.getSlot(slot).getItem().copy())));
-            }),
-            // 165: an advancement toast, gone from the advancements as soon as it is shown
-            saying("false_advancement", EventTag.PRESENCE, config -> config.texts("advancements"), (player, name) -> {
-                AdvancementHolder advancement = player.level().getServer().getAdvancements().get(Identifier.fromNamespaceAndPath(Restless.MOD_ID, name));
-                if (advancement != null && player.getAdvancements().award(advancement, IMPOSSIBLE)) {
-                    Scheduler.later(player, Config.event("false_advancement").integer("revoke_ticks"), p -> p.getAdvancements().revoke(advancement, IMPOSSIBLE));
-                }
-            }),
-            // 166: a step where the spirit is, and the head turns toward it, slowly, by itself
-            SimpleEvent.harmful("turned_head", EventTag.PRESENCE, player -> true, player -> {
-                Config.Section config = Config.event("turned_head");
-                Vec3 at = Nearby.source(player, config.num("distance"));
-                Nearby.sound(player, player.level().getBlockState(BlockPos.containing(at).below()).getSoundType().getStepSound(), at, config.tone("sound"));
-                // Turned smoothly on the client, see HeadTurn; from wherever the player looks by then.
-                Scheduler.later(player, config.integer("delay_ticks"), p -> {
-                    if (!Platform.get().canReceive(p, TurnPayload.TYPE)) {
-                        return;
-                    }
-                    float toward = (float) (Mth.atan2(at.z - p.getZ(), at.x - p.getX()) * Mth.RAD_TO_DEG) - 90.0F;
-                    // Up or down as well, so a player looking at the floor ends up looking at the spirit, not at the floor.
-                    double flat = Math.hypot(at.x - p.getX(), at.z - p.getZ());
-                    float up = (float) (-Mth.atan2(at.y + 1.0 - p.getEyeY(), flat) * Mth.RAD_TO_DEG) - p.getXRot();
-                    p.connection.send(new ClientboundCustomPayloadPacket(new TurnPayload(Mth.wrapDegrees(toward - p.getYRot()), up, config.integer("ticks"))));
-                });
-            }),
-            // 124: someone joins, is in the player list (which then opens even in single player), and leaves a while later
-            stranger("stranger_joins", player -> {
-                Config.Section config = Config.event("stranger_joins");
-                GameProfile profile = Figure.nobody(player, Figure.nickname(player));
-                player.connection.send(listed(player, profile, config.integer("latency")));
-                player.sendSystemMessage(Component.translatable("multiplayer.player.joined", profile.name()).withStyle(ChatFormatting.YELLOW));
-                Scheduler.later(player, Ticks.SECOND * config.integer("seconds"), p -> {
-                    p.connection.send(new ClientboundPlayerInfoRemovePacket(List.of(profile.id())));
-                    p.sendSystemMessage(Component.translatable("multiplayer.player.left", profile.name()).withStyle(ChatFormatting.YELLOW));
-                });
-            }),
-            // 202: a whisper, styled as /msg, from a real player online who never sent it; off by default, as it puts words in a real person's mouth
-            new SimpleEvent(Identifier.parse("false_whisper"), HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER),
-                player -> !others(player).isEmpty() && Said.left(player, "false_whisper", Config.event("false_whisper").texts("lines")), player -> {
-                    List<ServerPlayer> others = others(player);
-                    String line = Said.pick(player, "false_whisper", Config.event("false_whisper").texts("lines"));
-                    if (line != null && !others.isEmpty()) {
-                        ServerPlayer from = others.get(player.getRandom().nextInt(others.size()));
-                        player.sendSystemMessage(Component.translatable("commands.message.display.incoming", from.getDisplayName(), Component.literal(line))
-                            .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
-                    }
-                }),
-            // 124: someone else's death, in the player's own language
-            new SimpleEvent(Identifier.parse("stranger_death"), HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER),
-                player -> Said.left(player, "stranger_death", Config.event("stranger_death").texts("deaths")), player -> {
-                    String death = Said.pick(player, "stranger_death", Config.event("stranger_death").texts("deaths"));
-                    if (death != null) {
-                        player.sendSystemMessage(Component.translatable(death, Figure.nickname(player)));
-                    }
-                })
-        );
+                // 202: a whisper, styled as /msg, from a real player online who never sent it; off by default, as it
+                // puts words in a real person's mouth
+                new SimpleEvent(
+                        Identifier.parse("false_whisper"),
+                        HauntTier.LIGHT,
+                        Set.of(EventTag.PRESENCE, EventTag.PLAYER),
+                        player -> !others(player).isEmpty()
+                                && Said.left(
+                                        player,
+                                        "false_whisper",
+                                        Config.event("false_whisper").texts("lines")),
+                        player -> {
+                            List<ServerPlayer> others = others(player);
+                            String line = Said.pick(
+                                    player,
+                                    "false_whisper",
+                                    Config.event("false_whisper").texts("lines"));
+                            if (line != null && !others.isEmpty()) {
+                                ServerPlayer from =
+                                        others.get(player.getRandom().nextInt(others.size()));
+                                player.sendSystemMessage(Component.translatable(
+                                                "commands.message.display.incoming",
+                                                from.getDisplayName(),
+                                                Component.literal(line))
+                                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+                            }
+                        }),
+                // 124: someone else's death, in the player's own language
+                new SimpleEvent(
+                        Identifier.parse("stranger_death"),
+                        HauntTier.LIGHT,
+                        Set.of(EventTag.PRESENCE, EventTag.PLAYER),
+                        player -> Said.left(
+                                player,
+                                "stranger_death",
+                                Config.event("stranger_death").texts("deaths")),
+                        player -> {
+                            String death = Said.pick(
+                                    player,
+                                    "stranger_death",
+                                    Config.event("stranger_death").texts("deaths"));
+                            if (death != null) {
+                                player.sendSystemMessage(Component.translatable(death, Figure.nickname(player)));
+                            }
+                        }));
     }
 
     private static List<ServerPlayer> others(ServerPlayer player) {
-        return player.level().getServer().getPlayerList().getPlayers().stream().filter(p -> p != player).toList();
+        return player.level().getServer().getPlayerList().getPlayers().stream()
+                .filter(p -> p != player)
+                .toList();
     }
 
     /** An event that can always run. */
@@ -277,7 +406,11 @@ final class Lies {
     }
 
     /** An event that says one of its {@code variants}, never the same one twice for a spirit; see {@link Said}. */
-    private static HauntEvent saying(String id, EventTag tag, Function<Config.Section, List<String>> variants, BiConsumer<ServerPlayer, String> action) {
+    private static HauntEvent saying(
+            String id,
+            EventTag tag,
+            Function<Config.Section, List<String>> variants,
+            BiConsumer<ServerPlayer, String> action) {
         return SimpleEvent.light(id, tag, player -> Said.left(player, id, variants.apply(Config.event(id))), player -> {
             String said = Said.pick(player, id, variants.apply(Config.event(id)));
             if (said != null) {
@@ -299,7 +432,12 @@ final class Lies {
 
     /** An event about another player, that can always run. */
     private static HauntEvent stranger(String id, Consumer<ServerPlayer> action) {
-        return new SimpleEvent(Identifier.parse(id), HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, action);
+        return new SimpleEvent(
+                Identifier.parse(id),
+                HauntTier.LIGHT,
+                Set.of(EventTag.PRESENCE, EventTag.PLAYER),
+                player -> true,
+                action);
     }
 
     private static String pick(ServerPlayer player, List<String> texts) {
@@ -314,7 +452,9 @@ final class Lies {
         RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), player.registryAccess());
         try {
             // Each entry's fields come in the actions' declared order.
-            buffer.writeEnumSet(EnumSet.of(Action.ADD_PLAYER, Action.UPDATE_GAME_MODE, Action.UPDATE_LISTED, Action.UPDATE_LATENCY), Action.class);
+            buffer.writeEnumSet(
+                    EnumSet.of(Action.ADD_PLAYER, Action.UPDATE_GAME_MODE, Action.UPDATE_LISTED, Action.UPDATE_LATENCY),
+                    Action.class);
             buffer.writeVarInt(1);
             buffer.writeUUID(profile.id());
             ByteBufCodecs.PLAYER_NAME.encode(buffer, profile.name());
@@ -329,7 +469,10 @@ final class Lies {
     }
 
     private static void resendHealth(ServerPlayer player) {
-        player.connection.send(new ClientboundSetHealthPacket(player.getHealth(), player.getFoodData().getFoodLevel(), player.getFoodData().getSaturationLevel()));
+        player.connection.send(new ClientboundSetHealthPacket(
+                player.getHealth(),
+                player.getFoodData().getFoodLevel(),
+                player.getFoodData().getSaturationLevel()));
     }
 
     private static void privateRain(ServerPlayer player) {
@@ -346,8 +489,10 @@ final class Lies {
             if (!level.isRaining()) {
                 p.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.STOP_RAINING, 0));
             }
-            p.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.RAIN_LEVEL_CHANGE, level.getRainLevel(1)));
-            p.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.THUNDER_LEVEL_CHANGE, level.getThunderLevel(1)));
+            p.connection.send(new ClientboundGameEventPacket(
+                    ClientboundGameEventPacket.RAIN_LEVEL_CHANGE, level.getRainLevel(1)));
+            p.connection.send(new ClientboundGameEventPacket(
+                    ClientboundGameEventPacket.THUNDER_LEVEL_CHANGE, level.getThunderLevel(1)));
         });
     }
 }

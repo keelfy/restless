@@ -16,10 +16,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Local protection, checked when a spirit's event is about to run on a player. A ward stops that one event; the spirit's
- * cooldown still runs, so the event is lost, not postponed. Salt: the player stands inside a closed loop of it (walls may
- * close the gaps). Hallowed lantern, dreamcatcher (while the player sleeps), door charm (door events) and scarecrow (any
- * event) work by the blocks near the player; the last two wear out.
+ * Local protection, checked when a spirit's event is about to run on a player. A ward stops that one event; the
+ * spirit's cooldown still runs, so the event is lost, not postponed. Salt: the player stands inside a closed loop of it
+ * (walls may close the gaps). Hallowed lantern, dreamcatcher (while the player sleeps), door charm (door events) and
+ * scarecrow (any event) work by the blocks near the player; the last two wear out.
  */
 public final class Wards {
     private Wards() {}
@@ -31,8 +31,9 @@ public final class Wards {
         ServerLevel level = player.level();
         Config.Section config = Config.section("wards");
         Map<WardBlock.Kind, BlockPos> near = new EnumMap<>(WardBlock.Kind.class);
-        int radius = Math.max(Math.max(config.integer("lantern_radius"), config.integer("dreamcatcher_radius")),
-            Math.max(config.integer("charm_radius"), config.integer("scarecrow_radius")));
+        int radius = Math.max(
+                Math.max(config.integer("lantern_radius"), config.integer("dreamcatcher_radius")),
+                Math.max(config.integer("charm_radius"), config.integer("scarecrow_radius")));
         BlockPos at = player.blockPosition();
         Scan.each(level, at, radius, (pos, state) -> {
             if (state.getBlock() instanceof WardBlock ward && pos.distSqr(at) <= square(reach(config, ward.kind()))) {
@@ -82,8 +83,11 @@ public final class Wards {
 
     /** Whether {@code pos} lies inside a closed loop of salt, walls closing the gaps. */
     public static boolean ringed(ServerLevel level, BlockPos pos) {
-        return Enclosure.sealed(pos.getX(), pos.getZ(), (x, z) -> cell(level, new BlockPos(x, pos.getY(), z)),
-            Config.section("salt").integer("max_cells"));
+        return Enclosure.sealed(
+                pos.getX(),
+                pos.getZ(),
+                (x, z) -> cell(level, new BlockPos(x, pos.getY(), z)),
+                Config.section("salt").integer("max_cells"));
     }
 
     private static Enclosure.Cell cell(ServerLevel level, BlockPos pos) {
@@ -95,18 +99,31 @@ public final class Wards {
         if (state.is(Content.ALTAR.get())) {
             return Enclosure.Cell.OPEN;
         }
-        boolean solid = !state.getCollisionShape(level, pos).isEmpty() || !level.getBlockState(pos.above()).getCollisionShape(level, pos.above()).isEmpty();
+        boolean solid = !state.getCollisionShape(level, pos).isEmpty()
+                || !level.getBlockState(pos.above())
+                        .getCollisionShape(level, pos.above())
+                        .isEmpty();
         return solid ? Enclosure.Cell.WALL : Enclosure.Cell.OPEN;
     }
 
     /** The visible and audible "blocked": ash drifts down around the player and something rings out. */
     public static void blocked(ServerPlayer player) {
         ServerLevel level = player.level();
-        level.sendParticles(ParticleTypes.WHITE_ASH, player.getX(), player.getY() + 1.0, player.getZ(), 24, 0.8, 0.8, 0.8, 0.02);
-        level.playSound(null, player.blockPosition(), SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS, 0.6f, 1.4f);
+        level.sendParticles(
+                ParticleTypes.WHITE_ASH, player.getX(), player.getY() + 1.0, player.getZ(), 24, 0.8, 0.8, 0.8, 0.02);
+        level.playSound(
+                null,
+                player.blockPosition(),
+                SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(),
+                SoundSource.BLOCKS,
+                0.6f,
+                1.4f);
     }
 
-    /** A bell rang at {@code pos}: every spirit of a player within earshot, and every territorial one it covers, waits longer. */
+    /**
+     * A bell rang at {@code pos}: every spirit of a player within earshot, and every territorial one it covers, waits
+     * longer.
+     */
     public static void rung(ServerLevel level, BlockPos pos) {
         Config.Section config = Config.section("bell");
         int reach = config.integer("radius");
@@ -115,10 +132,17 @@ public final class Wards {
         for (ServerPlayer player : level.players()) {
             List<HauntData.Haunting> spirits = data.get(player.getUUID());
             if (spirits != null && player.blockPosition().distSqr(pos) <= square(reach)) {
-                data.put(player.getUUID(), spirits.stream().map(h -> h.rescheduled(h.nextEventAt() + delay)).toList());
+                data.put(
+                        player.getUUID(),
+                        spirits.stream()
+                                .map(h -> h.rescheduled(h.nextEventAt() + delay))
+                                .toList());
             }
         }
         data.putTerritorial(data.territorial().stream()
-            .map(t -> t.dimension().equals(level.dimension()) && t.covers(pos, reach) ? t.rescheduled(t.haunting().nextEventAt() + delay) : t).toList());
+                .map(t -> t.dimension().equals(level.dimension()) && t.covers(pos, reach)
+                        ? t.rescheduled(t.haunting().nextEventAt() + delay)
+                        : t)
+                .toList());
     }
 }

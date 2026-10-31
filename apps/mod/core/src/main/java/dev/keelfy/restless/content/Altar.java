@@ -47,14 +47,22 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The center of a ritual. It holds one thing: a focus, which starts a ritual on the spirit weak to it (see {@link Ritual}),
- * or a bottle of water, which turns holy after a night on it. Using it with an empty hand takes the thing back.
+ * The center of a ritual. It holds one thing: a focus, which starts a ritual on the spirit weak to it (see
+ * {@link Ritual}), or a bottle of water, which turns holy after a night on it. Using it with an empty hand takes the
+ * thing back.
  */
 public final class Altar extends Block implements EntityBlock {
     /** Offsets from the bowl; only the center owns an offering or a block entity. */
     public enum Part implements StringRepresentable {
-        CENTER(0, 0), NORTH(0, -1), EAST(1, 0), SOUTH(0, 1), WEST(-1, 0),
-        NORTH_WEST(-1, -1), NORTH_EAST(1, -1), SOUTH_EAST(1, 1), SOUTH_WEST(-1, 1);
+        CENTER(0, 0),
+        NORTH(0, -1),
+        EAST(1, 0),
+        SOUTH(0, 1),
+        WEST(-1, 0),
+        NORTH_WEST(-1, -1),
+        NORTH_EAST(1, -1),
+        SOUTH_EAST(1, 1),
+        SOUTH_WEST(-1, 1);
 
         final int x;
         final int z;
@@ -84,7 +92,12 @@ public final class Altar extends Block implements EntityBlock {
 
     /** What lies on the altar. */
     public enum Held implements StringRepresentable {
-        EMPTY(null), WATER(null), IRON(Focus.IRON), GLOWSTONE(Focus.GLOWSTONE), HOLY_WATER(Focus.HOLY_WATER), MIRROR(Focus.MIRROR);
+        EMPTY(null),
+        WATER(null),
+        IRON(Focus.IRON),
+        GLOWSTONE(Focus.GLOWSTONE),
+        HOLY_WATER(Focus.HOLY_WATER),
+        MIRROR(Focus.MIRROR);
 
         private final @Nullable Focus focus;
 
@@ -129,20 +142,33 @@ public final class Altar extends Block implements EntityBlock {
 
     public static final EnumProperty<Held> HELD = EnumProperty.create("held", Held.class);
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
-    private static final VoxelShape BASE = Shapes.or(Block.box(0, 0, 0, 16, 2, 16),
-        Block.box(0.5, 2, 0.5, 7.75, 3.5, 7.75), Block.box(8.25, 2, 0.5, 15.5, 3.5, 7.75),
-        Block.box(0.5, 2, 8.25, 7.75, 3.5, 15.5), Block.box(8.25, 2, 8.25, 15.5, 3.5, 15.5));
-    private static final VoxelShape BOWL = Shapes.or(BASE,
-        Block.box(3, 3, 3, 13, 9, 13), Block.box(1, 9, 1, 15, 12, 15),
-        Block.box(1, 12, 1, 15, 13, 3), Block.box(1, 12, 13, 15, 13, 15),
-        Block.box(1, 12, 3, 3, 13, 13), Block.box(13, 12, 3, 15, 13, 13),
-        Block.box(2.75, 4, 2.75, 13.25, 5, 13.25),
-        Block.box(6, 6, 2.75, 10, 8, 3), Block.box(6, 6, 13, 10, 8, 13.25),
-        Block.box(2.75, 6, 6, 3, 8, 10), Block.box(13, 6, 6, 13.25, 8, 10));
-    private static final VoxelShape PILLAR = Shapes.or(BASE,
-        Block.box(4, 3, 4, 12, 5, 12), Block.box(5, 5, 5, 11, 6, 11),
-        Block.box(6.5, 6, 6.5, 9.5, 12, 9.5), Block.box(5.5, 11, 5.5, 10.5, 13, 10.5),
-        Block.box(4, 13, 4, 12, 14, 12), Block.box(3, 14, 3, 13, 16, 13));
+    private static final VoxelShape BASE = Shapes.or(
+            Block.box(0, 0, 0, 16, 2, 16),
+            Block.box(0.5, 2, 0.5, 7.75, 3.5, 7.75),
+            Block.box(8.25, 2, 0.5, 15.5, 3.5, 7.75),
+            Block.box(0.5, 2, 8.25, 7.75, 3.5, 15.5),
+            Block.box(8.25, 2, 8.25, 15.5, 3.5, 15.5));
+    private static final VoxelShape BOWL = Shapes.or(
+            BASE,
+            Block.box(3, 3, 3, 13, 9, 13),
+            Block.box(1, 9, 1, 15, 12, 15),
+            Block.box(1, 12, 1, 15, 13, 3),
+            Block.box(1, 12, 13, 15, 13, 15),
+            Block.box(1, 12, 3, 3, 13, 13),
+            Block.box(13, 12, 3, 15, 13, 13),
+            Block.box(2.75, 4, 2.75, 13.25, 5, 13.25),
+            Block.box(6, 6, 2.75, 10, 8, 3),
+            Block.box(6, 6, 13, 10, 8, 13.25),
+            Block.box(2.75, 6, 6, 3, 8, 10),
+            Block.box(13, 6, 6, 13.25, 8, 10));
+    private static final VoxelShape PILLAR = Shapes.or(
+            BASE,
+            Block.box(4, 3, 4, 12, 5, 12),
+            Block.box(5, 5, 5, 11, 6, 11),
+            Block.box(6.5, 6, 6.5, 9.5, 12, 9.5),
+            Block.box(5.5, 11, 5.5, 10.5, 13, 10.5),
+            Block.box(4, 13, 4, 12, 14, 12),
+            Block.box(3, 14, 3, 13, 16, 13));
 
     public Altar(BlockBehaviour.Properties properties) {
         super(properties.pushReaction(PushReaction.IMMOVEABLE));
@@ -171,11 +197,14 @@ public final class Altar extends Block implements EntityBlock {
         for (Part part : Part.values()) {
             BlockPos at = part.position(context.getClickedPos());
             BlockState state = defaultBlockState().setValue(PART, part);
-            if (!level.getWorldBorder().isWithinBounds(at) || !level.hasChunkAt(at)
-                || !level.getBlockState(at).canBeReplaced(context) || !level.getFluidState(at).isEmpty()
-                || !state.canSurvive(level, at)
-                || !level.isUnobstructed(state, at, CollisionContext.placementContext(context.getPlayer()))
-                || (context.getPlayer() != null && !context.getPlayer().mayUseItemAt(at, Direction.UP, context.getItemInHand()))) {
+            if (!level.getWorldBorder().isWithinBounds(at)
+                    || !level.hasChunkAt(at)
+                    || !level.getBlockState(at).canBeReplaced(context)
+                    || !level.getFluidState(at).isEmpty()
+                    || !state.canSurvive(level, at)
+                    || !level.isUnobstructed(state, at, CollisionContext.placementContext(context.getPlayer()))
+                    || (context.getPlayer() != null
+                            && !context.getPlayer().mayUseItemAt(at, Direction.UP, context.getItemInHand()))) {
                 if (context.getPlayer() instanceof ServerPlayer player) {
                     player.sendSystemMessage(Component.translatable("message.restless.altar_space"), true);
                 }
@@ -200,14 +229,22 @@ public final class Altar extends Block implements EntityBlock {
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(
+            BlockState state,
+            LevelReader level,
+            ScheduledTickAccess ticks,
+            BlockPos pos,
+            Direction direction,
+            BlockPos neighbourPos,
+            BlockState neighbourState,
+            RandomSource random) {
         return direction == Direction.DOWN && !state.canSurvive(level, pos) ? Blocks.AIR.defaultBlockState() : state;
     }
 
     /** Removal starts at the center, so recursive neighbour callbacks cannot drop or dismantle it twice. */
     @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+    protected void affectNeighborsAfterRemoval(
+            BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
         Part removed = state.getValue(PART);
         if (removed.corner() && level.getBlockState(pos.above()).getBlock() instanceof CandleBlock) {
             level.destroyBlock(pos.above(), true);
@@ -254,9 +291,18 @@ public final class Altar extends Block implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (state.getValue(PART).corner() && hit.getDirection() == Direction.UP
-            && stack.getItem() instanceof BlockItem item && item.getBlock() instanceof CandleBlock) {
+    protected InteractionResult useItemOn(
+            ItemStack stack,
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hit) {
+        if (state.getValue(PART).corner()
+                && hit.getDirection() == Direction.UP
+                && stack.getItem() instanceof BlockItem item
+                && item.getBlock() instanceof CandleBlock) {
             return InteractionResult.PASS;
         }
         pos = state.getValue(PART).center(pos);
@@ -286,7 +332,8 @@ public final class Altar extends Block implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(
+            BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         pos = state.getValue(PART).center(pos);
         state = level.getBlockState(pos);
         if (!isPart(state, Part.CENTER)) {
@@ -321,15 +368,24 @@ public final class Altar extends Block implements EntityBlock {
         double x = pos.getX() + 0.5 + Math.cos(angle) * radius;
         double z = pos.getZ() + 0.5 + Math.sin(angle) * radius;
         boolean blessing = center.getValue(HELD) == Held.WATER || center.getValue(HELD) == Held.HOLY_WATER;
-        level.addParticle(blessing ? ParticleTypes.END_ROD : ParticleTypes.SOUL_FIRE_FLAME,
-            x, pos.getY() + 0.9, z, 0, 0.015, 0);
+        level.addParticle(
+                blessing ? ParticleTypes.END_ROD : ParticleTypes.SOUL_FIRE_FLAME, x, pos.getY() + 0.9, z, 0, 0.015, 0);
     }
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (state.getValue(PART) == Part.CENTER && state.getValue(HELD) == Held.WATER) {
             level.setBlock(pos, state.setValue(HELD, Held.HOLY_WATER), 3);
-            level.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 12, 0.2, 0.3, 0.2, 0.02);
+            level.sendParticles(
+                    ParticleTypes.END_ROD,
+                    pos.getX() + 0.5,
+                    pos.getY() + 1.0,
+                    pos.getZ() + 0.5,
+                    12,
+                    0.2,
+                    0.3,
+                    0.2,
+                    0.02);
             level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.BLOCKS, 1.0f, 0.8f);
         }
     }

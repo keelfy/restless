@@ -53,7 +53,10 @@ public final class AltarGameTests {
         SanityGameTests.register(TESTS);
         TESTS.put("placement", helper -> {
             place(helper);
-            check(helper, Altar.isComplete(helper.getLevel(), helper.absolutePos(CENTER)), "All nine parts must be present");
+            check(
+                    helper,
+                    Altar.isComplete(helper.getLevel(), helper.absolutePos(CENTER)),
+                    "All nine parts must be present");
             int entities = 0;
             for (BlockPos pos : BlockPos.betweenClosed(CENTER.offset(-1, 0, -1), CENTER.offset(1, 0, 1))) {
                 if (helper.getLevel().getBlockEntity(helper.absolutePos(pos)) != null) entities++;
@@ -84,10 +87,17 @@ public final class AltarGameTests {
                 TESTS.put("break" + suffix, helper -> {
                     place(helper);
                     BlockPos center = helper.absolutePos(CENTER);
-                    helper.getLevel().setBlockAndUpdate(center, helper.getLevel().getBlockState(center).setValue(Altar.HELD, Altar.Held.WATER));
+                    helper.getLevel()
+                            .setBlockAndUpdate(
+                                    center,
+                                    helper.getLevel().getBlockState(center).setValue(Altar.HELD, Altar.Held.WATER));
                     helper.getLevel().destroyBlock(center.offset(offset), true);
                     assertRemoved(helper);
-                    check(helper, drops(helper, Content.ALTAR_ITEM.get()) == 1, "Breaking any part must drop exactly one altar; got " + drops(helper, Content.ALTAR_ITEM.get()));
+                    check(
+                            helper,
+                            drops(helper, Content.ALTAR_ITEM.get()) == 1,
+                            "Breaking any part must drop exactly one altar; got "
+                                    + drops(helper, Content.ALTAR_ITEM.get()));
                     check(helper, drops(helper, Items.POTION) == 1, "Breaking must return the offering once");
                     helper.succeed();
                 });
@@ -100,14 +110,23 @@ public final class AltarGameTests {
                     state.getBlock().playerWillDestroy(helper.getLevel(), at, state, player);
                     helper.getLevel().destroyBlock(at, false);
                     assertRemoved(helper);
-                    check(helper, drops(helper, Content.ALTAR_ITEM.get()) == 0, "Creative removal must not drop the altar");
+                    check(
+                            helper,
+                            drops(helper, Content.ALTAR_ITEM.get()) == 0,
+                            "Creative removal must not drop the altar");
                     helper.succeed();
                 });
                 TESTS.put("floor_break" + suffix, helper -> {
                     place(helper);
-                    helper.getLevel().destroyBlock(helper.absolutePos(CENTER.offset(offset).below()), false);
+                    helper.getLevel()
+                            .destroyBlock(
+                                    helper.absolutePos(CENTER.offset(offset).below()), false);
                     assertRemoved(helper);
-                    check(helper, drops(helper, Content.ALTAR_ITEM.get()) == 1, "Losing support must dismantle and drop one altar; got " + drops(helper, Content.ALTAR_ITEM.get()));
+                    check(
+                            helper,
+                            drops(helper, Content.ALTAR_ITEM.get()) == 1,
+                            "Losing support must dismantle and drop one altar; got "
+                                    + drops(helper, Content.ALTAR_ITEM.get()));
                     helper.succeed();
                 });
             }
@@ -118,24 +137,34 @@ public final class AltarGameTests {
             placeItem(helper, other, true);
             helper.getLevel().destroyBlock(helper.absolutePos(CENTER.east()), true);
             assertRemoved(helper);
-            check(helper, Altar.isComplete(helper.getLevel(), helper.absolutePos(other)), "Dismantling must not touch the adjacent altar");
+            check(
+                    helper,
+                    Altar.isComplete(helper.getLevel(), helper.absolutePos(other)),
+                    "Dismantling must not touch the adjacent altar");
             helper.succeed();
         });
         TESTS.put("salt_ring", helper -> {
             place(helper);
             for (int x = -2; x <= 2; x++) {
                 for (int z = -2; z <= 2; z++) {
-                    if (Math.abs(x) == 2 || Math.abs(z) == 2) helper.setBlock(CENTER.offset(x, 0, z), Content.SALT_LINE.get());
+                    if (Math.abs(x) == 2 || Math.abs(z) == 2)
+                        helper.setBlock(CENTER.offset(x, 0, z), Content.SALT_LINE.get());
                 }
             }
-            check(helper, Wards.ringed(helper.getLevel(), helper.absolutePos(CENTER)), "The platform must let the salt scan reach the ring");
+            check(
+                    helper,
+                    Wards.ringed(helper.getLevel(), helper.absolutePos(CENTER)),
+                    "The platform must let the salt scan reach the ring");
             helper.setBlock(CENTER.offset(2, 0, 0), Blocks.AIR);
             // Open the test enclosure itself, otherwise its barrier walls also count as a salt ward.
             for (int x = 9; x <= 11; x++) {
                 helper.setBlock(new BlockPos(x, 1, 4), Blocks.AIR);
                 helper.setBlock(new BlockPos(x, 2, 4), Blocks.AIR);
             }
-            check(helper, !Wards.ringed(helper.getLevel(), helper.absolutePos(CENTER)), "The platform must not seal a gap in the salt");
+            check(
+                    helper,
+                    !Wards.ringed(helper.getLevel(), helper.absolutePos(CENTER)),
+                    "The platform must not seal a gap in the salt");
             helper.succeed();
         });
         TESTS.put("offering_from_corner", helper -> {
@@ -144,16 +173,24 @@ public final class AltarGameTests {
             ItemStack water = PotionContents.createItemStack(Items.POTION, Potions.WATER);
             BlockPos corner = helper.absolutePos(CENTER.offset(-1, 0, -1));
             BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(corner), Direction.UP, corner, false);
-            helper.getLevel().getBlockState(corner).useItemOn(water, helper.getLevel(), player, InteractionHand.MAIN_HAND, hit);
+            helper.getLevel()
+                    .getBlockState(corner)
+                    .useItemOn(water, helper.getLevel(), player, InteractionHand.MAIN_HAND, hit);
             helper.assertBlockProperty(CENTER, Altar.HELD, Altar.Held.WATER);
             check(helper, water.isEmpty(), "The offering must be consumed once");
-            helper.getLevel().getBlockTicks().clearArea(new net.minecraft.world.level.levelgen.structure.BoundingBox(helper.absolutePos(CENTER)));
+            helper.getLevel()
+                    .getBlockTicks()
+                    .clearArea(
+                            new net.minecraft.world.level.levelgen.structure.BoundingBox(helper.absolutePos(CENTER)));
             helper.getLevel().scheduleTick(helper.absolutePos(CENTER), Content.ALTAR.get(), 1);
             helper.runAfterDelay(2, () -> {
                 helper.assertBlockProperty(CENTER, Altar.HELD, Altar.Held.HOLY_WATER);
                 helper.getLevel().getBlockState(corner).useWithoutItem(helper.getLevel(), player, hit);
                 helper.assertBlockProperty(CENTER, Altar.HELD, Altar.Held.EMPTY);
-                check(helper, player.getInventory().countItem(Content.HOLY_WATER.get()) == 1, "Any part must return the blessed offering once");
+                check(
+                        helper,
+                        player.getInventory().countItem(Content.HOLY_WATER.get()) == 1,
+                        "Any part must return the blessed offering once");
                 helper.succeed();
             });
         });
@@ -167,16 +204,30 @@ public final class AltarGameTests {
                 for (int x : new int[] {-1, 1}) {
                     for (int z : new int[] {-1, 1}) {
                         BlockPos corner = center.offset(x, 0, z);
-                        BlockHitResult hit = new BlockHitResult(Vec3.atBottomCenterOf(corner.above()), Direction.UP, corner, false);
+                        BlockHitResult hit =
+                                new BlockHitResult(Vec3.atBottomCenterOf(corner.above()), Direction.UP, corner, false);
                         ItemStack candle = new ItemStack(Items.CANDLE);
-                        check(helper, level.getBlockState(corner).useItemOn(candle, level, player, InteractionHand.MAIN_HAND, hit)
-                            == net.minecraft.world.InteractionResult.PASS, "A candle must reach item placement without taking the offering");
-                        check(helper, ((BlockItem) candle.getItem()).place(new BlockPlaceContext(level, player,
-                            InteractionHand.MAIN_HAND, candle, hit)).consumesAction(), "A corner stand must support a real candle");
+                        check(
+                                helper,
+                                level.getBlockState(corner)
+                                                .useItemOn(candle, level, player, InteractionHand.MAIN_HAND, hit)
+                                        == net.minecraft.world.InteractionResult.PASS,
+                                "A candle must reach item placement without taking the offering");
+                        check(
+                                helper,
+                                ((BlockItem) candle.getItem())
+                                        .place(new BlockPlaceContext(
+                                                level, player, InteractionHand.MAIN_HAND, candle, hit))
+                                        .consumesAction(),
+                                "A corner stand must support a real candle");
                         check(helper, candle.isEmpty(), "Placing a candle must consume it once");
                         BlockPos above = corner.above();
-                        check(helper, level.getBlockState(above).canSurvive(level, above), "The tray must support the candle");
-                        level.setBlockAndUpdate(above, level.getBlockState(above).setValue(CandleBlock.LIT, true));
+                        check(
+                                helper,
+                                level.getBlockState(above).canSurvive(level, above),
+                                "The tray must support the candle");
+                        level.setBlockAndUpdate(
+                                above, level.getBlockState(above).setValue(CandleBlock.LIT, true));
                     }
                 }
                 int[] lit = {0};
@@ -187,7 +238,10 @@ public final class AltarGameTests {
                 helper.assertBlockProperty(CENTER, Altar.HELD, Altar.Held.IRON);
                 BlockPos candle = center.offset(-1, 1, -1);
                 AbstractCandleBlock.extinguish(null, level.getBlockState(candle), level, candle);
-                check(helper, !AbstractCandleBlock.isLit(level.getBlockState(candle)), "A spirit must be able to snuff a stand's candle");
+                check(
+                        helper,
+                        !AbstractCandleBlock.isLit(level.getBlockState(candle)),
+                        "A spirit must be able to snuff a stand's candle");
                 level.destroyBlock(breakCorner ? center.offset(-1, 0, -1) : center, true);
                 helper.runAfterDelay(2, () -> {
                     for (int x : new int[] {-1, 1}) {
@@ -199,15 +253,31 @@ public final class AltarGameTests {
             });
         }
 
-        DeferredRegister<Consumer<GameTestHelper>> functions = DeferredRegister.create(Registries.TEST_FUNCTION, "restless_tests");
+        DeferredRegister<Consumer<GameTestHelper>> functions =
+                DeferredRegister.create(Registries.TEST_FUNCTION, "restless_tests");
         TESTS.forEach((name, test) -> functions.register(name, () -> HardcoreGameTests.inItsBatch(name, test)));
         functions.register(bus);
         bus.addListener((RegisterGameTestsEvent event) -> {
             var environment = event.registerEnvironment(id("altar"));
             // Hardcore is one switch for the whole server, so the tests that need it run in a batch of their own.
             var hardcore = event.registerEnvironment(id("hardcore"));
-            TESTS.forEach((name, test) -> event.registerTest(id(name), new FunctionGameTestInstance(
-                ResourceKey.create(Registries.TEST_FUNCTION, id(name)), new TestData<>(HardcoreGameTests.BATCH.contains(name) ? hardcore : environment, net.minecraft.world.level.Level.OVERWORLD, id("empty"), HauntEventGameTests.TIMEOUT.getOrDefault(name, 40), 0, true, net.minecraft.world.level.block.Rotation.NONE, false, 1, 1, true, HauntEventGameTests.PADDING.getOrDefault(name, 0)))));
+            TESTS.forEach((name, test) -> event.registerTest(
+                    id(name),
+                    new FunctionGameTestInstance(
+                            ResourceKey.create(Registries.TEST_FUNCTION, id(name)),
+                            new TestData<>(
+                                    HardcoreGameTests.BATCH.contains(name) ? hardcore : environment,
+                                    net.minecraft.world.level.Level.OVERWORLD,
+                                    id("empty"),
+                                    HauntEventGameTests.TIMEOUT.getOrDefault(name, 40),
+                                    0,
+                                    true,
+                                    net.minecraft.world.level.block.Rotation.NONE,
+                                    false,
+                                    1,
+                                    1,
+                                    true,
+                                    HauntEventGameTests.PADDING.getOrDefault(name, 0)))));
         });
     }
 
@@ -237,8 +307,13 @@ public final class AltarGameTests {
     }
 
     private static int drops(GameTestHelper helper, net.minecraft.world.item.Item item) {
-        return helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(CENTER)).inflate(2))
-            .stream().filter(entity -> entity.getItem().is(item)).mapToInt(entity -> entity.getItem().getCount()).sum();
+        return helper
+                .getLevel()
+                .getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(CENTER)).inflate(2))
+                .stream()
+                .filter(entity -> entity.getItem().is(item))
+                .mapToInt(entity -> entity.getItem().getCount())
+                .sum();
     }
 
     private static void assertRemoved(GameTestHelper helper) {

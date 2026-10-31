@@ -43,13 +43,18 @@ public final class Reactions {
         return sounds == null ? 0 : sounds.getAndSet(0);
     }
 
-    /** The spirit's next roll after this check: sooner for every sound its noise-fed traits hear, later while the player sneaks. */
+    /**
+     * The spirit's next roll after this check: sooner for every sound its noise-fed traits hear, later while the player
+     * sneaks.
+     */
     static HauntData.Haunting fed(HauntData.Haunting haunting, int sounds, boolean sneaking) {
         List<Trait> traits = Traits.of(haunting.traits());
         if (traits.stream().noneMatch(t -> t.noise() > 0)) {
             return haunting;
         }
-        long shift = sneaking ? -Config.section("director").integer("sneak_delay_ticks") : (long) Traits.noise(traits, sounds);
+        long shift = sneaking
+                ? -Config.section("director").integer("sneak_delay_ticks")
+                : (long) Traits.noise(traits, sounds);
         return shift == 0 ? haunting : haunting.rescheduled(haunting.nextEventAt() - shift);
     }
 
@@ -82,8 +87,11 @@ public final class Reactions {
         boolean changed = false;
         for (int i = 0; i < spirits.size(); i++) {
             HauntData.Haunting haunting = spirits.get(i);
-            if (haunting.nextEventAt() > now && (Director.spirit(haunting).reacts().contains(trigger) || Traits.reacts(Traits.of(haunting.traits()), trigger))
-                && player.getRandom().nextDouble() < Config.section("director").num("react_chance")) {
+            if (haunting.nextEventAt() > now
+                    && (Director.spirit(haunting).reacts().contains(trigger)
+                            || Traits.reacts(Traits.of(haunting.traits()), trigger))
+                    && player.getRandom().nextDouble()
+                            < Config.section("director").num("react_chance")) {
                 spirits.set(i, haunting.rescheduled(now));
                 changed = true;
             }

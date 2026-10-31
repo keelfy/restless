@@ -12,8 +12,13 @@ import java.util.Set;
  * @param when what the surroundings must be like for {@code activity} to apply; otherwise the spirit acts at 1
  * @param reacts player actions that can make a personal spirit of this type act right away, as a trait's do
  */
-public record SpiritType(String id, Kind kind, Map<EventTag, Double> affinity, double activity, Trait.Condition when,
-                         List<Trait.Trigger> reacts) {
+public record SpiritType(
+        String id,
+        Kind kind,
+        Map<EventTag, Double> affinity,
+        double activity,
+        Trait.Condition when,
+        List<Trait.Trigger> reacts) {
     /** Personal spirits follow one player; territorial ones stay at an anchor and act on whoever is near it. */
     public enum Kind {
         PERSONAL,

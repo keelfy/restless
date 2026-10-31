@@ -45,7 +45,9 @@ class TraitsTest {
         List<Trait> rain = Traits.of(List.of("rain_walker"));
         assertEquals(1.0, Traits.activity(rain, EnumSet.of(Trait.Condition.ANY)));
         assertEquals(2.0, Traits.activity(rain, EnumSet.of(Trait.Condition.ANY, Trait.Condition.RAIN)));
-        assertNotEquals(1.0, Traits.activity(Traits.of(List.of("rain_walker", "night_stalker")), EnumSet.of(Trait.Condition.NIGHT)));
+        assertNotEquals(
+                1.0,
+                Traits.activity(Traits.of(List.of("rain_walker", "night_stalker")), EnumSet.of(Trait.Condition.NIGHT)));
     }
 
     @Test

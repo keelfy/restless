@@ -29,12 +29,27 @@ public final class Candle {
                 continue;
             }
             data = data == null ? HauntData.get(server) : data;
-            Vec3 hand = player.getEyePosition().add(player.getLookAngle().scale(0.6)).add(0, -0.4, 0);
-            Optional<Sense.Spirit> next = Sense.of(player, data).stream().min(Comparator.comparingLong(s -> s.haunting().nextEventAt()));
-            boolean warning = next.filter(s -> s.haunting().nextEventAt() - now <= config.integer("warning_ticks")).isPresent();
-            Vec3 lean = next.map(Sense.Spirit::at).map(at -> at.subtract(hand).multiply(1, 0, 1).normalize()).orElse(Vec3.ZERO);
-            player.level().sendParticles(warning ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
-                hand.x, hand.y, hand.z, 0, lean.x * config.num("lean"), 1.0, lean.z * config.num("lean"), 0.03);
+            Vec3 hand = player.getEyePosition()
+                    .add(player.getLookAngle().scale(0.6))
+                    .add(0, -0.4, 0);
+            Optional<Sense.Spirit> next = Sense.of(player, data).stream()
+                    .min(Comparator.comparingLong(s -> s.haunting().nextEventAt()));
+            boolean warning = next.filter(s -> s.haunting().nextEventAt() - now <= config.integer("warning_ticks"))
+                    .isPresent();
+            Vec3 lean = next.map(Sense.Spirit::at)
+                    .map(at -> at.subtract(hand).multiply(1, 0, 1).normalize())
+                    .orElse(Vec3.ZERO);
+            player.level()
+                    .sendParticles(
+                            warning ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
+                            hand.x,
+                            hand.y,
+                            hand.z,
+                            0,
+                            lean.x * config.num("lean"),
+                            1.0,
+                            lean.z * config.num("lean"),
+                            0.03);
         }
     }
 

@@ -43,8 +43,11 @@ public final class Ritual {
                 candles.add(pos.immutable());
             }
         });
-        if (!Altar.isComplete(level, altar) || candles.size() < config.integer("candles") || !Wards.ringed(level, altar)) {
-            player.sendSystemMessage(Component.translatable("message.restless.altar_incomplete", config.integer("candles")), true);
+        if (!Altar.isComplete(level, altar)
+                || candles.size() < config.integer("candles")
+                || !Wards.ringed(level, altar)) {
+            player.sendSystemMessage(
+                    Component.translatable("message.restless.altar_incomplete", config.integer("candles")), true);
             return false;
         }
         List<Sense.Spirit> spirits = Sense.of(player, HauntData.get(level.getServer()));
@@ -53,7 +56,9 @@ public final class Ritual {
             return false;
         }
         level.setBlock(altar, level.getBlockState(altar).setValue(Altar.HELD, Altar.Held.of(focus)), 3);
-        Optional<Sense.Spirit> weak = spirits.stream().filter(s -> Traits.weakness(Traits.of(s.haunting().traits())) == focus).findFirst();
+        Optional<Sense.Spirit> weak = spirits.stream()
+                .filter(s -> Traits.weakness(Traits.of(s.haunting().traits())) == focus)
+                .findFirst();
         if (weak.isEmpty()) {
             wrong(player, level, altar, spirits.get(player.getRandom().nextInt(spirits.size())));
             return true;
@@ -78,32 +83,57 @@ public final class Ritual {
     /** Dense vanilla soot follows the offering's bob; its task ends with the ritual, including player departure. */
     private static void smoke(ServerLevel level, BlockPos altar, Focus focus) {
         BlockState state = level.getBlockState(altar);
-        if (!state.is(Content.ALTAR.get()) || state.getValue(Altar.HELD) != Altar.Held.of(focus)
-            || !Altar.isComplete(level, altar)) {
+        if (!state.is(Content.ALTAR.get())
+                || state.getValue(Altar.HELD) != Altar.Held.of(focus)
+                || !Altar.isComplete(level, altar)) {
             return;
         }
         double height = 1.12 + Math.sin((level.getGameTime() % 24000) * 0.06) * 0.035;
-        level.sendParticles(ParticleTypes.LARGE_SMOKE, altar.getX() + 0.5, altar.getY() + height, altar.getZ() + 0.5,
-            4, 0.22, 0.10, 0.22, 0.008);
+        level.sendParticles(
+                ParticleTypes.LARGE_SMOKE,
+                altar.getX() + 0.5,
+                altar.getY() + height,
+                altar.getZ() + 0.5,
+                4,
+                0.22,
+                0.10,
+                0.22,
+                0.008);
     }
 
-    /** One wave: the ritual holds or breaks, ends after the last, and otherwise the spirit fights back. @return whether it goes on */
-    private static boolean wave(ServerPlayer player, ServerLevel level, BlockPos altar, Focus focus, List<BlockPos> candles, Sense.Spirit spirit, int n) {
+    /**
+     * One wave: the ritual holds or breaks, ends after the last, and otherwise the spirit fights back. @return whether
+     * it goes on
+     */
+    private static boolean wave(
+            ServerPlayer player,
+            ServerLevel level,
+            BlockPos altar,
+            Focus focus,
+            List<BlockPos> candles,
+            Sense.Spirit spirit,
+            int n) {
         Config.Section config = Config.section("ritual");
         BlockState state = level.getBlockState(altar);
-        boolean held = state.is(Content.ALTAR.get()) && state.getValue(Altar.HELD) == Altar.Held.of(focus)
-            && Altar.isComplete(level, altar);
+        boolean held = state.is(Content.ALTAR.get())
+                && state.getValue(Altar.HELD) == Altar.Held.of(focus)
+                && Altar.isComplete(level, altar);
         boolean lit = candles.stream().allMatch(pos -> AbstractCandleBlock.isLit(level.getBlockState(pos)));
         boolean near = player.level() == level && player.blockPosition().closerThan(altar, config.integer("radius"));
         if (!held || !lit || !near) {
             fail(player, level, altar, spirit);
             return false;
         }
-        if (n + 1 >= config.integer("waves") + (spirit.haunting().evolved() ? Config.section("evolution").integer("extra_waves") : 0)) {
+        if (n + 1
+                >= config.integer("waves")
+                        + (spirit.haunting().evolved()
+                                ? Config.section("evolution").integer("extra_waves")
+                                : 0)) {
             banish(player, level, altar, spirit);
             return false;
         }
-        level.sendParticles(ParticleTypes.SOUL, altar.getX() + 0.5, altar.getY() + 1.2, altar.getZ() + 0.5, 8, 0.4, 0.4, 0.4, 0.02);
+        level.sendParticles(
+                ParticleTypes.SOUL, altar.getX() + 0.5, altar.getY() + 1.2, altar.getZ() + 0.5, 8, 0.4, 0.4, 0.4, 0.02);
         if (player.getRandom().nextDouble() < config.num("snuff_chance")) {
             BlockPos candle = candles.get(player.getRandom().nextInt(candles.size()));
             AbstractCandleBlock.extinguish(null, level.getBlockState(candle), level, candle); // all lit: checked above
@@ -119,19 +149,38 @@ public final class Ritual {
         clear(level, altar);
         HauntData.get(level.getServer()).change(spirit.haunting().uuid(), h -> null);
         Location.forget(spirit.haunting().uuid());
-        Identifier essence = Identifier.fromNamespaceAndPath(Restless.MOD_ID, spirit.haunting().spirit() + "_essence");
+        Identifier essence = Identifier.fromNamespaceAndPath(
+                Restless.MOD_ID, spirit.haunting().spirit() + "_essence");
         Optional<Item> item = BuiltInRegistries.ITEM.getOptional(essence);
-        item.ifPresent(i -> level.addFreshEntity(new ItemEntity(level, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, new ItemStack(i))));
-        level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, 40, 0.5, 1.0, 0.5, 0.05);
+        item.ifPresent(i -> level.addFreshEntity(
+                new ItemEntity(level, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, new ItemStack(i))));
+        level.sendParticles(
+                ParticleTypes.SOUL_FIRE_FLAME,
+                altar.getX() + 0.5,
+                altar.getY() + 1.0,
+                altar.getZ() + 0.5,
+                40,
+                0.5,
+                1.0,
+                0.5,
+                0.05);
         level.playSound(null, altar, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0f, 0.6f);
         Component type = Evolution.name(spirit.haunting());
         player.sendSystemMessage(Component.translatable("message.restless.banished", type), true);
-        Journal.note(player, Notebook.Kind.BANISHED, spirit.haunting(), type, Story.of(spirit.haunting().seed()).name());
+        Journal.note(
+                player,
+                Notebook.Kind.BANISHED,
+                spirit.haunting(),
+                type,
+                Story.of(spirit.haunting().seed()).name());
     }
 
     private static void fail(ServerPlayer player, ServerLevel level, BlockPos altar, Sense.Spirit spirit) {
         clear(level, altar);
-        HauntData.get(level.getServer()).change(spirit.haunting().uuid(), h -> h.angered(Config.section("ritual").num("fail_anger")));
+        HauntData.get(level.getServer())
+                .change(
+                        spirit.haunting().uuid(),
+                        h -> h.angered(Config.section("ritual").num("fail_anger")));
         level.playSound(null, altar, SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS, 1.0f, 0.5f);
         player.sendSystemMessage(Component.translatable("message.restless.ritual_failed"), true);
     }

@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
@@ -23,11 +23,17 @@ import net.minecraft.world.level.Level;
 
 /** A normal shapeless recipe with a reusable igniter and component-preserving output. */
 public final class RelightingRecipe extends NormalCraftingRecipe {
-    public static final Supplier<RecipeSerializer<?>> SERIALIZER = Platform.get().register(
-        BuiltInRegistries.RECIPE_SERIALIZER, "relighting", key -> new RecipeSerializer<>(
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("light").xmap(RelightingRecipe::new, recipe -> recipe.light),
-            ByteBufCodecs.registry(net.minecraft.core.registries.Registries.ITEM)
-                .map(RelightingRecipe::new, recipe -> recipe.light)));
+    public static final Supplier<RecipeSerializer<?>> SERIALIZER = Platform.get()
+            .register(
+                    BuiltInRegistries.RECIPE_SERIALIZER,
+                    "relighting",
+                    key -> new RecipeSerializer<>(
+                            BuiltInRegistries.ITEM
+                                    .byNameCodec()
+                                    .fieldOf("light")
+                                    .xmap(RelightingRecipe::new, recipe -> recipe.light),
+                            ByteBufCodecs.registry(net.minecraft.core.registries.Registries.ITEM)
+                                    .map(RelightingRecipe::new, recipe -> recipe.light)));
 
     private final Item light;
     private final ShapelessRecipe delegate;
@@ -35,10 +41,16 @@ public final class RelightingRecipe extends NormalCraftingRecipe {
     public RelightingRecipe(Item light) {
         super(new CommonInfo(true), new CraftingBookInfo(CraftingBookCategory.MISC, "restless_relighting"));
         this.light = light;
-        this.delegate = new ShapelessRecipe(commonInfo, bookInfo,
-            new ItemStackTemplate(UnlitLights.relit(((BlockItem) light).getBlock().defaultBlockState()).getBlock().asItem()),
-            List.of(Ingredient.of(light), Ingredient.of(BuiltInRegistries.ITEM.stream()
-                .filter(UnlitLights::canIgnite))));
+        this.delegate = new ShapelessRecipe(
+                commonInfo,
+                bookInfo,
+                new ItemStackTemplate(
+                        UnlitLights.relit(((BlockItem) light).getBlock().defaultBlockState())
+                                .getBlock()
+                                .asItem()),
+                List.of(
+                        Ingredient.of(light),
+                        Ingredient.of(BuiltInRegistries.ITEM.stream().filter(UnlitLights::canIgnite))));
     }
 
     public static void init() {}
@@ -48,9 +60,21 @@ public final class RelightingRecipe extends NormalCraftingRecipe {
     public RecipeSerializer<RelightingRecipe> getSerializer() {
         return (RecipeSerializer<RelightingRecipe>) SERIALIZER.get();
     }
-    @Override protected PlacementInfo createPlacementInfo() { return delegate.placementInfo(); }
-    @Override public List<RecipeDisplay> display() { return delegate.display(); }
-    @Override public boolean matches(CraftingInput input, Level level) { return delegate.matches(input, level); }
+
+    @Override
+    protected PlacementInfo createPlacementInfo() {
+        return delegate.placementInfo();
+    }
+
+    @Override
+    public List<RecipeDisplay> display() {
+        return delegate.display();
+    }
+
+    @Override
+    public boolean matches(CraftingInput input, Level level) {
+        return delegate.matches(input, level);
+    }
 
     @Override
     public ItemStack assemble(CraftingInput input) {

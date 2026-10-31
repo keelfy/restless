@@ -17,8 +17,18 @@ import net.minecraft.world.phys.Vec3;
 record PacketEntity(int id) {
     static PacketEntity show(ServerPlayer player, EntityType<?> type, Vec3 at, float yaw) {
         PacketEntity entity = new PacketEntity(player.level().getNextEntityId());
-        player.connection.send(new ClientboundAddEntityPacket(entity.id, Mth.createInsecureUUID(player.getRandom()), at.x, at.y, at.z,
-            0.0F, yaw, type, 0, Vec3.ZERO, yaw));
+        player.connection.send(new ClientboundAddEntityPacket(
+                entity.id,
+                Mth.createInsecureUUID(player.getRandom()),
+                at.x,
+                at.y,
+                at.z,
+                0.0F,
+                yaw,
+                type,
+                0,
+                Vec3.ZERO,
+                yaw));
         return entity;
     }
 

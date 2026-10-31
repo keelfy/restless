@@ -30,49 +30,74 @@ final class Presence {
 
     static List<HauntEvent> all() {
         return List.of(
-            // 94
-            PresenceFigure.edge(),
-            // 95
-            PresenceFigure.fog(),
-            // 123
-            PresenceFigure.distantPlayer(),
-            // 120
-            PresenceFigure.distantWalker(),
-            // 121
-            new PillarEvent(),
-            // 122
-            new HarvestEvent(),
-            // 128
-            new ArmorStandEvent(),
-            // 201
-            PresenceFigure.friendDouble(),
-            // 119
-            new SimpleEvent(Identifier.parse("nametag"), HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Presence::nametag),
-            // 97: a puff of breath at the face where nobody should be breathing out
-            SimpleEvent.light("cold_breath", EventTag.PRESENCE, Presence::warm, player -> {
-                Config.Section config = Config.event("cold_breath");
-                Config.Burst puff = config.burst("particles");
-                Vec3 look = player.getLookAngle();
-                Vec3 face = player.getEyePosition().add(look.x * config.num("forward"), puff.offsetY(), look.z * config.num("forward"));
-                player.level().sendParticles(ParticleTypes.CLOUD, face.x, face.y, face.z, puff.count(), puff.dx(), puff.dy(), puff.dz(), puff.speed());
-            }),
-            // 96
-            SimpleEvent.light("footprints", EventTag.PRESENCE, player -> soft(player) != null, Presence::footprints),
-            // 98
-            SimpleEvent.light("local_rain", EventTag.PRESENCE,
-                player -> player.level().canSeeSky(player.blockPosition()) && !player.level().isRainingAt(player.blockPosition()),
-                Presence::localRain),
-            // 99
-            SimpleEvent.harmful("lost_time", EventTag.PRESENCE, player -> player.level().isDarkOutside(), player -> {
-                var server = player.level().getServer();
-                server.clockManager().addTicks(server.registryAccess().getOrThrow(WorldClocks.OVERWORLD), Config.event("lost_time").integer("skip_ticks"));
-            })
-        );
+                // 94
+                PresenceFigure.edge(),
+                // 95
+                PresenceFigure.fog(),
+                // 123
+                PresenceFigure.distantPlayer(),
+                // 120
+                PresenceFigure.distantWalker(),
+                // 121
+                new PillarEvent(),
+                // 122
+                new HarvestEvent(),
+                // 128
+                new ArmorStandEvent(),
+                // 201
+                PresenceFigure.friendDouble(),
+                // 119
+                new SimpleEvent(
+                        Identifier.parse("nametag"),
+                        HauntTier.LIGHT,
+                        Set.of(EventTag.PRESENCE, EventTag.PLAYER),
+                        player -> true,
+                        Presence::nametag),
+                // 97: a puff of breath at the face where nobody should be breathing out
+                SimpleEvent.light("cold_breath", EventTag.PRESENCE, Presence::warm, player -> {
+                    Config.Section config = Config.event("cold_breath");
+                    Config.Burst puff = config.burst("particles");
+                    Vec3 look = player.getLookAngle();
+                    Vec3 face = player.getEyePosition()
+                            .add(look.x * config.num("forward"), puff.offsetY(), look.z * config.num("forward"));
+                    player.level()
+                            .sendParticles(
+                                    ParticleTypes.CLOUD,
+                                    face.x,
+                                    face.y,
+                                    face.z,
+                                    puff.count(),
+                                    puff.dx(),
+                                    puff.dy(),
+                                    puff.dz(),
+                                    puff.speed());
+                }),
+                // 96
+                SimpleEvent.light(
+                        "footprints", EventTag.PRESENCE, player -> soft(player) != null, Presence::footprints),
+                // 98
+                SimpleEvent.light(
+                        "local_rain",
+                        EventTag.PRESENCE,
+                        player -> player.level().canSeeSky(player.blockPosition())
+                                && !player.level().isRainingAt(player.blockPosition()),
+                        Presence::localRain),
+                // 99
+                SimpleEvent.harmful(
+                        "lost_time", EventTag.PRESENCE, player -> player.level().isDarkOutside(), player -> {
+                            var server = player.level().getServer();
+                            server.clockManager()
+                                    .addTicks(
+                                            server.registryAccess().getOrThrow(WorldClocks.OVERWORLD),
+                                            Config.event("lost_time").integer("skip_ticks"));
+                        }));
     }
 
     private static boolean warm(ServerPlayer player) {
         ServerLevel level = player.level();
-        return level.getBiome(player.blockPosition()).value().warmEnoughToRain(player.blockPosition(), level.getSeaLevel());
+        return level.getBiome(player.blockPosition())
+                .value()
+                .warmEnoughToRain(player.blockPosition(), level.getSeaLevel());
     }
 
     /** Snow or sand the player is standing on or in; its sound and particles are what the prints are made of. */
@@ -99,9 +124,27 @@ final class Presence {
             last[0] = p.position();
             BlockState ground = soft(p);
             if (ground != null && spot.distanceToSqr(p.position()) > minMove * minMove) {
-                p.level().sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, ground), spot.x, spot.y + dust.offsetY(), spot.z,
-                    dust.count(), dust.dx(), dust.dy(), dust.dz(), dust.speed());
-                p.level().playSound(null, spot.x, spot.y, spot.z, ground.getSoundType().getStepSound(), SoundSource.HOSTILE, step.volume(), step.pitch());
+                p.level()
+                        .sendParticles(
+                                new BlockParticleOption(ParticleTypes.BLOCK, ground),
+                                spot.x,
+                                spot.y + dust.offsetY(),
+                                spot.z,
+                                dust.count(),
+                                dust.dx(),
+                                dust.dy(),
+                                dust.dz(),
+                                dust.speed());
+                p.level()
+                        .playSound(
+                                null,
+                                spot.x,
+                                spot.y,
+                                spot.z,
+                                ground.getSoundType().getStepSound(),
+                                SoundSource.HOSTILE,
+                                step.volume(),
+                                step.pitch());
             }
             return n + 1 < config.integer("steps");
         });
@@ -121,7 +164,8 @@ final class Presence {
             }
             at = Vec3.atBottomCenterOf(stand);
         }
-        Display.TextDisplay plate = Figure.nameplate(player.level(), at.add(0, config.num("height"), 0), Figure.nickname(player));
+        Display.TextDisplay plate =
+                Figure.nameplate(player.level(), at.add(0, config.num("height"), 0), Figure.nickname(player));
         if (plate != null) {
             Restore.after(player.level(), config.integer("ticks"), force -> {
                 plate.discard();
@@ -136,9 +180,28 @@ final class Presence {
         Config.Burst drops = config.burst("particles");
         Config.Tone patter = config.tone("sound");
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
-            p.level().sendParticles(ParticleTypes.RAIN, p.getX(), p.getY() + drops.offsetY(), p.getZ(), drops.count(), drops.dx(), drops.dy(), drops.dz(), drops.speed());
+            p.level()
+                    .sendParticles(
+                            ParticleTypes.RAIN,
+                            p.getX(),
+                            p.getY() + drops.offsetY(),
+                            p.getZ(),
+                            drops.count(),
+                            drops.dx(),
+                            drops.dy(),
+                            drops.dz(),
+                            drops.speed());
             if (n % config.integer("sound_every_steps") == 0) {
-                p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WEATHER_RAIN, SoundSource.WEATHER, patter.volume(), patter.pitch());
+                p.level()
+                        .playSound(
+                                null,
+                                p.getX(),
+                                p.getY(),
+                                p.getZ(),
+                                SoundEvents.WEATHER_RAIN,
+                                SoundSource.WEATHER,
+                                patter.volume(),
+                                patter.pitch());
             }
             return n + 1 < config.integer("steps");
         });

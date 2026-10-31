@@ -22,22 +22,35 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 
 /**
- * Every tunable value of the mod. The tree is split over bundled files ({@link #FILES}); {@code config/restless/}
- * holds a copy of each, written on first run, and whatever a copy overrides wins. A value missing from both is a bug
- * and fails loudly. Each file has a {@code version}; an older copy is migrated (see {@link Migrations}), a newer one
- * is ignored. No Minecraft types, so the pure math can read it in unit tests.
+ * Every tunable value of the mod. The tree is split over bundled files ({@link #FILES}); {@code config/restless/} holds
+ * a copy of each, written on first run, and whatever a copy overrides wins. A value missing from both is a bug and
+ * fails loudly. Each file has a {@code version}; an older copy is migrated (see {@link Migrations}), a newer one is
+ * ignored. No Minecraft types, so the pure math can read it in unit tests.
  */
 public final class Config {
     private static final Logger LOGGER = LogUtils.getLogger();
     /** The bundled files, each a slice of the same tree (an {@code events} object in several of them is merged). */
     static final List<String> FILES = List.of(
-        "haunt", "spirits", "lights", "mechanisms", "sounds", "afflictions", "assaults", "items", "blocks", "mobs", "presence", "lies");
+            "haunt",
+            "spirits",
+            "lights",
+            "mechanisms",
+            "sounds",
+            "afflictions",
+            "assaults",
+            "items",
+            "blocks",
+            "mobs",
+            "presence",
+            "lies");
     /** The namespace of events that use only vanilla content. */
     static final String DEFAULT_NAMESPACE = "minecraft";
+
     static final String VERSION = "version";
     private static final String DIR = "restless";
     private static final String RESOURCES = "/restless-config/";
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final Gson GSON =
+            new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     private static volatile JsonObject root;
 
@@ -53,13 +66,15 @@ public final class Config {
         JsonObject json = root();
         for (String part : path.split("\\.")) {
             json = json.has(part) && json.get(part).isJsonObject()
-                ? json.getAsJsonObject(part)
-                : fail("Missing config section " + path);
+                    ? json.getAsJsonObject(part)
+                    : fail("Missing config section " + path);
         }
         return new Section(json, path);
     }
 
-    /** The values of one haunt event, by its id; written like a vanilla one, so no namespace means {@code minecraft}. */
+    /**
+     * The values of one haunt event, by its id; written like a vanilla one, so no namespace means {@code minecraft}.
+     */
     public static Section event(String id) {
         return section("events." + eventKey(id));
     }
@@ -110,12 +125,16 @@ public final class Config {
         return loaded;
     }
 
-    /** One file's slice: the bundled values under the player's copy, migrated first if the copy is from an older release. */
+    /**
+     * One file's slice: the bundled values under the player's copy, migrated first if the copy is from an older
+     * release.
+     */
     static JsonObject loadFile(Path dir, String name, String text, Migrations migrations) {
         JsonObject bundled = JsonParser.parseString(text).getAsJsonObject();
         int current = bundled.get(VERSION).getAsInt();
         if (current != migrations.latest(name)) {
-            throw new IllegalStateException(name + ".json is version " + current + " but its migrations lead to " + migrations.latest(name));
+            throw new IllegalStateException(
+                    name + ".json is version " + current + " but its migrations lead to " + migrations.latest(name));
         }
         Path file = dir.resolve(name + ".json");
         JsonObject merged = bundled.deepCopy();
@@ -127,7 +146,11 @@ public final class Config {
                 JsonObject user = parse(file);
                 int version = user.has(VERSION) ? user.get(VERSION).getAsInt() : 1;
                 if (version > current) {
-                    LOGGER.error("{} is version {}, newer than this mod understands ({}); using the built-in defaults for it", file, version, current);
+                    LOGGER.error(
+                            "{} is version {}, newer than this mod understands ({}); using the built-in defaults for it",
+                            file,
+                            version,
+                            current);
                 } else {
                     if (version < current) {
                         user = migrations.upgrade(name, user, version);
@@ -245,8 +268,13 @@ public final class Config {
 
         public Burst burst(String key) {
             Section particles = section(key);
-            return new Burst(particles.integer("count"), particles.num("dx"), particles.num("dy"), particles.num("dz"),
-                particles.num("speed"), particles.num("offset_y"));
+            return new Burst(
+                    particles.integer("count"),
+                    particles.num("dx"),
+                    particles.num("dy"),
+                    particles.num("dz"),
+                    particles.num("speed"),
+                    particles.num("offset_y"));
         }
 
         public Section section(String key) {

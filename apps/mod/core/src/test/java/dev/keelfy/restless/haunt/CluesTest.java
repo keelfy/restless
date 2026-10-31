@@ -16,15 +16,30 @@ import org.junit.jupiter.api.Test;
 
 class CluesTest {
     private static Trait trait(String id, boolean lies, Clue... clues) {
-        return new Trait(id, Map.of(), 1.0, Trait.Condition.ANY, 0.0, List.of(), Set.of(clues), List.of("word"), id, lies, Focus.IRON);
+        return new Trait(
+                id,
+                Map.of(),
+                1.0,
+                Trait.Condition.ANY,
+                0.0,
+                List.of(),
+                Set.of(clues),
+                List.of("word"),
+                id,
+                lies,
+                Focus.IRON);
     }
 
     @Test
     void aSpiritShowsOnlyTheCluesItsTraitsLeave() {
         Trait cold = trait("cold", false, Clue.SILHOUETTE);
         List<Trait> catalog = List.of(cold, trait("other", false, Clue.VOICE));
-        assertEquals(cold, Clues.reveal(List.of(cold), catalog, Clue.SILHOUETTE, new Random(1)).orElseThrow());
-        assertFalse(Clues.reveal(List.of(cold), catalog, Clue.VOICE, new Random(1)).isPresent());
+        assertEquals(
+                cold,
+                Clues.reveal(List.of(cold), catalog, Clue.SILHOUETTE, new Random(1))
+                        .orElseThrow());
+        assertFalse(
+                Clues.reveal(List.of(cold), catalog, Clue.VOICE, new Random(1)).isPresent());
     }
 
     @Test
@@ -34,7 +49,9 @@ class CluesTest {
         List<Trait> catalog = List.of(liar, other);
         Random random = new Random(3);
         long lies = java.util.stream.IntStream.range(0, 200)
-            .filter(i -> Clues.reveal(List.of(liar), catalog, Clue.VOICE, random).orElseThrow() == other).count();
+                .filter(i ->
+                        Clues.reveal(List.of(liar), catalog, Clue.VOICE, random).orElseThrow() == other)
+                .count();
         assertTrue(lies > 50 && lies < 150, "lies: " + lies);
     }
 
@@ -43,7 +60,10 @@ class CluesTest {
         Trait liar = trait("liar", true, Clue.SILHOUETTE);
         List<Trait> catalog = List.of(liar, trait("other", false, Clue.SILHOUETTE));
         for (int i = 0; i < 50; i++) {
-            assertEquals(liar, Clues.reveal(List.of(liar), catalog, Clue.SILHOUETTE, new Random(i)).orElseThrow());
+            assertEquals(
+                    liar,
+                    Clues.reveal(List.of(liar), catalog, Clue.SILHOUETTE, new Random(i))
+                            .orElseThrow());
         }
     }
 

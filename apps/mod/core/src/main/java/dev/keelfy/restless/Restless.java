@@ -4,37 +4,37 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.config.Lang;
+import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Anger;
 import dev.keelfy.restless.haunt.Candle;
 import dev.keelfy.restless.haunt.Compass;
 import dev.keelfy.restless.haunt.Corruption;
-import dev.keelfy.restless.haunt.Evolution;
-import dev.keelfy.restless.haunt.Divination;
-import dev.keelfy.restless.haunt.Graves;
-import dev.keelfy.restless.haunt.Sanity;
-import dev.keelfy.restless.haunt.Wards;
-import dev.keelfy.restless.haunt.event.Swaps;
 import dev.keelfy.restless.haunt.Director;
-import dev.keelfy.restless.haunt.Echoes;
-import dev.keelfy.restless.haunt.Location;
+import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.DoorLocks;
+import dev.keelfy.restless.haunt.Echoes;
+import dev.keelfy.restless.haunt.Evolution;
+import dev.keelfy.restless.haunt.Graves;
+import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Reactions;
 import dev.keelfy.restless.haunt.Restore;
+import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.haunt.event.Swaps;
 import dev.keelfy.restless.platform.Platform;
 import dev.keelfy.restless.spirit.Trait;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,23 +43,22 @@ import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 /**
- * Loader-agnostic entry point. Each loader module calls {@link #init()} once at mod construction
- * and forwards its server tick and command registration events to the hooks below.
+ * Loader-agnostic entry point. Each loader module calls {@link #init()} once at mod construction and forwards its
+ * server tick and command registration events to the hooks below.
  */
 public final class Restless {
     public static final String MOD_ID = "restless";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    private Restless() {
-    }
+    private Restless() {}
 
     public static void init() {
         Config.load(Platform.get().configDir());
@@ -121,11 +120,15 @@ public final class Restless {
         if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
             Reactions.used(server, level.getBlockState(pos));
         }
-        if (level instanceof ServerLevel server && hand == InteractionHand.MAIN_HAND && level.getBlockState(pos).is(Blocks.BELL)) {
+        if (level instanceof ServerLevel server
+                && hand == InteractionHand.MAIN_HAND
+                && level.getBlockState(pos).is(Blocks.BELL)) {
             Wards.rung(server, pos);
         }
-        if (player instanceof ServerPlayer server && isFire(player.getItemInHand(hand))
-            && (level.getBlockState(pos).is(BlockTags.LOGS) || level.getBlockState(pos).is(BlockTags.LEAVES))) {
+        if (player instanceof ServerPlayer server
+                && isFire(player.getItemInHand(hand))
+                && (level.getBlockState(pos).is(BlockTags.LOGS)
+                        || level.getBlockState(pos).is(BlockTags.LEAVES))) {
             Anger.provoke(server, Anger.Source.BURN_FOREST, pos);
         }
         if (!DoorLocks.isLocked(level, pos)) {
@@ -135,7 +138,8 @@ public final class Restless {
         if (hand == InteractionHand.MAIN_HAND) {
             Config.Tone tone = Config.event("locked_door").tone("denied_sound");
             if (level.isClientSide()) {
-                level.playLocalSound(pos, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, tone.volume(), tone.pitch(), false);
+                level.playLocalSound(
+                        pos, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, tone.volume(), tone.pitch(), false);
             } else {
                 level.playSound(null, pos, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, tone.volume(), tone.pitch());
             }
@@ -148,7 +152,8 @@ public final class Restless {
     }
 
     /** Call whenever a level is about to play a sound at a point; the sound itself is left alone. */
-    public static void onPlaySound(Level level, Vec3 at, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) {
+    public static void onPlaySound(
+            Level level, Vec3 at, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) {
         Echoes.hear(level, at, sound, source, volume, pitch);
     }
 

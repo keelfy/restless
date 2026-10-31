@@ -32,44 +32,66 @@ final class DreamcatcherGameTests {
                 contact(helper, GameType.SURVIVAL, movement, Vec3.ZERO);
                 helper.runAfterDelay(4, () -> {
                     float angle = direction.getAxis() == Direction.Axis.X ? entity.swingZ(1) : -entity.swingX(1);
-                    check(helper, angle * direction.getAxisDirection().getStep() > 1, "Contact must swing in the player's direction");
+                    check(
+                            helper,
+                            angle * direction.getAxisDirection().getStep() > 1,
+                            "Contact must swing in the player's direction");
                     float initial = angle;
                     boolean crossed = false;
                     for (int tick = 0; tick < 240; tick++) {
-                        DreamcatcherEntity.tick(helper.getLevel(), entity.getBlockPos(), entity.getBlockState(), entity);
+                        DreamcatcherEntity.tick(
+                                helper.getLevel(), entity.getBlockPos(), entity.getBlockState(), entity);
                         angle = direction.getAxis() == Direction.Axis.X ? entity.swingZ(1) : -entity.swingX(1);
                         crossed |= angle * initial < 0;
                         check(helper, Math.abs(angle) <= 25, "Swing must remain bounded");
                     }
                     check(helper, crossed, "The pendulum must swing back across its resting position");
-                    check(helper, entity.swingX(1) == 0 && entity.swingZ(1) == 0, "Swing must settle after contact ends");
+                    check(
+                            helper,
+                            entity.swingX(1) == 0 && entity.swingZ(1) == 0,
+                            "Swing must settle after contact ends");
                     helper.succeed();
                 });
             });
         }
-        tests.put("dreamcatcher_ignore_stationary", helper -> ignoresContact(helper, GameType.SURVIVAL, Vec3.ZERO, Vec3.ZERO));
-        tests.put("dreamcatcher_ignore_spectator", helper -> ignoresContact(helper, GameType.SPECTATOR, new Vec3(.2, 0, 0), Vec3.ZERO));
-        tests.put("dreamcatcher_ignore_nearby", helper -> ignoresContact(helper, GameType.SURVIVAL, new Vec3(.2, 0, 0), new Vec3(0, 0, .9)));
+        tests.put(
+                "dreamcatcher_ignore_stationary",
+                helper -> ignoresContact(helper, GameType.SURVIVAL, Vec3.ZERO, Vec3.ZERO));
+        tests.put(
+                "dreamcatcher_ignore_spectator",
+                helper -> ignoresContact(helper, GameType.SPECTATOR, new Vec3(.2, 0, 0), Vec3.ZERO));
+        tests.put(
+                "dreamcatcher_ignore_nearby",
+                helper -> ignoresContact(helper, GameType.SURVIVAL, new Vec3(.2, 0, 0), new Vec3(0, 0, .9)));
         for (Direction facing : Direction.Plane.HORIZONTAL) {
             tests.put("dreamcatcher_" + facing.getSerializedName(), helper -> {
                 helper.setBlock(TARGET.above(), Blocks.STONE);
                 place(helper, Direction.DOWN, facing, true);
                 helper.assertBlockProperty(TARGET, Dreamcatcher.FACING, facing.getOpposite());
                 var state = helper.getLevel().getBlockState(helper.absolutePos(TARGET));
-                AABB shape = state.getShape(helper.getLevel(), helper.absolutePos(TARGET)).bounds();
+                AABB shape = state.getShape(helper.getLevel(), helper.absolutePos(TARGET))
+                        .bounds();
                 check(helper, shape.maxY == 1 && shape.minY == .25, "The shape must reach the ceiling");
-                check(helper, facing.getAxis() == Direction.Axis.X ? shape.getZsize() > shape.getXsize()
-                    : shape.getXsize() > shape.getZsize(), "The shape must rotate with the model");
+                check(
+                        helper,
+                        facing.getAxis() == Direction.Axis.X
+                                ? shape.getZsize() > shape.getXsize()
+                                : shape.getXsize() > shape.getZsize(),
+                        "The shape must rotate with the model");
                 helper.getLevel().destroyBlock(helper.absolutePos(TARGET.above()), false);
                 helper.assertBlockPresent(Blocks.AIR, TARGET);
-                int drops = helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(TARGET)).inflate(2))
-                    .stream().filter(entity -> entity.getItem().is(Content.DREAMCATCHER_ITEM.get()))
-                    .mapToInt(entity -> entity.getItem().getCount()).sum();
+                int drops = helper
+                        .getLevel()
+                        .getEntitiesOfClass(ItemEntity.class, new AABB(helper.absolutePos(TARGET)).inflate(2))
+                        .stream()
+                        .filter(entity -> entity.getItem().is(Content.DREAMCATCHER_ITEM.get()))
+                        .mapToInt(entity -> entity.getItem().getCount())
+                        .sum();
                 check(helper, drops == 1, "Losing the ceiling must drop exactly one dreamcatcher");
                 helper.succeed();
             });
         }
-        for (Direction face : new Direction[]{Direction.UP, Direction.EAST}) {
+        for (Direction face : new Direction[] {Direction.UP, Direction.EAST}) {
             tests.put("dreamcatcher_reject_" + face.getSerializedName(), helper -> {
                 helper.setBlock(TARGET.above(), Blocks.STONE);
                 helper.setBlock(TARGET.relative(face.getOpposite()), Blocks.STONE);
@@ -84,9 +106,13 @@ final class DreamcatcherGameTests {
             helper.succeed();
         });
         tests.put("dreamcatcher_unsupported_ceiling", helper -> {
-            helper.setBlock(TARGET.above(), Blocks.OAK_SLAB.defaultBlockState()
-                .setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.SLAB_TYPE,
-                    net.minecraft.world.level.block.state.properties.SlabType.TOP));
+            helper.setBlock(
+                    TARGET.above(),
+                    Blocks.OAK_SLAB
+                            .defaultBlockState()
+                            .setValue(
+                                    net.minecraft.world.level.block.state.properties.BlockStateProperties.SLAB_TYPE,
+                                    net.minecraft.world.level.block.state.properties.SlabType.TOP));
             place(helper, Direction.DOWN, Direction.NORTH, false);
             helper.assertBlockPresent(Blocks.AIR, TARGET);
             helper.succeed();
@@ -97,8 +123,13 @@ final class DreamcatcherGameTests {
         helper.setBlock(TARGET.above(), Blocks.STONE);
         helper.setBlock(TARGET, Content.DREAMCATCHER.get().defaultBlockState().setValue(Dreamcatcher.FACING, facing));
         BlockPos pos = helper.absolutePos(TARGET);
-        check(helper, helper.getLevel().getBlockState(pos).getCollisionShape(helper.getLevel(), pos).isEmpty(),
-            "Players must be able to brush through the hanging ornament");
+        check(
+                helper,
+                helper.getLevel()
+                        .getBlockState(pos)
+                        .getCollisionShape(helper.getLevel(), pos)
+                        .isEmpty(),
+                "Players must be able to brush through the hanging ornament");
         return (DreamcatcherEntity) helper.getLevel().getBlockEntity(pos);
     }
 
@@ -114,7 +145,10 @@ final class DreamcatcherGameTests {
         DreamcatcherEntity entity = hanging(helper, Direction.NORTH);
         contact(helper, mode, movement, offset);
         helper.runAfterDelay(4, () -> {
-            check(helper, entity.swingX(1) == 0 && entity.swingZ(1) == 0, "No swing without physical contact by a moving player");
+            check(
+                    helper,
+                    entity.swingX(1) == 0 && entity.swingZ(1) == 0,
+                    "No swing without physical contact by a moving player");
             helper.succeed();
         });
     }
@@ -123,14 +157,20 @@ final class DreamcatcherGameTests {
         BlockPos support = helper.absolutePos(TARGET.relative(face.getOpposite()));
         ItemStack stack = new ItemStack(Content.DREAMCATCHER_ITEM.get(), 2);
         Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-        player.setYRot(switch (facing) {
-            case SOUTH -> 0;
-            case WEST -> 90;
-            case NORTH -> 180;
-            case EAST -> 270;
-            default -> throw new IllegalArgumentException("Horizontal direction required");
-        });
-        var hit = new BlockHitResult(Vec3.atCenterOf(support).add(Vec3.atLowerCornerOf(face.getUnitVec3i()).scale(.5)), face, support, false);
+        player.setYRot(
+                switch (facing) {
+                    case SOUTH -> 0;
+                    case WEST -> 90;
+                    case NORTH -> 180;
+                    case EAST -> 270;
+                    default -> throw new IllegalArgumentException("Horizontal direction required");
+                });
+        var hit = new BlockHitResult(
+                Vec3.atCenterOf(support)
+                        .add(Vec3.atLowerCornerOf(face.getUnitVec3i()).scale(.5)),
+                face,
+                support,
+                false);
         var context = new BlockPlaceContext(helper.getLevel(), player, InteractionHand.MAIN_HAND, stack, hit);
         boolean placed = ((BlockItem) stack.getItem()).place(context).consumesAction();
         check(helper, placed == expected, "Unexpected placement result");

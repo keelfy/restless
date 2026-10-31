@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,14 +38,21 @@ class LangTest {
     @Test
     void userCopyOverridesOnlyWhatItSets(@TempDir Path dir) throws IOException {
         Files.createDirectories(dir.resolve("restless/lang"));
-        Files.writeString(dir.resolve("restless/lang/ru.json"),
-            "{\"version\":1,\"events\":{\"minecraft:cat_hiss\":{\"name\":\"Мяу\"}}}");
+        Files.writeString(
+                dir.resolve("restless/lang/ru.json"),
+                "{\"version\":1,\"events\":{\"minecraft:cat_hiss\":{\"name\":\"Мяу\"}}}");
         Lang.load(dir);
         try {
             assertEquals("Мяу", Lang.name("ru_ru", "cat_hiss"));
             assertTrue(Files.exists(dir.resolve("restless/lang/en.json")));
-            assertEquals(Lang.defaults().get("ru").getAsJsonObject("events").getAsJsonObject("minecraft:cat_hiss").get("description").getAsString(),
-                Lang.description("ru_ru", "cat_hiss"));
+            assertEquals(
+                    Lang.defaults()
+                            .get("ru")
+                            .getAsJsonObject("events")
+                            .getAsJsonObject("minecraft:cat_hiss")
+                            .get("description")
+                            .getAsString(),
+                    Lang.description("ru_ru", "cat_hiss"));
         } finally {
             Lang.load(dir.resolve("none"));
         }

@@ -55,20 +55,28 @@ public final class JournalScreen extends Screen {
         textWidth = bookWidth - sidebar - 40;
         for (int i = 0; i < data.sections().size(); i++) {
             int index = i;
-            addRenderableWidget(new PaperButton(left + 12, top + 42 + i * 28, sidebar - 14, 26,
-                Component.translatable("journal.restless.tab." + data.sections().get(i).key()), b -> select(index), i));
+            addRenderableWidget(new PaperButton(
+                    left + 12,
+                    top + 42 + i * 28,
+                    sidebar - 14,
+                    26,
+                    Component.translatable(
+                            "journal.restless.tab." + data.sections().get(i).key()),
+                    b -> select(index),
+                    i));
         }
-        previous = addRenderableWidget(new PaperButton(textX, top + bookHeight - 32, 28, 20,
-            Component.literal("<"), b -> turn(-1), -1));
-        next = addRenderableWidget(new PaperButton(left + bookWidth - 46, top + bookHeight - 32, 28, 20,
-            Component.literal(">"), b -> turn(1), -1));
-        addRenderableWidget(new PaperButton(left + 12, top + bookHeight - 32, sidebar - 14, 20,
-            CommonComponents.GUI_DONE, b -> onClose(), -1));
+        previous = addRenderableWidget(
+                new PaperButton(textX, top + bookHeight - 32, 28, 20, Component.literal("<"), b -> turn(-1), -1));
+        next = addRenderableWidget(new PaperButton(
+                left + bookWidth - 46, top + bookHeight - 32, 28, 20, Component.literal(">"), b -> turn(1), -1));
+        addRenderableWidget(new PaperButton(
+                left + 12, top + bookHeight - 32, sidebar - 14, 20, CommonComponents.GUI_DONE, b -> onClose(), -1));
         paginate();
     }
 
     private Component sectionTitle(int index) {
-        return Component.translatable("journal.restless.section." + data.sections().get(index).key());
+        return Component.translatable(
+                "journal.restless.section." + data.sections().get(index).key());
     }
 
     private void select(int index) {
@@ -109,7 +117,8 @@ public final class JournalScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.shortcutKey() == InputConstants.KEYCODE_PAGEDOWN || event.shortcutKey() == InputConstants.KEYCODE_PAGEUP) {
+        if (event.shortcutKey() == InputConstants.KEYCODE_PAGEDOWN
+                || event.shortcutKey() == InputConstants.KEYCODE_PAGEUP) {
             turn(event.shortcutKey() == InputConstants.KEYCODE_PAGEDOWN ? 1 : -1);
             return true;
         }
@@ -156,7 +165,16 @@ public final class JournalScreen extends Screen {
             graphics.fill(left + sidebar + 6, y, left + sidebar + 8, y + 4, 0xFF765B44);
         }
         graphics.text(font, title, left + 15, top + 17, INK, false);
-        graphics.text(font, data.sections().isEmpty() ? title : Component.translatable("journal.restless.tab." + data.sections().get(section).key()), textX, top + 17, MUTED, false);
+        graphics.text(
+                font,
+                data.sections().isEmpty()
+                        ? title
+                        : Component.translatable("journal.restless.tab."
+                                + data.sections().get(section).key()),
+                textX,
+                top + 17,
+                MUTED,
+                false);
         graphics.fill(textX, top + 32, left + bookWidth - 18, top + 33, 0xFFBEA47C);
         int y = top + 42;
         if (!pages.isEmpty()) {

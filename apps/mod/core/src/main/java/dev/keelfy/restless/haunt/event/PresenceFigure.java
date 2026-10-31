@@ -16,7 +16,6 @@ import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.decoration.Mannequin;
@@ -40,8 +39,13 @@ final class PresenceFigure implements HauntEvent {
     /** The figure each player has now; one per event at a time. */
     private final Map<UUID, Mannequin> active = new ConcurrentHashMap<>();
 
-    private PresenceFigure(String id, Set<EventTag> tags, Predicate<ServerPlayer> place, Function<ServerPlayer, ResolvableProfile> skin, boolean walks,
-                           boolean named) {
+    private PresenceFigure(
+            String id,
+            Set<EventTag> tags,
+            Predicate<ServerPlayer> place,
+            Function<ServerPlayer, ResolvableProfile> skin,
+            boolean walks,
+            boolean named) {
         this.id = id;
         this.tags = tags;
         this.place = place;
@@ -50,46 +54,75 @@ final class PresenceFigure implements HauntEvent {
         this.named = named;
     }
 
-    private PresenceFigure(String id, Set<EventTag> tags, Predicate<ServerPlayer> place, Function<ServerPlayer, ResolvableProfile> skin, boolean walks) {
+    private PresenceFigure(
+            String id,
+            Set<EventTag> tags,
+            Predicate<ServerPlayer> place,
+            Function<ServerPlayer, ResolvableProfile> skin,
+            boolean walks) {
         this(id, tags, place, skin, walks, false);
     }
 
     /** 94: the player's own likeness at the edge of vision. */
     static HauntEvent edge() {
-        return new PresenceFigure("edge_figure", Set.of(EventTag.PRESENCE), player -> true, player -> ResolvableProfile.createResolved(player.getGameProfile()), false);
+        return new PresenceFigure(
+                "edge_figure",
+                Set.of(EventTag.PRESENCE),
+                player -> true,
+                player -> ResolvableProfile.createResolved(player.getGameProfile()),
+                false);
     }
 
     /** 95: a pale stranger far off in the fog, which is rain or darkness under open sky. */
     static HauntEvent fog() {
-        return new PresenceFigure("fog_silhouette", Set.of(EventTag.PRESENCE),
-            player -> player.level().canSeeSky(player.blockPosition()) && (player.level().isRaining() || player.level().isDarkOutside()),
-            Figure::stranger, false);
+        return new PresenceFigure(
+                "fog_silhouette",
+                Set.of(EventTag.PRESENCE),
+                player -> player.level().canSeeSky(player.blockPosition())
+                        && (player.level().isRaining() || player.level().isDarkOutside()),
+                Figure::stranger,
+                false);
     }
 
     /** 123: another player, in a default skin, far off and turned toward the player until approached. */
     static HauntEvent distantPlayer() {
-        return new PresenceFigure("distant_player", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Figure::stranger, false);
+        return new PresenceFigure(
+                "distant_player", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Figure::stranger, false);
     }
 
-    /** 120: another player, in a default skin, walking past far off; gone when approached or when the ground runs out. */
+    /**
+     * 120: another player, in a default skin, walking past far off; gone when approached or when the ground runs out.
+     */
     static HauntEvent distantWalker() {
-        return new PresenceFigure("distant_walker", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Figure::stranger, true);
+        return new PresenceFigure(
+                "distant_walker", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> true, Figure::stranger, true);
     }
 
     /** 201: a player who stands near the player is also far off, in their skin and under their name, watching. */
     static HauntEvent friendDouble() {
-        return new PresenceFigure("friend_double", Set.of(EventTag.PRESENCE, EventTag.PLAYER), player -> friend(player) != null, player -> {
-            ServerPlayer friend = friend(player);
-            return friend == null ? Figure.stranger(player) : ResolvableProfile.createResolved(friend.getGameProfile());
-        }, false, true);
+        return new PresenceFigure(
+                "friend_double",
+                Set.of(EventTag.PRESENCE, EventTag.PLAYER),
+                player -> friend(player) != null,
+                player -> {
+                    ServerPlayer friend = friend(player);
+                    return friend == null
+                            ? Figure.stranger(player)
+                            : ResolvableProfile.createResolved(friend.getGameProfile());
+                },
+                false,
+                true);
     }
 
     /** Another player in the world within the event's friend distance; null if there is none. */
     private static @Nullable ServerPlayer friend(ServerPlayer player) {
         double near = Config.event("friend_double").num("friend_distance");
         List<ServerPlayer> friends = player.level().getServer().getPlayerList().getPlayers().stream()
-            .filter(p -> p != player && p.level() == player.level() && !p.isSpectator() && p.distanceToSqr(player) <= near * near)
-            .toList();
+                .filter(p -> p != player
+                        && p.level() == player.level()
+                        && !p.isSpectator()
+                        && p.distanceToSqr(player) <= near * near)
+                .toList();
         return friends.isEmpty() ? null : friends.get(player.getRandom().nextInt(friends.size()));
     }
 
@@ -133,7 +166,8 @@ final class PresenceFigure implements HauntEvent {
         }
         UUID owner = player.getUUID();
         active.put(owner, figure);
-        // Across the view: a quarter turn, to either side, from facing the player; walking, or now and then running and jumping.
+        // Across the view: a quarter turn, to either side, from facing the player; walking, or now and then running and
+        // jumping.
         float heading = Mth.wrapDegrees(figure.getYRot() + (player.getRandom().nextBoolean() ? 90.0F : -90.0F));
         Gait gait = walks ? new Gait(config.integer("climb"), config.integer("drop")) : null;
         boolean runs = walks && player.getRandom().nextDouble() < config.num("run_chance");
@@ -145,9 +179,11 @@ final class PresenceFigure implements HauntEvent {
             return true;
         });
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
-            boolean over = !figure.isAlive() || figure.level() != p.level()
-                || n * config.integer("interval_ticks") >= config.integer("max_ticks") || noticed(p, figure, config)
-                || gait != null && !stride(p, figure, gait, heading, stride, runs, config);
+            boolean over = !figure.isAlive()
+                    || figure.level() != p.level()
+                    || n * config.integer("interval_ticks") >= config.integer("max_ticks")
+                    || noticed(p, figure, config)
+                    || gait != null && !stride(p, figure, gait, heading, stride, runs, config);
             if (over) {
                 leave(figure, owner);
             } else if (gait != null) {
@@ -160,7 +196,14 @@ final class PresenceFigure implements HauntEvent {
     }
 
     /** One tick of the walk; a runner jumps now and then, as players do. False when the way on is blocked every way. */
-    private static boolean stride(ServerPlayer player, Mannequin figure, Gait gait, float heading, double stride, boolean runs, Config.Section config) {
+    private static boolean stride(
+            ServerPlayer player,
+            Mannequin figure,
+            Gait gait,
+            float heading,
+            double stride,
+            boolean runs,
+            Config.Section config) {
         if (runs && player.getRandom().nextDouble() < config.num("hop_chance")) {
             gait.hop();
         }
@@ -179,8 +222,11 @@ final class PresenceFigure implements HauntEvent {
             return true;
         }
         double degrees = config.num("vanish_degrees");
-        Vec3 toFigure = figure.getEyePosition().subtract(player.getEyePosition()).normalize();
-        return degrees > 0 && player.getLookAngle().dot(toFigure) >= Math.cos(Math.toRadians(degrees)) && player.hasLineOfSight(figure);
+        Vec3 toFigure =
+                figure.getEyePosition().subtract(player.getEyePosition()).normalize();
+        return degrees > 0
+                && player.getLookAngle().dot(toFigure) >= Math.cos(Math.toRadians(degrees))
+                && player.hasLineOfSight(figure);
     }
 
     private void leave(Mannequin figure, UUID owner) {

@@ -30,17 +30,41 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * An armor stand that turns up behind the player and follows them, a stride at a time and only while they are not
- * looking, striking a new pose each time it moves. It is a real armor stand, but breaking it drops nothing. It goes away
- * after a while; under {@linkplain Hardcore hardcore} it stays where it ended up.
+ * looking, striking a new pose each time it moves. It is a real armor stand, but breaking it drops nothing. It goes
+ * away after a while; under {@linkplain Hardcore hardcore} it stays where it ended up.
  */
 final class ArmorStandEvent implements HauntEvent {
     private static final String ID = "armor_stand";
     /** Arms out reaching, arms raised over the head, the head lolling on its shoulder, a lunge. */
     private static final List<ArmorStand.ArmorStandPose> POSES = List.of(
-        new ArmorStand.ArmorStandPose(new Rotations(0, 0, 0), new Rotations(0, 0, 0), new Rotations(-90, 0, 0), new Rotations(-90, 0, 0), new Rotations(0, 0, 0), new Rotations(0, 0, 0)),
-        new ArmorStand.ArmorStandPose(new Rotations(-15, 0, 0), new Rotations(0, 0, 0), new Rotations(-170, 0, -10), new Rotations(-170, 0, 10), new Rotations(0, 0, 0), new Rotations(0, 0, 0)),
-        new ArmorStand.ArmorStandPose(new Rotations(0, 0, 40), new Rotations(0, 0, 5), new Rotations(0, 0, -5), new Rotations(0, 0, 5), new Rotations(0, 0, 0), new Rotations(0, 0, 0)),
-        new ArmorStand.ArmorStandPose(new Rotations(20, 0, 0), new Rotations(10, 0, 0), new Rotations(20, 0, 0), new Rotations(-110, 0, 0), new Rotations(-20, 0, 0), new Rotations(20, 0, 0)));
+            new ArmorStand.ArmorStandPose(
+                    new Rotations(0, 0, 0),
+                    new Rotations(0, 0, 0),
+                    new Rotations(-90, 0, 0),
+                    new Rotations(-90, 0, 0),
+                    new Rotations(0, 0, 0),
+                    new Rotations(0, 0, 0)),
+            new ArmorStand.ArmorStandPose(
+                    new Rotations(-15, 0, 0),
+                    new Rotations(0, 0, 0),
+                    new Rotations(-170, 0, -10),
+                    new Rotations(-170, 0, 10),
+                    new Rotations(0, 0, 0),
+                    new Rotations(0, 0, 0)),
+            new ArmorStand.ArmorStandPose(
+                    new Rotations(0, 0, 40),
+                    new Rotations(0, 0, 5),
+                    new Rotations(0, 0, -5),
+                    new Rotations(0, 0, 5),
+                    new Rotations(0, 0, 0),
+                    new Rotations(0, 0, 0)),
+            new ArmorStand.ArmorStandPose(
+                    new Rotations(20, 0, 0),
+                    new Rotations(10, 0, 0),
+                    new Rotations(20, 0, 0),
+                    new Rotations(-110, 0, 0),
+                    new Rotations(-20, 0, 0),
+                    new Rotations(20, 0, 0)));
 
     /** The stand each player has now; one at a time. */
     private static final Map<UUID, ArmorStand> ACTIVE = new ConcurrentHashMap<>();
@@ -86,7 +110,9 @@ final class ArmorStandEvent implements HauntEvent {
             return true;
         });
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
-            if (!stand.isAlive() || stand.level() != p.level() || n * config.integer("interval_ticks") >= config.integer("max_ticks")) {
+            if (!stand.isAlive()
+                    || stand.level() != p.level()
+                    || n * config.integer("interval_ticks") >= config.integer("max_ticks")) {
                 ACTIVE.remove(owner, stand);
                 if (!Hardcore.on(level)) {
                     vanish(stand);
@@ -94,8 +120,9 @@ final class ArmorStandEvent implements HauntEvent {
                 return false;
             }
             double near = config.num("stop_distance");
-            if (p.distanceToSqr(stand) > near * near && !watched(p, stand, config)
-                && Walk.toward(p, stand, config.num("speed"), config.integer("climb"), config.integer("drop"))) {
+            if (p.distanceToSqr(stand) > near * near
+                    && !watched(p, stand, config)
+                    && Walk.toward(p, stand, config.num("speed"), config.integer("climb"), config.integer("drop"))) {
                 face(stand, p);
                 if (p.getRandom().nextDouble() < config.num("pose_chance")) {
                     stand.setArmorStandPose(POSES.get(p.getRandom().nextInt(POSES.size())));
@@ -112,11 +139,13 @@ final class ArmorStandEvent implements HauntEvent {
 
     private static boolean watched(ServerPlayer player, ArmorStand stand, Config.Section config) {
         Vec3 toStand = stand.getEyePosition().subtract(player.getEyePosition()).normalize();
-        return player.getLookAngle().dot(toStand) >= Math.cos(Math.toRadians(config.num("watch_degrees"))) && player.hasLineOfSight(stand);
+        return player.getLookAngle().dot(toStand) >= Math.cos(Math.toRadians(config.num("watch_degrees")))
+                && player.hasLineOfSight(stand);
     }
 
     private static void face(ArmorStand stand, ServerPlayer player) {
-        float yaw = (float) Math.toDegrees(Mth.atan2(player.getZ() - stand.getZ(), player.getX() - stand.getX())) - 90.0F;
+        float yaw =
+                (float) Math.toDegrees(Mth.atan2(player.getZ() - stand.getZ(), player.getX() - stand.getX())) - 90.0F;
         stand.setYRot(yaw);
         stand.setYBodyRot(yaw);
         stand.setYHeadRot(yaw);
@@ -125,9 +154,25 @@ final class ArmorStandEvent implements HauntEvent {
     /** Falls apart as a broken armor stand does, with nothing left behind. */
     private static void vanish(ArmorStand stand) {
         if (stand.isAlive() && stand.level() instanceof ServerLevel level) {
-            level.playSound(null, stand.getX(), stand.getY(), stand.getZ(), SoundEvents.ARMOR_STAND_BREAK, stand.getSoundSource(), 1.0F, 1.0F);
-            level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.defaultBlockState()),
-                stand.getX(), stand.getY(0.66), stand.getZ(), 10, stand.getBbWidth() / 4.0, stand.getBbHeight() / 4.0, stand.getBbWidth() / 4.0, 0.05);
+            level.playSound(
+                    null,
+                    stand.getX(),
+                    stand.getY(),
+                    stand.getZ(),
+                    SoundEvents.ARMOR_STAND_BREAK,
+                    stand.getSoundSource(),
+                    1.0F,
+                    1.0F);
+            level.sendParticles(
+                    new BlockParticleOption(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.defaultBlockState()),
+                    stand.getX(),
+                    stand.getY(0.66),
+                    stand.getZ(),
+                    10,
+                    stand.getBbWidth() / 4.0,
+                    stand.getBbHeight() / 4.0,
+                    stand.getBbWidth() / 4.0,
+                    0.05);
             stand.discard();
         }
     }
@@ -140,7 +185,9 @@ final class ArmorStandEvent implements HauntEvent {
 
         @Override
         public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-            if (isRemoved() || isInvulnerableTo(level, source) || source.getEntity() instanceof Player player && !player.getAbilities().mayBuild) {
+            if (isRemoved()
+                    || isInvulnerableTo(level, source)
+                    || source.getEntity() instanceof Player player && !player.getAbilities().mayBuild) {
                 return false;
             }
             vanish(this);

@@ -32,7 +32,11 @@ final class Place {
                     continue;
                 }
                 BlockPos behind = low.relative(d);
-                if (k >= min && solid(level, low) && solid(level, high) && free(level, behind) && level.getBlockState(behind.below()).isSolidRender()) {
+                if (k >= min
+                        && solid(level, low)
+                        && solid(level, high)
+                        && free(level, behind)
+                        && level.getBlockState(behind.below()).isSolidRender()) {
                     return new Wall(low, high, behind);
                 }
                 break;
@@ -57,7 +61,8 @@ final class Place {
      * the player looks, that also passes {@code ok}. A single column often has none (a tree, a hill, water), so several
      * bearings are tried.
      */
-    static @Nullable BlockPos standingAhead(ServerPlayer player, double distance, double minAngle, double maxAngle, Predicate<BlockPos> ok) {
+    static @Nullable BlockPos standingAhead(
+            ServerPlayer player, double distance, double minAngle, double maxAngle, Predicate<BlockPos> ok) {
         for (int i = 0; i < config().integer("tries"); i++) {
             double angle = minAngle + player.getRandom().nextDouble() * (maxAngle - minAngle);
             double side = player.getRandom().nextBoolean() ? 1.0 : -1.0;
@@ -79,18 +84,24 @@ final class Place {
         return standing(player.level(), BlockPos.containing(at.x, player.getY(), at.z));
     }
 
-    /** The first spot in the column of {@code base}, a few blocks up to a few down, with a floor and two free blocks. */
+    /**
+     * The first spot in the column of {@code base}, a few blocks up to a few down, with a floor and two free blocks.
+     */
     static @Nullable BlockPos standing(ServerLevel level, BlockPos base) {
         for (int dy = config().integer("spawn_climb"); dy >= -config().integer("spawn_drop"); dy--) {
             BlockPos pos = base.above(dy);
-            if (level.isLoaded(pos) && free(level, pos) && level.getBlockState(pos.below()).isSolidRender()) {
+            if (level.isLoaded(pos)
+                    && free(level, pos)
+                    && level.getBlockState(pos.below()).isSolidRender()) {
                 return pos;
             }
         }
         return null;
     }
 
-    /** An empty block {@code min} to {@code max} blocks from {@code centre}, a layer up or down, that passes {@code ok}. */
+    /**
+     * An empty block {@code min} to {@code max} blocks from {@code centre}, a layer up or down, that passes {@code ok}.
+     */
     static @Nullable BlockPos near(ServerPlayer player, BlockPos centre, int min, int max, Predicate<BlockPos> ok) {
         for (int i = 0; i < config().integer("tries"); i++) {
             BlockPos base = scatter(player, Vec3.atBottomCenterOf(centre), min, max);
@@ -105,7 +116,9 @@ final class Place {
 
     /** Loaded air on a solid floor. */
     static boolean floored(ServerLevel level, BlockPos pos) {
-        return level.isLoaded(pos) && level.isEmptyBlock(pos) && level.getBlockState(pos.below()).isSolidRender();
+        return level.isLoaded(pos)
+                && level.isEmptyBlock(pos)
+                && level.getBlockState(pos.below()).isSolidRender();
     }
 
     /** The centre of a plus of five free blocks lying on solid ground, {@code min} to {@code max} blocks away. */
@@ -115,7 +128,10 @@ final class Place {
             BlockPos base = scatter(player, min, max);
             for (int dy = config().integer("cross_climb"); dy >= -config().integer("cross_drop"); dy--) {
                 BlockPos centre = base.above(dy);
-                if (crossCells(centre).stream().allMatch(pos -> level.isLoaded(pos) && level.isEmptyBlock(pos) && level.getBlockState(pos.below()).isSolidRender())) {
+                if (crossCells(centre).stream()
+                        .allMatch(pos -> level.isLoaded(pos)
+                                && level.isEmptyBlock(pos)
+                                && level.getBlockState(pos.below()).isSolidRender())) {
                     return centre;
                 }
             }
@@ -150,7 +166,10 @@ final class Place {
                 depth++;
                 below = below.below();
             }
-            if (depth >= minDrop && depth <= maxDrop && level.isLoaded(below) && level.getBlockState(below).isSolidRender()) {
+            if (depth >= minDrop
+                    && depth <= maxDrop
+                    && level.isLoaded(below)
+                    && level.getBlockState(below).isSolidRender()) {
                 return d;
             }
         }
@@ -158,15 +177,20 @@ final class Place {
     }
 
     /**
-     * A ragged patch around {@code centre}: each position within the radius (a few layers up or down) that passes {@code ok}
-     * is kept with a chance that falls off towards the edge, so the shape is a scatter, never a disc. The centre is always kept.
+     * A ragged patch around {@code centre}: each position within the radius (a few layers up or down) that passes
+     * {@code ok} is kept with a chance that falls off towards the edge, so the shape is a scatter, never a disc. The
+     * centre is always kept.
      */
-    static List<BlockPos> patch(ServerPlayer player, BlockPos centre, int radius, double density, Predicate<BlockPos> ok) {
+    static List<BlockPos> patch(
+            ServerPlayer player, BlockPos centre, int radius, double density, Predicate<BlockPos> ok) {
         List<BlockPos> kept = new ArrayList<>();
         int layers = config().integer("patch_layers");
-        for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-radius, -layers, -radius), centre.offset(radius, layers, radius))) {
+        for (BlockPos pos : BlockPos.betweenClosed(
+                centre.offset(-radius, -layers, -radius), centre.offset(radius, layers, radius))) {
             double edge = Math.sqrt(pos.distSqr(centre)) / (radius + 1.0);
-            if (edge < 1.0 && ok.test(pos) && (pos.equals(centre) || player.getRandom().nextDouble() < density * (1.0 - edge * edge))) {
+            if (edge < 1.0
+                    && ok.test(pos)
+                    && (pos.equals(centre) || player.getRandom().nextDouble() < density * (1.0 - edge * edge))) {
                 kept.add(pos.immutable());
             }
         }
@@ -182,14 +206,20 @@ final class Place {
         return open(level, pos) && open(level, pos.above());
     }
 
-    /** Nothing to bump into: air, or grass, flowers, a torch; not water. Fields are full of plants, so air alone is rare. */
+    /**
+     * Nothing to bump into: air, or grass, flowers, a torch; not water. Fields are full of plants, so air alone is
+     * rare.
+     */
     static boolean open(ServerLevel level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
-        return state.getCollisionShape(level, pos).isEmpty() && state.getFluidState().isEmpty() && !state.hasBlockEntity();
+        return state.getCollisionShape(level, pos).isEmpty()
+                && state.getFluidState().isEmpty()
+                && !state.hasBlockEntity();
     }
 
     private static List<Direction> horizontals(ServerPlayer player) {
-        List<Direction> dirs = new ArrayList<>(Direction.Plane.HORIZONTAL.stream().toList());
+        List<Direction> dirs =
+                new ArrayList<>(Direction.Plane.HORIZONTAL.stream().toList());
         Collections.shuffle(dirs, new Random(player.getRandom().nextLong()));
         return dirs;
     }
@@ -205,6 +235,7 @@ final class Place {
     private static BlockPos scatter(ServerPlayer player, Vec3 around, int min, int max) {
         double angle = player.getRandom().nextDouble() * Math.PI * 2;
         double distance = min + player.getRandom().nextDouble() * (max - min);
-        return BlockPos.containing(around.x + Math.cos(angle) * distance, around.y, around.z + Math.sin(angle) * distance);
+        return BlockPos.containing(
+                around.x + Math.cos(angle) * distance, around.y, around.z + Math.sin(angle) * distance);
     }
 }

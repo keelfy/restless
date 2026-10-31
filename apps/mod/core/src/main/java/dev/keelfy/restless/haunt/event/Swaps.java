@@ -14,12 +14,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Where every event that shows other blocks in place of the real ones goes through. By default it is an illusion
- * only the haunted player sees: their client is told of other blocks, the server keeps its own, and the client is told
- * the truth again when it is due (a click on one shows the real block, as does the chunk being sent again). With
+ * Where every event that shows other blocks in place of the real ones goes through. By default it is an illusion only
+ * the haunted player sees: their client is told of other blocks, the server keeps its own, and the client is told the
+ * truth again when it is due (a click on one shows the real block, as does the chunk being sent again). With
  * {@code swaps.mode} set to {@code real} the blocks are changed in the world for everyone and put back through
- * {@link Restore#swap}; under {@linkplain Hardcore hardcore} they are changed for good. A block that holds something
- * (a chest, a furnace) is never changed for real, since its contents would have nowhere to go: it is only shown.
+ * {@link Restore#swap}; under {@linkplain Hardcore hardcore} they are changed for good. A block that holds something (a
+ * chest, a furnace) is never changed for real, since its contents would have nowhere to go: it is only shown.
  */
 public final class Swaps {
     private Swaps() {}
@@ -30,16 +30,17 @@ public final class Swaps {
     }
 
     static boolean real(boolean hardcore, String mode) {
-        return hardcore || switch (mode) {
-            case "illusion" -> false;
-            case "real" -> true;
-            default -> throw new IllegalStateException("swaps.mode must be illusion or real");
-        };
+        return hardcore
+                || switch (mode) {
+                    case "illusion" -> false;
+                    case "real" -> true;
+                    default -> throw new IllegalStateException("swaps.mode must be illusion or real");
+                };
     }
 
     /**
-     * The player starts to break the block at {@code pos}: their client is told the real block, so a shown one that is not
-     * there is gone at the click instead of standing until its time is up.
+     * The player starts to break the block at {@code pos}: their client is told the real block, so a shown one that is
+     * not there is gone at the click instead of standing until its time is up.
      */
     public static void reveal(ServerPlayer player, BlockPos pos) {
         player.connection.send(new ClientboundBlockUpdatePacket(player.level(), pos));

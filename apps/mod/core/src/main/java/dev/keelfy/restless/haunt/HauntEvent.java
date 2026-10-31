@@ -6,7 +6,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 public interface HauntEvent {
-    /** The namespace names the mod whose content the event uses: {@code minecraft} for vanilla, another mod's id for an integration. */
+    /**
+     * The namespace names the mod whose content the event uses: {@code minecraft} for vanilla, another mod's id for an
+     * integration.
+     */
     Identifier id();
 
     HauntTier tier();

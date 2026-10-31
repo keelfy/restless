@@ -49,10 +49,13 @@ public final class DebugScreen extends Screen {
         data.events().forEach(list::add);
 
         int side = MARGIN * 2 + listWidth;
-        fire = addRenderableWidget(Button.builder(Component.literal("Fire in " + DebugMenu.FIRE_DELAY / 20 + "s"), b -> fire())
-            .bounds(side, height - BOTTOM + 8, 120, 20).build());
+        fire = addRenderableWidget(
+                Button.builder(Component.literal("Fire in " + DebugMenu.FIRE_DELAY / 20 + "s"), b -> fire())
+                        .bounds(side, height - BOTTOM + 8, 120, 20)
+                        .build());
         addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, b -> onClose())
-            .bounds(width - MARGIN - 80, height - BOTTOM + 8, 80, 20).build());
+                .bounds(width - MARGIN - 80, height - BOTTOM + 8, 80, 20)
+                .build());
         fire.active = false;
     }
 
@@ -83,8 +86,20 @@ public final class DebugScreen extends Screen {
         for (int i = 0; i < data.spirits().size(); i++) {
             y += LINE;
             DebugPayload.Spirit spirit = data.spirits().get(i);
-            graphics.text(font, String.format(Locale.ROOT, "%d. %s%s  seed %x  power %.2f  next in %ds",
-                i + 1, spirit.id(), spirit.territorial() ? " (territorial)" : "", spirit.seed(), spirit.power(), spirit.seconds()), x, y, GRAY);
+            graphics.text(
+                    font,
+                    String.format(
+                            Locale.ROOT,
+                            "%d. %s%s  seed %x  power %.2f  next in %ds",
+                            i + 1,
+                            spirit.id(),
+                            spirit.territorial() ? " (territorial)" : "",
+                            spirit.seed(),
+                            spirit.power(),
+                            spirit.seconds()),
+                    x,
+                    y,
+                    GRAY);
             y += LINE;
             graphics.text(font, "    " + String.join(", ", spirit.traits()), x, y, GRAY);
         }
@@ -100,13 +115,32 @@ public final class DebugScreen extends Screen {
         y += LINE;
         graphics.text(font, event.id().toString(), x, y, GRAY);
         y += LINE;
-        String tags = event.tags().stream().map(EventTag::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.joining(", "));
-        graphics.text(font, event.tier().name().toLowerCase(Locale.ROOT) + "   weight " + event.weight() + "   " + tags, x, y, GRAY);
+        String tags = event.tags().stream()
+                .map(EventTag::name)
+                .map(s -> s.toLowerCase(Locale.ROOT))
+                .collect(Collectors.joining(", "));
+        graphics.text(
+                font,
+                event.tier().name().toLowerCase(Locale.ROOT) + "   weight " + event.weight() + "   " + tags,
+                x,
+                y,
+                GRAY);
         y += LINE;
-        graphics.text(font, event.canRun() ? "can run now" : "nothing to act on here", x, y, event.canRun() ? GREEN : RED);
+        graphics.text(
+                font, event.canRun() ? "can run now" : "nothing to act on here", x, y, event.canRun() ? GREEN : RED);
         y += LINE;
         for (int i = 0; i < event.chances().size(); i++) {
-            graphics.text(font, String.format(Locale.ROOT, "%d. %s rolls it next: %.1f%%", i + 1, data.spirits().get(i).id(), event.chances().get(i) * 100), x, y, GRAY);
+            graphics.text(
+                    font,
+                    String.format(
+                            Locale.ROOT,
+                            "%d. %s rolls it next: %.1f%%",
+                            i + 1,
+                            data.spirits().get(i).id(),
+                            event.chances().get(i) * 100),
+                    x,
+                    y,
+                    GRAY);
             y += LINE;
         }
         y += LINE;
@@ -124,7 +158,8 @@ public final class DebugScreen extends Screen {
 
         @Override
         public int getRowWidth() {
-            // The bar sits a bar's width and 2 px beyond the row's right edge, and only a click inside the widget reaches it.
+            // The bar sits a bar's width and 2 px beyond the row's right edge, and only a click inside the widget
+            // reaches it.
             return width - 4 * scrollbarWidth() - 4;
         }
 
@@ -146,13 +181,19 @@ public final class DebugScreen extends Screen {
             }
 
             @Override
-            public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
+            public void extractContent(
+                    GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
                 if (hovered) {
                     graphics.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), 0x30FFFFFF);
                 }
                 graphics.text(font, name, getContentX(), getContentY(), event.canRun() ? WHITE : GRAY);
                 String tier = event.tier() == HauntTier.HARMFUL ? "harmful" : "light";
-                graphics.text(font, tier, getContentRight() - font.width(tier), getContentY(), event.tier() == HauntTier.HARMFUL ? RED : GREEN);
+                graphics.text(
+                        font,
+                        tier,
+                        getContentRight() - font.width(tier),
+                        getContentY(),
+                        event.tier() == HauntTier.HARMFUL ? RED : GREEN);
             }
         }
     }

@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Who the spirit was: a made-up player nickname, how many days it had been dead when it woke and how it died. All of it comes
- * from the spirit's seed, so it is never saved and stays the same for the spirit's whole life while the {@code story}
- * config is unchanged.
+ * Who the spirit was: a made-up player nickname, how many days it had been dead when it woke and how it died. All of it
+ * comes from the spirit's seed, so it is never saved and stays the same for the spirit's whole life while the
+ * {@code story} config is unchanged.
  */
 public record Story(String name, int daysDead, String cause) {
     // Keeps the story's rolls apart from the trait roll, which also starts from the bare seed.
@@ -30,7 +30,8 @@ public record Story(String name, int daysDead, String cause) {
     /** Two words, sometimes joined by an underscore and sometimes followed by a number, like a real nickname. */
     public static String nickname(Random random) {
         Config.Section config = Config.section("story");
-        String name = pick(config.texts("name_first"), random) + (random.nextBoolean() ? "_" : "")
+        String name = pick(config.texts("name_first"), random)
+                + (random.nextBoolean() ? "_" : "")
                 + pick(config.texts("name_second"), random);
         return random.nextBoolean() ? name + random.nextInt(config.integer("name_number_max") + 1) : name;
     }

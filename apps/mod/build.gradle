@@ -1,17 +1,59 @@
+plugins {
+	id 'com.diffplug.spotless'
+}
+
+// Build scripts and git metadata of the whole build live under the root project.
+spotless {
+	format('misc') {
+		// Explicit globs: a `**` target with `targetExclude` makes the configuration cache walk the whole tree.
+		target '*.gradle', '*/*.gradle', '.gitattributes', '.gitignore'
+
+		trimTrailingWhitespace()
+		leadingSpacesToTabs()
+		endWithNewline()
+	}
+}
+
 subprojects {
-    apply plugin: 'java-library'
+	apply plugin: 'java-library'
+	apply plugin: 'com.diffplug.spotless'
 
-    group = mod_group_id
-    version = mod_version
+	group = mod_group_id
+	version = mod_version
 
-    // Mojang ships Java 25 to end users in 26.3.
-    java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+	// Mojang ships Java 25 to end users in 26.3.
+	java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
-    base {
-        archivesName = "${mod_id}-${project.name}"
-    }
+	base {
+		archivesName = "${mod_id}-${project.name}"
+	}
 
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = 'UTF-8'
-    }
+	// Spotless resolves the formatter from here.
+	repositories {
+		mavenCentral()
+	}
+
+	// `check` (and so `build`) fails on unformatted code; `spotlessApply` fixes it.
+	spotless {
+		java {
+			importOrder()
+
+			removeUnusedImports()
+			forbidModuleImports()
+			// expandWildcardImports() and shortenFullyQualifiedTypes() are omitted: in Spotless 8.10.4
+			// their classpath state cannot be restored from the configuration cache.
+
+			cleanthat()
+
+			palantirJavaFormat('2.103.0').formatJavadoc(true)
+
+			tableTestFormatter()
+
+			formatAnnotations()
+		}
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = 'UTF-8'
+	}
 }

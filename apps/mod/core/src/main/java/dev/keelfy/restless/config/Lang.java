@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public final class Lang {
     /** The bundled languages, by the part of a Minecraft code before the underscore ({@code ru_ru} is {@code ru}). */
     static final List<String> LANGUAGES = List.of("en", "ru");
+
     private static final String FALLBACK = "en";
     private static final String DIR = "restless/lang";
 
@@ -26,11 +27,19 @@ public final class Lang {
 
     /** Reads (or first writes) the files in {@code <configDir>/restless/lang/}; call once at start. */
     public static void load(Path configDir) {
-        texts = LANGUAGES.stream().collect(Collectors.toMap(code -> code,
-            code -> Config.loadFile(configDir.resolve(DIR), code, Config.bundledText("lang/" + code), Migrations.BUILT_IN)));
+        texts = LANGUAGES.stream()
+                .collect(Collectors.toMap(
+                        code -> code,
+                        code -> Config.loadFile(
+                                configDir.resolve(DIR),
+                                code,
+                                Config.bundledText("lang/" + code),
+                                Migrations.BUILT_IN)));
     }
 
-    /** The event's display name in a Minecraft language code such as {@code ru_ru}; the id itself if nobody wrote one. */
+    /**
+     * The event's display name in a Minecraft language code such as {@code ru_ru}; the id itself if nobody wrote one.
+     */
     public static String name(String language, String eventId) {
         String name = find(language, eventId, "name");
         return name.isEmpty() ? eventId : name;
@@ -43,7 +52,8 @@ public final class Lang {
 
     static Map<String, JsonObject> defaults() {
         return LANGUAGES.stream().collect(Collectors.toMap(code -> code, code -> {
-            JsonObject file = JsonParser.parseString(Config.bundledText("lang/" + code)).getAsJsonObject();
+            JsonObject file =
+                    JsonParser.parseString(Config.bundledText("lang/" + code)).getAsJsonObject();
             file.remove(Config.VERSION);
             return file;
         }));
@@ -70,7 +80,8 @@ public final class Lang {
             return "";
         }
         JsonElement entry = file.getAsJsonObject("events").get(Config.eventKey(eventId));
-        JsonElement text = entry != null && entry.isJsonObject() ? entry.getAsJsonObject().get(field) : null;
+        JsonElement text =
+                entry != null && entry.isJsonObject() ? entry.getAsJsonObject().get(field) : null;
         return text == null ? "" : text.getAsString();
     }
 

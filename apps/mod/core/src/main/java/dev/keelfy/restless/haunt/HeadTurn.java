@@ -4,8 +4,9 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 
 /**
- * The client side of the {@code turned_head} event. The server can only set the view a tick at a time, which steps; here
- * it turns a little every frame, as the mouse turns it, slow at the start and the end. The mouse still works meanwhile.
+ * The client side of the {@code turned_head} event. The server can only set the view a tick at a time, which steps;
+ * here it turns a little every frame, as the mouse turns it, slow at the start and the end. The mouse still works
+ * meanwhile.
  */
 public final class HeadTurn {
     private static long start;
@@ -34,7 +35,8 @@ public final class HeadTurn {
         if (total == 0 || minecraft.level == null || minecraft.player == null) {
             return;
         }
-        double progress = Math.clamp((minecraft.level.getGameTime() - start + delta.getGameTimeDeltaPartialTick(false)) / total, 0.0, 1.0);
+        double progress = Math.clamp(
+                (minecraft.level.getGameTime() - start + delta.getGameTimeDeltaPartialTick(false)) / total, 0.0, 1.0);
         double eased = progress * progress * (3 - 2 * progress);
         float step = (float) (degrees * (eased - done));
         double before = done;

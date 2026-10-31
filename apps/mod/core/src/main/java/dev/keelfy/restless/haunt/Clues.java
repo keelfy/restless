@@ -17,13 +17,17 @@ public final class Clues {
      * @return empty when none of the spirit's traits leaves this clue
      */
     public static Optional<Trait> reveal(List<Trait> owned, List<Trait> catalog, Clue clue, Random random) {
-        List<Trait> leaving = owned.stream().filter(t -> t.clues().contains(clue)).toList();
+        List<Trait> leaving =
+                owned.stream().filter(t -> t.clues().contains(clue)).toList();
         if (leaving.isEmpty()) {
             return Optional.empty();
         }
         boolean speaks = clue == Clue.VOICE || clue == Clue.PLANCHETTE;
-        if (speaks && owned.stream().anyMatch(Trait::lies) && random.nextDouble() < Config.section("clues").num("lie_chance")) {
-            List<Trait> others = catalog.stream().filter(t -> !owned.contains(t)).toList();
+        if (speaks
+                && owned.stream().anyMatch(Trait::lies)
+                && random.nextDouble() < Config.section("clues").num("lie_chance")) {
+            List<Trait> others =
+                    catalog.stream().filter(t -> !owned.contains(t)).toList();
             if (!others.isEmpty()) {
                 return Optional.of(others.get(random.nextInt(others.size())));
             }

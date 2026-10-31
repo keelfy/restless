@@ -26,8 +26,16 @@ public final class DoorLocks {
         BlockPos lower = lower(level.getBlockState(pos), pos);
         put(level, lower, ticks);
         double range = Config.event("locked_door").num("sync_range");
-        level.getServer().getPlayerList().broadcast(null, lower.getX(), lower.getY(), lower.getZ(), range, level.dimension(),
-            new ClientboundCustomPayloadPacket(new DoorLockPayload(lower, ticks)));
+        level.getServer()
+                .getPlayerList()
+                .broadcast(
+                        null,
+                        lower.getX(),
+                        lower.getY(),
+                        lower.getZ(),
+                        range,
+                        level.dimension(),
+                        new ClientboundCustomPayloadPacket(new DoorLockPayload(lower, ticks)));
     }
 
     /** Records a lock; a client calls this when the server's message arrives. */

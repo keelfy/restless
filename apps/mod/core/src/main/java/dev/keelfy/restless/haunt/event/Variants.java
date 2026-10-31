@@ -9,7 +9,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-/** For a block, another kind of the same material: dirt for dirt, stone for stone, so a change never reads as damage to a build. */
+/**
+ * For a block, another kind of the same material: dirt for dirt, stone for stone, so a change never reads as damage to
+ * a build.
+ */
 final class Variants {
     private static final Map<Block, List<Block>> OF = new HashMap<>();
 

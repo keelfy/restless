@@ -19,16 +19,29 @@ public final class Location {
 
     private Location() {}
 
-    /** Moves the roaming spirit a step and keeps it between the configured distances of the player; teleporting the player pulls it along. */
+    /**
+     * Moves the roaming spirit a step and keeps it between the configured distances of the player; teleporting the
+     * player pulls it along.
+     */
     public static Vec3 roam(UUID spirit, ServerPlayer player) {
         Config.Section config = Config.section("location");
         Vec3 from = ROAMING.get(spirit);
         double angle = player.getRandom().nextDouble() * Math.PI * 2;
-        double dx = from == null ? Math.cos(angle) : from.x - player.getX() + (player.getRandom().nextDouble() - 0.5) * 2 * config.num("step");
-        double dz = from == null ? Math.sin(angle) : from.z - player.getZ() + (player.getRandom().nextDouble() - 0.5) * 2 * config.num("step");
+        double dx = from == null
+                ? Math.cos(angle)
+                : from.x - player.getX() + (player.getRandom().nextDouble() - 0.5) * 2 * config.num("step");
+        double dz = from == null
+                ? Math.sin(angle)
+                : from.z - player.getZ() + (player.getRandom().nextDouble() - 0.5) * 2 * config.num("step");
         double length = Math.max(Math.sqrt(dx * dx + dz * dz), 1e-6);
-        double distance = Math.clamp(from == null ? config.num("max_distance") : length, config.num("min_distance"), config.num("max_distance"));
-        Vec3 to = new Vec3(player.getX() + dx / length * distance, player.getY() + config.num("height"), player.getZ() + dz / length * distance);
+        double distance = Math.clamp(
+                from == null ? config.num("max_distance") : length,
+                config.num("min_distance"),
+                config.num("max_distance"));
+        Vec3 to = new Vec3(
+                player.getX() + dx / length * distance,
+                player.getY() + config.num("height"),
+                player.getZ() + dz / length * distance);
         ROAMING.put(spirit, to);
         return to;
     }

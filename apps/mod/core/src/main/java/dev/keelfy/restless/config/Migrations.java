@@ -8,33 +8,53 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 /**
- * How an old config file becomes a current one. Every file carries a {@code version}; a release that renames, moves
- * or drops a key bumps it by adding one step here, and a player's file is walked through the steps it has not seen.
- * Step {@code i} (from 0) turns version {@code i + 1} into version {@code i + 2}. Keys that are new need no step:
- * they come from the bundled defaults.
+ * How an old config file becomes a current one. Every file carries a {@code version}; a release that renames, moves or
+ * drops a key bumps it by adding one step here, and a player's file is walked through the steps it has not seen. Step
+ * {@code i} (from 0) turns version {@code i + 1} into version {@code i + 2}. Keys that are new need no step: they come
+ * from the bundled defaults.
  */
 public final class Migrations {
-    /** Version 2 of every event file: event ids carry a namespace ({@code cat_hiss} became {@code minecraft:cat_hiss}). */
+    /**
+     * Version 2 of every event file: event ids carry a namespace ({@code cat_hiss} became {@code minecraft:cat_hiss}).
+     */
     private static final List<UnaryOperator<JsonObject>> NAMESPACED_EVENTS = List.of(Migrations::namespaceEvents);
 
-    /** Version 2 of haunt: the world-wide {@code danger} section became per-spirit {@code power}; its progression keys are gone. */
+    /**
+     * Version 2 of haunt: the world-wide {@code danger} section became per-spirit {@code power}; its progression keys
+     * are gone.
+     */
     private static final List<UnaryOperator<JsonObject>> POWER = List.of(Migrations::dangerToPower);
 
-    /** Version 2 of lies: strangers' names are made up, not listed; {@code false_slot} has more items; the head turn is timed in ticks. */
+    /**
+     * Version 2 of lies: strangers' names are made up, not listed; {@code false_slot} has more items; the head turn is
+     * timed in ticks.
+     */
     private static final List<UnaryOperator<JsonObject>> LIES = List.of(Migrations::liesNicknames);
 
-    /** Version 3 of blocks: {@code false_looks} turns any block of its list into another of it, instead of following a fixed map. */
-    private static final List<UnaryOperator<JsonObject>> BLOCKS = List.of(Migrations::namespaceEvents, Migrations::falseLooksPool);
+    /**
+     * Version 3 of blocks: {@code false_looks} turns any block of its list into another of it, instead of following a
+     * fixed map.
+     */
+    private static final List<UnaryOperator<JsonObject>> BLOCKS =
+            List.of(Migrations::namespaceEvents, Migrations::falseLooksPool);
 
     /** Version 3 of presence: the distant walker walks for longer; the nametag's names are made up, not listed. */
-    private static final List<UnaryOperator<JsonObject>> PRESENCE = List.of(Migrations::namespaceEvents, Migrations::presenceWalker);
+    private static final List<UnaryOperator<JsonObject>> PRESENCE =
+            List.of(Migrations::namespaceEvents, Migrations::presenceWalker);
 
     /** Steps per file name (without {@code .json}). A file with no entry has never changed shape: version 1. */
     static final Migrations BUILT_IN = new Migrations(Map.ofEntries(
-        Map.entry("haunt", POWER), Map.entry("lights", NAMESPACED_EVENTS), Map.entry("mechanisms", NAMESPACED_EVENTS),
-        Map.entry("sounds", NAMESPACED_EVENTS), Map.entry("afflictions", NAMESPACED_EVENTS), Map.entry("assaults", NAMESPACED_EVENTS),
-        Map.entry("items", NAMESPACED_EVENTS), Map.entry("blocks", BLOCKS), Map.entry("mobs", NAMESPACED_EVENTS),
-        Map.entry("presence", PRESENCE), Map.entry("lies", LIES)));
+            Map.entry("haunt", POWER),
+            Map.entry("lights", NAMESPACED_EVENTS),
+            Map.entry("mechanisms", NAMESPACED_EVENTS),
+            Map.entry("sounds", NAMESPACED_EVENTS),
+            Map.entry("afflictions", NAMESPACED_EVENTS),
+            Map.entry("assaults", NAMESPACED_EVENTS),
+            Map.entry("items", NAMESPACED_EVENTS),
+            Map.entry("blocks", BLOCKS),
+            Map.entry("mobs", NAMESPACED_EVENTS),
+            Map.entry("presence", PRESENCE),
+            Map.entry("lies", LIES)));
 
     private final Map<String, List<UnaryOperator<JsonObject>>> steps;
 
@@ -77,7 +97,8 @@ public final class Migrations {
 
     private static JsonObject liesNicknames(JsonObject root) {
         // The old item list goes too, so the longer bundled one is used.
-        for (String gone : List.of("stranger_joins.names", "stranger_death.names", "false_slot.items", "turned_head.steps")) {
+        for (String gone :
+                List.of("stranger_joins.names", "stranger_death.names", "false_slot.items", "turned_head.steps")) {
             remove(root, "events.minecraft:" + gone);
         }
         return root;
@@ -103,7 +124,9 @@ public final class Migrations {
         return root;
     }
 
-    /** For use inside a step: moves the value at a dotted path to another, creating objects on the way. No-op if absent. */
+    /**
+     * For use inside a step: moves the value at a dotted path to another, creating objects on the way. No-op if absent.
+     */
     public static void move(JsonObject root, String from, String to) {
         JsonElement value = remove(root, from);
         if (value == null) {

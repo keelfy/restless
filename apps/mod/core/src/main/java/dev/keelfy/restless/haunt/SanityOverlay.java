@@ -4,7 +4,10 @@ import dev.keelfy.restless.config.Config;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
-/** The client side of {@link Sanity}: below a threshold, darkness creeps in from the screen's edges, deeper as sanity falls. */
+/**
+ * The client side of {@link Sanity}: below a threshold, darkness creeps in from the screen's edges, deeper as sanity
+ * falls.
+ */
 public final class SanityOverlay {
     private static final int BANDS = 8;
 

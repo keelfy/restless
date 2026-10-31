@@ -24,7 +24,8 @@ public final class WornWard extends ShapedBlock implements WardBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
+    protected void createBlockStateDefinition(
+            StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
         builder.add(WEAR);
     }
 

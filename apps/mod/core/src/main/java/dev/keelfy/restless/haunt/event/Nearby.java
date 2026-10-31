@@ -51,7 +51,8 @@ final class Nearby {
     /** Every loaded block within a cube of the given radius around {@code center} that matches. */
     static List<BlockPos> all(ServerLevel level, BlockPos center, int radius, Predicate<BlockState> match) {
         List<BlockPos> hits = new ArrayList<>();
-        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius))) {
+        for (BlockPos pos : BlockPos.betweenClosed(
+                center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius))) {
             if (level.isLoaded(pos) && match.test(level.getBlockState(pos))) {
                 hits.add(pos.immutable());
             }
@@ -67,17 +68,24 @@ final class Nearby {
         player.level().playSound(null, at.x, at.y, at.z, sound, SoundSource.HOSTILE, tone.volume(), tone.pitch());
     }
 
-    /** Sound at a point {@code distance} blocks from the player; {@code yawOffset} is relative to where they look (180 = behind). */
+    /**
+     * Sound at a point {@code distance} blocks from the player; {@code yawOffset} is relative to where they look (180 =
+     * behind).
+     */
     static Vec3 around(ServerPlayer player, double distance, double yawOffset) {
         double yaw = Math.toRadians(player.getYRot() + yawOffset);
-        return player.position().add(-Math.sin(yaw) * distance, Config.section("place").num("sound_height"), Math.cos(yaw) * distance);
+        return player.position()
+                .add(-Math.sin(yaw) * distance, Config.section("place").num("sound_height"), Math.cos(yaw) * distance);
     }
 
     static Vec3 randomAround(ServerPlayer player, double distance) {
         return around(player, distance, player.getRandom().nextDouble() * FULL_TURN);
     }
 
-    /** Where a source-free sound comes from: the spirit that sent it, or {@code distance} blocks away at a random bearing when none did. */
+    /**
+     * Where a source-free sound comes from: the spirit that sent it, or {@code distance} blocks away at a random
+     * bearing when none did.
+     */
     static Vec3 source(ServerPlayer player, double distance) {
         return Location.source(randomAround(player, distance));
     }

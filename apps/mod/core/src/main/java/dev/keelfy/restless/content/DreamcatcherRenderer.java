@@ -26,8 +26,12 @@ public final class DreamcatcherRenderer implements BlockEntityRenderer<Dreamcatc
     }
 
     @Override
-    public void extractRenderState(DreamcatcherEntity entity, State state, float partialTicks, Vec3 cameraPosition,
-                                   ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+    public void extractRenderState(
+            DreamcatcherEntity entity,
+            State state,
+            float partialTicks,
+            Vec3 cameraPosition,
+            ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(entity, state, partialTicks, cameraPosition, breakProgress);
         state.swingX = entity.swingX(partialTicks);
         state.swingZ = entity.swingZ(partialTicks);

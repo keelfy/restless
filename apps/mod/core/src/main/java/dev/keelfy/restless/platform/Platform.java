@@ -14,8 +14,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Services core needs from the mod loader. Each loader module ships one implementation,
- * registered in {@code META-INF/services/dev.keelfy.restless.platform.Platform}.
+ * Services core needs from the mod loader. Each loader module ships one implementation, registered in
+ * {@code META-INF/services/dev.keelfy.restless.platform.Platform}.
  */
 public interface Platform {
     String loaderName();
@@ -26,13 +26,14 @@ public interface Platform {
     Path configDir();
 
     /**
-     * Declares an entry of this mod in a vanilla registry. The loader adds it when that registry opens;
-     * the factory gets the key the entry must be built with, and the supplier is valid after that.
+     * Declares an entry of this mod in a vanilla registry. The loader adds it when that registry opens; the factory
+     * gets the key the entry must be built with, and the supplier is valid after that.
      */
     <T> Supplier<T> register(Registry<T> registry, String name, Function<ResourceKey<T>, T> factory);
 
     /** Declares a creative tab of this mod that lists {@code items}; they are looked up when the tab is filled. */
-    void registerTab(String name, Component title, Supplier<ItemStack> icon, List<? extends Supplier<? extends Item>> items);
+    void registerTab(
+            String name, Component title, Supplier<ItemStack> icon, List<? extends Supplier<? extends Item>> items);
 
     /** The player's client takes payloads of this type: it has this mod (a test's mock player does not). */
     boolean canReceive(ServerPlayer player, CustomPacketPayload.Type<?> type);
@@ -46,7 +47,6 @@ public interface Platform {
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("No Platform implementation on the classpath"));
 
-        private Holder() {
-        }
+        private Holder() {}
     }
 }

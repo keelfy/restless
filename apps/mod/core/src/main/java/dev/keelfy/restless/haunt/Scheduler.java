@@ -38,7 +38,9 @@ public final class Scheduler {
 
     private Scheduler() {}
 
-    /** Runs {@code step} after {@code delay} ticks, then every {@code interval} ticks for as long as it returns true. */
+    /**
+     * Runs {@code step} after {@code delay} ticks, then every {@code interval} ticks for as long as it returns true.
+     */
     public static void repeat(ServerPlayer player, int delay, int interval, Step step) {
         TASKS.add(new Task(player, now(player) + delay, Math.max(1, interval), step));
     }
@@ -58,7 +60,9 @@ public final class Scheduler {
         long now = server.getTickCount();
         // Steps may schedule more tasks, so walk a snapshot.
         for (Task task : List.copyOf(TASKS)) {
-            if (task.player.isRemoved() || !task.player.isAlive() || task.player.level().getServer() != server) {
+            if (task.player.isRemoved()
+                    || !task.player.isAlive()
+                    || task.player.level().getServer() != server) {
                 task.done = true;
             } else if (now >= task.due) {
                 task.done = !task.step.run(task.player, task.n++);

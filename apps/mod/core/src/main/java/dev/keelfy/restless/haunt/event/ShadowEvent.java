@@ -55,9 +55,9 @@ public final class ShadowEvent implements HauntEvent {
     @Override
     public boolean canRun(ServerPlayer player) {
         return player.level().getDifficulty() != Difficulty.PEACEFUL
-            && !ACTIVE.containsKey(player.getUUID())
-            && Assaults.healthy(player, "shadow")
-            && spot(player) != null;
+                && !ACTIVE.containsKey(player.getUUID())
+                && Assaults.healthy(player, "shadow")
+                && spot(player) != null;
     }
 
     @Override
@@ -98,15 +98,33 @@ public final class ShadowEvent implements HauntEvent {
     private static void vanish(Mob shadow, UUID owner) {
         if (shadow.isAlive()) {
             Config.Burst smoke = Config.event("shadow").burst("particles");
-            ((ServerLevel) shadow.level()).sendParticles(ParticleTypes.LARGE_SMOKE, shadow.getX(), shadow.getY() + smoke.offsetY(), shadow.getZ(),
-                smoke.count(), smoke.dx(), smoke.dy(), smoke.dz(), smoke.speed());
+            ((ServerLevel) shadow.level())
+                    .sendParticles(
+                            ParticleTypes.LARGE_SMOKE,
+                            shadow.getX(),
+                            shadow.getY() + smoke.offsetY(),
+                            shadow.getZ(),
+                            smoke.count(),
+                            smoke.dx(),
+                            smoke.dy(),
+                            smoke.dz(),
+                            smoke.speed());
             shadow.discard();
         }
         ACTIVE.remove(owner, shadow);
     }
 
     private static void play(ServerPlayer player, SoundEvent sound, Config.Tone tone) {
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), sound, SoundSource.HOSTILE, tone.volume(), tone.pitch());
+        player.level()
+                .playSound(
+                        null,
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        sound,
+                        SoundSource.HOSTILE,
+                        tone.volume(),
+                        tone.pitch());
     }
 
     private static final class Chase {
@@ -122,8 +140,10 @@ public final class ShadowEvent implements HauntEvent {
         /** @return true to keep chasing */
         boolean step(ServerPlayer player, int n) {
             Config.Section config = Config.event("shadow");
-            if (!shadow.isAlive() || shadow.level() != player.level() || stuck >= config.integer("stuck_steps")
-                || n * config.integer("interval_ticks") >= config.integer("max_ticks")) {
+            if (!shadow.isAlive()
+                    || shadow.level() != player.level()
+                    || stuck >= config.integer("stuck_steps")
+                    || n * config.integer("interval_ticks") >= config.integer("max_ticks")) {
                 vanish(shadow, owner);
                 return false;
             }
@@ -143,7 +163,8 @@ public final class ShadowEvent implements HauntEvent {
         }
 
         private boolean watched(ServerPlayer player, Config.Section config) {
-            Vec3 toShadow = shadow.getEyePosition().subtract(player.getEyePosition()).normalize();
+            Vec3 toShadow =
+                    shadow.getEyePosition().subtract(player.getEyePosition()).normalize();
             double facing = player.getLookAngle().dot(toShadow);
             return facing >= Math.cos(Math.toRadians(config.num("watch_degrees"))) && player.hasLineOfSight(shadow);
         }
@@ -162,7 +183,8 @@ public final class ShadowEvent implements HauntEvent {
             float room = player.getHealth() - Assaults.safeHealth();
             if (room > 0) {
                 play(player, SoundEvents.WARDEN_ATTACK_IMPACT, config.tone("touch_sound"));
-                player.hurtServer(player.level(), player.damageSources().magic(), Math.min((float) config.num("damage"), room));
+                player.hurtServer(
+                        player.level(), player.damageSources().magic(), Math.min((float) config.num("damage"), room));
             }
         }
     }

@@ -17,8 +17,8 @@ import net.minecraft.world.entity.decoration.Mannequin;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Another player, in a default skin, doing something as players do, step by step. Gone when it is done, when the
- * player comes close, or when time runs out, with no sound and no trace but what it did.
+ * Another player, in a default skin, doing something as players do, step by step. Gone when it is done, when the player
+ * comes close, or when time runs out, with no sound and no trace but what it did.
  */
 abstract class StrangerAct implements HauntEvent {
     private final String id;
@@ -80,8 +80,11 @@ abstract class StrangerAct implements HauntEvent {
         });
         Scheduler.repeat(player, interval, interval, (p, n) -> {
             double near = config.num("vanish_distance");
-            boolean over = !figure.isAlive() || figure.level() != p.level() || n * interval >= config.integer("max_ticks")
-                || p.distanceToSqr(figure) <= near * near || !step(p, figure, config, n);
+            boolean over = !figure.isAlive()
+                    || figure.level() != p.level()
+                    || n * interval >= config.integer("max_ticks")
+                    || p.distanceToSqr(figure) <= near * near
+                    || !step(p, figure, config, n);
             if (over) {
                 leave(figure, owner);
             }

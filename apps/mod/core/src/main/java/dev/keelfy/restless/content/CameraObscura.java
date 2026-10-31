@@ -21,7 +21,9 @@ public final class CameraObscura extends Item {
         if (level.isClientSide() || !(player instanceof ServerPlayer server)) {
             return InteractionResult.SUCCESS;
         }
-        player.getCooldowns().addCooldown(player.getItemInHand(hand), Config.section("camera").integer("cooldown_ticks"));
+        player.getCooldowns()
+                .addCooldown(
+                        player.getItemInHand(hand), Config.section("camera").integer("cooldown_ticks"));
         Divination.photograph(server).ifPresent(photo -> {
             if (!player.addItem(photo)) {
                 level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), photo));

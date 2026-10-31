@@ -14,8 +14,8 @@ import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -48,7 +48,8 @@ public final class Dreamcatcher extends Block implements WardBlock, EntityBlock 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         if (context.getClickedFace() != Direction.DOWN) return null;
-        BlockState state = defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        BlockState state = defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection().getOpposite());
         return state.canSurvive(context.getLevel(), context.getClickedPos()) ? state : null;
     }
 
@@ -59,8 +60,15 @@ public final class Dreamcatcher extends Block implements WardBlock, EntityBlock 
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(
+            BlockState state,
+            LevelReader level,
+            ScheduledTickAccess ticks,
+            BlockPos pos,
+            Direction direction,
+            BlockPos neighbourPos,
+            BlockState neighbourState,
+            RandomSource random) {
         return direction == Direction.UP && !state.canSurvive(level, pos) ? Blocks.AIR.defaultBlockState() : state;
     }
 
@@ -70,15 +78,23 @@ public final class Dreamcatcher extends Block implements WardBlock, EntityBlock 
     }
 
     @Override
-    protected VoxelShape getEntityInsideCollisionShape(BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
+    protected VoxelShape getEntityInsideCollisionShape(
+            BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
         return getShape(state, level, pos, CollisionContext.empty());
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity,
-                                InsideBlockEffectApplier effects, boolean isPrecise) {
-        if (!level.isClientSide() && entity instanceof Player player && !player.isSpectator()
-            && level.getBlockEntity(pos) instanceof DreamcatcherEntity dreamcatcher) {
+    protected void entityInside(
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Entity entity,
+            InsideBlockEffectApplier effects,
+            boolean isPrecise) {
+        if (!level.isClientSide()
+                && entity instanceof Player player
+                && !player.isSpectator()
+                && level.getBlockEntity(pos) instanceof DreamcatcherEntity dreamcatcher) {
             dreamcatcher.touch(player.getKnownMovement());
         }
     }
@@ -94,9 +110,12 @@ public final class Dreamcatcher extends Block implements WardBlock, EntityBlock 
     }
 
     @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return type == Content.DREAMCATCHER_ENTITY.get() ? (world, pos, blockState, entity) ->
-            DreamcatcherEntity.tick(world, pos, blockState, (DreamcatcherEntity) entity) : null;
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(
+            Level level, BlockState state, BlockEntityType<T> type) {
+        return type == Content.DREAMCATCHER_ENTITY.get()
+                ? (world, pos, blockState, entity) ->
+                        DreamcatcherEntity.tick(world, pos, blockState, (DreamcatcherEntity) entity)
+                : null;
     }
 
     @Override

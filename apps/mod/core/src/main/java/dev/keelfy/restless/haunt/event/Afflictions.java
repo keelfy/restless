@@ -24,11 +24,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Difficulty;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -45,82 +45,127 @@ final class Afflictions {
 
     static List<HauntEvent> all() {
         return List.of(
-            // 39
-            light("nausea", MobEffects.NAUSEA),
-            // 40
-            light("heaviness", MobEffects.SLOWNESS),
-            // 41
-            light("fatigue", MobEffects.MINING_FATIGUE),
-            // 42
-            SimpleEvent.light("hunger_pang", EventTag.AFFLICTION,
-                player -> player.getFoodData().getFoodLevel() > Config.event("hunger_pang").integer("min_food"),
-                player -> player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - Config.event("hunger_pang").integer("loss"))),
-            // 43
-            light("darkness", MobEffects.DARKNESS),
-            // 44
-            SimpleEvent.light("shudder", EventTag.AFFLICTION, player -> true, player -> {
-                Config.Section config = Config.event("shudder");
-                double angle = player.getRandom().nextDouble() * Math.PI * 2;
-                player.push(Math.cos(angle) * config.num("push"), config.num("lift"), Math.sin(angle) * config.num("push"));
-                player.connection.send(new ClientboundSetEntityMotionPacket(player));
-            }),
-            // 46: poison stops at half a heart by itself
-            harmful("poison", MobEffects.POISON),
-            // 47
-            harmful("weakness", MobEffects.WEAKNESS),
-            // 48: two seconds of levitation is a drop of a few blocks at most
-            harmful("levitation", MobEffects.LEVITATION),
-            // 49
-            SimpleEvent.harmful("frostbite", EventTag.AFFLICTION,
-                player -> player.getHealth() > Config.event("frostbite").num("min_health") && !player.isFreezing(),
-                player -> {
-                    player.setTicksFrozen(player.getTicksRequiredToFreeze() + Config.event("frostbite").integer("extra_freeze_ticks"));
-                    Config.Tone tone = Config.event("frostbite").tone("sound");
-                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-                        SoundEvents.PLAYER_HURT_FREEZE, SoundSource.HOSTILE, tone.volume(), tone.pitch());
+                // 39
+                light("nausea", MobEffects.NAUSEA),
+                // 40
+                light("heaviness", MobEffects.SLOWNESS),
+                // 41
+                light("fatigue", MobEffects.MINING_FATIGUE),
+                // 42
+                SimpleEvent.light(
+                        "hunger_pang",
+                        EventTag.AFFLICTION,
+                        player -> player.getFoodData().getFoodLevel()
+                                > Config.event("hunger_pang").integer("min_food"),
+                        player -> player.getFoodData()
+                                .setFoodLevel(player.getFoodData().getFoodLevel()
+                                        - Config.event("hunger_pang").integer("loss"))),
+                // 43
+                light("darkness", MobEffects.DARKNESS),
+                // 44
+                SimpleEvent.light("shudder", EventTag.AFFLICTION, player -> true, player -> {
+                    Config.Section config = Config.event("shudder");
+                    double angle = player.getRandom().nextDouble() * Math.PI * 2;
+                    player.push(
+                            Math.cos(angle) * config.num("push"),
+                            config.num("lift"),
+                            Math.sin(angle) * config.num("push"));
+                    player.connection.send(new ClientboundSetEntityMotionPacket(player));
                 }),
-            // 50
-            SimpleEvent.harmful("drained", EventTag.AFFLICTION,
-                player -> player.totalExperience > 0,
-                player -> {
+                // 46: poison stops at half a heart by itself
+                harmful("poison", MobEffects.POISON),
+                // 47
+                harmful("weakness", MobEffects.WEAKNESS),
+                // 48: two seconds of levitation is a drop of a few blocks at most
+                harmful("levitation", MobEffects.LEVITATION),
+                // 49
+                SimpleEvent.harmful(
+                        "frostbite",
+                        EventTag.AFFLICTION,
+                        player -> player.getHealth() > Config.event("frostbite").num("min_health")
+                                && !player.isFreezing(),
+                        player -> {
+                            player.setTicksFrozen(player.getTicksRequiredToFreeze()
+                                    + Config.event("frostbite").integer("extra_freeze_ticks"));
+                            Config.Tone tone = Config.event("frostbite").tone("sound");
+                            player.level()
+                                    .playSound(
+                                            null,
+                                            player.getX(),
+                                            player.getY(),
+                                            player.getZ(),
+                                            SoundEvents.PLAYER_HURT_FREEZE,
+                                            SoundSource.HOSTILE,
+                                            tone.volume(),
+                                            tone.pitch());
+                        }),
+                // 50
+                SimpleEvent.harmful("drained", EventTag.AFFLICTION, player -> player.totalExperience > 0, player -> {
                     Config.Section config = Config.event("drained");
-                    player.giveExperiencePoints(-Math.min(player.totalExperience, config.integer("xp_min") + player.getRandom().nextInt(config.integer("xp_spread"))));
+                    player.giveExperiencePoints(-Math.min(
+                            player.totalExperience,
+                            config.integer("xp_min") + player.getRandom().nextInt(config.integer("xp_spread"))));
                 }),
-            // 51
-            harmful("bad_luck", MobEffects.UNLUCK),
-            SimpleEvent.harmful("sanity_crash", EventTag.AFFLICTION,
-                player -> !player.isCreative() && !player.isSpectator() && Sanity.of(player) > 0,
-                player -> {
-                    if (!player.isCreative() && !player.isSpectator()) {
-                        Sanity.set(player, Sanity.of(player) - Config.event("sanity_crash").num("loss"));
-                    }
-                }),
-            SimpleEvent.harmful("sanity_drain", EventTag.AFFLICTION,
-                player -> !player.isCreative() && !player.isSpectator() && Sanity.of(player) > 0,
-                player -> {
-                    if (!player.isCreative() && !player.isSpectator()) {
-                        Config.Section config = Config.event("sanity_drain");
-                        double loss = config.num("min_loss")
-                            + player.getRandom().nextDouble() * (config.num("max_loss") - config.num("min_loss"));
-                        Sanity.set(player, Sanity.of(player) - loss);
-                    }
-                }),
-            // 141: more of the same, none of which can kill
-            light("ravenous", MobEffects.HUNGER),
-            harmful("infested", MobEffects.INFESTED),
-            light("oozing", MobEffects.OOZING),
-            light("weaving", MobEffects.WEAVING),
-            // 143: a slow pull in one direction, as if by a current
-            SimpleEvent.light("drift", EventTag.AFFLICTION, player -> player.onGround(), Afflictions::drift),
-            // 173: no dream until the player sleeps; they wake to a line, in chat and in the journal, from a spirit near them
-            SimpleEvent.light("dream", EventTag.AFFLICTION, player -> !DREAMERS.contains(player.getUUID()) && !Sense.of(player, HauntData.get(player.level().getServer())).isEmpty(), Afflictions::dream),
-            // 171: the clock phantoms go by says three days without sleep
-            SimpleEvent.harmful("insomnia", EventTag.AFFLICTION,
-                player -> player.level().getDifficulty() != Difficulty.PEACEFUL && player.getStats().getValue(Stats.CUSTOM.get(Stats.TIME_SINCE_REST)) < SLEEPLESS,
-                player -> player.getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), SLEEPLESS)),
-            // 172: no walk until the player sleeps through; they wake on safe ground some way off, outdoors if it can be found
-            SimpleEvent.harmful("sleepwalk", EventTag.AFFLICTION, player -> !SLEEPWALKERS.contains(player.getUUID()), Afflictions::sleepwalk)
-        );
+                // 51
+                harmful("bad_luck", MobEffects.UNLUCK),
+                SimpleEvent.harmful(
+                        "sanity_crash",
+                        EventTag.AFFLICTION,
+                        player -> !player.isCreative() && !player.isSpectator() && Sanity.of(player) > 0,
+                        player -> {
+                            if (!player.isCreative() && !player.isSpectator()) {
+                                Sanity.set(
+                                        player,
+                                        Sanity.of(player)
+                                                - Config.event("sanity_crash").num("loss"));
+                            }
+                        }),
+                SimpleEvent.harmful(
+                        "sanity_drain",
+                        EventTag.AFFLICTION,
+                        player -> !player.isCreative() && !player.isSpectator() && Sanity.of(player) > 0,
+                        player -> {
+                            if (!player.isCreative() && !player.isSpectator()) {
+                                Config.Section config = Config.event("sanity_drain");
+                                double loss = config.num("min_loss")
+                                        + player.getRandom().nextDouble()
+                                                * (config.num("max_loss") - config.num("min_loss"));
+                                Sanity.set(player, Sanity.of(player) - loss);
+                            }
+                        }),
+                // 141: more of the same, none of which can kill
+                light("ravenous", MobEffects.HUNGER),
+                harmful("infested", MobEffects.INFESTED),
+                light("oozing", MobEffects.OOZING),
+                light("weaving", MobEffects.WEAVING),
+                // 143: a slow pull in one direction, as if by a current
+                SimpleEvent.light("drift", EventTag.AFFLICTION, player -> player.onGround(), Afflictions::drift),
+                // 173: no dream until the player sleeps; they wake to a line, in chat and in the journal, from a spirit
+                // near them
+                SimpleEvent.light(
+                        "dream",
+                        EventTag.AFFLICTION,
+                        player -> !DREAMERS.contains(player.getUUID())
+                                && !Sense.of(
+                                                player,
+                                                HauntData.get(player.level().getServer()))
+                                        .isEmpty(),
+                        Afflictions::dream),
+                // 171: the clock phantoms go by says three days without sleep
+                SimpleEvent.harmful(
+                        "insomnia",
+                        EventTag.AFFLICTION,
+                        player -> player.level().getDifficulty() != Difficulty.PEACEFUL
+                                && player.getStats().getValue(Stats.CUSTOM.get(Stats.TIME_SINCE_REST)) < SLEEPLESS,
+                        player ->
+                                player.getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), SLEEPLESS)),
+                // 172: no walk until the player sleeps through; they wake on safe ground some way off, outdoors if it
+                // can be found
+                SimpleEvent.harmful(
+                        "sleepwalk",
+                        EventTag.AFFLICTION,
+                        player -> !SLEEPWALKERS.contains(player.getUUID()),
+                        Afflictions::sleepwalk));
     }
 
     /** Players with a dream waiting, so a second one is not stacked on the first. */
@@ -128,13 +173,16 @@ final class Afflictions {
 
     private static void dream(ServerPlayer player) {
         Config.Section config = Config.event("dream");
-        List<Sense.Spirit> spirits = new ArrayList<>(Sense.of(player, HauntData.get(player.level().getServer())));
+        List<Sense.Spirit> spirits =
+                new ArrayList<>(Sense.of(player, HauntData.get(player.level().getServer())));
         Sense.Spirit spirit = spirits.get(player.getRandom().nextInt(spirits.size()));
         Story story = Story.of(spirit.haunting().seed());
         List<Trait> traits = Traits.of(spirit.haunting().traits());
         Component line = traits.isEmpty() || player.getRandom().nextBoolean()
-            ? Component.translatable("message.restless.dream_story", story.name(), story.cause())
-            : Component.translatable("message.restless.dream_trait", traits.get(player.getRandom().nextInt(traits.size())).hint());
+                ? Component.translatable("message.restless.dream_story", story.name(), story.cause())
+                : Component.translatable(
+                        "message.restless.dream_trait",
+                        traits.get(player.getRandom().nextInt(traits.size())).hint());
         DREAMERS.add(player.getUUID());
         int interval = config.integer("interval_ticks");
         boolean[] slept = {false};
@@ -169,7 +217,15 @@ final class Afflictions {
             } else if (slept[0] >= config.integer("min_sleep_ticks")) {
                 BlockPos to = wakeSpot(p, config);
                 if (to != null) {
-                    p.teleportTo(p.level(), to.getX() + 0.5, to.getY(), to.getZ() + 0.5, Set.of(), p.getRandom().nextFloat() * 360.0F, p.getXRot(), true);
+                    p.teleportTo(
+                            p.level(),
+                            to.getX() + 0.5,
+                            to.getY(),
+                            to.getZ() + 0.5,
+                            Set.of(),
+                            p.getRandom().nextFloat() * 360.0F,
+                            p.getXRot(),
+                            true);
                 }
                 SLEEPWALKERS.remove(p.getUUID());
                 return false;
@@ -185,14 +241,18 @@ final class Afflictions {
         });
     }
 
-    /** Standing room a few blocks off on a floor that does not burn, away from lava; under open sky if any try finds it. */
+    /**
+     * Standing room a few blocks off on a floor that does not burn, away from lava; under open sky if any try finds it.
+     */
     private static @Nullable BlockPos wakeSpot(ServerPlayer player, Config.Section config) {
         ServerLevel level = player.level();
         BlockPos found = null;
         for (int i = 0; i < config.integer("tries"); i++) {
             BlockPos pos = Place.spawnSpot(player, config.integer("min_distance"), config.integer("max_distance"));
-            if (pos == null || level.getBlockState(pos.below()).is(Blocks.MAGMA_BLOCK)
-                || BlockPos.betweenClosedStream(pos.offset(-1, -1, -1), pos.offset(1, 2, 1)).anyMatch(near -> level.getFluidState(near).is(FluidTags.LAVA))) {
+            if (pos == null
+                    || level.getBlockState(pos.below()).is(Blocks.MAGMA_BLOCK)
+                    || BlockPos.betweenClosedStream(pos.offset(-1, -1, -1), pos.offset(1, 2, 1))
+                            .anyMatch(near -> level.getFluidState(near).is(FluidTags.LAVA))) {
                 continue;
             }
             if (level.canSeeSky(pos)) {
@@ -215,18 +275,31 @@ final class Afflictions {
     }
 
     private static HauntEvent light(String id, Holder<MobEffect> effect) {
-        return SimpleEvent.light(id, EventTag.AFFLICTION, player -> !player.hasEffect(effect), player -> apply(player, effect, id));
+        return SimpleEvent.light(
+                id, EventTag.AFFLICTION, player -> !player.hasEffect(effect), player -> apply(player, effect, id));
     }
 
     private static HauntEvent harmful(String id, Holder<MobEffect> effect) {
-        return SimpleEvent.harmful(id, EventTag.AFFLICTION, player -> !player.hasEffect(effect), player -> apply(player, effect, id));
+        return SimpleEvent.harmful(
+                id, EventTag.AFFLICTION, player -> !player.hasEffect(effect), player -> apply(player, effect, id));
     }
 
     private static void apply(ServerPlayer player, Holder<MobEffect> effect, String id) {
         Config.Section config = Config.event(id);
-        player.addEffect(new MobEffectInstance(effect, Ticks.SECOND * config.integer("seconds"), config.integer("amplifier")), null);
+        player.addEffect(
+                new MobEffectInstance(effect, Ticks.SECOND * config.integer("seconds"), config.integer("amplifier")),
+                null);
         Vec3 at = player.position();
         Config.Tone tone = config.tone("sound");
-        player.level().playSound(null, at.x, at.y, at.z, SoundEvents.AMBIENT_CAVE.value(), SoundSource.AMBIENT, tone.volume(), tone.pitch());
+        player.level()
+                .playSound(
+                        null,
+                        at.x,
+                        at.y,
+                        at.z,
+                        SoundEvents.AMBIENT_CAVE.value(),
+                        SoundSource.AMBIENT,
+                        tone.volume(),
+                        tone.pitch());
     }
 }

@@ -46,6 +46,9 @@ public final class DoorEvent implements HauntEvent {
     }
 
     private static @Nullable BlockPos find(ServerPlayer player) {
-        return Nearby.random(player, Config.event("door").integer("radius"), s -> s.getBlock() instanceof DoorBlock && DoorBlock.isWoodenDoor(s));
+        return Nearby.random(
+                player,
+                Config.event("door").integer("radius"),
+                s -> s.getBlock() instanceof DoorBlock && DoorBlock.isWoodenDoor(s));
     }
 }

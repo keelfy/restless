@@ -1,89 +1,89 @@
 plugins {
-    id 'net.neoforged.moddev'
+	id 'net.neoforged.moddev'
 }
 
 def core = project(':core')
 
 sourceSets {
-    gameTest
+	gameTest
 }
 
 neoForge {
-    version = project.neo_version
-    addModdingDependenciesTo(sourceSets.gameTest)
+	version = project.neo_version
+	addModdingDependenciesTo(sourceSets.gameTest)
 
-    mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
-        }
-        restless_tests {
-            sourceSet(sourceSets.gameTest)
-        }
-    }
+	mods {
+		"${mod_id}" {
+			sourceSet(sourceSets.main)
+		}
+		restless_tests {
+			sourceSet(sourceSets.gameTest)
+		}
+	}
 
-    runs {
-        client {
-            client()
-            loadedMods = [mods[mod_id]]
-        }
-        server {
-            server()
-            programArgument '--nogui'
-            loadedMods = [mods[mod_id]]
-        }
-        gameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gameTest
-            gameDirectory = layout.buildDirectory.dir('gametest')
-            programArgument '--tests'
-            programArgument 'restless_tests:*'
-        }
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-    }
+	runs {
+		client {
+			client()
+			loadedMods = [mods[mod_id]]
+		}
+		server {
+			server()
+			programArgument '--nogui'
+			loadedMods = [mods[mod_id]]
+		}
+		gameTestServer {
+			type = 'gameTestServer'
+			sourceSet = sourceSets.gameTest
+			gameDirectory = layout.buildDirectory.dir('gametest')
+			programArgument '--tests'
+			programArgument 'restless_tests:*'
+		}
+		configureEach {
+			logLevel = org.slf4j.event.Level.INFO
+		}
+	}
 }
 
 dependencies {
-    compileOnly core
-    gameTestImplementation sourceSets.main.output
-    gameTestCompileOnly core
+	compileOnly core
+	gameTestImplementation sourceSets.main.output
+	gameTestCompileOnly core
 }
 
 // Core is bundled into this jar: its sources and resources are compiled here.
 tasks.named('compileJava', JavaCompile) {
-    source(core.sourceSets.main.allJava)
+	source(core.sourceSets.main.allJava)
 }
 tasks.named('processResources', ProcessResources) {
-    from(core.sourceSets.main.resources)
+	from(core.sourceSets.main.resources)
 }
 
 var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
-    var replaceProperties = [
-            minecraft_version_range: minecraft_version_range,
-            neo_version            : neo_version,
-            mod_id                 : mod_id,
-            mod_name               : mod_name,
-            mod_license            : mod_license,
-            mod_version            : mod_version,
-    ]
-    inputs.properties replaceProperties
-    expand replaceProperties
-    from 'src/main/templates'
-    into 'build/generated/sources/modMetadata'
+	var replaceProperties = [
+			minecraft_version_range: minecraft_version_range,
+			neo_version            : neo_version,
+			mod_id                 : mod_id,
+			mod_name               : mod_name,
+			mod_license            : mod_license,
+			mod_version            : mod_version,
+	]
+	inputs.properties replaceProperties
+	expand replaceProperties
+	from 'src/main/templates'
+	into 'build/generated/sources/modMetadata'
 }
 sourceSets.main.resources.srcDir generateModMetadata
 neoForge.ideSyncTask generateModMetadata
 
 // Optional viewer APIs are never bundled or required at runtime.
 repositories {
-    maven { url = 'https://api.modrinth.com/maven' }
-    maven { url = 'https://maven.shedaniel.me' }
+	maven { url = 'https://api.modrinth.com/maven' }
+	maven { url = 'https://maven.shedaniel.me' }
 }
 
 dependencies {
-    compileOnly('maven.modrinth:jei:31.17.0.107') { transitive = false }
-    compileOnly('maven.modrinth:rei:26.3.824+neoforge') { transitive = false }
-    compileOnly 'me.shedaniel.cloth:basic-math:0.6.0'
-    compileOnly('maven.modrinth:architectury-api:22.0.5+neoforge') { transitive = false }
+	compileOnly('maven.modrinth:jei:31.17.0.107') { transitive = false }
+	compileOnly('maven.modrinth:rei:26.3.824+neoforge') { transitive = false }
+	compileOnly 'me.shedaniel.cloth:basic-math:0.6.0'
+	compileOnly('maven.modrinth:architectury-api:22.0.5+neoforge') { transitive = false }
 }

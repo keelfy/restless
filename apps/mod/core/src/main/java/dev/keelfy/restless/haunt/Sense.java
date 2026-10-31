@@ -11,7 +11,8 @@ import org.jspecify.annotations.Nullable;
 /** Which spirits a tool can sense, and where they are. */
 public final class Sense {
     /** @param at the spirit's point; null for a personal spirit that has not yet roamed */
-    public record Spirit(HauntData.Haunting haunting, @Nullable Vec3 at) {}
+    public record Spirit(
+            HauntData.Haunting haunting, @Nullable Vec3 at) {}
 
     private Sense() {}
 
@@ -32,7 +33,10 @@ public final class Sense {
         return found;
     }
 
-    /** What is at a place rather than at a player: spirits of players within {@code reach} of it, and territorial ones covering it. */
+    /**
+     * What is at a place rather than at a player: spirits of players within {@code reach} of it, and territorial ones
+     * covering it.
+     */
     public static List<Spirit> around(ServerLevel level, BlockPos pos, int reach, HauntData data) {
         List<Spirit> found = new ArrayList<>();
         for (ServerPlayer player : level.players()) {

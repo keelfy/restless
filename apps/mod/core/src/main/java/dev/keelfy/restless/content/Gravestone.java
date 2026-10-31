@@ -20,7 +20,14 @@ public final class Gravestone extends ShapedBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(
+            ItemStack stack,
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hit) {
         if (player instanceof ServerPlayer visitor && Graves.visit(visitor, pos, stack)) {
             stack.consume(1, player);
         }
@@ -28,7 +35,8 @@ public final class Gravestone extends ShapedBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(
+            BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (player instanceof ServerPlayer visitor) {
             Graves.visit(visitor, pos, ItemStack.EMPTY);
         }

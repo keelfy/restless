@@ -48,15 +48,18 @@ class PowerTest {
     @Test
     void poltergeistPrefersDoorsOverAffliction() {
         double doors = Power.weight(HauntTier.LIGHT, Set.of(EventTag.DOORS), 1, Spirits.POLTERGEIST, List.of(), 0.5);
-        double affliction = Power.weight(HauntTier.LIGHT, Set.of(EventTag.AFFLICTION), 1, Spirits.POLTERGEIST, List.of(), 0.5);
+        double affliction =
+                Power.weight(HauntTier.LIGHT, Set.of(EventTag.AFFLICTION), 1, Spirits.POLTERGEIST, List.of(), 0.5);
         assertTrue(doors > affliction * 4);
     }
 
     @Test
     void phantomPrefersOtherPlayersOverOtherPresence() {
-        double player = Power.weight(HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), 1, Spirits.PHANTOM, List.of(), 0.5);
+        double player = Power.weight(
+                HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), 1, Spirits.PHANTOM, List.of(), 0.5);
         double presence = Power.weight(HauntTier.LIGHT, Set.of(EventTag.PRESENCE), 1, Spirits.PHANTOM, List.of(), 0.5);
-        double shade = Power.weight(HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), 1, Spirits.SHADE, List.of(), 0.5);
+        double shade = Power.weight(
+                HauntTier.LIGHT, Set.of(EventTag.PRESENCE, EventTag.PLAYER), 1, Spirits.SHADE, List.of(), 0.5);
         assertTrue(player > presence * 5);
         assertTrue(player > shade * 5);
     }
@@ -94,13 +97,21 @@ class PowerTest {
     void newTypesKeepTheirKind() {
         assertEquals(SpiritType.Kind.PERSONAL, Spirits.WRAITH.kind());
         assertEquals(SpiritType.Kind.TERRITORIAL, Spirits.DOMOVOI.kind());
-        assertTrue(Spirits.personal().containsAll(List.of(Spirits.MIMIC, Spirits.WRAITH, Spirits.MARA, Spirits.BANSHEE, Spirits.REVENANT, Spirits.LOST_ONE)));
-        assertTrue(Spirits.personal().stream().noneMatch(List.of(Spirits.DOMOVOI, Spirits.HOARDER, Spirits.DEMON, Spirits.TRICKSTER)::contains));
+        assertTrue(Spirits.personal()
+                .containsAll(List.of(
+                        Spirits.MIMIC,
+                        Spirits.WRAITH,
+                        Spirits.MARA,
+                        Spirits.BANSHEE,
+                        Spirits.REVENANT,
+                        Spirits.LOST_ONE)));
+        assertTrue(Spirits.personal().stream()
+                .noneMatch(List.of(Spirits.DOMOVOI, Spirits.HOARDER, Spirits.DEMON, Spirits.TRICKSTER)::contains));
     }
 
     private static double lean(SpiritType spirit, EventTag liked, EventTag other) {
         return Power.weight(HauntTier.LIGHT, Set.of(liked), 1, spirit, List.of(), 0.5)
-            / Power.weight(HauntTier.LIGHT, Set.of(other), 1, spirit, List.of(), 0.5);
+                / Power.weight(HauntTier.LIGHT, Set.of(other), 1, spirit, List.of(), 0.5);
     }
 
     @Test

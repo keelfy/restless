@@ -18,8 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
 /**
- * What a player has seen, noted down as it happens and read as a book; saved with the world ({@link Notebook}), not on the
- * item. Each kind of note can open the guide chapter about it, so the guide grows with what the player has run into.
+ * What a player has seen, noted down as it happens and read as a book; saved with the world ({@link Notebook}), not on
+ * the item. Each kind of note can open the guide chapter about it, so the guide grows with what the player has run
+ * into.
  */
 public final class Journal {
     private Journal() {}
@@ -35,14 +36,19 @@ public final class Journal {
     }
 
     /** @param tag see {@link Kind} */
-    public static void note(ServerPlayer player, Kind kind, HauntData.@Nullable Haunting spirit, @Nullable String tag, Object... args) {
+    public static void note(
+            ServerPlayer player, Kind kind, HauntData.@Nullable Haunting spirit, @Nullable String tag, Object... args) {
         List<Component> text = new ArrayList<>();
         for (Object arg : args) {
             text.add(arg instanceof Component c ? c : Component.literal(String.valueOf(arg)));
         }
         HauntData data = HauntData.get(player.level().getServer());
-        Notebook grown = data.notebook(player.getUUID()).with(new Notebook.Note(kind,
-            Optional.ofNullable(spirit).map(HauntData.Haunting::uuid), Optional.ofNullable(tag), List.copyOf(text)));
+        Notebook grown = data.notebook(player.getUUID())
+                .with(new Notebook.Note(
+                        kind,
+                        Optional.ofNullable(spirit).map(HauntData.Haunting::uuid),
+                        Optional.ofNullable(tag),
+                        List.copyOf(text)));
         if (grown != null) {
             data.putNotebook(player.getUUID(), grown);
             turnPage(player, Component.translatable("message.restless.journal_written"));
@@ -62,7 +68,10 @@ public final class Journal {
         }
     }
 
-    /** A player seen for the first time: the journal opens at its first chapter and, if the config says so, is put in their hands. */
+    /**
+     * A player seen for the first time: the journal opens at its first chapter and, if the config says so, is put in
+     * their hands.
+     */
     public static void begin(ServerPlayer player) {
         HauntData data = HauntData.get(player.level().getServer());
         Notebook opened = data.notebook(player.getUUID()).opened(Chapter.START);
@@ -70,7 +79,8 @@ public final class Journal {
             data.putNotebook(player.getUUID(), opened);
         }
         if (Config.section("journal").flag("give_on_join")) {
-            player.getInventory().placeItemBackInInventory(new ItemStack(Content.JOURNAL.get()), Prediction.SERVER_ONLY);
+            player.getInventory()
+                    .placeItemBackInInventory(new ItemStack(Content.JOURNAL.get()), Prediction.SERVER_ONLY);
         }
     }
 
@@ -83,7 +93,7 @@ public final class Journal {
             data.putNotebook(player.getUUID(), started);
         }
         player.connection.send(new ClientboundCustomPayloadPacket(
-            new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())))));
+                new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())))));
     }
 
     private static List<Chapter> chapters(Kind kind) {
@@ -98,7 +108,8 @@ public final class Journal {
     }
 
     private static void turnPage(ServerPlayer player, Component message) {
-        player.level().playSound(null, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 0.6f, 0.8f);
+        player.level()
+                .playSound(null, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 0.6f, 0.8f);
         player.sendSystemMessage(message, true);
     }
 }

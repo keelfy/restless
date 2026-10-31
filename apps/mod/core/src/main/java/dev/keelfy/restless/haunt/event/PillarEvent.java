@@ -5,10 +5,10 @@ import dev.keelfy.restless.haunt.Scheduler;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,15 +21,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 /**
- * 121: another player pillars up some way off, as players do, on a block it holds (cobblestone, dirt, planks...): eyes on
- * its feet, a jump, a block under the feet at the top of it, a swing of the arm. It waits at the top, watching the player, until its time is up; the pillar
- * goes later, and stays under hardcore.
+ * 121: another player pillars up some way off, as players do, on a block it holds (cobblestone, dirt, planks...): eyes
+ * on its feet, a jump, a block under the feet at the top of it, a swing of the arm. It waits at the top, watching the
+ * player, until its time is up; the pillar goes later, and stays under hardcore.
  */
 final class PillarEvent extends StrangerAct {
     private static final String ID = "pillar";
     /** Looking down at its own feet, where the block goes. */
     private static final float LOOK_DOWN = 80.0F;
-    /** Height above the take-off, tick by tick, of a player's jump that lands a block up; vanilla's jump and gravity. */
+    /**
+     * Height above the take-off, tick by tick, of a player's jump that lands a block up; vanilla's jump and gravity.
+     */
     private static final List<Double> JUMP = jump();
 
     PillarEvent() {
@@ -39,7 +41,8 @@ final class PillarEvent extends StrangerAct {
     @Override
     void prepare(Mannequin figure) {
         List<String> blocks = Config.event(ID).texts("blocks");
-        Item block = BuiltInRegistries.ITEM.getValue(Identifier.parse(blocks.get(figure.getRandom().nextInt(blocks.size()))));
+        Item block = BuiltInRegistries.ITEM.getValue(
+                Identifier.parse(blocks.get(figure.getRandom().nextInt(blocks.size()))));
         figure.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(block));
     }
 
@@ -72,7 +75,13 @@ final class PillarEvent extends StrangerAct {
                 Swaps.show(p, feet, block, config.integer("restore_ticks"));
                 figure.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
                 Config.Tone tone = config.tone("sound");
-                level.playSound(null, feet, block.getSoundType().getPlaceSound(), SoundSource.BLOCKS, tone.volume(), tone.pitch());
+                level.playSound(
+                        null,
+                        feet,
+                        block.getSoundType().getPlaceSound(),
+                        SoundSource.BLOCKS,
+                        tone.volume(),
+                        tone.pitch());
             }
             return true;
         });

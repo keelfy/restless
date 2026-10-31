@@ -12,15 +12,16 @@ import net.minecraft.util.RandomSource;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A slow, soft wisp of grey mist lying on the ground: the blighted biome spawns it as an ambient particle anywhere around the
- * player, and it sinks to the first solid block a few below, so it is only seen hugging the land. Fades in, creeps, fades out.
+ * A slow, soft wisp of grey mist lying on the ground: the blighted biome spawns it as an ambient particle anywhere
+ * around the player, and it sinks to the first solid block a few below, so it is only seen hugging the land. Fades in,
+ * creeps, fades out.
  */
 public final class MistParticle extends SingleQuadParticle {
     private static final int REACH = 6;
     private static final float PEAK = 0.12f;
     private static final int FADE = 60;
-    private static final FacingCameraMode GROUND = (rotation, camera, partialTick) ->
-            rotation.rotationX(-(float) Math.PI / 2);
+    private static final FacingCameraMode GROUND =
+            (rotation, camera, partialTick) -> rotation.rotationX(-(float) Math.PI / 2);
 
     private MistParticle(ClientLevel level, double x, double y, double z, RandomSource random, SpriteSet sprites) {
         super(level, x, y, z, sprites.get(random));
@@ -80,12 +81,21 @@ public final class MistParticle extends SingleQuadParticle {
         }
 
         @Override
-        public @Nullable MistParticle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z,
-                                                     double xAux, double yAux, double zAux, RandomSource random) {
+        public @Nullable MistParticle createParticle(
+                SimpleParticleType options,
+                ClientLevel level,
+                double x,
+                double y,
+                double z,
+                double xAux,
+                double yAux,
+                double zAux,
+                RandomSource random) {
             BlockPos.MutableBlockPos pos = BlockPos.containing(x, y, z).mutable();
             for (int i = 0; i < REACH; i++, pos.move(0, -1, 0)) {
                 if (canHover(level, pos)) {
-                    return new MistParticle(level, x, pos.getY() + 0.15 + random.nextDouble() * 0.2, z, random, sprites);
+                    return new MistParticle(
+                            level, x, pos.getY() + 0.15 + random.nextDouble() * 0.2, z, random, sprites);
                 }
             }
             return null;

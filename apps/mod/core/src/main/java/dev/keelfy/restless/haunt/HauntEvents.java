@@ -14,9 +14,15 @@ import net.minecraft.resources.Identifier;
 
 public final class HauntEvents {
     private static final List<HauntEvent> ALL = Stream.concat(
-            Stream.of(new ExtinguishLightEvent(), new DoorEvent(), new BlindnessEvent(), new ColdTouchEvent(), new ShadowEvent(), new DoubleEvent()),
-            Catalog.all().stream())
-        .toList();
+                    Stream.of(
+                            new ExtinguishLightEvent(),
+                            new DoorEvent(),
+                            new BlindnessEvent(),
+                            new ColdTouchEvent(),
+                            new ShadowEvent(),
+                            new DoubleEvent()),
+                    Catalog.all().stream())
+            .toList();
 
     private HauntEvents() {}
 

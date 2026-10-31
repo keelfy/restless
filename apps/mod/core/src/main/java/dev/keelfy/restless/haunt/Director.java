@@ -6,11 +6,11 @@ import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
-import java.util.EnumSet;
-import java.util.Set;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +19,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-/** Rolls haunt events for every personal spirit on its player and every territorial spirit on a player near its anchor; each spirit runs its own timer. */
+/**
+ * Rolls haunt events for every personal spirit on its player and every territorial spirit on a player near its anchor;
+ * each spirit runs its own timer.
+ */
 public final class Director {
     private Director() {}
 
@@ -44,10 +47,15 @@ public final class Director {
                 }
                 SpiritType spirit = spirit(haunting);
                 if (canHaunt(player)) {
-                    Said.during(haunting.uuid(), () ->
-                        pick(player, spirit, Traits.of(haunting.traits()), power(haunting, now), null).ifPresent(event -> fireUnlessWarded(player, event, at)));
+                    Said.during(
+                            haunting.uuid(),
+                            () -> pick(player, spirit, Traits.of(haunting.traits()), power(haunting, now), null)
+                                    .ifPresent(event -> fireUnlessWarded(player, event, at)));
                 }
-                spirits.set(i, haunting.rescheduled(now + cooldown(player.level(), player.blockPosition(), haunting, now, player.getRandom())));
+                spirits.set(
+                        i,
+                        haunting.rescheduled(now
+                                + cooldown(player.level(), player.blockPosition(), haunting, now, player.getRandom())));
                 changed = true;
             }
             if (changed) {
@@ -57,7 +65,9 @@ public final class Director {
         tickTerritorial(server, data, now);
     }
 
-    /** A due territorial spirit acts on one random player inside its radius; it reschedules even when nobody is near. */
+    /**
+     * A due territorial spirit acts on one random player inside its radius; it reschedules even when nobody is near.
+     */
     private static void tickTerritorial(MinecraftServer server, HauntData data, long now) {
         List<HauntData.Territorial> spirits = new ArrayList<>(data.territorial());
         boolean changed = false;
@@ -67,12 +77,21 @@ public final class Director {
             if (now < territorial.haunting().nextEventAt() || level == null) {
                 continue;
             }
-            List<ServerPlayer> near = level.players().stream().filter(p -> canHaunt(p) && territorial.reaches(p)).toList();
+            List<ServerPlayer> near = level.players().stream()
+                    .filter(p -> canHaunt(p) && territorial.reaches(p))
+                    .toList();
             if (!near.isEmpty()) {
                 ServerPlayer player = near.get(level.getRandom().nextInt(near.size()));
-                Said.during(territorial.haunting().uuid(), () ->
-                    pick(player, spirit(territorial.haunting()), Traits.of(territorial.haunting().traits()), power(territorial.haunting(), now), null)
-                        .ifPresent(event -> fireUnlessWarded(player, event, Vec3.atCenterOf(territorial.anchor()))));
+                Said.during(
+                        territorial.haunting().uuid(),
+                        () -> pick(
+                                        player,
+                                        spirit(territorial.haunting()),
+                                        Traits.of(territorial.haunting().traits()),
+                                        power(territorial.haunting(), now),
+                                        null)
+                                .ifPresent(event ->
+                                        fireUnlessWarded(player, event, Vec3.atCenterOf(territorial.anchor()))));
             }
             long next = now + cooldown(level, territorial.anchor(), territorial.haunting(), now, level.getRandom());
             spirits.set(i, territorial.rescheduled(next));
@@ -102,7 +121,10 @@ public final class Director {
         }
         // Drop spirits whose type no longer exists (renamed/removed between versions) or became territorial.
         List<HauntData.Haunting> known = spirits.stream()
-            .filter(h -> Spirits.byId(h.spirit()).filter(s -> s.kind() == SpiritType.Kind.PERSONAL).isPresent()).toList();
+                .filter(h -> Spirits.byId(h.spirit())
+                        .filter(s -> s.kind() == SpiritType.Kind.PERSONAL)
+                        .isPresent())
+                .toList();
         if (known.size() != spirits.size()) {
             data.put(player.getUUID(), known);
         }
@@ -124,17 +146,25 @@ public final class Director {
         List<HauntData.Territorial> spirits = new ArrayList<>(data.territorial());
         HauntData.Haunting born = HauntData.Haunting.born(spirit.id(), now, level.getRandom());
         int radius = Config.section("director").integer("territorial_radius");
-        spirits.add(new HauntData.Territorial(born.rescheduled(now + cooldown(level, anchor, born, now, level.getRandom())),
-            level.dimension(), anchor, radius));
+        spirits.add(new HauntData.Territorial(
+                born.rescheduled(now + cooldown(level, anchor, born, now, level.getRandom())),
+                level.dimension(),
+                anchor,
+                radius));
         data.putTerritorial(spirits);
     }
 
     /** Territorial spirits of one dimension in saved order, as listed by /haunt info after the personal ones. */
     public static List<HauntData.Territorial> territorial(HauntData data, ServerLevel level) {
-        return data.territorial().stream().filter(t -> t.dimension().equals(level.dimension())).toList();
+        return data.territorial().stream()
+                .filter(t -> t.dimension().equals(level.dimension()))
+                .toList();
     }
 
-    /** @param index 0-based position as listed by /haunt info: the player's own spirits, then the territorial ones of their dimension */
+    /**
+     * @param index 0-based position as listed by /haunt info: the player's own spirits, then the territorial ones of
+     *     their dimension
+     */
     public static boolean remove(ServerPlayer player, HauntData data, int index, long now) {
         List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
         if (index >= spirits.size()) {
@@ -164,12 +194,16 @@ public final class Director {
      * The spirit acts on the player now, outside its timer and past every ward (a ritual has called it in);
      * {@code tier}, when given, is the only kind of event it may pick.
      */
-    public static void act(ServerPlayer player, HauntData.Haunting haunting, @Nullable Vec3 at, @Nullable HauntTier tier) {
+    public static void act(
+            ServerPlayer player, HauntData.Haunting haunting, @Nullable Vec3 at, @Nullable HauntTier tier) {
         long now = player.level().getServer().overworld().getGameTime();
-        Said.during(haunting.uuid(), () -> pick(player, spirit(haunting), Traits.of(haunting.traits()), power(haunting, now), tier).ifPresent(event -> {
-            fire(player, event, at);
-            Journal.unlock(player, Notebook.Chapter.HAUNTED);
-        }));
+        Said.during(
+                haunting.uuid(),
+                () -> pick(player, spirit(haunting), Traits.of(haunting.traits()), power(haunting, now), tier)
+                        .ifPresent(event -> {
+                            fire(player, event, at);
+                            Journal.unlock(player, Notebook.Chapter.HAUNTED);
+                        }));
     }
 
     private static void fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
@@ -194,9 +228,12 @@ public final class Director {
         Sanity.shock(player);
     }
 
-    /** Events that must happen before one repeats: {@code director.repeat_share} of all registered events, at least 1. */
+    /**
+     * Events that must happen before one repeats: {@code director.repeat_share} of all registered events, at least 1.
+     */
     private static int repeatGap() {
-        return Math.max(1, (int) Math.ceil(Config.section("director").num("repeat_share") * HauntEvents.all().size()));
+        return Math.max(1, (int) Math.ceil(Config.section("director").num("repeat_share")
+                * HauntEvents.all().size()));
     }
 
     /** How harmful and how frequent the spirit is right now; depends only on the spirit. */
@@ -204,7 +241,8 @@ public final class Director {
         return Power.of(now - haunting.bornAt(), haunting.anger(), haunting.evolved());
     }
 
-    private static long cooldown(ServerLevel level, BlockPos at, HauntData.Haunting haunting, long now, RandomSource random) {
+    private static long cooldown(
+            ServerLevel level, BlockPos at, HauntData.Haunting haunting, long now, RandomSource random) {
         double quiet = Power.daylightFactor(level.isBrightOutside(), level.canSeeSky(at), !level.isThundering());
         Set<Trait.Condition> around = conditions(level, at);
         double activity = spirit(haunting).activity(around) * Traits.activity(Traits.of(haunting.traits()), around);
@@ -226,17 +264,22 @@ public final class Director {
     }
 
     /** An event's weight for this spirit as {@link #pick} rolls it; 0 when the event has nothing to act on. */
-    public static double weight(HauntEvent event, ServerPlayer player, SpiritType spirit, List<Trait> traits, double power) {
+    public static double weight(
+            HauntEvent event, ServerPlayer player, SpiritType spirit, List<Trait> traits, double power) {
         return weight(event, event.canRun(player), spirit, traits, power);
     }
 
     /** Boosted by {@link Rarity}: an event that seldom has anything to act on is likelier when it does. */
     private static double weight(HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power) {
-        return ready ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power) * Rarity.boost(event.id().toString()) : 0.0;
+        return ready
+                ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power)
+                        * Rarity.boost(event.id().toString())
+                : 0.0;
     }
 
     /** Events the player went through lately ({@link Recent}) are left out, unless they are all that can run. */
-    private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit, List<Trait> traits, double power, @Nullable HauntTier tier) {
+    private static Optional<HauntEvent> pick(
+            ServerPlayer player, SpiritType spirit, List<Trait> traits, double power, @Nullable HauntTier tier) {
         List<HauntEvent> candidates = new ArrayList<>();
         List<Double> weights = new ArrayList<>();
         List<Boolean> stale = new ArrayList<>();

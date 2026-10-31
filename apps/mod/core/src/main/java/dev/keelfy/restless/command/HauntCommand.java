@@ -18,8 +18,8 @@ import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.SpiritType;
-import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.Story;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,58 +31,64 @@ import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
 
-/** Debug/admin command: /haunt opens the debug screen; info|force|sanity|spirit add|age|remove [player] work from chat. */
+/**
+ * Debug/admin command: /haunt opens the debug screen; info|force|sanity|spirit add|age|remove [player] work from chat.
+ */
 public final class HauntCommand {
     private static final DynamicCommandExceptionType UNKNOWN_EVENT =
-        new DynamicCommandExceptionType(id -> Component.literal("Unknown haunt event: " + id));
+            new DynamicCommandExceptionType(id -> Component.literal("Unknown haunt event: " + id));
     private static final DynamicCommandExceptionType UNKNOWN_SPIRIT =
-        new DynamicCommandExceptionType(id -> Component.literal("Unknown spirit: " + id));
+            new DynamicCommandExceptionType(id -> Component.literal("Unknown spirit: " + id));
 
     private HauntCommand() {}
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("haunt")
-            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
-            .executes(c -> {
-                DebugMenu.open(c.getSource().getPlayerOrException());
-                return 1;
-            })
-            .then(Commands.literal("info")
-                .executes(c -> info(c.getSource(), c.getSource().getPlayerOrException()))
-                .then(Commands.argument("player", EntityArgument.player())
-                    .executes(c -> info(c.getSource(), EntityArgument.getPlayer(c, "player")))))
-            .then(Commands.literal("force")
-                .then(Commands.argument("event", IdentifierArgument.id())
-                    .suggests((c, b) -> SharedSuggestionProvider.suggestResource(HauntEvents.all().stream().map(HauntEvent::id), b))
-                    .executes(c -> force(c, c.getSource().getPlayerOrException()))
-                    .then(Commands.argument("player", EntityArgument.player())
-                        .executes(c -> force(c, EntityArgument.getPlayer(c, "player"))))))
-            .then(Commands.literal("sanity")
-                .then(Commands.argument("value", DoubleArgumentType.doubleArg(0, 1))
-                    .executes(c -> sanity(c, c.getSource().getPlayerOrException()))
-                    .then(Commands.argument("player", EntityArgument.player())
-                        .executes(c -> sanity(c, EntityArgument.getPlayer(c, "player"))))))
-            .then(Commands.literal("spirit")
-                .then(Commands.literal("add")
-                    .then(Commands.argument("spirit", StringArgumentType.word())
-                        .suggests((c, b) -> SharedSuggestionProvider.suggest(Spirits.all().stream().map(SpiritType::id), b))
-                        .executes(c -> add(c, c.getSource().getPlayerOrException()))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .executes(c -> {
+                    DebugMenu.open(c.getSource().getPlayerOrException());
+                    return 1;
+                })
+                .then(Commands.literal("info")
+                        .executes(c -> info(c.getSource(), c.getSource().getPlayerOrException()))
                         .then(Commands.argument("player", EntityArgument.player())
-                            .executes(c -> add(c, EntityArgument.getPlayer(c, "player"))))))
-                .then(Commands.literal("age")
-                    .then(Commands.argument("index", IntegerArgumentType.integer(1))
-                        .then(Commands.argument("days", DoubleArgumentType.doubleArg(0))
-                            .executes(c -> age(c, c.getSource().getPlayerOrException()))
-                            .then(Commands.argument("player", EntityArgument.player())
-                                .executes(c -> age(c, EntityArgument.getPlayer(c, "player")))))))
-                .then(Commands.literal("remove")
-                    .then(Commands.argument("index", IntegerArgumentType.integer(1))
-                        .executes(c -> remove(c, c.getSource().getPlayerOrException()))
-                        .then(Commands.argument("player", EntityArgument.player())
-                            .executes(c -> remove(c, EntityArgument.getPlayer(c, "player"))))))));
+                                .executes(c -> info(c.getSource(), EntityArgument.getPlayer(c, "player")))))
+                .then(Commands.literal("force")
+                        .then(Commands.argument("event", IdentifierArgument.id())
+                                .suggests((c, b) -> SharedSuggestionProvider.suggestResource(
+                                        HauntEvents.all().stream().map(HauntEvent::id), b))
+                                .executes(c -> force(c, c.getSource().getPlayerOrException()))
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(c -> force(c, EntityArgument.getPlayer(c, "player"))))))
+                .then(Commands.literal("sanity")
+                        .then(Commands.argument("value", DoubleArgumentType.doubleArg(0, 1))
+                                .executes(c -> sanity(c, c.getSource().getPlayerOrException()))
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(c -> sanity(c, EntityArgument.getPlayer(c, "player"))))))
+                .then(Commands.literal("spirit")
+                        .then(Commands.literal("add")
+                                .then(Commands.argument("spirit", StringArgumentType.word())
+                                        .suggests((c, b) -> SharedSuggestionProvider.suggest(
+                                                Spirits.all().stream().map(SpiritType::id), b))
+                                        .executes(c -> add(c, c.getSource().getPlayerOrException()))
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(c -> add(c, EntityArgument.getPlayer(c, "player"))))))
+                        .then(Commands.literal("age")
+                                .then(Commands.argument("index", IntegerArgumentType.integer(1))
+                                        .then(Commands.argument("days", DoubleArgumentType.doubleArg(0))
+                                                .executes(c ->
+                                                        age(c, c.getSource().getPlayerOrException()))
+                                                .then(Commands.argument("player", EntityArgument.player())
+                                                        .executes(
+                                                                c -> age(c, EntityArgument.getPlayer(c, "player")))))))
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("index", IntegerArgumentType.integer(1))
+                                        .executes(c -> remove(c, c.getSource().getPlayerOrException()))
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(c -> remove(c, EntityArgument.getPlayer(c, "player"))))))));
     }
 
     private static int info(CommandSourceStack source, ServerPlayer player) {
@@ -97,30 +103,78 @@ public final class HauntCommand {
         }
         for (int i = 0; i < places.size(); i++) {
             HauntData.Territorial t = places.get(i);
-            list.append(describe(source, spirits.size() + i + 1, t.haunting(), "territorial", now, String.format(Locale.ROOT,
-                " anchor=%d,%d,%d radius=%d%s", t.anchor().getX(), t.anchor().getY(), t.anchor().getZ(), t.radius(), t.reaches(player) ? " (in range)" : "")));
+            list.append(describe(
+                    source,
+                    spirits.size() + i + 1,
+                    t.haunting(),
+                    "territorial",
+                    now,
+                    String.format(
+                            Locale.ROOT,
+                            " anchor=%d,%d,%d radius=%d%s",
+                            t.anchor().getX(),
+                            t.anchor().getY(),
+                            t.anchor().getZ(),
+                            t.radius(),
+                            t.reaches(player) ? " (in range)" : "")));
         }
-        String text = String.format(Locale.ROOT, "%s: sanity=%.2f spirits=%d%s", player.getName().getString(), Sanity.of(player), spirits.size() + places.size(), list);
+        String text = String.format(
+                Locale.ROOT,
+                "%s: sanity=%.2f spirits=%d%s",
+                player.getName().getString(),
+                Sanity.of(player),
+                spirits.size() + places.size(),
+                list);
         source.sendSuccess(() -> Component.literal(text), false);
         return 1;
     }
 
-    private static String describe(CommandSourceStack source, int number, HauntData.Haunting h, String kind, long now, String extra) {
+    private static String describe(
+            CommandSourceStack source, int number, HauntData.Haunting h, String kind, long now, String extra) {
         Vec3 roaming = Location.roaming(h.uuid());
-        String at = roaming == null ? "" : String.format(Locale.ROOT, " at=%.0f,%.0f,%.0f", roaming.x, roaming.y, roaming.z);
+        String at = roaming == null
+                ? ""
+                : String.format(Locale.ROOT, " at=%.0f,%.0f,%.0f", roaming.x, roaming.y, roaming.z);
         HauntData.Grave grave = HauntData.get(source.getServer()).graves().get(h.uuid());
-        String buried = grave == null ? "" : String.format(Locale.ROOT, " grave=%d,%d,%d%s wants=%s", grave.pos().getX(), grave.pos().getY(), grave.pos().getZ(),
-            grave.built() ? "" : "(unbuilt)", BuiltInRegistries.ITEM.getKey(Graves.wanted(h.seed())));
+        String buried = grave == null
+                ? ""
+                : String.format(
+                        Locale.ROOT,
+                        " grave=%d,%d,%d%s wants=%s",
+                        grave.pos().getX(),
+                        grave.pos().getY(),
+                        grave.pos().getZ(),
+                        grave.built() ? "" : "(unbuilt)",
+                        BuiltInRegistries.ITEM.getKey(Graves.wanted(h.seed())));
         String blight = Corruption.size(HauntData.get(source.getServer()), h.uuid());
         extra += (h.evolved() ? " evolved" : "") + (blight.isEmpty() ? "" : " blight=" + blight);
-        return String.format(Locale.ROOT, "%n  %d. %s %s \"%s\" seed=%x traits=%s power=%.2f anger=%.2f next=%ds%s%s", number, h.spirit(), kind, Story.of(h.seed()), h.seed(), String.join(",", h.traits()),
-            Director.power(h, now), h.anger(), Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND), at + buried, extra);
+        return String.format(
+                Locale.ROOT,
+                "%n  %d. %s %s \"%s\" seed=%x traits=%s power=%.2f anger=%.2f next=%ds%s%s",
+                number,
+                h.spirit(),
+                kind,
+                Story.of(h.seed()),
+                h.seed(),
+                String.join(",", h.traits()),
+                Director.power(h, now),
+                h.anger(),
+                Math.max(0, (h.nextEventAt() - now) / Ticks.SECOND),
+                at + buried,
+                extra);
     }
 
     private static int sanity(CommandContext<CommandSourceStack> c, ServerPlayer player) {
         double value = DoubleArgumentType.getDouble(c, "value");
         Sanity.set(player, value);
-        c.getSource().sendSuccess(() -> Component.literal(String.format(Locale.ROOT, "Sanity of %s is now %.2f", player.getName().getString(), value)), true);
+        c.getSource()
+                .sendSuccess(
+                        () -> Component.literal(String.format(
+                                Locale.ROOT,
+                                "Sanity of %s is now %.2f",
+                                player.getName().getString(),
+                                value)),
+                        true);
         return 1;
     }
 
@@ -128,11 +182,17 @@ public final class HauntCommand {
         Identifier id = IdentifierArgument.getId(c, "event");
         HauntEvent event = HauntEvents.byId(id).orElseThrow(() -> UNKNOWN_EVENT.create(id));
         if (!event.canRun(player)) {
-            c.getSource().sendFailure(Component.literal(id + ": nothing to act on near " + player.getName().getString()));
+            c.getSource()
+                    .sendFailure(Component.literal(
+                            id + ": nothing to act on near " + player.getName().getString()));
             return 0;
         }
         Director.fire(player, event);
-        c.getSource().sendSuccess(() -> Component.literal("Forced " + id + " on " + player.getName().getString()), true);
+        c.getSource()
+                .sendSuccess(
+                        () -> Component.literal(
+                                "Forced " + id + " on " + player.getName().getString()),
+                        true);
         return 1;
     }
 
@@ -143,15 +203,25 @@ public final class HauntCommand {
         HauntData data = HauntData.get(c.getSource().getServer());
         if (spirit.kind() == SpiritType.Kind.TERRITORIAL) {
             Director.anchor(data, spirit, player.level(), player.blockPosition(), now);
-            c.getSource().sendSuccess(() -> Component.literal(id + " now haunts the place where " + player.getName().getString() + " stands"), true);
+            c.getSource()
+                    .sendSuccess(
+                            () -> Component.literal(id + " now haunts the place where "
+                                    + player.getName().getString() + " stands"),
+                            true);
             return 1;
         }
         Director.add(player, data, spirit, now);
-        c.getSource().sendSuccess(() -> Component.literal(id + " now haunts " + player.getName().getString()), true);
+        c.getSource()
+                .sendSuccess(
+                        () -> Component.literal(
+                                id + " now haunts " + player.getName().getString()),
+                        true);
         return 1;
     }
 
-    /** Makes the spirit at this /haunt info index older, so maturity, blight reach and evolution can be tried at once. */
+    /**
+     * Makes the spirit at this /haunt info index older, so maturity, blight reach and evolution can be tried at once.
+     */
     private static int age(CommandContext<CommandSourceStack> c, ServerPlayer player) {
         int index = IntegerArgumentType.getInteger(c, "index");
         double days = DoubleArgumentType.getDouble(c, "days");
@@ -164,7 +234,15 @@ public final class HauntCommand {
             return 0;
         }
         data.change(listed.get(index - 1).uuid(), h -> h.aged((long) (days * Ticks.DAY)));
-        c.getSource().sendSuccess(() -> Component.literal(String.format(Locale.ROOT, "Spirit #%d of %s is %.1f days older", index, player.getName().getString(), days)), true);
+        c.getSource()
+                .sendSuccess(
+                        () -> Component.literal(String.format(
+                                Locale.ROOT,
+                                "Spirit #%d of %s is %.1f days older",
+                                index,
+                                player.getName().getString(),
+                                days)),
+                        true);
         return 1;
     }
 
@@ -175,7 +253,11 @@ public final class HauntCommand {
             c.getSource().sendFailure(Component.literal(player.getName().getString() + " has no spirit #" + index));
             return 0;
         }
-        c.getSource().sendSuccess(() -> Component.literal("Removed spirit #" + index + " from " + player.getName().getString()), true);
+        c.getSource()
+                .sendSuccess(
+                        () -> Component.literal("Removed spirit #" + index + " from "
+                                + player.getName().getString()),
+                        true);
         return 1;
     }
 }

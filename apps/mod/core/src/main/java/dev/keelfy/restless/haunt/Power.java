@@ -11,7 +11,10 @@ import java.util.Set;
 public final class Power {
     private Power() {}
 
-    /** 0 for a spirit just born and calm, 1 once it is fully mature and angry; both come from the spirit alone, not the world. */
+    /**
+     * 0 for a spirit just born and calm, 1 once it is fully mature and angry; both come from the spirit alone, not the
+     * world.
+     */
     public static double of(long ageTicks, double anger) {
         Config.Section config = Config.section("power");
         double maturity = Math.min(ageTicks / (config.num("maturity_days") * Ticks.DAY), 1.0);
@@ -46,7 +49,13 @@ public final class Power {
         };
     }
 
-    public static double weight(HauntTier tier, Set<EventTag> tags, double baseWeight, SpiritType spirit, List<Trait> traits, double power) {
+    public static double weight(
+            HauntTier tier,
+            Set<EventTag> tags,
+            double baseWeight,
+            SpiritType spirit,
+            List<Trait> traits,
+            double power) {
         double weight = baseWeight * tierFactor(tier, power);
         for (EventTag tag : tags) {
             weight *= spirit.affinity(tag) * Traits.affinity(traits, tag);
@@ -54,7 +63,10 @@ public final class Power {
         return weight;
     }
 
-    /** Spirits are quieter in the open: each of day, open sky and no thunderstorm stretches the cooldown by the daylight step. */
+    /**
+     * Spirits are quieter in the open: each of day, open sky and no thunderstorm stretches the cooldown by the daylight
+     * step.
+     */
     public static double daylightFactor(boolean day, boolean seesSky, boolean noThunder) {
         double step = Config.section("power").num("daylight_step");
         double factor = 1.0;
@@ -67,12 +79,14 @@ public final class Power {
     }
 
     /**
-     * Ticks until the next event: the calm cooldown shrinks with power, a roll stretches it up to twofold, then it is scaled
-     * by spirit activity and stretched by {@code quiet} (see {@link #daylightFactor}).
+     * Ticks until the next event: the calm cooldown shrinks with power, a roll stretches it up to twofold, then it is
+     * scaled by spirit activity and stretched by {@code quiet} (see {@link #daylightFactor}).
      */
     public static long cooldownTicks(double power, double activity, double roll, double quiet) {
         Config.Section config = Config.section("power");
-        double minutes = (config.num("cooldown_calm_minutes") - config.num("cooldown_drop_minutes") * power) * (1.0 + roll) * quiet;
+        double minutes = (config.num("cooldown_calm_minutes") - config.num("cooldown_drop_minutes") * power)
+                * (1.0 + roll)
+                * quiet;
         return Math.max(config.integer("min_cooldown_ticks"), (long) (minutes * Ticks.MINUTE / activity));
     }
 }

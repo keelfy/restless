@@ -39,7 +39,15 @@ public final class BlindnessEvent implements HauntEvent {
         Config.Section config = Config.event("blindness");
         Config.Tone tone = config.tone("sound");
         player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, config.integer("seconds") * Ticks.SECOND), null);
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-            SoundEvents.AMBIENT_CAVE.value(), SoundSource.AMBIENT, tone.volume(), tone.pitch());
+        player.level()
+                .playSound(
+                        null,
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        SoundEvents.AMBIENT_CAVE.value(),
+                        SoundSource.AMBIENT,
+                        tone.volume(),
+                        tone.pitch());
     }
 }

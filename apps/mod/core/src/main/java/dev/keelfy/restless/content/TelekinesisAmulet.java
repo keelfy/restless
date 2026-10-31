@@ -23,7 +23,8 @@ public final class TelekinesisAmulet extends Item {
         }
         Config.Section config = Config.section("artifacts");
         double radius = config.num("amulet_radius");
-        for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, player.getBoundingBox().inflate(radius))) {
+        for (ItemEntity item : level.getEntitiesOfClass(
+                ItemEntity.class, player.getBoundingBox().inflate(radius))) {
             item.setPos(player.getX(), player.getY(), player.getZ());
             item.setNoPickUpDelay();
         }

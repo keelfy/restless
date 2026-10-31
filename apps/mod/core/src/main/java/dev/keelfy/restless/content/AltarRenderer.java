@@ -33,11 +33,20 @@ public final class AltarRenderer implements BlockEntityRenderer<AltarEntity, Alt
     }
 
     @Override
-    public void extractRenderState(AltarEntity altar, State state, float partialTicks, Vec3 cameraPosition,
-                                   ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+    public void extractRenderState(
+            AltarEntity altar,
+            State state,
+            float partialTicks,
+            Vec3 cameraPosition,
+            ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(altar, state, partialTicks, cameraPosition, breakProgress);
-        items.updateForTopItem(state.item, altar.getBlockState().getValue(Altar.HELD).stack(), ItemDisplayContext.FIXED,
-            altar.getLevel(), null, (int) altar.getBlockPos().asLong());
+        items.updateForTopItem(
+                state.item,
+                altar.getBlockState().getValue(Altar.HELD).stack(),
+                ItemDisplayContext.FIXED,
+                altar.getLevel(),
+                null,
+                (int) altar.getBlockPos().asLong());
     }
 
     @Override

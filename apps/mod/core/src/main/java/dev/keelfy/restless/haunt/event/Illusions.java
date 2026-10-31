@@ -29,9 +29,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -41,44 +41,72 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The player's own view of the world lies to them; see {@link Swaps} and {@link PacketEntity}. Nothing on the
- * server changes, except under {@linkplain Hardcore hardcore}, where the blocks and the mob are made real (the dragon
- * stays a sight). The ghost tree
- * is made of blocks with no collision, so the client lets the player walk through it, as the server does.
+ * The player's own view of the world lies to them; see {@link Swaps} and {@link PacketEntity}. Nothing on the server
+ * changes, except under {@linkplain Hardcore hardcore}, where the blocks and the mob are made real (the dragon stays a
+ * sight). The ghost tree is made of blocks with no collision, so the client lets the player walk through it, as the
+ * server does.
  */
 final class Illusions {
     private Illusions() {}
 
     static List<HauntEvent> all() {
         return List.of(
-            // 105: every window nearby is gone, or fenced, or walled up with what is around it
-            SimpleEvent.light("false_windows", EventTag.BLOCKS, player -> Nearby.any(player, "false_windows", Illusions::isGlass), Illusions::falseWindows),
-            // 106: blocks one uses look like others of the kind: a crafting table like a furnace, a stonecutter like a loom
-            SimpleEvent.light("false_looks", EventTag.BLOCKS, player -> Nearby.any(player, "false_looks", Illusions::lookable), player -> {
-                Config.Section config = Config.event("false_looks");
-                Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
-                for (BlockPos pos : nearest(player, Nearby.all(player, "false_looks", Illusions::lookable), config.integer("max_blocks"))) {
-                    look(player, player.level().getBlockState(pos)).ifPresent(state -> shown.put(pos, state));
-                }
-                Swaps.show(player, shown, config.integer("ticks"));
-            }),
-            // 107: a tree where there was none, pale oak, oak or birch, which the player walks through
-            SimpleEvent.light("ghost_tree", EventTag.BLOCKS, player -> treeSpot(player) != null, player -> {
-                BlockPos root = treeSpot(player);
-                if (root != null) {
-                    Swaps.show(player, ghostTree(player, root), Config.event("ghost_tree").integer("ticks"));
-                }
-            }),
-            // 190: a line of torches in the dark leads away from the player, each gone when they come near it
-            SimpleEvent.light("torch_line", EventTag.BLOCKS, player -> inTheDark(player) && !torchSpots(player).isEmpty(), Illusions::torchLine),
-            // 126: a mob standing out in the field that is not there, facing the player; gone when approached
-            SimpleEvent.light("hallucination", EventTag.MOBS, player -> mobSpot(player) != null, Illusions::hallucination),
-            // 125: an animal nearby looks like another to this player; under hardcore it is changed for real
-            SimpleEvent.light("disguise", EventTag.MOBS, player -> !disguisable(player).isEmpty(), Illusions::disguise),
-            // 127: the ender dragon flies over, high up, for this player alone
-            SimpleEvent.light("dragon_flyover", EventTag.PRESENCE,
-                player -> player.level().dimension() == Level.OVERWORLD && player.level().canSeeSky(player.blockPosition()), Illusions::dragonFlyover)
-        );
+                // 105: every window nearby is gone, or fenced, or walled up with what is around it
+                SimpleEvent.light(
+                        "false_windows",
+                        EventTag.BLOCKS,
+                        player -> Nearby.any(player, "false_windows", Illusions::isGlass),
+                        Illusions::falseWindows),
+                // 106: blocks one uses look like others of the kind: a crafting table like a furnace, a stonecutter
+                // like a loom
+                SimpleEvent.light(
+                        "false_looks",
+                        EventTag.BLOCKS,
+                        player -> Nearby.any(player, "false_looks", Illusions::lookable),
+                        player -> {
+                            Config.Section config = Config.event("false_looks");
+                            Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
+                            for (BlockPos pos : nearest(
+                                    player,
+                                    Nearby.all(player, "false_looks", Illusions::lookable),
+                                    config.integer("max_blocks"))) {
+                                look(player, player.level().getBlockState(pos))
+                                        .ifPresent(state -> shown.put(pos, state));
+                            }
+                            Swaps.show(player, shown, config.integer("ticks"));
+                        }),
+                // 107: a tree where there was none, pale oak, oak or birch, which the player walks through
+                SimpleEvent.light("ghost_tree", EventTag.BLOCKS, player -> treeSpot(player) != null, player -> {
+                    BlockPos root = treeSpot(player);
+                    if (root != null) {
+                        Swaps.show(
+                                player,
+                                ghostTree(player, root),
+                                Config.event("ghost_tree").integer("ticks"));
+                    }
+                }),
+                // 190: a line of torches in the dark leads away from the player, each gone when they come near it
+                SimpleEvent.light(
+                        "torch_line",
+                        EventTag.BLOCKS,
+                        player -> inTheDark(player) && !torchSpots(player).isEmpty(),
+                        Illusions::torchLine),
+                // 126: a mob standing out in the field that is not there, facing the player; gone when approached
+                SimpleEvent.light(
+                        "hallucination", EventTag.MOBS, player -> mobSpot(player) != null, Illusions::hallucination),
+                // 125: an animal nearby looks like another to this player; under hardcore it is changed for real
+                SimpleEvent.light(
+                        "disguise",
+                        EventTag.MOBS,
+                        player -> !disguisable(player).isEmpty(),
+                        Illusions::disguise),
+                // 127: the ender dragon flies over, high up, for this player alone
+                SimpleEvent.light(
+                        "dragon_flyover",
+                        EventTag.PRESENCE,
+                        player -> player.level().dimension() == Level.OVERWORLD
+                                && player.level().canSeeSky(player.blockPosition()),
+                        Illusions::dragonFlyover));
     }
 
     private static @Nullable BlockPos mobSpot(ServerPlayer player) {
@@ -90,7 +118,9 @@ final class Illusions {
         Config.Section config = Config.event("hallucination");
         BlockPos spot = mobSpot(player);
         List<String> mobs = config.texts("mobs");
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(mobs.get(player.getRandom().nextInt(mobs.size())))).orElse(null);
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE
+                .getOptional(Identifier.parse(mobs.get(player.getRandom().nextInt(mobs.size()))))
+                .orElse(null);
         if (spot == null || type == null) {
             return;
         }
@@ -104,7 +134,8 @@ final class Illusions {
         int interval = config.integer("interval_ticks");
         double near = config.num("vanish_distance");
         Scheduler.repeat(player, interval, interval, (p, n) -> {
-            boolean over = n * interval >= config.integer("max_ticks") || p.position().distanceToSqr(at) <= near * near;
+            boolean over =
+                    n * interval >= config.integer("max_ticks") || p.position().distanceToSqr(at) <= near * near;
             if (over) {
                 mob.remove(p);
             }
@@ -115,8 +146,14 @@ final class Illusions {
     private static List<Mob> disguisable(ServerPlayer player) {
         Config.Section looks = Config.event("disguise").section("looks");
         double radius = Config.event("disguise").num("radius");
-        return player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(radius),
-            mob -> mob.isAlive() && looks.has(BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString()));
+        return player.level()
+                .getEntitiesOfClass(
+                        Mob.class,
+                        player.getBoundingBox().inflate(radius),
+                        mob -> mob.isAlive()
+                                && looks.has(BuiltInRegistries.ENTITY_TYPE
+                                        .getKey(mob.getType())
+                                        .toString()));
     }
 
     /**
@@ -128,7 +165,12 @@ final class Illusions {
         Config.Section config = Config.event("disguise");
         List<Mob> found = disguisable(player);
         Mob mob = found.get(player.getRandom().nextInt(found.size()));
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(config.section("looks").text(BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString()))).orElse(null);
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE
+                .getOptional(Identifier.parse(config.section("looks")
+                        .text(BuiltInRegistries.ENTITY_TYPE
+                                .getKey(mob.getType())
+                                .toString())))
+                .orElse(null);
         if (type == null) {
             return;
         }
@@ -137,7 +179,11 @@ final class Illusions {
             mob.convertTo((EntityType<Mob>) type, ConversionParams.single(mob, true, true), converted -> {});
             return;
         }
-        byte flags = (byte) mob.getEntityData().getNonDefaultValues().stream().filter(value -> value.id() == SHARED_FLAGS).map(value -> (Byte) value.value()).findFirst().orElse((byte) 0);
+        byte flags = (byte) mob.getEntityData().getNonDefaultValues().stream()
+                .filter(value -> value.id() == SHARED_FLAGS)
+                .map(value -> (Byte) value.value())
+                .findFirst()
+                .orElse((byte) 0);
         player.connection.send(sharedFlags(mob, (byte) (flags | INVISIBLE)));
         PacketEntity copy = PacketEntity.show(player, type, mob.position(), mob.getYRot());
         Scheduler.repeat(player, 1, 1, (p, n) -> {
@@ -156,7 +202,9 @@ final class Illusions {
     private static final byte INVISIBLE = 1 << 5;
 
     private static ClientboundSetEntityDataPacket sharedFlags(Mob mob, byte flags) {
-        return new ClientboundSetEntityDataPacket(mob.getId(), List.of(new SynchedEntityData.DataValue<>(SHARED_FLAGS, EntityDataSerializers.BYTE, flags)));
+        return new ClientboundSetEntityDataPacket(
+                mob.getId(),
+                List.of(new SynchedEntityData.DataValue<>(SHARED_FLAGS, EntityDataSerializers.BYTE, flags)));
     }
 
     /** A straight line high over the player, at a random bearing and a little to one side, flown in {@code ticks}. */
@@ -164,7 +212,8 @@ final class Illusions {
         Config.Section config = Config.event("dragon_flyover");
         double bearing = player.getRandom().nextDouble() * Math.PI * 2;
         Vec3 along = new Vec3(Math.cos(bearing), 0, Math.sin(bearing));
-        Vec3 side = new Vec3(-along.z, 0, along.x).scale((player.getRandom().nextDouble() * 2 - 1) * config.num("side"));
+        Vec3 side =
+                new Vec3(-along.z, 0, along.x).scale((player.getRandom().nextDouble() * 2 - 1) * config.num("side"));
         Vec3 over = player.position().add(side).add(0, config.num("height"), 0);
         Vec3 from = over.subtract(along.scale(config.num("length") / 2));
         Vec3 to = over.add(along.scale(config.num("length") / 2));
@@ -172,8 +221,15 @@ final class Illusions {
         float yaw = PacketEntity.yawToward(from, to) + 180.0F;
         PacketEntity dragon = PacketEntity.show(player, EntityTypes.ENDER_DRAGON, from, yaw);
         Config.Tone growl = config.tone("sound");
-        player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ENDER_DRAGON_GROWL), SoundSource.HOSTILE,
-            over.x, over.y, over.z, growl.volume(), growl.pitch(), player.getRandom().nextLong()));
+        player.connection.send(new ClientboundSoundPacket(
+                BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ENDER_DRAGON_GROWL),
+                SoundSource.HOSTILE,
+                over.x,
+                over.y,
+                over.z,
+                growl.volume(),
+                growl.pitch(),
+                player.getRandom().nextLong()));
         int ticks = config.integer("ticks");
         Scheduler.repeat(player, 1, 1, (p, n) -> {
             if (n >= ticks) {
@@ -207,7 +263,8 @@ final class Illusions {
         Config.Section config = Config.event("ghost_tree");
         ServerLevel level = player.level();
         List<String> woods = config.texts("woods");
-        Content.GhostWood wood = Content.GHOST_WOODS.getOrDefault(woods.get(player.getRandom().nextInt(woods.size())), Content.GHOST_WOODS.get("pale_oak"));
+        Content.GhostWood wood = Content.GHOST_WOODS.getOrDefault(
+                woods.get(player.getRandom().nextInt(woods.size())), Content.GHOST_WOODS.get("pale_oak"));
         int trunk = config.integer("trunk") + player.getRandom().nextInt(config.integer("trunk_extra") + 1);
         Map<BlockPos, BlockState> tree = new LinkedHashMap<>();
         BlockState leaves = wood.leaves().get().defaultBlockState();
@@ -238,11 +295,14 @@ final class Illusions {
         }
         // Only leaves overhead, and trees around.
         boolean underLeaves = level.getHeight(Heightmap.Types.MOTION_BLOCKING, at.getX(), at.getZ()) > at.getY()
-            && level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, at.getX(), at.getZ()) <= at.getY();
+                && level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, at.getX(), at.getZ()) <= at.getY();
         return underLeaves && Nearby.any(player, "torch_line", state -> state.is(BlockTags.LOGS));
     }
 
-    /** Ground for a torch every {@code spacing} blocks along where the player looks, from {@code start} on, following the ground up and down. */
+    /**
+     * Ground for a torch every {@code spacing} blocks along where the player looks, from {@code start} on, following
+     * the ground up and down.
+     */
     private static List<BlockPos> torchSpots(ServerPlayer player) {
         Config.Section config = Config.event("torch_line");
         ServerLevel level = player.level();
@@ -260,7 +320,10 @@ final class Illusions {
         return line.size() >= config.integer("min_torches") ? line : List.of();
     }
 
-    /** Shown to the player for {@code ticks}; as an illusion each torch is gone for them once they come within {@code vanish_distance}. */
+    /**
+     * Shown to the player for {@code ticks}; as an illusion each torch is gone for them once they come within
+     * {@code vanish_distance}.
+     */
     private static void torchLine(ServerPlayer player) {
         Config.Section config = Config.event("torch_line");
         List<BlockPos> line = torchSpots(player);
@@ -297,20 +360,25 @@ final class Illusions {
         List<String> modes = config.texts("modes");
         String mode = modes.get(player.getRandom().nextInt(modes.size()));
         Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
-        for (BlockPos pos : nearest(player, Nearby.all(player, "false_windows", Illusions::isGlass), config.integer("max_blocks"))) {
-            shown.put(pos, switch (mode) {
-                // Connected to the walls around it, as a fence put there would be.
-                case "fence" -> Block.updateFromNeighbourShapes(Blocks.OAK_FENCE.defaultBlockState(), level, pos);
-                case "wall" -> commonNeighbour(level, pos);
-                default -> Blocks.AIR.defaultBlockState();
-            });
+        for (BlockPos pos : nearest(
+                player, Nearby.all(player, "false_windows", Illusions::isGlass), config.integer("max_blocks"))) {
+            shown.put(
+                    pos,
+                    switch (mode) {
+                        // Connected to the walls around it, as a fence put there would be.
+                        case "fence" ->
+                            Block.updateFromNeighbourShapes(Blocks.OAK_FENCE.defaultBlockState(), level, pos);
+                        case "wall" -> commonNeighbour(level, pos);
+                        default -> Blocks.AIR.defaultBlockState();
+                    });
         }
         Swaps.show(player, shown, config.integer("ticks"));
     }
 
     /** Glass blocks and panes, plain, stained or tinted. */
     private static boolean isGlass(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE) || BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().endsWith("glass_pane");
+        return state.is(BlockTags.IMPERMEABLE)
+                || BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().endsWith("glass_pane");
     }
 
     /** The full block most of its neighbours are, so the hole looks bricked up; air if none is. */
@@ -322,26 +390,39 @@ final class Illusions {
                 counts.merge(next, 1, Integer::sum);
             }
         }
-        return counts.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(Blocks.AIR.defaultBlockState());
+        return counts.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(Blocks.AIR.defaultBlockState());
     }
 
     private static boolean lookable(BlockState state) {
-        return Config.event("false_looks").texts("blocks").contains(BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
+        return Config.event("false_looks")
+                .texts("blocks")
+                .contains(BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
     }
 
-    /** {@code state} as another of {@code false_looks.blocks}, at random, keeping what it shares with it (its facing). */
+    /**
+     * {@code state} as another of {@code false_looks.blocks}, at random, keeping what it shares with it (its facing).
+     */
     private static Optional<BlockState> look(ServerPlayer player, BlockState state) {
         String id = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
-        List<String> others = Config.event("false_looks").texts("blocks").stream().filter(other -> !other.equals(id)).toList();
+        List<String> others = Config.event("false_looks").texts("blocks").stream()
+                .filter(other -> !other.equals(id))
+                .toList();
         if (others.isEmpty()) {
             return Optional.empty();
         }
-        return BuiltInRegistries.BLOCK.getOptional(Identifier.parse(others.get(player.getRandom().nextInt(others.size()))))
-            .map(to -> to.defaultBlockState().withPropertiesOf(state));
+        return BuiltInRegistries.BLOCK
+                .getOptional(Identifier.parse(others.get(player.getRandom().nextInt(others.size()))))
+                .map(to -> to.defaultBlockState().withPropertiesOf(state));
     }
 
     /** The {@code max} of {@code found} nearest the player. */
     private static List<BlockPos> nearest(ServerPlayer player, List<BlockPos> found, int max) {
-        return found.stream().sorted(Comparator.comparingDouble(pos -> pos.distSqr(player.blockPosition()))).limit(max).toList();
+        return found.stream()
+                .sorted(Comparator.comparingDouble(pos -> pos.distSqr(player.blockPosition())))
+                .limit(max)
+                .toList();
     }
 }

@@ -40,16 +40,18 @@ final class Seals {
 
     static List<HauntEvent> all() {
         return List.of(
-            // 116: knocking on every side, then walls of the stone around, a roof, and mining fatigue; the player's own two blocks stay open
-            SimpleEvent.harmful("walled_in", EventTag.BLOCKS, Seals::wallable, Seals::wallIn),
-            // 188: the tunnel a few blocks behind the player is filled in, wall to wall
-            SimpleEvent.harmful("sealed_tunnel", EventTag.BLOCKS, player -> plug(player) != null, Seals::seal)
-        );
+                // 116: knocking on every side, then walls of the stone around, a roof, and mining fatigue; the player's
+                // own two blocks stay open
+                SimpleEvent.harmful("walled_in", EventTag.BLOCKS, Seals::wallable, Seals::wallIn),
+                // 188: the tunnel a few blocks behind the player is filled in, wall to wall
+                SimpleEvent.harmful("sealed_tunnel", EventTag.BLOCKS, player -> plug(player) != null, Seals::seal));
     }
 
     private static boolean wallable(ServerPlayer player) {
-        return player.onGround() && !player.isInWater() && !player.isPassenger()
-            && shell(player).size() >= Config.event("walled_in").integer("min_blocks");
+        return player.onGround()
+                && !player.isInWater()
+                && !player.isPassenger()
+                && shell(player).size() >= Config.event("walled_in").integer("min_blocks");
     }
 
     /** The air around the player's feet and head and over the head, with nobody standing in it. */
@@ -73,10 +75,17 @@ final class Seals {
         Scheduler.repeat(player, 0, config.integer("knock_ticks"), (p, n) -> {
             ServerLevel level = p.level();
             BlockPos feet = p.blockPosition();
-            BlockState material = material(level, BlockPos.betweenClosed(feet.offset(-2, -1, -2), feet.offset(2, 2, 2)));
+            BlockState material =
+                    material(level, BlockPos.betweenClosed(feet.offset(-2, -1, -2), feet.offset(2, 2, 2)));
             if (n < knocks) {
                 Direction side = Direction.Plane.HORIZONTAL.getRandomDirection(p.getRandom());
-                level.playSound(null, feet.above().relative(side), material.getSoundType().getHitSound(), SoundSource.HOSTILE, tone.volume(), tone.pitch());
+                level.playSound(
+                        null,
+                        feet.above().relative(side),
+                        material.getSoundType().getHitSound(),
+                        SoundSource.HOSTILE,
+                        tone.volume(),
+                        tone.pitch());
                 return true;
             }
             if (!p.isAlive() || p.isInWater()) {
@@ -86,8 +95,19 @@ final class Seals {
             p.teleportTo(feet.getX() + 0.5, p.getY(), feet.getZ() + 0.5);
             int restore = config.integer("restore_ticks");
             shell(p).forEach(pos -> Restore.swap(level, pos, material, restore));
-            level.playSound(null, feet, material.getSoundType().getPlaceSound(), SoundSource.BLOCKS, tone.volume(), tone.pitch());
-            p.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, Ticks.SECOND * config.integer("fatigue_seconds"), config.integer("amplifier")), null);
+            level.playSound(
+                    null,
+                    feet,
+                    material.getSoundType().getPlaceSound(),
+                    SoundSource.BLOCKS,
+                    tone.volume(),
+                    tone.pitch());
+            p.addEffect(
+                    new MobEffectInstance(
+                            MobEffects.MINING_FATIGUE,
+                            Ticks.SECOND * config.integer("fatigue_seconds"),
+                            config.integer("amplifier")),
+                    null);
             return false;
         });
     }
@@ -97,7 +117,9 @@ final class Seals {
         ServerLevel level = player.level();
         BlockPos feet = player.blockPosition();
         // The heightmap rather than sky light: light is recomputed lazily and a roof placed this tick is not in it yet.
-        if (!player.onGround() || player.isInWater() || level.getHeight(Heightmap.Types.MOTION_BLOCKING, feet.getX(), feet.getZ()) <= feet.getY() + 2) {
+        if (!player.onGround()
+                || player.isInWater()
+                || level.getHeight(Heightmap.Types.MOTION_BLOCKING, feet.getX(), feet.getZ()) <= feet.getY() + 2) {
             return null;
         }
         Config.Section config = Config.event("sealed_tunnel");
@@ -117,7 +139,10 @@ final class Seals {
         return null;
     }
 
-    /** Flood fill of the air across the tunnel at {@code start}; null when it is not shut in by full blocks within the budget. */
+    /**
+     * Flood fill of the air across the tunnel at {@code start}; null when it is not shut in by full blocks within the
+     * budget.
+     */
     private static @Nullable Set<BlockPos> section(ServerLevel level, BlockPos start, Direction along, int max) {
         Direction side = along.getClockWise();
         List<Direction> across = List.of(Direction.UP, Direction.DOWN, side, side.getOpposite());
@@ -155,18 +180,30 @@ final class Seals {
         ServerLevel level = player.level();
         Config.Section config = Config.event("sealed_tunnel");
         List<BlockPos> walls = new ArrayList<>();
-        plug.forEach(pos -> Direction.stream().map(pos::relative).filter(p -> !plug.contains(p)).forEach(walls::add));
+        plug.forEach(pos -> Direction.stream()
+                .map(pos::relative)
+                .filter(p -> !plug.contains(p))
+                .forEach(walls::add));
         BlockState material = material(level, walls);
         plug.forEach(pos -> Restore.swap(level, pos, material, config.integer("restore_ticks")));
         Config.Tone tone = config.tone("sound");
-        level.playSound(null, plug.iterator().next(), material.getSoundType().getPlaceSound(), SoundSource.BLOCKS, tone.volume(), tone.pitch());
+        level.playSound(
+                null,
+                plug.iterator().next(),
+                material.getSoundType().getPlaceSound(),
+                SoundSource.BLOCKS,
+                tone.volume(),
+                tone.pitch());
     }
 
     private static boolean occupied(ServerLevel level, BlockPos pos) {
         return !level.getEntitiesOfClass(LivingEntity.class, new AABB(pos)).isEmpty();
     }
 
-    /** The commonest plain block among {@code around}, one that will not fall or pay out when dug; stone if there is none. */
+    /**
+     * The commonest plain block among {@code around}, one that will not fall or pay out when dug; stone if there is
+     * none.
+     */
     private static BlockState material(ServerLevel level, Iterable<BlockPos> around) {
         Map<Block, Integer> counts = new HashMap<>();
         for (BlockPos pos : around) {
@@ -175,8 +212,10 @@ final class Seals {
                 counts.merge(state.getBlock(), 1, Integer::sum);
             }
         }
-        return counts.entrySet().stream().max(Map.Entry.comparingByValue())
-            .map(e -> e.getKey().defaultBlockState()).orElse(Blocks.STONE.defaultBlockState());
+        return counts.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(e -> e.getKey().defaultBlockState())
+                .orElse(Blocks.STONE.defaultBlockState());
     }
 
     private static boolean valuable(BlockState state) {

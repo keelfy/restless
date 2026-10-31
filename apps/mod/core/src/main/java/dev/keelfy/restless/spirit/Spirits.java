@@ -24,8 +24,21 @@ public final class Spirits {
     public static final SpiritType DEMON = of("demon");
     public static final SpiritType TRICKSTER = of("trickster");
 
-    private static final List<SpiritType> ALL = List.of(POLTERGEIST, SHADE, PHANTOM, NIX, MIMIC, WRAITH, MARA, BANSHEE, REVENANT,
-        LOST_ONE, DOMOVOI, HOARDER, DEMON, TRICKSTER);
+    private static final List<SpiritType> ALL = List.of(
+            POLTERGEIST,
+            SHADE,
+            PHANTOM,
+            NIX,
+            MIMIC,
+            WRAITH,
+            MARA,
+            BANSHEE,
+            REVENANT,
+            LOST_ONE,
+            DOMOVOI,
+            HOARDER,
+            DEMON,
+            TRICKSTER);
 
     private Spirits() {}
 
@@ -50,10 +63,20 @@ public final class Spirits {
         for (String tag : affinity.keys()) {
             tags.put(EventTag.valueOf(tag), affinity.num(tag));
         }
-        Trait.Condition when = config.has("when") ? Trait.Condition.valueOf(config.text("when").toUpperCase(Locale.ROOT)) : Trait.Condition.ANY;
+        Trait.Condition when = config.has("when")
+                ? Trait.Condition.valueOf(config.text("when").toUpperCase(Locale.ROOT))
+                : Trait.Condition.ANY;
         List<Trait.Trigger> reacts = config.has("reacts")
-            ? config.texts("reacts").stream().map(t -> Trait.Trigger.valueOf(t.toUpperCase(Locale.ROOT))).toList() : List.of();
-        return new SpiritType(id, SpiritType.Kind.valueOf(config.text("kind").toUpperCase(Locale.ROOT)), Map.copyOf(tags), config.num("activity"),
-            when, reacts);
+                ? config.texts("reacts").stream()
+                        .map(t -> Trait.Trigger.valueOf(t.toUpperCase(Locale.ROOT)))
+                        .toList()
+                : List.of();
+        return new SpiritType(
+                id,
+                SpiritType.Kind.valueOf(config.text("kind").toUpperCase(Locale.ROOT)),
+                Map.copyOf(tags),
+                config.num("activity"),
+                when,
+                reacts);
     }
 }

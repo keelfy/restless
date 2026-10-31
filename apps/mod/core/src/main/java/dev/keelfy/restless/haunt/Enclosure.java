@@ -4,9 +4,15 @@ import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
 
-/** Whether a floor cell is shut in by salt: a flood fill that has to close within a cell budget and has to touch salt. */
+/**
+ * Whether a floor cell is shut in by salt: a flood fill that has to close within a cell budget and has to touch salt.
+ */
 public final class Enclosure {
-    public enum Cell { OPEN, SALT, WALL }
+    public enum Cell {
+        OPEN,
+        SALT,
+        WALL
+    }
 
     @FunctionalInterface
     public interface Floor {
@@ -15,7 +21,9 @@ public final class Enclosure {
 
     private Enclosure() {}
 
-    /** The start cell counts as open even when it holds salt. Walls alone do not shelter: a plain room is not warded. */
+    /**
+     * The start cell counts as open even when it holds salt. Walls alone do not shelter: a plain room is not warded.
+     */
     public static boolean sealed(int x, int z, Floor floor, int maxCells) {
         Set<Long> seen = new HashSet<>();
         ArrayDeque<int[]> queue = new ArrayDeque<>();
@@ -32,7 +40,7 @@ public final class Enclosure {
                 }
                 switch (floor.at(nx, nz)) {
                     case SALT -> touchedSalt = true;
-                    case WALL -> { }
+                    case WALL -> {}
                     case OPEN -> {
                         if (seen.size() > maxCells) {
                             return false;

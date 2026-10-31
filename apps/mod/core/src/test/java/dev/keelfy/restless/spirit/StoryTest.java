@@ -20,7 +20,11 @@ class StoryTest {
 
     @Test
     void nicknamesVaryAcrossManySeeds() {
-        assertTrue(LongStream.range(0, 1000).mapToObj(seed -> Story.of(seed).name()).distinct().count() > 900);
+        assertTrue(LongStream.range(0, 1000)
+                        .mapToObj(seed -> Story.of(seed).name())
+                        .distinct()
+                        .count()
+                > 900);
     }
 
     @Test

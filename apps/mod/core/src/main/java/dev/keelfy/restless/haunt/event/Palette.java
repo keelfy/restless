@@ -19,12 +19,36 @@ import org.jspecify.annotations.Nullable;
  * deepslate. The facing, half and shape of the old block carry over to the new one.
  */
 final class Palette {
-    /** Dyes in a ring from light to dark and round the hues, so a step either way stays close to the original colour. */
-    private static final List<DyeColor> DYES = List.of(DyeColor.WHITE, DyeColor.LIGHT_GRAY, DyeColor.GRAY, DyeColor.BLACK,
-        DyeColor.BROWN, DyeColor.RED, DyeColor.ORANGE, DyeColor.YELLOW, DyeColor.LIME, DyeColor.GREEN, DyeColor.CYAN,
-        DyeColor.LIGHT_BLUE, DyeColor.BLUE, DyeColor.PURPLE, DyeColor.MAGENTA, DyeColor.PINK);
-    private static final List<ColorCollection<Block>> DYED = List.of(Blocks.WOOL, Blocks.CONCRETE, Blocks.DYED_TERRACOTTA,
-        Blocks.STAINED_GLASS, Blocks.WOOL_STAIRS, Blocks.WOOL_SLAB, Blocks.CONCRETE_STAIRS, Blocks.CONCRETE_SLAB);
+    /**
+     * Dyes in a ring from light to dark and round the hues, so a step either way stays close to the original colour.
+     */
+    private static final List<DyeColor> DYES = List.of(
+            DyeColor.WHITE,
+            DyeColor.LIGHT_GRAY,
+            DyeColor.GRAY,
+            DyeColor.BLACK,
+            DyeColor.BROWN,
+            DyeColor.RED,
+            DyeColor.ORANGE,
+            DyeColor.YELLOW,
+            DyeColor.LIME,
+            DyeColor.GREEN,
+            DyeColor.CYAN,
+            DyeColor.LIGHT_BLUE,
+            DyeColor.BLUE,
+            DyeColor.PURPLE,
+            DyeColor.MAGENTA,
+            DyeColor.PINK);
+
+    private static final List<ColorCollection<Block>> DYED = List.of(
+            Blocks.WOOL,
+            Blocks.CONCRETE,
+            Blocks.DYED_TERRACOTTA,
+            Blocks.STAINED_GLASS,
+            Blocks.WOOL_STAIRS,
+            Blocks.WOOL_SLAB,
+            Blocks.CONCRETE_STAIRS,
+            Blocks.CONCRETE_SLAB);
     private static final Map<Block, List<Block>> NEXT = new HashMap<>();
 
     static {

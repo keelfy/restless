@@ -11,9 +11,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 /**
- * Each player's grip, 0..1. It slips in the dark, inside a territorial spirit's reach and with every event; light, sleep,
- * a full stomach and a salt-warded home bring it back. Low sanity shows what is otherwise hidden; the client sees it as
- * darkness closing in from the edges ({@link SanityOverlay}).
+ * Each player's grip, 0..1. It slips in the dark, inside a territorial spirit's reach and with every event; light,
+ * sleep, a full stomach and a salt-warded home bring it back. Low sanity shows what is otherwise hidden; the client
+ * sees it as darkness closing in from the edges ({@link SanityOverlay}).
  */
 public final class Sanity {
     /** What each client last heard; a new player object (join, respawn) is told again. */
@@ -74,8 +74,10 @@ public final class Sanity {
 
     /** Server-side light sources work even when held lighting is rendered only by a shader. */
     private static boolean emitsLight(ItemStack stack) {
-        return !stack.isEmpty() && (stack.is(Items.LAVA_BUCKET)
-            || stack.getItem() instanceof BlockItem block && block.getBlock().defaultBlockState().getLightEmission() > 0);
+        return !stack.isEmpty()
+                && (stack.is(Items.LAVA_BUCKET)
+                        || stack.getItem() instanceof BlockItem block
+                                && block.getBlock().defaultBlockState().getLightEmission() > 0);
     }
 
     /** An event just ran on the player. */

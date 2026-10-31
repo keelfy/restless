@@ -9,8 +9,10 @@ import net.minecraft.resources.Identifier;
 
 /** Tells a client its player's sanity, 0..1. */
 public record SanityPayload(float sanity) implements CustomPacketPayload {
-    public static final Type<SanityPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "sanity"));
-    public static final StreamCodec<ByteBuf, SanityPayload> CODEC = StreamCodec.composite(ByteBufCodecs.FLOAT, SanityPayload::sanity, SanityPayload::new);
+    public static final Type<SanityPayload> TYPE =
+            new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "sanity"));
+    public static final StreamCodec<ByteBuf, SanityPayload> CODEC =
+            StreamCodec.composite(ByteBufCodecs.FLOAT, SanityPayload::sanity, SanityPayload::new);
 
     @Override
     public Type<SanityPayload> type() {

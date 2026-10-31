@@ -7,19 +7,21 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A figure's legs, a tick at a time: strides over the ground by hand as {@link Walk} does, but jumps up a step and falls
- * off a ledge as a player would instead of snapping, and goes round what is in its way. One per figure, since it
+ * A figure's legs, a tick at a time: strides over the ground by hand as {@link Walk} does, but jumps up a step and
+ * falls off a ledge as a player would instead of snapping, and goes round what is in its way. One per figure, since it
  * remembers whether the figure is in the air.
  */
 final class Gait {
     /** A player's jump and fall, per tick, as vanilla moves them. */
     private static final double JUMP = 0.42;
+
     private static final double GRAVITY = 0.08;
     private static final double DRAG = 0.98;
     /** Ticks in the air before the figure is taken to have fallen somewhere it cannot get out of. */
     private static final int MAX_AIR = 60;
     /** Headings tried, off the one wanted, when that one is blocked. */
     private static final float[] DETOURS = {0.0F, 40.0F, -40.0F, 80.0F, -80.0F};
+
     private static final double EPSILON = 1.0E-3;
 
     private final int climb;
@@ -46,8 +48,8 @@ final class Gait {
     }
 
     /**
-     * One tick's stride of {@code stride} blocks along {@code yaw}, or the nearest heading off it that has a way on.
-     * In the air the jump or fall goes on along the heading it started on. Returns false, and does not move, when no
+     * One tick's stride of {@code stride} blocks along {@code yaw}, or the nearest heading off it that has a way on. In
+     * the air the jump or fall goes on along the heading it started on. Returns false, and does not move, when no
      * heading has standing room within {@code climb} blocks up or {@code drop} down.
      */
     boolean along(ServerLevel level, Entity figure, float yaw, double stride) {
@@ -108,8 +110,12 @@ final class Gait {
 
     private @Nullable Integer ahead(ServerLevel level, Entity figure, float yaw, double stride) {
         double radians = Math.toRadians(yaw);
-        return Walk.ground(level, figure.getX() - Math.sin(radians) * stride, figure.getZ() + Math.cos(radians) * stride,
-            Mth.floor(figure.getY() + EPSILON) + climb, climb + drop);
+        return Walk.ground(
+                level,
+                figure.getX() - Math.sin(radians) * stride,
+                figure.getZ() + Math.cos(radians) * stride,
+                Mth.floor(figure.getY() + EPSILON) + climb,
+                climb + drop);
     }
 
     private double x(Entity figure, double stride) {

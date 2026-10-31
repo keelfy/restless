@@ -30,18 +30,28 @@ final class SanityGameTests {
             var player = HauntEventGameTests.connected(helper);
             // The mock client must accept the same sanity updates as a connected modded client.
             ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
-                .add(SanityPayload.TYPE.id());
-            var event = HauntEvents.byId(Identifier.withDefaultNamespace("sanity_crash")).orElseThrow();
+                    .add(SanityPayload.TYPE.id());
+            var event = HauntEvents.byId(Identifier.withDefaultNamespace("sanity_crash"))
+                    .orElseThrow();
             Sanity.set(player, 1.0);
             HauntEventGameTests.check(helper, event.canRun(player), "The event must run at full sanity");
             Director.fire(player, event, null);
-            double expected = Math.max(0, 1 - Config.event("sanity_crash").num("loss")
-                - Config.section("sanity").num("event_loss"));
-            HauntEventGameTests.check(helper, Math.abs(Sanity.of(player) - expected) < 1e-9,
-                "The event must remove its configured loss plus ordinary event shock");
-            HauntEventGameTests.check(helper,
-                HauntData.get(player.level().getServer()).notebook(player.getUUID()).chapters().contains("sanity"),
-                "The sanity chapter must unlock when sanity crashes");
+            double expected = Math.max(
+                    0,
+                    1
+                            - Config.event("sanity_crash").num("loss")
+                            - Config.section("sanity").num("event_loss"));
+            HauntEventGameTests.check(
+                    helper,
+                    Math.abs(Sanity.of(player) - expected) < 1e-9,
+                    "The event must remove its configured loss plus ordinary event shock");
+            HauntEventGameTests.check(
+                    helper,
+                    HauntData.get(player.level().getServer())
+                            .notebook(player.getUUID())
+                            .chapters()
+                            .contains("sanity"),
+                    "The sanity chapter must unlock when sanity crashes");
             Sanity.set(player, 0.2);
             Director.fire(player, event, null);
             HauntEventGameTests.check(helper, Sanity.of(player) == 0, "Low sanity must clamp at zero");
@@ -54,8 +64,9 @@ final class SanityGameTests {
         tests.put("event_sanity_drain", helper -> {
             var player = HauntEventGameTests.connected(helper);
             ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
-                .add(SanityPayload.TYPE.id());
-            var event = HauntEvents.byId(Identifier.withDefaultNamespace("sanity_drain")).orElseThrow();
+                    .add(SanityPayload.TYPE.id());
+            var event = HauntEvents.byId(Identifier.withDefaultNamespace("sanity_drain"))
+                    .orElseThrow();
             var config = Config.event("sanity_drain");
             double shock = Config.section("sanity").num("event_loss");
             var outcomes = new HashSet<Double>();
@@ -65,9 +76,10 @@ final class SanityGameTests {
                 HauntEventGameTests.check(helper, event.canRun(player), "The drain must run at full sanity");
                 Director.fire(player, event, null);
                 double lost = 1 - Sanity.of(player);
-                HauntEventGameTests.check(helper,
-                    lost >= config.num("min_loss") + shock - 1e-9 && lost <= config.num("max_loss") + shock + 1e-9,
-                    "Every drain must stay within its configured range plus ordinary event shock");
+                HauntEventGameTests.check(
+                        helper,
+                        lost >= config.num("min_loss") + shock - 1e-9 && lost <= config.num("max_loss") + shock + 1e-9,
+                        "Every drain must stay within its configured range plus ordinary event shock");
                 outcomes.add(lost);
             }
             HauntEventGameTests.check(helper, outcomes.size() > 1, "Repeated drains must vary in strength");
@@ -82,14 +94,17 @@ final class SanityGameTests {
         });
         for (String id : List.of("sanity_crash", "sanity_drain")) {
             tests.put("event_" + id + "_modes", helper -> {
-                var event = HauntEvents.byId(Identifier.withDefaultNamespace(id)).orElseThrow();
-                for (var mode : new GameType[]{GameType.CREATIVE, GameType.SPECTATOR}) {
+                var event =
+                        HauntEvents.byId(Identifier.withDefaultNamespace(id)).orElseThrow();
+                for (var mode : new GameType[] {GameType.CREATIVE, GameType.SPECTATOR}) {
                     var player = (ServerPlayer) helper.makeMockServerPlayer(mode);
                     double before = Sanity.of(player);
                     HauntEventGameTests.check(helper, !event.canRun(player), "Protected game modes must be excluded");
                     Director.fire(player, event, null);
-                    HauntEventGameTests.check(helper, Sanity.of(player) == before,
-                        "Even a forced sanity loss must preserve creative and spectator sanity");
+                    HauntEventGameTests.check(
+                            helper,
+                            Sanity.of(player) == before,
+                            "Even a forced sanity loss must preserve creative and spectator sanity");
                     player.discard();
                 }
                 helper.succeed();
@@ -108,49 +123,73 @@ final class SanityGameTests {
             player.snapTo(absolute.getX() + .5, absolute.getY(), absolute.getZ() + .5);
             player.getFoodData().setFoodLevel(10);
             var config = Config.section("sanity");
-            helper.startSequence().thenWaitUntil(() -> HauntEventGameTests.check(helper,
-                    player.level().getMaxLocalRawBrightness(player.blockPosition()) < config.integer("dark_light"),
-                    "The sanity test must start in darkness"))
-                .thenExecute(() -> {
-                    double baseline = drift(player);
-                    double protectedRate = baseline + config.num("dark_loss") * (1 - config.num("held_light_loss_multiplier"));
-                    HauntEventGameTests.check(helper, baseline < 0 && protectedRate > baseline && protectedRate < 0,
-                        "Held light must slow darkness loss without restoring sanity");
-                    for (var hand : InteractionHand.values()) {
-                        for (var item : new net.minecraft.world.item.Item[]{Items.TORCH, Items.SOUL_TORCH, Items.COPPER_TORCH,
-                                Items.REDSTONE_TORCH, Items.LANTERN, Items.SOUL_LANTERN, Items.GLOWSTONE, Items.SEA_LANTERN,
-                                Content.HALLOWED_LANTERN_ITEM.get(), Items.LAVA_BUCKET}) {
-                            player.setItemInHand(hand, new ItemStack(item));
-                            rate(helper, player, protectedRate, "Every held light must reduce darkness loss in either hand");
+            helper.startSequence()
+                    .thenWaitUntil(() -> HauntEventGameTests.check(
+                            helper,
+                            player.level().getMaxLocalRawBrightness(player.blockPosition())
+                                    < config.integer("dark_light"),
+                            "The sanity test must start in darkness"))
+                    .thenExecute(() -> {
+                        double baseline = drift(player);
+                        double protectedRate =
+                                baseline + config.num("dark_loss") * (1 - config.num("held_light_loss_multiplier"));
+                        HauntEventGameTests.check(
+                                helper,
+                                baseline < 0 && protectedRate > baseline && protectedRate < 0,
+                                "Held light must slow darkness loss without restoring sanity");
+                        for (var hand : InteractionHand.values()) {
+                            for (var item : new net.minecraft.world.item.Item[] {
+                                Items.TORCH,
+                                Items.SOUL_TORCH,
+                                Items.COPPER_TORCH,
+                                Items.REDSTONE_TORCH,
+                                Items.LANTERN,
+                                Items.SOUL_LANTERN,
+                                Items.GLOWSTONE,
+                                Items.SEA_LANTERN,
+                                Content.HALLOWED_LANTERN_ITEM.get(),
+                                Items.LAVA_BUCKET
+                            }) {
+                                player.setItemInHand(hand, new ItemStack(item));
+                                rate(
+                                        helper,
+                                        player,
+                                        protectedRate,
+                                        "Every held light must reduce darkness loss in either hand");
+                            }
+                            for (var item : UnlitLights.ITEMS) {
+                                player.setItemInHand(hand, new ItemStack(item.get()));
+                                rate(helper, player, baseline, "Extinguished lights must not protect sanity");
+                            }
+                            for (var item :
+                                    new net.minecraft.world.item.Item[] {Items.STICK, Items.CANDLE, Items.REDSTONE_LAMP
+                                    }) {
+                                player.setItemInHand(hand, new ItemStack(item));
+                                rate(helper, player, baseline, "Non-emitting items must not protect sanity");
+                            }
+                            player.setItemInHand(hand, ItemStack.EMPTY);
                         }
-                        for (var item : UnlitLights.ITEMS) {
-                            player.setItemInHand(hand, new ItemStack(item.get()));
-                            rate(helper, player, baseline, "Extinguished lights must not protect sanity");
-                        }
-                        for (var item : new net.minecraft.world.item.Item[]{Items.STICK, Items.CANDLE, Items.REDSTONE_LAMP}) {
-                            player.setItemInHand(hand, new ItemStack(item));
-                            rate(helper, player, baseline, "Non-emitting items must not protect sanity");
-                        }
-                        player.setItemInHand(hand, ItemStack.EMPTY);
-                    }
-                    player.getInventory().setItem(9, new ItemStack(Items.LANTERN));
-                    rate(helper, player, baseline, "A light in the inventory must not protect sanity");
-                    player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.TORCH));
-                    player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.LANTERN));
-                    rate(helper, player, protectedRate, "Two held lights must not stack their protection");
-                    player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-                    player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-                    helper.setBlock(feet.west(), Blocks.GLOWSTONE);
-                })
-                .thenWaitUntil(() -> HauntEventGameTests.check(helper,
-                        player.level().getMaxLocalRawBrightness(player.blockPosition()) >= config.integer("lit_light"),
-                        "The recovery check must run in a lit room"))
-                .thenExecute(() -> {
-                    double recovery = drift(player);
-                    player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.TORCH));
-                    rate(helper, player, recovery, "Held light must not alter recovery in a lit area");
-                    player.discard();
-                }).thenSucceed();
+                        player.getInventory().setItem(9, new ItemStack(Items.LANTERN));
+                        rate(helper, player, baseline, "A light in the inventory must not protect sanity");
+                        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.TORCH));
+                        player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.LANTERN));
+                        rate(helper, player, protectedRate, "Two held lights must not stack their protection");
+                        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                        player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+                        helper.setBlock(feet.west(), Blocks.GLOWSTONE);
+                    })
+                    .thenWaitUntil(() -> HauntEventGameTests.check(
+                            helper,
+                            player.level().getMaxLocalRawBrightness(player.blockPosition())
+                                    >= config.integer("lit_light"),
+                            "The recovery check must run in a lit room"))
+                    .thenExecute(() -> {
+                        double recovery = drift(player);
+                        player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.TORCH));
+                        rate(helper, player, recovery, "Held light must not alter recovery in a lit area");
+                        player.discard();
+                    })
+                    .thenSucceed();
         });
     }
 
@@ -160,9 +199,11 @@ final class SanityGameTests {
 
     private static double drift(ServerPlayer player) {
         try {
-            var method = Sanity.class.getDeclaredMethod("drift", ServerPlayer.class, HauntData.class, Config.Section.class);
+            var method =
+                    Sanity.class.getDeclaredMethod("drift", ServerPlayer.class, HauntData.class, Config.Section.class);
             method.setAccessible(true);
-            return (double) method.invoke(null, player, HauntData.get(player.level().getServer()), Config.section("sanity"));
+            return (double)
+                    method.invoke(null, player, HauntData.get(player.level().getServer()), Config.section("sanity"));
         } catch (ReflectiveOperationException e) {
             throw new AssertionError("Cannot inspect the server's sanity rate", e);
         }

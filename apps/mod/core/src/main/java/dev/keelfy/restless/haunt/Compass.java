@@ -38,9 +38,10 @@ public final class Compass {
     }
 
     private static void aim(ServerPlayer player, ItemStack stack, HauntData data) {
-        Optional<GlobalPos> target = Sense.of(player, data).stream().filter(s -> s.at() != null)
-            .min(Comparator.comparingDouble(s -> s.at().distanceToSqr(player.position())))
-            .map(s -> GlobalPos.of(player.level().dimension(), BlockPos.containing(s.at())));
+        Optional<GlobalPos> target = Sense.of(player, data).stream()
+                .filter(s -> s.at() != null)
+                .min(Comparator.comparingDouble(s -> s.at().distanceToSqr(player.position())))
+                .map(s -> GlobalPos.of(player.level().dimension(), BlockPos.containing(s.at())));
         LodestoneTracker tracker = new LodestoneTracker(target, false);
         if (!tracker.equals(stack.get(DataComponents.LODESTONE_TRACKER))) {
             stack.set(DataComponents.LODESTONE_TRACKER, tracker);

@@ -60,7 +60,6 @@ public final class ExtinguishLightEvent implements HauntEvent {
     }
 
     private static boolean isLight(BlockState state) {
-        return AbstractCandleBlock.isLit(state)
-            || UnlitLights.isTorch(state) || UnlitLights.isLantern(state);
+        return AbstractCandleBlock.isLit(state) || UnlitLights.isTorch(state) || UnlitLights.isLantern(state);
     }
 }

@@ -25,13 +25,20 @@ public record Notebook(List<Note> notes, Set<String> chapters) {
     public static final Notebook EMPTY = new Notebook(List.of(), Set.of());
 
     static final Codec<Notebook> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Note.CODEC.listOf().optionalFieldOf("notes", List.of()).forGetter(Notebook::notes),
-        Codec.STRING.listOf().xmap(Set::copyOf, List::copyOf).optionalFieldOf("chapters", Set.of()).forGetter(Notebook::chapters)
-    ).apply(i, Notebook::new));
+                    Note.CODEC.listOf().optionalFieldOf("notes", List.of()).forGetter(Notebook::notes),
+                    Codec.STRING
+                            .listOf()
+                            .xmap(Set::copyOf, List::copyOf)
+                            .optionalFieldOf("chapters", Set.of())
+                            .forGetter(Notebook::chapters))
+            .apply(i, Notebook::new));
 
     /** What kind of thing was seen; decides where it goes in the journal. */
     public enum Kind {
-        /** A camera photo. Args: type, hint, weakness; tag: the type id as shown ({@code shade} or {@code shade_evolved}). */
+        /**
+         * A camera photo. Args: type, hint, weakness; tag: the type id as shown ({@code shade} or
+         * {@code shade_evolved}).
+         */
         PHOTO(true),
         /** A print in ash. Args: the print. */
         FOOTPRINTS(true),
@@ -54,7 +61,8 @@ public record Notebook(List<Note> notes, Set<String> chapters) {
         /** An entry from before the journal had kinds. Args: its text. */
         OLD(true);
 
-        static final Codec<Kind> CODEC = Codec.STRING.xmap(s -> valueOf(s.toUpperCase(Locale.ROOT)), k -> k.name().toLowerCase(Locale.ROOT));
+        static final Codec<Kind> CODEC = Codec.STRING.xmap(
+                s -> valueOf(s.toUpperCase(Locale.ROOT)), k -> k.name().toLowerCase(Locale.ROOT));
 
         /** False for the tools a lying spirit can speak through. */
         public final boolean reliable;
@@ -80,11 +88,14 @@ public record Notebook(List<Note> notes, Set<String> chapters) {
      */
     public record Note(Kind kind, Optional<UUID> spirit, Optional<String> tag, List<Component> args) {
         static final Codec<Note> CODEC = RecordCodecBuilder.create(i -> i.group(
-            Kind.CODEC.fieldOf("kind").forGetter(Note::kind),
-            UUIDUtil.CODEC.optionalFieldOf("spirit").forGetter(Note::spirit),
-            Codec.STRING.optionalFieldOf("tag").forGetter(Note::tag),
-            ComponentSerialization.CODEC.listOf().optionalFieldOf("args", List.of()).forGetter(Note::args)
-        ).apply(i, Note::new));
+                        Kind.CODEC.fieldOf("kind").forGetter(Note::kind),
+                        UUIDUtil.CODEC.optionalFieldOf("spirit").forGetter(Note::spirit),
+                        Codec.STRING.optionalFieldOf("tag").forGetter(Note::tag),
+                        ComponentSerialization.CODEC
+                                .listOf()
+                                .optionalFieldOf("args", List.of())
+                                .forGetter(Note::args))
+                .apply(i, Note::new));
     }
 
     /** Guide chapters, opened one at a time as the player runs into what each is about. */
@@ -144,6 +155,10 @@ public record Notebook(List<Note> notes, Set<String> chapters) {
 
     /** Spirits the player has met, in the order they met them. */
     public List<UUID> met() {
-        return notes.stream().filter(n -> n.kind().meets()).flatMap(n -> n.spirit().stream()).distinct().toList();
+        return notes.stream()
+                .filter(n -> n.kind().meets())
+                .flatMap(n -> n.spirit().stream())
+                .distinct()
+                .toList();
     }
 }

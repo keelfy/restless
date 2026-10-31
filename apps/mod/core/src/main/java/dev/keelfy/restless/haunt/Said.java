@@ -9,9 +9,9 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Keeps a spirit from saying the same thing twice. Each text event (a title, a chat line, a sign) remembers, per spirit,
- * which of its variants were used; once all were, the event rests for that spirit for a long while, then starts over.
- * An event with no spirit behind it (a command, the debug menu) counts against the player instead.
+ * Keeps a spirit from saying the same thing twice. Each text event (a title, a chat line, a sign) remembers, per
+ * spirit, which of its variants were used; once all were, the event rests for that spirit for a long while, then starts
+ * over. An event with no spirit behind it (a command, the debug menu) counts against the player instead.
  */
 public final class Said {
     /** The spirit whose roll or event is running right now; set only for the duration of {@link #during}. */
@@ -37,7 +37,9 @@ public final class Said {
         return left(player, id, variants, Function.identity());
     }
 
-    /** A variant of event {@code id} the speaker has not said since it last rested, now said; null when there is none. */
+    /**
+     * A variant of event {@code id} the speaker has not said since it last rested, now said; null when there is none.
+     */
     public static <T> @Nullable T pick(ServerPlayer player, String id, List<T> variants, Function<T, String> key) {
         List<T> fresh = unsaid(player, id, variants, key);
         if (fresh.isEmpty()) {
@@ -47,9 +49,13 @@ public final class Said {
         HauntData data = HauntData.get(player.level().getServer());
         List<String> used = new ArrayList<>(data.spoken(speaker(player), id).used());
         used.add(key.apply(picked));
-        data.putSpoken(speaker(player), id, fresh.size() == 1
-            ? new HauntData.Spoken(List.of(), now(player) + Config.section("said").integer("rest_ticks"))
-            : new HauntData.Spoken(used, 0L));
+        data.putSpoken(
+                speaker(player),
+                id,
+                fresh.size() == 1
+                        ? new HauntData.Spoken(
+                                List.of(), now(player) + Config.section("said").integer("rest_ticks"))
+                        : new HauntData.Spoken(used, 0L));
         return picked;
     }
 
@@ -62,7 +68,9 @@ public final class Said {
         if (now(player) < spoken.restUntil()) {
             return List.of();
         }
-        return variants.stream().filter(v -> !spoken.used().contains(key.apply(v))).toList();
+        return variants.stream()
+                .filter(v -> !spoken.used().contains(key.apply(v)))
+                .toList();
     }
 
     private static UUID speaker(ServerPlayer player) {

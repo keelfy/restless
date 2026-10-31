@@ -11,9 +11,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
 /**
- * A spirit left alone long enough grows up: a poltergeist turns raging, a shade a light-eater. It keeps a power floor, takes a
- * longer ritual and, if territorial, fouls its land faster. Personal spirits grow while their player is online; the
- * players it haunts (its own, or those in its radius) are told and it goes in their journal.
+ * A spirit left alone long enough grows up: a poltergeist turns raging, a shade a light-eater. It keeps a power floor,
+ * takes a longer ritual and, if territorial, fouls its land faster. Personal spirits grow while their player is online;
+ * the players it haunts (its own, or those in its radius) are told and it goes in their journal.
  */
 public final class Evolution {
     private Evolution() {}
@@ -49,9 +49,11 @@ public final class Evolution {
     private static void tell(ServerPlayer player, HauntData.Haunting spirit) {
         Component was = Component.translatable("spirit.restless." + spirit.spirit());
         Component now = Component.translatable("spirit.restless." + spirit.spirit() + "_evolved");
-        player.level().playSound(null, player.blockPosition(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.HOSTILE, 1.0f, 0.6f);
+        player.level()
+                .playSound(null, player.blockPosition(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.HOSTILE, 1.0f, 0.6f);
         player.sendSystemMessage(Component.translatable("message.restless.evolved", was, now), true);
-        Journal.note(player, Notebook.Kind.EVOLVED, spirit, Story.of(spirit.seed()).name(), was, now);
+        Journal.note(
+                player, Notebook.Kind.EVOLVED, spirit, Story.of(spirit.seed()).name(), was, now);
     }
 
     /** The spirit's type as players read it: the grown-up name once it has evolved. */
