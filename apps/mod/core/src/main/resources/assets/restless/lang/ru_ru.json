@@ -136,5 +136,8 @@
   "journal.restless.tab.spirits": "Духи",
   "journal.restless.tab.loose": "Заметки",
   "journal.restless.tab.bestiary": "Бестиарий",
-  "journal.restless.tab.chronicle": "Хроника"
+  "journal.restless.tab.chronicle": "Хроника",
+  "restless.relighting.title": "Зажигание",
+  "restless.relighting.action": "ПКМ по источнику",
+  "restless.relighting.description": "Нажмите ПКМ по установленному источнику огнивом или горящим факелом. Огниво теряет 1 прочность; факел не расходуется. Под водой зажечь нельзя."
 }

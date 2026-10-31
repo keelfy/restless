@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
@@ -45,6 +46,52 @@ final class LanternGameTests {
             var ward = Content.HALLOWED_LANTERN.get().defaultBlockState();
             check(helper, UnlitLights.extinguished(ward) == ward && !UnlitLights.isLantern(ward),
                 "Hallowed lantern must be excluded");
+            helper.succeed();
+        });
+        tests.put("relight_lights", helper -> {
+            var player = helper.makeMockPlayer(GameType.SURVIVAL);
+            BlockPos pos = helper.absolutePos(TARGET);
+            helper.setBlock(TARGET.below(), Blocks.STONE);
+            helper.setBlock(TARGET.above(), Blocks.STONE);
+            helper.setBlock(TARGET.east(), Blocks.STONE);
+            var hit = new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
+            for (var entry : net.minecraft.core.registries.BuiltInRegistries.BLOCK.entrySet()) {
+                if (!entry.getKey().identifier().getNamespace().equals("restless")
+                        || !entry.getKey().identifier().getPath().startsWith("unlit_")) continue;
+                var original = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(
+                    net.minecraft.resources.Identifier.withDefaultNamespace(
+                        entry.getKey().identifier().getPath().substring("unlit_".length()))).defaultBlockState();
+                if (original.hasProperty(net.minecraft.world.level.block.WallTorchBlock.FACING)) {
+                    original = original.setValue(net.minecraft.world.level.block.WallTorchBlock.FACING, Direction.WEST);
+                }
+                if (original.hasProperty(LanternBlock.HANGING)) original = original.setValue(LanternBlock.HANGING, true);
+                for (var item : new net.minecraft.world.item.Item[]{Items.FLINT_AND_STEEL, Items.TORCH, Items.SOUL_TORCH, Items.COPPER_TORCH}) {
+                    var unlit = UnlitLights.extinguished(original);
+                    helper.getLevel().setBlock(pos, unlit, 3);
+                    var stack = new ItemStack(item);
+                    player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+                    check(helper, unlit.useItemOn(stack, helper.getLevel(), player, InteractionHand.MAIN_HAND, hit).consumesAction(),
+                        "Ignition must consume the interaction");
+                    check(helper, helper.getLevel().getBlockState(pos).equals(original),
+                        "Relighting must restore the original type and attachment");
+                    check(helper, stack.getCount() == 1 && stack.getDamageValue() == (item == Items.FLINT_AND_STEEL ? 1 : 0),
+                        "Only flint durability may be consumed");
+                }
+            }
+            var unlit = UnlitLights.extinguished(Blocks.LANTERN.defaultBlockState());
+            for (var item : new net.minecraft.world.item.Item[]{Items.STICK, UnlitLights.ITEMS.getFirst().get()}) {
+                helper.getLevel().setBlock(pos, unlit, 3);
+                var stack = new ItemStack(item);
+                check(helper, !unlit.useItemOn(stack, helper.getLevel(), player, InteractionHand.MAIN_HAND, hit).consumesAction(),
+                    "Non-burning items must not relight lights");
+                check(helper, helper.getLevel().getBlockState(pos).equals(unlit), "Rejected items must preserve the block");
+            }
+            var wet = unlit.setValue(LanternBlock.WATERLOGGED, true);
+            helper.getLevel().setBlock(pos, wet, 3);
+            var flint = new ItemStack(Items.FLINT_AND_STEEL);
+            wet.useItemOn(flint, helper.getLevel(), player, InteractionHand.MAIN_HAND, hit);
+            check(helper, helper.getLevel().getBlockState(pos).equals(wet) && flint.getDamageValue() == 0,
+                "Underwater ignition must fail without consuming durability");
             helper.succeed();
         });
         for (boolean hanging : new boolean[]{false, true}) {

@@ -197,5 +197,8 @@
   "journal.restless.tab.spirits": "Spirits",
   "journal.restless.tab.loose": "Loose notes",
   "journal.restless.tab.bestiary": "Bestiary",
-  "journal.restless.tab.chronicle": "Chronicle"
+  "journal.restless.tab.chronicle": "Chronicle",
+  "restless.relighting.title": "Relighting",
+  "restless.relighting.action": "Right-click the light",
+  "restless.relighting.description": "Right-click the placed light with flint and steel or a lit torch. Flint and steel loses 1 durability; torches are not consumed. Cannot ignite underwater."
 }

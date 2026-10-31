@@ -74,3 +74,16 @@ var generateModMetadata = tasks.register('generateModMetadata', ProcessResources
 }
 sourceSets.main.resources.srcDir generateModMetadata
 neoForge.ideSyncTask generateModMetadata
+
+// Optional viewer APIs are never bundled or required at runtime.
+repositories {
+    maven { url = 'https://api.modrinth.com/maven' }
+    maven { url = 'https://maven.shedaniel.me' }
+}
+
+dependencies {
+    compileOnly('maven.modrinth:jei:31.17.0.107') { transitive = false }
+    compileOnly('maven.modrinth:rei:26.3.824+neoforge') { transitive = false }
+    compileOnly 'me.shedaniel.cloth:basic-math:0.6.0'
+    compileOnly('maven.modrinth:architectury-api:22.0.5+neoforge') { transitive = false }
+}
