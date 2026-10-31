@@ -168,8 +168,10 @@ public final class Scenario implements HauntEvent {
     public void run(ServerPlayer player) {
         Vec3 at = Location.current();
         UUID spirit = Said.current();
-        beats.getFirst().event().run(player);
-        follow(player, 1, 0, at, spirit);
+        ScenarioContext.start(() -> {
+            beats.getFirst().event().run(player);
+            follow(player, 1, 0, at, spirit);
+        });
     }
 
     /** Schedules the beats from {@code from} on; a waiting beat schedules the ones after it once its wait is over. */

@@ -11,6 +11,18 @@
     "minecraft:armor_off": { "weight": 0.4, "min_pieces": 1, "max_pieces": 4, "sound": { "volume": 1.0, "pitch": 0.6 } },
     "minecraft:vanishing_item": { "weight": 0.5, "radius": 10, "min_distance": 2 },
     "minecraft:map_marker": { "weight": 0.5, "spread_pixels": 40, "sound": { "volume": 0.8, "pitch": 0.6 } },
-    "minecraft:false_compass": { "weight": 0.5, "min_offset": 30, "offset_spread": 30, "sound": { "volume": 1.0, "pitch": 0.6 } }
+    "minecraft:false_compass": { "weight": 0.5, "min_offset": 30, "offset_spread": 30, "sound": { "volume": 1.0, "pitch": 0.6 } },
+    "minecraft:elytra_flicker": { "weight": 0.4, "min_height": 12, "ticks": 40, "hardcore_fraction": 0.1 },
+    "minecraft:stew_bowl": { "weight": 0.4, "sound": { "volume": 0.8, "pitch": 0.7 } },
+    "minecraft:bucket_pufferfish": { "weight": 0.4, "ticks": 100 },
+    "minecraft:torch_burn": { "weight": 0.4, "fraction": 0.5, "sound": { "volume": 0.6, "pitch": 1.2 } },
+    "minecraft:bundle_bone": { "weight": 0.4, "sound": { "volume": 0.8, "pitch": 0.6 } },
+    "minecraft:shield_ghost": { "weight": 0.4, "sound": { "volume": 1.0, "pitch": 0.8 } },
+    "minecraft:item_throwback": { "weight": 0.4, "radius": 12, "min_distance": 3, "speed": 0.5, "lift": 0.2 },
+    "minecraft:phantom_horn": { "weight": 0.3, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:armor_dye": { "weight": 0.4, "restore_ticks": 6000, "items": ["minecraft:leather_helmet", "minecraft:leather_chestplate", "minecraft:leather_leggings", "minecraft:leather_boots"] },
+    "minecraft:item_glint": { "weight": 0.4, "restore_ticks": 200 },
+    "minecraft:item_lore": { "weight": 0.4, "restore_ticks": 6000, "lines": ["it remembers you", "it knows where you sleep", "it was waiting"] },
+    "minecraft:tool_mirage": { "weight": 0.4, "ticks": 60, "hardcore_fraction": 0.3 }
   }
 }

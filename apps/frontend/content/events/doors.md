@@ -4,7 +4,7 @@ title: Doors
 
 # Doors
 
-25 events.
+34 events.
 
 ## `door`
 
@@ -161,3 +161,57 @@ Runs when: Indoors, a bed or chest within 10 on the player's level, reachable ov
 Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back
 
 Runs when: A wooden door within 12
+
+## `hook_click`
+
+The hook clicks on, then off a moment later, with no string to trip it
+
+Runs when: A tripwire hook within 12
+
+## `daylight_flip`
+
+It turns inverted, so lamps on it light at noon and go dark at night; set back after a minute
+
+Runs when: A daylight detector within 12
+
+## `rod_sparks`
+
+It is powered for a moment and throws sparks, with no storm
+
+Runs when: An unpowered lightning rod within 16
+
+## `torch_burnout`
+
+It burns out with the vanilla smoke and fizz and lights again after 8 s, or sooner on any update beside it
+
+Runs when: A lit redstone torch within 12
+
+## `chests_open`
+
+Every lid in the room opens at once and shuts 2 s later, contents untouched
+
+Runs when: Indoors, and two or more chests within 10
+
+## `anvil_lands`
+
+The sound of an anvil landing; under hardcore the anvil also gains one damage stage
+
+Runs when: Night, and an anvil within 16
+
+## `cake_bite`
+
+One more slice is gone with an eating sound; it comes back after a minute
+
+Runs when: A cake within 12 with a slice left
+
+## `tnt_hiss`
+
+The primed-TNT hiss comes from it, with nothing lit
+
+Runs when: A block of TNT, or a chest holding TNT, within 12
+
+## `pot_holds`
+
+A bone, a skull sherd or an echo shard sits in it with a wobble; taken out again after two minutes
+
+Runs when: An empty decorated pot within 12

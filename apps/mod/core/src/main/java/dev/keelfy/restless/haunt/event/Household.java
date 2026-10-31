@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -34,10 +35,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CakeBlock;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.ComparatorBlock;
@@ -153,7 +156,141 @@ final class Household {
                         "muddy_footprints",
                         EventTag.DOORS,
                         player -> !trail(player).isEmpty(),
-                        Household::walkMud));
+                        Household::walkMud),
+                // 210: only the sound of one landing; under hardcore the anvil really takes the blow
+                SimpleEvent.light(
+                        "anvil_lands",
+                        EventTag.DOORS,
+                        player -> player.level().isDarkOutside()
+                                && Nearby.any(player, "anvil_lands", s -> s.is(BlockTags.ANVIL)),
+                        Household::landAnvil),
+                // 211
+                SimpleEvent.light(
+                        "cake_bite",
+                        EventTag.DOORS,
+                        player -> Nearby.any(player, "cake_bite", Household::slicesLeft),
+                        Household::biteCake),
+                // 220: the hiss of a fuse where TNT lies, with nothing lit
+                SimpleEvent.light(
+                        "tnt_hiss", EventTag.DOORS, player -> !stored(player).isEmpty(), Household::hissTnt),
+                // 246
+                SimpleEvent.light(
+                        "pot_holds",
+                        EventTag.DOORS,
+                        player -> !emptyPots(player).isEmpty(),
+                        Household::fillPot));
+    }
+
+    /** A roof overhead, read off the heightmap since sky light lags. */
+    static boolean indoors(ServerPlayer player) {
+        BlockPos from = player.blockPosition();
+        return player.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, from.getX(), from.getZ())
+                > from.getY() + 2;
+    }
+
+    private static void landAnvil(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "anvil_lands", s -> s.is(BlockTags.ANVIL));
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        level.levelEvent(LevelEvent.SOUND_ANVIL_LAND, pos, 0);
+        if (Hardcore.on(level)) {
+            BlockState worse = AnvilBlock.damage(level.getBlockState(pos));
+            if (worse != null) {
+                level.setBlockAndUpdate(pos, worse);
+            }
+        }
+    }
+
+    private static boolean slicesLeft(BlockState state) {
+        return state.is(Blocks.CAKE) && state.getValue(CakeBlock.BITES) < CakeBlock.MAX_BITES;
+    }
+
+    private static void biteCake(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "cake_bite", Household::slicesLeft);
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        Config.Section config = Config.event("cake_bite");
+        Config.Tone tone = config.tone("sound");
+        BlockState state = level.getBlockState(pos);
+        Swaps.show(
+                player,
+                pos,
+                state.setValue(CakeBlock.BITES, state.getValue(CakeBlock.BITES) + 1),
+                config.integer("restore_ticks"));
+        level.playSound(null, pos, SoundEvents.GENERIC_EAT.value(), SoundSource.BLOCKS, tone.volume(), tone.pitch());
+    }
+
+    /** A block of TNT, or a chest with TNT in it. */
+    private static List<BlockPos> stored(ServerPlayer player) {
+        ServerLevel level = player.level();
+        return Nearby.all(player, "tnt_hiss", s -> s.is(Blocks.TNT) || s.is(Blocks.CHEST) || s.is(Blocks.TRAPPED_CHEST))
+                .stream()
+                .filter(pos -> level.getBlockState(pos).is(Blocks.TNT)
+                        || level.getBlockEntity(pos) instanceof ChestBlockEntity chest && holdsTnt(chest))
+                .toList();
+    }
+
+    private static boolean holdsTnt(ChestBlockEntity chest) {
+        for (int slot = 0; slot < chest.getContainerSize(); slot++) {
+            if (chest.getItem(slot).is(Items.TNT)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void hissTnt(ServerPlayer player) {
+        List<BlockPos> spots = stored(player);
+        if (spots.isEmpty()) {
+            return;
+        }
+        BlockPos pos = spots.get(player.getRandom().nextInt(spots.size()));
+        Config.Tone tone = Config.event("tnt_hiss").tone("sound");
+        player.level().playSound(null, pos, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+    }
+
+    private static List<BlockPos> emptyPots(ServerPlayer player) {
+        return Nearby.all(player, "pot_holds", s -> s.is(Blocks.DECORATED_POT)).stream()
+                .filter(pos -> player.level().getBlockEntity(pos) instanceof DecoratedPotBlockEntity pot
+                        && pot.getTheItem().isEmpty())
+                .toList();
+    }
+
+    /**
+     * A bone or a sherd in the empty pot; taken out again after a while if still there, and under hardcore it stays.
+     */
+    private static void fillPot(ServerPlayer player) {
+        List<BlockPos> pots = emptyPots(player);
+        if (pots.isEmpty()) {
+            return;
+        }
+        ServerLevel level = player.level();
+        BlockPos pos = pots.get(player.getRandom().nextInt(pots.size()));
+        DecoratedPotBlockEntity pot = (DecoratedPotBlockEntity) level.getBlockEntity(pos);
+        Config.Section config = Config.event("pot_holds");
+        List<String> items = config.texts("items");
+        ItemStack put = new ItemStack(BuiltInRegistries.ITEM.getValue(
+                Identifier.parse(items.get(player.getRandom().nextInt(items.size())))));
+        pot.setTheItem(put.copy());
+        pot.setChanged();
+        pot.wobble(DecoratedPotBlockEntity.WobbleStyle.POSITIVE);
+        Config.Tone tone = config.tone("sound");
+        level.playSound(null, pos, SoundEvents.DECORATED_POT_INSERT, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+        Restore.revert(level, config.integer("restore_ticks"), force -> {
+            if (!force && !level.isLoaded(pos)) {
+                return false;
+            }
+            if (level.getBlockEntity(pos) instanceof DecoratedPotBlockEntity now
+                    && ItemStack.matches(now.getTheItem(), put)) {
+                now.setTheItem(ItemStack.EMPTY);
+                now.setChanged();
+            }
+            return true;
+        });
     }
 
     /** A chest this player has open right now. */
@@ -278,7 +415,7 @@ final class Household {
     private static List<Print> trail(ServerPlayer player) {
         ServerLevel level = player.level();
         BlockPos from = player.blockPosition();
-        if (level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, from.getX(), from.getZ()) <= from.getY() + 2) {
+        if (!indoors(player)) {
             return List.of();
         }
         Config.Section config = Config.event("muddy_footprints");

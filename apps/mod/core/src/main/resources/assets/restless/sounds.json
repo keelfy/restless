@@ -12,6 +12,14 @@
       { "name": "restless:haunt/scream_4" }
     ]
   },
+  "haunt.cut_off_scream": {
+    "subtitle": "subtitles.restless.scream",
+    "sounds": [{ "name": "restless:haunt/cut_off_scream" }]
+  },
+  "haunt.long_scream": {
+    "subtitle": "subtitles.restless.scream",
+    "sounds": [{ "name": "restless:haunt/long_scream" }]
+  },
   "haunt.moan": {
     "subtitle": "subtitles.restless.moan",
     "sounds": [

@@ -4,7 +4,7 @@ title: Blocks
 
 # Blocks
 
-28 events.
+32 events.
 
 ## `wilted_flowers`
 
@@ -178,3 +178,27 @@ Runs when: Standing room 10–16 away
 Up to 40 blocks of that one kind turn into the neighbouring colour (dyes form a ring), planks into the stripped log of their wood, stone bricks into stone, cobblestone and stone bricks into their mossy or cracked kind and back, one deepslate kind into another; swapped back after 60 seconds
 
 Runs when: A dyed block (wool, concrete, terracotta, stained glass; stairs and slabs of wool and concrete too), planks, cobblestone, stone bricks or deepslate bricks, tiles and cobbled deepslate (with their stairs, slabs and walls) within 10
+
+## `lava_cauldron`
+
+It turns to a lava cauldron with a sizzle, and back after half a minute
+
+Runs when: A water cauldron within 10
+
+## `cauldron_fills`
+
+It fills to a random level with drip particles, and runs dry again after a minute
+
+Runs when: Indoors, and a dry cauldron within 10
+
+## `turning_terracotta`
+
+Every piece turns a quarter and stands back after a minute
+
+Runs when: Glazed terracotta within 10
+
+## `end_rod_gaze`
+
+One rod turns to point at the player and stands back after a minute
+
+Runs when: An end rod within 12 that does not already face the player

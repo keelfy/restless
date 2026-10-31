@@ -18,6 +18,22 @@
     "minecraft:turned_head": { "weight": 0.2, "distance": 6.0, "sound": { "volume": 0.8, "pitch": 0.9 }, "delay_ticks": 10, "ticks": 30 },
     "minecraft:stranger_joins": { "weight": 0.2, "seconds": 40, "latency": 120 },
     "minecraft:false_whisper": { "weight": 0.0, "lines": ["behind you", "why did you leave me there", "it followed me to you", "don't go to sleep"] },
-    "minecraft:stranger_death": { "weight": 0.2, "deaths": ["death.fell.accident.generic", "death.attack.drown", "death.attack.inWall", "death.attack.outOfWorld", "death.attack.generic"] }
+    "minecraft:stranger_death": { "weight": 0.2, "deaths": ["death.fell.accident.generic", "death.attack.drown", "death.attack.inWall", "death.attack.outOfWorld", "death.attack.generic"] },
+    "minecraft:pumpkin_head": { "weight": 0.2, "seconds": 4 },
+    "minecraft:xp_drain": { "weight": 0.2, "seconds": 3 },
+    "minecraft:phantom_flames": { "weight": 0.2, "ticks": 60 },
+    "minecraft:phantom_drowning": { "weight": 0.2, "ticks": 80, "drained": 0.8 },
+    "minecraft:phantom_frost": { "weight": 0.2, "ticks": 100, "ramp_ticks": 50, "hardcore_extra_ticks": 40 },
+    "minecraft:moon_phase": { "weight": 0.2, "seconds": 20 },
+    "minecraft:false_boss_bar": { "weight": 0.2, "names": ["???", "It Watches", "The One Behind You", "Hungry", "Do Not Look"], "fill_ticks": 60, "empty_ticks": 40 },
+    "minecraft:action_bar_whisper": { "weight": 0.3, "ticks": 40, "lines": ["Don't turn around", "It is right behind you", "Do not look", "Stay still", "It knows you can see it"] },
+    "minecraft:false_absorption": { "weight": 0.2, "ticks": 80, "amount": 8.0 },
+    "minecraft:empty_armor_bar": { "weight": 0.2, "seconds": 4 },
+    "minecraft:hurt_tilt": { "weight": 0.3 },
+    "minecraft:own_hand_swings": { "weight": 0.2, "swings": 2, "interval_ticks": 14 },
+    "minecraft:night_eyes": { "weight": 0.2, "flash_ticks": 30, "dark_ticks": 80 },
+    "minecraft:dead_silence": { "weight": 0.2, "seconds": 5 },
+    "minecraft:all_on_cooldown": { "weight": 0.2, "seconds": 2 },
+    "minecraft:noon_moon": { "weight": 0.2, "time_of_day": 18000, "seconds": 10 }
   }
 }

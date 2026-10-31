@@ -4,7 +4,7 @@ title: Items
 
 # Items
 
-11 events.
+23 events.
 
 ## `swap_slots`
 
@@ -76,3 +76,78 @@ Runs when: A plain compass in the inventory
 A red X appears on it somewhere in its area. Permanent: the marker is stored in the map item
 
 Runs when: A filled map in the inventory without a marker of this event
+
+## `elytra_flicker`
+
+Worn elytra look almost broken for 2 s (only shown to the player); under hardcore they are worn down for real
+
+Runs when: Elytra worn with durability to spare, 12 or more blocks above the ground
+
+## `stew_bowl`
+
+**Harmful.**
+One stew becomes an empty bowl
+
+Runs when: Mushroom, beetroot, rabbit or suspicious stew in the inventory
+
+## `bucket_pufferfish`
+
+A water bucket looks like a pufferfish bucket for 5 s (only shown to the player); under hardcore it is swapped for real
+
+Runs when: A water bucket in the inventory
+
+## `torch_burn`
+
+**Harmful.**
+Half of a stack of torches is gone, at least one is left
+
+Runs when: A stack of 2 or more torches or soul torches
+
+## `bundle_bone`
+
+A bone is added to a bundle's contents (nothing is taken out)
+
+Runs when: A bundle with room for a bone
+
+## `shield_ghost`
+
+The sound of a shield blocking a hit, with nothing there
+
+Runs when: A shield in either hand
+
+## `item_throwback`
+
+A dropped item is thrown at the player, slowly enough to dodge
+
+Runs when: A dropped item 3–12 blocks away
+
+## `phantom_horn`
+
+The goat horn's own tune sounds at the player
+
+Runs when: A goat horn with a tune in the inventory
+
+## `armor_dye`
+
+A piece of leather armor is dyed black, and its old colour returns after 5 min; under hardcore it stays black
+
+Runs when: A leather armor piece, worn or carried, that is not black
+
+## `item_glint`
+
+An item glints as if enchanted for 10 s
+
+Runs when: An item that does not glint
+
+## `item_lore`
+
+A lore line such as "it remembers you" is added and removed after 5 min; under hardcore it stays
+
+Runs when: Any item in the inventory or worn
+
+## `tool_mirage`
+
+**Harmful.**
+A tool shows full durability, then almost broken, then the truth (only shown to the player); under hardcore it is worn down for real
+
+Runs when: A damageable tool with durability to spare

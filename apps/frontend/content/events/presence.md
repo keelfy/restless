@@ -4,7 +4,7 @@ title: Presence
 
 # Presence
 
-26 events.
+41 events.
 
 ## `dragon_flyover`
 
@@ -163,3 +163,93 @@ Runs when: None
 A gray italic "X whispers to you" line from a real online player; off by default since it impersonates a real person
 
 Runs when: Another player online
+
+## `pumpkin_head`
+
+Only this player's client is told the head slot holds a carved pumpkin, so the pumpkin blur covers the screen. 4 s later the real slot comes back. Nothing on the server. In hardcore, a real pumpkin is put on an empty head slot and taken off again
+
+Runs when: Always
+
+## `xp_drain`
+
+The client is told the experience bar and level are zero for 3 s, then the real values
+
+Runs when: Has experience points or levels
+
+## `phantom_flames`
+
+The client is told the player is on fire for 3 s, so the fire shows on screen. Nothing burns; the real flags come back after. In hardcore, the player is set on fire for 1 s
+
+Runs when: Not on fire, not in water
+
+## `phantom_drowning`
+
+The client is told the air supply drains from full to 20% over 4 s, so bubbles show on land; then the real value
+
+Runs when: Full air
+
+## `phantom_frost`
+
+The client is told the frozen ticks rise to full over 2.5 s, so frost creeps over the screen, held until 5 s; then the real value. In hardcore, the player really freezes
+
+Runs when: Not freezing
+
+## `moon_phase`
+
+Only this player's client is shown the clock moved a random 1 to 7 whole days on, so the moon has another phase and the time of day is the same. 20 s later it gets the real time back. Nothing on the server
+
+Runs when: Overworld, night
+
+## `false_boss_bar`
+
+A purple boss bar with a name from `names` is sent to this player only. It fills over 3 s, empties over 2 s and is removed. No boss exists
+
+Runs when: Always
+
+## `action_bar_whisper`
+
+A dark red line from `lines` ("Don't turn around" and others) on the action bar, cleared after 2 s
+
+Runs when: Always
+
+## `false_absorption`
+
+The client is told the player has 8 absorption (4 golden hearts), draining to 0 over 4 s; then the real value
+
+Runs when: No absorption
+
+## `empty_armor_bar`
+
+The client is told the armor attribute is 0 for 4 s, so the armor bar vanishes; then the real attribute
+
+Runs when: Wearing armor
+
+## `hurt_tilt`
+
+The hurt animation (screen tilt) from a random side, with no damage
+
+Runs when: Always
+
+## `own_hand_swings`
+
+The player's own main hand swings twice, 14 ticks apart
+
+Runs when: Always
+
+## `night_eyes`
+
+The client is told of 1.5 s of night vision, then 4 s of darkness; then the real effects. No effect exists on the server
+
+Runs when: No night vision or darkness
+
+## `all_on_cooldown`
+
+Every item on the hotbar and in the hands is shown on a 2 s cooldown. The client counts it down by itself
+
+Runs when: An item on the hotbar or in the hands
+
+## `noon_moon`
+
+Only this player's client is told it is midnight under a full moon, with the clock stopped. 10 s later it gets the real time back. Nothing on the server
+
+Runs when: Overworld, daytime

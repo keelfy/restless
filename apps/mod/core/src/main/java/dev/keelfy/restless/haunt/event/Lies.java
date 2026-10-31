@@ -8,6 +8,7 @@ import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Said;
+import dev.keelfy.restless.haunt.ScenarioContext;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.TurnPayload;
@@ -19,6 +20,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -32,24 +34,38 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
 import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket.Action;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetBorderWarningDistancePacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.network.protocol.game.ClientboundSetHealthPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.network.protocol.game.ClientboundSwingAnimationPacket;
+import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.BossEvent;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.clock.ClockNetworkState;
 import net.minecraft.world.clock.ServerClockManager;
 import net.minecraft.world.clock.WorldClock;
@@ -58,12 +74,17 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityEvent;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.MoonPhase;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.Vec3;
 
@@ -207,7 +228,9 @@ final class Lies {
                         EventTag.PRESENCE,
                         config -> List.of(config.text("killer")),
                         (player, killer) -> player.sendSystemMessage(Component.translatable(
-                                "death.attack.mob", player.getDisplayName(), Component.literal(killer)))),
+                                "death.attack.mob",
+                                player.getDisplayName(),
+                                Component.literal(ScenarioContext.speaker(killer))))),
                 // 167: rain or a storm that only this player sees and hears
                 SimpleEvent.light(
                         "private_rain",
@@ -391,7 +414,95 @@ final class Lies {
                             if (death != null) {
                                 player.sendSystemMessage(Component.translatable(death, Figure.nickname(player)));
                             }
-                        }));
+                        }),
+                // 342: the carved pumpkin's blur over the screen
+                light("pumpkin_head", EventTag.PRESENCE, Lies::pumpkinHead),
+                // 343: the experience bar drops to zero
+                SimpleEvent.light(
+                        "xp_drain",
+                        EventTag.PRESENCE,
+                        player -> player.experienceLevel > 0 || player.experienceProgress > 0,
+                        player -> {
+                            player.connection.send(new ClientboundSetExperiencePacket(0.0F, 0, 0));
+                            Scheduler.later(
+                                    player,
+                                    Ticks.SECOND * Config.event("xp_drain").integer("seconds"),
+                                    Lies::resendExperience);
+                        }),
+                // 344: on fire on screen, with nothing burning
+                SimpleEvent.light(
+                        "phantom_flames",
+                        EventTag.PRESENCE,
+                        player -> !player.isOnFire() && !player.isInWater(),
+                        Lies::phantomFlames),
+                // 345: air bubbles on dry land, draining
+                SimpleEvent.light(
+                        "phantom_drowning",
+                        EventTag.PRESENCE,
+                        player -> player.getAirSupply() >= player.getMaxAirSupply(),
+                        Lies::phantomDrowning),
+                // 346: frost creeping over the screen, with no freezing
+                SimpleEvent.light(
+                        "phantom_frost", EventTag.PRESENCE, player -> player.getTicksFrozen() == 0, Lies::phantomFrost),
+                // 350: another moon, for this player alone; the real time comes back after
+                SimpleEvent.light(
+                        "moon_phase",
+                        EventTag.PRESENCE,
+                        player -> player.level().dimension() == Level.OVERWORLD
+                                && player.level().isDarkOutside(),
+                        Lies::moonPhase),
+                // 352: a boss bar with a name and no boss, filling and emptying
+                light("false_boss_bar", EventTag.PRESENCE, Lies::falseBossBar),
+                // 353: a line on the action bar, gone in a few ticks
+                saying("action_bar_whisper", EventTag.PRESENCE, config -> config.texts("lines"), (player, line) -> {
+                    player.connection.send(new ClientboundSetActionBarTextPacket(
+                            Component.literal(line).withStyle(ChatFormatting.DARK_RED)));
+                    Scheduler.later(
+                            player,
+                            Config.event("action_bar_whisper").integer("ticks"),
+                            p -> p.connection.send(new ClientboundSetActionBarTextPacket(Component.empty())));
+                }),
+                // 356: golden hearts, draining
+                SimpleEvent.light(
+                        "false_absorption",
+                        EventTag.PRESENCE,
+                        player -> player.getAbsorptionAmount() <= 0,
+                        Lies::falseAbsorption),
+                // 357: the armor bar disappears
+                SimpleEvent.light(
+                        "empty_armor_bar",
+                        EventTag.PRESENCE,
+                        player -> player.getArmorValue() > 0,
+                        Lies::emptyArmorBar),
+                // 359: the hurt tilt, with no damage
+                light(
+                        "hurt_tilt",
+                        EventTag.PRESENCE,
+                        player -> player.connection.send(new ClientboundHurtAnimationPacket(
+                                player.getId(), player.getRandom().nextFloat() * 360.0F - 180.0F))),
+                // 360: the player's own hand swings by itself
+                light("own_hand_swings", EventTag.PRESENCE, Lies::ownHandSwings),
+                // 361: a flash of night vision, then darkness
+                SimpleEvent.light(
+                        "night_eyes",
+                        EventTag.PRESENCE,
+                        player -> !player.hasEffect(MobEffects.NIGHT_VISION) && !player.hasEffect(MobEffects.DARKNESS),
+                        Lies::nightEyes),
+                // 362: every sound stopped, again and again
+                light("dead_silence", EventTag.SOUND, Lies::deadSilence),
+                // 363: everything held or on the hotbar on cooldown
+                SimpleEvent.light(
+                        "all_on_cooldown",
+                        EventTag.PRESENCE,
+                        player -> !heldItems(player).isEmpty(),
+                        Lies::allOnCooldown),
+                // 365: a full moon at midnight, in the middle of the day
+                SimpleEvent.light(
+                        "noon_moon",
+                        EventTag.PRESENCE,
+                        player -> player.level().dimension() == Level.OVERWORLD
+                                && !player.level().isDarkOutside(),
+                        Lies::noonMoon));
     }
 
     private static List<ServerPlayer> others(ServerPlayer player) {
@@ -466,6 +577,277 @@ final class Lies {
         } finally {
             buffer.release();
         }
+    }
+
+    private static final int SHARED_FLAGS = 0;
+    private static final int AIR_SUPPLY = 1;
+    private static final int TICKS_FROZEN = 7;
+    /** Entity data ids run Entity 0-7, LivingEntity 8-14, Avatar 15-16, and then the player's own. */
+    private static final int ABSORPTION = 17;
+
+    private static final byte ON_FIRE = 1;
+
+    /** Runs {@code lie} on each of {@code ticks} ticks, then {@code truth} once. */
+    private static void hold(
+            ServerPlayer player, int ticks, BiConsumer<ServerPlayer, Integer> lie, Consumer<ServerPlayer> truth) {
+        Scheduler.repeat(player, 0, 1, (p, n) -> {
+            if (n >= ticks) {
+                truth.accept(p);
+                return false;
+            }
+            lie.accept(p, n);
+            return true;
+        });
+    }
+
+    private static void tell(ServerPlayer player, SynchedEntityData.DataValue<?> value) {
+        player.connection.send(new ClientboundSetEntityDataPacket(player.getId(), List.of(value)));
+    }
+
+    private static void tellFlags(ServerPlayer player, byte flags) {
+        tell(player, new SynchedEntityData.DataValue<>(SHARED_FLAGS, EntityDataSerializers.BYTE, flags));
+    }
+
+    private static void tellAir(ServerPlayer player, int air) {
+        tell(player, new SynchedEntityData.DataValue<>(AIR_SUPPLY, EntityDataSerializers.INT, air));
+    }
+
+    private static void tellFrozen(ServerPlayer player, int ticks) {
+        tell(player, new SynchedEntityData.DataValue<>(TICKS_FROZEN, EntityDataSerializers.INT, ticks));
+    }
+
+    private static void tellAbsorption(ServerPlayer player, float amount) {
+        tell(player, new SynchedEntityData.DataValue<>(ABSORPTION, EntityDataSerializers.FLOAT, amount));
+    }
+
+    /** The player's shared flags (on fire, sneaking, sprinting and the rest) as they are now. */
+    private static byte sharedFlags(ServerPlayer player) {
+        List<SynchedEntityData.DataValue<?>> values = player.getEntityData().getNonDefaultValues();
+        if (values == null) {
+            return 0;
+        }
+        return (byte) values.stream()
+                .filter(value -> value.id() == SHARED_FLAGS)
+                .map(value -> (Byte) value.value())
+                .findFirst()
+                .orElse((byte) 0);
+    }
+
+    private static void pumpkinHead(ServerPlayer player) {
+        int ticks = Ticks.SECOND * Config.event("pumpkin_head").integer("seconds");
+        if (Hardcore.on(player.level())
+                && player.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+            // A real one, taken off again after.
+            ItemStack pumpkin = new ItemStack(Items.CARVED_PUMPKIN);
+            player.setItemSlot(EquipmentSlot.HEAD, pumpkin);
+            Scheduler.later(player, ticks, p -> {
+                if (p.getItemBySlot(EquipmentSlot.HEAD) == pumpkin) {
+                    p.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                }
+            });
+            return;
+        }
+        InventoryMenu menu = player.inventoryMenu;
+        // The first armor slot is the head.
+        int slot = InventoryMenu.ARMOR_SLOT_START;
+        player.connection.send(new ClientboundContainerSetSlotPacket(
+                menu.containerId, menu.getStateId(), slot, new ItemStack(Items.CARVED_PUMPKIN)));
+        Scheduler.later(
+                player,
+                ticks,
+                p -> p.connection.send(new ClientboundContainerSetSlotPacket(
+                        menu.containerId,
+                        menu.getStateId(),
+                        slot,
+                        menu.getSlot(slot).getItem().copy())));
+    }
+
+    private static void resendExperience(ServerPlayer player) {
+        player.connection.send(new ClientboundSetExperiencePacket(
+                player.experienceProgress, player.totalExperience, player.experienceLevel));
+    }
+
+    private static void phantomFlames(ServerPlayer player) {
+        Config.Section config = Config.event("phantom_flames");
+        if (Hardcore.on(player.level())) {
+            player.setRemainingFireTicks(Ticks.SECOND);
+            return;
+        }
+        // The flags are told afresh each tick, so a sprint or a sneak in the meantime is not undone.
+        hold(
+                player,
+                config.integer("ticks"),
+                (p, n) -> tellFlags(p, (byte) (sharedFlags(p) | ON_FIRE)),
+                p -> tellFlags(p, sharedFlags(p)));
+    }
+
+    private static void phantomDrowning(ServerPlayer player) {
+        Config.Section config = Config.event("phantom_drowning");
+        int max = player.getMaxAirSupply();
+        int ticks = config.integer("ticks");
+        double drained = config.num("drained");
+        hold(
+                player,
+                ticks,
+                (p, n) -> tellAir(p, max - (int) (max * drained * n / ticks)),
+                p -> tellAir(p, p.getAirSupply()));
+    }
+
+    private static void phantomFrost(ServerPlayer player) {
+        Config.Section config = Config.event("phantom_frost");
+        int required = player.getTicksRequiredToFreeze();
+        if (Hardcore.on(player.level())) {
+            player.setTicksFrozen(required + config.integer("hardcore_extra_ticks"));
+            return;
+        }
+        int ramp = config.integer("ramp_ticks");
+        hold(
+                player,
+                config.integer("ticks"),
+                (p, n) -> tellFrozen(p, (int) Math.min(required, (long) required * (n + 1) / ramp)),
+                p -> tellFrozen(p, p.getTicksFrozen()));
+    }
+
+    private static void falseAbsorption(ServerPlayer player) {
+        Config.Section config = Config.event("false_absorption");
+        int ticks = config.integer("ticks");
+        float amount = (float) config.num("amount");
+        hold(
+                player,
+                ticks,
+                (p, n) -> tellAbsorption(p, amount * (ticks - n) / ticks),
+                p -> tellAbsorption(p, p.getAbsorptionAmount()));
+    }
+
+    private static void emptyArmorBar(ServerPlayer player) {
+        AttributeInstance bare = new AttributeInstance(Attributes.ARMOR, instance -> {});
+        bare.setBaseValue(0);
+        player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(), List.of(bare)));
+        Scheduler.later(player, Ticks.SECOND * Config.event("empty_armor_bar").integer("seconds"), p -> {
+            AttributeInstance real = p.getAttributes().getInstance(Attributes.ARMOR);
+            if (real != null) {
+                p.connection.send(new ClientboundUpdateAttributesPacket(p.getId(), List.of(real)));
+            }
+        });
+    }
+
+    private static void ownHandSwings(ServerPlayer player) {
+        Config.Section config = Config.event("own_hand_swings");
+        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            p.connection.send(
+                    new ClientboundSwingAnimationPacket(p, InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT));
+            return n + 1 < config.integer("swings");
+        });
+    }
+
+    private static void nightEyes(ServerPlayer player) {
+        Config.Section config = Config.event("night_eyes");
+        int flash = config.integer("flash_ticks");
+        int dark = config.integer("dark_ticks");
+        player.connection.send(new ClientboundUpdateMobEffectPacket(
+                player.getId(), new MobEffectInstance(MobEffects.NIGHT_VISION, flash), false));
+        Scheduler.later(player, flash, p -> {
+            restoreEffect(p, MobEffects.NIGHT_VISION);
+            p.connection.send(new ClientboundUpdateMobEffectPacket(
+                    p.getId(), new MobEffectInstance(MobEffects.DARKNESS, dark), false));
+        });
+        Scheduler.later(player, flash + dark, p -> restoreEffect(p, MobEffects.DARKNESS));
+    }
+
+    /** Tells the client what the server really has of {@code effect}: the effect itself, or nothing. */
+    private static void restoreEffect(ServerPlayer player, Holder<MobEffect> effect) {
+        MobEffectInstance real = player.getEffect(effect);
+        if (real == null) {
+            player.connection.send(new ClientboundRemoveMobEffectPacket(player.getId(), effect));
+        } else {
+            player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), real, false));
+        }
+    }
+
+    private static void deadSilence(ServerPlayer player) {
+        hold(
+                player,
+                Ticks.SECOND * Config.event("dead_silence").integer("seconds"),
+                (p, n) -> p.connection.send(new ClientboundStopSoundPacket(null, null)),
+                p -> {});
+    }
+
+    /** What is in the hands and on the hotbar, without the empty ones. */
+    private static List<ItemStack> heldItems(ServerPlayer player) {
+        List<ItemStack> held = new ArrayList<>();
+        for (int slot = InventoryMenu.USE_ROW_SLOT_START; slot < InventoryMenu.USE_ROW_SLOT_END; slot++) {
+            held.add(player.inventoryMenu.getSlot(slot).getItem());
+        }
+        held.add(player.getOffhandItem());
+        held.removeIf(ItemStack::isEmpty);
+        return held;
+    }
+
+    private static void allOnCooldown(ServerPlayer player) {
+        int ticks = Ticks.SECOND * Config.event("all_on_cooldown").integer("seconds");
+        // The client counts the cooldown down by itself, so nothing is sent after.
+        heldItems(player).stream()
+                .map(stack -> player.getCooldowns().getCooldownGroup(stack))
+                .distinct()
+                .forEach(group -> player.connection.send(new ClientboundCooldownPacket(group, ticks)));
+    }
+
+    private static void moonPhase(ServerPlayer player) {
+        Config.Section config = Config.event("moon_phase");
+        ServerClockManager clocks = player.level().getServer().clockManager();
+        Holder<WorldClock> clock = player.level().getServer().registryAccess().getOrThrow(WorldClocks.OVERWORLD);
+        ServerClockManager.ServerClockInstance now = clocks.getInstance(clock);
+        // Whole days on, so the time of day stays and only the phase moves.
+        long shifted = now.totalTicks()
+                + (long) (1 + player.getRandom().nextInt(MoonPhase.COUNT - 1)) * MoonPhase.PHASE_LENGTH;
+        skyTold(
+                player,
+                clock,
+                new ClockNetworkState(shifted, now.partialTick(), now.rate()),
+                config.integer("seconds"));
+    }
+
+    private static void noonMoon(ServerPlayer player) {
+        Config.Section config = Config.event("noon_moon");
+        ServerClockManager clocks = player.level().getServer().clockManager();
+        Holder<WorldClock> clock = player.level().getServer().registryAccess().getOrThrow(WorldClocks.OVERWORLD);
+        long now = clocks.getInstance(clock).totalTicks();
+        // The full moon is the first of the cycle's phases.
+        long midnight = now
+                - Math.floorMod(now, (long) MoonPhase.PHASE_LENGTH * MoonPhase.COUNT)
+                + config.integer("time_of_day");
+        skyTold(player, clock, new ClockNetworkState(midnight, 0.0F, 0.0F), config.integer("seconds"));
+    }
+
+    /** Tells only this client that the {@code clock} reads {@code state}, and the real clock again after. */
+    private static void skyTold(ServerPlayer player, Holder<WorldClock> clock, ClockNetworkState state, int seconds) {
+        player.connection.send(new ClientboundSetTimePacket(player.level().getGameTime(), Map.of(clock, state)));
+        Scheduler.later(
+                player,
+                Ticks.SECOND * seconds,
+                p -> p.connection.send(p.level().getServer().clockManager().createFullSyncPacket()));
+    }
+
+    private static void falseBossBar(ServerPlayer player) {
+        Config.Section config = Config.event("false_boss_bar");
+        ServerBossEvent bar = new ServerBossEvent(
+                UUID.randomUUID(),
+                Component.literal(pick(player, config.texts("names"))),
+                BossEvent.BossBarColor.PURPLE,
+                BossEvent.BossBarOverlay.PROGRESS);
+        bar.setProgress(0.0F);
+        player.connection.send(ClientboundBossEventPacket.createAddPacket(bar));
+        int fill = config.integer("fill_ticks");
+        int empty = config.integer("empty_ticks");
+        Scheduler.repeat(player, 1, 1, (p, n) -> {
+            if (n >= fill + empty) {
+                p.connection.send(ClientboundBossEventPacket.createRemovePacket(bar.getId()));
+                return false;
+            }
+            bar.setProgress(n < fill ? (n + 1) / (float) fill : 1.0F - (n + 1 - fill) / (float) empty);
+            p.connection.send(ClientboundBossEventPacket.createUpdateProgressPacket(bar));
+            return true;
+        });
     }
 
     private static void resendHealth(ServerPlayer player) {

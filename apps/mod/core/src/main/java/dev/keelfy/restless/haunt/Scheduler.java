@@ -42,7 +42,12 @@ public final class Scheduler {
      * Runs {@code step} after {@code delay} ticks, then every {@code interval} ticks for as long as it returns true.
      */
     public static void repeat(ServerPlayer player, int delay, int interval, Step step) {
-        TASKS.add(new Task(player, now(player) + delay, Math.max(1, interval), step));
+        ScenarioContext context = ScenarioContext.current();
+        TASKS.add(new Task(player, now(player) + delay, Math.max(1, interval), (p, n) -> {
+            boolean[] again = {false};
+            ScenarioContext.during(context, () -> again[0] = step.run(p, n));
+            return again[0];
+        }));
     }
 
     public static void later(ServerPlayer player, int delay, Consumer<ServerPlayer> action) {

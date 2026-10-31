@@ -4,6 +4,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
 import java.util.function.Predicate;
@@ -17,11 +18,15 @@ import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.DaylightDetectorBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.JukeboxBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.RedstoneTorchBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -102,7 +107,40 @@ final class Mechanisms {
                         EventTag.DOORS,
                         player -> player.level().isDarkOutside()
                                 && Nearby.any(player, "open_house", Mechanisms::closedWoodenDoor),
-                        Mechanisms::openHouse));
+                        Mechanisms::openHouse),
+                // 219: the click of a tripwire hook that nothing tripped
+                SimpleEvent.light(
+                        "hook_click",
+                        EventTag.DOORS,
+                        player -> Nearby.any(player, "hook_click", s -> s.is(Blocks.TRIPWIRE_HOOK)),
+                        Mechanisms::clickHook),
+                // 221: stays flipped for a while, so lamps on it switch with the daylight the wrong way round
+                SimpleEvent.light(
+                        "daylight_flip",
+                        EventTag.DOORS,
+                        player -> Nearby.any(player, "daylight_flip", s -> s.is(Blocks.DAYLIGHT_DETECTOR)),
+                        Mechanisms::flipDetector),
+                // 224: the vanilla lightning strike on a rod: powered for a moment, with its sparks
+                SimpleEvent.light(
+                        "rod_sparks",
+                        EventTag.DOORS,
+                        player -> Nearby.any(player, "rod_sparks", Mechanisms::idleRod),
+                        Mechanisms::sparkRod),
+                // 240: the vanilla burnout, which relights it by itself after a while
+                SimpleEvent.light(
+                        "torch_burnout",
+                        EventTag.DOORS,
+                        player -> Nearby.any(player, "torch_burnout", Mechanisms::litTorch),
+                        Mechanisms::burnOut),
+                // 243: every lid in the house, at once
+                SimpleEvent.light(
+                        "chests_open",
+                        EventTag.DOORS,
+                        player -> Household.indoors(player)
+                                && Nearby.all(player, "chests_open", Mechanisms::chest)
+                                                .size()
+                                        >= Config.event("chests_open").integer("min_chests"),
+                        Mechanisms::openChests));
     }
 
     private interface Action {
@@ -124,6 +162,14 @@ final class Mechanisms {
 
     private static boolean chest(BlockState state) {
         return state.is(Blocks.CHEST) || state.is(Blocks.TRAPPED_CHEST);
+    }
+
+    private static boolean idleRod(BlockState state) {
+        return state.getBlock() instanceof LightningRodBlock && !state.getValue(BlockStateProperties.POWERED);
+    }
+
+    private static boolean litTorch(BlockState state) {
+        return state.getBlock() instanceof RedstoneTorchBlock && state.getValue(RedstoneTorchBlock.LIT);
     }
 
     private static boolean lockableDoor(BlockState state) {
@@ -239,16 +285,18 @@ final class Mechanisms {
             return;
         }
         ServerLevel level = player.level();
-        lid(level, pos, true);
+        lid("chest_lid", level, pos, true);
         Scheduler.later(
-                player, Config.event("chest_lid").integer("close_after_ticks"), p -> lid(p.level(), pos, false));
+                player,
+                Config.event("chest_lid").integer("close_after_ticks"),
+                p -> lid("chest_lid", p.level(), pos, false));
     }
 
-    private static void lid(ServerLevel level, BlockPos pos, boolean open) {
+    private static void lid(String event, ServerLevel level, BlockPos pos, boolean open) {
         BlockState state = level.getBlockState(pos);
         if (chest(state)) {
             level.blockEvent(pos, state.getBlock(), 1, open ? 1 : 0);
-            Config.Tone tone = Config.event("chest_lid").tone("sound");
+            Config.Tone tone = Config.event(event).tone("sound");
             level.playSound(
                     null,
                     pos,
@@ -302,5 +350,80 @@ final class Mechanisms {
         level.playSound(
                 null, pos, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.BLOCKS, tone.volume(), tone.pitch());
         DoorLocks.lock(level, pos, config.integer("lock_ticks"));
+    }
+
+    private static void clickHook(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "hook_click", s -> s.is(Blocks.TRIPWIRE_HOOK));
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        Config.Section config = Config.event("hook_click");
+        Config.Tone tone = config.tone("sound");
+        level.playSound(null, pos, SoundEvents.TRIPWIRE_CLICK_ON, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+        Scheduler.later(
+                player,
+                config.integer("release_ticks"),
+                p -> level.playSound(
+                        null, pos, SoundEvents.TRIPWIRE_CLICK_OFF, SoundSource.BLOCKS, tone.volume(), tone.pitch()));
+    }
+
+    /** The detector's own tick works out its power again; set back after a while unless it stays under hardcore. */
+    private static void flipDetector(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "daylight_flip", s -> s.is(Blocks.DAYLIGHT_DETECTOR));
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        BlockState flipped = level.getBlockState(pos).cycle(DaylightDetectorBlock.INVERTED);
+        level.setBlockAndUpdate(pos, flipped);
+        Restore.revert(level, Config.event("daylight_flip").integer("restore_ticks"), force -> {
+            if (!force && !level.isLoaded(pos)) {
+                return false;
+            }
+            BlockState now = level.getBlockState(pos);
+            if (now.is(Blocks.DAYLIGHT_DETECTOR)
+                    && now.getValue(DaylightDetectorBlock.INVERTED)
+                            == flipped.getValue(DaylightDetectorBlock.INVERTED)) {
+                level.setBlockAndUpdate(pos, now.cycle(DaylightDetectorBlock.INVERTED));
+            }
+            return true;
+        });
+    }
+
+    private static void sparkRod(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "rod_sparks", Mechanisms::idleRod);
+        if (pos != null) {
+            BlockState state = player.level().getBlockState(pos);
+            ((LightningRodBlock) state.getBlock()).onLightningStrike(state, player.level(), pos);
+        }
+    }
+
+    /**
+     * The torch goes out without a neighbour update, so it does not light itself again at once; the tick scheduled here
+     * does it, or any update beside it sooner.
+     */
+    private static void burnOut(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "torch_burnout", Mechanisms::litTorch);
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        BlockState state = level.getBlockState(pos);
+        Restore.quiet(level, pos, state.setValue(RedstoneTorchBlock.LIT, false));
+        level.updateNeighborsAt(pos, state.getBlock());
+        level.updateNeighborsAt(pos.above(), state.getBlock());
+        level.levelEvent(LevelEvent.REDSTONE_TORCH_BURNOUT, pos, 0);
+        level.scheduleTick(pos, state.getBlock(), Config.event("torch_burnout").integer("relight_ticks"));
+    }
+
+    private static void openChests(ServerPlayer player) {
+        ServerLevel level = player.level();
+        List<BlockPos> chests = Nearby.all(player, "chests_open", Mechanisms::chest);
+        chests.forEach(pos -> lid("chests_open", level, pos, true));
+        Scheduler.later(
+                player,
+                Config.event("chests_open").integer("close_after_ticks"),
+                p -> chests.forEach(pos -> lid("chests_open", p.level(), pos, false)));
     }
 }

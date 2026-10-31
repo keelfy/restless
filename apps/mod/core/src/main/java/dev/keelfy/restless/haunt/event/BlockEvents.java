@@ -57,6 +57,9 @@ import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.GlazedTerracottaBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.StandingSignBlock;
@@ -67,6 +70,7 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -196,6 +200,32 @@ final class BlockEvents {
                                 player.level().setBlockAndUpdate(pos, Blocks.CAULDRON.defaultBlockState());
                             }
                         }),
+                // 239
+                SimpleEvent.light(
+                        "lava_cauldron",
+                        EventTag.BLOCKS,
+                        player -> Nearby.any(player, "lava_cauldron", s -> s.is(Blocks.WATER_CAULDRON)),
+                        BlockEvents::lavaCauldron),
+                // 245: only in a house, where nothing could have rained into it
+                SimpleEvent.light(
+                        "cauldron_fills",
+                        EventTag.BLOCKS,
+                        player -> Household.indoors(player)
+                                && Nearby.any(player, "cauldron_fills", s -> s.is(Blocks.CAULDRON)),
+                        BlockEvents::fillCauldron),
+                // 235
+                SimpleEvent.light(
+                        "turning_terracotta",
+                        EventTag.BLOCKS,
+                        player -> Nearby.any(
+                                player, "turning_terracotta", s -> s.getBlock() instanceof GlazedTerracottaBlock),
+                        BlockEvents::turnTerracotta),
+                // 237
+                SimpleEvent.light(
+                        "end_rod_gaze",
+                        EventTag.BLOCKS,
+                        player -> !rodsToTurn(player).isEmpty(),
+                        BlockEvents::turnRod),
                 // 79: a scatter of grass around the player turns to dirt
                 SimpleEvent.light(
                         "dead_ground",
@@ -568,6 +598,90 @@ final class BlockEvents {
                         SoundSource.HOSTILE,
                         tone.volume(),
                         tone.pitch());
+    }
+
+    private static void lavaCauldron(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "lava_cauldron", s -> s.is(Blocks.WATER_CAULDRON));
+        if (pos == null) {
+            return;
+        }
+        Swaps.show(player, pos, Blocks.LAVA_CAULDRON.defaultBlockState(), restoreTicks("lava_cauldron"));
+        Config.Tone tone = Config.event("lava_cauldron").tone("sound");
+        player.level()
+                .playSound(null, pos, SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, tone.volume(), tone.pitch());
+    }
+
+    private static void fillCauldron(ServerPlayer player) {
+        BlockPos pos = Nearby.random(player, "cauldron_fills", s -> s.is(Blocks.CAULDRON));
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        int fill =
+                LayeredCauldronBlock.MIN_FILL_LEVEL + player.getRandom().nextInt(LayeredCauldronBlock.MAX_FILL_LEVEL);
+        Swaps.show(
+                player,
+                pos,
+                Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, fill),
+                restoreTicks("cauldron_fills"));
+        level.sendParticles(
+                ParticleTypes.DRIPPING_WATER,
+                pos.getX() + 0.5,
+                pos.getY() + 1.0,
+                pos.getZ() + 0.5,
+                6,
+                0.2,
+                0.1,
+                0.2,
+                0.0);
+        Config.Tone tone = Config.event("cauldron_fills").tone("sound");
+        level.playSound(
+                null,
+                pos,
+                SoundEvents.POINTED_DRIPSTONE_DRIP_WATER_INTO_CAULDRON,
+                SoundSource.BLOCKS,
+                tone.volume(),
+                tone.pitch());
+    }
+
+    private static void turnTerracotta(ServerPlayer player) {
+        ServerLevel level = player.level();
+        Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
+        for (BlockPos pos :
+                Nearby.all(player, "turning_terracotta", s -> s.getBlock() instanceof GlazedTerracottaBlock)) {
+            BlockState state = level.getBlockState(pos);
+            shown.put(
+                    pos,
+                    state.setValue(
+                            HorizontalDirectionalBlock.FACING,
+                            state.getValue(HorizontalDirectionalBlock.FACING).getClockWise()));
+        }
+        Swaps.show(player, shown, restoreTicks("turning_terracotta"));
+    }
+
+    /** The way an end rod would point at the player's eyes. */
+    private static Direction toward(ServerPlayer player, BlockPos pos) {
+        return Direction.getApproximateNearest(player.getEyePosition().subtract(Vec3.atCenterOf(pos)));
+    }
+
+    private static List<BlockPos> rodsToTurn(ServerPlayer player) {
+        return Nearby.all(player, "end_rod_gaze", s -> s.is(Blocks.END_ROD)).stream()
+                .filter(pos ->
+                        player.level().getBlockState(pos).getValue(BlockStateProperties.FACING) != toward(player, pos))
+                .toList();
+    }
+
+    private static void turnRod(ServerPlayer player) {
+        List<BlockPos> rods = rodsToTurn(player);
+        if (rods.isEmpty()) {
+            return;
+        }
+        BlockPos pos = rods.get(player.getRandom().nextInt(rods.size()));
+        Swaps.show(
+                player,
+                pos,
+                player.level().getBlockState(pos).setValue(BlockStateProperties.FACING, toward(player, pos)),
+                restoreTicks("end_rod_gaze"));
     }
 
     /** How long an event's change lasts before it is put back. */

@@ -4,7 +4,7 @@ title: Sound
 
 # Sound
 
-36 events.
+67 events.
 
 ## `footsteps`
 
@@ -207,7 +207,13 @@ Runs when: Always
 
 ## `cut_off_scream`
 
-A scream (custom sound) 12 blocks away that is stopped dead 0.7 s in
+A pre-cut scream (custom sound) 12 blocks away
+
+Runs when: Always
+
+## `long_scream`
+
+A sustained scream (custom sound) 12 blocks away
 
 Runs when: Always
 
@@ -220,5 +226,191 @@ Runs when: Always
 ## `own_voice`
 
 A chat line `<name> ...` from `lines`, sent only to the player
+
+Runs when: Always
+
+## `distant_warden`
+
+A warden roar, then a sonic boom 2 s later, from 40 blocks away; loud enough to carry
+
+Runs when: Always
+
+## `sky_dragon`
+
+An ender dragon growl from 30 blocks away and 25 above, loud enough to carry
+
+Runs when: Always
+
+## `distant_wither`
+
+A wither spawn sound from 45 blocks away, loud enough to carry
+
+Runs when: Always
+
+## `end_portal_open`
+
+An end portal opening sound from 30 blocks away
+
+Runs when: Always
+
+## `sky_ghast`
+
+A ghast scream from 20 blocks away and 14 above
+
+Runs when: Always
+
+## `fox_screech`
+
+A fox screech 12 blocks away
+
+Runs when: Not bright outside (night or storm)
+
+## `rabbit_death`
+
+A rabbit death sound 4 blocks away
+
+Runs when: Always
+
+## `phantom_hurt`
+
+The player hurt sound at the player; no damage
+
+Runs when: Always
+
+## `phantom_tool_break`
+
+The item break sound at the player; nothing is damaged
+
+Runs when: Always
+
+## `elytra_overhead`
+
+Twelve elytra wind sounds sweeping 45 blocks each way across a line 10 blocks up
+
+Runs when: Always
+
+## `nether_ambience`
+
+Six mood and additions sounds of a soul sand valley or basalt deltas, 2 s apart, at the player
+
+Runs when: Always
+
+## `equip_behind`
+
+Four equip sounds of one armor material, 0.3 s apart, 1.5 blocks behind the player
+
+Runs when: Always
+
+## `phantom_fishing`
+
+Bobber throw, splash and retrieve sounds 1.2 s apart, 6 blocks away
+
+Runs when: Always
+
+## `zombie_at_door`
+
+Four door-battering sounds and a break sound at a wooden door within 12
+
+Runs when: A wooden door within 12
+
+## `phantom_anchor`
+
+A respawn anchor charge or deplete sound 5 blocks away
+
+Runs when: Always
+
+## `bucket_spill`
+
+A bucket empty sound 3 blocks away
+
+Runs when: No open sky above the player
+
+## `lost_villager`
+
+A villager idle sound 4 blocks behind the player
+
+Runs when: Always
+
+## `phantom_arrow`
+
+An arrow hit sound at a one-block-thick wall in front of the player
+
+Runs when: A wall in front of the player
+
+## `phantom_glass`
+
+Break particles and sound of a glass block or pane within 12; it stays
+
+Runs when: Glass within 12
+
+## `pen_cries`
+
+A sheep, piglet or cow death sound at an animal within 16
+
+Runs when: An animal within 16
+
+## `sniffing_behind`
+
+A sniffer sniff 1 block behind the player
+
+Runs when: Always
+
+## `distant_goat_horn`
+
+A random goat horn call from 40 blocks away, loud enough to carry
+
+Runs when: Always
+
+## `false_raid_horn`
+
+A raid horn from 35 blocks away
+
+Runs when: Always
+
+## `heavy_splash`
+
+A low splash at water within 16
+
+Runs when: Water within 16
+
+## `distant_ravager`
+
+A ravager roar from 30 blocks away, loud enough to carry
+
+Runs when: Always
+
+## `golem_circling`
+
+Fourteen golem steps on a point circling 7 blocks out at ground level
+
+Runs when: Always
+
+## `burp_behind`
+
+A player burp 1.5 blocks behind the player
+
+Runs when: Always
+
+## `bubble_columns`
+
+Six bubble column sounds, 0.5 s apart, 1 block from the player
+
+Runs when: Always
+
+## `lava_pops`
+
+A lava ambient sound and three pops, 0.7 s apart, 2 blocks away
+
+Runs when: Always
+
+## `chain_rattle`
+
+Twelve chain step sounds on a point circling 4 blocks out at ground level
+
+Runs when: Always
+
+## `dead_silence`
+
+A stop-all-sounds packet every tick for 5 s, so nothing plays
 
 Runs when: Always

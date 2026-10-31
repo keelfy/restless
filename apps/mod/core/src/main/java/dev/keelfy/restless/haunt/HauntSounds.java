@@ -10,6 +10,8 @@ import net.minecraft.sounds.SoundEvent;
  */
 public final class HauntSounds {
     public static final SoundEvent SCREAM = event("haunt.scream");
+    public static final SoundEvent CUT_OFF_SCREAM = event("haunt.cut_off_scream");
+    public static final SoundEvent LONG_SCREAM = event("haunt.long_scream");
     public static final SoundEvent MOAN = event("haunt.moan");
     public static final SoundEvent WHISPER = event("haunt.whisper");
     public static final SoundEvent LAUGH = event("haunt.laugh");

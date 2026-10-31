@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import com.mojang.authlib.GameProfile;
+import dev.keelfy.restless.haunt.ScenarioContext;
 import dev.keelfy.restless.spirit.Story;
 import java.util.List;
 import java.util.Random;
@@ -80,6 +81,10 @@ final class Figure {
 
     /** A made-up player nickname, as spirits have, short enough to be a real player's. */
     static String nickname(ServerPlayer player) {
+        return ScenarioContext.nickname(() -> freshNickname(player));
+    }
+
+    private static String freshNickname(ServerPlayer player) {
         Random random = new Random(player.getRandom().nextLong());
         String name = Story.nickname(random);
         for (int i = 0; i < 8 && name.length() > NAME_MAX; i++) {

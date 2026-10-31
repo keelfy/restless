@@ -403,7 +403,8 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `ghost_breath` | 135 | LIGHT | SOUND | 0.3 | Always | A cold breath (custom sound) 0.8 blocks behind the player |
 | `close_whispers` | 135 | LIGHT | SOUND | 0.3 | Always | Three whispers (custom sound) 1.5 blocks away at the player's ears, left and right in turn, one every 2.5 s |
 | `circling_moan` | 135 | LIGHT | SOUND | 0.25 | Always | Four moans (custom sound) 6 blocks away, each 90° further round the player than the last, one every 2.25 s |
-| `cut_off_scream` | 135 | LIGHT | SOUND | 0.25 | Always | A scream (custom sound) 12 blocks away that is stopped dead 0.7 s in |
+| `cut_off_scream` | 135 | LIGHT | SOUND | 0.25 | Always | A pre-cut scream (custom sound) 12 blocks away |
+| `long_scream` | — | LIGHT | SOUND | 0.25 | Always | A sustained scream (custom sound) 12 blocks away |
 | `banshee` | 150 | LIGHT | SOUND | 0.15 | Always | A 14 s shriek (custom sound) from 30 blocks away and 12 above, loud enough to carry |
 | `nausea` | 39 | LIGHT | AFFLICTION | 0.6 | No nausea | Nausea 5 s |
 | `heaviness` | 40 | LIGHT | AFFLICTION | 0.6 | No slowness | Slowness II 8 s |
@@ -539,6 +540,77 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `stranger_joins` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets "<name> joined the game" and a player list entry for a made-up nickname (as spirits get, at most 16 characters), in a default skin. 40 s later the entry goes and "<name> left the game" follows. Nothing on the server |
 | `stranger_death` | 124 | LIGHT | PRESENCE, PLAYER | 0.2 | None | Only this player gets a vanilla death message (fell, drowned, suffocated, fell out of the world, died) for a made-up nickname |
 | `false_whisper` | 202 | LIGHT | PRESENCE, PLAYER | 0.0 | Another player online | A gray italic "X whispers to you" line from a real online player; off by default since it impersonates a real person |
+| `distant_warden` | 312 | LIGHT | SOUND | 0.25 | Always | A warden roar, then a sonic boom 2 s later, from 40 blocks away; loud enough to carry |
+| `sky_dragon` | 313 | LIGHT | SOUND | 0.2 | Always | An ender dragon growl from 30 blocks away and 25 above, loud enough to carry |
+| `distant_wither` | 314 | LIGHT | SOUND | 0.2 | Always | A wither spawn sound from 45 blocks away, loud enough to carry |
+| `end_portal_open` | 315 | LIGHT | SOUND | 0.25 | Always | An end portal opening sound from 30 blocks away |
+| `sky_ghast` | 316 | LIGHT | SOUND | 0.25 | Always | A ghast scream from 20 blocks away and 14 above |
+| `fox_screech` | 317 | LIGHT | SOUND | 0.3 | Not bright outside (night or storm) | A fox screech 12 blocks away |
+| `rabbit_death` | 318 | LIGHT | SOUND | 0.3 | Always | A rabbit death sound 4 blocks away |
+| `phantom_hurt` | 319 | LIGHT | SOUND | 0.3 | Always | The player hurt sound at the player; no damage |
+| `phantom_tool_break` | 320 | LIGHT | SOUND | 0.3 | Always | The item break sound at the player; nothing is damaged |
+| `elytra_overhead` | 321 | LIGHT | SOUND | 0.25 | Always | Twelve elytra wind sounds sweeping 45 blocks each way across a line 10 blocks up |
+| `nether_ambience` | 322 | LIGHT | SOUND | 0.25 | Always | Six mood and additions sounds of a soul sand valley or basalt deltas, 2 s apart, at the player |
+| `equip_behind` | 323 | LIGHT | SOUND | 0.3 | Always | Four equip sounds of one armor material, 0.3 s apart, 1.5 blocks behind the player |
+| `phantom_fishing` | 324 | LIGHT | SOUND | 0.3 | Always | Bobber throw, splash and retrieve sounds 1.2 s apart, 6 blocks away |
+| `zombie_at_door` | 325 | LIGHT | SOUND | 0.3 | A wooden door within 12 | Four door-battering sounds and a break sound at a wooden door within 12 |
+| `phantom_anchor` | 326 | LIGHT | SOUND | 0.3 | Always | A respawn anchor charge or deplete sound 5 blocks away |
+| `bucket_spill` | 327 | LIGHT | SOUND | 0.3 | No open sky above the player | A bucket empty sound 3 blocks away |
+| `lost_villager` | 328 | LIGHT | SOUND | 0.3 | Always | A villager idle sound 4 blocks behind the player |
+| `phantom_arrow` | 329 | LIGHT | SOUND | 0.3 | A wall in front of the player | An arrow hit sound at a one-block-thick wall in front of the player |
+| `phantom_glass` | 330 | LIGHT | SOUND | 0.3 | Glass within 12 | Break particles and sound of a glass block or pane within 12; it stays |
+| `pen_cries` | 331 | LIGHT | SOUND | 0.3 | An animal within 16 | A sheep, piglet or cow death sound at an animal within 16 |
+| `sniffing_behind` | 332 | LIGHT | SOUND | 0.3 | Always | A sniffer sniff 1 block behind the player |
+| `distant_goat_horn` | 333 | LIGHT | SOUND | 0.25 | Always | A random goat horn call from 40 blocks away, loud enough to carry |
+| `false_raid_horn` | 334 | LIGHT | SOUND | 0.2 | Always | A raid horn from 35 blocks away |
+| `heavy_splash` | 335 | LIGHT | SOUND | 0.3 | Water within 16 | A low splash at water within 16 |
+| `distant_ravager` | 336 | LIGHT | SOUND | 0.25 | Always | A ravager roar from 30 blocks away, loud enough to carry |
+| `golem_circling` | 337 | LIGHT | SOUND | 0.25 | Always | Fourteen golem steps on a point circling 7 blocks out at ground level |
+| `burp_behind` | 338 | LIGHT | SOUND | 0.3 | Always | A player burp 1.5 blocks behind the player |
+| `bubble_columns` | 339 | LIGHT | SOUND | 0.3 | Always | Six bubble column sounds, 0.5 s apart, 1 block from the player |
+| `lava_pops` | 340 | LIGHT | SOUND | 0.3 | Always | A lava ambient sound and three pops, 0.7 s apart, 2 blocks away |
+| `chain_rattle` | 341 | LIGHT | SOUND | 0.25 | Always | Twelve chain step sounds on a point circling 4 blocks out at ground level |
+| `pumpkin_head` | 342 | LIGHT | PRESENCE | 0.2 | Always | Only this player's client is told the head slot holds a carved pumpkin, so the pumpkin blur covers the screen. 4 s later the real slot comes back. Nothing on the server. In hardcore, a real pumpkin is put on an empty head slot and taken off again |
+| `xp_drain` | 343 | LIGHT | PRESENCE | 0.2 | Has experience points or levels | The client is told the experience bar and level are zero for 3 s, then the real values |
+| `phantom_flames` | 344 | LIGHT | PRESENCE | 0.2 | Not on fire, not in water | The client is told the player is on fire for 3 s, so the fire shows on screen. Nothing burns; the real flags come back after. In hardcore, the player is set on fire for 1 s |
+| `phantom_drowning` | 345 | LIGHT | PRESENCE | 0.2 | Full air | The client is told the air supply drains from full to 20% over 4 s, so bubbles show on land; then the real value |
+| `phantom_frost` | 346 | LIGHT | PRESENCE | 0.2 | Not freezing | The client is told the frozen ticks rise to full over 2.5 s, so frost creeps over the screen, held until 5 s; then the real value. In hardcore, the player really freezes |
+| `moon_phase` | 350 | LIGHT | PRESENCE | 0.2 | Overworld, night | Only this player's client is shown the clock moved a random 1 to 7 whole days on, so the moon has another phase and the time of day is the same. 20 s later it gets the real time back. Nothing on the server |
+| `false_boss_bar` | 352 | LIGHT | PRESENCE | 0.2 | Always | A purple boss bar with a name from `names` is sent to this player only. It fills over 3 s, empties over 2 s and is removed. No boss exists |
+| `action_bar_whisper` | 353 | LIGHT | PRESENCE | 0.3 | Always | A dark red line from `lines` ("Don't turn around" and others) on the action bar, cleared after 2 s |
+| `false_absorption` | 356 | LIGHT | PRESENCE | 0.2 | No absorption | The client is told the player has 8 absorption (4 golden hearts), draining to 0 over 4 s; then the real value |
+| `empty_armor_bar` | 357 | LIGHT | PRESENCE | 0.2 | Wearing armor | The client is told the armor attribute is 0 for 4 s, so the armor bar vanishes; then the real attribute |
+| `hurt_tilt` | 359 | LIGHT | PRESENCE | 0.3 | Always | The hurt animation (screen tilt) from a random side, with no damage |
+| `own_hand_swings` | 360 | LIGHT | PRESENCE | 0.2 | Always | The player's own main hand swings twice, 14 ticks apart |
+| `night_eyes` | 361 | LIGHT | PRESENCE | 0.2 | No night vision or darkness | The client is told of 1.5 s of night vision, then 4 s of darkness; then the real effects. No effect exists on the server |
+| `dead_silence` | 362 | LIGHT | SOUND | 0.2 | Always | A stop-all-sounds packet every tick for 5 s, so nothing plays |
+| `all_on_cooldown` | 363 | LIGHT | PRESENCE | 0.2 | An item on the hotbar or in the hands | Every item on the hotbar and in the hands is shown on a 2 s cooldown. The client counts it down by itself |
+| `noon_moon` | 365 | LIGHT | PRESENCE | 0.2 | Overworld, daytime | Only this player's client is told it is midnight under a full moon, with the clock stopped. 10 s later it gets the real time back. Nothing on the server |
+| `elytra_flicker` | 421 | LIGHT | ITEMS | 0.4 | Elytra worn, with durability to spare, and the player 12 or more blocks above the ground | Only this player's client is told the elytra is almost broken; 2 s later it gets the real one back. Under hardcore the elytra is worn down for real (10%, never breaks) |
+| `stew_bowl` | 424 | HARMFUL | ITEMS | 0.4 | Mushroom, beetroot, rabbit or suspicious stew in the inventory | One stew becomes an empty bowl, with an eating sound |
+| `bucket_pufferfish` | 427 | LIGHT | ITEMS | 0.4 | A water bucket in the inventory | Only this player's client is told it is a pufferfish bucket; 5 s later it gets the real one back. Under hardcore the stack is swapped for real and stays |
+| `torch_burn` | 428 | HARMFUL | ITEMS | 0.4 | A stack of torches or soul torches of 2 or more | Half of the stack is gone, at least one is left, with a hiss |
+| `bundle_bone` | 429 | LIGHT | ITEMS | 0.4 | A bundle that has room for a bone | One bone is added to its contents (nothing is taken out) |
+| `shield_ghost` | 430 | LIGHT | ITEMS | 0.4 | A shield in either hand | The sound of a shield blocking a hit, with nothing there |
+| `item_throwback` | 433 | LIGHT | ITEMS | 0.4 | A dropped item 3–12 blocks away | One of them is thrown at the player, slowly enough to dodge |
+| `phantom_horn` | 436 | LIGHT | ITEMS | 0.3 | A goat horn with a tune in the inventory | The tune of that horn sounds at the player |
+| `armor_dye` | 437 | LIGHT | ITEMS | 0.4 | A leather helmet, chestplate, leggings or boots (worn or carried) that is not black | It is dyed black, and its old colour comes back after 5 min wherever the player carries it then. Under hardcore it stays black |
+| `item_glint` | 438 | LIGHT | ITEMS | 0.4 | An item that does not glint | It glints as if enchanted for 10 s, then stops |
+| `item_lore` | 439 | LIGHT | ITEMS | 0.4 | Any item in the inventory or worn | A lore line ("it remembers you" and the like) is added, and removed after 5 min wherever the player carries it then. Under hardcore it stays |
+| `tool_mirage` | 440 | HARMFUL | ITEMS | 0.4 | A damageable tool with durability to spare | Only this player's client is told it has full durability, 3 s later that it is almost broken, 3 s later the truth. Under hardcore the tool is worn down for real (30%, never breaks) |
+| `hook_click` | 219 | LIGHT | DOORS | 0.6 | A tripwire hook within 12 | It clicks on, then off 4 ticks later, no string |
+| `daylight_flip` | 221 | LIGHT | DOORS | 0.5 | A daylight detector within 12 | Flips `inverted`; set back after 1 min unless hardcore |
+| `rod_sparks` | 224 | LIGHT | DOORS | 0.5 | An unpowered lightning rod within 16 | Powered for a moment with spark particles, no storm |
+| `torch_burnout` | 240 | LIGHT | DOORS | 0.6 | A lit redstone torch within 12 | Goes out with the burnout smoke and fizz; relights after 8 s or on any update beside it |
+| `chests_open` | 243 | LIGHT | DOORS | 0.4 | Indoors, two or more chests within 10 | Every lid opens at once, shuts 2 s later, contents untouched |
+| `anvil_lands` | 210 | LIGHT | DOORS | 0.5 | Night, and an anvil within 16 | The anvil-landing sound; under hardcore the anvil gains one damage stage |
+| `cake_bite` | 211 | LIGHT | DOORS | 0.5 | A cake within 12 with a slice left | One more bite gone, with an eating sound; restored after 1 min unless hardcore |
+| `tnt_hiss` | 220 | LIGHT | DOORS | 0.4 | A block of TNT, or a chest holding TNT, within 12 | The primed-TNT hiss at it, nothing lit |
+| `pot_holds` | 246 | LIGHT | DOORS | 0.5 | An empty decorated pot within 12 | A bone, a skull sherd or an echo shard sits in it with a wobble; taken out after 2 min unless hardcore |
+| `lava_cauldron` | 239 | LIGHT | BLOCKS | 0.4 | A water cauldron within 10 | Shown as a lava cauldron with a sizzle; restored after 30 s |
+| `cauldron_fills` | 245 | LIGHT | BLOCKS | 0.5 | Indoors, and a dry cauldron within 10 | Fills to a random level with drip particles; restored after 1 min |
+| `turning_terracotta` | 235 | LIGHT | BLOCKS | 0.5 | Glazed terracotta within 10 | Every piece turns a quarter; restored after 1 min |
+| `end_rod_gaze` | 237 | LIGHT | BLOCKS | 0.5 | An end rod within 12 not already facing the player | One rod turns to point at the player; restored after 1 min |
 
 ## Chances
 
