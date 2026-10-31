@@ -46,6 +46,7 @@ public final class AltarGameTests {
     public AltarGameTests(IEventBus bus) {
         DreamcatcherGameTests.register(TESTS);
         LanternGameTests.register(TESTS);
+        HeldLightGameTests.register(TESTS);
         HauntEventGameTests.register(TESTS);
         HardcoreGameTests.register(TESTS);
         JournalGameTests.register(TESTS);

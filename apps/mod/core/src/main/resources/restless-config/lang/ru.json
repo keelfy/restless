@@ -1,6 +1,7 @@
 {
   "version": 1,
   "events": {
+    "minecraft:held_light_out": {"name": "Погасший свет в руке", "description": "Гасит стак факелов или фонарей в одной из рук."},
     "minecraft:extinguish_light": { "name": "Погасший свет", "description": "Гасит ближайшую свечу, факел или фонарь на месте." },
     "minecraft:candles_out": { "name": "Свечи гаснут", "description": "Все зажжённые свечи поблизости разом гаснут." },
     "minecraft:torch_chain": { "name": "Цепочка факелов", "description": "До восьми факелов по очереди гаснут, ближайший к игроку последним." },

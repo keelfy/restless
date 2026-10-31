@@ -122,6 +122,7 @@ public final class Content {
 
     /** Forces the class to load, which declares every entry and the creative tab that holds the items. */
     public static void init() {
+        RelightingRecipe.init();
         var tabItems = new java.util.ArrayList<Supplier<Item>>(UnlitLights.ITEMS);
         tabItems.addAll(List.of(SALT, ASH, SPIRIT_CANDLE, SPIRIT_COMPASS, CAMERA_OBSCURA, SPIRIT_BOX_ITEM, OUIJA_BOARD_ITEM,
             DOOR_CHARM_ITEM, DREAMCATCHER_ITEM, HALLOWED_LANTERN_ITEM, SCARECROW_ITEM, ALTAR_ITEM, HOLY_WATER, MIRROR,

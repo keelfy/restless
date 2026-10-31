@@ -1,6 +1,7 @@
 {
   "version": 1,
   "events": {
+    "minecraft:held_light_out": {"name": "Snuffed Handheld Light", "description": "Snuffs a stack of torches or lanterns in one hand."},
     "minecraft:extinguish_light": { "name": "Snuffed Light", "description": "Snuffs a nearby candle, torch or lantern in place." },
     "minecraft:candles_out": { "name": "Candles Out", "description": "Every lit candle within range goes out at once." },
     "minecraft:torch_chain": { "name": "Torch Chain", "description": "Up to eight torches go dark one after another, the nearest to the player last." },

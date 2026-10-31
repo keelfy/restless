@@ -87,6 +87,25 @@ public final class UnlitLights {
         level.setBlock(pos, extinguished(level.getBlockState(pos)), Block.UPDATE_ALL);
     }
 
+    /** Converts a held stack without losing its count or custom components. */
+    public static ItemStack extinguished(ItemStack stack) {
+        if (!stack.isEmpty()) {
+            for (Entry entry : ENTRIES) {
+                if (stack.is(entry.source().asItem())) return stack.transmuteCopy(entry.unlit().get());
+            }
+        }
+        return stack;
+    }
+
+    public static ItemStack relit(ItemStack stack) {
+        if (!stack.isEmpty()) {
+            for (Entry entry : ENTRIES) {
+                if (stack.is(entry.unlit().get().asItem())) return stack.transmuteCopy(entry.source());
+            }
+        }
+        return stack;
+    }
+
     public static BlockState relit(BlockState state) {
         for (Entry entry : ENTRIES) {
             if (state.is(entry.unlit().get())) return entry.source().withPropertiesOf(state);
@@ -95,8 +114,12 @@ public final class UnlitLights {
     }
 
     public static boolean canIgnite(ItemStack stack) {
-        return stack.is(Items.FLINT_AND_STEEL)
-            || (stack.getItem() instanceof BlockItem item && isTorch(item.getBlock().defaultBlockState())
+        return !stack.isEmpty() && canIgnite(stack.getItem());
+    }
+
+    public static boolean canIgnite(Item source) {
+        return source == Items.FLINT_AND_STEEL
+            || (source instanceof BlockItem item && isTorch(item.getBlock().defaultBlockState())
                 && item.getBlock().defaultBlockState().getLightEmission() > 0);
     }
 

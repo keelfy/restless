@@ -21,6 +21,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Mob;
@@ -47,6 +48,19 @@ final class Lights {
 
     static List<HauntEvent> all() {
         return List.of(
+            SimpleEvent.light("held_light_out", EventTag.LIGHTS,
+                player -> java.util.Arrays.stream(InteractionHand.values())
+                    .anyMatch(hand -> UnlitLights.extinguished(player.getItemInHand(hand)) != player.getItemInHand(hand)),
+                player -> {
+                    var hands = java.util.Arrays.stream(InteractionHand.values())
+                        .filter(hand -> UnlitLights.extinguished(player.getItemInHand(hand)) != player.getItemInHand(hand)).toList();
+                    if (hands.isEmpty()) return;
+                    InteractionHand hand = hands.get(player.getRandom().nextInt(hands.size()));
+                    player.setItemInHand(hand, UnlitLights.extinguished(player.getItemInHand(hand)));
+                    Config.Tone tone = Config.event("held_light_out").tone("sound");
+                    player.level().playSound(null, player.blockPosition(), SoundEvents.FIRE_EXTINGUISH,
+                        SoundSource.HOSTILE, tone.volume(), tone.pitch());
+                }),
             // 1
             SimpleEvent.light("candles_out", EventTag.LIGHTS,
                 player -> Nearby.any(player, "candles_out", AbstractCandleBlock::isLit),
