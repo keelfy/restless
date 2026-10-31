@@ -162,6 +162,33 @@ final class HauntEventGameTests {
             check(helper, BlockPos.betweenClosedStream(centre.offset(-12, 0, -12), centre.offset(12, 6, 12))
                 .filter(pos -> helper.getLevel().getBlockState(pos).is(BlockTags.LOGS)).count() == 3, "moving_tree must keep the trunk whole");
         }));
+        PADDING.put("event_moving_tree_grown", 20);
+        tests.put("event_moving_tree_grown", helper -> runs(helper, "moving_tree", player -> {
+            BlockPos centre = helper.absolutePos(FEET);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-12, -1, -12), centre.offset(12, -1, 12))) {
+                helper.getLevel().setBlock(pos, Blocks.GRASS_BLOCK.defaultBlockState(), 2);
+                helper.getLevel().setBlock(pos.above(), Blocks.SHORT_GRASS.defaultBlockState(), 2);
+            }
+            // An oak as the world grows one: five logs, a two-block crown, and the distance each leaf has to a log.
+            var level = helper.getLevel();
+            BlockPos trunk = centre.east(5);
+            level.setBlock(trunk.below(), Blocks.DIRT.defaultBlockState(), 2); // a grown tree turns the earth under its trunk to dirt
+            for (int dy = 0; dy < 5; dy++) {
+                level.setBlock(trunk.above(dy), Blocks.OAK_LOG.defaultBlockState(), 2);
+            }
+            for (BlockPos pos : BlockPos.betweenClosed(trunk.offset(-2, 3, -2), trunk.offset(2, 6, 2))) {
+                int dx = Math.abs(pos.getX() - trunk.getX());
+                int dz = Math.abs(pos.getZ() - trunk.getZ());
+                int up = pos.getY() - trunk.getY();
+                int radius = up >= 5 ? 1 : 2;
+                if (dx <= radius && dz <= radius && !(dx == 2 && dz == 2) && up <= 5 + 1 && !(up == 6 && (dx + dz) > 1)
+                    && !(dx == 0 && dz == 0 && up <= 4)) {
+                    int distance = Math.max(1, Math.max(dx, dz) + Math.max(0, up - 4) + (dx > 0 && dz > 0 ? 1 : 0));
+                    level.setBlock(pos.immutable(), Blocks.OAK_LEAVES.defaultBlockState()
+                        .setValue(net.minecraft.world.level.block.LeavesBlock.DISTANCE, Math.min(7, distance)), 2);
+                }
+            }
+        }, () -> check(helper, !helper.getLevel().getBlockState(helper.absolutePos(FEET).east(5)).is(BlockTags.LOGS), "an oak grown in a grass field must move")));
         tests.put("event_drowned_fish", helper -> {
             Entity[] cod = new Entity[1];
             runs(helper, "drowned_fish", player -> cod[0] = EntityTypes.COD.spawn(helper.getLevel(), helper.absolutePos(FEET).east(4), EntitySpawnReason.COMMAND),

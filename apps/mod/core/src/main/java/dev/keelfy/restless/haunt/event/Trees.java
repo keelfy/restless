@@ -57,10 +57,10 @@ final class Trees {
         }
     }
 
-    /** Logs standing on earth: the foot of a tree, and never the logs of a wall or a roof. */
+    /** Logs standing on earth (dirt, grass, moss, mud): the foot of a tree, and never the logs of a wall or a roof. */
     private static List<BlockPos> feet(ServerPlayer player) {
         List<BlockPos> logs = new ArrayList<>(Nearby.all(player, "moving_tree", state -> state.is(BlockTags.LOGS)));
-        logs.removeIf(pos -> !player.level().getBlockState(pos.below()).is(BlockTags.DIRT));
+        logs.removeIf(pos -> !player.level().getBlockState(pos.below()).is(BlockTags.SUBSTRATE_OVERWORLD));
         return logs;
     }
 
@@ -118,7 +118,7 @@ final class Trees {
                 return false;
             }
             boolean foot = part.getKey().getY() == lowest && part.getValue().is(BlockTags.LOGS);
-            if (foot && !level.getBlockState(to.below()).is(BlockTags.DIRT)) {
+            if (foot && !level.getBlockState(to.below()).is(BlockTags.SUBSTRATE_OVERWORLD)) {
                 return false;
             }
         }
