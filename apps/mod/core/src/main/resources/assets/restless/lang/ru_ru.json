@@ -130,5 +130,11 @@
   "journal.restless.guide.evolution.2": "Не тяни. Когда он изгнан или упокоен, земля заживает.",
   "journal.restless.guide.essence.title": "Что остаётся",
   "journal.restless.guide.essence.1": "Некоторые духи оставляют эссенцию. Ритуал даёт одну, исполненное дело у могилы — больше.",
-  "journal.restless.guide.essence.2": "Из эссенции делают амулеты. Эссенция полтергейста притягивает выпавшие вещи, эссенция тени даёт видеть в темноте."
+  "journal.restless.guide.essence.2": "Из эссенции делают амулеты. Эссенция полтергейста притягивает выпавшие вещи, эссенция тени даёт видеть в темноте.",
+  "journal.restless.page": "%s / %s",
+  "journal.restless.tab.guide": "Путеводитель",
+  "journal.restless.tab.spirits": "Духи",
+  "journal.restless.tab.loose": "Заметки",
+  "journal.restless.tab.bestiary": "Бестиарий",
+  "journal.restless.tab.chronicle": "Хроника"
 }

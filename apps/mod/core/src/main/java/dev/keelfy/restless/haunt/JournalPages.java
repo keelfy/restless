@@ -27,7 +27,7 @@ public final class JournalPages {
     private static final String EVOLVED = "_evolved";
 
     /** A run of pages under one heading in the contents. */
-    private record Section(String key, List<Component> pages) {}
+    public record Section(String key, List<Component> pages) {}
 
     private JournalPages() {}
 
@@ -35,7 +35,7 @@ public final class JournalPages {
         return Component.translatable("journal.restless.guide." + chapter.id() + ".title");
     }
 
-    public static List<Component> of(Notebook notebook) {
+    public static List<Section> sections(Notebook notebook) {
         List<Section> sections = new ArrayList<>();
         sections.add(new Section("guide", guide(notebook)));
         sections.add(new Section("spirits", spirits(notebook)));
@@ -44,6 +44,11 @@ public final class JournalPages {
         sections.add(new Section("chronicle", chronicle(notebook)));
         sections.removeIf(s -> s.pages().isEmpty());
 
+        return List.copyOf(sections);
+    }
+
+    public static List<Component> of(Notebook notebook) {
+        List<Section> sections = sections(notebook);
         MutableComponent contents = heading(Component.translatable("journal.restless.contents"));
         List<Component> pages = new ArrayList<>();
         pages.add(contents);
@@ -145,7 +150,7 @@ public final class JournalPages {
         MutableComponent line = Component.translatable("journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT),
             note.args().toArray());
         return note.kind().reliable ? line
-            : line.append(" ").append(Component.translatable("journal.restless.may_lie").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+            : line.append(" ").append(Component.translatable("journal.restless.may_lie").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
 
     /** {@code lines}, {@code perPage} to a page and a blank line apart, under {@code heading} on the first; no pages when there are no lines. */

@@ -4,13 +4,17 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.Journal;
 import dev.keelfy.restless.haunt.JournalPages;
+import dev.keelfy.restless.haunt.JournalPayload;
 import dev.keelfy.restless.haunt.Notebook;
+import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -39,6 +43,25 @@ final class JournalGameTests {
             Journal.note(player, Notebook.Kind.PHOTO, shade, "shade", Component.translatable("spirit.restless.shade"), "it feeds on light",
                 Component.translatable("focus.restless.glowstone"));
             List<String> after = keys(player, data);
+            JournalPayload sent = new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())));
+            check(helper, sent.sections().stream().map(JournalPages.Section::key).toList()
+                .equals(List.of("guide", "spirits", "bestiary")), "the screen must receive only discovered sections in order");
+            RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), helper.getLevel().registryAccess());
+            try {
+                JournalPayload.CODEC.encode(buffer, sent);
+                JournalPayload received = JournalPayload.CODEC.decode(buffer);
+                check(helper, received.sections().stream().map(JournalPages.Section::key).toList()
+                    .equals(sent.sections().stream().map(JournalPages.Section::key).toList()), "section order must survive the network codec");
+                // Vanilla collapses literal component arguments into strings during decoding. Compare their content.
+                List<String> sentKeys = new ArrayList<>();
+                sent.sections().forEach(section -> section.pages().forEach(text -> collect(text, sentKeys)));
+                List<String> screenKeys = new ArrayList<>();
+                received.sections().forEach(section -> section.pages().forEach(text -> collect(text, screenKeys)));
+                check(helper, screenKeys.equals(sentKeys), "journal text and translation arguments must survive the network codec: " + sentKeys + " != " + screenKeys);
+                check(helper, screenKeys.contains("journal.restless.may_lie"), "the screen must retain unreliable evidence labels");
+            } finally {
+                buffer.release();
+            }
             check(helper, !after.contains("journal.restless.section.loose"), "once met, the spirit's earlier clues must move to its pages");
             check(helper, after.contains("journal.restless.unnamed") && after.contains("journal.restless.note.voice"),
                 "the met spirit's pages must hold its earlier clues");
@@ -66,8 +89,13 @@ final class JournalGameTests {
             for (Object arg : translatable.getArgs()) {
                 if (arg instanceof Component inner) {
                     collect(inner, keys);
+                } else {
+                    keys.add(String.valueOf(arg));
                 }
             }
+        }
+        if (component.getContents() instanceof PlainTextContents literal && !literal.text().isEmpty()) {
+            keys.add(literal.text());
         }
         component.getSiblings().forEach(sibling -> collect(sibling, keys));
     }

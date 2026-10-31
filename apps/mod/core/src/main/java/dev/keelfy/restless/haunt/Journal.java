@@ -7,16 +7,14 @@ import dev.keelfy.restless.haunt.Notebook.Kind;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.WrittenBookContent;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -76,7 +74,7 @@ public final class Journal {
         }
     }
 
-    /** Lays the player's notebook out into the held journal and opens it like a written book. */
+    /** Opens the player's discovered sections in the journal screen. */
     public static void open(ServerPlayer player, ItemStack journal, InteractionHand hand) {
         HauntData data = HauntData.get(player.level().getServer());
         // A player from before the guide still gets its first chapter.
@@ -84,11 +82,8 @@ public final class Journal {
         if (started != null) {
             data.putNotebook(player.getUUID(), started);
         }
-        List<Filterable<Component>> pages = JournalPages.of(data.notebook(player.getUUID())).stream().map(Filterable::passThrough).toList();
-        journal.set(DataComponents.WRITTEN_BOOK_CONTENT,
-            new WrittenBookContent(Filterable.passThrough("Journal"), player.getName().getString(), 0, pages, true));
-        player.containerMenu.broadcastChanges();
-        player.openItemGui(journal, hand);
+        player.connection.send(new ClientboundCustomPayloadPacket(
+            new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())))));
     }
 
     private static List<Chapter> chapters(Kind kind) {

@@ -238,10 +238,15 @@ note is never written twice. `JournalPages` lays the notebook out as:
 - **Chronicle**: rested, banished, evolved, and entries from saves before typed notes (read once from the old `journal`
   field).
 
-`journal.entries_per_page` notes fit on a page, `journal.traits_per_page` bestiary traits. Texts are `journal.restless.*`
+`journal.entries_per_page` notes form a source page, `journal.traits_per_page` bestiary traits.
+The screen splits these further when the text exceeds the available space. Texts are `journal.restless.*`
 in the item lang files.
 
-Not built yet: a journal screen of its own (the book is a vanilla written book), diary pages and portraits in chests,
+The journal opens a dedicated parchment screen with section bookmarks. Only discovered sections are sent to the
+reader. Text wraps and splits into additional pages at the current GUI size and font; wheel and Page Up/Page Down
+turn pages, Tab navigates controls, and Escape closes it. The screen supports narration.
+
+Not built yet: illustrated photos and footprint stamps, diary pages and portraits in chests,
 the other quest kinds (bury remains, a letter to a descendant, a named killer mob, a killer spirit), hallucinations at
 very low sanity, and research: the journal unlocks no recipes.
 

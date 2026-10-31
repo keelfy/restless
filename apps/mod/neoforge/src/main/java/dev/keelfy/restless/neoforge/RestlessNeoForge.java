@@ -10,6 +10,8 @@ import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.DoorLockPayload;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.HeadTurn;
+import dev.keelfy.restless.haunt.JournalPayload;
+import dev.keelfy.restless.haunt.JournalScreen;
 import dev.keelfy.restless.haunt.RedVignette;
 import dev.keelfy.restless.haunt.SanityOverlay;
 import dev.keelfy.restless.haunt.SanityPayload;
@@ -40,6 +42,7 @@ public final class RestlessNeoForge {
             .playToClient(TurnPayload.TYPE, TurnPayload.CODEC, (payload, context) -> HeadTurn.start(payload.degrees(), payload.pitch(), payload.ticks()))
             .playToClient(VignettePayload.TYPE, VignettePayload.CODEC, (payload, context) -> RedVignette.start(payload.strength(), payload.ticks()))
             .playToClient(SanityPayload.TYPE, SanityPayload.CODEC, (payload, context) -> SanityOverlay.set(payload.sanity()))
+            .playToClient(JournalPayload.TYPE, JournalPayload.CODEC, (payload, context) -> JournalScreen.open(payload))
             .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))
             .playToServer(FirePayload.TYPE, FirePayload.CODEC, (payload, context) -> DebugMenu.fire((ServerPlayer) context.player(), payload)));
         NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post e) -> Restless.onServerTick(e.getServer()));

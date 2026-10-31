@@ -191,5 +191,11 @@
   "journal.restless.grave": "The grave of %s, at %s, %s. They want their %s back.",
   "journal.restless.rested": "%s, a %s, went to rest in peace.",
   "journal.restless.banished": "Banished a %s, once %s.",
-  "journal.restless.evolved": "%s, a %s, was left alone too long and grew into a %s."
+  "journal.restless.evolved": "%s, a %s, was left alone too long and grew into a %s.",
+  "journal.restless.page": "%s / %s",
+  "journal.restless.tab.guide": "Guide",
+  "journal.restless.tab.spirits": "Spirits",
+  "journal.restless.tab.loose": "Loose notes",
+  "journal.restless.tab.bestiary": "Bestiary",
+  "journal.restless.tab.chronicle": "Chronicle"
 }
