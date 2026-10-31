@@ -9,7 +9,8 @@ code, only a sequencer on top of `Scheduler`.
 - **Gate.** A scenario is picked only when the spirit's `power` is at least the gate (`0.4`, `0.6`, `0.7`, `0.8`),
   or once it has evolved (`evo`). Below the gate it never runs, so early haunts stay single events.
 - **Pick.** The `Director` rolls a scenario like an event: weight from the spirit's affinity for the beats' tags, the
-  `Where` condition must hold, and the first beat's `canRun` must pass. It counts as one event for the cooldown and
+  `Where` condition must hold, and the first beat's `canRun` must pass. A scenario whose first beat can run anywhere (always true) needs no moment, so its
+  weight is halved (`director.sure_start_factor`). It counts as one event for the cooldown and
   for `Recent`.
 - **Beats.** `+N` is seconds after the previous beat; `∥` runs with the previous beat; `×N` repeats; `→` waits for a
   condition (the player waking, reaching water). A later beat whose `canRun` fails is skipped, not retried.

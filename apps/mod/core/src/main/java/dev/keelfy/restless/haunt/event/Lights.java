@@ -136,9 +136,9 @@ final class Lights {
                         player -> !fueled(player).isEmpty(),
                         Lights::douse),
                 // 7: the view fades on this player's client only; see Dimming
-                SimpleEvent.light("dimming", EventTag.LIGHTS, player -> true, player -> dim(player, "dimming")),
+                SimpleEvent.light("dimming", EventTag.LIGHTS, SimpleEvent.ALWAYS, player -> dim(player, "dimming")),
                 // 144: the same, quick and over and over, like eyes that will not stay open
-                SimpleEvent.light("blinking", EventTag.LIGHTS, player -> true, player -> dim(player, "blinking")),
+                SimpleEvent.light("blinking", EventTag.LIGHTS, SimpleEvent.ALWAYS, player -> dim(player, "blinking")),
                 // 8
                 SimpleEvent.light(
                         "candles_light",

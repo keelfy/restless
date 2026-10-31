@@ -63,7 +63,7 @@ final class Afflictions {
                 // 43
                 light("darkness", MobEffects.DARKNESS),
                 // 44
-                SimpleEvent.light("shudder", EventTag.AFFLICTION, player -> true, player -> {
+                SimpleEvent.light("shudder", EventTag.AFFLICTION, SimpleEvent.ALWAYS, player -> {
                     Config.Section config = Config.event("shudder");
                     double angle = player.getRandom().nextDouble() * Math.PI * 2;
                     player.push(

@@ -107,7 +107,7 @@ final class Sounds {
                             }
                         }),
                 // 199: a heart with no warden, quickening
-                SimpleEvent.light("phantom_heartbeat", EventTag.SOUND, player -> true, player -> {
+                SimpleEvent.light("phantom_heartbeat", EventTag.SOUND, SimpleEvent.ALWAYS, player -> {
                     Config.Section config = Config.event("phantom_heartbeat");
                     Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
                         Nearby.sound(p, SoundEvents.WARDEN_HEARTBEAT, p.position(), config.tone("sound"));
@@ -543,7 +543,7 @@ final class Sounds {
     }
 
     private static HauntEvent sound(String id, Consumer<ServerPlayer> action) {
-        return SimpleEvent.light(id, EventTag.SOUND, player -> true, action);
+        return SimpleEvent.light(id, EventTag.SOUND, SimpleEvent.ALWAYS, action);
     }
 
     private static HauntEvent at(String id, SoundEvent sound) {

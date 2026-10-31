@@ -157,6 +157,24 @@ final class ScenarioGameTests {
             check(helper, debt.signature(demon, false) == 1.0, "A spirit that has not evolved must get no boost");
             check(helper, debt.signature(Spirits.SHADE, true) == 1.0, "Another type must get no boost");
             check(helper, lights.signature(demon, true) == 1.0, "A scenario with no spirit must get no boost");
+            double sure = Config.section("director").num("sure_start_factor");
+            List<Scenario> scenarios = HauntEvents.all().stream()
+                    .filter(Scenario.class::isInstance)
+                    .map(Scenario.class::cast)
+                    .toList();
+            boolean sureCut = true;
+            for (Scenario s : scenarios) {
+                double base = Config.event(s.id().toString()).num("weight");
+                sureCut &= s.baseWeight() == (s.beats().getFirst().event().always() ? base * sure : base);
+            }
+            check(helper, sureCut, "Only a scenario with a sure start must have its weight cut");
+            check(
+                    helper,
+                    scenarios.stream()
+                                    .anyMatch(s -> s.beats().getFirst().event().always())
+                            && scenarios.stream()
+                                    .anyMatch(s -> !s.beats().getFirst().event().always()),
+                    "Some scenarios must have a sure start and some not");
             check(
                     helper,
                     HauntEvents.all().stream()

@@ -134,6 +134,15 @@ public final class Scenario implements HauntEvent {
         return tags;
     }
 
+    /** Halved (see {@code director.sure_start_factor}) when the opening beat can run anywhere: it needs no moment. */
+    @Override
+    public double baseWeight() {
+        double weight = Config.event(id.toString()).num("weight");
+        return beats.getFirst().event().always()
+                ? weight * Config.section("director").num("sure_start_factor")
+                : weight;
+    }
+
     @Override
     public boolean opensAt(double power, boolean evolved) {
         Config.Section config = Config.event(id.toString());

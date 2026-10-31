@@ -37,6 +37,11 @@ public interface HauntEvent {
         return false;
     }
 
+    /** Whether {@link #canRun} is true wherever the player is. */
+    default boolean always() {
+        return false;
+    }
+
     /** Cheap check whether the event has anything to act on right now. */
     boolean canRun(ServerPlayer player);
 

@@ -51,7 +51,7 @@ final class Presence {
                         Identifier.parse("nametag"),
                         HauntTier.LIGHT,
                         Set.of(EventTag.PRESENCE, EventTag.PLAYER),
-                        player -> true,
+                        SimpleEvent.ALWAYS,
                         Presence::nametag),
                 // 97: a puff of breath at the face where nobody should be breathing out
                 SimpleEvent.light("cold_breath", EventTag.PRESENCE, Presence::warm, player -> {

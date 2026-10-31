@@ -308,7 +308,7 @@ final class Lies {
                             }
                         }),
                 // 166: a step where the spirit is, and the head turns toward it, slowly, by itself
-                SimpleEvent.harmful("turned_head", EventTag.PRESENCE, player -> true, player -> {
+                SimpleEvent.harmful("turned_head", EventTag.PRESENCE, SimpleEvent.ALWAYS, player -> {
                     Config.Section config = Config.event("turned_head");
                     Vec3 at = Nearby.source(player, config.num("distance"));
                     Nearby.sound(
@@ -402,7 +402,7 @@ final class Lies {
 
     /** An event that can always run. */
     private static HauntEvent light(String id, EventTag tag, Consumer<ServerPlayer> action) {
-        return SimpleEvent.light(id, tag, player -> true, action);
+        return SimpleEvent.light(id, tag, SimpleEvent.ALWAYS, action);
     }
 
     /** An event that says one of its {@code variants}, never the same one twice for a spirit; see {@link Said}. */
@@ -436,7 +436,7 @@ final class Lies {
                 Identifier.parse(id),
                 HauntTier.LIGHT,
                 Set.of(EventTag.PRESENCE, EventTag.PLAYER),
-                player -> true,
+                SimpleEvent.ALWAYS,
                 action);
     }
 

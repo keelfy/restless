@@ -64,7 +64,7 @@ final class ItemEvents {
                             inventory.setItem(b, first);
                         }),
                 // 63
-                SimpleEvent.light("hotbar_shift", EventTag.ITEMS, player -> true, player -> {
+                SimpleEvent.light("hotbar_shift", EventTag.ITEMS, SimpleEvent.ALWAYS, player -> {
                     int hotbar = Inventory.getSelectionSize();
                     int slot = (player.getInventory().getSelectedSlot()
                                     + 1
