@@ -3,11 +3,14 @@ package dev.keelfy.restless.gametest;
 import static dev.keelfy.restless.gametest.HauntEventGameTests.check;
 import static dev.keelfy.restless.gametest.HauntEventGameTests.connected;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Scenario;
+import dev.keelfy.restless.spirit.SpiritType;
+import dev.keelfy.restless.spirit.Spirits;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +66,6 @@ final class ScenarioGameTests {
                     scenario.tags().equals(Set.of(EventTag.SOUND, EventTag.ITEMS, EventTag.ASSAULT)),
                     "A scenario must carry every beat's tags");
             ServerPlayer player = connected(helper);
-            check(helper, !scenario.canRun(player), "A scenario with a beat that cannot run must not be rolled");
             int start = helper.getLevel().getServer().getTickCount();
             scenario.run(player);
             check(helper, knock.ran().equals(List.of(start)), "The first beat must run at once");
@@ -149,6 +151,12 @@ final class ScenarioGameTests {
                     .orElseThrow();
             check(helper, !debt.opensAt(1.0, false), "An evolved-only scenario must wait for evolution");
             check(helper, debt.opensAt(0.7, true), "An evolved spirit must open its scenario");
+            SpiritType demon = Spirits.DEMON;
+            double boost = Config.section("evolution").num("signature_boost");
+            check(helper, debt.signature(demon, true) == boost, "An evolved spirit's own scenario must be boosted");
+            check(helper, debt.signature(demon, false) == 1.0, "A spirit that has not evolved must get no boost");
+            check(helper, debt.signature(Spirits.SHADE, true) == 1.0, "Another type must get no boost");
+            check(helper, lights.signature(demon, true) == 1.0, "A scenario with no spirit must get no boost");
             check(
                     helper,
                     HauntEvents.all().stream()

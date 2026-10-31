@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.spirit.SpiritType;
 import java.util.Set;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,6 +25,11 @@ public interface HauntEvent {
     /** Whether a spirit this strong may roll the event at all; only {@link Scenario}s are gated. */
     default boolean opensAt(double power, boolean evolved) {
         return true;
+    }
+
+    /** How much likelier the event is for this spirit, over its affinity; only an evolved spirit's own scenario is. */
+    default double signature(SpiritType spirit, boolean evolved) {
+        return 1.0;
     }
 
     /** Whether something this event raised for the player is still going; only {@code >gone} waits ask. */

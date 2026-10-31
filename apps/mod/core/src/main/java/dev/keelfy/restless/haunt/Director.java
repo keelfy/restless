@@ -290,12 +290,16 @@ public final class Director {
         return weight(event, event.canRun(player), spirit, traits, power, evolved);
     }
 
-    /** Boosted by {@link Rarity}: an event that seldom has anything to act on is likelier when it does. */
+    /**
+     * Boosted by {@link Rarity}: an event that seldom has anything to act on is likelier when it does; and by
+     * {@link HauntEvent#signature}: an evolved spirit's own scenario is likelier still.
+     */
     private static double weight(
             HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power, boolean evolved) {
         return ready && event.opensAt(power, evolved)
                 ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power)
                         * Rarity.boost(event.id().toString())
+                        * event.signature(spirit, evolved)
                 : 0.0;
     }
 

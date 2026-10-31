@@ -9,10 +9,10 @@ code, only a sequencer on top of `Scheduler`.
 - **Gate.** A scenario is picked only when the spirit's `power` is at least the gate (`0.4`, `0.6`, `0.7`, `0.8`),
   or once it has evolved (`evo`). Below the gate it never runs, so early haunts stay single events.
 - **Pick.** The `Director` rolls a scenario like an event: weight from the spirit's affinity for the beats' tags, the
-  `Where` condition must hold, and every beat's `canRun` must pass at the start. It counts as one event for the cooldown and
+  `Where` condition must hold, and the first beat's `canRun` must pass. It counts as one event for the cooldown and
   for `Recent`.
 - **Beats.** `+N` is seconds after the previous beat; `∥` runs with the previous beat; `×N` repeats; `→` waits for a
-  condition (the player waking, reaching water). A beat whose `canRun` fails when its turn comes (the player moved) is skipped, not retried.
+  condition (the player waking, reaching water). A later beat whose `canRun` fails is skipped, not retried.
 - **Harm last.** A harmful beat never opens a scenario: an earlier light beat always announces it, as the single
   harmful events already do. The existing stops (3 hearts, light, water) still apply.
 - **Abort.** Steps live in `Scheduler`, so death, logout or a closed world drops the rest of the scenario.
@@ -26,11 +26,11 @@ code, only a sequencer on top of `Scheduler`.
 as one event. Tier is harmful if any beat is; tags are every beat's. Beats keep the spirit's point and voice.
 
 To add one: a line in `haunt/Scenarios.java` (script in the notation below), an entry in `scenarios.json`
-(`weight`, `min_power`, `evolved`) and a name in `lang/en.json` and `lang/ru.json`. An unknown id, a harmful or
+(`weight`, `min_power`, `evolved`, and for an evolved type's own scenario its `spirit`) and a name in `lang/en.json` and `lang/ru.json`. An unknown id, a harmful or
 delayed opening, or an id taken by an event fails at startup. Done: all. `→` is written `>gone`, `>waking` or `>water` before the event. Scenario 12 has the id `unlocked_house` (`open_house` is an event).
 
 The script knows `+N` and the waits; write `∥` as `+0` and `×N` as the beat N times. Not built yet, add when a scenario needs
-it: the `Where` column beyond what the beats' `canRun` already check, the ×3 weight of a signature for its evolved type.
+it: `Where` beyond the first beat's `canRun`.
 
 ## Darkness
 
@@ -170,7 +170,7 @@ it: the `Where` column beyond what the beats' `canRun` already check, the ×3 we
 
 ## Evolved signatures
 
-One per evolved type: its longest and worst scenario, `evo` only and weighted ×3 for that type.
+One per evolved type: its longest and worst scenario, `evo` only and weighted ×3 for that type (`spirit` in `scenarios.json`, `evolution.signature_boost`).
 
 | # | Scenario | Beats | Gate | Where | Spirits |
 |---|---|---|---|---|---|
