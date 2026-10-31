@@ -221,7 +221,12 @@ public final class Director {
 
     /** An event's weight for this spirit as {@link #pick} rolls it; 0 when the event has nothing to act on. */
     public static double weight(HauntEvent event, ServerPlayer player, SpiritType spirit, List<Trait> traits, double power) {
-        return event.canRun(player) ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power) : 0.0;
+        return weight(event, event.canRun(player), spirit, traits, power);
+    }
+
+    /** Boosted by {@link Rarity}: an event that seldom has anything to act on is likelier when it does. */
+    private static double weight(HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power) {
+        return ready ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power) * Rarity.boost(event.id().toString()) : 0.0;
     }
 
     private static Optional<HauntEvent> pick(ServerPlayer player, SpiritType spirit, List<Trait> traits, double power, @Nullable HauntTier tier) {
@@ -229,7 +234,12 @@ public final class Director {
         List<Double> weights = new ArrayList<>();
         double total = 0;
         for (HauntEvent event : HauntEvents.all()) {
-            double weight = tier == null || event.tier() == tier ? weight(event, player, spirit, traits, power) : 0.0;
+            if (tier != null && event.tier() != tier) {
+                continue;
+            }
+            boolean ready = event.canRun(player);
+            Rarity.observe(event.id().toString(), ready);
+            double weight = weight(event, ready, spirit, traits, power);
             if (weight > 0) {
                 candidates.add(event);
                 weights.add(weight);
