@@ -2,10 +2,13 @@ package dev.keelfy.restless.haunt;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.keelfy.restless.content.Picture;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -20,9 +23,10 @@ import org.jspecify.annotations.Nullable;
  *
  * @param notes oldest first
  * @param chapters ids of the {@link Chapter}s the player has opened
+ * @param pictures the latest developed photograph of each spirit, pasted in
  */
-public record Notebook(List<Note> notes, Set<String> chapters) {
-    public static final Notebook EMPTY = new Notebook(List.of(), Set.of());
+public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture> pictures) {
+    public static final Notebook EMPTY = new Notebook(List.of(), Set.of(), Map.of());
 
     static final Codec<Notebook> CODEC = RecordCodecBuilder.create(i -> i.group(
                     Note.CODEC.listOf().optionalFieldOf("notes", List.of()).forGetter(Notebook::notes),
@@ -30,7 +34,10 @@ public record Notebook(List<Note> notes, Set<String> chapters) {
                             .listOf()
                             .xmap(Set::copyOf, List::copyOf)
                             .optionalFieldOf("chapters", Set.of())
-                            .forGetter(Notebook::chapters))
+                            .forGetter(Notebook::chapters),
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Picture.CODEC)
+                            .optionalFieldOf("pictures", Map.of())
+                            .forGetter(Notebook::pictures))
             .apply(i, Notebook::new));
 
     /** What kind of thing was seen; decides where it goes in the journal. */
@@ -136,7 +143,7 @@ public record Notebook(List<Note> notes, Set<String> chapters) {
         }
         List<Note> grown = new ArrayList<>(notes);
         grown.add(note);
-        return new Notebook(List.copyOf(grown), chapters);
+        return new Notebook(List.copyOf(grown), chapters, pictures);
     }
 
     /** @return null when the chapter is already open */
@@ -146,7 +153,14 @@ public record Notebook(List<Note> notes, Set<String> chapters) {
         }
         Set<String> grown = new HashSet<>(chapters);
         grown.add(chapter.id());
-        return new Notebook(notes, Set.copyOf(grown));
+        return new Notebook(notes, Set.copyOf(grown), pictures);
+    }
+
+    /** The spirit's photograph, replacing an older one: a notebook keeps one picture per spirit. */
+    public Notebook pasted(UUID spirit, Picture picture) {
+        Map<UUID, Picture> grown = new HashMap<>(pictures);
+        grown.put(spirit, picture);
+        return new Notebook(notes, chapters, Map.copyOf(grown));
     }
 
     public boolean has(Chapter chapter) {

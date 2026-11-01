@@ -8,9 +8,12 @@ import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,6 +32,16 @@ import net.minecraft.world.item.component.ItemLore;
  * player.
  */
 public final class Divination {
+    /**
+     * Who each undeveloped photo shows, by film, so its picture can be pasted into the journal; the oldest are dropped.
+     */
+    private static final Map<Integer, UUID> SUBJECTS = new LinkedHashMap<>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Integer, UUID> eldest) {
+            return size() > 64;
+        }
+    };
+
     /**
      * What a clue showed: the spirit it came from and the trait it named, which for a liar may not be the spirit's own.
      */
@@ -89,6 +102,9 @@ public final class Divination {
         if (Platform.get().canReceive(player, ShutterPayload.TYPE)) {
             int film = reading.get().random().nextInt();
             photo.set(Content.FILM.get(), film);
+            synchronized (SUBJECTS) {
+                SUBJECTS.put(film, spirit.uuid());
+            }
             player.connection.send(new ClientboundCustomPayloadPacket(new ShutterPayload(
                     film, Optional.ofNullable(reading.get().spirit().at()))));
         }
@@ -102,20 +118,27 @@ public final class Divination {
     public static void develop(ServerPlayer player, DevelopPayload payload) {
         Inventory inventory = player.getInventory();
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
-            if (develop(inventory.getItem(slot), payload)) {
+            if (develop(player, inventory.getItem(slot), payload)) {
                 return;
             }
         }
-        develop(player.containerMenu.getCarried(), payload);
+        develop(player, player.containerMenu.getCarried(), payload);
     }
 
-    private static boolean develop(ItemStack stack, DevelopPayload payload) {
+    private static boolean develop(ServerPlayer player, ItemStack stack, DevelopPayload payload) {
         Integer film = stack.get(Content.FILM.get());
         if (!stack.is(Content.PHOTO.get()) || film == null || film != payload.film()) {
             return false;
         }
         stack.remove(Content.FILM.get());
         stack.set(Content.PICTURE.get(), payload.picture());
+        UUID subject;
+        synchronized (SUBJECTS) {
+            subject = SUBJECTS.remove(film);
+        }
+        if (subject != null) {
+            Journal.paste(player, subject, payload.picture());
+        }
         return true;
     }
 

@@ -1,6 +1,6 @@
 package dev.keelfy.restless.haunt;
 
-import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Picture;
 import dev.keelfy.restless.haunt.Notebook.Chapter;
 import dev.keelfy.restless.haunt.Notebook.Kind;
 import dev.keelfy.restless.haunt.Notebook.Note;
@@ -15,19 +15,29 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /**
- * Lays a {@link Notebook} out as book pages: contents, the guide, a few pages per met spirit, loose notes, the bestiary
- * and the chronicle. It only arranges what the player saw; it draws no conclusions for them.
+ * Lays a {@link Notebook} out as cards under sections: the guide, a dossier per met spirit, loose notes, the bestiary
+ * and the chronicle. It only arranges what the player saw; it draws no conclusions for them. How many cards fit a page
+ * is up to whoever draws them.
  */
 public final class JournalPages {
     private static final String EVOLVED = "_evolved";
 
-    /** A run of pages under one heading in the contents. */
-    public record Section(String key, List<Component> pages) {}
+    /** One thing written on a card; {@code kind} tells what showed it, when a note did. */
+    public record Entry(Optional<Kind> kind, Component text) {
+        static Entry plain(Component text) {
+            return new Entry(Optional.empty(), text);
+        }
+    }
+
+    /** A heading, maybe a pasted photograph, and what is written under them. */
+    public record Card(Component heading, Optional<Picture> picture, List<Entry> entries) {}
+
+    /** A run of cards under one tab. */
+    public record Section(String key, List<Card> cards) {}
 
     private JournalPages() {}
 
@@ -42,59 +52,41 @@ public final class JournalPages {
         sections.add(new Section("loose", loose(notebook)));
         sections.add(new Section("bestiary", bestiary(notebook)));
         sections.add(new Section("chronicle", chronicle(notebook)));
-        sections.removeIf(s -> s.pages().isEmpty());
+        sections.removeIf(s -> s.cards().isEmpty());
 
         return List.copyOf(sections);
     }
 
-    public static List<Component> of(Notebook notebook) {
-        List<Section> sections = sections(notebook);
-        MutableComponent contents = heading(Component.translatable("journal.restless.contents"));
-        List<Component> pages = new ArrayList<>();
-        pages.add(contents);
-        for (Section section : sections) {
-            int page = pages.size() + 1;
-            contents.append("\n\n")
-                    .append(Component.translatable(
-                                    "journal.restless.contents.line",
-                                    Component.translatable("journal.restless.section." + section.key()),
-                                    page)
-                            .withStyle(s -> s.withColor(ChatFormatting.DARK_BLUE)
-                                    .withClickEvent(new ClickEvent.ChangePage(page))));
-            pages.addAll(section.pages());
-        }
-        return pages;
-    }
-
-    private static List<Component> guide(Notebook notebook) {
-        List<Component> pages = new ArrayList<>();
+    private static List<Card> guide(Notebook notebook) {
+        List<Card> cards = new ArrayList<>();
         for (Chapter chapter : Chapter.values()) {
             if (!notebook.has(chapter)) {
                 continue;
             }
+            List<Entry> paragraphs = new ArrayList<>();
             for (int i = 1; i <= chapter.pages; i++) {
-                Component text = Component.translatable("journal.restless.guide." + chapter.id() + "." + i);
-                pages.add(i == 1 ? heading(title(chapter)).append("\n\n").append(text) : text);
+                paragraphs.add(Entry.plain(Component.translatable("journal.restless.guide." + chapter.id() + "." + i)));
             }
+            cards.add(new Card(title(chapter), Optional.empty(), paragraphs));
         }
-        return pages;
+        return cards;
     }
 
     /** A dossier per met spirit, in the order they were met: what each tool showed of it, unreliable sources marked. */
-    private static List<Component> spirits(Notebook notebook) {
-        List<Component> pages = new ArrayList<>();
+    private static List<Card> spirits(Notebook notebook) {
+        List<Card> cards = new ArrayList<>();
         Map<String, Integer> unnamed = new HashMap<>();
         for (UUID spirit : notebook.met()) {
             List<Note> notes = notebook.notes().stream()
                     .filter(n -> !n.kind().chronicle()
                             && n.spirit().filter(spirit::equals).isPresent())
                     .toList();
-            pages.addAll(paged(
-                    heading(who(notes, unnamed)),
-                    notes.stream().map(JournalPages::line).toList(),
-                    perPage()));
+            cards.add(new Card(
+                    who(notes, unnamed),
+                    Optional.ofNullable(notebook.pictures().get(spirit)),
+                    notes.stream().map(JournalPages::entry).toList()));
         }
-        return pages;
+        return cards;
     }
 
     /**
@@ -116,26 +108,28 @@ public final class JournalPages {
     }
 
     /** What was seen of spirits the player has not met yet, or of nobody in particular: it stays theirs to sort out. */
-    private static List<Component> loose(Notebook notebook) {
+    private static List<Card> loose(Notebook notebook) {
         Set<UUID> met = Set.copyOf(notebook.met());
-        List<Component> lines = notebook.notes().stream()
+        List<Entry> entries = notebook.notes().stream()
                 .filter(n -> !n.kind().chronicle()
                         && n.spirit().filter(met::contains).isEmpty())
-                .map(JournalPages::line)
+                .map(JournalPages::entry)
                 .toList();
-        return paged(
-                heading(Component.translatable("journal.restless.section.loose"))
-                        .append("\n\n")
-                        .append(Component.translatable("journal.restless.loose.intro")
-                                .withStyle(ChatFormatting.ITALIC)),
-                lines,
-                perPage());
+        if (entries.isEmpty()) {
+            return List.of();
+        }
+        List<Entry> all = new ArrayList<>();
+        all.add(Entry.plain(
+                Component.translatable("journal.restless.loose.intro").withStyle(ChatFormatting.ITALIC)));
+        all.addAll(entries);
+        return List.of(new Card(Component.translatable("journal.restless.section.loose"), Optional.empty(), all));
     }
 
     /**
-     * A page per kind of spirit the player has photographed, and every trait a photo named with what it shrinks from.
+     * A card per kind of spirit the player has photographed, and one with every trait a photo named and what it shrinks
+     * from.
      */
-    private static List<Component> bestiary(Notebook notebook) {
+    private static List<Card> bestiary(Notebook notebook) {
         Map<String, Boolean> kinds = new LinkedHashMap<>();
         Set<Component> traits = new LinkedHashSet<>();
         for (Note note : notebook.notes()) {
@@ -150,30 +144,40 @@ public final class JournalPages {
                     note.args().get(1),
                     note.args().get(2)));
         }
-        List<Component> pages = new ArrayList<>();
+        List<Card> cards = new ArrayList<>();
         kinds.forEach((kind, grown) -> {
-            MutableComponent page = Component.translatable("journal.restless.bestiary." + kind);
+            List<Entry> entries = new ArrayList<>();
+            entries.add(Entry.plain(Component.translatable("journal.restless.bestiary." + kind)));
             if (grown) {
-                page.append("\n\n")
-                        .append(Component.translatable(
-                                "journal.restless.bestiary.grown",
-                                Component.translatable("spirit.restless." + kind + EVOLVED)));
+                entries.add(Entry.plain(Component.translatable(
+                        "journal.restless.bestiary.grown",
+                        Component.translatable("spirit.restless." + kind + EVOLVED))));
             }
-            pages.add(page);
+            cards.add(new Card(
+                    Component.translatable("journal.restless.bestiary." + kind + ".name"), Optional.empty(), entries));
         });
-        pages.addAll(paged(
-                heading(Component.translatable("journal.restless.bestiary.traits")),
-                List.copyOf(traits),
-                Config.section("journal").integer("traits_per_page")));
-        return pages;
+        if (!traits.isEmpty()) {
+            cards.add(new Card(
+                    Component.translatable("journal.restless.bestiary.traits"),
+                    Optional.empty(),
+                    traits.stream().map(Entry::plain).toList()));
+        }
+        return cards;
     }
 
-    private static List<Component> chronicle(Notebook notebook) {
-        List<Component> lines = notebook.notes().stream()
+    private static List<Card> chronicle(Notebook notebook) {
+        List<Entry> entries = notebook.notes().stream()
                 .filter(n -> n.kind().chronicle())
-                .map(JournalPages::line)
+                .map(JournalPages::entry)
                 .toList();
-        return paged(heading(Component.translatable("journal.restless.section.chronicle")), lines, perPage());
+        return entries.isEmpty()
+                ? List.of()
+                : List.of(new Card(
+                        Component.translatable("journal.restless.section.chronicle"), Optional.empty(), entries));
+    }
+
+    private static Entry entry(Note note) {
+        return new Entry(Optional.of(note.kind()), line(note));
     }
 
     private static Component line(Note note) {
@@ -190,34 +194,7 @@ public final class JournalPages {
                                 .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
 
-    /**
-     * {@code lines}, {@code perPage} to a page and a blank line apart, under {@code heading} on the first; no pages
-     * when there are no lines.
-     */
-    private static List<Component> paged(Component heading, List<Component> lines, int perPage) {
-        List<Component> pages = new ArrayList<>();
-        for (int i = 0; i < lines.size(); i += perPage) {
-            MutableComponent page = i == 0 ? heading.copy() : Component.empty();
-            for (int j = i; j < Math.min(i + perPage, lines.size()); j++) {
-                if (i == 0 || j > i) {
-                    page.append("\n\n");
-                }
-                page.append(lines.get(j));
-            }
-            pages.add(page);
-        }
-        return pages;
-    }
-
     private static Optional<Note> last(List<Note> notes, Kind kind) {
         return notes.stream().filter(n -> n.kind() == kind).reduce((a, b) -> b);
-    }
-
-    private static int perPage() {
-        return Config.section("journal").integer("entries_per_page");
-    }
-
-    private static MutableComponent heading(Component text) {
-        return Component.empty().append(text.copy().withStyle(ChatFormatting.BOLD));
     }
 }

@@ -2,11 +2,13 @@ package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.Picture;
 import dev.keelfy.restless.haunt.Notebook.Chapter;
 import dev.keelfy.restless.haunt.Notebook.Kind;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -56,6 +58,12 @@ public final class Journal {
         for (Chapter chapter : chapters(kind)) {
             unlock(player, chapter);
         }
+    }
+
+    /** Pastes a developed photograph of a spirit into the player's notebook, in place of the last one. */
+    public static void paste(ServerPlayer player, UUID spirit, Picture picture) {
+        HauntData data = HauntData.get(player.level().getServer());
+        data.putNotebook(player.getUUID(), data.notebook(player.getUUID()).pasted(spirit, picture));
     }
 
     /** Opens a guide chapter the first time the player runs into what it is about. */

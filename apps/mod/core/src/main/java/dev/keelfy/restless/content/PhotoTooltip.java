@@ -15,7 +15,7 @@ import net.minecraft.util.ARGB;
 
 /** Shows a developed photo's picture, toned sepia, in its tooltip. */
 public record PhotoTooltip(Picture picture) implements ClientTooltipComponent {
-    private static final int BORDER = 3;
+    public static final int BORDER = 3;
     private static final int DARK = 0xFF1E140C;
     private static final int LIGHT = 0xFFEEDFC0;
     /** The last pictures shown, kept as textures; the oldest is released past this many. */
@@ -45,6 +45,11 @@ public record PhotoTooltip(Picture picture) implements ClientTooltipComponent {
 
     @Override
     public void extractImage(Font font, int x, int y, int w, int h, GuiGraphicsExtractor graphics) {
+        draw(graphics, picture, x, y);
+    }
+
+    /** The picture in its pale border, {@code WIDTH + 2 * BORDER} wide, with its corner at ({@code x}, {@code y}). */
+    public static void draw(GuiGraphicsExtractor graphics, Picture picture, int x, int y) {
         graphics.fill(x, y, x + Picture.WIDTH + BORDER * 2, y + Picture.HEIGHT + BORDER * 2, LIGHT);
         graphics.blit(
                 RenderPipelines.GUI_TEXTURED,

@@ -246,7 +246,8 @@ public final class HauntData extends SavedData {
                                     player,
                                     new Notebook(
                                             List.copyOf(notes),
-                                            data.notebook(player).chapters()));
+                                            data.notebook(player).chapters(),
+                                            data.notebook(player).pictures()));
                         });
                         data.hardcore = hardcore.orElse(null);
                         said.forEach((speaker, events) -> data.said.put(speaker, new HashMap<>(events)));

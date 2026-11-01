@@ -112,6 +112,18 @@ final class JournalGameTests {
                     "it feeds on light",
                     Component.translatable("focus.restless.glowstone"));
             List<String> after = keys(player, data);
+            byte[] grey = new byte[Picture.SIZE];
+            grey[5] = 77;
+            Picture shot = new Picture(grey);
+            Journal.paste(player, shade.uuid(), shot);
+            check(
+                    helper,
+                    JournalPages.sections(data.notebook(player.getUUID())).stream()
+                            .filter(section -> section.key().equals("spirits"))
+                            .flatMap(section -> section.cards().stream())
+                            .anyMatch(
+                                    card -> card.picture().filter(shot::equals).isPresent()),
+                    "a developed photo must be pasted onto its spirit's card");
             JournalPayload sent = new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())));
             check(
                     helper,
@@ -136,14 +148,21 @@ final class JournalGameTests {
                         "section order must survive the network codec");
                 // Vanilla collapses literal component arguments into strings during decoding. Compare their content.
                 List<String> sentKeys = new ArrayList<>();
-                sent.sections().forEach(section -> section.pages().forEach(text -> collect(text, sentKeys)));
+                sent.sections().forEach(section -> texts(section, sentKeys));
                 List<String> screenKeys = new ArrayList<>();
-                received.sections().forEach(section -> section.pages().forEach(text -> collect(text, screenKeys)));
+                received.sections().forEach(section -> texts(section, screenKeys));
                 check(
                         helper,
                         screenKeys.equals(sentKeys),
                         "journal text and translation arguments must survive the network codec: " + sentKeys + " != "
                                 + screenKeys);
+                check(
+                        helper,
+                        received.sections().stream()
+                                .flatMap(section -> section.cards().stream())
+                                .anyMatch(card ->
+                                        card.picture().filter(shot::equals).isPresent()),
+                        "the pasted photo must survive the network codec");
                 check(
                         helper,
                         screenKeys.contains("journal.restless.may_lie"),
@@ -182,8 +201,15 @@ final class JournalGameTests {
     /** Every translation key on the player's pages, so the test does not depend on the server's language. */
     private static List<String> keys(ServerPlayer player, HauntData data) {
         List<String> keys = new ArrayList<>();
-        JournalPages.of(data.notebook(player.getUUID())).forEach(page -> collect(page, keys));
+        JournalPages.sections(data.notebook(player.getUUID())).forEach(section -> texts(section, keys));
         return keys;
+    }
+
+    private static void texts(JournalPages.Section section, List<String> keys) {
+        section.cards().forEach(card -> {
+            collect(card.heading(), keys);
+            card.entries().forEach(entry -> collect(entry.text(), keys));
+        });
     }
 
     private static void collect(Component component, List<String> keys) {

@@ -71,7 +71,7 @@
     }
   },
   "evolution": { "check_ticks": 100, "days": 5, "power_floor": 0.7, "extra_waves": 4, "signature_boost": 3.0 },
-  "journal": { "entries_per_page": 3, "traits_per_page": 5, "give_on_join": true },
+  "journal": { "give_on_join": true },
   "candle": { "step_ticks": 4, "warning_ticks": 60, "lean": 0.5 },
   "hardcore": { "mode": "auto" },
   "restore": { "retry_ticks": 20 },
