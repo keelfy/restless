@@ -83,7 +83,17 @@ final class Tricks {
     /** The bobber of the player's rod, if it floats. */
     private static @Nullable FishingHook hook(ServerPlayer player) {
         FishingHook hook = player.fishing;
-        return hook != null && hook.isAlive() && hook.isInWater() ? hook : null;
+        return hook != null
+                        && hook.isAlive()
+                        && (hook.isInWater()
+                                || player.level()
+                                        .getFluidState(hook.blockPosition())
+                                        .is(net.minecraft.tags.FluidTags.WATER)
+                                || player.level()
+                                        .getFluidState(hook.blockPosition().below())
+                                        .is(net.minecraft.tags.FluidTags.WATER))
+                ? hook
+                : null;
     }
 
     private static void borderCloses(ServerPlayer player) {

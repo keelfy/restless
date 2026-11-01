@@ -274,7 +274,11 @@ final class Strangers {
 
     private static boolean mine(ServerPlayer player, Mannequin figure, Config.Section config, int n) {
         ServerLevel level = player.level();
-        BlockPos wall = figure.blockPosition().relative(figure.getDirection());
+        BlockPos wall = java.util.stream.StreamSupport.stream(Direction.Plane.HORIZONTAL.spliterator(), false)
+                .map(figure.blockPosition()::relative)
+                .filter(pos -> player.level().getBlockState(pos).isSolidRender())
+                .min(Comparator.comparingDouble(pos -> pos.distToCenterSqr(player.position())))
+                .orElse(figure.blockPosition());
         BlockState state = level.getBlockState(wall);
         int id = player.getId() + CRACK_ID;
         if (state.isAir()) {
@@ -350,6 +354,8 @@ final class Strangers {
     /** On the bed block it was put on: asleep, as the game draws a sleeper, without marking the bed taken. */
     private static void lieDown(Mannequin figure) {
         BlockPos bed = figure.blockPosition();
+        figure.noPhysics = true;
+        figure.setDeltaMovement(Vec3.ZERO);
         figure.setPose(Pose.SLEEPING);
         figure.setSleepingPos(bed);
         figure.setPos(bed.getX() + 0.5, bed.getY() + BED_HEIGHT, bed.getZ() + 0.5);

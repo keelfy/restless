@@ -68,21 +68,20 @@ final class Wilds {
                         Wilds::lilyDrift),
                 // 471: a cauldron bubbles
                 SimpleEvent.light(
-                        "swamp_cauldron",
+                        "cauldron",
                         EventTag.BLOCKS,
-                        player -> swamp(player) && Nearby.any(player, "swamp_cauldron", Wilds::cauldron),
+                        player -> Nearby.any(player, "cauldron", Wilds::cauldron),
                         Wilds::cauldronBubbles),
                 // 472: the firefly bushes around the player show as plain bushes
                 SimpleEvent.light(
-                        "swamp_fireflies_dark",
+                        "fireflies_dark",
                         EventTag.BLOCKS,
-                        player -> swamp(player)
-                                && Nearby.any(player, "swamp_fireflies_dark", s -> s.is(Blocks.FIREFLY_BUSH)),
+                        player -> Nearby.any(player, "fireflies_dark", s -> s.is(Blocks.FIREFLY_BUSH)),
                         player -> Swaps.show(
                                 player,
-                                Nearby.all(player, "swamp_fireflies_dark", s -> s.is(Blocks.FIREFLY_BUSH)),
+                                Nearby.all(player, "fireflies_dark", s -> s.is(Blocks.FIREFLY_BUSH)),
                                 Blocks.BUSH.defaultBlockState(),
-                                Config.event("swamp_fireflies_dark").integer("ticks"))),
+                                Config.event("fireflies_dark").integer("ticks"))),
                 // 473: real snow piles against the outside of a door
                 SimpleEvent.light(
                         "snow_door_drift",
@@ -273,8 +272,8 @@ final class Wilds {
     }
 
     private static void cauldronBubbles(ServerPlayer player) {
-        Config.Section config = Config.event("swamp_cauldron");
-        BlockPos pot = Nearby.random(player, "swamp_cauldron", Wilds::cauldron);
+        Config.Section config = Config.event("cauldron");
+        BlockPos pot = Nearby.random(player, "cauldron", Wilds::cauldron);
         if (pot == null) {
             return;
         }
@@ -314,7 +313,7 @@ final class Wilds {
             Direction facing = level.getBlockState(door).getValue(DoorBlock.FACING);
             for (Direction out : new Direction[] {facing, facing.getOpposite()}) {
                 BlockPos spot = door.relative(out);
-                if (level.isEmptyBlock(spot) && level.canSeeSky(spot) && snow.canSurvive(level, spot)) {
+                if (snowReplaceable(level, spot) && level.canSeeSky(spot) && snow.canSurvive(level, spot)) {
                     found.add(new Drift(spot, out));
                 }
             }
@@ -340,9 +339,16 @@ final class Wilds {
         }
     }
 
+    private static boolean snowReplaceable(ServerLevel level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        return state.isAir()
+                || state.is(Blocks.SNOW)
+                || (state.canBeReplaced() && level.getFluidState(pos).isEmpty());
+    }
+
     private static void piles(ServerLevel level, BlockPos pos, int layers, int ticks) {
         BlockState snow = Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, layers);
-        if (level.isEmptyBlock(pos) && snow.canSurvive(level, pos)) {
+        if (snowReplaceable(level, pos) && snow.canSurvive(level, pos)) {
             Restore.swap(level, pos, snow, ticks);
         }
     }

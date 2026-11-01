@@ -369,7 +369,7 @@ Runs when: A lectern with a book within 12
 
 Every such skull is shown turned to face the player (a swap, see `swaps.mode`); restored after 30 s
 
-Runs when: Nether, a wither skeleton skull standing on a fence within 12
+Runs when: Any floor or wall skull within 12, in any dimension
 
 ## `anchor_charge`
 
@@ -425,17 +425,17 @@ Falling sand particles under the first solid block above the player's head, 12 p
 
 Runs when: In a desert, with a solid block within 6 above the player's head
 
-## `swamp_cauldron`
+## `cauldron`
 
 Brewing bubble sounds and bubble particles over a cauldron within 12, 8 pulses 0.5 s apart
 
-Runs when: In a swamp or mangrove swamp, with a cauldron within 12
+Runs when: A cauldron within 12, in any biome
 
-## `swamp_fireflies_dark`
+## `fireflies_dark`
 
 Only this player's client is told that every firefly bush within 12 is a plain bush. 30 s later it gets the real blocks back. Nothing on the server
 
-Runs when: In a swamp or mangrove swamp, with a firefly bush within 12
+Runs when: A firefly bush within 12, in any biome
 
 ## `snow_door_drift`
 
@@ -447,13 +447,13 @@ Runs when: In a snowy biome, with a wooden door within 12 that has open sky and 
 
 Real vines grow on up to 24 of the nearest air blocks beside the glass, hung toward it. 60 s later each goes unless it was changed meanwhile. Under hardcore they stay
 
-Runs when: In a jungle biome, glass or a glass pane within 12 with air beside it
+Runs when: In a jungle, swamp or mangrove swamp biome, glass or a glass pane within 12 with air beside it
 
 ## `eyeblossoms_open`
 
 Only this player's client is told that up to 12 of the nearest such flowers are open, and an opening sounds. 30 s later it gets the real blocks back. Nothing on the server
 
-Runs when: In the pale garden, a closed eyeblossom within 12 more than 80 degrees from where the player looks
+Runs when: A closed eyeblossom within 12, regardless of biome or view
 
 ## `resin_clumps`
 
@@ -465,7 +465,7 @@ Runs when: In a forest, flower forest, birch forest, old growth birch forest, da
 
 Only this player's client is told that the 40 nearest such blocks are persistent dark oak leaves. 15 s later it gets the real blocks back. Nothing on the server
 
-Runs when: In the dark forest, at least 6 air blocks touching leaves at least 3 above the player within 8
+Runs when: In the dark forest or pale garden, at least 6 air blocks touching leaves at least 3 above the player within 8
 
 ## `sculk_creep`
 
@@ -477,7 +477,7 @@ Runs when: In the deep dark, sculk-replaceable ground with air above, 8 to 14 bl
 
 Up to 10 of the nearest bunches lose their berries, one per second; 1 min later each has them again. Under hardcore they stay dark
 
-Runs when: In the lush caves, glow berries within 14
+Runs when: Glow berries within 14, in any biome
 
 ## `scarecrow_closer`
 

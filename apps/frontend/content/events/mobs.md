@@ -457,7 +457,7 @@ Runs when: Nether, soul fire within 16
 
 Only this player's client is told of a blaze there, facing the player and not moving. Gone when the player comes within 5 blocks, or after 20 s. Nothing on the server
 
-Runs when: Nether, standing room 10 blocks away within 40° of where the player looks, with a roof 2 or 3 blocks above it
+Runs when: Nether, standing room 10 blocks away within 40° of where the player looks
 
 ## `magma_hop`
 

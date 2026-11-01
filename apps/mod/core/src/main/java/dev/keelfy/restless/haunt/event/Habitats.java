@@ -85,7 +85,8 @@ final class Habitats {
                 SimpleEvent.light(
                         "window_vines",
                         EventTag.BLOCKS,
-                        player -> Where.biome(player, BiomeTags.IS_JUNGLE)
+                        player -> (Where.biome(player, BiomeTags.IS_JUNGLE)
+                                        || Where.biome(player, Biomes.SWAMP, Biomes.MANGROVE_SWAMP))
                                 && !vineSpots(player).isEmpty(),
                         Habitats::growVines),
                 // 483: on the mushroom fields the red mooshrooms turn brown, then red again unless hardcore
@@ -99,8 +100,7 @@ final class Habitats {
                 SimpleEvent.light(
                         "eyeblossoms_open",
                         EventTag.BLOCKS,
-                        player -> Where.biome(player, Biomes.PALE_GARDEN)
-                                && !unwatched(player).isEmpty(),
+                        player -> !closedEyes(player).isEmpty(),
                         Habitats::openEyes),
                 // 485: in an ordinary forest a creaking heart sounds from the trees
                 SimpleEvent.light(
@@ -125,7 +125,7 @@ final class Habitats {
                 SimpleEvent.light(
                         "canopy_closes",
                         EventTag.BLOCKS,
-                        player -> Where.biome(player, Biomes.DARK_FOREST)
+                        player -> Where.biome(player, Biomes.DARK_FOREST, Biomes.PALE_GARDEN)
                                 && gaps(player).size()
                                         >= Config.event("canopy_closes").integer("min_blocks"),
                         Habitats::closeCanopy),
@@ -140,8 +140,7 @@ final class Habitats {
                 SimpleEvent.light(
                         "berries_dark",
                         EventTag.LIGHTS,
-                        player -> Where.biome(player, Biomes.LUSH_CAVES)
-                                && Nearby.any(player, "berries_dark", Habitats::berries),
+                        player -> Nearby.any(player, "berries_dark", Habitats::berries),
                         Habitats::darkenBerries));
     }
 
@@ -285,19 +284,14 @@ final class Habitats {
 
     // 484
 
-    /** Closed eyeblossoms well outside the player's view. */
-    private static List<BlockPos> unwatched(ServerPlayer player) {
-        double limit = Math.cos(Math.toRadians(Config.event("eyeblossoms_open").num("min_angle")));
-        Vec3 look = player.getLookAngle();
-        Vec3 eye = player.getEyePosition();
-        return Nearby.all(player, "eyeblossoms_open", state -> state.is(Blocks.CLOSED_EYEBLOSSOM)).stream()
-                .filter(pos -> look.dot(Vec3.atCenterOf(pos).subtract(eye).normalize()) < limit)
-                .toList();
+    /** Closed eyeblossoms near the player. */
+    private static List<BlockPos> closedEyes(ServerPlayer player) {
+        return Nearby.all(player, "eyeblossoms_open", state -> state.is(Blocks.CLOSED_EYEBLOSSOM));
     }
 
     private static void openEyes(ServerPlayer player) {
         Config.Section config = Config.event("eyeblossoms_open");
-        List<BlockPos> opened = nearest(player, unwatched(player), config.integer("max_blocks"));
+        List<BlockPos> opened = nearest(player, closedEyes(player), config.integer("max_blocks"));
         Swaps.show(player, opened, Blocks.OPEN_EYEBLOSSOM.defaultBlockState(), config.integer("ticks"));
         Nearby.sound(player, SoundEvents.EYEBLOSSOM_OPEN, Vec3.atCenterOf(opened.getFirst()), config.tone("sound"));
     }
@@ -323,7 +317,8 @@ final class Habitats {
             walls.add(BuiltInRegistries.BLOCK.getValue(Identifier.parse(id)));
         }
         Map<BlockPos, Direction> spots = new LinkedHashMap<>();
-        for (BlockPos wall : Nearby.all(player, "resin_clumps", state -> walls.contains(state.getBlock()))) {
+        for (BlockPos wall : Nearby.all(
+                player, "resin_clumps", state -> state.is(BlockTags.PLANKS) || walls.contains(state.getBlock()))) {
             for (Direction d : Direction.Plane.HORIZONTAL) {
                 BlockPos cell = wall.relative(d);
                 if (level.isEmptyBlock(cell)) {

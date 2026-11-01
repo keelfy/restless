@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Random;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -54,6 +55,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GrowingPlantHeadBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import net.minecraft.world.level.block.SkullBlock;
+import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -106,7 +108,7 @@ final class Nether {
                 SimpleEvent.light(
                         "skulls_turn",
                         EventTag.BLOCKS,
-                        player -> Where.nether(player) && !skulls(player).isEmpty(),
+                        player -> !skulls(player).isEmpty(),
                         Nether::turnSkulls),
                 // 450: a blaze stands motionless in a corridor, and is gone when approached
                 SimpleEvent.light(
@@ -403,12 +405,12 @@ final class Nether {
 
     // 449
 
-    /** Wither skeleton skulls standing on a fence. */
+    /** Floor and wall skulls, on any support and in any dimension. */
     private static List<BlockPos> skulls(ServerPlayer player) {
-        ServerLevel level = player.level();
-        return Nearby.all(player, "skulls_turn", state -> state.is(Blocks.WITHER_SKELETON_SKULL)).stream()
-                .filter(pos -> level.getBlockState(pos.below()).is(BlockTags.FENCES))
-                .toList();
+        return Nearby.all(
+                player,
+                "skulls_turn",
+                state -> state.getBlock() instanceof SkullBlock || state.getBlock() instanceof WallSkullBlock);
     }
 
     private static void turnSkulls(ServerPlayer player) {
@@ -418,23 +420,25 @@ final class Nether {
             double yaw =
                     Mth.atan2(-(pos.getX() + 0.5 - player.getX()), pos.getZ() + 0.5 - player.getZ()) * Mth.RAD_TO_DEG;
             int segment = Mth.floor(yaw * 16.0 / 360.0 + 0.5) & SkullBlock.MAX;
-            shown.put(pos, player.level().getBlockState(pos).setValue(SkullBlock.ROTATION, segment));
+            BlockState state = player.level().getBlockState(pos);
+            if (state.hasProperty(SkullBlock.ROTATION)) {
+                shown.put(pos, state.setValue(SkullBlock.ROTATION, segment));
+            } else {
+                Vec3 toward = player.position().subtract(Vec3.atCenterOf(pos));
+                shown.put(
+                        pos,
+                        state.setValue(WallSkullBlock.FACING, Direction.getApproximateNearest(toward.x, 0, toward.z)));
+            }
         }
         Swaps.show(player, shown, Config.event("skulls_turn").integer("ticks"));
     }
 
     // 450
 
-    /** Standing room ahead with a roof just above: a corridor, not an open cavern. */
+    /** Standing room ahead, including open caverns. */
     private static @Nullable BlockPos blazeSpot(ServerPlayer player) {
         Config.Section config = Config.event("still_blaze");
-        ServerLevel level = player.level();
-        return Place.standingAhead(
-                player,
-                config.num("distance"),
-                config.num("min_angle"),
-                config.num("max_angle"),
-                pos -> Place.solid(level, pos.above(2)) || Place.solid(level, pos.above(3)));
+        return Place.standingAhead(player, config.num("distance"), config.num("min_angle"), config.num("max_angle"));
     }
 
     private static void stillBlaze(ServerPlayer player) {

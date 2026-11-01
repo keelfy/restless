@@ -85,6 +85,44 @@ final class HauntEventGameTests {
     static final Map<String, Integer> TIMEOUT = new HashMap<>();
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
+        for (Block skull : List.of(
+                Blocks.SKELETON_SKULL,
+                Blocks.WITHER_SKELETON_SKULL,
+                Blocks.PLAYER_HEAD,
+                Blocks.ZOMBIE_HEAD,
+                Blocks.CREEPER_HEAD,
+                Blocks.DRAGON_HEAD,
+                Blocks.PIGLIN_HEAD,
+                Blocks.SKELETON_WALL_SKULL)) {
+            tests.put(
+                    "skulls_anywhere_"
+                            + net.minecraft.core.registries.BuiltInRegistries.BLOCK
+                                    .getKey(skull)
+                                    .getPath(),
+                    helper -> runs(helper, "skulls_turn", player -> helper.setBlock(FEET.east(2), skull), () -> {}));
+        }
+        for (String id : List.of("fireflies_dark", "cauldron", "eyeblossoms_open", "berries_dark")) {
+            tests.put(
+                    "unrestricted_" + id,
+                    helper -> runs(
+                            helper,
+                            id,
+                            player -> {
+                                BlockState state = switch (id) {
+                                    case "fireflies_dark" -> Blocks.FIREFLY_BUSH.defaultBlockState();
+                                    case "cauldron" -> Blocks.CAULDRON.defaultBlockState();
+                                    case "eyeblossoms_open" -> Blocks.CLOSED_EYEBLOSSOM.defaultBlockState();
+                                    default ->
+                                        Blocks.CAVE_VINES
+                                                .defaultBlockState()
+                                                .setValue(net.minecraft.world.level.block.CaveVines.BERRIES, true);
+                                };
+                                helper.setBlock(FEET.south(2), state);
+                                player.setYRot(0);
+                            },
+                            () -> {}));
+        }
+
         for (String id : List.of(
                 "false_wound",
                 "false_hearts",
