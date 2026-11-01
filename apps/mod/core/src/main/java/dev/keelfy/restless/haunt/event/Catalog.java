@@ -29,7 +29,15 @@ public final class Catalog {
                         Mirages.all(),
                         Veils.all(),
                         Hallucinations.all(),
-                        Apparitions.all())
+                        Apparitions.all(),
+                        Nether.all(),
+                        TheEnd.all(),
+                        Wilds.all(),
+                        Habitats.all(),
+                        Strangers.all(),
+                        Rites.all(),
+                        Fixtures.all(),
+                        Tricks.all())
                 .flatMap(List::stream)
                 .toList();
     }

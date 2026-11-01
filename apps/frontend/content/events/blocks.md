@@ -4,7 +4,7 @@ title: Blocks
 
 # Blocks
 
-59 events.
+95 events.
 
 ## `wilted_flowers`
 
@@ -364,3 +364,220 @@ Runs when: Stairs within 12 behind where you are looking
 The book on a lectern is another one, signed by the spirit; the first comes back later
 
 Runs when: A lectern with a book within 12
+
+## `skulls_turn`
+
+Every such skull is shown turned to face the player (a swap, see `swaps.mode`); restored after 30 s
+
+Runs when: Nether, a wither skeleton skull standing on a fence within 12
+
+## `anchor_charge`
+
+One of them shows one more charge, with the charging sound (a swap, see `swaps.mode`); restored after 30 s, and under hardcore it stays
+
+Runs when: Nether, a respawn anchor below full charge within 10
+
+## `vines_reach`
+
+The vine nearest the player grows up to 3 blocks down into the air, ending in a full-grown head; put back after 30 s, and under hardcore it stays
+
+Runs when: Nether, a weeping vine end with air below within 12
+
+## `void_wind`
+
+A wind-burst howl, then after 2 s the player on the ground is nudged outward at about 2.4 blocks/s every 0.1 s for 5 s, with the howl repeated each second. It ends the moment ground is missing within 10 blocks along the way, so the edge is never reached
+
+Runs when: End, health > 5 hearts, on the ground, not riding, 24 or more blocks from the middle, and ground (within 4 blocks below) at every second block out to 10 blocks along the way outward
+
+## `gateway_beam`
+
+The gateway's own beam event is sent, as when an entity enters it, so it shows its beam for 2 s. Nobody is moved
+
+Runs when: End, a gateway in the 9×9 chunks around the player
+
+## `chorus_shift`
+
+Only this player's client is told that the 24 nearest such blocks are one block over in a single direction (air where they were). After 10 s it gets the real blocks back. Nothing on the server
+
+Runs when: End, a chorus plant or flower within 12 blocks with free air beside it
+
+## `phantom_egg`
+
+Only this player's client is told of a dragon egg standing there. A click shows the truth. After 10 s it gets the real block back. Nothing on the server
+
+Runs when: End, standing room 4–12 blocks away
+
+## `ender_chests_open`
+
+Five ender chest open sounds, 3–8 blocks away at random bearings, 0.4 s apart, each followed by the close sound 1.5 s after. Nothing in the world
+
+Runs when: End
+
+## `nowhere_portal`
+
+Only this player's client is told of a lit nether portal in a frame of obsidian (no corners) there, facing them, with the portal ambient sound. A click shows air. After 15 s it gets the real blocks back. Nothing on the server
+
+Runs when: Overworld, a 4×5 empty space on solid ground 14 blocks away within 40° of where the player looks
+
+## `desert_sand_trickle`
+
+Falling sand particles under the first solid block above the player's head, 12 pulses 0.25 s apart, with a sand-breaking sound. Nothing in the world changes
+
+Runs when: In a desert, with a solid block within 6 above the player's head
+
+## `swamp_cauldron`
+
+Brewing bubble sounds and bubble particles over a cauldron within 12, 8 pulses 0.5 s apart
+
+Runs when: In a swamp or mangrove swamp, with a cauldron within 12
+
+## `swamp_fireflies_dark`
+
+Only this player's client is told that every firefly bush within 12 is a plain bush. 30 s later it gets the real blocks back. Nothing on the server
+
+Runs when: In a swamp or mangrove swamp, with a firefly bush within 12
+
+## `snow_door_drift`
+
+Four layers of real snow on the outside of a wooden door within 12 and three layers on each side along the wall; removed after 2 min (stays under hardcore)
+
+Runs when: In a snowy biome, with a wooden door within 12 that has open sky and free ground outside it
+
+## `window_vines`
+
+Real vines grow on up to 24 of the nearest air blocks beside the glass, hung toward it. 60 s later each goes unless it was changed meanwhile. Under hardcore they stay
+
+Runs when: In a jungle biome, glass or a glass pane within 12 with air beside it
+
+## `eyeblossoms_open`
+
+Only this player's client is told that up to 12 of the nearest such flowers are open, and an opening sounds. 30 s later it gets the real blocks back. Nothing on the server
+
+Runs when: In the pale garden, a closed eyeblossom within 12 more than 80 degrees from where the player looks
+
+## `resin_clumps`
+
+Real resin clumps grow on up to 8 air blocks beside the walls, clustered around a random spot, with a placing sound. 2 min later each goes unless it was changed meanwhile. Under hardcore they stay
+
+Runs when: In a forest, flower forest, birch forest, old growth birch forest, dark forest or pale garden, a plank, cobblestone, stone brick, brick or wool wall within 12 with air beside it
+
+## `canopy_closes`
+
+Only this player's client is told that the 40 nearest such blocks are persistent dark oak leaves. 15 s later it gets the real blocks back. Nothing on the server
+
+Runs when: In the dark forest, at least 6 air blocks touching leaves at least 3 above the player within 8
+
+## `sculk_creep`
+
+Real sculk spreads in a trail of up to 12 blocks from far ground toward the player, one every second, each next to the last and nearer, stopping 3 blocks away. 2 min later each goes unless it was changed meanwhile. Under hardcore it stays
+
+Runs when: In the deep dark, sculk-replaceable ground with air above, 8 to 14 blocks away
+
+## `berries_dark`
+
+Up to 10 of the nearest bunches lose their berries, one per second; 1 min later each has them again. Under hardcore they stay dark
+
+Runs when: In the lush caves, glow berries within 14
+
+## `scarecrow_closer`
+
+A scarecrow stands a step closer than it did, then goes back after a minute
+
+Runs when: A scarecrow within 14, at least 4 away, with room to step toward you
+
+## `ouija_hi`
+
+The planchette spells "HI" on its own
+
+Runs when: An ouija board within 8
+
+## `spirit_box_word`
+
+The spirit box says a word nobody asked for
+
+Runs when: A spirit box within 6
+
+## `salt_gap`
+
+One cell of a salt line disappears, the one nearest the spirit, and returns after two minutes
+
+Runs when: At least 4 salt cells within 8
+
+## `grave_name`
+
+A gravestone reads your own name
+
+Runs when: A gravestone within 16
+
+## `journal_page_torn`
+
+One journal entry is gone for a few minutes, then back in its place
+
+Runs when: You carry a journal with at least 3 entries
+
+## `dreamcatcher_fails`
+
+A dreamcatcher swings hard, and the dream comes anyway
+
+Runs when: A dreamcatcher within 8 and a dream that can start
+
+## `lantern_soul_fire`
+
+A hallowed lantern burns with soul fire for half a minute and does not ward meanwhile
+
+Runs when: A hallowed lantern within 10 and a spirit about
+
+## `charm_falls`
+
+A door charm drops off its hook as an item
+
+Runs when: A door charm within 10
+
+## `altar_midnight`
+
+At night the candles around an altar light themselves one after another
+
+Runs when: Night in the overworld and an altar within 12 with unlit candles beside it
+
+## `beacon_out`
+
+**Harmful.**
+An obsidian or black stained glass block is shown right above it, so the beam goes out or turns black. 30 s, this player only (a real block under `real` swaps; under hardcore it stays)
+
+Runs when: An active beacon within 16 with air above it
+
+## `campfire_cooks`
+
+Rotten flesh or a rabbit foot shows on the grill for 1 min, to this player only. Nothing cooks and the real campfire is unchanged
+
+Runs when: A campfire with a free slot within 10
+
+## `spawner_shows`
+
+The spinning mob inside is a villager, iron golem, cat, wandering trader, chicken or witch for 30 s, this player only. The real spawner is unchanged
+
+Runs when: A monster spawner within 16
+
+## `trial_ominous`
+
+Shown as ominous for 10 s, this player only
+
+Runs when: A calm trial spawner within 16
+
+## `vault_head`
+
+Its display item is the player's own head for 30 s, this player only
+
+Runs when: A vault within 16
+
+## `black_bed`
+
+Both halves show as the black bed, same facing and part, for 1 min, this player only (a bed is never really swapped)
+
+Runs when: A bed that is not black within 12
+
+## `black_carpets`
+
+The 48 nearest show as black carpets for 1 min (really changed in `real` mode; stays under hardcore)
+
+Runs when: Indoors, a carpet that is not black within 8

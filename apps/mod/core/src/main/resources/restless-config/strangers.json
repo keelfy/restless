@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:roof_figure": {
+      "weight": 0.3,
+      "radius": 20,
+      "min_distance": 12.0,
+      "interval_ticks": 20,
+      "max_ticks": 600,
+      "vanish_distance": 10.0,
+      "cleanup_ticks": 40
+    },
+    "minecraft:hill_waver": {
+      "weight": 0.3,
+      "tries": 16,
+      "distance": 45.0,
+      "min_angle": 0.0,
+      "max_angle": 40.0,
+      "min_rise": 6,
+      "interval_ticks": 8,
+      "max_ticks": 400,
+      "vanish_distance": 20.0,
+      "cleanup_ticks": 40
+    },
+    "minecraft:wall_miner": {
+      "weight": 0.3,
+      "stages": 10,
+      "interval_ticks": 8,
+      "max_ticks": 200,
+      "vanish_distance": 2.5,
+      "sound": { "volume": 0.8, "pitch": 0.9 },
+      "cleanup_ticks": 40
+    },
+    "minecraft:table_figure": {
+      "weight": 0.3,
+      "radius": 16,
+      "reach": 2,
+      "min_distance": 6.0,
+      "interval_ticks": 10,
+      "max_ticks": 300,
+      "vanish_distance": 4.0,
+      "cleanup_ticks": 40
+    },
+    "minecraft:cave_torches": {
+      "weight": 0.3,
+      "tries": 12,
+      "min_distance": 6.0,
+      "max_distance": 28.0,
+      "spacing": 4.0,
+      "min_count": 3,
+      "max_light": 7,
+      "restore_ticks": 1200
+    },
+    "minecraft:own_walker": {
+      "weight": 0.3,
+      "distance": 45.0,
+      "min_angle": 0.0,
+      "max_angle": 40.0,
+      "vanish_distance": 25.0,
+      "stride": 0.2,
+      "climb": 1,
+      "drop": 2,
+      "interval_ticks": 1,
+      "max_ticks": 600,
+      "cleanup_ticks": 40
+    },
+    "minecraft:night_runner": {
+      "weight": 0.3,
+      "max_light": 4,
+      "distance": 22.0,
+      "min_angle": 0.0,
+      "max_angle": 35.0,
+      "vanish_distance": 7.0,
+      "stride": 0.36,
+      "hop_chance": 0.05,
+      "climb": 1,
+      "drop": 2,
+      "interval_ticks": 1,
+      "max_ticks": 300,
+      "cleanup_ticks": 40
+    },
+    "minecraft:bed_sleeper": {
+      "weight": 0.3,
+      "radius": 24,
+      "min_distance": 8.0,
+      "interval_ticks": 10,
+      "max_ticks": 400,
+      "vanish_distance": 6.0,
+      "cleanup_ticks": 40
+    },
+    "minecraft:shrieker_figure": {
+      "weight": 0.3,
+      "radius": 24,
+      "reach": 3,
+      "min_distance": 8.0,
+      "interval_ticks": 10,
+      "max_ticks": 400,
+      "vanish_distance": 6.0,
+      "cleanup_ticks": 40
+    },
+    "minecraft:hello_chat": {
+      "weight": 0.3,
+      "lines": ["hello?", "anyone here?", "is someone there", "hello??", "can anyone hear me", "hey, wait", "where am I", "who is that"]
+    },
+    "minecraft:ghost_teleport": { "weight": 0.2, "names": ["???"] },
+    "minecraft:stranger_advancement": {
+      "weight": 0.2,
+      "titles": ["Who's There?", "Not Alone", "Behind You", "Stay Still", "Do Not Look"]
+    },
+    "minecraft:grave_figure": {
+      "weight": 0.3,
+      "min_distance": 20.0,
+      "max_distance": 60.0,
+      "interval_ticks": 10,
+      "max_ticks": 400,
+      "vanish_distance": 12.0,
+      "cleanup_ticks": 40
+    },
+    "minecraft:bedside_figure": {
+      "weight": 0.3,
+      "interval_ticks": 20,
+      "wait_ticks": 24000,
+      "reach": 3,
+      "stay_ticks": 25,
+      "cleanup_ticks": 40
+    }
+  }
+}

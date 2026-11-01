@@ -4,7 +4,7 @@ title: Assault
 
 # Assault
 
-12 events.
+15 events.
 
 ## `cold_touch`
 
@@ -89,3 +89,24 @@ Runs when: Night in the overworld (any time elsewhere), health > 5 hearts, lava 
 A wither skeleton with no AI and no gear (invulnerable, silent) stands there. Every 0.1 s it takes a 0.3-block stride toward the player, but only while the player is not looking at it (within 45° and in line of sight). Warden heartbeat once a second. A touch (1.2 blocks) deals up to 7 hearts but never below 3 hearts, then it vanishes in smoke; it also vanishes after 60 s or after 40 blocked strides
 
 Runs when: Not peaceful, no shadow already following the player, health > 7 hearts, standing room 14–20 blocks away
+
+## `snow_snowball`
+
+**Harmful.**
+A snowball thrown from a point 10 blocks away at the player's eyes at 1.2 blocks/tick; it does no damage
+
+Runs when: In a snowy biome
+
+## `snow_powder_path`
+
+**Harmful.**
+The block under standing room 5 blocks ahead within 30° of where the player looks becomes powder snow, one block deep; restored after 1 min (stays under hardcore)
+
+Runs when: In a snowy biome, health above the safe floor + 2 hearts, and standing room 5 blocks ahead with solid ground two blocks under it
+
+## `mountain_wind_push`
+
+**Harmful.**
+Three wind howls 0.5 s apart, then a push of 0.3 toward the edge the player stands at
+
+Runs when: In a mountain biome, health above the safe floor + 2 hearts, and the player at the edge of a drop

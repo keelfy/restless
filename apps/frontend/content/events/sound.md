@@ -4,7 +4,7 @@ title: Sound
 
 # Sound
 
-67 events.
+72 events.
 
 ## `footsteps`
 
@@ -414,3 +414,33 @@ Runs when: Always
 A stop-all-sounds packet every tick for 5 s, so nothing plays
 
 Runs when: Always
+
+## `desert_plate_click`
+
+A stone pressure plate click 5 blocks away
+
+Runs when: In a desert
+
+## `mountain_avalanche`
+
+A rumble that carries and a cloud of snow falling 25 blocks down at a point 50 blocks away, over 24 steps 0.2 s apart
+
+Runs when: In a mountain biome
+
+## `ocean_ship_bell`
+
+Three bell tolls 2 s apart, 40 blocks away; loud enough to carry
+
+Runs when: In an ocean biome
+
+## `creaking_heart_call`
+
+A creaking heart sounds 3 times, 2 s apart, from one point 14 blocks away at a random bearing (or the spirit's point)
+
+Runs when: In a forest, flower forest, birch forest or old growth birch forest
+
+## `note_tune`
+
+One of 4 fixed tunes, one note per 0.3 s, each on the next note block nearest first, with the note particle. The blocks keep their own notes
+
+Runs when: A note block with a tunable instrument within 12 (air above it unless the instrument sounds from above)

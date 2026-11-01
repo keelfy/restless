@@ -4,7 +4,7 @@ title: Water
 
 # Water
 
-5 events.
+6 events.
 
 ## `undertow`
 
@@ -37,3 +37,9 @@ Runs when: An empty boat or raft within 24 blocks
 A steady push away from the player for 10 seconds
 
 Runs when: An empty boat floating within 24
+
+## `swamp_lily_drift`
+
+A lily pad within 10 steps one block toward the player every second, 6 times at most, stopping 2.5 blocks away; restored after 1 min (stays under hardcore)
+
+Runs when: In a swamp or mangrove swamp, with a lily pad within 10 that has a free water block toward the player

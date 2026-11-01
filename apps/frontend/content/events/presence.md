@@ -4,7 +4,7 @@ title: Presence
 
 # Presence
 
-41 events.
+61 events.
 
 ## `dragon_flyover`
 
@@ -253,3 +253,123 @@ Runs when: An item on the hotbar or in the hands
 Only this player's client is told it is midnight under a full moon, with the clock stopped. 10 s later it gets the real time back. Nothing on the server
 
 Runs when: Overworld, daytime
+
+## `black_petals`
+
+For 10 s ash particles fall in a cloud above and around the player, like petals
+
+Runs when: In the cherry grove
+
+## `roof_figure`
+
+A silent, unhurtable mannequin in a random default skin crouches on top of a roof block, facing the player. Gone, silently, when the player comes within 10 blocks or after 30 s
+
+Runs when: A stair, slab or planks block open to the sky within 20 blocks, at least 12 blocks from the player
+
+## `hill_waver`
+
+A silent, unhurtable mannequin in a random default skin stands on a hilltop facing the player and swings its arm every 0.4 s. Gone, silently, when the player comes within 20 blocks or after 20 s
+
+Runs when: Standing room open to the sky 45 blocks away within 40° of where the player looks, at least 6 blocks above the player
+
+## `wall_miner`
+
+A silent, unhurtable mannequin in a random default skin stands behind a wall and every 0.4 s swings at it: cracks run up the block over 10 steps, only on this player's client, with its digging sound, then clear. The wall is never broken. Gone when it is done, when the player comes within 2.5 blocks, or after 10 s
+
+Runs when: A one-block-thick wall two blocks high in front of the player, with standing room behind it
+
+## `table_figure`
+
+A silent, unhurtable mannequin in a random default skin stands at a crafting table looking down at it. Gone, silently, when the table is gone, when the player comes within 4 blocks, or after 15 s
+
+Runs when: A crafting table within 16 blocks with standing room within 2 blocks of it, at least 6 blocks from the player
+
+## `cave_torches`
+
+Only this player's client is told that a line of floor spots along a dark tunnel holds torches. 1 min later it gets the real blocks back
+
+Runs when: Under a roof, and a bearing with at least 3 dark floor spots 6 to 28 blocks off, out of the sky
+
+## `own_walker`
+
+A silent, unhurtable mannequin in the player's own skin walks across their view, jumping up one-block steps, dropping off ledges up to 2 deep and going round what is in its way. Gone, silently, when the player comes within 25 blocks, when no way on is left, or after 30 s
+
+Runs when: Standing room 45 blocks away within 40° of where the player looks
+
+## `night_runner`
+
+A silent, unhurtable mannequin in a random default skin sprints across the view at 0.36 blocks/tick, jumping now and then. Gone, silently, when the player comes within 7 blocks, when no way on is left, or after 15 s
+
+Runs when: Light at the player 4 or less, and standing room 22 blocks away within 35° of where the player looks
+
+## `bed_sleeper`
+
+A silent, unhurtable mannequin in a random default skin lies asleep in a free bed; the bed is not marked taken. Gone, silently, when the player comes within 6 blocks or after 20 s
+
+Runs when: A free bed within 24 blocks with room above it, at least 8 blocks from the player
+
+## `shrieker_figure`
+
+A silent, unhurtable mannequin in a random default skin crouches by a sculk shrieker looking at it. Gone, silently, when the shrieker shrieks, when the player comes within 6 blocks, or after 20 s
+
+Runs when: Deep dark biome, and a sculk shrieker within 24 blocks with standing room beside it, at least 8 blocks from the player
+
+## `hello_chat`
+
+Only this player gets a chat line `<name> hello?` (from `lines`) under a made-up nickname
+
+Runs when: A line is left that the spirit has not said
+
+## `ghost_teleport`
+
+Only this player gets the command feedback `Teleported ??? to <player>`. Nobody is moved
+
+Runs when: A name is left that the spirit has not said
+
+## `stranger_advancement`
+
+Only this player gets the chat line `<name> has made the advancement [Who's There?]` under a made-up nickname
+
+Runs when: A title is left that the spirit has not said
+
+## `grave_figure`
+
+A silent, unhurtable mannequin in a random default skin stands where the player last died, facing them. Gone, silently, when the player comes within 12 blocks or after 20 s
+
+Runs when: The last death was in this dimension, 20 to 60 blocks away, in a loaded chunk with standing room
+
+## `bedside_figure`
+
+Waits up to 20 min for the player to sleep and wake. Then a silent, unhurtable mannequin in a random default skin stands next to the bed for 1.25 s, facing the player
+
+Runs when: No such wait already
+
+## `black_ash`
+
+Dark ash falls around the player from 2 blocks up, 24 bursts 0.25 s apart
+
+Runs when: Indoors
+
+## `border_closes`
+
+Only this player's client is shown a world border centered on them, shrinking from 80 to 40 blocks wide over 4 s and held 2 s; then the real border. Nothing on the server
+
+Runs when: No real border within 80 blocks
+
+## `false_recipe`
+
+Only this player's client gets a "recipe unlocked" toast for a made-up bone and skull recipe (the result is a skull, bone block, soul lantern or wither rose); 10 s later it is removed from the recipe book. No recipe exists
+
+Runs when: Always
+
+## `view_narrows`
+
+The client is told the movement speed attribute is 0.02 for 1 s, so the field of view pinches; then the real attribute
+
+Runs when: Always
+
+## `portal_swirl`
+
+Only this player's client is told a nether portal block stands at their feet, so the swirl fills the screen. 2 s later the real block comes back. Nothing on the server, nobody is sent anywhere
+
+Runs when: Air at the player's feet

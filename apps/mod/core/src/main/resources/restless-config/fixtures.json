@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:brewing_swap": { "weight": 0.3, "radius": 10, "restore_ticks": 6000, "potions": ["minecraft:water", "minecraft:awkward", "minecraft:night_vision", "minecraft:swiftness", "minecraft:healing", "minecraft:harming", "minecraft:poison", "minecraft:weakness", "minecraft:slowness", "minecraft:invisibility"] },
+    "minecraft:brewing_bubbles": { "weight": 0.3, "radius": 10, "bubbles": 6, "interval_ticks": 8, "sound": { "volume": 0.8, "pitch": 0.9 }, "particles": { "count": 5, "dx": 0.2, "dy": 0.1, "dz": 0.2, "speed": 0.02, "offset_y": 1.0 } },
+    "minecraft:beacon_out": { "weight": 0.2, "radius": 16, "ticks": 600, "blocks": ["minecraft:obsidian", "minecraft:black_stained_glass"] },
+    "minecraft:statue_pose": { "weight": 0.3, "radius": 12, "watch_degrees": 60.0, "restore_ticks": 2400 },
+    "minecraft:note_tune": { "weight": 0.3, "radius": 12, "step_ticks": 6, "sound": { "volume": 3.0, "pitch": 1.0 }, "tunes": ["12 14 15 14 12 10 12 7", "7 10 12 10 7 5 7 0", "12 12 15 15 14 14 10 10 12", "19 17 15 14 12 14 15 17 19 19 19"] },
+    "minecraft:campfire_cooks": { "weight": 0.3, "radius": 10, "ticks": 1200, "items": ["minecraft:rotten_flesh", "minecraft:rabbit_foot"] },
+    "minecraft:spawner_shows": { "weight": 0.3, "radius": 16, "ticks": 600, "mobs": ["minecraft:villager", "minecraft:iron_golem", "minecraft:cat", "minecraft:wandering_trader", "minecraft:chicken", "minecraft:witch"] },
+    "minecraft:trial_ominous": { "weight": 0.3, "radius": 16, "ticks": 200 },
+    "minecraft:vault_head": { "weight": 0.3, "radius": 16, "ticks": 600 },
+    "minecraft:black_bed": { "weight": 0.3, "radius": 12, "ticks": 1200 },
+    "minecraft:black_carpets": { "weight": 0.3, "radius": 8, "max_blocks": 48, "ticks": 1200 },
+    "minecraft:black_ash": { "weight": 0.3, "interval_ticks": 5, "bursts": 24, "particles": { "count": 8, "dx": 3.0, "dy": 0.3, "dz": 3.0, "speed": 0.01, "offset_y": 2.2 } }
+  }
+}

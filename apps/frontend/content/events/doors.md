@@ -4,7 +4,7 @@ title: Doors
 
 # Doors
 
-40 events.
+43 events.
 
 ## `door`
 
@@ -251,3 +251,21 @@ Runs when: You have a respawn point
 A note you never wrote shows in an empty slot of the open ender chest, gone at the first click
 
 Runs when: An ender chest is open with an empty slot
+
+## `brewing_swap`
+
+One bottle becomes another potion (water, awkward, night vision, swiftness, healing, harming, poison, weakness, slowness or invisibility); put back after 5 min if untouched (stays under hardcore)
+
+Runs when: A brewing stand with a potion bottle within 10
+
+## `brewing_bubbles`
+
+The brewing sound and bubbles above it, 6 times, 0.4 s apart. Nothing changes
+
+Runs when: A brewing stand with nothing in any slot within 10
+
+## `statue_pose`
+
+Its pose becomes another one while the player is not looking; set back after 2 min (stays under hardcore)
+
+Runs when: A copper golem statue within 12, outside 60° of where the player looks

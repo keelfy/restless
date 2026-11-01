@@ -4,7 +4,7 @@ title: Mobs
 
 # Mobs
 
-65 events.
+84 events.
 
 ## `double`
 
@@ -416,3 +416,119 @@ Runs when: Standing room 16 blocks away within 25° of where the player looks (u
 Only this player's client is told of a size 8 slime there, hopping on the spot once a second and facing the player. Gone when the player comes within 14 blocks, or after 30 s. Nothing on the server
 
 Runs when: Standing room 32 blocks away within 40° of where the player looks (up to 16 bearings tried)
+
+## `piglins_stare`
+
+Each piglin loses its AI, faces the player (re-aimed every 0.25 s) for 8 s, then gets its AI back
+
+Runs when: Nether, a piglin or brute within 24
+
+## `piglin_barter`
+
+It plays its admiring sound; 2 s later a player head (the player's own) or a bone is thrown from it toward the player, and is gone after 30 s
+
+Runs when: Nether, an adult piglin within 16
+
+## `ghast_cry`
+
+A ghast's scream 40 blocks away (the spirit's point if one sent it), 2.5 s later its fireball shot, 1.25 s after that an explosion from the same spot
+
+Runs when: Nether
+
+## `lava_figure`
+
+A vanilla mannequin in a stranger's skin (invulnerable, silent) stands on that lava, facing the player; gone when the player is within 8 blocks, or after 30 s
+
+Runs when: Nether, a lava source with two free blocks above it within 24, at least 10 away
+
+## `strider_shiver`
+
+Only this player's client is told the striders are cold (the shiver) for 8 s, then the real state again. Nothing changes on the server
+
+Runs when: Nether, a strider within 24 that is not already cold
+
+## `soul_fire_lean`
+
+Up to 6 soul fires send soul fire flame particles streaming horizontally toward the player, 2 per pulse every 0.2 s, 30 pulses
+
+Runs when: Nether, soul fire within 16
+
+## `still_blaze`
+
+Only this player's client is told of a blaze there, facing the player and not moving. Gone when the player comes within 5 blocks, or after 20 s. Nothing on the server
+
+Runs when: Nether, standing room 10 blocks away within 40° of where the player looks, with a roof 2 or 3 blocks above it
+
+## `magma_hop`
+
+All of them jump at once, with their jump sound
+
+Runs when: Nether, a magma cube on the ground within 16
+
+## `steady_compass`
+
+Only this player's client is shown the compasses locked on that spirit's anchor for 30 s, then the real stacks again
+
+Runs when: Nether, a plain compass in the inventory, and a territorial spirit whose reach holds the player
+
+## `soul_sand_drag`
+
+**Harmful.**
+Slowness II for 5 s and a whisper 2 blocks away
+
+Runs when: Nether, standing on soul sand or soil, not slowed
+
+## `piglins_angered`
+
+**Harmful.**
+Idle piglins within 16 turn on the player as if they wore no gold (vanilla anger, 30 s)
+
+Runs when: Nether, the player wears gold armor (not creative), a piglin within 16
+
+## `endermen_turn`
+
+Each such enderman faces the player and has its target cleared and its path stopped every tick, for 10 s. They stay calm however long the player looks back. Nothing to revert
+
+Runs when: End, an enderman with no target within 32 blocks
+
+## `shulker_peeks`
+
+One shulker opens its shell fully with the open sound, and shuts it with the close sound 3 s later (put back at shutdown too)
+
+Runs when: End, a shulker with no target within 24 blocks
+
+## `empty_pillar_crystal`
+
+Only this player's client is told of an end crystal on it, with an id no server entity has. Gone when the player comes within 12 blocks, or after 20 s. Nothing on the server
+
+Runs when: End, a pillar top (bedrock on obsidian, free air above, no crystal on it) 8 or more blocks away in the 48-block square
+
+## `enderman_home_block`
+
+Only this player's client is told of an enderman standing there, facing them, holding one of the blocks they carry. Gone with the teleport sound once it has been within 30° of where they look for 3 checks (every tick), or silently within 6 blocks or after 20 s. Nothing on the server
+
+Runs when: End, the player carries a block item (not one with a block entity) and has standing room 18 blocks away within 50° of where they look
+
+## `desert_husk_haze`
+
+Only this player's client is told of a husk standing 28 blocks away within 40° of where they look, facing them, with an id no server entity has. Gone when the player comes within 14 blocks, or after 20 s. Nothing on the server
+
+Runs when: In a desert, with standing room 28 blocks away within 40° of where the player looks
+
+## `boat_grabbed`
+
+For 8 s the boat's motion is set to zero every tick and the client is told, so it will not move; drowned groans sound under it every 1.5 s
+
+Runs when: In an ocean biome, riding a boat that floats in water
+
+## `parrots_scatter`
+
+Every such parrot is thrown up if it is on the ground and sent toward a point 24 blocks away from the player and 10 up, again every 0.5 s for 8 s; a wing beat sounds
+
+Runs when: In a jungle biome, a parrot with no owner within 24
+
+## `mooshroom_brown`
+
+Up to 8 of them turn brown; 30 s later each is red again. Under hardcore they stay brown
+
+Runs when: In the mushroom fields, a red mooshroom within 24

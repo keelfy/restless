@@ -4,7 +4,7 @@ title: Items
 
 # Items
 
-31 events.
+33 events.
 
 ## `swap_slots`
 
@@ -201,3 +201,16 @@ Runs when: A dropped item within 5
 Experience orbs fly away from the player
 
 Runs when: An experience orb within 8
+
+## `line_pulls`
+
+**Harmful.**
+A shove toward the bobber, with a splash there
+
+Runs when: The player's bobber floats in water
+
+## `odd_catch`
+
+A player head in their own likeness, a bone, a skeleton skull or rotten flesh is thrown out of the water at the player, as a real catch is. It vanishes after 1 min if not picked up
+
+Runs when: The player's bobber floats in water

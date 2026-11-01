@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:endermen_turn": { "weight": 0.3, "radius": 32, "interval_ticks": 1, "ticks": 200 },
+    "minecraft:shulker_peeks": { "weight": 0.3, "radius": 24, "open": 100, "ticks": 60, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:empty_pillar_crystal": { "weight": 0.25, "radius": 48, "min_distance": 8.0, "interval_ticks": 5, "max_ticks": 400, "vanish_distance": 12.0 },
+    "minecraft:void_wind": { "weight": 0.2, "margin": 4.0, "min_origin": 24.0, "stop_distance": 10, "drop": 4, "delay_ticks": 40, "ticks": 100, "interval_ticks": 2, "pull": 0.12, "sound_ticks": 20, "sound": { "volume": 1.5, "pitch": 0.7 } },
+    "minecraft:gateway_beam": { "weight": 0.3, "chunks": 4 },
+    "minecraft:chorus_shift": { "weight": 0.3, "radius": 12, "max_blocks": 24, "ticks": 200 },
+    "minecraft:phantom_egg": { "weight": 0.25, "min_distance": 4, "max_distance": 12, "ticks": 200 },
+    "minecraft:ender_chests_open": { "weight": 0.3, "count": 5, "min_distance": 3.0, "max_distance": 8.0, "stagger_ticks": 8, "hold_ticks": 30, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:nowhere_portal": { "weight": 0.2, "distance": 14.0, "max_angle": 40.0, "ticks": 300, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:enderman_home_block": { "weight": 0.2, "distance": 18.0, "max_angle": 50.0, "interval_ticks": 1, "max_ticks": 400, "vanish_distance": 6.0, "look_angle": 30.0, "look_ticks": 3, "sound": { "volume": 1.0, "pitch": 1.0 } }
+  }
+}

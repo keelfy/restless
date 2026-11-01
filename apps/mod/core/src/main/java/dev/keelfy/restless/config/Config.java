@@ -48,6 +48,14 @@ public final class Config {
             "veils",
             "hallucinations",
             "apparitions",
+            "nether",
+            "the_end",
+            "wilds",
+            "habitats",
+            "strangers",
+            "rites",
+            "fixtures",
+            "tricks",
             "scenarios");
     /** The namespace of events that use only vanilla content. */
     static final String DEFAULT_NAMESPACE = "minecraft";

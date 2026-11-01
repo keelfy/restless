@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:piglins_stare": { "weight": 0.35, "radius": 24, "interval_ticks": 5, "ticks": 160 },
+    "minecraft:piglin_barter": { "weight": 0.3, "radius": 16, "delay_ticks": 40, "vanish_ticks": 600, "items": ["minecraft:player_head", "minecraft:bone"], "speed": 0.35, "lift": 0.2, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:ghast_cry": { "weight": 0.35, "distance": 40.0, "shoot_delay_ticks": 50, "blast_delay_ticks": 25, "cry": { "volume": 4.0, "pitch": 1.0 }, "shoot": { "volume": 4.0, "pitch": 1.0 }, "blast": { "volume": 3.0, "pitch": 0.8 } },
+    "minecraft:lava_figure": { "weight": 0.25, "radius": 24, "min_distance": 10.0, "surface": 0.9, "interval_ticks": 5, "vanish_distance": 8.0, "max_ticks": 600 },
+    "minecraft:strider_shiver": { "weight": 0.35, "radius": 24, "ticks": 160 },
+    "minecraft:soul_fire_lean": { "weight": 0.3, "radius": 16, "max_fires": 6, "interval_ticks": 4, "pulses": 30, "per_pulse": 2, "speed": 0.12, "lift": 0.25 },
+    "minecraft:skulls_turn": { "weight": 0.3, "radius": 12, "ticks": 600 },
+    "minecraft:still_blaze": { "weight": 0.25, "distance": 10.0, "min_angle": 0.0, "max_angle": 40.0, "interval_ticks": 10, "vanish_distance": 5.0, "max_ticks": 400 },
+    "minecraft:magma_hop": { "weight": 0.35, "radius": 16, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:anchor_charge": { "weight": 0.3, "radius": 10, "ticks": 600, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:vines_reach": { "weight": 0.3, "radius": 12, "length": 3, "ticks": 600 },
+    "minecraft:steady_compass": { "weight": 0.3, "ticks": 600 },
+    "minecraft:soul_sand_drag": { "weight": 0.2, "ticks": 100, "amplifier": 1, "distance": 2.0, "sound": { "volume": 1.0, "pitch": 1.0 } },
+    "minecraft:piglins_angered": { "weight": 0.15, "radius": 16 }
+  }
+}
