@@ -1,0 +1,10 @@
+{
+  "comparator_output": 7,
+  "description": {
+    "text": "Someone, Humming"
+  },
+  "length_in_seconds": 12.0,
+  "sound_event": {
+    "sound_id": "restless:haunt.moan"
+  }
+}

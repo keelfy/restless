@@ -56,6 +56,16 @@ public final class Config {
             "rites",
             "fixtures",
             "tricks",
+            "cameras",
+            "screens",
+            "remodels",
+            "shrines",
+            "herds",
+            "sightings",
+            "followers",
+            "machines",
+            "relics",
+            "fittings",
             "scenarios");
     /** The namespace of events that use only vanilla content. */
     static final String DEFAULT_NAMESPACE = "minecraft";

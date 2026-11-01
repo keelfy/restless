@@ -4,7 +4,7 @@ title: Blocks
 
 # Blocks
 
-95 events.
+112 events.
 
 ## `wilted_flowers`
 
@@ -581,3 +581,106 @@ Runs when: A bed that is not black within 12
 The 48 nearest show as black carpets for 1 min (really changed in `real` mode; stays under hardcore)
 
 Runs when: Indoors, a carpet that is not black within 8
+
+## `netherrack_behind`
+
+Only this player's client is told that the 40 nearest such blocks are netherrack. They get the real blocks back when the player looks within 70° of any of them, or after 30 s. Nothing on the server (with `swaps.mode` real, changed for 30 s)
+
+Runs when: A solid block with a free face 2 to 8 away, more than 100° from where the player looks
+
+## `roof_gone`
+
+Only this player's client is told that every block from 2 above the player to the sky, 2 blocks to either side, is air. 20 s later it gets the real blocks back. Nothing on the server
+
+Runs when: Indoors, with at most 6 blocks of roof over the player's head; at least 4 blocks to hide
+
+## `path_rearranged`
+
+Only this player's client is told that those floor blocks are shuffled among each other. They get the real blocks back when the player looks within 70° of any of them, or after 30 s. Nothing on the server
+
+Runs when: At least 8 floor blocks 3 to 10 behind the player (1 to either side) of at least two kinds
+
+## `landmark_tree_gone`
+
+Only this player's client is told that the tallest such tree (logs and leaves) is air. It gets the real blocks back when the player comes within 12 of it, or after 60 s. Nothing on the server
+
+Runs when: The player's bed is in this dimension; a tree of at most 250 blocks and 8 leaves within 24 of it, 18 to 64 from the player
+
+## `tunnel_filled`
+
+Only this player's client is told that both blocks of each such cell are stone. They get the real blocks back when the player looks within 70° of any of them, or after 30 s. Nothing on the server. Not limited to tunnels the player dug
+
+Runs when: Under no sky; at least 6 walkway cells 2 to 10 behind the player (1 to either side) with a solid block 2 above and no sky
+
+## `ceiling_furniture`
+
+Only this player's client is told that up to 6 such blocks hold an upside-down stair or slab, or a bed (two blocks), at random facings. 30 s later it gets the real blocks back. Nothing on the server
+
+Runs when: Indoors, an air block under the ceiling 6 blocks around the player, at least 1.5 from them and above their feet
+
+## `crafter_crafts`
+
+The crafter shows its crafting state (6 ticks) with the craft sound and particles, and ejects a bone, skeleton skull or paper named after the player from its face; the item vanishes after 1 min. Its real contents are not touched
+
+Runs when: A crafter within 12
+
+## `scaffold_collapses`
+
+**Harmful.**
+Three creaks, 14 ticks apart, then every scaffolding block of the column breaks and drops (only if the player still stands on it)
+
+Runs when: Standing on a scaffolding column on solid ground, a fall of under 4 blocks
+
+## `wall_map_shows`
+
+The framed map is replaced by a new map of the area around the spirit's anchor; the original is put back after 2 min (stays under hardcore)
+
+Runs when: A framed filled map within 12 and a territorial spirit whose reach holds the player, with the 128-block area around its anchor loaded
+
+## `haunted_painting`
+
+A painting becomes one of the mod's own (a portrait of no one, the house at night, a pair of eyes), and is put back after a minute (stays under hardcore)
+
+Runs when: A painting within 12 that has a mod variant of the same size
+
+## `painting_darkens`
+
+A large painting darkens in four steps, 20 s apart, and a figure comes up the path to the house; put back after 3 min (stays under hardcore)
+
+Runs when: A 2 by 2 painting within 12
+
+## `sigil_banner`
+
+A black spirit sigil appears on a banner, and is taken off after 2 min (stays under hardcore)
+
+Runs when: A banner within 12 with room for another pattern
+
+## `abandoned_camp`
+
+A bed, a campfire and a chest holding a signed book in the spirit's voice (a page from a pool, never repeated for the same spirit); every block is removed after 10 min unless it was changed, a chest with the player's own items stays; stays under hardcore
+
+Runs when: Overworld; open standing room for a 4×3 camp 6–14 away; the spirit still has a book page it has not said
+
+## `dirt_hut`
+
+A dirt hut with a two-high doorway and a roof; removed block by block after 7.5 min, stays under hardcore
+
+Runs when: Overworld; open ground for a 3×3 hut 5–12 away
+
+## `rocking_chair`
+
+A rocking chair appears and leans forward and back 24 times with a creak, then is gone 5 s later
+
+Runs when: A spot of free floor under a roof within 10, 3+ away and outside 55° of where the player looks
+
+## `rotten_planks`
+
+One plank turns into rotten planks, then the rot spreads to touching planks, 2 per second, up to 24 blocks. They are put back after 2 min; under hardcore they stay
+
+Runs when: Indoors, planks within 10
+
+## `cracked_mirror`
+
+A cracked mirror appears on the wall. When the player looks at it from within 6 blocks, a dark figure shows in it for 2 s. Gone after 30 s more
+
+Runs when: Indoors, a wall at head height within 8, 2+ away and outside 60° of where the player looks

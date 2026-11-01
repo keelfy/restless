@@ -1790,7 +1790,7 @@ final class HauntEventGameTests {
         BlockPos feet = helper.absolutePos(FEET);
         player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
         scene.accept(player);
-        HauntEvent event = HauntEvents.byId(Identifier.withDefaultNamespace(id)).orElseThrow();
+        HauntEvent event = HauntEvents.byId(Identifier.parse(id)).orElseThrow();
         check(helper, event.canRun(player), id + " must be able to run in its scene");
         event.run(player);
         helper.runAfterDelay(settle, () -> {

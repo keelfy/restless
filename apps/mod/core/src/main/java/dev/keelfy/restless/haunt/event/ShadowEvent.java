@@ -184,7 +184,9 @@ public final class ShadowEvent implements HauntEvent {
             if (room > 0) {
                 play(player, SoundEvents.WARDEN_ATTACK_IMPACT, config.tone("touch_sound"));
                 player.hurtServer(
-                        player.level(), player.damageSources().magic(), Math.min((float) config.num("damage"), room));
+                        player.level(),
+                        Taken.by(player.level(), Taken.TAKEN),
+                        Math.min((float) config.num("damage"), room));
             }
         }
     }

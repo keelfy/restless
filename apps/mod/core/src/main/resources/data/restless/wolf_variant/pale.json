@@ -1,0 +1,17 @@
+{
+  "assets": {
+    "angry": "restless:entity/wolf/pale_angry",
+    "tame": "restless:entity/wolf/pale_tame",
+    "wild": "restless:entity/wolf/pale_wild"
+  },
+  "baby_assets": {
+    "angry": "restless:entity/wolf/pale_angry_baby",
+    "tame": "restless:entity/wolf/pale_tame_baby",
+    "wild": "restless:entity/wolf/pale_wild_baby"
+  },
+  "spawn_conditions": [
+    {
+      "priority": -1
+    }
+  ]
+}

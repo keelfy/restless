@@ -49,6 +49,6 @@ public final class ColdTouchEvent implements HauntEvent {
                         SoundSource.HOSTILE,
                         tone.volume(),
                         tone.pitch());
-        player.hurtServer(player.level(), player.damageSources().magic(), damage);
+        player.hurtServer(player.level(), Taken.by(player.level(), Taken.TAKEN), damage);
     }
 }

@@ -7,6 +7,8 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.Darkroom;
 import dev.keelfy.restless.content.DreamcatcherEntity;
 import dev.keelfy.restless.content.DreamcatcherRenderer;
+import dev.keelfy.restless.content.EyesParticle;
+import dev.keelfy.restless.content.EyesType;
 import dev.keelfy.restless.content.MistParticle;
 import dev.keelfy.restless.content.PhotoTooltip;
 import dev.keelfy.restless.content.Picture;
@@ -14,6 +16,7 @@ import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.HeadTurn;
 import dev.keelfy.restless.haunt.RedVignette;
 import dev.keelfy.restless.haunt.SanityOverlay;
+import dev.keelfy.restless.haunt.ScreenOverlay;
 import java.util.List;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -55,6 +58,10 @@ public final class RestlessNeoForgeClient {
                 VanillaGuiLayers.CAMERA_OVERLAYS,
                 Identifier.fromNamespaceAndPath(Restless.MOD_ID, "camera_flash"),
                 Darkroom::render);
+        event.registerAbove(
+                VanillaGuiLayers.CAMERA_OVERLAYS,
+                Identifier.fromNamespaceAndPath(Restless.MOD_ID, "screen"),
+                ScreenOverlay::render);
     }
 
     @SubscribeEvent
@@ -98,5 +105,6 @@ public final class RestlessNeoForgeClient {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet((SimpleParticleType) Content.MIST.get(), MistParticle.Provider::new);
+        event.registerSpriteSet(EyesType.type(), EyesParticle.Provider::new);
     }
 }

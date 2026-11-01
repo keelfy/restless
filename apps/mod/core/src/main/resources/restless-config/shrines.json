@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:abandoned_camp": { "weight": 0.3, "min_distance": 6, "max_distance": 14, "restore_ticks": 12000, "author": "someone", "titles": ["left behind", "if you find this", "day 3"], "pages": ["i waited here for you and you did not come. the fire is still warm, take it", "i slept here. i do not remember getting up. the bed is still mine", "do not stay the night. i did. i am still here"] },
+    "minecraft:dirt_hut": { "weight": 0.3, "min_distance": 5, "max_distance": 12, "restore_ticks": 9000 },
+    "minecraft:overnight_shrine": { "weight": 0.3, "min_distance": 6, "max_distance": 14, "restore_ticks": 12000, "signs": [["for the one", "who stayed"], ["do not", "take them"], ["it likes", "it here"], ["they come", "when lit"]] },
+    "minecraft:far_house": { "weight": 0.2, "min_distance": 28, "max_distance": 44, "tries": 8, "radius": 4, "height": 4, "ticks": 600 },
+    "restless:ash_sign": { "weight": 0.3, "distance": 3.0, "spread_degrees": 25.0, "radius": 3, "letter_chance": 0.5, "min_share": 0.7, "restore_ticks": 6000 }
+  }
+}

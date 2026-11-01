@@ -135,6 +135,29 @@ public final class Content {
     /** Left by the muddy footprints event, never crafted: no item, it drops nothing. */
     public static final Supplier<Block> FOOTPRINTS = block("footprints", Footprints::new);
 
+    /** The thin pictures the fittings events lay on walls, doors and glass; no items, they drop nothing. */
+    public static final Supplier<Block> FROST_PRINT = block("frost_print", Decal::new);
+
+    public static final Supplier<Block> FROST_WRITING = block("frost_writing", Decal.Writing::new);
+    public static final Supplier<Block> CLAW_MARKS = block("claw_marks", Decal::new);
+    public static final Supplier<Block> CRACKED_MIRROR = block("cracked_mirror", Decal.Mirror::new);
+    /** Small things set down by the fittings events; no items, they drop nothing. */
+    public static final Supplier<Block> DOLL =
+            block("doll", p -> new Prop(p.sound(SoundType.WOOL), Block.box(4, 0, 4, 12, 14, 12)));
+
+    public static final Supplier<Block> MUSIC_BOX =
+            block("music_box", p -> new Prop.MusicBox(p.sound(SoundType.WOOD), Block.box(3, 0, 4, 13, 7, 12)));
+    public static final Supplier<Block> ROCKING_CHAIR =
+            block("rocking_chair", p -> new Prop.Chair(p.sound(SoundType.WOOD), Block.box(2, 0, 2, 14, 15, 14)));
+    /** Planks that went soft; the rot event spreads it over a house's planks, then puts them back. */
+    public static final Supplier<Block> ROTTEN_PLANKS = Platform.get()
+            .register(
+                    BuiltInRegistries.BLOCK,
+                    "rotten_planks",
+                    key -> new Block(BlockBehaviour.Properties.ofLegacyCopy(Blocks.PALE_OAK_PLANKS)
+                            .setId(key)
+                            .strength(1.0f)));
+
     /**
      * A tree that is not there, shown by the ghost tree event: it looks like its wood, has no collision and drops
      * nothing.

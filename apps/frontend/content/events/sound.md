@@ -4,7 +4,7 @@ title: Sound
 
 # Sound
 
-72 events.
+81 events.
 
 ## `footsteps`
 
@@ -444,3 +444,57 @@ Runs when: In a forest, flower forest, birch forest or old growth birch forest
 One of 4 fixed tunes, one note per 0.3 s, each on the next note block nearest first, with the note particle. The blocks keep their own notes
 
 Runs when: A note block with a tunable instrument within 12 (air above it unless the instrument sounds from above)
+
+## `jukebox_quiet`
+
+The disc is taken out of the jukebox, so the music stops, and put into a free slot of a chest. The move stays
+
+Runs when: A playing jukebox within 12 and a chest with a free slot
+
+## `chat_repeats`
+
+2 to 12 s later `<???> <the line>` appears as a grey italic system message; the line is used once
+
+Runs when: The player said a line of at most 100 characters between 10 s and 10 min ago
+
+## `spirit_song`
+
+A jukebox with no disc starts a song nobody put in; the disc is taken out after 30 s if still there
+
+Runs when: A jukebox with no disc within 16
+
+## `spirit_horn`
+
+A low horn call from far away. Nothing changes
+
+Runs when: In the overworld
+
+## `counting_children`
+
+Children count to ten in the dark, then small steps close in, a door opens and someone laughs. Nothing changes
+
+Runs when: Under a roof
+
+## `wall_scratching`
+
+Scratching inside a wall, creeping along it. Nothing changes
+
+Runs when: Under a roof
+
+## `chest_knocks`
+
+Four muffled knocks from inside a chest or barrel. Nothing changes
+
+Runs when: A chest, trapped chest or barrel within 12
+
+## `bedroom_lullaby`
+
+A lullaby is hummed on a flute where a bed stands. Nothing changes
+
+Runs when: A bed within 14
+
+## `music_box`
+
+An open music box appears and plays a 14-15 note tune on vanilla chime sounds, then shuts; gone 10 s later
+
+Runs when: A spot of free floor under a roof within 10, 3+ away and outside 55° of where the player looks

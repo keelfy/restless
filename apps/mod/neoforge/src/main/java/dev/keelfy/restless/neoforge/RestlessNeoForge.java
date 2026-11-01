@@ -2,6 +2,7 @@ package dev.keelfy.restless.neoforge;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.content.Darkroom;
+import dev.keelfy.restless.content.EyesType;
 import dev.keelfy.restless.debug.DebugMenu;
 import dev.keelfy.restless.debug.DebugPayload;
 import dev.keelfy.restless.debug.DebugScreen;
@@ -20,6 +21,8 @@ import dev.keelfy.restless.haunt.JournalScreen;
 import dev.keelfy.restless.haunt.RedVignette;
 import dev.keelfy.restless.haunt.SanityOverlay;
 import dev.keelfy.restless.haunt.SanityPayload;
+import dev.keelfy.restless.haunt.ScreenOverlay;
+import dev.keelfy.restless.haunt.ScreenPayload;
 import dev.keelfy.restless.haunt.ShutterPayload;
 import dev.keelfy.restless.haunt.TurnPayload;
 import dev.keelfy.restless.haunt.VignettePayload;
@@ -41,12 +44,15 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 public final class RestlessNeoForge {
     public RestlessNeoForge(IEventBus modBus) {
         Restless.init();
+        EyesType.init();
         modBus.addListener((RegisterPayloadHandlersEvent e) -> e.registrar("1")
                 .playToClient(
                         DoorLockPayload.TYPE,
                         DoorLockPayload.CODEC,
                         (payload, context) -> DoorLocks.put(context.player().level(), payload.pos(), payload.ticks()))
                 .playToClient(DimPayload.TYPE, DimPayload.CODEC, (payload, context) -> Dimming.start(payload))
+                .playToClient(
+                        ScreenPayload.TYPE, ScreenPayload.CODEC, (payload, context) -> ScreenOverlay.start(payload))
                 .playToClient(
                         TurnPayload.TYPE,
                         TurnPayload.CODEC,
@@ -95,7 +101,7 @@ public final class RestlessNeoForge {
                 Restless.onBreakBlock(player, e.getState(), e.getPos());
             }
         });
-        NeoForge.EVENT_BUS.addListener((ServerChatEvent e) -> Restless.onChat(e.getPlayer()));
+        NeoForge.EVENT_BUS.addListener((ServerChatEvent e) -> Restless.onChat(e.getPlayer(), e.getRawText()));
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.LeftClickBlock e) -> {
             if (e.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START
                     && e.getEntity() instanceof ServerPlayer player) {

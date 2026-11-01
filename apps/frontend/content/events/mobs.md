@@ -4,7 +4,7 @@ title: Mobs
 
 # Mobs
 
-84 events.
+100 events.
 
 ## `double`
 
@@ -532,3 +532,99 @@ Runs when: In a jungle biome, a parrot with no owner within 24
 Up to 8 of them turn brown; 30 s later each is red again. Under hardcore they stay brown
 
 Runs when: In the mushroom fields, a red mooshroom within 24
+
+## `roof_skeleton`
+
+Only this player's client is told of a skeleton standing on a roof with its bow drawn and no arrow, facing the player. Gone when looked at for a moment, approached within 6 blocks, or after 20 s. Nothing on the server
+
+Runs when: A stair or slab within 16 blocks, at least 8 away and 2 above the player, with open sky and two free blocks over it
+
+## `far_warden`
+
+Only this player's client is told of a warden 30 to 42 blocks away that rises with its emerge animation and sound, stands a few seconds, and digs back in with the dig sound. Nothing on the server
+
+Runs when: Overworld, standing room 30 to 42 blocks away
+
+## `swamp_witch`
+
+Only this player's client is told of a witch standing behind a window, facing the player. Gone when looked at, approached within 2.5 blocks, or after 20 s. Nothing on the server
+
+Runs when: Swamp or mangrove swamp; a glass block or pane, or a one-block gap over a plank sill, within 12 blocks and at least 4 away, with the player outside and standing room inside
+
+## `wall_shulker`
+
+Only this player's client is told of a shulker on the wall of a room; it opens its shell fully with the open sound, shuts it with the close sound 3 s later, and is gone. Nothing on the server
+
+Runs when: A free floored block under cover against a solid wall block within 8 blocks, at least 3 away and within 2 of the player's height
+
+## `forest_creaking`
+
+Only this player's client is told of a creaking that walks to the player at 0.175 blocks/tick, following the ground, but only while they are not looking at it. Gone within 3 blocks, after 60 s, or when stuck. Nothing on the server
+
+Runs when: Forest biome, standing room 24 to 36 blocks away
+
+## `cow_herd_blink`
+
+Only this player's client is told of a herd of cows in a field. When the player has looked at it for a moment the view blinks once and the herd is gone at the darkest point; otherwise it goes when approached within 8 blocks or after 30 s. Nothing on the server
+
+Runs when: The mod is on the client, and there is grass under open sky for at least 3 cows 20 to 26 blocks ahead
+
+## `golem_wrong_chest`
+
+One stack moves from the copper chest to the other chest, with the golem's get and drop animations and chest sounds, 1 s apart. The move stays
+
+Runs when: A copper golem within 12, a copper chest with an item and another, non-adjacent chest with a free slot
+
+## `villagers_at_windows`
+
+Up to 3 villagers wake, walk (up to 20 s) to the nearest unclaimed window, then lose their AI and face the player for 30 s; the AI comes back after
+
+Runs when: Overworld at night, a villager within 20 and a window (glass or pane with open air on both sides) within 12 with a roofed floor cell at its foot
+
+## `strange_trader`
+
+A real wandering trader (no AI, facing the player) with offers from `offers` (a bone for the player's head, essence for echo shards, ...), 1 use each. Gone once the player has seen it and looks away (unless trading), or after 2 min
+
+Runs when: Overworld at night, standing room 12 blocks away within 40° of where the player looks
+
+## `golem_in_corner`
+
+The golem walks there (up to 30 s), loses its AI and faces the corner for 30 s; the AI comes back after
+
+Runs when: An idle iron golem within 40, and a roofed floor cell in a corner (two walls) within 6 of the player, at least 2 away
+
+## `dolphins_lead`
+
+Up to 3 dolphins swim 16 blocks at a time toward the spirit's point (60 blocks away at random if none sent it), calling now and then; one more than 12 blocks from the player stops and faces them. 30 pulses of 1 s
+
+Runs when: The player in water, a dolphin in water within 32
+
+## `spiders_at_window`
+
+Up to 5 spiders walk to the ground at the foot of that window, lose their AI and face it for 30 s; the AI comes back after
+
+Runs when: At least 2 idle spiders within 24, and a window within 12 with open ground under it outside (up to 3 below)
+
+## `squid_goes_dark`
+
+Each such squid has its dark ticks set to 60 s (the glow is off, then returns by itself)
+
+Runs when: A glow squid within 32 that is glowing
+
+## `hoglins_charge`
+
+Each is set on the player for up to 5 s; one that comes within 3.2 blocks loses its AI and faces the player for 4 s, then gets it back and is told to avoid the player for 10 s
+
+Runs when: Nether, at least 2 adult hoglins within 24, farther than 3.2 blocks from the player
+
+## `pale_pet`
+
+One of your tame wolves or cats turns pale until dawn (stays under hardcore)
+
+Runs when: Night, and your tame wolf or cat within 24
+
+## `pale_herd`
+
+Up to four cows, pigs or chickens turn pale for 2 min (stays under hardcore)
+
+Runs when: A cow, pig or chicken within 24

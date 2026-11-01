@@ -4,7 +4,7 @@ title: Water
 
 # Water
 
-6 events.
+8 events.
 
 ## `undertow`
 
@@ -43,3 +43,15 @@ Runs when: An empty boat floating within 24
 A lily pad within 10 steps one block toward the player every second, 6 times at most, stopping 2.5 blocks away; restored after 1 min (stays under hardcore)
 
 Runs when: In a swamp or mangrove swamp, with a lily pad within 10 that has a free water block toward the player
+
+## `water_guardian`
+
+Only this player's client is told of a guardian 2 blocks under the water of a pond, with its beam set on the player and its attack sound, for 4 s. Nothing on the server
+
+Runs when: Source water at least 4 deep with air above it, within 20 blocks and at least 6 away
+
+## `sea_lights`
+
+Only this player's client is told of a sea lantern that moves along the run, one block every 0.2 s, 2 lit at a time, each put back behind it. Nothing on the server
+
+Runs when: In an ocean biome, a straight run of at least 8 water blocks 3 under the surface, starting 6 to 18 away

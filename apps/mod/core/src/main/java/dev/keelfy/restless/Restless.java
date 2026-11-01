@@ -22,6 +22,7 @@ import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.haunt.event.Machines;
 import dev.keelfy.restless.haunt.event.Swaps;
 import dev.keelfy.restless.platform.Platform;
 import dev.keelfy.restless.spirit.Trait;
@@ -105,8 +106,9 @@ public final class Restless {
     }
 
     /** Call when a player says something in chat. */
-    public static void onChat(ServerPlayer player) {
+    public static void onChat(ServerPlayer player, String line) {
         Divination.ask(player);
+        Machines.said(player, line);
     }
 
     /** Call when a player starts to break a block. */

@@ -1,0 +1,43 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "text": "Curse of the Restless",
+    "color": "red"
+  },
+  "effects": {
+    "minecraft:tick": [
+      {
+        "effect": {
+          "type": "minecraft:play_sound",
+          "sound": {
+            "sound_id": "restless:haunt.whisper"
+          },
+          "volume": 0.4,
+          "pitch": {
+            "type": "minecraft:uniform",
+            "min_inclusive": 0.8,
+            "max_exclusive": 1.0
+          }
+        },
+        "requirements": {
+          "type": "minecraft:random_chance",
+          "chance": 0.002
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 0
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 25,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/durability",
+  "weight": 1
+}

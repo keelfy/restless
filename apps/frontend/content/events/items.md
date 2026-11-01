@@ -4,7 +4,7 @@ title: Items
 
 # Items
 
-33 events.
+40 events.
 
 ## `swap_slots`
 
@@ -214,3 +214,46 @@ Runs when: The player's bobber floats in water
 A player head in their own likeness, a bone, a skeleton skull or rotten flesh is thrown out of the water at the player, as a real catch is. It vanishes after 1 min if not picked up
 
 Runs when: The player's bobber floats in water
+
+## `allay_thief`
+
+Only this player's client is told of an allay by their side holding a copy of one of their stacks, which flies 45 blocks straight away and is gone. Nothing is taken and nothing is on the server
+
+Runs when: The player carries anything
+
+## `holy_water_cloudy`
+
+**Harmful.**
+Every holy water stack gets a "cloudy" mark and a lore line; the altar refuses it until the next dawn, then the mark is removed. Stays
+
+Runs when: Clear holy water in the inventory
+
+## `mirror_names`
+
+A soft chime marks the mirror. The next time a mirror is placed on the altar, the name of a spirit around the player is shown in chat, once. The mark lapses after 30 min
+
+Runs when: A mirror in the inventory, a spirit that senses the player, none already marked
+
+## `pearl_strays`
+
+For 5 min the first pearl the player throws is moved above standing room 8 to 24 blocks away and dropped, so the player lands there (with the usual 5 damage)
+
+Runs when: An ender pearl in the inventory
+
+## `whispering_item`
+
+The item in your hand gains the Curse of the Restless and whispers now and then while held; the curse is lifted after 3 min (stays under hardcore)
+
+Runs when: You hold an item without the curse
+
+## `hollow_trim`
+
+A worn piece of armor shows a hollow trim for 2 min (stays under hardcore)
+
+Runs when: You wear trimmable armor with no trim
+
+## `photo_figure`
+
+A pale hollow-eyed figure 34–60 px tall is painted into one developed photo's picture; the change is kept
+
+Runs when: A developed photo in the inventory

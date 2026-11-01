@@ -2,6 +2,7 @@ package dev.keelfy.restless.content;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Ritual;
+import dev.keelfy.restless.haunt.event.Machines;
 import dev.keelfy.restless.spirit.Focus;
 import java.util.Locale;
 import net.minecraft.core.BlockPos;
@@ -321,6 +322,10 @@ public final class Altar extends Block implements EntityBlock {
             caster.sendSystemMessage(Component.translatable("message.restless.altar_rebuild"), true);
             return InteractionResult.FAIL;
         }
+        if (held == Held.HOLY_WATER && Machines.cloudy(stack, server)) {
+            caster.sendSystemMessage(Component.translatable("message.restless.holy_water_cloudy"), true);
+            return InteractionResult.FAIL;
+        }
         if (held == Held.WATER) {
             server.setBlock(pos, state.setValue(HELD, Held.WATER), 3);
             server.scheduleTick(pos, this, Config.section("ritual").integer("bless_ticks"));
@@ -328,6 +333,9 @@ public final class Altar extends Block implements EntityBlock {
             return InteractionResult.FAIL;
         }
         stack.consume(1, player);
+        if (held == Held.MIRROR) {
+            Machines.mirrorUsed(caster);
+        }
         return InteractionResult.SUCCESS_SERVER;
     }
 

@@ -87,8 +87,7 @@ final class Assaults {
                                             SoundSource.HOSTILE,
                                             tone.volume(),
                                             tone.pitch());
-                            player.hurtServer(
-                                    player.level(), player.damageSources().magic(), damage);
+                            player.hurtServer(player.level(), Taken.by(player.level(), Taken.TAKEN), damage);
                         }),
                 // 56
                 SimpleEvent.harmful(
@@ -338,7 +337,7 @@ final class Assaults {
                             hit.pitch());
             p.hurtServer(
                     p.level(),
-                    p.damageSources().magic(),
+                    Taken.by(p.level(), Taken.TAKEN),
                     Math.min((float) config.num("damage_step") * (n + 1), p.getHealth() - safeHealth()));
             return true;
         });

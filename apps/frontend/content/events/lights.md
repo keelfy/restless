@@ -4,7 +4,7 @@ title: Lights
 
 # Lights
 
-15 events.
+18 events.
 
 ## `extinguish_light`
 
@@ -97,3 +97,21 @@ Runs when: Torch or lantern in main hand
 Becomes another kind (torch, soul, copper; lantern, soul lantern), facing kept; swapped back after 60 seconds
 
 Runs when: A torch, wall torch or lantern within 10
+
+## `spirit_candle_out`
+
+The candle's flame, lean and blue warning stop for 30 s, with the extinguish sound and a puff of smoke
+
+Runs when: The spirit candle in a hand, not already out
+
+## `far_house`
+
+The 9×9×5 volume round the player is shown as fake blocks on open ground far off, with a lantern lit on the floor; only this player's client, put back after 30 s
+
+Runs when: Overworld at night, under a roof; open ground 28–44 away
+
+## `black_candle`
+
+The candle turns black and lights itself (or a lit black candle is set down), with soul fire flames for 20 s. Put back after 2 min (stays under hardcore)
+
+Runs when: Indoors, an unlit candle within 10, or free floor to set one on

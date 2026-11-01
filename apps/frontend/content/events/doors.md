@@ -4,7 +4,7 @@ title: Doors
 
 # Doors
 
-43 events.
+45 events.
 
 ## `door`
 
@@ -269,3 +269,15 @@ Runs when: A brewing stand with nothing in any slot within 10
 Its pose becomes another one while the player is not looking; set back after 2 min (stays under hardcore)
 
 Runs when: A copper golem statue within 12, outside 60° of where the player looks
+
+## `open_door_view`
+
+The view moves for 3 s into the doorway of the nearest open door, looking in toward the player; then back. Same early resets as `mob_eyes`
+
+Runs when: Player on the ground, not in a fluid, and an open door 3 to 12 blocks away
+
+## `claw_marks`
+
+Claw marks appear on the player's side of both halves of the door with a scrape. Removed after 3 min; under hardcore they stay
+
+Runs when: Indoors, a closed door within 8 with free blocks on the player's side

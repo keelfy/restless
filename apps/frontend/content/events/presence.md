@@ -4,7 +4,7 @@ title: Presence
 
 # Presence
 
-61 events.
+85 events.
 
 ## `dragon_flyover`
 
@@ -373,3 +373,147 @@ Runs when: Always
 Only this player's client is told a nether portal block stands at their feet, so the swirl fills the screen. 2 s later the real block comes back. Nothing on the server, nobody is sent anywhere
 
 Runs when: Air at the player's feet
+
+## `mob_eyes`
+
+Only this player's client is sent to see through a spider, cave spider, creeper or enderman within 24 blocks for 2.5 s, with the vanilla shader of that mob; then back. The view also ends early if the mob dies or vanishes, the player is hurt or changes dimension; death, logout and server stop reset it too. Nothing changes on the server
+
+Runs when: Player on the ground, not in a fluid, and one of those mobs within 24 blocks
+
+## `out_of_body`
+
+The view moves to a packet-only entity 3.5 blocks behind the player (nearer if blocked) and 0.6 above their eyes, looking at the back of their head, for 3 s; then back and the entity is removed. Same early resets as `mob_eyes`
+
+Runs when: Player on the ground, not in a fluid
+
+## `spirit_sight`
+
+The view moves for 1 s to the spirit's point (10 blocks away at a random bearing when no spirit sent it), looking at the player; does nothing if that point is over 40 blocks away or not loaded. Same early resets as `mob_eyes`
+
+Runs when: Player on the ground, not in a fluid
+
+## `lake_fisher`
+
+A silent, unhurtable mannequin in a random default skin stands on the bank with a fishing rod, facing the water, casts, and every 4th second swings and splashes (fishing particles and sounds). No bobber is drawn. Gone, silently, when the player comes within 6 blocks or after 30 s
+
+Runs when: A lake (a water source with water on three sides for 3 blocks) within 16 blocks, with standing room on its bank at least 8 blocks from the player
+
+## `window_figure`
+
+A silent, unhurtable mannequin in a random default skin stands behind the glass facing the player. Gone, silently, when the player comes within 3 blocks or after 20 s
+
+Runs when: The player is under open sky; a glass block or glass pane within 14 blocks has a roofed room behind it (standing room one block below or level with it, at least 4 blocks from the player) and open air on the player's side
+
+## `trailing_figure`
+
+A silent, unhurtable mannequin in a random default skin faces the player and steps toward them by as far as the player moved each 0.1 s (up to 1 block), so it keeps its distance while they walk and stops when they stop; it sprints when they do. Gone, silently, when the player looks within 12° of it, comes within 8 blocks, or after 60 s
+
+Runs when: Standing room 30 blocks behind the player (150-180° from where they look)
+
+## `deep_swimmer`
+
+A silent, unhurtable mannequin in a random default skin lies in the swimming pose in the water there and swims across the view at 2.4 blocks/s, trailing bubbles. Gone, silently, when the water ends, when the player comes within 2 blocks, or after 15 s
+
+Runs when: The player's head is underwater, with water 8 blocks away within 15-60° of where they look (12 bearings tried)
+
+## `note_dropper`
+
+A silent, unhurtable mannequin in a random default skin faces the player for 1.6 s, then drops a torch or (half the time) paper named with a short note, and sprints away from the player. The item is real and stays. Gone, silently, when the player comes within 2 blocks, when no way on is left, or after 20 s
+
+Runs when: Standing room 14 blocks away within 30° of where the player looks
+
+## `horizon_choir`
+
+Six silent, unhurtable mannequins in random default skins stand there, all facing the player. All gone at once, silently, when the player looks within 10° of any of them, comes within 20 blocks of any, or after 30 s
+
+Runs when: The player is under open sky and standing room is found at the surface for at least 4 of 6 points 45-51 blocks away spread over 60° of where they look
+
+## `blade_stalker`
+
+A silent, unhurtable mannequin in a random default skin crouches with an iron sword and creeps toward the player at 1.3 blocks/s, facing them. It does not move while the player looks within 25° of it, and is gone after 2 s of being looked at in all, or when it comes within 3 blocks, or after 30 s
+
+Runs when: Standing room 16 blocks behind the player (140-180° from where they look)
+
+## `cliff_faller`
+
+A silent, unhurtable mannequin in a random default skin sprints along that line off the edge and falls; after 5 blocks of falling it makes the player death sound and is gone, silently, with no body. Gone too if the player comes within 6 blocks or after 15 s
+
+Runs when: Standing room 12-22 blocks away with flat ground within 6 blocks in some direction ending in an 8-40 block drop onto solid ground (24 tries)
+
+## `lake_ferry`
+
+A silent, unhurtable mannequin in a random default skin sits in an invulnerable, silent oak boat there (real entities, removed with the figure) and sails across the player's view along the longer stretch of open water at 2.4 blocks/s, with paddle sounds. Gone, with the boat, when the player comes within 6 blocks, when the water ends, or after 30 s
+
+Runs when: A lake (as for `lake_fisher`) within 16 blocks, with a surface point at least 10 blocks from the player
+
+## `cave_cart`
+
+A silent, unhurtable mannequin in a random default skin sits in an invulnerable, silent minecart (real entities, no rails needed) that rolls along the ground across the view at 6 blocks/s, going round or up and down small obstacles, with rolling sounds. Gone, with the cart, when the player comes within 5 blocks, when no way on is left, or after 20 s
+
+Runs when: The player is below y 50 with no open sky above, and cave standing room 14 blocks away within 10-40° of where they look
+
+## `spyglass_figure`
+
+Waits up to 2 min for the player to raise a spyglass, then tells their client of a villager 48 blocks away along where they look. It is removed as soon as the spyglass is lowered, or after 1 min. Nothing on the server
+
+Runs when: The player carries a spyglass
+
+## `flash_figure`
+
+Four visual-only lightning bolts, 2 to 4.5 s apart; at each, only this player's client is told of a wither skeleton standing on one bearing for 4 ticks, 34 blocks away at the first flash and 7 blocks closer each time, with the bolt striking beyond it. Nothing on the server
+
+Runs when: Overworld, raining, sky visible
+
+## `overnight_shrine`
+
+A row of bone blocks with two skulls and lit candles on top and a sign with a few words in front; removed after 10 min, stays under hardcore
+
+Runs when: Overworld; open ground for a 3×3 shrine 6–14 away; a sign text the spirit has not used
+
+## `ash_sign`
+
+Ash laid as a ring of radius 3 or as the initial of the spirit's name, readable from the player's side (cells on bare floor only, at least 70%); swept away after 5 min, stays under hardcore
+
+Runs when: Under a roof; bare floor ahead (3 away, within 25° of the view) for the shape
+
+## `screen_handprint`
+
+A pale handprint over the player's view for 3.5 s (peak 80%), quick in and slow out; client-side overlay under the HUD
+
+Runs when: The client has the mod
+
+## `screen_frost`
+
+Frost along the screen's edges for 8 s (peak 70%), in over 2.4 s and out over 4 s; client-side overlay
+
+Runs when: The client has the mod
+
+## `screen_face`
+
+A pale face over the view for 2 ticks (90%); weight 0, so it never runs until a player raises it
+
+Runs when: The client has the mod
+
+## `eyes_in_dark`
+
+A pair of eyes hangs 1.5 blocks above a dark spot for 2–3 s, blinks once and goes out; a client-only particle, fully lit
+
+Runs when: The client has the mod; standing room 7–14 blocks ahead (within 60°) with light level at most 3
+
+## `frost_prints`
+
+Up to 3 frost handprints appear one by one, 1.5 s apart, on the outer face of the glass, each with a tap on glass. Each is removed after 2 min; under hardcore they stay
+
+Runs when: Indoors, glass or a glass pane within 8 with a free block on its far side from the player
+
+## `frost_writing`
+
+A phrase (`let me in`, `cold`, `help`, `open`) forms word by word, 2 s apart, one word per window, read left to right from the player's side. Each word is removed after 2 min; under hardcore they stay
+
+Runs when: Indoors, a run of glass within 8 with free blocks on the player's side, long enough for a phrase
+
+## `doll`
+
+A doll appears and, whenever it is not watched, turns to face the player and hops to another spot up to 4 times. It keeps still while watched. Gone after 2 min or when broken
+
+Runs when: A spot of free floor under a roof within 10, 4+ away and outside 55° of where the player looks

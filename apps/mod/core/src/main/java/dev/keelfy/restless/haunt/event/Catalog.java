@@ -37,7 +37,17 @@ public final class Catalog {
                         Strangers.all(),
                         Rites.all(),
                         Fixtures.all(),
-                        Tricks.all())
+                        Tricks.all(),
+                        Cameras.all(),
+                        Screens.all(),
+                        Remodels.all(),
+                        Shrines.all(),
+                        Herds.all(),
+                        Sightings.all(),
+                        Followers.all(),
+                        Machines.all(),
+                        Relics.all(),
+                        Fittings.all())
                 .flatMap(List::stream)
                 .toList();
     }

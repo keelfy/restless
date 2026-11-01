@@ -1,0 +1,9 @@
+{
+  "asset_id": "restless:entity/chicken/pale",
+  "baby_asset_id": "restless:entity/chicken/pale_baby",
+  "spawn_conditions": [
+    {
+      "priority": -1
+    }
+  ]
+}
