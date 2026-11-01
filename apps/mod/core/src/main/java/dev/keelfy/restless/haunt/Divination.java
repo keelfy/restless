@@ -2,6 +2,7 @@ package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.platform.Platform;
 import dev.keelfy.restless.spirit.Clue;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
@@ -14,10 +15,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 
@@ -83,7 +86,37 @@ public final class Divination {
                         Component.translatable("item.restless.photo.silhouette", type),
                         Component.translatable("item.restless.photo.hint", hint),
                         Component.translatable("item.restless.photo.weakness", weakness))));
+        if (Platform.get().canReceive(player, ShutterPayload.TYPE)) {
+            int film = reading.get().random().nextInt();
+            photo.set(Content.FILM.get(), film);
+            player.connection.send(new ClientboundCustomPayloadPacket(new ShutterPayload(
+                    film, Optional.ofNullable(reading.get().spirit().at()))));
+        }
         return Optional.of(photo);
+    }
+
+    /**
+     * Puts the picture a client took into its undeveloped photo. Only the photographer's own inventory is searched, and
+     * each film develops once.
+     */
+    public static void develop(ServerPlayer player, DevelopPayload payload) {
+        Inventory inventory = player.getInventory();
+        for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+            if (develop(inventory.getItem(slot), payload)) {
+                return;
+            }
+        }
+        develop(player.containerMenu.getCarried(), payload);
+    }
+
+    private static boolean develop(ItemStack stack, DevelopPayload payload) {
+        Integer film = stack.get(Content.FILM.get());
+        if (!stack.is(Content.PHOTO.get()) || film == null || film != payload.film()) {
+            return false;
+        }
+        stack.remove(Content.FILM.get());
+        stack.set(Content.PICTURE.get(), payload.picture());
+        return true;
     }
 
     /**

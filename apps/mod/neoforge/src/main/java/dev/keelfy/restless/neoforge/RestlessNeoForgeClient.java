@@ -4,9 +4,12 @@ import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.content.AltarEntity;
 import dev.keelfy.restless.content.AltarRenderer;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.Darkroom;
 import dev.keelfy.restless.content.DreamcatcherEntity;
 import dev.keelfy.restless.content.DreamcatcherRenderer;
 import dev.keelfy.restless.content.MistParticle;
+import dev.keelfy.restless.content.PhotoTooltip;
+import dev.keelfy.restless.content.Picture;
 import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.HeadTurn;
 import dev.keelfy.restless.haunt.RedVignette;
@@ -20,10 +23,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /** Client-only wiring; the dedicated server never loads this class. */
@@ -46,6 +51,21 @@ public final class RestlessNeoForgeClient {
                 VanillaGuiLayers.CAMERA_OVERLAYS,
                 Identifier.fromNamespaceAndPath(Restless.MOD_ID, "red_vignette"),
                 RedVignette::render);
+        event.registerAbove(
+                VanillaGuiLayers.CAMERA_OVERLAYS,
+                Identifier.fromNamespaceAndPath(Restless.MOD_ID, "camera_flash"),
+                Darkroom::render);
+    }
+
+    @SubscribeEvent
+    public static void registerTooltips(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(Picture.class, PhotoTooltip::new);
+    }
+
+    /** The camera obscura grabs its frame here: the world is drawn, the hand and the HUD are not yet. */
+    @SubscribeEvent
+    public static void afterLevel(RenderLevelStageEvent.AfterLevel event) {
+        Darkroom.afterLevel();
     }
 
     @SubscribeEvent

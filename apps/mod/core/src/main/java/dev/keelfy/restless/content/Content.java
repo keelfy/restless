@@ -1,15 +1,20 @@
 package dev.keelfy.restless.content;
 
+import com.mojang.serialization.Codec;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.platform.Platform;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -55,7 +60,12 @@ public final class Content {
     public static final Supplier<Item> SPIRIT_CANDLE = item("spirit_candle", p -> new Item(p.stacksTo(1)));
     public static final Supplier<Item> SPIRIT_COMPASS = item("spirit_compass", p -> new Item(p.stacksTo(1)));
     public static final Supplier<Item> CAMERA_OBSCURA = item("camera_obscura", p -> new CameraObscura(p.stacksTo(1)));
-    public static final Supplier<Item> PHOTO = item("photo", p -> new Item(p.stacksTo(1)));
+    public static final Supplier<Item> PHOTO = item("photo", p -> new Photo(p.stacksTo(1)));
+    /** Marks a photo whose picture the photographer's client has yet to send; the value pairs the two. */
+    public static final Supplier<DataComponentType<Integer>> FILM = component("film", Codec.INT, ByteBufCodecs.VAR_INT);
+    /** What a developed photo shows, see {@link Picture}. */
+    public static final Supplier<DataComponentType<Picture>> PICTURE =
+            component("picture", Picture.CODEC, Picture.STREAM_CODEC);
 
     public static final Supplier<Block> SPIRIT_BOX = block(
             "spirit_box",
@@ -146,6 +156,20 @@ public final class Content {
     private static Supplier<Item> item(String name, java.util.function.Function<Item.Properties, Item> factory) {
         return Platform.get()
                 .register(BuiltInRegistries.ITEM, name, key -> factory.apply(new Item.Properties().setId(key)));
+    }
+
+    @SuppressWarnings("unchecked") // the registry is typed DataComponentType<?>; this entry is built for T
+    private static <T> Supplier<DataComponentType<T>> component(
+            String name, Codec<T> codec, StreamCodec<? super RegistryFriendlyByteBuf, T> stream) {
+        Supplier<DataComponentType<?>> entry = Platform.get()
+                .register(
+                        BuiltInRegistries.DATA_COMPONENT_TYPE,
+                        name,
+                        key -> DataComponentType.<T>builder()
+                                .persistent(codec)
+                                .networkSynchronized(stream)
+                                .build());
+        return () -> (DataComponentType<T>) entry.get();
     }
 
     private static Supplier<Block> block(

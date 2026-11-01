@@ -1,6 +1,9 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.Picture;
+import dev.keelfy.restless.haunt.DevelopPayload;
+import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.Journal;
 import dev.keelfy.restless.haunt.JournalPages;
@@ -17,11 +20,52 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 final class JournalGameTests {
     private JournalGameTests() {}
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("photo_develops_once", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            ItemStack photo = new ItemStack(Content.PHOTO.get());
+            photo.set(Content.FILM.get(), 42);
+            player.getInventory().setItem(0, photo);
+            byte[] grey = new byte[Picture.SIZE];
+            grey[7] = 99;
+            Picture picture = new Picture(grey);
+
+            Divination.develop(player, new DevelopPayload(41, new Picture(new byte[Picture.SIZE])));
+            check(helper, !photo.has(Content.PICTURE.get()), "another film's picture must not develop this photo");
+            Divination.develop(player, new DevelopPayload(42, picture));
+            check(
+                    helper,
+                    picture.equals(photo.get(Content.PICTURE.get())),
+                    "the film's picture must develop the photo");
+            check(helper, !photo.has(Content.FILM.get()), "a developed photo must no longer wait for its picture");
+            Divination.develop(player, new DevelopPayload(42, new Picture(new byte[Picture.SIZE])));
+            check(helper, picture.equals(photo.get(Content.PICTURE.get())), "a photo must develop only once");
+
+            RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(
+                    Unpooled.buffer(), helper.getLevel().registryAccess());
+            ItemStack.STREAM_CODEC.encode(buffer, photo);
+            check(
+                    helper,
+                    ItemStack.matches(photo, ItemStack.STREAM_CODEC.decode(buffer)),
+                    "a developed photo must reach clients unchanged");
+            check(
+                    helper,
+                    Picture.CODEC
+                            .parse(
+                                    net.minecraft.nbt.NbtOps.INSTANCE,
+                                    Picture.CODEC
+                                            .encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, picture)
+                                            .getOrThrow())
+                            .getOrThrow()
+                            .equals(picture),
+                    "a picture must survive saving");
+            helper.succeed();
+        });
         tests.put("journal_sorts_notes", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             HauntData data = HauntData.get(helper.getLevel().getServer());

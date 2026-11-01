@@ -1,12 +1,15 @@
 package dev.keelfy.restless.neoforge;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.content.Darkroom;
 import dev.keelfy.restless.debug.DebugMenu;
 import dev.keelfy.restless.debug.DebugPayload;
 import dev.keelfy.restless.debug.DebugScreen;
 import dev.keelfy.restless.debug.FirePayload;
+import dev.keelfy.restless.haunt.DevelopPayload;
 import dev.keelfy.restless.haunt.DimPayload;
 import dev.keelfy.restless.haunt.Dimming;
+import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.DoorLockPayload;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.HeadTurn;
@@ -15,6 +18,7 @@ import dev.keelfy.restless.haunt.JournalScreen;
 import dev.keelfy.restless.haunt.RedVignette;
 import dev.keelfy.restless.haunt.SanityOverlay;
 import dev.keelfy.restless.haunt.SanityPayload;
+import dev.keelfy.restless.haunt.ShutterPayload;
 import dev.keelfy.restless.haunt.TurnPayload;
 import dev.keelfy.restless.haunt.VignettePayload;
 import net.minecraft.server.level.ServerPlayer;
@@ -56,6 +60,12 @@ public final class RestlessNeoForge {
                 .playToClient(
                         JournalPayload.TYPE, JournalPayload.CODEC, (payload, context) -> JournalScreen.open(payload))
                 .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))
+                .playToClient(
+                        ShutterPayload.TYPE, ShutterPayload.CODEC, (payload, context) -> Darkroom.shutter(payload))
+                .playToServer(
+                        DevelopPayload.TYPE,
+                        DevelopPayload.CODEC,
+                        (payload, context) -> Divination.develop((ServerPlayer) context.player(), payload))
                 .playToServer(
                         FirePayload.TYPE,
                         FirePayload.CODEC,
