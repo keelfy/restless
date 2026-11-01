@@ -153,7 +153,7 @@ final class Household {
                         Household::moveFurniture),
                 // 184: prints from where the player stands to a bed or a chest, one pair at a time
                 SimpleEvent.light(
-                        "muddy_footprints",
+                        "restless:muddy_footprints",
                         EventTag.DOORS,
                         player -> !trail(player).isEmpty(),
                         Household::walkMud),
@@ -418,10 +418,11 @@ final class Household {
         if (!indoors(player)) {
             return List.of();
         }
-        Config.Section config = Config.event("muddy_footprints");
-        List<BlockPos> targets = new ArrayList<>(Nearby.all(player, "muddy_footprints", Household::mudTarget).stream()
-                .filter(pos -> pos.getY() == from.getY())
-                .toList());
+        Config.Section config = Config.event("restless:muddy_footprints");
+        List<BlockPos> targets =
+                new ArrayList<>(Nearby.all(player, "restless:muddy_footprints", Household::mudTarget).stream()
+                        .filter(pos -> pos.getY() == from.getY())
+                        .toList());
         Collections.shuffle(targets, new java.util.Random(player.getRandom().nextLong()));
         for (BlockPos target : targets) {
             List<Print> path = walk(level, from, target, config.integer("max_steps"));
@@ -469,7 +470,7 @@ final class Household {
     private static void walkMud(ServerPlayer player) {
         List<Print> path = trail(player);
         ServerLevel level = player.level();
-        Config.Section config = Config.event("muddy_footprints");
+        Config.Section config = Config.event("restless:muddy_footprints");
         Config.Tone tone = config.tone("sound");
         int delay = 0;
         for (int i = 0; i < path.size(); i += 1 + player.getRandom().nextInt(2)) {

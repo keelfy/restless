@@ -165,7 +165,7 @@ final class HardcoreGameTests {
         hardcore(
                 tests,
                 "hardcore_ghost_tree",
-                helper -> runs(helper, "ghost_tree", player -> floor(helper, 14), () -> {
+                helper -> runs(helper, "restless:ghost_tree", player -> floor(helper, 14), () -> {
                     BlockPos centre = helper.absolutePos(FEET);
                     check(
                             helper,

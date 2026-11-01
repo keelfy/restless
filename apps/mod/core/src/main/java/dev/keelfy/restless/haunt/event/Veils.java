@@ -80,7 +80,10 @@ final class Veils {
                         Veils::flicker),
                 // 302: a gravestone in the open, for this player alone
                 SimpleEvent.light(
-                        "lone_gravestone", EventTag.BLOCKS, player -> graveSpot(player) != null, Veils::gravestone),
+                        "restless:lone_gravestone",
+                        EventTag.BLOCKS,
+                        player -> graveSpot(player) != null,
+                        Veils::gravestone),
                 // 304: some of the obsidian round a nether portal is gone
                 SimpleEvent.light(
                         "broken_portal",
@@ -189,7 +192,7 @@ final class Veils {
     }
 
     private static @Nullable BlockPos graveSpot(ServerPlayer player) {
-        Config.Section config = Config.event("lone_gravestone");
+        Config.Section config = Config.event("restless:lone_gravestone");
         return Place.standingAhead(
                 player,
                 config.num("distance"),
@@ -205,7 +208,7 @@ final class Veils {
                     player,
                     spot,
                     Content.GRAVESTONE.get().defaultBlockState(),
-                    Config.event("lone_gravestone").integer("ticks"));
+                    Config.event("restless:lone_gravestone").integer("ticks"));
         }
     }
 

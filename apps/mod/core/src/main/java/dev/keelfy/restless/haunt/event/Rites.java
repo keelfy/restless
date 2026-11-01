@@ -56,41 +56,47 @@ final class Rites {
         return List.of(
                 // 522: a scarecrow within reach takes one step toward the player; stepped back later
                 SimpleEvent.light(
-                        "scarecrow_closer", EventTag.BLOCKS, player -> closer(player) != null, Rites::scarecrowCloser),
+                        "restless:scarecrow_closer",
+                        EventTag.BLOCKS,
+                        player -> closer(player) != null,
+                        Rites::scarecrowCloser),
                 // 523: the planchette spells a short greeting with nobody asking
                 SimpleEvent.light(
-                        "ouija_hi",
+                        "restless:ouija_hi",
                         EventTag.PRESENCE,
-                        player -> Nearby.any(player, "ouija_hi", s -> s.is(Content.OUIJA_BOARD.get())),
+                        player -> Nearby.any(player, "restless:ouija_hi", s -> s.is(Content.OUIJA_BOARD.get())),
                         Rites::ouijaHi),
                 // 524: a word from a spirit's voice pool out of the spirit box, unasked
                 SimpleEvent.light(
-                        "spirit_box_word",
+                        "restless:spirit_box_word",
                         EventTag.SOUND,
-                        player -> Nearby.any(player, "spirit_box_word", s -> s.is(Content.SPIRIT_BOX.get())),
+                        player -> Nearby.any(player, "restless:spirit_box_word", s -> s.is(Content.SPIRIT_BOX.get())),
                         Rites::spiritBoxWord),
                 // 525: one cell of a salt line vanishes, the one nearest the spirit; it is back later
-                SimpleEvent.harmful("salt_gap", EventTag.BLOCKS, player -> gap(player) != null, Rites::saltGap),
+                SimpleEvent.harmful(
+                        "restless:salt_gap", EventTag.BLOCKS, player -> gap(player) != null, Rites::saltGap),
                 // 528: a gravestone nearby reads the player's own name
                 SimpleEvent.light(
-                        "grave_name",
+                        "restless:grave_name",
                         EventTag.PRESENCE,
-                        player -> Nearby.any(player, "grave_name", s -> s.is(Content.GRAVESTONE.get())),
+                        player -> Nearby.any(player, "restless:grave_name", s -> s.is(Content.GRAVESTONE.get())),
                         Rites::graveName),
                 // 530: one journal note is gone from the book until it comes back
-                SimpleEvent.light("journal_page_torn", EventTag.ITEMS, Rites::tearable, Rites::tearPage),
+                SimpleEvent.light("restless:journal_page_torn", EventTag.ITEMS, Rites::tearable, Rites::tearPage),
                 // 531: a dreamcatcher swings hard, then the dream comes anyway
                 SimpleEvent.light(
-                        "dreamcatcher_fails",
+                        "restless:dreamcatcher_fails",
                         EventTag.AFFLICTION,
-                        player -> Nearby.any(player, "dreamcatcher_fails", s -> s.is(Content.DREAMCATCHER.get()))
-                                && dream(player) != null,
+                        player ->
+                                Nearby.any(player, "restless:dreamcatcher_fails", s -> s.is(Content.DREAMCATCHER.get()))
+                                        && dream(player) != null,
                         Rites::dreamcatcherFails),
                 // 532: a hallowed lantern burns with soul fire while a spirit is about
                 SimpleEvent.light(
-                        "lantern_soul_fire",
+                        "restless:lantern_soul_fire",
                         EventTag.LIGHTS,
-                        player -> Nearby.any(player, "lantern_soul_fire", s -> s.is(Content.HALLOWED_LANTERN.get()))
+                        player -> Nearby.any(
+                                        player, "restless:lantern_soul_fire", s -> s.is(Content.HALLOWED_LANTERN.get()))
                                 && !Sense.of(
                                                 player,
                                                 HauntData.get(player.level().getServer()))
@@ -98,13 +104,13 @@ final class Rites {
                         Rites::soulFire),
                 // 533: a door charm drops off its hook as an item
                 SimpleEvent.harmful(
-                        "charm_falls",
+                        "restless:charm_falls",
                         EventTag.BLOCKS,
-                        player -> Nearby.any(player, "charm_falls", s -> s.is(Content.DOOR_CHARM.get())),
+                        player -> Nearby.any(player, "restless:charm_falls", s -> s.is(Content.DOOR_CHARM.get())),
                         Rites::charmFalls),
                 // 536: at night the candles around an altar light one after another
                 SimpleEvent.light(
-                        "altar_midnight",
+                        "restless:altar_midnight",
                         EventTag.LIGHTS,
                         player -> Where.overworld(player)
                                 && player.level().isDarkOutside()
@@ -119,8 +125,8 @@ final class Rites {
     /** A scarecrow far enough away to come closer, with a free cell on a floor between it and the player. */
     private static @Nullable Step closer(ServerPlayer player) {
         ServerLevel level = player.level();
-        Config.Section config = Config.event("scarecrow_closer");
-        List<BlockPos> stands = Nearby.all(player, "scarecrow_closer", s -> s.is(Content.SCARECROW.get()));
+        Config.Section config = Config.event("restless:scarecrow_closer");
+        List<BlockPos> stands = Nearby.all(player, "restless:scarecrow_closer", s -> s.is(Content.SCARECROW.get()));
         for (BlockPos from : stands) {
             Vec3 toPlayer = player.position().subtract(Vec3.atCenterOf(from)).multiply(1, 0, 1);
             if (toPlayer.length() < config.num("min_gap")) {
@@ -144,7 +150,7 @@ final class Rites {
             return;
         }
         ServerLevel level = player.level();
-        Config.Section config = Config.event("scarecrow_closer");
+        Config.Section config = Config.event("restless:scarecrow_closer");
         BlockState scarecrow = level.getBlockState(step.from());
         Restore.swap(level, step.to(), scarecrow, config.integer("restore_ticks"));
         Restore.swap(level, step.from(), Blocks.AIR.defaultBlockState(), config.integer("restore_ticks"));
@@ -162,7 +168,7 @@ final class Rites {
 
     private static void ouijaHi(ServerPlayer player) {
         Config.Section ouija = Config.section("ouija");
-        List<String> words = Config.event("ouija_hi").texts("words");
+        List<String> words = Config.event("restless:ouija_hi").texts("words");
         String text = words.get(player.getRandom().nextInt(words.size()));
         Scheduler.repeat(player, ouija.integer("delay_ticks"), ouija.integer("letter_ticks"), (p, n) -> {
             p.sendSystemMessage(Component.literal(text.substring(0, n + 1)), true);
@@ -192,8 +198,8 @@ final class Rites {
 
     /** The salt cell nearest the spirit, when there is enough salt around to call it a line. */
     private static @Nullable BlockPos gap(ServerPlayer player) {
-        List<BlockPos> salt = Nearby.all(player, "salt_gap", s -> s.is(Content.SALT_LINE.get()));
-        if (salt.size() < Config.event("salt_gap").integer("min_cells")) {
+        List<BlockPos> salt = Nearby.all(player, "restless:salt_gap", s -> s.is(Content.SALT_LINE.get()));
+        if (salt.size() < Config.event("restless:salt_gap").integer("min_cells")) {
             return null;
         }
         Vec3 spirit = Location.source(player.position());
@@ -208,7 +214,7 @@ final class Rites {
             return;
         }
         ServerLevel level = player.level();
-        Config.Section config = Config.event("salt_gap");
+        Config.Section config = Config.event("restless:salt_gap");
         Restore.swap(level, pos, Blocks.AIR.defaultBlockState(), config.integer("restore_ticks"));
         level.sendParticles(
                 ParticleTypes.WHITE_ASH, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, 12, 0.2, 0.1, 0.2, 0.02);
@@ -219,17 +225,17 @@ final class Rites {
     // 528
 
     private static void graveName(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, "grave_name", s -> s.is(Content.GRAVESTONE.get()));
+        BlockPos pos = Nearby.random(player, "restless:grave_name", s -> s.is(Content.GRAVESTONE.get()));
         if (pos == null) {
             return;
         }
-        List<String> lines = Config.event("grave_name").texts("lines");
+        List<String> lines = Config.event("restless:grave_name").texts("lines");
         player.sendSystemMessage(Component.literal(lines.get(player.getRandom().nextInt(lines.size()))
                 .formatted(player.getName().getString())));
         ServerLevel level = player.level();
         level.sendParticles(
                 ParticleTypes.WHITE_ASH, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 10, 0.3, 0.4, 0.3, 0.01);
-        Config.Tone tone = Config.event("grave_name").tone("sound");
+        Config.Tone tone = Config.event("restless:grave_name").tone("sound");
         level.playSound(
                 null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.BLOCKS, tone.volume(), tone.pitch());
     }
@@ -242,7 +248,7 @@ final class Rites {
                                 .notebook(player.getUUID())
                                 .notes()
                                 .size()
-                        >= Config.event("journal_page_torn").integer("min_notes");
+                        >= Config.event("restless:journal_page_torn").integer("min_notes");
     }
 
     private static boolean holdsJournal(ServerPlayer player) {
@@ -269,7 +275,7 @@ final class Rites {
         rest.remove(index);
         data.putNotebook(owner, new Notebook(List.copyOf(rest), book.chapters(), book.pictures()));
         // Not Restore.revert: the page comes back under hardcore too, it is the player's own progress.
-        Restore.after(level, Config.event("journal_page_torn").integer("restore_ticks"), force -> {
+        Restore.after(level, Config.event("restless:journal_page_torn").integer("restore_ticks"), force -> {
             Notebook now = data.notebook(owner);
             if (!now.notes().contains(torn)) {
                 List<Notebook.Note> back = new ArrayList<>(now.notes());
@@ -278,7 +284,7 @@ final class Rites {
             }
             return true;
         });
-        Config.Tone tone = Config.event("journal_page_torn").tone("sound");
+        Config.Tone tone = Config.event("restless:journal_page_torn").tone("sound");
         level.playSound(
                 null,
                 player.blockPosition(),
@@ -296,8 +302,8 @@ final class Rites {
 
     private static void dreamcatcherFails(ServerPlayer player) {
         ServerLevel level = player.level();
-        Config.Section config = Config.event("dreamcatcher_fails");
-        for (BlockPos pos : Nearby.all(player, "dreamcatcher_fails", s -> s.is(Content.DREAMCATCHER.get()))) {
+        Config.Section config = Config.event("restless:dreamcatcher_fails");
+        for (BlockPos pos : Nearby.all(player, "restless:dreamcatcher_fails", s -> s.is(Content.DREAMCATCHER.get()))) {
             BlockState state = level.getBlockState(pos);
             int push = 7 + (player.getRandom().nextBoolean() ? 7 : -7);
             int other = 7 + player.getRandom().nextInt(15) - 7;
@@ -319,9 +325,10 @@ final class Rites {
 
     private static void soulFire(ServerPlayer player) {
         ServerLevel level = player.level();
-        Config.Section config = Config.event("lantern_soul_fire");
+        Config.Section config = Config.event("restless:lantern_soul_fire");
         Config.Tone tone = config.tone("sound");
-        for (BlockPos pos : Nearby.all(player, "lantern_soul_fire", s -> s.is(Content.HALLOWED_LANTERN.get()))) {
+        for (BlockPos pos :
+                Nearby.all(player, "restless:lantern_soul_fire", s -> s.is(Content.HALLOWED_LANTERN.get()))) {
             BlockPos at = pos.immutable();
             BlockState from = level.getBlockState(at);
             BlockState to = Blocks.SOUL_LANTERN.withPropertiesOf(from);
@@ -353,7 +360,7 @@ final class Rites {
     // 533
 
     private static void charmFalls(ServerPlayer player) {
-        BlockPos pos = Nearby.random(player, "charm_falls", s -> s.is(Content.DOOR_CHARM.get()));
+        BlockPos pos = Nearby.random(player, "restless:charm_falls", s -> s.is(Content.DOOR_CHARM.get()));
         if (pos == null) {
             return;
         }
@@ -376,7 +383,7 @@ final class Rites {
         List<BlockPos> candles = new ArrayList<>();
         for (BlockPos altar : Nearby.all(
                 player,
-                "altar_midnight",
+                "restless:altar_midnight",
                 s -> s.is(Content.ALTAR.get()) && s.getValue(Altar.PART) == Altar.Part.CENTER)) {
             candles.addAll(Nearby.all(level, altar, reach, CandleBlock::canLight));
         }
@@ -385,7 +392,7 @@ final class Rites {
 
     private static void altarMidnight(ServerPlayer player) {
         ServerLevel level = player.level();
-        Config.Section config = Config.event("altar_midnight");
+        Config.Section config = Config.event("restless:altar_midnight");
         List<BlockPos> candles = new ArrayList<>(unlitAround(player));
         Config.Tone tone = config.tone("sound");
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {

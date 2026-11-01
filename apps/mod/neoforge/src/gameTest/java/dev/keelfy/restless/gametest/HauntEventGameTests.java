@@ -252,7 +252,7 @@ final class HauntEventGameTests {
                 "event_ghost_tree",
                 helper -> runs(
                         helper,
-                        "ghost_tree",
+                        "restless:ghost_tree",
                         player -> {
                             // Ground 12 blocks out on every side; the tree itself is only sent, so the server's air
                             // must stay.
@@ -579,7 +579,7 @@ final class HauntEventGameTests {
                 "event_mock_grave",
                 helper -> runs(
                         helper,
-                        "mock_grave",
+                        "restless:mock_grave",
                         player -> {
                             for (BlockPos pos : BlockPos.betweenClosed(-12, 0, -12, 21, 0, 21)) {
                                 helper.getLevel()
@@ -747,7 +747,7 @@ final class HauntEventGameTests {
                 "event_muddy_footprints",
                 helper -> runs(
                         helper,
-                        "muddy_footprints",
+                        "restless:muddy_footprints",
                         player -> {
                             for (BlockPos pos : BlockPos.betweenClosed(0, 4, 0, 9, 4, 9)) {
                                 helper.setBlock(pos, Blocks.STONE);

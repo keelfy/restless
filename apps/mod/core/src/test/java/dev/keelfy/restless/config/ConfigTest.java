@@ -109,6 +109,21 @@ class ConfigTest {
     }
 
     @Test
+    void modItemEventsMoveToRestlessNamespace(@TempDir Path dir) throws IOException {
+        Files.writeString(
+                dir.resolve("rites.json"), "{\"version\":1,\"events\":{\"minecraft:ouija_hi\":{\"radius\":3}}}");
+        Files.writeString(
+                dir.resolve("blocks.json"), "{\"version\":3,\"events\":{\"minecraft:mock_grave\":{\"tries\":2}}}");
+        JsonObject events =
+                Config.read(dir, Config::bundledText, Migrations.BUILT_IN).getAsJsonObject("events");
+        assertEquals(
+                3, events.getAsJsonObject("restless:ouija_hi").get("radius").getAsInt());
+        assertEquals(
+                2, events.getAsJsonObject("restless:mock_grave").get("tries").getAsInt());
+        assertFalse(events.has("minecraft:ouija_hi") || events.has("minecraft:mock_grave"));
+    }
+
+    @Test
     void newerOrBrokenFileFallsBackAndIsLeftAlone(@TempDir Path dir) throws IOException {
         String newer = "{\"version\":99,\"director\":{\"check_interval_ticks\":7}}";
         Files.writeString(dir.resolve("haunt.json"), newer);

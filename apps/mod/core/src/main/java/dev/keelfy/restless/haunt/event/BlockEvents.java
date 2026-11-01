@@ -349,7 +349,10 @@ final class BlockEvents {
                                 SoundEvents.POINTED_DRIPSTONE_DRIP_LAVA)),
                 // 185: a gravestone with the player's name and tomorrow's date stands on open ground nearby
                 SimpleEvent.light(
-                        "mock_grave", EventTag.BLOCKS, player -> marker(player) != null, BlockEvents::markGrave),
+                        "restless:mock_grave",
+                        EventTag.BLOCKS,
+                        player -> marker(player) != null,
+                        BlockEvents::markGrave),
                 SimpleEvent.light(
                         "cave_sign",
                         EventTag.BLOCKS,
@@ -688,7 +691,7 @@ final class BlockEvents {
     /** Room for a gravestone with a sign in front of it on open ground, where the player can see it. */
     private static @Nullable Marker marker(ServerPlayer player) {
         ServerLevel level = player.level();
-        Config.Section config = Config.event("mock_grave");
+        Config.Section config = Config.event("restless:mock_grave");
         for (int i = 0; i < config.integer("tries"); i++) {
             BlockPos stone = Place.spawnSpot(player, config.integer("min_distance"), config.integer("max_distance"));
             if (stone == null) {
@@ -717,12 +720,13 @@ final class BlockEvents {
                 Blocks.OAK_SIGN.defaultBlockState().setValue(StandingSignBlock.ROTATION, marker.rotation()));
         if (level.getBlockEntity(marker.sign()) instanceof SignBlockEntity sign) {
             SignText.Mutable text = sign.getText(SignTextSlot.FRONT).asMutable();
-            text.setLine(0, Component.literal(Config.event("mock_grave").text("title")));
+            text.setLine(
+                    0, Component.literal(Config.event("restless:mock_grave").text("title")));
             text.setLine(1, player.getName());
             text.setLine(2, Component.literal(LocalDate.now().plusDays(1).toString()));
             sign.setText(text.asImmutable(), SignTextSlot.FRONT);
         }
-        Restore.revert(level, restoreTicks("mock_grave"), force -> {
+        Restore.revert(level, restoreTicks("restless:mock_grave"), force -> {
             if (!force && !level.isLoaded(marker.stone())) {
                 return false;
             }

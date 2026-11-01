@@ -76,15 +76,16 @@ final class Illusions {
                             Swaps.show(player, shown, config.integer("ticks"));
                         }),
                 // 107: a tree where there was none, pale oak, oak or birch, which the player walks through
-                SimpleEvent.light("ghost_tree", EventTag.BLOCKS, player -> treeSpot(player) != null, player -> {
-                    BlockPos root = treeSpot(player);
-                    if (root != null) {
-                        Swaps.show(
-                                player,
-                                ghostTree(player, root),
-                                Config.event("ghost_tree").integer("ticks"));
-                    }
-                }),
+                SimpleEvent.light(
+                        "restless:ghost_tree", EventTag.BLOCKS, player -> treeSpot(player) != null, player -> {
+                            BlockPos root = treeSpot(player);
+                            if (root != null) {
+                                Swaps.show(
+                                        player,
+                                        ghostTree(player, root),
+                                        Config.event("restless:ghost_tree").integer("ticks"));
+                            }
+                        }),
                 // 190: a line of torches in the dark leads away from the player, each gone when they come near it
                 SimpleEvent.light(
                         "torch_line",
@@ -243,7 +244,7 @@ final class Illusions {
 
     /** Standing room in front of the player, with room for the tallest trunk. */
     private static @Nullable BlockPos treeSpot(ServerPlayer player) {
-        Config.Section config = Config.event("ghost_tree");
+        Config.Section config = Config.event("restless:ghost_tree");
         int tallest = config.integer("trunk") + config.integer("trunk_extra");
         return Place.standingAhead(player, config.num("distance"), 0.0, config.num("max_angle"), root -> {
             for (int dy = 0; dy < tallest; dy++) {
@@ -260,7 +261,7 @@ final class Illusions {
      * crown is the vanilla oak and birch blob: two wide layers and two narrow, corners off at random and always on top.
      */
     private static Map<BlockPos, BlockState> ghostTree(ServerPlayer player, BlockPos root) {
-        Config.Section config = Config.event("ghost_tree");
+        Config.Section config = Config.event("restless:ghost_tree");
         ServerLevel level = player.level();
         List<String> woods = config.texts("woods");
         Content.GhostWood wood = Content.GHOST_WOODS.getOrDefault(

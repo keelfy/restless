@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "events": {
     "minecraft:red_wool": { "weight": 0.3, "radius": 10, "max_blocks": 64, "ticks": 300 },
     "minecraft:sign_whisper": {
@@ -39,7 +39,7 @@
         "minecraft:gold_block"
       ]
     },
-    "minecraft:lone_gravestone": {
+    "restless:lone_gravestone": {
       "weight": 0.3,
       "distance": 9.0,
       "max_angle": 40.0,

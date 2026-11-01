@@ -58,7 +58,7 @@ final class Scenarios {
                 // 15
                 scenario("midnight_kitchen", "chest_lid +2 eating_behind_wall +3 wrong_smelt +2 hunger_pang", lookup),
                 // 16
-                scenario("a_visitor", "doorstep_gift +2 muddy_footprints +4 three_knocks +4 door", lookup),
+                scenario("a_visitor", "doorstep_gift +2 restless:muddy_footprints +4 three_knocks +4 door", lookup),
                 // 17
                 scenario("trap_room", "pressure_plate +1 dispenser_shot +2 ghost_laugh", lookup),
                 // 18
@@ -80,7 +80,10 @@ final class Scenarios {
                 // 26
                 scenario("the_other_builder", "pillar +8 many_breaks +3 cave_sign", lookup),
                 // 27
-                scenario("died_out_there", "distant_walker +10 cut_off_scream +2 stranger_death +5 mock_grave", lookup),
+                scenario(
+                        "died_out_there",
+                        "distant_walker +10 cut_off_scream +2 stranger_death +5 restless:mock_grave",
+                        lookup),
                 // 28
                 scenario(
                         "the_dead_party",
@@ -95,7 +98,7 @@ final class Scenarios {
                 // 32
                 scenario("who_said_that", "own_voice +3 echo +2 own_voice +2 subliminal_title", lookup),
                 // 33
-                scenario("your_grave", "mock_grave +3 edge_figure +4 false_death", lookup),
+                scenario("your_grave", "restless:mock_grave +3 edge_figure +4 false_death", lookup),
                 // 34
                 scenario("behind_the_glass", "false_windows +3 glass_wall +3 edge_figure", lookup),
                 // 35
@@ -105,7 +108,7 @@ final class Scenarios {
                 // 37
                 scenario(
                         "walking_in_sleep",
-                        "close_whispers +3 sleepwalk >waking muddy_footprints +3 cave_sign",
+                        "close_whispers +3 sleepwalk >waking restless:muddy_footprints +3 cave_sign",
                         lookup),
                 // 38
                 scenario("bad_dream", "dream >waking false_night +4 close_whispers", lookup),
@@ -204,7 +207,7 @@ final class Scenarios {
                 // 85
                 scenario("funeral", "wilted_flowers +3 cross +3 death_cry", lookup),
                 // 86
-                scenario("walking_woods", "ghost_tree +5 moving_tree +3 footsteps", lookup),
+                scenario("walking_woods", "restless:ghost_tree +5 moving_tree +3 footsteps", lookup),
                 // 87
                 scenario("tantrum", "breathing_door +2 open_house +2 furniture_moves +3 snatch +2 chest_blast", lookup),
                 // 88
@@ -227,13 +230,16 @@ final class Scenarios {
                 // 93
                 scenario("rider", "occupied_bed +3 breathing +3 heaviness +2 darkness +3 embrace", lookup),
                 // 94
-                scenario("foretold", "distant_bell +4 banshee +6 cut_off_scream +3 false_death +5 mock_grave", lookup),
+                scenario(
+                        "foretold",
+                        "distant_bell +4 banshee +6 cut_off_scream +3 false_death +5 restless:mock_grave",
+                        lookup),
                 // 95
                 scenario("blood_for_blood", "death_cry +2 red_vignette +2 copycat +0 wild_pet +3 wrath", lookup),
                 // 96
                 scenario(
                         "the_way_they_went",
-                        "muddy_footprints +3 item_trail +5 torch_line +10 stranger_death +2 lost_time",
+                        "restless:muddy_footprints +3 item_trail +5 torch_line +10 stranger_death +2 lost_time",
                         lookup),
                 // 97
                 scenario(

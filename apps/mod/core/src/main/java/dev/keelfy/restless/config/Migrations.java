@@ -35,18 +35,49 @@ public final class Migrations {
      * Version 3 of blocks: {@code false_looks} turns any block of its list into another of it, instead of following a
      * fixed map.
      */
-    private static final List<UnaryOperator<JsonObject>> BLOCKS =
-            List.of(Migrations::namespaceEvents, Migrations::falseLooksPool);
+    private static final List<UnaryOperator<JsonObject>> BLOCKS = List.of(
+            Migrations::namespaceEvents,
+            Migrations::falseLooksPool,
+            root -> restlessEvents(root, "mock_grave", "ghost_tree"));
 
     /** Version 3 of presence: the distant walker walks for longer; the nametag's names are made up, not listed. */
     private static final List<UnaryOperator<JsonObject>> PRESENCE =
             List.of(Migrations::namespaceEvents, Migrations::presenceWalker);
 
+    /**
+     * Version 2 of rites: every event uses the mod's own blocks or items, so its id is {@code restless:}, not
+     * {@code minecraft:}.
+     */
+    private static final List<UnaryOperator<JsonObject>> RITES = List.of(root -> restlessEvents(
+            root,
+            "scarecrow_closer",
+            "ouija_hi",
+            "spirit_box_word",
+            "salt_gap",
+            "grave_name",
+            "journal_page_torn",
+            "dreamcatcher_fails",
+            "lantern_soul_fire",
+            "charm_falls",
+            "altar_midnight"));
+
+    /**
+     * Version 3 of mechanisms: {@code muddy_footprints} leaves the mod's footprints, so it is a {@code restless:} id.
+     */
+    private static final List<UnaryOperator<JsonObject>> MECHANISMS =
+            List.of(Migrations::namespaceEvents, root -> restlessEvents(root, "muddy_footprints"));
+
+    /** Version 2 of veils: {@code lone_gravestone} shows the mod's gravestone, so it is a {@code restless:} id. */
+    private static final List<UnaryOperator<JsonObject>> VEILS =
+            List.of(root -> restlessEvents(root, "lone_gravestone"));
+
     /** Steps per file name (without {@code .json}). A file with no entry has never changed shape: version 1. */
     static final Migrations BUILT_IN = new Migrations(Map.ofEntries(
             Map.entry("haunt", POWER),
             Map.entry("lights", NAMESPACED_EVENTS),
-            Map.entry("mechanisms", NAMESPACED_EVENTS),
+            Map.entry("mechanisms", MECHANISMS),
+            Map.entry("rites", RITES),
+            Map.entry("veils", VEILS),
             Map.entry("sounds", NAMESPACED_EVENTS),
             Map.entry("afflictions", NAMESPACED_EVENTS),
             Map.entry("assaults", NAMESPACED_EVENTS),
@@ -91,6 +122,16 @@ public final class Migrations {
                 namespaced.add(Config.eventKey(entry.getKey()), entry.getValue());
             }
             root.add("events", namespaced);
+        }
+        return root;
+    }
+
+    /**
+     * Moves the values of events from {@code minecraft:<id>} to {@code restless:<id>}; settings the player edited stay.
+     */
+    private static JsonObject restlessEvents(JsonObject root, String... ids) {
+        for (String id : ids) {
+            move(root, "events.minecraft:" + id, "events.restless:" + id);
         }
         return root;
     }
