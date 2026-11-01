@@ -171,6 +171,7 @@ public final class Ritual {
                 player,
                 Notebook.Kind.BANISHED,
                 spirit.haunting(),
+                spirit.haunting().spirit() + (spirit.haunting().evolved() ? "_evolved" : ""),
                 type,
                 Story.of(spirit.haunting().seed()).name());
     }

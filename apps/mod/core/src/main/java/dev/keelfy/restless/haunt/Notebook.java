@@ -24,9 +24,13 @@ import org.jspecify.annotations.Nullable;
  * @param notes oldest first
  * @param chapters ids of the {@link Chapter}s the player has opened
  * @param pictures the latest developed photograph of each spirit, pasted in
+ * @param filed for a banished spirit, the dossier the player filed it under: their own conclusion, right or wrong
  */
-public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture> pictures) {
-    public static final Notebook EMPTY = new Notebook(List.of(), Set.of(), Map.of());
+public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture> pictures, Map<UUID, UUID> filed) {
+    /** Ends a type tag of a grown spirit. */
+    static final String EVOLVED = "_evolved";
+
+    public static final Notebook EMPTY = new Notebook(List.of(), Set.of(), Map.of(), Map.of());
 
     static final Codec<Notebook> CODEC = RecordCodecBuilder.create(i -> i.group(
                     Note.CODEC.listOf().optionalFieldOf("notes", List.of()).forGetter(Notebook::notes),
@@ -37,7 +41,10 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
                             .forGetter(Notebook::chapters),
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Picture.CODEC)
                             .optionalFieldOf("pictures", Map.of())
-                            .forGetter(Notebook::pictures))
+                            .forGetter(Notebook::pictures),
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, UUIDUtil.STRING_CODEC)
+                            .optionalFieldOf("filed", Map.of())
+                            .forGetter(Notebook::filed))
             .apply(i, Notebook::new));
 
     /** What kind of thing was seen; decides where it goes in the journal. */
@@ -61,7 +68,7 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         DREAM(true),
         /** Args: name, type. */
         RESTED(true),
-        /** Args: type, name. */
+        /** Args: type, name; tag: the type id as a photo has it. */
         BANISHED(true),
         /** Args: name, old type, new type. */
         EVOLVED(true),
@@ -143,7 +150,7 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         }
         List<Note> grown = new ArrayList<>(notes);
         grown.add(note);
-        return new Notebook(List.copyOf(grown), chapters, pictures);
+        return new Notebook(List.copyOf(grown), chapters, pictures, filed);
     }
 
     /** @return null when the chapter is already open */
@@ -153,14 +160,60 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         }
         Set<String> grown = new HashSet<>(chapters);
         grown.add(chapter.id());
-        return new Notebook(notes, Set.copyOf(grown), pictures);
+        return new Notebook(notes, Set.copyOf(grown), pictures, filed);
     }
 
     /** The spirit's photograph, replacing an older one: a notebook keeps one picture per spirit. */
     public Notebook pasted(UUID spirit, Picture picture) {
         Map<UUID, Picture> grown = new HashMap<>(pictures);
         grown.put(spirit, picture);
-        return new Notebook(notes, chapters, Map.copyOf(grown));
+        return new Notebook(notes, chapters, Map.copyOf(grown), filed);
+    }
+
+    /** The notes replaced, everything else kept. */
+    public Notebook withNotes(List<Note> replaced) {
+        return new Notebook(List.copyOf(replaced), chapters, pictures, filed);
+    }
+
+    /**
+     * Whether the banishment written at note {@code record} may be filed under the {@code dossier}th met spirit: both
+     * are still unclaimed and, where both say what type they were, the types agree. It cannot tell whether they are the
+     * same spirit; that is the player's to judge.
+     */
+    public boolean fits(int record, int dossier) {
+        List<UUID> met = met();
+        if (record < 0 || record >= notes.size() || dossier < 0 || dossier >= met.size()) {
+            return false;
+        }
+        Note banished = notes.get(record);
+        if (banished.kind() != Kind.BANISHED
+                || banished.spirit().isEmpty()
+                || filed.containsKey(banished.spirit().get())
+                || filed.containsValue(met.get(dossier))) {
+            return false;
+        }
+        Optional<String> seen = notes.stream()
+                .filter(n -> n.kind() == Kind.PHOTO
+                        && n.spirit().filter(met.get(dossier)::equals).isPresent())
+                .flatMap(n -> n.tag().stream())
+                .reduce((a, b) -> b);
+        return banished.tag().isEmpty()
+                || seen.isEmpty()
+                || base(banished.tag().get()).equals(base(seen.get()));
+    }
+
+    /** @return null when {@link #fits} says no */
+    public @Nullable Notebook filed(int record, int dossier) {
+        if (!fits(record, dossier)) {
+            return null;
+        }
+        Map<UUID, UUID> grown = new HashMap<>(filed);
+        grown.put(notes.get(record).spirit().get(), met().get(dossier));
+        return new Notebook(notes, chapters, pictures, Map.copyOf(grown));
+    }
+
+    static String base(String tag) {
+        return tag.endsWith(EVOLVED) ? tag.substring(0, tag.length() - EVOLVED.length()) : tag;
     }
 
     public boolean has(Chapter chapter) {

@@ -12,7 +12,9 @@ import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.DoorLockPayload;
 import dev.keelfy.restless.haunt.DoorLocks;
+import dev.keelfy.restless.haunt.FilePayload;
 import dev.keelfy.restless.haunt.HeadTurn;
+import dev.keelfy.restless.haunt.Journal;
 import dev.keelfy.restless.haunt.JournalPayload;
 import dev.keelfy.restless.haunt.JournalScreen;
 import dev.keelfy.restless.haunt.RedVignette;
@@ -66,6 +68,10 @@ public final class RestlessNeoForge {
                         DevelopPayload.TYPE,
                         DevelopPayload.CODEC,
                         (payload, context) -> Divination.develop((ServerPlayer) context.player(), payload))
+                .playToServer(
+                        FilePayload.TYPE,
+                        FilePayload.CODEC,
+                        (payload, context) -> Journal.file((ServerPlayer) context.player(), payload))
                 .playToServer(
                         FirePayload.TYPE,
                         FirePayload.CODEC,

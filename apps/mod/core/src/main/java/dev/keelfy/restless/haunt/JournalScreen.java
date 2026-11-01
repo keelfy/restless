@@ -17,8 +17,10 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +32,7 @@ import org.jspecify.annotations.Nullable;
 @OnlyIn(Dist.CLIENT)
 public final class JournalScreen extends Screen {
     private static final int INK = 0xFF382B24;
+    private static final int LINK = 0xFF713E38;
     private static final int MUTED = 0xFF77634D;
     private static final int PAPER = 0xFFE5D5AD;
     private static final int LINE = 12;
@@ -40,7 +43,13 @@ public final class JournalScreen extends Screen {
             @Nullable Kind icon,
             @Nullable Picture picture,
             @Nullable Set<Kind> clues,
+            JournalPages.@Nullable Filing filing,
             int height) {}
+
+    /** Where a filing entry was drawn this frame, for clicks. */
+    private record Hit(int x, int y, int width, int height, JournalPages.Filing filing) {}
+
+    private final List<Hit> hits = new ArrayList<>();
 
     /** The tools and finds a dossier shows slots for, in order; the ones the player has used light up. */
     private static final List<Kind> CLUES =
@@ -64,13 +73,24 @@ public final class JournalScreen extends Screen {
     private Button previous;
     private Button next;
 
-    private JournalScreen(JournalPayload data) {
+    private JournalScreen(JournalPayload data, @Nullable String key) {
         super(Component.translatable("item.restless.journal"));
         this.data = data;
+        for (int i = 0; i < data.sections().size(); i++) {
+            if (data.sections().get(i).key().equals(key)) {
+                section = i;
+            }
+        }
     }
 
+    /** Opens the journal, or when it is already open (a filing changed it) puts the new pages in the same tab. */
     public static void open(JournalPayload data) {
-        Minecraft.getInstance().setScreenAndShow(new JournalScreen(data));
+        Minecraft minecraft = Minecraft.getInstance();
+        String key = minecraft.gui.screen() instanceof JournalScreen open
+                        && open.section < open.data.sections().size()
+                ? open.data.sections().get(open.section).key()
+                : null;
+        minecraft.setScreenAndShow(new JournalScreen(data, key));
     }
 
     @Override
@@ -152,12 +172,19 @@ public final class JournalScreen extends Screen {
     private void place(Block block) {
         if (block.height() > room - used) {
             List<FormattedCharSequence> lines = block.lines();
-            int fit = block.picture() == null && block.clues() == null ? (room - used) / LINE : 0;
+            int fit = block.picture() == null && block.clues() == null && block.filing() == null
+                    ? (room - used) / LINE
+                    : 0;
             if (fit >= 1 && fit < lines.size()) {
-                laid.add(new Block(lines.subList(0, fit), block.icon(), null, null, fit * LINE));
+                laid.add(new Block(lines.subList(0, fit), block.icon(), null, null, null, fit * LINE));
                 flush();
                 place(new Block(
-                        lines.subList(fit, lines.size()), null, null, null, (lines.size() - fit) * LINE + ENTRY_GAP));
+                        lines.subList(fit, lines.size()),
+                        null,
+                        null,
+                        null,
+                        null,
+                        (lines.size() - fit) * LINE + ENTRY_GAP));
                 return;
             }
             if (!laid.isEmpty()) {
@@ -174,22 +201,27 @@ public final class JournalScreen extends Screen {
         if (!card.heading().getString().isEmpty()) {
             List<FormattedCharSequence> lines =
                     font.split(card.heading().copy().withStyle(ChatFormatting.BOLD), Math.max(1, textWidth));
-            blocks.add(new Block(lines, null, null, null, lines.size() * LINE + 4));
+            blocks.add(new Block(lines, null, null, null, null, lines.size() * LINE + 4));
         }
-        if (key.equals("spirits")) {
+        if (key.equals("spirits") || key.equals("archive")) {
             Set<Kind> found =
                     card.entries().stream().flatMap(e -> e.kind().stream()).collect(Collectors.toSet());
             int height = card.picture().isPresent()
                     ? Math.max(Picture.HEIGHT + PhotoTooltip.BORDER * 2, CLUES.size() * (ICON + 4))
                     : ICON;
-            blocks.add(new Block(List.of(), null, card.picture().orElse(null), found, height + 8));
+            blocks.add(new Block(List.of(), null, card.picture().orElse(null), found, null, height + 8));
         }
         for (JournalPages.Entry entry : card.entries()) {
             Kind icon = entry.kind().filter(k -> icon(k) != null).orElse(null);
             int width = Math.max(1, textWidth - (icon == null ? 0 : ICON + 6));
             List<FormattedCharSequence> lines = font.split(entry.text(), width);
             blocks.add(new Block(
-                    lines, icon, null, null, Math.max(lines.size() * LINE, icon == null ? 0 : ICON) + ENTRY_GAP));
+                    lines,
+                    icon,
+                    null,
+                    null,
+                    entry.filing().orElse(null),
+                    Math.max(lines.size() * LINE, icon == null ? 0 : ICON) + ENTRY_GAP));
         }
         return blocks;
     }
@@ -275,6 +307,7 @@ public final class JournalScreen extends Screen {
         graphics.text(font, data.sections().isEmpty() ? title : sectionTitle(section), textX, top + 17, MUTED, false);
         graphics.fill(textX, top + 32, left + bookWidth - 18, top + 33, 0xFFBEA47C);
         int y = top + 42;
+        hits.clear();
         if (!pages.isEmpty()) {
             for (Block block : pages.get(page)) {
                 drawBlock(graphics, block, y);
@@ -296,10 +329,30 @@ public final class JournalScreen extends Screen {
             graphics.fakeItem(icon(block.icon()), textX, y - 1);
             x += ICON + 6;
         }
+        if (block.filing() != null) {
+            hits.add(new Hit(x, y, textWidth, block.lines().size() * LINE, block.filing()));
+        }
         for (FormattedCharSequence line : block.lines()) {
-            graphics.text(font, line, x, y, INK, false);
+            graphics.text(font, line, x, y, block.filing() != null ? LINK : INK, false);
             y += LINE;
         }
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        for (Hit hit : hits) {
+            if (event.x() >= hit.x()
+                    && event.x() < hit.x() + hit.width()
+                    && event.y() >= hit.y()
+                    && event.y() < hit.y() + hit.height()) {
+                Minecraft.getInstance()
+                        .getConnection()
+                        .send(new ServerboundCustomPayloadPacket(new FilePayload(
+                                hit.filing().record(), hit.filing().dossier())));
+                return true;
+            }
+        }
+        return super.mouseClicked(event, doubleClick);
     }
 
     /** The pasted photograph, taped on at an angle of its own, and one slot per tool: dim until the player used it. */

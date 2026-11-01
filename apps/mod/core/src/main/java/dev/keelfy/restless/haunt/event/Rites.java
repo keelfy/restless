@@ -273,14 +273,14 @@ final class Rites {
         Notebook.Note torn = book.notes().get(index);
         List<Notebook.Note> rest = new ArrayList<>(book.notes());
         rest.remove(index);
-        data.putNotebook(owner, new Notebook(List.copyOf(rest), book.chapters(), book.pictures()));
+        data.putNotebook(owner, book.withNotes(rest));
         // Not Restore.revert: the page comes back under hardcore too, it is the player's own progress.
         Restore.after(level, Config.event("restless:journal_page_torn").integer("restore_ticks"), force -> {
             Notebook now = data.notebook(owner);
             if (!now.notes().contains(torn)) {
                 List<Notebook.Note> back = new ArrayList<>(now.notes());
                 back.add(Math.min(index, back.size()), torn);
-                data.putNotebook(owner, new Notebook(List.copyOf(back), now.chapters(), now.pictures()));
+                data.putNotebook(owner, now.withNotes(back));
             }
             return true;
         });

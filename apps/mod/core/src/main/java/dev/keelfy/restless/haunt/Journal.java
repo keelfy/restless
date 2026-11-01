@@ -100,6 +100,25 @@ public final class Journal {
         if (started != null) {
             data.putNotebook(player.getUUID(), started);
         }
+        show(player);
+    }
+
+    /**
+     * The player filed a banishment under a spirit's dossier. Whether they are the same spirit is not checked: the
+     * archive keeps the player's conclusion.
+     */
+    public static void file(ServerPlayer player, FilePayload payload) {
+        HauntData data = HauntData.get(player.level().getServer());
+        Notebook filed = data.notebook(player.getUUID()).filed(payload.record(), payload.dossier());
+        if (filed != null) {
+            data.putNotebook(player.getUUID(), filed);
+            turnPage(player, Component.translatable("message.restless.journal_filed"));
+            show(player);
+        }
+    }
+
+    private static void show(ServerPlayer player) {
+        HauntData data = HauntData.get(player.level().getServer());
         player.connection.send(new ClientboundCustomPayloadPacket(
                 new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())))));
     }

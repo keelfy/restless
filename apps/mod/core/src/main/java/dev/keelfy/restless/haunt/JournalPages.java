@@ -19,17 +19,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /**
- * Lays a {@link Notebook} out as cards under sections: the guide, a dossier per met spirit, loose notes, the bestiary
- * and the chronicle. It only arranges what the player saw; it draws no conclusions for them. How many cards fit a page
- * is up to whoever draws them.
+ * Lays a {@link Notebook} out as cards under sections: the guide, a dossier per met spirit, the archive of those the
+ * player banished and filed, loose notes, the bestiary and the chronicle. It only arranges what the player saw; it
+ * draws no conclusions for them. How many cards fit a page is up to whoever draws them.
  */
 public final class JournalPages {
-    private static final String EVOLVED = "_evolved";
+    private static final String EVOLVED = Notebook.EVOLVED;
 
-    /** One thing written on a card; {@code kind} tells what showed it, when a note did. */
-    public record Entry(Optional<Kind> kind, Component text) {
+    /** What clicking an entry asks for: file banishment note {@code record} under the {@code dossier}th met spirit. */
+    public record Filing(int record, int dossier) {}
+
+    /**
+     * One thing written on a card; {@code kind} tells what showed it, when a note did, and {@code filing} makes it
+     * something to click.
+     */
+    public record Entry(Optional<Kind> kind, Component text, Optional<Filing> filing) {
         static Entry plain(Component text) {
-            return new Entry(Optional.empty(), text);
+            return new Entry(Optional.empty(), text, Optional.empty());
         }
     }
 
@@ -48,7 +54,8 @@ public final class JournalPages {
     public static List<Section> sections(Notebook notebook) {
         List<Section> sections = new ArrayList<>();
         sections.add(new Section("guide", guide(notebook)));
-        sections.add(new Section("spirits", spirits(notebook)));
+        sections.add(new Section("spirits", dossiers(notebook, false)));
+        sections.add(new Section("archive", dossiers(notebook, true)));
         sections.add(new Section("loose", loose(notebook)));
         sections.add(new Section("bestiary", bestiary(notebook)));
         sections.add(new Section("chronicle", chronicle(notebook)));
@@ -72,19 +79,52 @@ public final class JournalPages {
         return cards;
     }
 
-    /** A dossier per met spirit, in the order they were met: what each tool showed of it, unreliable sources marked. */
-    private static List<Card> spirits(Notebook notebook) {
+    /**
+     * A dossier per met spirit, in the order they were met: what each tool showed of it, unreliable sources marked. A
+     * spirit the player filed a banishment under moves to the archive under the name that note gave it; the others
+     * offer the banishments they could be.
+     */
+    private static List<Card> dossiers(Notebook notebook, boolean archive) {
         List<Card> cards = new ArrayList<>();
         Map<String, Integer> unnamed = new HashMap<>();
-        for (UUID spirit : notebook.met()) {
+        Map<UUID, Note> banished = new HashMap<>();
+        for (Note note : notebook.notes()) {
+            note.spirit().map(notebook.filed()::get).ifPresent(dossier -> banished.put(dossier, note));
+        }
+        List<UUID> met = notebook.met();
+        for (int i = 0; i < met.size(); i++) {
+            UUID spirit = met.get(i);
             List<Note> notes = notebook.notes().stream()
                     .filter(n -> !n.kind().chronicle()
                             && n.spirit().filter(spirit::equals).isPresent())
                     .toList();
-            cards.add(new Card(
-                    who(notes, unnamed),
-                    Optional.ofNullable(notebook.pictures().get(spirit)),
-                    notes.stream().map(JournalPages::entry).toList()));
+            Component who = who(notes, unnamed);
+            Optional<Picture> picture = Optional.ofNullable(notebook.pictures().get(spirit));
+            List<Entry> entries = new ArrayList<>();
+            Note gone = banished.get(spirit);
+            if (gone != null) {
+                who = Component.translatable(
+                        "journal.restless.named",
+                        gone.args().get(1),
+                        gone.args().getFirst());
+                entries.add(entry(gone));
+            }
+            notes.stream().map(JournalPages::entry).forEach(entries::add);
+            if (gone == null) {
+                for (int record = 0; record < notebook.notes().size(); record++) {
+                    if (notebook.fits(record, i)) {
+                        entries.add(new Entry(
+                                Optional.empty(),
+                                Component.translatable(
+                                        "journal.restless.file",
+                                        notebook.notes().get(record).args().get(1)),
+                                Optional.of(new Filing(record, i))));
+                    }
+                }
+            }
+            if ((gone != null) == archive) {
+                cards.add(new Card(who, picture, entries));
+            }
         }
         return cards;
     }
@@ -177,7 +217,7 @@ public final class JournalPages {
     }
 
     private static Entry entry(Note note) {
-        return new Entry(Optional.of(note.kind()), line(note));
+        return new Entry(Optional.of(note.kind()), line(note), Optional.empty());
     }
 
     private static Component line(Note note) {

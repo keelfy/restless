@@ -26,6 +26,7 @@ final class JournalGameTests {
     private JournalGameTests() {}
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
+        registerArchive(tests);
         tests.put("photo_develops_once", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             ItemStack photo = new ItemStack(Content.PHOTO.get());
@@ -193,6 +194,60 @@ final class JournalGameTests {
                     helper,
                     data.notebook(player.getUUID()).notes().size() == notes,
                     "the same note must not be written twice");
+            data.putNotebook(player.getUUID(), Notebook.EMPTY);
+            helper.succeed();
+        });
+    }
+
+    private static void registerArchive(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("journal_files_banished", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            HauntData data = HauntData.get(helper.getLevel().getServer());
+            long now = helper.getLevel().getGameTime();
+            HauntData.Haunting first =
+                    HauntData.Haunting.born("shade", now, helper.getLevel().getRandom());
+            HauntData.Haunting second =
+                    HauntData.Haunting.born("shade", now, helper.getLevel().getRandom());
+            Component shade = Component.translatable("spirit.restless.shade");
+            for (HauntData.Haunting met : List.of(first, second)) {
+                Journal.note(
+                        player,
+                        Notebook.Kind.PHOTO,
+                        met,
+                        "shade",
+                        shade,
+                        "it feeds on light",
+                        Component.translatable("focus.restless.glowstone"));
+            }
+            Journal.note(player, Notebook.Kind.BANISHED, first, "shade", shade, "Marta");
+            Journal.note(player, Notebook.Kind.BANISHED, null, "phantom", shade, "Nobody");
+            Notebook book = data.notebook(player.getUUID());
+            int record = book.notes().size() - 2;
+            check(helper, book.fits(record, 1), "a banishment must be fileable under any met spirit of its type");
+            check(helper, !book.fits(record + 1, 0), "a note about nobody must not be fileable");
+            check(
+                    helper,
+                    JournalPages.sections(book).stream()
+                            .noneMatch(section -> section.key().equals("archive")),
+                    "nothing is archived until the player files it");
+            // The player picks the second spirit, though the banished one was the first: the book takes their word.
+            Notebook filed = book.filed(record, 1);
+            check(helper, filed != null, "filing must succeed");
+            check(helper, !filed.fits(record, 0), "a banishment must be filed once");
+            JournalPages.Section archive = JournalPages.sections(filed).stream()
+                    .filter(section -> section.key().equals("archive"))
+                    .findFirst()
+                    .orElseThrow();
+            check(helper, archive.cards().size() == 1, "the filed spirit must move to the archive");
+            List<String> texts = new ArrayList<>();
+            texts(archive, texts);
+            check(helper, texts.contains("Marta"), "the archive must name the spirit by the banishment");
+            check(
+                    helper,
+                    JournalPages.sections(filed).stream()
+                            .filter(section -> section.key().equals("spirits"))
+                            .allMatch(section -> section.cards().size() == 1),
+                    "the other spirit must stay among the known ones");
             data.putNotebook(player.getUUID(), Notebook.EMPTY);
             helper.succeed();
         });

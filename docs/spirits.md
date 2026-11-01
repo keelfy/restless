@@ -232,6 +232,12 @@ note is never written twice. `JournalPages` lays the notebook out as:
 - **Spirits**: a dossier per spirit the player has *met* (photographed, or its grave read), named once its grave is
   read and otherwise "an unnamed <type>", numbered when several share a type. It lists every note about that spirit,
   including ones written before they met. Spirit box words and the planchette are marked "(it may lie)".
+- **Archive**: dossiers the player filed a banishment under. A banishment (chronicle) does not find its dossier by
+  itself: under each unfiled dossier of the same type (or any, when either side has no type) a clickable line offers
+  "Banished: <name>", once per banishment still unfiled. Clicking files that banishment under that dossier for good, and
+  the dossier moves from *Spirits* to *Archive* under the name the banishment gave. The book does not check that they are
+  the same spirit, so a wrong guess stays wrong. Nothing is archived until the player files it, and a rested spirit is
+  not archived.
 - **Loose notes**: clues of spirits not met yet, without saying whose. They move to the dossier on meeting.
 - **Bestiary**: a page per type the player has photographed, with its grown name once a grown one was photographed, and
   every trait hint a photo showed with what it shrinks from.

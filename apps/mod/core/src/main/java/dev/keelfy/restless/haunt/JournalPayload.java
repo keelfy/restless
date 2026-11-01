@@ -15,11 +15,19 @@ import net.minecraft.resources.Identifier;
 public record JournalPayload(List<JournalPages.Section> sections) implements CustomPacketPayload {
     public static final Type<JournalPayload> TYPE =
             new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "journal"));
+    private static final StreamCodec<RegistryFriendlyByteBuf, JournalPages.Filing> FILING_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT,
+            JournalPages.Filing::record,
+            ByteBufCodecs.VAR_INT,
+            JournalPages.Filing::dossier,
+            JournalPages.Filing::new);
     private static final StreamCodec<RegistryFriendlyByteBuf, JournalPages.Entry> ENTRY_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.idMapper(i -> Kind.values()[i], Kind::ordinal)),
             JournalPages.Entry::kind,
             ComponentSerialization.STREAM_CODEC,
             JournalPages.Entry::text,
+            ByteBufCodecs.optional(FILING_CODEC),
+            JournalPages.Entry::filing,
             JournalPages.Entry::new);
     private static final StreamCodec<RegistryFriendlyByteBuf, JournalPages.Card> CARD_CODEC = StreamCodec.composite(
             ComponentSerialization.STREAM_CODEC,
