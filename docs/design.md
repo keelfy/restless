@@ -210,6 +210,7 @@ The world gets worse unless the player acts.
   `Restore`-style rules so they can be undone.
 - **World-born spirits**: territorial ones appear at a player's death spot, in abandoned structures, on a blood moon;
   personal ones are born from deeds (mass killing, a pet's death). `/haunt spirit add` stops being the only way in.
+  Personal births are planned in [births.md](births.md).
 - **Evolution**: a spirit not banished for N days grows up: poltergeist → raging, shade → light-eater. New events,
   new clues, a harder ritual, and a higher power floor.
 - **Merging**: two spirits of one player can merge into a stronger one.

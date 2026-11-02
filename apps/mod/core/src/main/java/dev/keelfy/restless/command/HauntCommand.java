@@ -8,6 +8,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import dev.keelfy.restless.debug.DebugMenu;
+import dev.keelfy.restless.haunt.BirthRules;
+import dev.keelfy.restless.haunt.Births;
 import dev.keelfy.restless.haunt.Corruption;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Graves;
@@ -21,6 +23,7 @@ import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.commands.CommandSourceStack;
@@ -35,13 +38,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Debug/admin command: /haunt opens the debug screen; info|force|sanity|spirit add|age|remove [player] work from chat.
+ * Debug/admin command: /haunt opens the debug screen; info|force|sanity|birth|spirit add|age|remove [player] work from
+ * chat.
  */
 public final class HauntCommand {
     private static final DynamicCommandExceptionType UNKNOWN_EVENT =
             new DynamicCommandExceptionType(id -> Component.literal("Unknown haunt event: " + id));
     private static final DynamicCommandExceptionType UNKNOWN_SPIRIT =
             new DynamicCommandExceptionType(id -> Component.literal("Unknown spirit: " + id));
+
+    private static final DynamicCommandExceptionType UNKNOWN_DEED =
+            new DynamicCommandExceptionType(id -> Component.literal("Unknown deed: " + id));
 
     private HauntCommand() {}
 
@@ -68,6 +75,13 @@ public final class HauntCommand {
                                 .executes(c -> sanity(c, c.getSource().getPlayerOrException()))
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(c -> sanity(c, EntityArgument.getPlayer(c, "player"))))))
+                .then(Commands.literal("birth")
+                        .then(Commands.argument("deed", StringArgumentType.word())
+                                .suggests((c, b) -> SharedSuggestionProvider.suggest(
+                                        Arrays.stream(Births.Deed.values()).map(Births.Deed::key), b))
+                                .executes(c -> birth(c, c.getSource().getPlayerOrException()))
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(c -> birth(c, EntityArgument.getPlayer(c, "player"))))))
                 .then(Commands.literal("spirit")
                         .then(Commands.literal("add")
                                 .then(Commands.argument("spirit", StringArgumentType.word())
@@ -194,6 +208,16 @@ public final class HauntCommand {
                                 "Forced " + id + " on " + player.getName().getString()),
                         true);
         return 1;
+    }
+
+    private static int birth(CommandContext<CommandSourceStack> c, ServerPlayer player) throws CommandSyntaxException {
+        String key = StringArgumentType.getString(c, "deed");
+        Births.Deed deed = Births.Deed.byKey(key).orElseThrow(() -> UNKNOWN_DEED.create(key));
+        BirthRules.Verdict verdict = Births.deed(player, deed, false);
+        c.getSource()
+                .sendSuccess(
+                        () -> Component.literal(key + " on " + player.getName().getString() + ": " + verdict), true);
+        return verdict == BirthRules.Verdict.BORN || verdict == BirthRules.Verdict.FED ? 1 : 0;
     }
 
     private static int add(CommandContext<CommandSourceStack> c, ServerPlayer player) throws CommandSyntaxException {

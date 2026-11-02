@@ -12,6 +12,19 @@
     "min_cooldown_ticks": 20
   },
   "anger": { "kill_cat": 0.15, "break_grave": 0.2, "burn_forest": 0.1, "break_anchor": 0.3, "anchor_reach": 3, "graves": ["minecraft:skeleton_skull", "minecraft:wither_skeleton_skull", "minecraft:bone_block", "restless:gravestone"] },
+  "births": {
+    "cooldown_days": 3,
+    "max_personal": 6,
+    "repeat_anger": 0.15,
+    "start_anger": 0.5,
+    "grace_ticks": 2400,
+    "deeds": {
+      "slaughter": { "spirit": "revenant", "chance": 1.0 },
+      "far_death": { "spirit": "lost_one", "chance": 0.5 },
+      "pet_slain": { "spirit": "revenant", "chance": 1.0 },
+      "pet_lost": { "spirit": "banshee", "chance": 1.0 }
+    }
+  },
   "salt": { "max_cells": 400 },
   "wards": { "lantern_radius": 6, "dreamcatcher_radius": 5, "charm_radius": 8, "scarecrow_radius": 16 },
   "bell": { "radius": 24, "delay_ticks": 1200 },

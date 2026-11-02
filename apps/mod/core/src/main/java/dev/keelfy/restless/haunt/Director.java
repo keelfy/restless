@@ -142,10 +142,12 @@ public final class Director {
         return Spirits.byId(haunting.spirit()).orElseThrow();
     }
 
-    public static void add(ServerPlayer player, HauntData data, SpiritType spirit, long now) {
+    public static HauntData.Haunting add(ServerPlayer player, HauntData data, SpiritType spirit, long now) {
         List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
-        spirits.add(bind(player, spirit, now));
+        HauntData.Haunting bound = bind(player, spirit, now);
+        spirits.add(bound);
         data.put(player.getUUID(), spirits);
+        return bound;
     }
 
     /** Places a territorial spirit of the given type at {@code anchor} with the configured radius. */

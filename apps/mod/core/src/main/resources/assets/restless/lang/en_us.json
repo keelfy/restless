@@ -81,6 +81,7 @@
   "spirit.restless.shade_evolved": "light-eater",
   "spirit.restless.phantom_evolved": "doppelganger",
   "message.restless.evolved": "The %s has grown into a %s.",
+  "message.restless.birth": "Something followed you home.",
   "biome.restless.blighted": "Blighted Land",
   "block.restless.unlit_torch": "Unlit torch",
   "block.restless.unlit_soul_torch": "Unlit soul torch",
