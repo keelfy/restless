@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
@@ -179,10 +180,11 @@ final class Afflictions {
         Story story = Story.of(spirit.haunting().seed());
         List<Trait> traits = Traits.of(spirit.haunting().traits());
         Component line = traits.isEmpty() || player.getRandom().nextBoolean()
-                ? Component.translatable("message.restless.dream_story", story.name(), story.cause())
+                ? Component.translatable(
+                        "message.restless.dream_story", story.name(), Component.translatable(story.causeKey()))
                 : Component.translatable(
                         "message.restless.dream_trait",
-                        traits.get(player.getRandom().nextInt(traits.size())).hint());
+                        Divination.hint(traits.get(player.getRandom().nextInt(traits.size()))));
         DREAMERS.add(player.getUUID());
         int interval = config.integer("interval_ticks");
         boolean[] slept = {false};

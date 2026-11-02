@@ -17,6 +17,7 @@ import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -81,7 +82,7 @@ public final class Divination {
         }
         HauntData.Haunting spirit = reading.get().spirit().haunting();
         Component type = Evolution.name(spirit);
-        String hint = reading.get().trait().hint();
+        Component hint = hint(reading.get().trait());
         Component weakness = Component.translatable(
                 "focus.restless." + reading.get().trait().weakness().name().toLowerCase(java.util.Locale.ROOT));
         Journal.tagged(
@@ -182,6 +183,11 @@ public final class Divination {
         }));
     }
 
+    /** What the trait is, in a few words, for the camera, the ouija board and dreams. */
+    public static Component hint(Trait trait) {
+        return Component.translatable("trait.restless." + trait.id() + ".hint");
+    }
+
     /** The planchette spells out a trait, one letter at a time on the action bar. */
     public static void spell(ServerPlayer player) {
         Config.Section config = Config.section("ouija");
@@ -190,7 +196,9 @@ public final class Divination {
             player.sendSystemMessage(Component.translatable("message.restless.ouija_still"), true);
             return;
         }
-        String text = reading.get().trait().hint().toUpperCase(java.util.Locale.ROOT);
+        String text = Language.getInstance()
+                .getOrDefault(hint(reading.get().trait()).getString())
+                .toUpperCase(java.util.Locale.ROOT);
         Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("letter_ticks"), (p, n) -> {
             p.sendSystemMessage(Component.literal(text.substring(0, n + 1)), true);
             p.level()
@@ -201,7 +209,7 @@ public final class Divination {
                         p,
                         Notebook.Kind.PLANCHETTE,
                         reading.get().spirit().haunting(),
-                        reading.get().trait().hint());
+                        hint(reading.get().trait()));
                 return false;
             }
             return true;

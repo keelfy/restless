@@ -25,7 +25,6 @@ class CluesTest {
                 List.of(),
                 Set.of(clues),
                 List.of("word"),
-                id,
                 lies,
                 Focus.IRON);
     }
@@ -68,10 +67,9 @@ class CluesTest {
     }
 
     @Test
-    void everyBundledTraitLeavesAClueAndHasAHint() {
+    void everyBundledTraitLeavesAClue() {
         for (Trait trait : Traits.all()) {
             assertFalse(trait.clues().isEmpty(), trait.id());
-            assertFalse(trait.hint().isBlank(), trait.id());
         }
     }
 }

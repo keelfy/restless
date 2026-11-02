@@ -129,7 +129,11 @@ public final class Graves {
         }
         Component thing = wanted.getDefaultInstance().getHoverName();
         player.sendSystemMessage(Component.translatable(
-                "message.restless.epitaph", story.name(), story.daysDead(), story.cause(), thing));
+                "message.restless.epitaph",
+                story.name(),
+                story.daysDead(),
+                Component.translatable(story.causeKey()),
+                thing));
         Journal.note(player, Notebook.Kind.GRAVE, spirit, story.name(), pos.getX(), pos.getZ(), thing);
         return false;
     }

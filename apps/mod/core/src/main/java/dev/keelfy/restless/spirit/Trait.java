@@ -14,7 +14,6 @@ import java.util.Set;
  * @param reacts player actions that can make the spirit act right away
  * @param clues the ways this trait gives the spirit away
  * @param words what the spirit says through a spirit box
- * @param hint what the trait is, in a few words, for the camera and the ouija board
  * @param lies a spirit with this trait often names a trait it does not have, through the spirit box and the ouija board
  * @param weakness the focus this trait votes for; the spirit is weak to the focus most of its traits name
  */
@@ -27,7 +26,6 @@ public record Trait(
         List<Trigger> reacts,
         Set<Clue> clues,
         List<String> words,
-        String hint,
         boolean lies,
         Focus weakness) {
     /** What the spirit's surroundings must be like for its activity modifier to apply. */

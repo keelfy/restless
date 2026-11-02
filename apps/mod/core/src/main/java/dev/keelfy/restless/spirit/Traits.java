@@ -115,7 +115,6 @@ public final class Traits {
                 reacts,
                 Set.copyOf(clues),
                 config.texts("words"),
-                config.text("hint"),
                 config.has("lies") && config.num("lies") > 0,
                 Focus.valueOf(config.text("weakness").toUpperCase(Locale.ROOT)));
     }

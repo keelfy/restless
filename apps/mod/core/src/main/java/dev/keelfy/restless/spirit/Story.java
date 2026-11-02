@@ -5,11 +5,16 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Who the spirit was: a made-up player nickname, how many days it had been dead when it woke and how it died. All of it
- * comes from the spirit's seed, so it is never saved and stays the same for the spirit's whole life while the
- * {@code story} config is unchanged.
+ * Who the spirit was: a made-up player nickname, how many days it had been dead when it woke and how it died (an id,
+ * see {@link #causeKey}). All of it comes from the spirit's seed, so it is never saved and stays the same for the
+ * spirit's whole life while the {@code story} config is unchanged.
  */
 public record Story(String name, int daysDead, String cause) {
+    /** The lang key of {@code cause}, which is an id in the {@code story} config. */
+    public String causeKey() {
+        return "story.restless.cause." + cause;
+    }
+
     // Keeps the story's rolls apart from the trait roll, which also starts from the bare seed.
     private static final long SALT = 0x5DEECE66DL;
 
