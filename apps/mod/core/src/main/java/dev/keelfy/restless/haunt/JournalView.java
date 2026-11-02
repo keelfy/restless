@@ -36,6 +36,14 @@ public final class JournalView {
     private static final int LINE = 12;
     private static final int ICON = 16;
     private static final int ENTRY_GAP = 5;
+    private static final int EDGE = 0xFF5A4630;
+
+    /** How far the bookmarks stick out past the book's right edge. */
+    public static final int OVERHANG = 70;
+
+    private static final int TAB_TOP = 24;
+    private static final int TAB_HEIGHT = 24;
+    private static final int TAB_STEP = 26;
 
     /** The tools and finds a dossier shows slots for, in order; the ones the player has used light up. */
     private static final List<Kind> CLUES =
@@ -130,11 +138,12 @@ public final class JournalView {
         List<Control> list = new ArrayList<>();
         for (int i = 0; i < data.sections().size(); i++) {
             int index = i;
+            // A bookmark is tucked a little way into the pages and the rest of it sticks out of the edge.
             list.add(new Control(
-                    12,
-                    42 + i * 28,
-                    sidebar - 14,
-                    26,
+                    width - 3,
+                    TAB_TOP + i * TAB_STEP,
+                    OVERHANG + 3,
+                    TAB_HEIGHT,
                     Component.translatable(
                             "journal.restless.tab." + data.sections().get(i).key()),
                     i,
@@ -341,14 +350,15 @@ public final class JournalView {
             boolean active,
             boolean focused) {
         int background = selected ? 0xFF713E38 : hovered && active ? 0xFFEEDFBA : 0xFFC9B28A;
-        canvas.fill(x, y, x + w, y + h, background);
+        canvas.fill(x, y, x + w, y + h, EDGE);
+        canvas.fill(x + 1, y + 1, x + w - 1, y + h - 1, background);
         if (focused) {
-            canvas.fill(x, y, x + 2, y + h, INK);
+            canvas.fill(x + 1, y + 1, x + 3, y + h - 1, INK);
         }
-        List<FormattedCharSequence> lines = font.split(label, w - 8);
+        List<FormattedCharSequence> lines = font.split(label, w - 10);
         int ty = y + (h - lines.size() * font.lineHeight) / 2;
         for (FormattedCharSequence line : lines) {
-            canvas.text(line, x + 4, ty, selected ? PAPER : active ? INK : MUTED);
+            canvas.text(line, x + 5, ty, selected ? PAPER : active ? INK : MUTED);
             ty += font.lineHeight;
         }
     }

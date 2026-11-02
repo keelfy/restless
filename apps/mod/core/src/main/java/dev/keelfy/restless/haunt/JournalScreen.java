@@ -65,9 +65,9 @@ public final class JournalScreen extends Screen {
 
     @Override
     protected void init() {
-        bookWidth = Math.min(500, width - 16);
+        bookWidth = Math.min(500, width - 16 - JournalView.OVERHANG);
         bookHeight = Math.min(330, height - 20);
-        left = (width - bookWidth) / 2;
+        left = (width - bookWidth - JournalView.OVERHANG) / 2;
         top = (height - bookHeight) / 2;
         view.layout(bookWidth, bookHeight);
         buttons.clear();

@@ -45,6 +45,9 @@ public final class JournalHands {
     private static JournalView view;
     private static JournalPayload shown;
     private static boolean wasHeld;
+    /** The attack key is still down from a click that was already handled: one press is one click. */
+    private static boolean clicked;
+
     private static float lift;
     private static double pointerX = WIDTH / 2.0;
     private static double pointerY = HEIGHT / 2.0;
@@ -70,6 +73,9 @@ public final class JournalHands {
             minecraft.getConnection().send(new ServerboundCustomPayloadPacket(new ReadPayload()));
         }
         wasHeld = held;
+        if (!minecraft.options.keyAttack.isDown()) {
+            clicked = false;
+        }
         JournalPayload latest = JournalScreen.latest();
         if (latest == null) {
             view = null;
@@ -99,7 +105,8 @@ public final class JournalHands {
         Minecraft minecraft = Minecraft.getInstance();
         if (!pointing(minecraft)) return;
         double pixels = WIDTH / (SPAN * minecraft.getWindow().getScreenWidth());
-        pointerX = Mth.clamp(pointerX + minecraft.mouseHandler.getXVelocity() * pixels, 0, WIDTH - 1);
+        pointerX = Mth.clamp(
+                pointerX + minecraft.mouseHandler.getXVelocity() * pixels, 0, WIDTH + JournalView.OVERHANG - 1);
         pointerY = Mth.clamp(pointerY + minecraft.mouseHandler.getYVelocity() * pixels, 0, HEIGHT - 1);
         // A sensitivity of -1/3 comes out of the game's own formula as no turn at all.
         event.setMouseSensitivity(-1 / 3.0);
@@ -111,7 +118,8 @@ public final class JournalHands {
         if (!pointing(Minecraft.getInstance())) return;
         event.setCanceled(true);
         event.setSwingHand(false);
-        if (event.isAttack()) {
+        if (event.isAttack() && !clicked) {
+            clicked = true;
             view.click(pointerX, pointerY);
         }
     }
