@@ -35,11 +35,11 @@ public final class Journal {
      * @param args components, or anything else, written as text
      */
     public static void note(ServerPlayer player, Kind kind, HauntData.@Nullable Haunting spirit, Object... args) {
-        note(player, kind, spirit, null, args);
+        tagged(player, kind, spirit, null, args);
     }
 
     /** @param tag see {@link Kind} */
-    public static void note(
+    public static void tagged(
             ServerPlayer player, Kind kind, HauntData.@Nullable Haunting spirit, @Nullable String tag, Object... args) {
         List<Component> text = new ArrayList<>();
         for (Object arg : args) {

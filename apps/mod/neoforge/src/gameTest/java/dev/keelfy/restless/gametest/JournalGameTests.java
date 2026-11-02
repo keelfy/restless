@@ -104,7 +104,7 @@ final class JournalGameTests {
                     data.notebook(player.getUUID()).has(Notebook.Chapter.CLUES),
                     "the first clue must open the clues chapter");
 
-            Journal.note(
+            Journal.tagged(
                     player,
                     Notebook.Kind.PHOTO,
                     shade,
@@ -210,7 +210,7 @@ final class JournalGameTests {
                     HauntData.Haunting.born("shade", now, helper.getLevel().getRandom());
             Component shade = Component.translatable("spirit.restless.shade");
             for (HauntData.Haunting met : List.of(first, second)) {
-                Journal.note(
+                Journal.tagged(
                         player,
                         Notebook.Kind.PHOTO,
                         met,
@@ -219,8 +219,8 @@ final class JournalGameTests {
                         "it feeds on light",
                         Component.translatable("focus.restless.glowstone"));
             }
-            Journal.note(player, Notebook.Kind.BANISHED, first, "shade", shade, "Marta");
-            Journal.note(player, Notebook.Kind.BANISHED, null, "phantom", shade, "Nobody");
+            Journal.tagged(player, Notebook.Kind.BANISHED, first, "shade", shade, "Marta");
+            Journal.tagged(player, Notebook.Kind.BANISHED, null, "phantom", shade, "Nobody");
             Notebook book = data.notebook(player.getUUID());
             int record = book.notes().size() - 2;
             check(helper, book.fits(record, 1), "a banishment must be fileable under any met spirit of its type");

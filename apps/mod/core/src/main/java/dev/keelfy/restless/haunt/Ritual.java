@@ -167,7 +167,7 @@ public final class Ritual {
         level.playSound(null, altar, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0f, 0.6f);
         Component type = Evolution.name(spirit.haunting());
         player.sendSystemMessage(Component.translatable("message.restless.banished", type), true);
-        Journal.note(
+        Journal.tagged(
                 player,
                 Notebook.Kind.BANISHED,
                 spirit.haunting(),

@@ -84,7 +84,7 @@ public final class Divination {
         String hint = reading.get().trait().hint();
         Component weakness = Component.translatable(
                 "focus.restless." + reading.get().trait().weakness().name().toLowerCase(java.util.Locale.ROOT));
-        Journal.note(
+        Journal.tagged(
                 player,
                 Notebook.Kind.PHOTO,
                 spirit,
