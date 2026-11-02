@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "restless:block/ouija_board"
+    "model": "restless:item/ouija_board"
   }
 }

@@ -1,0 +1,6 @@
+Minecraft resource texture, strict low-resolution pixel art, top-down orthographic ouija board top face only. Square wooden board fills entire square edge to edge, no background, no perspective, no shadow outside. Dark walnut rim, warm aged ochre wood interior, dark brown ink, tiny sun and crescent moon in upper corners, YES and NO near top, alphabet in two arched rows, numbers below, GOOD BYE at bottom. Small ivory wooden planchette near bottom right. Render as exactly 64 by 64 logical pixels enlarged nearest neighbor, crisp square pixels, limited 12-color palette, no antialiasing, no realistic grain or gradients. This is a flat UV texture for Minecraft, no 3D illustration.
+
+Generated with built-in image_gen. Source: ouija-source.png.
+Final top: 64x64, nearest-neighbor reduction, 16-color palette.
+All block faces: 4 texels per model unit (64 texels per block).
+Item: separate 32x32 transparent flat sprite, minecraft:item/generated.
