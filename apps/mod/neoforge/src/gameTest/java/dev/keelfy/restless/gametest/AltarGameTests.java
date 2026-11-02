@@ -40,7 +40,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /** Runs against a real server world; this source set is excluded from the shipped mod. */
 @Mod("restless_tests")
 public final class AltarGameTests {
-    private static final BlockPos CENTER = new BlockPos(4, 1, 4);
+    static final BlockPos CENTER = new BlockPos(4, 1, 4);
     private static final Map<String, Consumer<GameTestHelper>> TESTS = new LinkedHashMap<>();
 
     public AltarGameTests(IEventBus bus) {
@@ -51,6 +51,7 @@ public final class AltarGameTests {
         HauntEventGameTests.register(TESTS);
         HardcoreGameTests.register(TESTS);
         JournalGameTests.register(TESTS);
+        RitualGameTests.register(TESTS);
         SanityGameTests.register(TESTS);
         BirthGameTests.register(TESTS);
         ScenarioGameTests.register(TESTS);
@@ -292,7 +293,7 @@ public final class AltarGameTests {
         for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 0, 9)) helper.setBlock(pos, Blocks.STONE);
     }
 
-    private static void place(GameTestHelper helper) {
+    static void place(GameTestHelper helper) {
         floor(helper);
         ItemStack stack = placeItem(helper, CENTER, true);
         check(helper, stack.getCount() == 1, "Placing nine parts must consume one item");

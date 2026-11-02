@@ -55,7 +55,7 @@ public final class Spirits {
         return ALL.stream().filter(s -> s.id().equals(id)).findFirst();
     }
 
-    /** Kind, affinities, activity and reactions come from the {@code spirits.<id>} config section. */
+    /** Kind, affinities, activity, reactions and form come from the {@code spirits.<id>} config section. */
     private static SpiritType of(String id) {
         Config.Section config = Config.section("spirits." + id);
         Config.Section affinity = config.section("affinity");
@@ -77,6 +77,7 @@ public final class Spirits {
                 Map.copyOf(tags),
                 config.num("activity"),
                 when,
-                reacts);
+                reacts,
+                Form.valueOf(config.text("form").toUpperCase(Locale.ROOT)));
     }
 }

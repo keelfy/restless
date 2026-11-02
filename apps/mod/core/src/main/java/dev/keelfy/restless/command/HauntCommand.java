@@ -24,6 +24,7 @@ import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;
+import dev.keelfy.restless.spirit.Traits;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -184,7 +185,14 @@ public final class HauntCommand {
                         grave.built() ? "" : "(unbuilt)",
                         BuiltInRegistries.ITEM.getKey(Graves.wanted(h.seed())));
         String blight = Corruption.size(HauntData.get(source.getServer()), h.uuid());
-        extra += (h.evolved() ? " evolved" : "") + (blight.isEmpty() ? "" : " blight=" + blight);
+        String form = Spirits.byId(h.spirit())
+                .map(type -> type.form().name().toLowerCase(Locale.ROOT))
+                .orElse("?");
+        extra += " nature=" + Traits.weakness(Traits.of(h.traits())).name().toLowerCase(Locale.ROOT)
+                + " form=" + form
+                + (h.waryUntil() > now ? " wary=" + (h.waryUntil() - now) / Ticks.SECOND + "s" : "")
+                + (h.evolved() ? " evolved" : "")
+                + (blight.isEmpty() ? "" : " blight=" + blight);
         return String.format(
                 Locale.ROOT,
                 "%n  %d. %s %s \"%s\" seed=%x traits=%s power=%.2f anger=%.2f next=%ds%s%s",

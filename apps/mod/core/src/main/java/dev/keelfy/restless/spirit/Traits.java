@@ -17,19 +17,32 @@ public final class Traits {
     private Traits() {}
 
     /**
-     * The same seed always gives the same traits while the catalog is unchanged, so a save from before traits existed
-     * gets them from its seed on load.
+     * The spirit's nature is picked first, evenly; all its traits but one then come from that nature's group, and the
+     * last from any other, so the nature is always the strict majority (see {@link #weakness}). The same seed always
+     * gives the same traits while the catalog is unchanged, so a save from before traits existed gets them from its
+     * seed on load.
      */
     public static List<String> roll(long seed) {
         Config.Section director = Config.section("director");
-        List<String> pool = new ArrayList<>(
-                Config.section("traits").keys().stream().sorted().toList());
         Random random = new Random(seed);
+        List<Trait> catalog = all();
+        Focus nature = Focus.values()[random.nextInt(Focus.values().length)];
+        List<String> own = new ArrayList<>(catalog.stream()
+                .filter(t -> t.weakness() == nature)
+                .map(Trait::id)
+                .toList());
+        List<String> foreign = new ArrayList<>(catalog.stream()
+                .filter(t -> t.weakness() != nature)
+                .map(Trait::id)
+                .toList());
         int min = director.integer("traits_min");
-        int count = Math.min(pool.size(), min + random.nextInt(director.integer("traits_max") - min + 1));
+        int count = min + random.nextInt(director.integer("traits_max") - min + 1);
         List<String> rolled = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            rolled.add(pool.remove(random.nextInt(pool.size())));
+        for (int i = 0; i < count - 1 && !own.isEmpty(); i++) {
+            rolled.add(own.remove(random.nextInt(own.size())));
+        }
+        if (!foreign.isEmpty()) {
+            rolled.add(foreign.remove(random.nextInt(foreign.size())));
         }
         return rolled;
     }
@@ -69,7 +82,11 @@ public final class Traits {
         return traits.stream().mapToDouble(Trait::noise).sum() * sounds;
     }
 
-    /** The focus most of the traits name; a tie goes to the one declared first in {@link Focus}. */
+    /**
+     * The focus most of the traits name; a tie goes to the one declared first in {@link Focus}. A spirit rolled by
+     * {@link #roll} never ties: it is its nature. The vote stays for saves from before natures, whose traits were drawn
+     * freely.
+     */
     public static Focus weakness(List<Trait> traits) {
         int[] votes = new int[Focus.values().length];
         traits.forEach(t -> votes[t.weakness().ordinal()]++);

@@ -3,6 +3,7 @@
   "spirits": {
     "poltergeist": {
       "kind": "territorial",
+      "form": "whole",
       "activity": 1.3,
       "affinity": {
         "DOORS": 4.0,
@@ -17,6 +18,7 @@
     },
     "shade": {
       "kind": "personal",
+      "form": "bit",
       "activity": 0.8,
       "affinity": {
         "DOORS": 0.3,
@@ -30,6 +32,7 @@
     },
     "nix": {
       "kind": "territorial",
+      "form": "crafted",
       "activity": 1.0,
       "affinity": {
         "WATER": 8.0,
@@ -42,6 +45,7 @@
     },
     "phantom": {
       "kind": "personal",
+      "form": "bit",
       "activity": 1.0,
       "affinity": {
         "PLAYER": 6.0,
@@ -55,6 +59,7 @@
     },
     "mimic": {
       "kind": "personal",
+      "form": "crafted",
       "activity": 1.0,
       "affinity": {
         "BLOCKS": 3.0,
@@ -68,6 +73,7 @@
     },
     "wraith": {
       "kind": "personal",
+      "form": "whole",
       "activity": 2.0,
       "when": "dark",
       "affinity": {
@@ -82,6 +88,7 @@
     },
     "mara": {
       "kind": "personal",
+      "form": "bit",
       "activity": 1.8,
       "when": "night",
       "reacts": [
@@ -98,6 +105,7 @@
     },
     "banshee": {
       "kind": "personal",
+      "form": "bit",
       "activity": 0.9,
       "affinity": {
         "SOUND": 5.0,
@@ -110,6 +118,7 @@
     },
     "revenant": {
       "kind": "personal",
+      "form": "whole",
       "activity": 1.0,
       "reacts": [
         "kill"
@@ -125,6 +134,7 @@
     },
     "lost_one": {
       "kind": "personal",
+      "form": "bit",
       "activity": 0.9,
       "reacts": [
         "deep"
@@ -140,6 +150,7 @@
     },
     "domovoi": {
       "kind": "territorial",
+      "form": "crafted",
       "activity": 0.7,
       "affinity": {
         "DOORS": 2.0,
@@ -152,6 +163,7 @@
     },
     "hoarder": {
       "kind": "territorial",
+      "form": "whole",
       "activity": 1.2,
       "affinity": {
         "ITEMS": 5.0,
@@ -164,6 +176,7 @@
     },
     "demon": {
       "kind": "territorial",
+      "form": "whole",
       "activity": 1.1,
       "affinity": {
         "ASSAULT": 3.0,
@@ -176,6 +189,7 @@
     },
     "trickster": {
       "kind": "territorial",
+      "form": "crafted",
       "activity": 1.2,
       "affinity": {
         "BLOCKS": 2.5,

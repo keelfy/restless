@@ -70,6 +70,21 @@ class TraitsTest {
     }
 
     @Test
+    void aRolledSpiritHasANatureAndExactlyOneForeignTrait() {
+        java.util.Map<Focus, Integer> natures = new java.util.EnumMap<>(Focus.class);
+        java.util.Random seeds = new java.util.Random(42);
+        for (int i = 0; i < 1000; i++) {
+            List<Trait> traits = Traits.of(Traits.roll(seeds.nextLong()));
+            Focus nature = Traits.weakness(traits);
+            assertEquals(1, traits.stream().filter(t -> t.weakness() != nature).count(), traits.toString());
+            natures.merge(nature, 1, Integer::sum);
+        }
+        for (Focus focus : Focus.values()) {
+            assertTrue(natures.get(focus) > 180 && natures.get(focus) < 320, natures.toString());
+        }
+    }
+
+    @Test
     void everyFocusIsSomeTraitsWeakness() {
         Set<Focus> named = EnumSet.noneOf(Focus.class);
         Traits.all().forEach(t -> named.add(t.weakness()));

@@ -109,13 +109,13 @@ Everything is crafted (shapeless) and listed in the **Restless** creative tab. S
 
 ### Clues
 
-A trait lists which of four clues it leaves (`clues` in `spirits.json`), so a spirit leaves the union of its traits'
-clues. A tool that reads a clue the spirit does not leave finds nothing. The tools read the player's own spirits and the
-territorial ones whose radius holds them.
+A trait lists which of four clues it leaves (`clues` in `spirits.json`). Every tool answers whenever a spirit is near:
+the traits that leave the clue are only likelier, by `clues.preferred_weight` (3 against 1), to be the one shown. The
+tools read the player's own spirits and the territorial ones whose radius holds them.
 
 | Clue | Tool | What it shows |
 |---|---|---|
-| footprints | **Ash powder** (charcoal, makes 4) | Placed flat like salt. After `ash.reveal_ticks` (30 s), if a spirit that leaves footprints is within `ash.reach` of it, it takes one of four prints (bare foot, paw, hoof, drag), picked by the spirit's seed: the same spirit always leaves the same print. |
+| footprints | **Ash powder** (charcoal, makes 4) | Placed flat like salt. After `ash.reveal_ticks` (30 s), if a spirit that leaves footprints is within `ash.reach` of it, it takes one of four prints (bare foot, paw, hoof, drag). Each trail shows one random trait of the spirit, as the print of that trait's nature: mirror a bare foot, iron a paw, holy water a hoof, glowstone a drag. |
 | silhouette | **Camera obscura** (iron, glass pane, black dye) | Use it: a **photograph** with the spirit's type only (no trait, no weakness), `camera.cooldown_ticks` apart. The figure on the picture is drawn from the spirit's type (build: hooded, hunched, horned...) and its seed (small differences), so the same spirit always looks the same (`content/Apparition.java`). |
 | voice | **Spirit box** (block: iron, redstone, note block) | Say something in chat within `spirit_box.radius` of it: `spirit_box.delay_ticks` later (40) it answers with a word of one trait. With [Plasmo Voice](https://github.com/plasmoapp/plasmo-voice) (2.2.0-beta.2+) on the server, finishing a phrase on voice chat does the same; it hears that you spoke, not the words. |
 | planchette | **Ouija board** (block: planks, black dye, salt) | Use it: the planchette spells one trait's hint letter by letter on the action bar. |
@@ -157,9 +157,24 @@ traits, the bell of noise-hating ones). The salt, the charm and the scarecrow ha
 
 ## Banishing
 
-Every trait names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror. A spirit is
-weak to the one most of its traits name; a tie goes to the first in that order. Nothing shows the weakness directly: the
-player reads the traits (ouija board, spirit box, dreams) and tries a focus at the altar, where a wrong one enrages.
+Every trait names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror, four traits
+each. A spirit has a **nature**, picked from its seed evenly among the four: all its traits but one come from that
+nature's group and one is foreign, so it is weak to the nature (`Traits.weakness` counts votes; a spirit from before
+natures keeps its old vote, ties to the first in that order). Nothing shows the nature directly: the player reads the
+traits (ouija board, spirit box, ash) and finds the group two of them share.
+
+The type adds a **form** (`form` in `spirits.json`): `whole`, `bit` or `crafted`. The bestiary card, which a photo
+opens, names it. The offering is the nature's category in a form:
+
+| Nature | whole | bit | crafted |
+|---|---|---|---|
+| iron | iron ingot | iron nugget | iron chain |
+| glowstone | glowstone | glowstone dust | lantern |
+| holy water | **holy water** | salt | bell |
+| mirror | **mirror** | glass pane | spyglass |
+
+whole: poltergeist, wraith, demon, revenant, hoarder. bit: shade, mara, banshee, phantom, lost_one. crafted: nix, mimic,
+domovoi, trickster.
 
 One **altar** item (chiseled stone bricks, salt, candle) places a 3×3 platform centered on the clicked space:
 a worn charcoal-stone offering slab, raised tuff paving with recessed joints, a broken chalk circle and four iron
@@ -173,17 +188,21 @@ Place the salt outside the platform, for example as the perimeter of a 5×5 squa
 
 The altar needs at least `ritual.candles` (4) lit candles within
 `ritual.candle_radius` (3) and a closed salt loop around it, checked like a salt ward on the altar's own level. Using it
-with a focus (an iron ingot, glowstone dust, **holy water**, a **mirror** from a glass pane and two iron nuggets) takes the
-focus and calls the first spirit near the player that is weak to it:
+with an offering from the table above (the **mirror** is made from a glass pane and two iron nuggets) takes it and calls
+the first spirit near the player whose nature is its category:
 
-- The ritual runs `ritual.waves` (12) waves of `ritual.wave_ticks` (5 s). Each wave the spirit may snuff one of the
+- The ritual runs `ritual.waves` (12) waves, plus `evolution.extra_waves` for a grown spirit and `ritual.off_form_waves`
+  (6) when the form is not the type's of `ritual.wave_ticks` (5 s). Each wave the spirit may snuff one of the
   candles (`ritual.snuff_chance`) and may act on the player at once, past every ward (`ritual.fury_chance`).
 - At the next wave every candle must be lit again, the focus still on the altar and the player within `ritual.radius`
   (16). Otherwise the ritual breaks: the focus is lost and the spirit's anger rises by `ritual.fail_anger`.
 - After the last wave the spirit is gone for good and drops its **essence** (`<type>_essence`).
-- No spirit near is weak to the focus: one of them eats it, its anger goes to 1 and it strikes at once with a harmful event.
+- No spirit near has that nature: one that is not wary eats the offering, its anger goes to 1, it strikes at once with a
+  harmful event, every candle goes out, it turns **wary** for `ritual.wary_ticks` (a day) and is aged by
+  `ritual.wrong_age_ticks` (a day) toward evolving. A wary spirit refuses the altar (the offering is kept), including
+  its own offering.
 
-Altars with nothing to answer, or missing candles or salt, refuse the focus. Empty-handed use takes the item back.
+Altars with nothing to answer, or missing candles or salt, refuse the offering. Empty-handed use takes the item back.
 **Holy water** is a water bottle left on the altar for `ritual.bless_ticks` (half a day).
 
 | Essence | Artifact | Use |
@@ -233,7 +252,7 @@ note is never written twice. `JournalPages` lays the notebook out as:
 - **Contents**: one clickable line per non-empty section.
 - **The last owner's notes**: the guide, chapters opened as the player runs into what each is about (`Notebook.Chapter`):
   `start` with the journal, `haunted` at the first event a spirit runs on them, `clues` at the first clue, `weakness` at
-  the first photo, `graves` at the first grave or word of one, `sanity` when sanity first drops below
+  the first photo (five pages: natures, ash, forms, the cost of a mistake), `graves` at the first grave or word of one, `sanity` when sanity first drops below
   `sanity.overlay_below`, `evolution` at the first grown spirit, `essence` at the first spirit gone for good. Opening one
   says so on the action bar.
 - **Spirits**: a dossier per spirit the player has *met* (photographed, or its grave read), named once its grave is

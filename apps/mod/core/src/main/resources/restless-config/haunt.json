@@ -95,7 +95,8 @@
     "letter_ticks": 6
   },
   "clues": {
-    "lie_chance": 0.5
+    "lie_chance": 0.5,
+    "preferred_weight": 3
   },
   "ritual": {
     "candles": 4,
@@ -106,6 +107,9 @@
     "snuff_chance": 0.25,
     "fury_chance": 0.5,
     "fail_anger": 0.3,
+    "off_form_waves": 6,
+    "wary_ticks": 24000,
+    "wrong_age_ticks": 24000,
     "bless_ticks": 12000
   },
   "artifacts": {

@@ -12,14 +12,15 @@ public final class Clues {
     private Clues() {}
 
     /**
+     * Any tool answers while a spirit has a trait: the traits that leave this clue are only likelier, by
+     * {@code clues.preferred_weight}, to be the one shown.
+     *
      * @param owned the spirit's traits
      * @param catalog every trait, where a lie is taken from
-     * @return empty when none of the spirit's traits leaves this clue
+     * @return empty only when {@code owned} is
      */
     public static Optional<Trait> reveal(List<Trait> owned, List<Trait> catalog, Clue clue, Random random) {
-        List<Trait> leaving =
-                owned.stream().filter(t -> t.clues().contains(clue)).toList();
-        if (leaving.isEmpty()) {
+        if (owned.isEmpty()) {
             return Optional.empty();
         }
         boolean speaks = clue == Clue.VOICE || clue == Clue.PLANCHETTE;
@@ -32,6 +33,19 @@ public final class Clues {
                 return Optional.of(others.get(random.nextInt(others.size())));
             }
         }
-        return Optional.of(leaving.get(random.nextInt(leaving.size())));
+        int preferred = Config.section("clues").integer("preferred_weight");
+        int total = owned.stream().mapToInt(t -> weight(t, clue, preferred)).sum();
+        int pick = random.nextInt(total);
+        for (Trait trait : owned) {
+            pick -= weight(trait, clue, preferred);
+            if (pick < 0) {
+                return Optional.of(trait);
+            }
+        }
+        throw new IllegalStateException("unreachable");
+    }
+
+    private static int weight(Trait trait, Clue clue, int preferred) {
+        return trait.clues().contains(clue) ? preferred : 1;
     }
 }

@@ -11,6 +11,7 @@ import java.util.Set;
  * @param activity how often the spirit acts while {@code when} holds; 2 means twice as often
  * @param when what the surroundings must be like for {@code activity} to apply; otherwise the spirit acts at 1
  * @param reacts player actions that can make a personal spirit of this type act right away, as a trait's do
+ * @param form the shape of offering the altar takes against this type
  */
 public record SpiritType(
         String id,
@@ -18,7 +19,8 @@ public record SpiritType(
         Map<EventTag, Double> affinity,
         double activity,
         Trait.Condition when,
-        List<Trait.Trigger> reacts) {
+        List<Trait.Trigger> reacts,
+        Form form) {
     /** Personal spirits follow one player; territorial ones stay at an anchor and act on whoever is near it. */
     public enum Kind {
         PERSONAL,

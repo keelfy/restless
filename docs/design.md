@@ -158,12 +158,13 @@ salt loop around a room stops events from inside it.
 
 ## Stage 3: Banishing and rewards
 
-- **Altar**: a multiblock of a center block, 4 candles and a salt ring. The center takes a **focus** matching the
-  spirit's weakness (from traits, not type): iron and a bell, glowstone with ash, holy water, a mirror.
+- **Altar**: a multiblock of a center block, 4 candles and a salt ring. The center takes an **offering**: its category
+  is the spirit's nature (from its traits: iron, glowstone, holy water, mirror), its form (whole, bit, crafted) is set
+  by the type. A form the type does not take only lengthens the ritual.
 - **Ritual**: 60 s in waves via `Scheduler`. The spirit fights back: events 3× as often, it tries to snuff the candles.
   A snuffed candle fails the ritual.
-- **Success**: the spirit leaves and drops **spirit essence** of its type. **Wrong focus**: anger to 1 and a harmful
-  event at once.
+- **Success**: the spirit leaves and drops **spirit essence** of its type. **Wrong category**: anger to 1, a harmful
+  event at once, every candle out, and the spirit turns wary and ages toward evolving.
 - **Holy water**: a bottle of water left on the altar overnight. Thrown, it ends a running event (shadow, double,
   embrace, the call).
 - **Offerings**: an item on the altar or a lectern; the spirit takes it and calms down. Each trait wants its own kind.

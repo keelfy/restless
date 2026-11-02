@@ -4,7 +4,9 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Ritual;
 import dev.keelfy.restless.haunt.event.Machines;
 import dev.keelfy.restless.spirit.Focus;
+import dev.keelfy.restless.spirit.Form;
 import java.util.Locale;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -22,6 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -91,23 +94,37 @@ public final class Altar extends Block implements EntityBlock {
         }
     }
 
-    /** What lies on the altar. */
+    /**
+     * What lies on the altar: nothing, a bottle of water that turns holy, or an offering. An offering is of one
+     * {@link Focus} category, which decides the spirit it calls, in one {@link Form}, which decides whether that spirit
+     * takes it gladly.
+     */
     public enum Held implements StringRepresentable {
-        EMPTY(null),
-        WATER(null),
-        IRON(Focus.IRON),
-        GLOWSTONE(Focus.GLOWSTONE),
-        HOLY_WATER(Focus.HOLY_WATER),
-        MIRROR(Focus.MIRROR);
+        EMPTY(null, null, () -> Items.AIR),
+        WATER(null, null, () -> Items.POTION),
+        IRON(Focus.IRON, Form.WHOLE, () -> Items.IRON_INGOT),
+        IRON_NUGGET(Focus.IRON, Form.BIT, () -> Items.IRON_NUGGET),
+        IRON_CHAIN(Focus.IRON, Form.CRAFTED, () -> Items.IRON_CHAIN),
+        GLOWSTONE(Focus.GLOWSTONE, Form.WHOLE, () -> Items.GLOWSTONE),
+        GLOWSTONE_DUST(Focus.GLOWSTONE, Form.BIT, () -> Items.GLOWSTONE_DUST),
+        LANTERN(Focus.GLOWSTONE, Form.CRAFTED, () -> Items.LANTERN),
+        HOLY_WATER(Focus.HOLY_WATER, Form.WHOLE, Content.HOLY_WATER),
+        SALT(Focus.HOLY_WATER, Form.BIT, Content.SALT),
+        BELL(Focus.HOLY_WATER, Form.CRAFTED, () -> Items.BELL),
+        MIRROR(Focus.MIRROR, Form.WHOLE, Content.MIRROR),
+        GLASS_PANE(Focus.MIRROR, Form.BIT, () -> Items.GLASS_PANE),
+        SPYGLASS(Focus.MIRROR, Form.CRAFTED, () -> Items.SPYGLASS);
 
-        private final @Nullable Focus focus;
+        /** Null for what is not an offering. */
+        public final @Nullable Focus focus;
 
-        Held(@Nullable Focus focus) {
+        public final @Nullable Form form;
+        private final Supplier<? extends Item> item;
+
+        Held(@Nullable Focus focus, @Nullable Form form, Supplier<? extends Item> item) {
             this.focus = focus;
-        }
-
-        public static Held of(Focus focus) {
-            return valueOf(focus.name());
+            this.form = form;
+            this.item = item;
         }
 
         /** What the player gets back when taking it off. */
@@ -115,10 +132,7 @@ public final class Altar extends Block implements EntityBlock {
             return switch (this) {
                 case EMPTY -> ItemStack.EMPTY;
                 case WATER -> PotionContents.createItemStack(Items.POTION, Potions.WATER);
-                case IRON -> new ItemStack(Items.IRON_INGOT);
-                case GLOWSTONE -> new ItemStack(Items.GLOWSTONE_DUST);
-                case HOLY_WATER -> new ItemStack(Content.HOLY_WATER.get());
-                case MIRROR -> new ItemStack(Content.MIRROR.get());
+                default -> new ItemStack(item.get());
             };
         }
 
@@ -128,7 +142,7 @@ public final class Altar extends Block implements EntityBlock {
                 return WATER;
             }
             for (Held held : values()) {
-                if (held.focus != null && stack.is(held.stack().getItem())) {
+                if (held.focus != null && stack.is(held.item.get())) {
                     return held;
                 }
             }
@@ -329,7 +343,7 @@ public final class Altar extends Block implements EntityBlock {
         if (held == Held.WATER) {
             server.setBlock(pos, state.setValue(HELD, Held.WATER), 3);
             server.scheduleTick(pos, this, Config.section("ritual").integer("bless_ticks"));
-        } else if (!Ritual.begin(caster, server, pos, held.focus)) {
+        } else if (!Ritual.begin(caster, server, pos, held)) {
             return InteractionResult.FAIL;
         }
         stack.consume(1, player);

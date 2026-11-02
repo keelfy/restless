@@ -7,7 +7,10 @@ import dev.keelfy.restless.haunt.Journal;
 import dev.keelfy.restless.haunt.Notebook;
 import dev.keelfy.restless.haunt.Sense;
 import dev.keelfy.restless.spirit.Clue;
+import dev.keelfy.restless.spirit.Focus;
+import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
+import java.util.Optional;
 import java.util.Random;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -21,11 +24,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 
 /**
- * Ash on the floor. Nearby spirits leave a trail of separate impressions above the powder. The spirit's seed picks one
- * of {@link #PRINTS} shapes, so the same spirit always leaves the same kind of print.
+ * Ash on the floor. Nearby spirits leave a trail of separate impressions above the powder. Each trail shows one trait
+ * of the spirit, as a print of one of {@link #PRINTS} shapes: the shape is the nature of that trait, so ash never lies,
+ * and the spirit's own nature is the print that turns up most.
  */
 public final class AshBlock extends CarpetBlock {
     public static final int PRINTS = 4;
+
+    /** The print a trait of this nature leaves. */
+    static int print(Focus nature) {
+        return switch (nature) {
+            case MIRROR -> 1;
+            case IRON -> 2;
+            case HOLY_WATER -> 3;
+            case GLOWSTONE -> 4;
+        };
+    }
 
     public AshBlock(BlockBehaviour.Properties properties) {
         super(properties
@@ -54,9 +68,10 @@ public final class AshBlock extends CarpetBlock {
         for (Sense.Spirit spirit :
                 Sense.around(level, pos, Config.section("ash").integer("reach"), data)) {
             HauntData.Haunting haunting = spirit.haunting();
-            if (Clues.reveal(Traits.of(haunting.traits()), Traits.all(), Clue.FOOTPRINTS, new Random(haunting.seed()))
-                    .isPresent()) {
-                int print = 1 + (int) Math.floorMod(haunting.seed(), (long) PRINTS);
+            Optional<Trait> shown = Clues.reveal(
+                    Traits.of(haunting.traits()), Traits.all(), Clue.FOOTPRINTS, new Random(random.nextLong()));
+            if (shown.isPresent()) {
+                int print = print(shown.get().weakness());
                 double angle = spirit.at() == null
                         ? new Random(haunting.seed()).nextDouble() * Math.PI * 2
                         : Math.atan2(spirit.at().z - pos.getZ() - .5, spirit.at().x - pos.getX() - .5);

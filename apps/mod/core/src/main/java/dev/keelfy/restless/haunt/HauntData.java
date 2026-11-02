@@ -49,6 +49,7 @@ public final class HauntData extends SavedData {
      * @param evolved grown up after being left alone long enough; it never grows back down
      * @param notice events it still runs before the journal gets a line about an unknown spirit near the player; the
      *     event that makes the line is the last one counted, 0 when no line is due
+     * @param waryUntil overworld game time until which it refuses an altar, after a wrong offering; 0 when it never was
      */
     public record Haunting(
             UUID uuid,
@@ -59,7 +60,8 @@ public final class HauntData extends SavedData {
             double anger,
             long nextEventAt,
             boolean evolved,
-            int notice) {
+            int notice,
+            long waryUntil) {
         static final Codec<Haunting> CODEC = RecordCodecBuilder.create(i -> i.group(
                         UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(h -> Optional.of(h.uuid)),
                         Codec.STRING.fieldOf("spirit").forGetter(Haunting::spirit),
@@ -69,8 +71,9 @@ public final class HauntData extends SavedData {
                         Codec.DOUBLE.optionalFieldOf("anger", 0.0).forGetter(Haunting::anger),
                         Codec.LONG.fieldOf("next_event_at").forGetter(Haunting::nextEventAt),
                         Codec.BOOL.optionalFieldOf("evolved", false).forGetter(Haunting::evolved),
-                        Codec.INT.optionalFieldOf("notice", 0).forGetter(Haunting::notice))
-                .apply(i, (uuid, spirit, seed, traits, bornAt, anger, next, evolved, notice) -> {
+                        Codec.INT.optionalFieldOf("notice", 0).forGetter(Haunting::notice),
+                        Codec.LONG.optionalFieldOf("wary_until", 0L).forGetter(Haunting::waryUntil))
+                .apply(i, (uuid, spirit, seed, traits, bornAt, anger, next, evolved, notice, wary) -> {
                     long rolled =
                             seed.orElseGet(() -> ThreadLocalRandom.current().nextLong());
                     return new Haunting(
@@ -82,16 +85,17 @@ public final class HauntData extends SavedData {
                             anger,
                             next,
                             evolved,
-                            notice);
+                            notice,
+                            wary);
                 }));
 
         public static Haunting born(String spirit, long now, RandomSource random) {
             long seed = random.nextLong();
-            return new Haunting(UUID.randomUUID(), spirit, seed, Traits.roll(seed), now, 0.0, now, false, 0);
+            return new Haunting(UUID.randomUUID(), spirit, seed, Traits.roll(seed), now, 0.0, now, false, 0, 0L);
         }
 
         public Haunting rescheduled(long nextEventAt) {
-            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, evolved, notice);
+            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, evolved, notice, waryUntil);
         }
 
         public Haunting angered(double by) {
@@ -104,20 +108,27 @@ public final class HauntData extends SavedData {
                     Math.max(0.0, Math.min(1.0, anger + by)),
                     nextEventAt,
                     evolved,
-                    notice);
+                    notice,
+                    waryUntil);
         }
 
         /** Born {@code ticks} earlier than it was. */
         public Haunting aged(long ticks) {
-            return new Haunting(uuid, spirit, seed, traits, bornAt - ticks, anger, nextEventAt, evolved, notice);
+            return new Haunting(
+                    uuid, spirit, seed, traits, bornAt - ticks, anger, nextEventAt, evolved, notice, waryUntil);
         }
 
         public Haunting evolve() {
-            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, true, notice);
+            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, true, notice, waryUntil);
         }
 
         public Haunting noticed(int events) {
-            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, evolved, events);
+            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, evolved, events, waryUntil);
+        }
+
+        /** Refusing every altar until this overworld game time. */
+        public Haunting wary(long until) {
+            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, evolved, notice, until);
         }
     }
 

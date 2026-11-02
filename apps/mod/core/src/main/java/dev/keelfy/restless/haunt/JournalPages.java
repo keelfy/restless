@@ -4,6 +4,7 @@ import dev.keelfy.restless.content.Picture;
 import dev.keelfy.restless.haunt.Notebook.Chapter;
 import dev.keelfy.restless.haunt.Notebook.Kind;
 import dev.keelfy.restless.haunt.Notebook.Note;
+import dev.keelfy.restless.spirit.Spirits;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -179,6 +180,9 @@ public final class JournalPages {
         kinds.forEach((kind, grown) -> {
             List<Entry> entries = new ArrayList<>();
             entries.add(Entry.plain(Component.translatable("journal.restless.bestiary." + kind)));
+            Spirits.byId(kind)
+                    .ifPresent(type -> entries.add(Entry.plain(Component.translatable(
+                            "journal.restless.form." + type.form().name().toLowerCase(Locale.ROOT)))));
             if (grown) {
                 entries.add(Entry.plain(Component.translatable(
                         "journal.restless.bestiary.grown",
