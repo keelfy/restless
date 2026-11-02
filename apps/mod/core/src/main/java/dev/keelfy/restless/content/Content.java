@@ -15,6 +15,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BlockItem;
@@ -145,6 +146,11 @@ public final class Content {
 
     public static final Supplier<Item> GRAVESTONE_ITEM = blockItem("gravestone", GRAVESTONE);
     public static final Supplier<Item> JOURNAL = item("journal", p -> new JournalBook(p.stacksTo(1)));
+    /** Found in chests of structures; reading one teaches the recipe in {@link #RECIPE}. */
+    public static final Supplier<Item> DIARY_PAGE = item("diary_page", p -> new DiaryPage(p.stacksTo(16)));
+    /** The recipe a diary page teaches; its result is the item of the same id. */
+    public static final Supplier<DataComponentType<Identifier>> RECIPE =
+            component("recipe", Identifier.CODEC, Identifier.STREAM_CODEC);
     /** Left by the muddy footprints event, never crafted: no item, it drops nothing. */
     public static final Supplier<Block> FOOTPRINTS = block("footprints", Footprints::new);
 
@@ -268,6 +274,7 @@ public final class Content {
                 TELEKINESIS_AMULET,
                 DARK_EYE,
                 JOURNAL,
+                DIARY_PAGE,
                 GRAVESTONE_ITEM,
                 TEST_ITEM));
         Platform.get()

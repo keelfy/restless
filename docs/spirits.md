@@ -258,9 +258,21 @@ The journal opens a dedicated parchment screen with section bookmarks. Only disc
 reader. Text wraps and splits into additional pages at the current GUI size and font; wheel and Page Up/Page Down
 turn pages, Tab navigates controls, and Escape closes it. The screen supports narration.
 
-Not built yet: illustrated photos and footprint stamps, diary pages and portraits in chests,
+Not built yet: illustrated photos and footprint stamps, portraits in chests,
 the other quest kinds (bury remains, a letter to a descendant, a named killer mob, a killer spirit), hallucinations at
 very low sanity, and research: the journal unlocks no recipes.
+
+### Diary pages
+
+A **torn page** is how a player learns a gadget's recipe. It sits in chests of structures: mineshafts, dungeons, desert
+and jungle temples, mansions, pillager outposts, ruined portals and village houses. A chest rolls one with chance 0.3,
+and the page names one recipe (`restless:recipe`): spirit box, camera obscura, Ouija board or ash. Using it adds that
+recipe to the recipe book and uses the page up; a page of a recipe already known stays in hand. The page is titled by the
+item the recipe makes, so a page's recipe id must equal that item's id.
+
+Which chests and which recipes are datapack: `data/restless/loot_modifiers/diary_pages.json` (the structure chests) and
+`data/restless/loot_table/chests/diary_pages.json` (the pages). Recipes can still be crafted without a page; the page only
+shows them.
 
 ## Spread and evolution
 

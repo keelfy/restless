@@ -11,22 +11,38 @@ import dev.keelfy.restless.haunt.JournalPayload;
 import dev.keelfy.restless.haunt.Notebook;
 import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 
 final class JournalGameTests {
     private JournalGameTests() {}
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         registerArchive(tests);
+        registerDiary(tests);
         tests.put("photo_develops_once", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             ItemStack photo = new ItemStack(Content.PHOTO.get());
@@ -270,6 +286,44 @@ final class JournalGameTests {
             keys.add(literal.text());
         }
         component.getSiblings().forEach(sibling -> collect(sibling, keys));
+    }
+
+    private static void registerDiary(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("diary_page_teaches_its_recipe", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            Identifier recipe = Identifier.parse("restless:spirit_box");
+            ResourceKey<Recipe<?>> key = ResourceKey.create(Registries.RECIPE, recipe);
+            ItemStack pages = new ItemStack(Content.DIARY_PAGE.get(), 2);
+            pages.set(Content.RECIPE.get(), recipe);
+            player.setItemInHand(InteractionHand.MAIN_HAND, pages);
+            check(helper, !player.getRecipeBook().contains(key), "the recipe must not be known before reading");
+
+            pages.getItem().use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
+            check(helper, player.getRecipeBook().contains(key), "reading a page must teach its recipe");
+            check(helper, pages.getCount() == 1, "reading a page must use it up");
+
+            pages.getItem().use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
+            check(helper, pages.getCount() == 1, "a page of a recipe already known must be kept");
+            helper.succeed();
+        });
+        tests.put("diary_pages_turn_up_in_structure_chests", helper -> {
+            ServerLevel level = helper.getLevel();
+            LootTable chest = level.getServer().reloadableRegistries().getLootTable(BuiltInLootTables.SIMPLE_DUNGEON);
+            LootParams params = new LootParams.Builder(level)
+                    .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(helper.absolutePos(BlockPos.ZERO)))
+                    .create(LootContextParamSets.CHEST);
+            Set<Identifier> taught = new HashSet<>();
+            for (long seed = 0; seed < 400; seed++) {
+                for (ItemStack loot : chest.getRandomItems(params, seed)) {
+                    if (loot.is(Content.DIARY_PAGE.get())) {
+                        taught.add(loot.get(Content.RECIPE.get()));
+                    }
+                }
+            }
+            check(helper, !taught.isEmpty(), "a dungeon chest must sometimes hold a diary page");
+            check(helper, !taught.contains(null), "a page found in a chest must name its recipe");
+            helper.succeed();
+        });
     }
 
     private static void check(GameTestHelper helper, boolean condition, String message) {

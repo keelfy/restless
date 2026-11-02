@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "restless:diary_page",
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "restless:recipe": "restless:spirit_box"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "restless:diary_page",
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "restless:recipe": "restless:camera_obscura"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "restless:diary_page",
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "restless:recipe": "restless:ouija_board"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "restless:diary_page",
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "restless:recipe": "restless:ash"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
