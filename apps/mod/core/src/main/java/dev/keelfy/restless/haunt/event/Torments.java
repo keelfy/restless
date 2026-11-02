@@ -26,6 +26,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -84,7 +87,7 @@ final class Torments {
                         SEARING,
                         EventTag.AFFLICTION,
                         player -> Assaults.healthy(player, SEARING)
-                                && !player.getItemBySlot(EquipmentSlot.CHEST).isEmpty()
+                                && conducts(player)
                                 && !player.fireImmune()
                                 && !player.isInWater()
                                 && !player.hasEffect(MobEffects.FIRE_RESISTANCE),
@@ -150,7 +153,9 @@ final class Torments {
                 SimpleEvent.harmful(
                         TERROR,
                         EventTag.ASSAULT,
-                        player -> Assaults.healthy(player, TERROR) && player.isSleeping(),
+                        player -> Assaults.healthy(player, TERROR)
+                                && player.isSleeping()
+                                && sleepLeft(player) >= Config.event(TERROR).integer("min_left_ticks"),
                         Torments::terror),
                 SimpleEvent.harmful(
                         FISTS,
@@ -248,15 +253,19 @@ final class Torments {
         });
     }
 
+    /** Whether the chestplate can take the heat: any worn one but leather. */
+    private static boolean conducts(ServerPlayer player) {
+        ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+        return !chest.isEmpty() && !chest.is(Items.LEATHER_CHESTPLATE);
+    }
+
     // searing_armor: the chestplate glows, then burns every second until it is off or the player is in water
     private static void searing(ServerPlayer player) {
         Config.Section config = Config.event(SEARING);
         sound(player, SoundEvents.FIRECHARGE_USE, config.tone("sound"));
         Config.Burst glow = config.burst("particles");
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
-            if (p.getItemBySlot(EquipmentSlot.CHEST).isEmpty()
-                    || p.isInWater()
-                    || n >= config.integer("warn_steps") + config.integer("max_steps")) {
+            if (!conducts(p) || p.isInWater() || n >= config.integer("warn_steps") + config.integer("max_steps")) {
                 return false;
             }
             particles(p, ParticleTypes.FLAME, p.getX(), p.getY(), p.getZ(), glow);
@@ -589,11 +598,18 @@ final class Torments {
         });
     }
 
-    // night_terror: a heartbeat in the sleeper's ears; if they are still asleep when it ends they are thrown awake
+    /** Ticks until the night is slept through and the sleeper wakes on their own. */
+    private static int sleepLeft(ServerPlayer player) {
+        return Player.SLEEP_DURATION - player.getSleepTimer();
+    }
+
+    // night_terror: a heartbeat in the sleeper's ears; if they are still asleep when it ends they are thrown awake. The
+    // wait is cut to what is left of the sleep, so the scream always comes before the night is over.
     private static void terror(ServerPlayer player) {
         Config.Section config = Config.event(TERROR);
         sound(player, SoundEvents.WARDEN_HEARTBEAT, config.tone("sound"));
-        Scheduler.later(player, config.integer("warn_ticks"), p -> {
+        int wait = Math.min(config.integer("warn_ticks"), sleepLeft(player) - config.integer("scream_lead_ticks"));
+        Scheduler.later(player, wait, p -> {
             if (!p.isSleeping()) {
                 return;
             }

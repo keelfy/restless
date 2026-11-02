@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -90,6 +91,8 @@ public final class DoubleEvent implements HauntEvent {
         if (twin == null) {
             return;
         }
+        // What the death screen names it: nobody the player knows.
+        twin.setCustomName(Component.literal("???"));
         for (EquipmentSlot slot : WORN) {
             twin.setItemSlot(slot, player.getItemBySlot(slot).copy());
         }
@@ -110,28 +113,41 @@ public final class DoubleEvent implements HauntEvent {
                 player, 0, config.integer("interval_ticks"), new Chase(twin, owner, id.toString(), band)::step);
     }
 
+    /** Sends away the player's double, if there is one: the player died, so there is nothing left to chase. */
+    public static void dismiss(ServerPlayer player) {
+        Mannequin twin = ACTIVE.get(player.getUUID());
+        if (twin != null) {
+            vanish(twin, player.getUUID(), null);
+        }
+    }
+
     private @Nullable BlockPos spot(ServerPlayer player) {
         Config.Section config = Config.event(id.toString());
         return Place.spawnSpot(player, config.integer("min_distance"), config.integer("max_distance"));
     }
 
-    private static void vanish(Mannequin twin, UUID owner, Config.Section config) {
+    private static void vanish(Mannequin twin, UUID owner, Config.@Nullable Section config) {
         if (twin.isAlive()) {
-            Config.Burst smoke = config.burst("particles");
-            ((ServerLevel) twin.level())
-                    .sendParticles(
-                            ParticleTypes.LARGE_SMOKE,
-                            twin.getX(),
-                            twin.getY() + smoke.offsetY(),
-                            twin.getZ(),
-                            smoke.count(),
-                            smoke.dx(),
-                            smoke.dy(),
-                            smoke.dz(),
-                            smoke.speed());
+            if (config != null) {
+                smoke(twin, config.burst("particles"));
+            }
             twin.discard();
         }
         ACTIVE.remove(owner, twin);
+    }
+
+    private static void smoke(Mannequin twin, Config.Burst smoke) {
+        ((ServerLevel) twin.level())
+                .sendParticles(
+                        ParticleTypes.LARGE_SMOKE,
+                        twin.getX(),
+                        twin.getY() + smoke.offsetY(),
+                        twin.getZ(),
+                        smoke.count(),
+                        smoke.dx(),
+                        smoke.dy(),
+                        smoke.dz(),
+                        smoke.speed());
     }
 
     private static void play(ServerPlayer player, SoundEvent sound, Config.Tone tone) {

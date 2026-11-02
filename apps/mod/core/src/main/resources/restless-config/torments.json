@@ -307,6 +307,8 @@
       "weight": 0.5,
       "margin": 4.0,
       "warn_ticks": 60,
+      "min_left_ticks": 25,
+      "scream_lead_ticks": 10,
       "damage": 3.0,
       "vignette_strength": 0.6,
       "vignette_ticks": 30,

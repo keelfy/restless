@@ -124,6 +124,9 @@
       "warn_ticks": 60,
       "growl_every": 2,
       "attack_ticks": 200,
+      "speed": 1.4,
+      "reach": 2.0,
+      "bite_every": 2,
       "sound": { "volume": 1.0, "pitch": 0.8 }
     },
     "restless:vex_swarm": {

@@ -23,6 +23,7 @@ import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.haunt.event.DoubleEvent;
 import dev.keelfy.restless.haunt.event.Machines;
 import dev.keelfy.restless.haunt.event.Swaps;
 import dev.keelfy.restless.platform.Platform;
@@ -94,6 +95,7 @@ public final class Restless {
     public static void onKill(@Nullable Entity killer, LivingEntity dead) {
         if (dead instanceof ServerPlayer victim) {
             Bands.died(victim);
+            DoubleEvent.dismiss(victim);
         }
         if (killer instanceof ServerPlayer player) {
             if (dead instanceof Mob) {

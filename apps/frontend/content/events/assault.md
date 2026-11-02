@@ -219,7 +219,7 @@ Runs when: Health above 5 hearts, light level 0
 **Harmful, threat band: leaves at least 3 hearts.**
 The chestplate glows and burns every second. Take it off or jump into water.
 
-Runs when: Health above 5 hearts, a chestplate worn, dry, not fire resistant
+Runs when: Health above 5 hearts, a non-leather chestplate worn, dry, not fire resistant
 
 ## `frost_grip`
 
@@ -303,7 +303,7 @@ Runs when: Health above 5 hearts, a door in the player's path
 **Harmful, threat band: leaves at least 3 hearts.**
 A heartbeat in your sleep, then you are thrown awake screaming. Wards hold it off.
 
-Runs when: Health above 5 hearts, the player is asleep
+Runs when: Health above 5 hearts, the player is asleep with at least a second of the night left
 
 ## `stone_fists`
 

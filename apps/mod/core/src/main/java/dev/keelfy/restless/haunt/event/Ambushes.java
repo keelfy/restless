@@ -606,7 +606,10 @@ final class Ambushes {
         }
     }
 
-    /** The player's wolves and cats stand and growl, then go for them for a while, and stop. */
+    /**
+     * The player's wolves and cats stand and growl, then run at them and bite for a while, and stop. A tame animal's
+     * own goals never turn on its owner, so they are walked and made to bite from here.
+     */
     private static void turnPets(ServerPlayer player) {
         Config.Section config = Config.event(PETS);
         List<TamableAnimal> pets = pets(player);
@@ -618,6 +621,7 @@ final class Ambushes {
         }
         int gap = config.integer("interval_ticks");
         int warn = config.integer("warn_ticks");
+        double reach = config.num("reach");
         Scheduler.repeat(player, 0, gap, (p, n) -> {
             int elapsed = n * gap;
             boolean over = elapsed >= warn + config.integer("attack_ticks");
@@ -626,15 +630,21 @@ final class Ambushes {
                     continue;
                 }
                 if (over) {
-                    pet.setTarget(null);
+                    pet.getNavigation().stop();
                 } else if (elapsed < warn) {
                     pet.getNavigation().stop();
                     pet.lookAt(EntityAnchorArgument.Anchor.EYES, p.getEyePosition());
                     if (n % config.integer("growl_every") == 0) {
                         growl(pet, config.tone("sound"));
                     }
+                } else if (pet.distanceToSqr(p) > reach * reach) {
+                    pet.getNavigation().moveTo(p, config.num("speed"));
                 } else {
-                    pet.setTarget(p);
+                    pet.getNavigation().stop();
+                    pet.lookAt(EntityAnchorArgument.Anchor.EYES, p.getEyePosition());
+                    if (n % config.integer("bite_every") == 0) {
+                        pet.doHurtTarget(p.level(), p);
+                    }
                 }
             }
             return !over;

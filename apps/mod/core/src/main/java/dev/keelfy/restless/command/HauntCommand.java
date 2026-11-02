@@ -18,6 +18,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Sanity;
+import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
@@ -38,8 +39,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Debug/admin command: /haunt opens the debug screen; info|force|sanity|birth|spirit add|age|remove [player] work from
- * chat.
+ * Debug/admin command: /haunt opens the debug screen; info|force (optionally after a delay in
+ * seconds)|sanity|birth|spirit add|age|remove [player] work from chat.
  */
 public final class HauntCommand {
     private static final DynamicCommandExceptionType UNKNOWN_EVENT =
@@ -67,9 +68,19 @@ public final class HauntCommand {
                         .then(Commands.argument("event", IdentifierArgument.id())
                                 .suggests((c, b) -> SharedSuggestionProvider.suggestResource(
                                         HauntEvents.all().stream().map(HauntEvent::id), b))
-                                .executes(c -> force(c, c.getSource().getPlayerOrException()))
+                                .executes(c -> force(c, c.getSource().getPlayerOrException(), 0))
+                                .then(Commands.argument("seconds", IntegerArgumentType.integer(1))
+                                        .executes(c -> force(
+                                                c,
+                                                c.getSource().getPlayerOrException(),
+                                                IntegerArgumentType.getInteger(c, "seconds")))
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(c -> force(
+                                                        c,
+                                                        EntityArgument.getPlayer(c, "player"),
+                                                        IntegerArgumentType.getInteger(c, "seconds")))))
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(c -> force(c, EntityArgument.getPlayer(c, "player"))))))
+                                        .executes(c -> force(c, EntityArgument.getPlayer(c, "player"), 0)))))
                 .then(Commands.literal("sanity")
                         .then(Commands.argument("value", DoubleArgumentType.doubleArg(0, 1))
                                 .executes(c -> sanity(c, c.getSource().getPlayerOrException()))
@@ -192,21 +203,32 @@ public final class HauntCommand {
         return 1;
     }
 
-    private static int force(CommandContext<CommandSourceStack> c, ServerPlayer player) throws CommandSyntaxException {
+    /** Fires the event now, or after {@code seconds}, when the conditions are checked, so a state can be got into. */
+    private static int force(CommandContext<CommandSourceStack> c, ServerPlayer player, int seconds)
+            throws CommandSyntaxException {
         Identifier id = IdentifierArgument.getId(c, "event");
         HauntEvent event = HauntEvents.byId(id).orElseThrow(() -> UNKNOWN_EVENT.create(id));
+        CommandSourceStack source = c.getSource();
+        String name = player.getName().getString();
+        if (seconds > 0) {
+            Scheduler.later(player, seconds * Ticks.SECOND, p -> {
+                if (event.canRun(p)) {
+                    Director.fire(p, event);
+                    source.sendSuccess(() -> Component.literal("Forced " + id + " on " + name), true);
+                } else {
+                    source.sendFailure(Component.literal(id + ": nothing to act on near " + name));
+                }
+            });
+            source.sendSuccess(
+                    () -> Component.literal("Will force " + id + " on " + name + " in " + seconds + "s"), true);
+            return 1;
+        }
         if (!event.canRun(player)) {
-            c.getSource()
-                    .sendFailure(Component.literal(
-                            id + ": nothing to act on near " + player.getName().getString()));
+            source.sendFailure(Component.literal(id + ": nothing to act on near " + name));
             return 0;
         }
         Director.fire(player, event);
-        c.getSource()
-                .sendSuccess(
-                        () -> Component.literal(
-                                "Forced " + id + " on " + player.getName().getString()),
-                        true);
+        source.sendSuccess(() -> Component.literal("Forced " + id + " on " + name), true);
         return 1;
     }
 

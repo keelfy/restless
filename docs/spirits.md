@@ -893,7 +893,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `hail_of_bones` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts, overworld, night, open sky | Rattling in the night sky, then blocks of bone fall around you. Take cover under a roof. |
 | `rake` | — | HARMFUL | ASSAULT | 0.5 | Health above 5 hearts | Three scratches in the dark, then three blows. Moving between them is enough to be missed. |
 | `teeth_in_dark` | — | HARMFUL | ASSAULT | 0.5 | Health above 5 hearts, light level 0 | A growl where the light is gone, then a bite every few seconds. Find light. |
-| `searing_armor` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, a chestplate worn, dry, not fire resistant | The chestplate glows and burns every second. Take it off or jump into water. |
+| `searing_armor` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, a non-leather chestplate worn, dry, not fire resistant | The chestplate glows and burns every second. Take it off or jump into water. |
 | `frost_grip` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, can freeze, not warm (no fire or lava nearby, not in water) | A cold like powder snow on dry land, and it bites. Get to fire or a light. |
 | `pinned` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, not slowed, a hostile mob nearby | Heavy limbs, and every hostile nearby turns on you. Fight or wait it out. |
 | `throat` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, not in water, no bad luck effect | Air drains on dry land and a whisper says hush. Crouch and wait, or drink milk. |
@@ -905,7 +905,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `hand_below` | — | HARMFUL | ASSAULT | 0.4 | Health above 5 hearts, on the ground | A circle of souls under your feet. Stay on it and a hand takes hold. Step off. |
 | `blade_behind` | — | HARMFUL | ASSAULT | 0.4 | Health above 5 hearts | A sweep sounds at your back. Turn to face it before it lands. |
 | `door_bite` | — | HARMFUL | DOORS | 0.3 | Health above 5 hearts, a door in the player's path | A door swings open by itself and slams on whoever passes. Use another way. |
-| `night_terror` | — | HARMFUL | ASSAULT | 0.5 | Health above 5 hearts, the player is asleep | A heartbeat in your sleep, then you are thrown awake screaming. Wards hold it off. |
+| `night_terror` | — | HARMFUL | ASSAULT | 0.5 | Health above 5 hearts, the player is asleep with at least a second of the night left | A heartbeat in your sleep, then you are thrown awake screaming. Wards hold it off. |
 | `stone_fists` | — | HARMFUL | ASSAULT | 0.4 | Health above 5 hearts, leaning on a wall | The wall you lean on rumbles and strikes. Step away from it. |
 | `final_blow` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, health above `min_health` | A roar and a ring of souls. Whoever is still inside it when it ends is struck down to half a heart. |
 | `the_hanging` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, on the ground, not in water, no slow falling | You are lifted high into the air, then let go. Slow falling, water, or a block under you softens the drop. |
@@ -1022,7 +1022,7 @@ Permission level: gamemaster. `[player]` defaults to the caller.
 - `/haunt`: opens the debug screen (needs the mod on the client): your spirits (seed, traits, power), every event with the chance each spirit rolls it next, with its tier and whether it can run now, and a button that runs the selected event on you after 1 second.
 - `/haunt info [player]`: the player's sanity and the numbered spirit list with each spirit's kind, story, seed, traits, power, anger, time to its next event, its grave and the item it wants, whether it has evolved, and its fouled land as `blight=<spots>/<biome columns>`.
 - `/haunt sanity <0..1> [player]`: sets sanity.
-- `/haunt force <event> [player]`: runs an event now (fails if it cannot run). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
+- `/haunt force <event> [seconds] [player]`: runs an event now (fails if it cannot run), or after `seconds`, when its conditions are checked, so you can first get into the state it needs (sprinting, in bed). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
 - `/haunt spirit add <spirit> [player]`: binds one more personal spirit; for a territorial one, anchors it where the player stands.
 - `/haunt spirit age <n> <days> [player]`: makes spirit number `n` that many in-game days older (maturity, blight reach, evolution).
 - `/haunt spirit remove <n> [player]`: removes spirit number `n` (1-based, as listed by `info`: the player's personal spirits, then the territorial ones in their dimension).
