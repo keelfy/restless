@@ -69,6 +69,7 @@
   "subtitles.restless.mirror_ring": "Звон стекла",
   "subtitles.restless.mirror_crack": "Треск стекла",
   "key.restless.journal_point": "Указывать на страницы журнала",
+  "hud.restless.journal_point": "Удерживайте %s, чтобы указывать на страницы",
   "message.restless.journal_chapter": "Новое в журнале: %s.",
   "message.restless.journal_filed": "Убрано в архив.",
   "journal.restless.contents": "Содержание",

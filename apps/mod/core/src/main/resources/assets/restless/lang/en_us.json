@@ -68,6 +68,7 @@
   "block.restless.gravestone": "Gravestone",
   "item.restless.journal": "Journal",
   "key.restless.journal_point": "Point at the journal pages",
+  "hud.restless.journal_point": "Hold %s to point at the pages",
   "message.restless.journal_written": "New entry in the journal.",
   "message.restless.journal_filed": "Filed in the archive.",
   "message.restless.grave_quiet": "The name has worn away. Nobody rests here.",

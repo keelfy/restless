@@ -12,6 +12,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -45,6 +46,8 @@ public final class JournalHands {
     private static JournalView view;
     private static JournalPayload shown;
     private static boolean wasHeld;
+    /** The hint about the pointer key was shown in this world. */
+    private static boolean hinted;
     /** The attack key is still down from a click that was already handled: one press is one click. */
     private static boolean clicked;
 
@@ -72,6 +75,11 @@ public final class JournalHands {
         if (held && !wasHeld && minecraft.getConnection() != null) {
             minecraft.getConnection().send(new ServerboundCustomPayloadPacket(new ReadPayload()));
         }
+        if (held && !hinted) {
+            hinted = true;
+            minecraft.gui.hud.setOverlayMessage(
+                    Component.translatable("hud.restless.journal_point", POINT.getTranslatedKeyMessage()), false);
+        }
         wasHeld = held;
         if (!minecraft.options.keyAttack.isDown()) {
             clicked = false;
@@ -97,6 +105,7 @@ public final class JournalHands {
         view = null;
         shown = null;
         wasHeld = false;
+        hinted = false;
     }
 
     /** The camera stays where it is while pointing; the mouse's travel moves the pointer. */
