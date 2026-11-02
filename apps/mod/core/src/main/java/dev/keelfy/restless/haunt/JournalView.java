@@ -38,12 +38,19 @@ public final class JournalView {
     private static final int ENTRY_GAP = 5;
     private static final int EDGE = 0xFF5A4630;
 
-    /** How far the bookmarks stick out past the book's right edge. */
-    public static final int OVERHANG = 70;
+    /** How far the bookmarks stick out past the book's pixels, for whoever centres the book. */
+    public static final int OVERHANG = 64;
 
-    private static final int TAB_TOP = 24;
-    private static final int TAB_HEIGHT = 24;
-    private static final int TAB_STEP = 26;
+    /**
+     * Where the paper ends, of a book 400 pixels wide, and the bookmarks' width, of which a little is under the paper.
+     */
+    private static final int PAPER_EDGE = 391;
+
+    private static final int TAB_WIDTH = 72;
+    private static final int TAB_TUCK = 2;
+    private static final int TAB_TOP = 22;
+    private static final int TAB_HEIGHT = 22;
+    private static final int TAB_STEP = 24;
 
     /** The tools and finds a dossier shows slots for, in order; the ones the player has used light up. */
     private static final List<Kind> CLUES =
@@ -90,8 +97,8 @@ public final class JournalView {
     private int page;
     private int width;
     private int height;
-    private int sidebar;
-    private int textX;
+    private int leftX;
+    private int rightX;
     private int textWidth;
 
     public JournalView(Font font, JournalPayload data, @Nullable String key) {
@@ -132,17 +139,19 @@ public final class JournalView {
     public void layout(int width, int height) {
         this.width = width;
         this.height = height;
-        sidebar = width / 2 - 10;
-        textX = sidebar + 22;
-        textWidth = width - sidebar - 40;
+        // Two pages either side of the spine, each as wide as the other.
+        textWidth = width / 2 - 34;
+        leftX = 20;
+        rightX = width / 2 + 14;
+        int edge = width * PAPER_EDGE / 400;
         List<Control> list = new ArrayList<>();
         for (int i = 0; i < data.sections().size(); i++) {
             int index = i;
-            // A bookmark is tucked a little way into the pages and the rest of it sticks out of the edge.
+            // A bookmark is a sheet tucked a little way under the paper's edge, the rest of it sticking out.
             list.add(new Control(
-                    width - 3,
+                    edge - TAB_TUCK,
                     TAB_TOP + i * TAB_STEP,
-                    OVERHANG + 3,
+                    TAB_WIDTH,
                     TAB_HEIGHT,
                     Component.translatable(
                             "journal.restless.tab." + data.sections().get(i).key()),
@@ -150,15 +159,15 @@ public final class JournalView {
                     () -> true,
                     () -> select(index)));
         }
-        list.add(new Control(textX, height - 32, 28, 20, Component.literal("<"), -1, () -> page > 0, () -> turn(-1)));
+        list.add(new Control(leftX, height - 32, 28, 20, Component.literal("<"), -1, () -> page > 0, () -> turn(-1)));
         list.add(new Control(
-                width - 46,
+                rightX + textWidth - 28,
                 height - 32,
                 28,
                 20,
                 Component.literal(">"),
                 -1,
-                () -> page + 1 < pages.size(),
+                () -> page + 2 < pages.size(),
                 () -> turn(1)));
         controls = List.copyOf(list);
         paginate();
@@ -172,11 +181,6 @@ public final class JournalView {
         return control.bookmark() >= 0 && section == control.bookmark();
     }
 
-    /** Where the pages start, for whoever places the buttons that are not the view's own. */
-    public int sidebar() {
-        return sidebar;
-    }
-
     public void select(int index) {
         if (section != index) {
             section = index;
@@ -185,8 +189,13 @@ public final class JournalView {
         }
     }
 
+    /** Turns the spread: the left page is always an even one. */
     public void turn(int delta) {
-        page = Math.clamp(page + delta, 0, pages.size() - 1);
+        page = Math.clamp(page + delta * 2, 0, lastSpread());
+    }
+
+    private int lastSpread() {
+        return (pages.size() - 1) / 2 * 2;
     }
 
     private Component sectionTitle() {
@@ -196,19 +205,19 @@ public final class JournalView {
                         + data.sections().get(section).key());
     }
 
-    private Component pageNumber() {
-        return Component.translatable("journal.restless.page", page + 1, pages.size());
+    private Component pageNumber(int index) {
+        return Component.translatable("journal.restless.page", index + 1, pages.size());
     }
 
     /** What a screen reader says: the open section and page, and the page's text. */
     public Component narration() {
         var message = sectionTitle().copy();
-        if (!pages.isEmpty()) {
-            message.append(". ").append(pageNumber());
-            for (Block block : pages.get(page)) {
+        for (int index = page; index < Math.min(page + 2, pages.size()); index++) {
+            message.append(". ").append(pageNumber(index));
+            for (Block block : pages.get(index)) {
                 for (FormattedCharSequence line : block.lines()) {
                     StringBuilder text = new StringBuilder();
-                    line.accept((index, style, codePoint) -> {
+                    line.accept((character, style, codePoint) -> {
                         text.appendCodePoint(codePoint);
                         return true;
                     });
@@ -237,7 +246,7 @@ public final class JournalView {
         if (!laid.isEmpty() || pages.isEmpty()) {
             flush();
         }
-        page = Math.min(page, pages.size() - 1);
+        page = Math.min(page, lastSpread());
     }
 
     private void flush() {
@@ -320,21 +329,28 @@ public final class JournalView {
         return item == null ? null : ICONS.computeIfAbsent(kind, k -> new ItemStack(item));
     }
 
-    /** Draws the titles, the open page and its number; the bookmarks and arrows are the buttons' business. */
+    /**
+     * Draws the titles and the two open pages with their numbers; the bookmarks and arrows are the buttons' business.
+     */
     public void draw(PageCanvas canvas) {
-        canvas.text(Component.translatable("item.restless.journal").getVisualOrderText(), 15, 17, INK);
-        canvas.text(sectionTitle().getVisualOrderText(), textX, 17, MUTED);
-        canvas.fill(textX, 32, width - 18, 33, 0xFFBEA47C);
-        int y = 42;
+        canvas.text(Component.translatable("item.restless.journal").getVisualOrderText(), leftX, 17, INK);
+        canvas.text(sectionTitle().getVisualOrderText(), rightX, 17, MUTED);
         hits.clear();
-        if (!pages.isEmpty()) {
-            for (Block block : pages.get(page)) {
-                drawBlock(canvas, block, y);
-                y += block.height();
-            }
+        spread(canvas, page, leftX);
+        spread(canvas, page + 1, rightX);
+    }
+
+    /** One page of the open spread, if the book has it, at the given left edge. */
+    private void spread(PageCanvas canvas, int index, int x) {
+        canvas.fill(x, 32, x + textWidth, 33, 0xFFBEA47C);
+        if (index >= pages.size()) return;
+        int y = 42;
+        for (Block block : pages.get(index)) {
+            drawBlock(canvas, block, x, y);
+            y += block.height();
         }
-        Component number = pageNumber();
-        canvas.text(number.getVisualOrderText(), textX + (textWidth - font.width(number)) / 2, height - 26, MUTED);
+        Component number = pageNumber(index);
+        canvas.text(number.getVisualOrderText(), x + (textWidth - font.width(number)) / 2, height - 26, MUTED);
     }
 
     /** A bookmark or an arrow, or any paper button, with its label. */
@@ -355,10 +371,41 @@ public final class JournalView {
         if (focused) {
             canvas.fill(x + 1, y + 1, x + 3, y + h - 1, INK);
         }
-        List<FormattedCharSequence> lines = font.split(label, w - 10);
+        label(canvas, label, x + 5, y, w - 10, h, selected ? PAPER : active ? INK : MUTED);
+    }
+
+    /**
+     * A bookmark: a sheet of its own that comes out from under the paper's edge. Each one a shade darker than the one
+     * above it, as the sheets lie deeper in the book.
+     */
+    public void tab(
+            PageCanvas canvas,
+            int x,
+            int y,
+            int w,
+            int h,
+            Component label,
+            int index,
+            boolean selected,
+            boolean hovered,
+            boolean focused) {
+        int fade = 6 * index;
+        int sheet = 0xFF000000 | (0xC9 - fade) << 16 | (0xB2 - fade) << 8 | (0x8A - fade);
+        canvas.fill(x, y, x + w, y + h, EDGE);
+        canvas.fill(x + 1, y + 1, x + w - 1, y + h - 1, selected ? 0xFF713E38 : hovered ? 0xFFEEDFBA : sheet);
+        // The part that is still under the page lies in its shadow.
+        canvas.fill(x + 1, y + 1, x + TAB_TUCK + 3, y + h - 1, 0x55000000);
+        if (focused) {
+            canvas.fill(x + TAB_TUCK + 3, y + 1, x + TAB_TUCK + 5, y + h - 1, INK);
+        }
+        label(canvas, label, x + TAB_TUCK + 7, y, w - TAB_TUCK - 12, h, selected ? PAPER : INK);
+    }
+
+    private void label(PageCanvas canvas, Component label, int x, int y, int w, int h, int color) {
+        List<FormattedCharSequence> lines = font.split(label, w);
         int ty = y + (h - lines.size() * font.lineHeight) / 2;
         for (FormattedCharSequence line : lines) {
-            canvas.text(line, x + 5, ty, selected ? PAPER : active ? INK : MUTED);
+            canvas.text(line, x, ty, color);
             ty += font.lineHeight;
         }
     }
@@ -366,6 +413,20 @@ public final class JournalView {
     /** Draws every control for a pointer at ({@code px}, {@code py}), for a book that has no widgets of its own. */
     public void drawControls(PageCanvas canvas, double px, double py) {
         for (Control control : controls) {
+            if (control.bookmark() >= 0) {
+                tab(
+                        canvas,
+                        control.x(),
+                        control.y(),
+                        control.width(),
+                        control.height(),
+                        control.label(),
+                        control.bookmark(),
+                        selected(control),
+                        control.contains(px, py),
+                        false);
+                continue;
+            }
             button(
                     canvas,
                     control.x(),
@@ -373,21 +434,21 @@ public final class JournalView {
                     control.width(),
                     control.height(),
                     control.label(),
-                    selected(control),
+                    false,
                     control.contains(px, py),
                     control.active().getAsBoolean(),
                     false);
         }
     }
 
-    private void drawBlock(PageCanvas canvas, Block block, int y) {
+    private void drawBlock(PageCanvas canvas, Block block, int left, int y) {
         if (block.clues() != null) {
-            drawEvidence(canvas, block, y);
+            drawEvidence(canvas, block, left, y);
             return;
         }
-        int x = textX;
+        int x = left;
         if (block.icon() != null) {
-            canvas.item(icon(block.icon()), textX, y - 1);
+            canvas.item(icon(block.icon()), left, y - 1);
             x += ICON + 6;
         }
         if (block.filing() != null) {
@@ -400,8 +461,8 @@ public final class JournalView {
     }
 
     /** The pasted photograph, taped on at an angle of its own, and one slot per tool: dim until the player used it. */
-    private void drawEvidence(PageCanvas canvas, Block block, int y) {
-        int x = textX;
+    private void drawEvidence(PageCanvas canvas, Block block, int left, int y) {
+        int x = left;
         Picture picture = block.picture();
         boolean pasted = picture != null;
         if (pasted) {

@@ -66,7 +66,7 @@ public final class JournalScreen extends Screen {
     @Override
     protected void init() {
         bookWidth = Math.min(500, width - 16 - JournalView.OVERHANG);
-        bookHeight = Math.min(330, height - 20);
+        bookHeight = Math.min(330, height - 56);
         left = (width - bookWidth - JournalView.OVERHANG) / 2;
         top = (height - bookHeight) / 2;
         view.layout(bookWidth, bookHeight);
@@ -75,7 +75,12 @@ public final class JournalScreen extends Screen {
             buttons.add(addRenderableWidget(new PaperButton(control)));
         }
         addRenderableWidget(new PaperButton(
-                left + 12, top + bookHeight - 32, view.sidebar() - 14, 20, CommonComponents.GUI_DONE, b -> onClose()));
+                left + (bookWidth - 100) / 2,
+                top + bookHeight + 4,
+                100,
+                20,
+                CommonComponents.GUI_DONE,
+                b -> onClose()));
         updateButtons();
     }
 
@@ -200,14 +205,29 @@ public final class JournalScreen extends Screen {
 
         @Override
         protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+            GuiCanvas canvas = new GuiCanvas(graphics, 0, 0);
+            if (control != null && control.bookmark() >= 0) {
+                view.tab(
+                        canvas,
+                        getX(),
+                        getY(),
+                        getWidth(),
+                        getHeight(),
+                        getMessage(),
+                        control.bookmark(),
+                        view.selected(control),
+                        isHoveredOrFocused(),
+                        isFocused());
+                return;
+            }
             view.button(
-                    new GuiCanvas(graphics, 0, 0),
+                    canvas,
                     getX(),
                     getY(),
                     getWidth(),
                     getHeight(),
                     getMessage(),
-                    control != null && view.selected(control),
+                    false,
                     isHoveredOrFocused(),
                     active,
                     isFocused());
