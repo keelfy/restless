@@ -1,0 +1,251 @@
+{
+  "version": 1,
+  "events": {
+    "restless:judgement": {
+      "weight": 0.2,
+      "band": "lethal",
+      "min_power": 0.9,
+      "evolved": true,
+      "spirit_ids": [
+        "demon"
+      ],
+      "strike_delay_ticks": 60,
+      "miss_distance": 6.0,
+      "hit_delay_ticks": 40,
+      "still_blocks": 2.0,
+      "damage": 40.0
+    },
+    "restless:reaping": {
+      "weight": 0.2,
+      "band": "lethal",
+      "min_power": 0.9,
+      "evolved": true,
+      "spirit_ids": [
+        "shade",
+        "wraith"
+      ],
+      "min_distance": 24,
+      "max_distance": 30,
+      "interval_ticks": 2,
+      "speed": 0.3,
+      "max_ticks": 1200,
+      "cleanup_ticks": 40,
+      "stuck_steps": 40,
+      "climb": 1,
+      "drop": 3,
+      "watch_degrees": 45.0,
+      "touch_distance": 1.2,
+      "damage": 1000.0,
+      "beat_steps": 10,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      "beat_sound": {
+        "volume": 0.9,
+        "pitch": 0.7
+      },
+      "touch_sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "particles": {
+        "count": 20,
+        "dx": 0.3,
+        "dy": 0.8,
+        "dz": 0.3,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
+    },
+    "restless:last_call": {
+      "weight": 0.2,
+      "band": "lethal",
+      "min_power": 0.9,
+      "evolved": true,
+      "spirit_ids": [
+        "lost_one"
+      ],
+      "radius": 12,
+      "void_distance": 10.0,
+      "delay_ticks": 80,
+      "interval_ticks": 2,
+      "pull": 0.1,
+      "max_ticks": 800,
+      "arrive_distance": 0.4,
+      "free_distance": 6.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      "particles": {
+        "count": 2,
+        "dx": 0.3,
+        "dy": 0.1,
+        "dz": 0.3,
+        "speed": 0.01,
+        "offset_y": 0.2
+      }
+    },
+    "restless:drowner": {
+      "weight": 0.2,
+      "band": "lethal",
+      "min_power": 0.9,
+      "evolved": true,
+      "spirit_ids": [
+        "nix"
+      ],
+      "warn_ticks": 80,
+      "max_ticks": 900,
+      "interval_ticks": 2,
+      "pull": 0.25,
+      "pulse_every": 10,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      "pulse_sound": {
+        "volume": 0.8,
+        "pitch": 0.6
+      },
+      "particles": {
+        "count": 12,
+        "dx": 0.5,
+        "dy": 0.8,
+        "dz": 0.5,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
+    },
+    "restless:the_avenger": {
+      "weight": 0.2,
+      "band": "lethal",
+      "min_power": 0.9,
+      "evolved": true,
+      "spirit_ids": [
+        "revenant"
+      ],
+      "min_kills": 30,
+      "min_distance": 20,
+      "max_distance": 26,
+      "warn_ticks": 100,
+      "interval_ticks": 10,
+      "max_ticks": 1800,
+      "cleanup_ticks": 40,
+      "health": 60.0,
+      "damage": 10.0,
+      "speed": 0.38,
+      "relief": 1.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "won_sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "particles": {
+        "count": 30,
+        "dx": 0.4,
+        "dy": 0.9,
+        "dz": 0.4,
+        "speed": 0.03,
+        "offset_y": 1.0
+      }
+    },
+    "restless:hellring": {
+      "weight": 0.2,
+      "band": "lethal",
+      "min_power": 0.9,
+      "evolved": true,
+      "spirit_ids": [
+        "demon"
+      ],
+      "ring_radius": 7.0,
+      "ring_ticks": 200,
+      "interval_ticks": 4,
+      "ring_points": 24,
+      "flame_height": 0.2,
+      "pulse_every": 5,
+      "burn_seconds": 8.0,
+      "damage": 1000.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "pulse_sound": {
+        "volume": 0.8,
+        "pitch": 0.8
+      }
+    },
+    "restless:the_double": {
+      "weight": 0.2,
+      "band": "lethal",
+      "min_power": 0.9,
+      "evolved": true,
+      "spirit_ids": [
+        "phantom"
+      ],
+      "min_distance": 20,
+      "max_distance": 26,
+      "interval_ticks": 2,
+      "speed": 0.3,
+      "reach": 1.8,
+      "attack_steps": 10,
+      "max_hits": 1,
+      "banish_hits": 3,
+      "health": 1000.0,
+      "damage": 1000.0,
+      "max_ticks": 800,
+      "cleanup_ticks": 40,
+      "stuck_steps": 40,
+      "climb": 1,
+      "drop": 3,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "particles": {
+        "count": 20,
+        "dx": 0.3,
+        "dy": 0.8,
+        "dz": 0.3,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
+    },
+    "restless:foretold": {
+      "weight": 0.2,
+      "band": "lethal",
+      "min_power": 0.9,
+      "evolved": true,
+      "spirit_ids": [
+        "banshee"
+      ],
+      "latest_time": 10500,
+      "death_time": 14000,
+      "toll_lead_ticks": 600,
+      "toll_every": 5,
+      "check_ticks": 20,
+      "max_steps": 800,
+      "damage": 1000.0,
+      "omens": [
+        "A bell tolls once. Before the night is old I will come for you.",
+        "I have counted your days. This dusk is the last, unless you are abed or sheltered.",
+        "Hear the bell? It rings for you, and it will ring again at dusk."
+      ],
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      "toll_sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      }
+    }
+  }
+}

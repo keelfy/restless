@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.Band;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
@@ -21,6 +22,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.item.component.SwingAnimation;
@@ -28,8 +30,9 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * A mannequin wearing the player's skin and gear walks up to the player and hits hard. It is the vanilla mannequin
- * entity moved by hand, so nothing is registered and no client code is needed. It cannot be hurt, hits only so far as
- * the assault safe health allows, and leaves on its own after a while.
+ * entity moved by hand, so nothing is registered and no client code is needed. It hits only so far as its band allows
+ * (the plain {@code double} is a threat; a lethal variant kills) and leaves on its own after a while. It cannot be
+ * hurt, unless the event's config sets {@code banish_hits}: then that many blows from the player send it away.
  */
 public final class DoubleEvent implements HauntEvent {
     private static final EquipmentSlot[] WORN = {
@@ -39,9 +42,22 @@ public final class DoubleEvent implements HauntEvent {
     /** The double each player has now; one at a time. */
     private static final Map<UUID, Mannequin> ACTIVE = new ConcurrentHashMap<>();
 
+    private final Identifier id;
+    private final Band band;
+
+    public DoubleEvent() {
+        this(Identifier.parse("double"));
+    }
+
+    /** A double whose behaviour and band come from the config of event {@code id}. */
+    DoubleEvent(Identifier id) {
+        this.id = id;
+        this.band = Band.of(id.toString());
+    }
+
     @Override
     public Identifier id() {
-        return Identifier.parse("double");
+        return id;
     }
 
     @Override
@@ -58,7 +74,7 @@ public final class DoubleEvent implements HauntEvent {
     public boolean canRun(ServerPlayer player) {
         return player.level().getDifficulty() != Difficulty.PEACEFUL
                 && !ACTIVE.containsKey(player.getUUID())
-                && Assaults.healthy(player, "double")
+                && Assaults.healthy(player, id.toString())
                 && spot(player) != null;
     }
 
@@ -68,7 +84,7 @@ public final class DoubleEvent implements HauntEvent {
         if (spot == null) {
             return;
         }
-        Config.Section config = Config.event("double");
+        Config.Section config = Config.event(id.toString());
         ServerLevel level = player.level();
         Mannequin twin = Figure.spawn(player, spot, ResolvableProfile.createResolved(player.getGameProfile()));
         if (twin == null) {
@@ -77,25 +93,31 @@ public final class DoubleEvent implements HauntEvent {
         for (EquipmentSlot slot : WORN) {
             twin.setItemSlot(slot, player.getItemBySlot(slot).copy());
         }
+        if (config.has("banish_hits")) {
+            twin.setPermanentlyInvulnerable(false);
+            twin.getAttribute(Attributes.MAX_HEALTH).setBaseValue(config.num("health"));
+            twin.setHealth(twin.getMaxHealth());
+        }
         UUID owner = player.getUUID();
         ACTIVE.put(owner, twin);
         play(player, SoundEvents.ENDERMAN_STARE, config.tone("sound"));
         // The chase ends itself; this catches the cases where the scheduler drops it (the player died or left).
         Restore.after(level, config.integer("max_ticks") + config.integer("cleanup_ticks"), force -> {
-            vanish(twin, owner);
+            vanish(twin, owner, config);
             return true;
         });
-        Scheduler.repeat(player, 0, config.integer("interval_ticks"), new Chase(twin, owner)::step);
+        Scheduler.repeat(
+                player, 0, config.integer("interval_ticks"), new Chase(twin, owner, id.toString(), band)::step);
     }
 
-    private static @Nullable BlockPos spot(ServerPlayer player) {
-        Config.Section config = Config.event("double");
+    private @Nullable BlockPos spot(ServerPlayer player) {
+        Config.Section config = Config.event(id.toString());
         return Place.spawnSpot(player, config.integer("min_distance"), config.integer("max_distance"));
     }
 
-    private static void vanish(Mannequin twin, UUID owner) {
+    private static void vanish(Mannequin twin, UUID owner, Config.Section config) {
         if (twin.isAlive()) {
-            Config.Burst smoke = Config.event("double").burst("particles");
+            Config.Burst smoke = config.burst("particles");
             ((ServerLevel) twin.level())
                     .sendParticles(
                             ParticleTypes.LARGE_SMOKE,
@@ -131,25 +153,31 @@ public final class DoubleEvent implements HauntEvent {
         private int stuck;
         private int lastHit = Integer.MIN_VALUE / 2;
         private int hits;
+        private int struck;
+        private final String key;
+        private final Band band;
         private final Gait gait;
 
-        Chase(Mannequin twin, UUID owner) {
+        Chase(Mannequin twin, UUID owner, String key, Band band) {
             this.twin = twin;
             this.owner = owner;
-            Config.Section config = Config.event("double");
+            this.key = key;
+            this.band = band;
+            Config.Section config = Config.event(key);
             this.gait = new Gait(config.integer("climb"), config.integer("drop"));
         }
 
         /** @return true to keep chasing */
         boolean step(ServerPlayer player, int n) {
-            Config.Section config = Config.event("double");
+            Config.Section config = Config.event(key);
             if (!twin.isAlive()
                     || twin.level() != player.level()
                     || stuck >= config.integer("stuck_steps")
                     || hits >= config.integer("max_hits")
-                    || player.getHealth() <= Assaults.safeHealth()
+                    || Assaults.room(player, band) <= 0
+                    || banished(config)
                     || n * config.integer("interval_ticks") >= config.integer("max_ticks")) {
-                vanish(twin, owner);
+                vanish(twin, owner, config);
                 return false;
             }
             double reach = config.num("reach");
@@ -169,6 +197,15 @@ public final class DoubleEvent implements HauntEvent {
             return true;
         }
 
+        /** Whether the player has struck it often enough to send it away; each blow is told by its health dropping. */
+        private boolean banished(Config.Section config) {
+            if (!config.has("banish_hits") || twin.getHealth() >= twin.getMaxHealth()) {
+                return false;
+            }
+            twin.setHealth(twin.getMaxHealth());
+            return ++struck >= config.integer("banish_hits");
+        }
+
         /** A step's worth of ticks toward the player, jumping up and round what is in the way. */
         private boolean walk(ServerPlayer player, Config.Section config) {
             int ticks = config.integer("interval_ticks");
@@ -183,7 +220,7 @@ public final class DoubleEvent implements HauntEvent {
         private void strike(ServerPlayer player, Config.Section config) {
             twin.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
             play(player, SoundEvents.PLAYER_ATTACK_STRONG, config.tone("hit_sound"));
-            float room = player.getHealth() - Assaults.safeHealth();
+            float room = Assaults.room(player, band);
             player.hurtServer(
                     player.level(),
                     player.damageSources().mobAttack(twin),

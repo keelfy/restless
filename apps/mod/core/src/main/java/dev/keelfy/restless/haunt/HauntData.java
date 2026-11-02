@@ -90,7 +90,8 @@ public final class HauntData extends SavedData {
         }
 
         public Haunting angered(double by) {
-            return new Haunting(uuid, spirit, seed, traits, bornAt, Math.min(1.0, anger + by), nextEventAt, evolved);
+            return new Haunting(
+                    uuid, spirit, seed, traits, bornAt, Math.max(0.0, Math.min(1.0, anger + by)), nextEventAt, evolved);
         }
 
         /** Born {@code ticks} earlier than it was. */
@@ -203,6 +204,12 @@ public final class HauntData extends SavedData {
                 .apply(i, Spoken::new));
     }
 
+    private static final Codec<Menace> MENACE = RecordCodecBuilder.create(i -> i.group(
+                    Codec.LONG.optionalFieldOf("last_lethal_at", -1L).forGetter(Menace::lastLethalAt),
+                    Codec.BOOL.optionalFieldOf("warned", false).forGetter(Menace::warned),
+                    Codec.LONG.optionalFieldOf("mercy_until", 0L).forGetter(Menace::mercyUntil))
+            .apply(i, Menace::new));
+
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL =
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Haunting.CODEC.listOf());
 
@@ -234,26 +241,41 @@ public final class HauntData extends SavedData {
                                     .forGetter(data -> Optional.ofNullable(data.hardcore)),
                             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.unboundedMap(Codec.STRING, Spoken.CODEC))
                                     .optionalFieldOf("said", Map.of())
-                                    .forGetter(data -> data.said))
-                    .apply(i, (players, territorial, graves, sanity, journal, notebooks, blight, hardcore, said) -> {
-                        HauntData data = new HauntData(players, territorial, graves, sanity, notebooks, blight);
-                        journal.forEach((player, entries) -> {
-                            List<Notebook.Note> notes = new ArrayList<>();
-                            entries.forEach(e -> notes.add(new Notebook.Note(
-                                    Notebook.Kind.OLD, Optional.empty(), Optional.empty(), List.of(e))));
-                            notes.addAll(data.notebook(player).notes());
-                            data.notebooks.put(
-                                    player,
-                                    new Notebook(
-                                            List.copyOf(notes),
-                                            data.notebook(player).chapters(),
-                                            data.notebook(player).pictures(),
-                                            data.notebook(player).filed()));
-                        });
-                        data.hardcore = hardcore.orElse(null);
-                        said.forEach((speaker, events) -> data.said.put(speaker, new HashMap<>(events)));
-                        return data;
-                    })),
+                                    .forGetter(data -> data.said),
+                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, MENACE)
+                                    .optionalFieldOf("menace", Map.of())
+                                    .forGetter(data -> data.menace))
+                    .apply(
+                            i,
+                            (players,
+                                    territorial,
+                                    graves,
+                                    sanity,
+                                    journal,
+                                    notebooks,
+                                    blight,
+                                    hardcore,
+                                    said,
+                                    menace) -> {
+                                HauntData data = new HauntData(players, territorial, graves, sanity, notebooks, blight);
+                                journal.forEach((player, entries) -> {
+                                    List<Notebook.Note> notes = new ArrayList<>();
+                                    entries.forEach(e -> notes.add(new Notebook.Note(
+                                            Notebook.Kind.OLD, Optional.empty(), Optional.empty(), List.of(e))));
+                                    notes.addAll(data.notebook(player).notes());
+                                    data.notebooks.put(
+                                            player,
+                                            new Notebook(
+                                                    List.copyOf(notes),
+                                                    data.notebook(player).chapters(),
+                                                    data.notebook(player).pictures(),
+                                                    data.notebook(player).filed()));
+                                });
+                                data.hardcore = hardcore.orElse(null);
+                                said.forEach((speaker, events) -> data.said.put(speaker, new HashMap<>(events)));
+                                data.menace.putAll(menace);
+                                return data;
+                            })),
             PERSONAL.xmap(
                     players -> new HauntData(players, List.of(), Map.of(), Map.of(), Map.of(), Map.of()),
                     data -> data.hauntings));
@@ -274,6 +296,8 @@ public final class HauntData extends SavedData {
     private final Map<UUID, Blight> blight;
     /** Keyed by speaker, then by event id. */
     private final Map<UUID, Map<String, Spoken>> said = new HashMap<>();
+    /** Keyed by player. */
+    private final Map<UUID, Menace> menace = new HashMap<>();
     /**
      * Decided the first time anyone asks and never again, so changing the config later does not flip a world; null
      * until then.
@@ -306,6 +330,15 @@ public final class HauntData extends SavedData {
     /** @return null for a player never seen before; an empty list means every spirit was removed */
     public @Nullable List<Haunting> get(UUID player) {
         return hauntings.get(player);
+    }
+
+    public Menace menace(UUID player) {
+        return menace.getOrDefault(player, Menace.NONE);
+    }
+
+    public void putMenace(UUID player, Menace state) {
+        menace.put(player, state);
+        setDirty();
     }
 
     public List<Territorial> territorial() {

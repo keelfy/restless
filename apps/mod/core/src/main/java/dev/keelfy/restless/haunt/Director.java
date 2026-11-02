@@ -238,6 +238,7 @@ public final class Director {
         Restless.LOGGER.debug("Haunt {} -> {}", event.id(), player.getName().getString());
         Recent.record(player.getUUID(), event.id().toString(), repeatGap());
         Location.during(at, () -> event.run(player));
+        Bands.fired(event, player);
         Sanity.shock(player);
     }
 
@@ -287,7 +288,7 @@ public final class Director {
             List<Trait> traits,
             double power,
             boolean evolved) {
-        return weight(event, event.canRun(player), spirit, traits, power, evolved);
+        return weight(event, event.canRun(player), player, spirit, traits, power, evolved);
     }
 
     /**
@@ -295,8 +296,14 @@ public final class Director {
      * {@link HauntEvent#signature}: an evolved spirit's own scenario is likelier still.
      */
     private static double weight(
-            HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power, boolean evolved) {
-        return ready && event.opensAt(power, evolved)
+            HauntEvent event,
+            boolean ready,
+            ServerPlayer player,
+            SpiritType spirit,
+            List<Trait> traits,
+            double power,
+            boolean evolved) {
+        return ready && event.opensAt(power, evolved) && Bands.open(event, player, spirit, power, evolved)
                 ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power)
                         * Rarity.boost(event.id().toString())
                         * event.signature(spirit, evolved)
@@ -322,7 +329,7 @@ public final class Director {
             String id = event.id().toString();
             boolean ready = event.canRun(player);
             Rarity.observe(id, ready);
-            double weight = weight(event, ready, spirit, traits, power, evolved);
+            double weight = weight(event, ready, player, spirit, traits, power, evolved);
             if (weight > 0) {
                 boolean repeat = Recent.blocks(player.getUUID(), id);
                 candidates.add(event);

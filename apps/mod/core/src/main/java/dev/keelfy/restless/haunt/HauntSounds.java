@@ -17,6 +17,12 @@ public final class HauntSounds {
     public static final SoundEvent LAUGH = event("haunt.laugh");
     public static final SoundEvent BREATH = event("haunt.breath");
     public static final SoundEvent SCREECH = event("haunt.screech");
+    public static final SoundEvent MUSIC_BOX = event("haunt.music_box");
+    public static final SoundEvent LULLABY = event("haunt.lullaby");
+    public static final SoundEvent CLAW_SCRATCH = event("haunt.claw_scratch");
+    public static final SoundEvent CHAIR_CREAK = event("haunt.chair_creak");
+    public static final SoundEvent MIRROR_RING = event("haunt.mirror_ring");
+    public static final SoundEvent MIRROR_CRACK = event("haunt.mirror_crack");
 
     private HauntSounds() {}
 

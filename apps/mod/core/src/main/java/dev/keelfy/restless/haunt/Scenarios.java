@@ -254,7 +254,18 @@ final class Scenarios {
                 scenario(
                         "punchline",
                         "false_advancement +1 false_totem +2 chest_lid +2 chest_blast +2 ghost_laugh",
-                        lookup));
+                        lookup),
+                // 101: harm may not open a scenario, so a light sound leads each of the hunt scenarios
+                scenario("the_hunt", "footsteps +3 restless:volley +5 restless:stalker +5 restless:final_blow", lookup),
+                // 102
+                scenario("the_last_night", "phantom_heartbeat +10 restless:reaping", lookup),
+                // 103
+                scenario(
+                        "debt",
+                        "ghost_breath +3 restless:possessed_mob +5 restless:final_blow +20 restless:the_avenger",
+                        lookup),
+                // 104
+                scenario("drowning_season", "dripping +3 undertow +30 restless:drowner", lookup));
         for (Scenario scenario : all) {
             if (byId.containsKey(scenario.id())) {
                 throw new IllegalStateException("A scenario takes the id of an event: " + scenario.id());

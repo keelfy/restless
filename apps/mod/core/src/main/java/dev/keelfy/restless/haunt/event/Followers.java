@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -634,7 +635,14 @@ final class Followers {
         }
         Config.Tone tone = config.tone("sound");
         level.playSound(
-                null, x, figure.getY(), z, SoundEvents.PLAYER_DEATH, SoundSource.PLAYERS, tone.volume(), tone.pitch());
+                null,
+                x,
+                figure.getY(),
+                z,
+                HauntSounds.CUT_OFF_SCREAM,
+                SoundSource.PLAYERS,
+                tone.volume(),
+                tone.pitch());
         return false;
     }
 

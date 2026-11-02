@@ -10,7 +10,7 @@
       "phrases": [["let", "me", "in"], ["cold"], ["help"], ["open"]],
       "sound": { "volume": 0.5, "pitch": 0.7 }
     },
-    "restless:claw_marks": { "weight": 0.3, "radius": 8, "restore_ticks": 3600, "sound": { "volume": 0.9, "pitch": 0.6 } },
+    "restless:claw_marks": { "weight": 0.3, "radius": 8, "restore_ticks": 3600, "sound": { "volume": 0.9, "pitch": 1.0 } },
     "restless:doll": { "weight": 0.25, "radius": 10, "min_distance": 4, "watch_degrees": 55.0, "turn_ticks": 20, "hop_every": 4, "hops": 4, "ticks": 2400, "sound": { "volume": 0.6, "pitch": 0.8 } },
     "restless:music_box": {
       "weight": 0.25,
@@ -23,9 +23,9 @@
       "sound": { "volume": 1.5, "pitch": 1.0 },
       "tunes": ["12 16 19 24 19 16 12 16 19 24 26 24 19 16 14", "12 12 19 19 21 21 19 17 17 16 16 14 14 12"]
     },
-    "restless:rocking_chair": { "weight": 0.2, "radius": 10, "min_distance": 3, "watch_degrees": 55.0, "rock_ticks": 14, "rocks": 24, "linger_ticks": 100, "sound": { "volume": 0.5, "pitch": 0.6 } },
+    "restless:rocking_chair": { "weight": 0.2, "radius": 10, "min_distance": 3, "watch_degrees": 55.0, "rock_ticks": 14, "rocks": 24, "linger_ticks": 100, "sound": { "volume": 0.5, "pitch": 1.0 } },
     "restless:rotten_planks": { "weight": 0.25, "radius": 10, "max_blocks": 24, "per_step": 2, "step_ticks": 20, "restore_ticks": 2400, "sound": { "volume": 0.5, "pitch": 0.7 } },
     "minecraft:black_candle": { "weight": 0.25, "radius": 10, "min_distance": 2, "watch_degrees": 55.0, "restore_ticks": 2400, "flame_ticks": 400, "flame_interval": 4, "sound": { "volume": 0.6, "pitch": 0.7 } },
-    "restless:cracked_mirror": { "weight": 0.25, "radius": 8, "min_distance": 2, "hide_degrees": 60.0, "look_degrees": 25.0, "look_distance": 6.0, "look_interval": 5, "wait_ticks": 400, "figure_ticks": 40, "linger_ticks": 200, "sound": { "volume": 0.8, "pitch": 0.5 } }
+    "restless:cracked_mirror": { "weight": 0.25, "radius": 8, "min_distance": 2, "hide_degrees": 60.0, "look_degrees": 25.0, "look_distance": 6.0, "look_interval": 5, "wait_ticks": 400, "figure_ticks": 40, "linger_ticks": 200, "sound": { "volume": 0.8, "pitch": 1.0 } }
   }
 }

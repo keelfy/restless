@@ -61,6 +61,22 @@ public final class Anger {
         raiseTerritorial(HauntData.get(player.level().getServer()), player, at, config.num("break_anchor"), reach);
     }
 
+    /**
+     * Call when a spirit's anger is spent (an avenger beaten, a player taken): the player's own spirits, and the
+     * territorial ones whose radius covers the player, lose {@code by}, to zero.
+     */
+    public static void soothe(ServerPlayer player, double by) {
+        MinecraftServer server = player.level().getServer();
+        HauntData data = HauntData.get(server);
+        List<HauntData.Haunting> own = new ArrayList<>(
+                Director.hauntings(player, data, server.overworld().getGameTime()));
+        if (!own.isEmpty()) {
+            own.replaceAll(h -> h.angered(-by));
+            data.put(player.getUUID(), own);
+        }
+        raiseTerritorial(data, player, player.blockPosition(), -by, Integer.MAX_VALUE);
+    }
+
     /** @param reach how close to the anchor {@code at} must be; a very large value means the spirit's whole radius */
     private static void raiseTerritorial(HauntData data, ServerPlayer player, BlockPos at, double by, int reach) {
         List<HauntData.Territorial> spirits = new ArrayList<>(data.territorial());

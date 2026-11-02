@@ -34,6 +34,7 @@ import net.neoforged.neoforge.event.PlayLevelSoundEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -94,6 +95,8 @@ public final class RestlessNeoForge {
                 e.getSource(),
                 e.getNewVolume(),
                 e.getNewPitch()));
+        NeoForge.EVENT_BUS.addListener((LivingIncomingDamageEvent e) ->
+                e.setAmount(Restless.onHurt(e.getEntity(), e.getSource(), e.getAmount())));
         NeoForge.EVENT_BUS.addListener(
                 (LivingDeathEvent e) -> Restless.onKill(e.getSource().getEntity(), e.getEntity()));
         NeoForge.EVENT_BUS.addListener((BreakBlockEvent e) -> {

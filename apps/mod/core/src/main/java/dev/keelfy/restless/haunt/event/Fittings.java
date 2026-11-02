@@ -6,6 +6,7 @@ import dev.keelfy.restless.content.Decal;
 import dev.keelfy.restless.content.Prop;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.ArrayList;
@@ -373,7 +374,7 @@ final class Fittings {
                 lay(level, spot.cell(), decal(Content.CLAW_MARKS.get(), spot), config.integer("restore_ticks"));
             }
         }
-        blip(level, first.cell(), SoundEvents.AXE_SCRAPE.value(), config.tone("sound"));
+        blip(level, first.cell(), HauntSounds.CLAW_SCRATCH, config.tone("sound"));
     }
 
     // 505: the doll
@@ -465,7 +466,7 @@ final class Fittings {
             level.playSound(
                     null,
                     pos,
-                    SoundEvents.NOTE_BLOCK_CHIME.value(),
+                    HauntSounds.MUSIC_BOX,
                     SoundSource.RECORDS,
                     tone.volume(),
                     NoteBlock.getPitchFromNote(note));
@@ -501,7 +502,7 @@ final class Fittings {
             int tilt = n >= rocks ? 0 : ROCK[n % ROCK.length];
             Restore.quiet(level, pos, chair.setValue(Prop.Chair.TILT, tilt));
             if (tilt != 0) {
-                blip(level, pos, SoundEvents.WOODEN_TRAPDOOR_OPEN, tone);
+                blip(level, pos, HauntSounds.CHAIR_CREAK, tone);
             }
             return n < rocks;
         });
@@ -652,7 +653,7 @@ final class Fittings {
             }
             if (watched(p, pos, config.num("look_degrees")) && p.distanceToSqr(Vec3.atCenterOf(pos)) <= near * near) {
                 Restore.quiet(level, pos, mirror.setValue(Decal.Mirror.FIGURE, true));
-                blip(level, pos, SoundEvents.GLASS_HIT, tone);
+                blip(level, pos, HauntSounds.MIRROR_CRACK, tone);
                 Scheduler.later(p, figure, q -> {
                     if (level.getBlockState(pos).is(mirror.getBlock())) {
                         Restore.quiet(level, pos, mirror);

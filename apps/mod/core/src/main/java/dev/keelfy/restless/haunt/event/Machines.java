@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.Candle;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.ScenarioContext;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -541,7 +542,7 @@ public final class Machines {
     private static void armMirror(ServerPlayer player) {
         Config.Section config = Config.event("mirror_names");
         MIRROR.put(player.getUUID(), player.level().getGameTime() + config.integer("ticks"));
-        Nearby.sound(player, SoundEvents.AMETHYST_BLOCK_CHIME, player.position(), config.tone("sound"));
+        Nearby.sound(player, HauntSounds.MIRROR_RING, player.position(), config.tone("sound"));
     }
 
     /** Altar hook: the mirror was just used. If a spirit has marked it, it shows that spirit's name, once. */

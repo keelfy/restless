@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.Band;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
@@ -31,15 +32,29 @@ import org.jspecify.annotations.Nullable;
 /**
  * A dark figure that stands far off and walks toward the player only while the player is not looking at it. It is a
  * vanilla wither skeleton with its AI switched off and moved by hand, so a client without special rendering sees it.
- * Touching it hurts, but never below the assault safe health, and it goes away on its own after a while.
+ * Touching it hurts, but never below what its band leaves (the plain {@code shadow} is a threat; a lethal variant kills
+ * with a touch), and it goes away on its own after a while.
  */
 public final class ShadowEvent implements HauntEvent {
     /** The shadow each player has now; one at a time. */
     private static final Map<UUID, Mob> ACTIVE = new ConcurrentHashMap<>();
 
+    private final Identifier id;
+    private final Band band;
+
+    public ShadowEvent() {
+        this(Identifier.parse("shadow"));
+    }
+
+    /** A shadow whose behaviour and band come from the config of event {@code id}. */
+    ShadowEvent(Identifier id) {
+        this.id = id;
+        this.band = Band.of(id.toString());
+    }
+
     @Override
     public Identifier id() {
-        return Identifier.parse("shadow");
+        return id;
     }
 
     @Override
@@ -56,7 +71,7 @@ public final class ShadowEvent implements HauntEvent {
     public boolean canRun(ServerPlayer player) {
         return player.level().getDifficulty() != Difficulty.PEACEFUL
                 && !ACTIVE.containsKey(player.getUUID())
-                && Assaults.healthy(player, "shadow")
+                && Assaults.healthy(player, id.toString())
                 && spot(player) != null;
     }
 
@@ -66,7 +81,7 @@ public final class ShadowEvent implements HauntEvent {
         if (spot == null) {
             return;
         }
-        Config.Section config = Config.event("shadow");
+        Config.Section config = Config.event(id.toString());
         ServerLevel level = player.level();
         Mob shadow = EntityTypes.WITHER_SKELETON.spawn(level, spot, EntitySpawnReason.EVENT);
         if (shadow == null) {
@@ -84,20 +99,21 @@ public final class ShadowEvent implements HauntEvent {
         play(player, SoundEvents.WARDEN_NEARBY_CLOSE, config.tone("sound"));
         // The chase ends itself; this catches the cases where the scheduler drops it (the player died or left).
         Restore.after(level, config.integer("max_ticks") + config.integer("cleanup_ticks"), force -> {
-            vanish(shadow, owner);
+            vanish(shadow, owner, config);
             return true;
         });
-        Scheduler.repeat(player, 0, config.integer("interval_ticks"), new Chase(shadow, owner)::step);
+        Scheduler.repeat(
+                player, 0, config.integer("interval_ticks"), new Chase(shadow, owner, id.toString(), band)::step);
     }
 
-    private static @Nullable BlockPos spot(ServerPlayer player) {
-        Config.Section config = Config.event("shadow");
+    private @Nullable BlockPos spot(ServerPlayer player) {
+        Config.Section config = Config.event(id.toString());
         return Place.spawnSpot(player, config.integer("min_distance"), config.integer("max_distance"));
     }
 
-    private static void vanish(Mob shadow, UUID owner) {
+    private static void vanish(Mob shadow, UUID owner, Config.Section config) {
         if (shadow.isAlive()) {
-            Config.Burst smoke = Config.event("shadow").burst("particles");
+            Config.Burst smoke = config.burst("particles");
             ((ServerLevel) shadow.level())
                     .sendParticles(
                             ParticleTypes.LARGE_SMOKE,
@@ -130,21 +146,25 @@ public final class ShadowEvent implements HauntEvent {
     private static final class Chase {
         private final Mob shadow;
         private final UUID owner;
+        private final String key;
+        private final Band band;
         private int stuck;
 
-        Chase(Mob shadow, UUID owner) {
+        Chase(Mob shadow, UUID owner, String key, Band band) {
             this.shadow = shadow;
             this.owner = owner;
+            this.key = key;
+            this.band = band;
         }
 
         /** @return true to keep chasing */
         boolean step(ServerPlayer player, int n) {
-            Config.Section config = Config.event("shadow");
+            Config.Section config = Config.event(key);
             if (!shadow.isAlive()
                     || shadow.level() != player.level()
                     || stuck >= config.integer("stuck_steps")
                     || n * config.integer("interval_ticks") >= config.integer("max_ticks")) {
-                vanish(shadow, owner);
+                vanish(shadow, owner, config);
                 return false;
             }
             if (n % config.integer("beat_steps") == 0) {
@@ -153,7 +173,7 @@ public final class ShadowEvent implements HauntEvent {
             double touch = config.num("touch_distance");
             if (player.distanceToSqr(shadow) <= touch * touch) {
                 touch(player, config);
-                vanish(shadow, owner);
+                vanish(shadow, owner, config);
                 return false;
             }
             if (!watched(player, config)) {
@@ -180,7 +200,7 @@ public final class ShadowEvent implements HauntEvent {
         }
 
         private void touch(ServerPlayer player, Config.Section config) {
-            float room = player.getHealth() - Assaults.safeHealth();
+            float room = Assaults.room(player, band);
             if (room > 0) {
                 play(player, SoundEvents.WARDEN_ATTACK_IMPACT, config.tone("touch_sound"));
                 player.hurtServer(

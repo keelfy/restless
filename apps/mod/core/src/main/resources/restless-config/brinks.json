@@ -1,0 +1,358 @@
+{
+  "version": 1,
+  "events": {
+    "restless:final_blow": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "warn_ticks": 60,
+      "interval_ticks": 5,
+      "ring_radius": 3.0,
+      "ring_points": 16,
+      "damage": 20.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      }
+    },
+    "restless:the_hanging": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "warn_ticks": 70,
+      "amplifier": 3,
+      "effect_ticks": 5,
+      "rise_ticks": 200,
+      "max_height": 24.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "particles": {
+        "count": 6,
+        "dx": 0.4,
+        "dy": 0.1,
+        "dz": 0.4,
+        "speed": 0.02,
+        "offset_y": 0.2
+      },
+      "fall_step": 4.0,
+      "grace_ticks": 4,
+      "max_ticks": 400,
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      }
+    },
+    "restless:held_under": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "interval_ticks": 2,
+      "warn_ticks": 70,
+      "max_ticks": 600,
+      "start_air": 60,
+      "pull": 0.12,
+      "escape_blocks": 3.0,
+      "drown_damage": 2.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "particles": {
+        "count": 10,
+        "dx": 0.4,
+        "dy": 0.6,
+        "dz": 0.4,
+        "speed": 0.05,
+        "offset_y": 1.0
+      }
+    },
+    "restless:pyre": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "interval_ticks": 5,
+      "warn_ticks": 70,
+      "burn_ticks": 400,
+      "keep_ticks": 60,
+      "fire_damage": 1.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "particles": {
+        "count": 8,
+        "dx": 0.4,
+        "dy": 0.6,
+        "dz": 0.4,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
+    },
+    "restless:withering": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "interval_ticks": 5,
+      "warn_ticks": 70,
+      "duration_ticks": 800,
+      "amplifier": 1,
+      "wither_damage": 1.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      "particles": {
+        "count": 8,
+        "dx": 0.4,
+        "dy": 0.6,
+        "dz": 0.4,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
+    },
+    "restless:count": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "step_ticks": 25,
+      "count_from": 3,
+      "light_safe": 8,
+      "damage": 20.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      }
+    },
+    "restless:the_hollow": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "warn_ticks": 70,
+      "min_distance": 12,
+      "max_distance": 20,
+      "mobs": [
+        "minecraft:husk",
+        "minecraft:vindicator"
+      ],
+      "name": "Hollow",
+      "interval_ticks": 10,
+      "max_ticks": 1800,
+      "cleanup_ticks": 40,
+      "relief": 0.1,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      "particles": {
+        "count": 20,
+        "dx": 0.3,
+        "dy": 0.8,
+        "dz": 0.3,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
+    },
+    "restless:ledge_push": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "interval_ticks": 5,
+      "warn_ticks": 70,
+      "push": 1.0,
+      "lift": 0.3,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "push_sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "particles": {
+        "count": 6,
+        "dx": 0.4,
+        "dy": 0.1,
+        "dz": 0.4,
+        "speed": 0.02,
+        "offset_y": 0.2
+      },
+      "fall_step": 4.0,
+      "grace_ticks": 4,
+      "max_ticks": 400,
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      }
+    },
+    "restless:circle_of_knives": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "interval_ticks": 5,
+      "warn_ticks": 70,
+      "ring_radius": 8.0,
+      "ring_points": 12,
+      "ring_height": 1.0,
+      "aim_height": 1.0,
+      "speed": 0.35,
+      "base_damage": 8.0,
+      "life_ticks": 200,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      }
+    },
+    "restless:smother_brink": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "dark_below": 8,
+      "delay_ticks": 80,
+      "interval_ticks": 2,
+      "max_steps": 200,
+      "drain": 12,
+      "pulse_every": 10,
+      "damage": 1.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      },
+      "pulse_sound": {
+        "volume": 0.8,
+        "pitch": 1.0
+      }
+    },
+    "restless:embrace_brink": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "delay_ticks": 80,
+      "interval_ticks": 20,
+      "max_steps": 20,
+      "escape_blocks": 10.0,
+      "damage_step": 0.5,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "particles": {
+        "count": 8,
+        "dx": 0.4,
+        "dy": 0.6,
+        "dz": 0.4,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
+    },
+    "restless:red_room": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "interval_ticks": 5,
+      "warn_ticks": 70,
+      "duration_ticks": 200,
+      "beat_ticks": 20,
+      "hit_ticks": 20,
+      "distance": 10.0,
+      "min_angle": 0.0,
+      "max_angle": 30.0,
+      "watch_degrees": 45.0,
+      "damage": 4.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      }
+    },
+    "restless:drain": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "interval_ticks": 20,
+      "warn_ticks": 80,
+      "low_food": 6,
+      "max_steps": 15,
+      "damage": 2.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "particles": {
+        "count": 6,
+        "dx": 0.4,
+        "dy": 0.6,
+        "dz": 0.4,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
+    },
+    "restless:bound": {
+      "weight": 0.3,
+      "band": "brink",
+      "min_power": 0.6,
+      "min_health": 4.0,
+      "interval_ticks": 2,
+      "warn_ticks": 70,
+      "min_distance": 8,
+      "max_distance": 14,
+      "mobs": [
+        "minecraft:husk",
+        "minecraft:vindicator",
+        "minecraft:spider"
+      ],
+      "amplifier": 6,
+      "effect_ticks": 10,
+      "pull_steps": 40,
+      "pull": 0.25,
+      "arrive_distance": 1.5,
+      "max_ticks": 600,
+      "cleanup_ticks": 40,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      "particles": {
+        "count": 6,
+        "dx": 0.4,
+        "dy": 0.1,
+        "dz": 0.4,
+        "speed": 0.02,
+        "offset_y": 0.2
+      }
+    }
+  }
+}

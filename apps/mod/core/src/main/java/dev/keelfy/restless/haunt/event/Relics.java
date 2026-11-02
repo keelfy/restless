@@ -595,8 +595,7 @@ final class Relics {
         Scheduler.repeat(player, 0, config.integer("note_ticks"), (p, n) -> {
             // Semitones above the lowest note; the pitch of a note block, two octaves at most.
             float pitch = (float) Math.pow(2.0, (Integer.parseInt(melody[n]) - 12) / 12.0);
-            Nearby.sound(
-                    p, SoundEvents.NOTE_BLOCK_FLUTE.value(), at, new Config.Tone(tone.volume(), pitch * tone.pitch()));
+            Nearby.sound(p, HauntSounds.LULLABY, at, new Config.Tone(tone.volume(), pitch * tone.pitch()));
             return n + 1 < melody.length;
         });
     }

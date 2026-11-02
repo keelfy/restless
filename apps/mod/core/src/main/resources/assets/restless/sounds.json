@@ -56,5 +56,37 @@
     "sounds": [
       { "name": "restless:haunt/screech" }
     ]
+  },
+  "haunt.song": {
+    "subtitle": "subtitles.restless.song",
+    "sounds": [{ "name": "restless:haunt.moan", "type": "event" }]
+  },
+  "haunt.horn": {
+    "subtitle": "subtitles.restless.horn",
+    "sounds": [{ "name": "minecraft:item.goat_horn.sound.2", "type": "event" }]
+  },
+  "haunt.music_box": {
+    "subtitle": "subtitles.restless.music_box",
+    "sounds": [{ "name": "minecraft:block.note_block.chime", "type": "event" }]
+  },
+  "haunt.lullaby": {
+    "subtitle": "subtitles.restless.lullaby",
+    "sounds": [{ "name": "minecraft:block.note_block.flute", "type": "event" }]
+  },
+  "haunt.claw_scratch": {
+    "subtitle": "subtitles.restless.claw_scratch",
+    "sounds": [{ "name": "minecraft:item.axe.scrape", "type": "event" }]
+  },
+  "haunt.chair_creak": {
+    "subtitle": "subtitles.restless.chair_creak",
+    "sounds": [{ "name": "minecraft:block.wooden_trapdoor.open", "type": "event" }]
+  },
+  "haunt.mirror_ring": {
+    "subtitle": "subtitles.restless.mirror_ring",
+    "sounds": [{ "name": "minecraft:block.amethyst_block.chime", "type": "event" }]
+  },
+  "haunt.mirror_crack": {
+    "subtitle": "subtitles.restless.mirror_crack",
+    "sounds": [{ "name": "minecraft:block.glass.hit", "type": "event" }]
   }
 }

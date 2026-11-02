@@ -66,6 +66,10 @@ public final class Config {
             "machines",
             "relics",
             "fittings",
+            "ambushes",
+            "torments",
+            "brinks",
+            "lethals",
             "scenarios");
     /** The namespace of events that use only vanilla content. */
     static final String DEFAULT_NAMESPACE = "minecraft";

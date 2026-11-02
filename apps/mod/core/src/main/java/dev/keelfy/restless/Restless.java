@@ -7,6 +7,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Anger;
+import dev.keelfy.restless.haunt.Bands;
 import dev.keelfy.restless.haunt.Candle;
 import dev.keelfy.restless.haunt.Compass;
 import dev.keelfy.restless.haunt.Corruption;
@@ -37,6 +38,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -90,6 +92,9 @@ public final class Restless {
 
     /** Call when a living thing dies; {@code killer} is whoever dealt the blow, if anyone. */
     public static void onKill(@Nullable Entity killer, LivingEntity dead) {
+        if (dead instanceof ServerPlayer victim) {
+            Bands.died(victim);
+        }
         if (killer instanceof ServerPlayer player) {
             if (dead instanceof Mob) {
                 Reactions.trigger(player, Trait.Trigger.KILL);
@@ -103,6 +108,11 @@ public final class Restless {
     /** Call when a player breaks a block, before it is gone; {@code state} is what stood there. */
     public static void onBreakBlock(ServerPlayer player, BlockState state, BlockPos pos) {
         Anger.broke(player, state, pos);
+    }
+
+    /** Call before a player takes damage; returns the amount to apply, capped if a spirit's creature dealt it. */
+    public static float onHurt(Entity victim, DamageSource source, float amount) {
+        return victim instanceof ServerPlayer player ? Bands.cap(source, player, amount) : amount;
     }
 
     /** Call when a player says something in chat. */

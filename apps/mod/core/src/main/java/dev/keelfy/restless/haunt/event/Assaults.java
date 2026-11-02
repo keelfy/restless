@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.Band;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -99,8 +100,8 @@ final class Assaults {
                 SimpleEvent.harmful(
                         "suffocation",
                         EventTag.ASSAULT,
-                        player -> healthy(player, "suffocation") && !player.isInWater() && dark(player),
-                        Assaults::suffocate),
+                        player -> healthy(player, "suffocation") && !player.isInWater() && dark(player, "suffocation"),
+                        player -> suffocate(player, "suffocation", Band.THREAT)),
                 // 52: always toward a drop onto solid ground
                 SimpleEvent.harmful(
                         "shove",
@@ -124,13 +125,17 @@ final class Assaults {
                         Assaults::thunderKnocks),
                 // 60
                 SimpleEvent.harmful(
-                        "embrace", EventTag.ASSAULT, player -> healthy(player, "embrace"), Assaults::embrace),
+                        "embrace",
+                        EventTag.ASSAULT,
+                        player -> healthy(player, "embrace"),
+                        player -> embrace(player, "embrace", Band.THREAT)),
                 // 100
                 SimpleEvent.harmful(
                         "the_call",
                         EventTag.ASSAULT,
-                        player -> healthy(player, "the_call") && night(player) && callTarget(player) != null,
-                        Assaults::call));
+                        player ->
+                                healthy(player, "the_call") && night(player) && callTarget(player, "the_call") != null,
+                        player -> call(player, "the_call")));
     }
 
     /** Telegraphed events stop hurting once the player is down to this much health. */
@@ -138,9 +143,15 @@ final class Assaults {
         return (float) Config.section("assaults").num("safe_health");
     }
 
-    /** Enough health above the safe floor for the event to start. */
+    /** How much damage the band still allows the player. */
+    static float room(ServerPlayer player, Band band) {
+        return band.room(player.getHealth());
+    }
+
+    /** Enough health above the safe floor for the event to start; a lethal event needs none. */
     static boolean healthy(ServerPlayer player, String id) {
-        return player.getHealth() > safeHealth() + Config.event(id).num("margin");
+        return Band.of(id) == Band.LETHAL
+                || player.getHealth() > safeHealth() + Config.event(id).num("margin");
     }
 
     private static void shove(ServerPlayer player) {
@@ -207,16 +218,17 @@ final class Assaults {
                         tone.pitch());
     }
 
-    private static boolean dark(ServerPlayer player) {
+    /** Whether the light at the player is below the event's {@code dark_below}. */
+    static boolean dark(ServerPlayer player, String id) {
         return player.level().getMaxLocalRawBrightness(player.blockPosition())
-                < Config.event("suffocation").integer("dark_below");
+                < Config.event(id).integer("dark_below");
     }
 
     /**
      * A heartbeat first, then the air drains until the player finds light; out of water nothing else would hurt them.
      */
-    private static void suffocate(ServerPlayer player) {
-        Config.Section config = Config.event("suffocation");
+    static void suffocate(ServerPlayer player, String id, Band band) {
+        Config.Section config = Config.event(id);
         Config.Tone start = config.tone("sound");
         Config.Tone pulse = config.tone("pulse_sound");
         player.level()
@@ -230,7 +242,7 @@ final class Assaults {
                         start.volume(),
                         start.pitch());
         Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("interval_ticks"), (p, n) -> {
-            if (!dark(p) || p.isInWater() || p.getHealth() <= safeHealth() || n >= config.integer("max_steps")) {
+            if (!dark(p, id) || p.isInWater() || room(p, band) <= 0 || n >= config.integer("max_steps")) {
                 return false;
             }
             p.setAirSupply(Math.max(0, p.getAirSupply() - config.integer("drain")));
@@ -246,7 +258,10 @@ final class Assaults {
                                 pulse.volume(),
                                 pulse.pitch());
                 if (p.getAirSupply() == 0) {
-                    p.hurtServer(p.level(), p.damageSources().drown(), (float) config.num("damage"));
+                    p.hurtServer(
+                            p.level(),
+                            p.damageSources().drown(),
+                            Math.min((float) config.num("damage"), room(p, band)));
                 }
             }
             return true;
@@ -291,9 +306,9 @@ final class Assaults {
     }
 
     /** A hit every so often, a little harder each time, until the player is far enough from where it began. */
-    private static void embrace(ServerPlayer player) {
+    static void embrace(ServerPlayer player, String id, Band band) {
         Vec3 origin = player.position();
-        Config.Section config = Config.event("embrace");
+        Config.Section config = Config.event(id);
         Config.Tone start = config.tone("sound");
         Config.Tone hit = config.tone("hit_sound");
         Config.Burst souls = config.burst("particles");
@@ -310,7 +325,7 @@ final class Assaults {
         double escape = config.num("escape_blocks");
         Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("interval_ticks"), (p, n) -> {
             if (p.position().distanceToSqr(origin) >= escape * escape
-                    || p.getHealth() <= safeHealth()
+                    || room(p, band) <= 0
                     || n >= config.integer("max_steps")) {
                 return false;
             }
@@ -338,31 +353,29 @@ final class Assaults {
             p.hurtServer(
                     p.level(),
                     Taken.by(p.level(), Taken.TAKEN),
-                    Math.min((float) config.num("damage_step") * (n + 1), p.getHealth() - safeHealth()));
+                    Math.min((float) config.num("damage_step") * (n + 1), room(p, band)));
             return true;
         });
     }
 
     /** Night in the overworld; the other dimensions have no day, so the call may come at any time there. */
-    private static boolean night(ServerPlayer player) {
+    static boolean night(ServerPlayer player) {
         return player.level().dimension() != Level.OVERWORLD || player.level().isDarkOutside();
     }
 
     /**
      * The nearest lava within the event's radius, else a bottomless column a few blocks off; the call pulls toward it.
      */
-    private static @Nullable Vec3 callTarget(ServerPlayer player) {
+    static @Nullable Vec3 callTarget(ServerPlayer player, String id) {
         ServerLevel level = player.level();
         BlockPos here = player.blockPosition();
-        BlockPos lava = Nearby.all(
-                        player, "the_call", state -> state.getFluidState().is(FluidTags.LAVA))
-                .stream()
+        BlockPos lava = Nearby.all(player, id, state -> state.getFluidState().is(FluidTags.LAVA)).stream()
                 .min(Comparator.comparingDouble(pos -> pos.distSqr(here)))
                 .orElse(null);
         if (lava != null) {
             return Vec3.atBottomCenterOf(lava);
         }
-        double distance = Config.event("the_call").num("void_distance");
+        double distance = Config.event(id).num("void_distance");
         for (int i = 0; i < 16; i++) {
             double angle = i * Math.PI / 8;
             BlockPos edge = BlockPos.containing(
@@ -381,12 +394,13 @@ final class Assaults {
      * A moan first, then the player is drawn along the ground toward lava or the void a little every step. Walking away
      * far enough breaks it. It also ends on arrival, in lava, at the safe health, or after a while.
      */
-    private static void call(ServerPlayer player) {
-        Vec3 target = callTarget(player);
+    static void call(ServerPlayer player, String id) {
+        Vec3 target = callTarget(player, id);
         if (target == null) {
             return;
         }
-        Config.Section config = Config.event("the_call");
+        Band band = Band.of(id);
+        Config.Section config = Config.event(id);
         Config.Tone tone = config.tone("sound");
         Config.Burst souls = config.burst("particles");
         player.level()
@@ -404,7 +418,7 @@ final class Assaults {
             double dx = target.x - p.getX();
             double dz = target.z - p.getZ();
             double left = Math.max(Math.hypot(dx, dz), 1.0E-4);
-            if (p.getHealth() <= safeHealth()
+            if (room(p, band) <= 0
                     || p.isInLava()
                     || left <= config.num("arrive_distance")
                     || left >= began + config.num("free_distance")

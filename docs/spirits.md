@@ -68,7 +68,7 @@ event, the chance each spirit rolls it next.
 
 ### Anger
 
-Anger is saved per spirit and only goes up for now (offerings that lower it come later). The amounts are the `anger` config:
+Anger is saved per spirit. It goes up from what the player does and down only when a spirit is satisfied (see the table below). The amounts are the `anger` config:
 
 | Source | Amount | Who takes it |
 |---|---|---|
@@ -77,7 +77,14 @@ Anger is saved per spirit and only goes up for now (offerings that lower it come
 | Lighting a log or leaves with flint and steel or a fire charge | `burn_forest` 0.1 per ignition | same |
 | Breaking a block within `anchor_reach` (3) of a territorial spirit's anchor | `break_anchor` 0.3 | that spirit only |
 
-Anger is capped at 1. A territorial spirit takes nothing from a player outside its radius, and a player's actions never
+Two things lower it, in `assaults.json`:
+
+| Source | Amount | Who loses it |
+|---|---|---|
+| A lethal event killed the player (they die within `relief_window_ticks`, 2400, of it) | `death_relief` 0.5 | the player's spirits, and territorial ones whose radius covers the death |
+| An avenger (`the_avenger`) beaten | its own amount | same |
+
+Anger is floored at 0 and capped at 1. A territorial spirit takes nothing from a player outside its radius, and a player's actions never
 anger another player's personal spirits. Fire is counted when the player lights it, not when a forest burns down.
 
 ### Story
@@ -872,6 +879,56 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `rotten_planks` | 508 | LIGHT | BLOCKS | 0.25 | Indoors, planks within 10 | One plank turns into rotten planks, then the rot spreads to touching planks, 2 per second, up to 24 blocks. They are put back after 2 min; under hardcore they stay |
 | `black_candle` | 509 | LIGHT | LIGHTS | 0.25 | Indoors, an unlit candle within 10, or free floor to set one on | The candle turns black and lights itself (or a lit black candle is set down), with soul fire flames for 20 s. Put back after 2 min (stays under hardcore) |
 | `cracked_mirror` | 510 | LIGHT | BLOCKS | 0.25 | Indoors, a wall at head height within 8, 2+ away and outside 60° of where the player looks | A cracked mirror appears on the wall. When the player looks at it from within 6 blocks, a dark figure shows in it for 2 s. Gone after 30 s more |
+| `hurled_block` | — | HARMFUL | ASSAULT | 0.4 | Not peaceful, health above 5 hearts, a loose block (gravel, cobblestone and the like) within reach | A loose block nearby shivers and lifts in a cloud of dust, then flies at you. Step aside. |
+| `flung_tools` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts, a chest with tools in it nearby | A chest nearby rattles and opens, and the tools inside fly at you one by one. Dodge them or empty the chest. |
+| `volley` | — | HARMFUL | ASSAULT | 0.4 | Not peaceful, health above 5 hearts, light level below `dark_below` | A skeleton rattles somewhere in the dark, then a few arrows come from that one direction. Take cover. |
+| `cave_in` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts, a solid roof overhead | Dust and creaking overhead, then gravel falls on the spot where you stand. Step out from under it. |
+| `dripstone_rain` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts, a solid roof overhead | Pointed dripstone breaks off the ceiling around you, wave after wave. Keep moving. |
+| `possessed_mob` | — | HARMFUL | ASSAULT | 0.4 | Not peaceful, health above 5 hearts, a hostile mob nearby | A hostile mob nearby is lit by spirit fire, then turns fast and strong and comes for you. Kill it. |
+| `frenzy` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts, at least `min_mobs` hostile mobs nearby | Every hostile mob nearby is seized by spirit fire, then turns fast and strong. Fall back. |
+| `turned_pets` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts, the player has a tamed wolf or cat nearby | Your tamed wolves and cats stand and growl, then go for you for a while. Walk away. |
+| `vex_swarm` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts | A cold wail, then a few short-lived vexes named "?" come out of the air. Fight back. |
+| `ghost_creeper` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts | A hiss behind you, then a small blast there that breaks no blocks. Run on the hiss. |
+| `stalker` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts, standing room for the figure in line of sight | A figure appears far off and stands watching, then runs at you, hits once and is gone. Outrun it. |
+| `hail_of_bones` | — | HARMFUL | ASSAULT | 0.3 | Not peaceful, health above 5 hearts, overworld, night, open sky | Rattling in the night sky, then blocks of bone fall around you. Take cover under a roof. |
+| `rake` | — | HARMFUL | ASSAULT | 0.5 | Health above 5 hearts | Three scratches in the dark, then three blows. Moving between them is enough to be missed. |
+| `teeth_in_dark` | — | HARMFUL | ASSAULT | 0.5 | Health above 5 hearts, light level 0 | A growl where the light is gone, then a bite every few seconds. Find light. |
+| `searing_armor` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, a chestplate worn, dry, not fire resistant | The chestplate glows and burns every second. Take it off or jump into water. |
+| `frost_grip` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, can freeze, not warm (no fire or lava nearby, not in water) | A cold like powder snow on dry land, and it bites. Get to fire or a light. |
+| `pinned` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, not slowed, a hostile mob nearby | Heavy limbs, and every hostile nearby turns on you. Fight or wait it out. |
+| `throat` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, not in water, no bad luck effect | Air drains on dry land and a whisper says hush. Crouch and wait, or drink milk. |
+| `undertow_dry` | — | HARMFUL | ASSAULT | 0.4 | Health above 5 hearts, sprinting | Something drags you back while you sprint. Stop running. |
+| `lantern_burst` | — | HARMFUL | ASSAULT | 0.4 | Health above 5 hearts, a torch or lantern within reach | A torch or lantern sputters, then bursts into fire. Stay away from the lights. |
+| `blood_cough` | — | HARMFUL | AFFLICTION | 0.4 | Health above 5 hearts, no nausea | A wet cough every few seconds, five in all. Milk ends it. |
+| `wrong_step` | — | HARMFUL | BLOCKS | 0.4 | On the ground, standing room 1 block ahead | The ground ahead crumbles into a hole, a fall of one to three blocks. Watch where you step. |
+| `ash_storm` | — | HARMFUL | ASSAULT | 0.5 | Health above 5 hearts, in the Nether | A wind of soul fire in the Nether. Take shelter behind a wall. |
+| `hand_below` | — | HARMFUL | ASSAULT | 0.4 | Health above 5 hearts, on the ground | A circle of souls under your feet. Stay on it and a hand takes hold. Step off. |
+| `blade_behind` | — | HARMFUL | ASSAULT | 0.4 | Health above 5 hearts | A sweep sounds at your back. Turn to face it before it lands. |
+| `door_bite` | — | HARMFUL | DOORS | 0.3 | Health above 5 hearts, a door in the player's path | A door swings open by itself and slams on whoever passes. Use another way. |
+| `night_terror` | — | HARMFUL | ASSAULT | 0.5 | Health above 5 hearts, the player is asleep | A heartbeat in your sleep, then you are thrown awake screaming. Wards hold it off. |
+| `stone_fists` | — | HARMFUL | ASSAULT | 0.4 | Health above 5 hearts, leaning on a wall | The wall you lean on rumbles and strikes. Step away from it. |
+| `final_blow` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, health above `min_health` | A roar and a ring of souls. Whoever is still inside it when it ends is struck down to half a heart. |
+| `the_hanging` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, on the ground, not in water, no slow falling | You are lifted high into the air, then let go. Slow falling, water, or a block under you softens the drop. |
+| `held_under` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, under water, no water breathing | In deep water something pushes you down until your breath is gone. Swim sideways out of the column. |
+| `pyre` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, not in water, not fire immune | A fire that will not go out, and fire resistance fails. Water puts it out. |
+| `withering` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, no wither effect | A wither that goes on and on. Milk ends it. |
+| `count` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, not in light | A countdown on the screen: three, two, one. Reach light or holy ground before it ends. |
+| `the_hollow` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, standing room for a hostile | A named creature of the spirit hunts you, and its blows cannot kill. Kill it and the spirit calms. |
+| `ledge_push` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, at the edge of a drop | A strong shove at the edge of a drop. Crouch when the warning comes. |
+| `circle_of_knives` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts | Arrows hang in a ring around you, then close in. Break out of the ring. |
+| `smother_brink` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, not in water, light level below `dark_below` | The air is taken from you in the dark, past the safe point. Find light. |
+| `embrace_brink` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts | Cold hands close around you, harder each time, past the safe point. Get ten blocks away. |
+| `red_room` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, standing room for a figure | Darkness, a heartbeat, and a figure in sight that strikes every second you look at it. Look away. |
+| `drain` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts | Your health drains a heart a second and your hunger bar empties. Eat. |
+| `bound` | — | HARMFUL | ASSAULT | 0.3 | Power ≥ 0.6, not peaceful, health above 2 hearts, standing room for a hostile | You are held in place while a hostile is dragged to you. Kill it. |
+| `judgement` | — | HARMFUL | ASSAULT | 0.2 | Evolved `demon` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown | Three knocks, a bolt that misses, then a bolt that kills whoever has not moved. |
+| `reaping` | — | HARMFUL | ASSAULT | 0.2 | Evolved `shade`/`wraith` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, standing room for the shadow | A shadow stands far off and walks closer whenever the player looks away. If it reaches them, its touch kills. It freezes while watched. |
+| `last_call` | — | HARMFUL | ASSAULT | 0.2 | Evolved `lost_one` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, night, lava or a bottomless column near | A moan, then a voice draws the player toward lava or the void and does not stop at any floor. Walking far enough away breaks it. |
+| `drowner` | — | HARMFUL | ASSAULT | 0.2 | Evolved `nix` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, in water | In water, bubbles and a gurgle, then the player is held under until the water takes them. Leaving the water in time, or breathing under it, saves them. |
+| `the_avenger` | — | HARMFUL | MOBS | 0.2 | Evolved `revenant` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, a killing spree: `min_kills` fresh mob kills, and standing room for it | After a killing spree, a named avenger rises and hunts the player to the death. Beating it spends the spirit's anger. |
+| `hellring` | — | HARMFUL | ASSAULT | 0.2 | Evolved `demon` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown | A roar and a ring of fire that closes in over ten seconds. Whoever is still inside when it shuts burns to death. |
+| `the_double` | — | HARMFUL | ASSAULT | 0.2 | Evolved `phantom` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, standing room for the double | A copy of the player walks up and kills with one touch. Three blows from the player drive it away. |
+| `foretold` | — | HARMFUL | ASSAULT | 0.2 | Evolved `banshee` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown | A bell and a true omen in the journal: at dusk the spirit takes the player, unless they are in a bed or inside a ward by then. |
 
 ## Chances
 
@@ -936,7 +993,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 |---|---|
 | `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `corruption`, `evolution`, `journal`, `hardcore`, `restore`, `swaps`, `place`, `said` |
 | `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words, hint and weakness), `story` (nickname words, days, causes) |
-| `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `items`, `blocks`, `mobs`, `presence`, `lies` | `events.<namespace>:<id>` for that group (`assaults.json` also holds `assaults.safe_health`) |
+| `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `ambushes`, `torments`, `brinks`, `lethals`, `items`, `blocks`, `mobs`, `presence`, `lies` | `events.<namespace>:<id>` for that group (`assaults.json` also holds the `assaults` section: `safe_health`, `brink_health`, `mercy_ticks`, `lethal`, `lethal_cooldown_days`, `death_relief`, `relief_window_ticks`; see [assaults.md](assaults.md)) |
 
 Names and descriptions of events live apart, in `restless-config/lang/en.json` and `ru.json` (copied to `config/restless/lang/` on first run,
 edit the copy). The debug screen shows them in the client's language, falling back to English, then to the id. A new event needs an entry in both.

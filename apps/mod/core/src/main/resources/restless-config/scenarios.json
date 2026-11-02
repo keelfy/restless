@@ -100,6 +100,10 @@
     "minecraft:bad_dream": { "weight": 0.06, "min_power": 0.4, "evolved": false },
     "minecraft:taken_under": { "weight": 0.06, "min_power": 0.7, "evolved": true, "spirit": "nix" },
     "minecraft:the_debt": { "weight": 0.06, "min_power": 0.7, "evolved": true, "spirit": "demon" },
-    "minecraft:punchline": { "weight": 0.06, "min_power": 0.7, "evolved": true, "spirit": "trickster" }
+    "minecraft:punchline": { "weight": 0.06, "min_power": 0.7, "evolved": true, "spirit": "trickster" },
+    "minecraft:the_hunt": { "weight": 0.06, "min_power": 0.8, "evolved": false, "band": "brink" },
+    "minecraft:the_last_night": { "weight": 0.06, "min_power": 0.9, "evolved": true, "band": "lethal", "spirit_ids": ["shade", "wraith"] },
+    "minecraft:debt": { "weight": 0.06, "min_power": 0.9, "evolved": true, "band": "lethal", "spirit_ids": ["revenant"] },
+    "minecraft:drowning_season": { "weight": 0.06, "min_power": 0.9, "evolved": true, "band": "lethal", "spirit_ids": ["nix"] }
   }
 }

@@ -6,7 +6,7 @@
     "minecraft:pale_pet": { "weight": 0.25, "radius": 24, "restore_ticks": 6000 },
     "minecraft:pale_herd": { "weight": 0.3, "radius": 24, "max_animals": 4, "restore_ticks": 2400 },
     "minecraft:spirit_song": { "weight": 0.25, "radius": 16, "restore_ticks": 600 },
-    "minecraft:spirit_horn": { "weight": 0.25, "distance": 40.0, "sound": { "volume": 2.0, "pitch": 0.6 } },
+    "minecraft:spirit_horn": { "weight": 0.25, "distance": 40.0, "sound": { "volume": 2.0, "pitch": 1.0 } },
     "minecraft:sigil_banner": { "weight": 0.3, "radius": 12, "colour": "black", "restore_ticks": 2400 },
     "minecraft:whispering_item": { "weight": 0.25, "restore_ticks": 3600 },
     "minecraft:hollow_trim": { "weight": 0.25, "material": "minecraft:quartz", "restore_ticks": 2400 },

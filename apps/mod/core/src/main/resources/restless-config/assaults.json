@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "assaults": { "safe_health": 6.0 },
+  "assaults": { "safe_health": 6.0, "brink_health": 1.0, "mercy_ticks": 1200, "lethal": "on", "lethal_cooldown_days": 3.0, "death_relief": 0.5, "relief_window_ticks": 2400 },
   "events": {
     "minecraft:cold_touch": {
       "weight": 1.0,

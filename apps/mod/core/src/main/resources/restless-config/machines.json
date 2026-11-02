@@ -8,7 +8,7 @@
     "minecraft:wall_map_shows": { "weight": 0.3, "radius": 12, "restore_ticks": 2400 },
     "minecraft:spirit_candle_out": { "weight": 0.3, "ticks": 600, "sound": { "volume": 0.8, "pitch": 1.0 } },
     "minecraft:holy_water_cloudy": { "weight": 0.2, "sound": { "volume": 0.6, "pitch": 0.8 } },
-    "minecraft:mirror_names": { "weight": 0.25, "ticks": 36000, "sound": { "volume": 0.5, "pitch": 1.4 } },
+    "minecraft:mirror_names": { "weight": 0.25, "ticks": 36000, "sound": { "volume": 0.5, "pitch": 1.0 } },
     "minecraft:chat_repeats": { "weight": 0.3, "format": "<???> %s", "max_length": 100, "min_age_ticks": 200, "max_age_ticks": 12000, "delay_ticks": 40, "delay_spread_ticks": 200 }
   }
 }
