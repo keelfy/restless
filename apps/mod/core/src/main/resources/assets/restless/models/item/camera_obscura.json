@@ -22,5 +22,13 @@
     {"from": [12.875,2.875,3.9],"to": [14.125,4.125,5.1],"faces": {"down": {"uv": [12.875,10.9,14.125,12.1],"texture": "#brass"},"up": {"uv": [12.875,3.9,14.125,5.1],"texture": "#brass"},"north": {"uv": [1.875,11.875,3.125,13.125],"texture": "#brass"},"south": {"uv": [12.875,11.875,14.125,13.125],"texture": "#brass"},"west": {"uv": [3.9,11.875,5.1,13.125],"texture": "#brass"},"east": {"uv": [10.9,11.875,12.1,13.125],"texture": "#brass"}}},
     {"from": [12.875,10.875,3.9],"to": [14.125,12.125,5.1],"faces": {"down": {"uv": [12.875,10.9,14.125,12.1],"texture": "#brass"},"up": {"uv": [12.875,3.9,14.125,5.1],"texture": "#brass"},"north": {"uv": [1.875,3.875,3.125,5.125],"texture": "#brass"},"south": {"uv": [12.875,3.875,14.125,5.125],"texture": "#brass"},"west": {"uv": [3.9,3.875,5.1,5.125],"texture": "#brass"},"east": {"uv": [10.9,3.875,12.1,5.125],"texture": "#brass"}}}
   ],
-  "display": {"gui": {"rotation": [20, 145, 0], "translation": [0, 0, 0], "scale": [0.95, 0.95, 0.95]}, "ground": {"rotation": [0, 0, 0], "translation": [0, 3, 0], "scale": [0.55, 0.55, 0.55]}, "fixed": {"rotation": [0, 180, 0], "translation": [0, 0, 0], "scale": [0.85, 0.85, 0.85]}, "thirdperson_righthand": {"rotation": [75, 180, 0], "translation": [0, 2, 1], "scale": [0.65, 0.65, 0.65]}, "thirdperson_lefthand": {"rotation": [75, 180, 0], "translation": [0, 2, 1], "scale": [0.65, 0.65, 0.65]}, "firstperson_righthand": {"rotation": [0, 155, -8], "translation": [1, 2, 0], "scale": [0.75, 0.75, 0.75]}, "firstperson_lefthand": {"rotation": [0, 155, 8], "translation": [1, 2, 0], "scale": [0.75, 0.75, 0.75]}}
+  "display": {
+    "gui": {"rotation": [20, 145, 0], "translation": [0, 0, 0], "scale": [0.95, 0.95, 0.95]},
+    "ground": {"rotation": [0, 0, 0], "translation": [0, 3, 0], "scale": [0.55, 0.55, 0.55]},
+    "fixed": {"rotation": [0, 180, 0], "translation": [0, 0, 0], "scale": [0.85, 0.85, 0.85]},
+    "thirdperson_righthand": {"rotation": [90, 0, 0], "translation": [0, 2, 1], "scale": [0.65, 0.65, 0.65]},
+    "thirdperson_lefthand": {"rotation": [90, 0, 0], "translation": [0, 2, 1], "scale": [0.65, 0.65, 0.65]},
+    "firstperson_righthand": {"rotation": [0, 0, 0], "translation": [-1, 2, 0], "scale": [0.75, 0.75, 0.75]},
+    "firstperson_lefthand": {"rotation": [0, 0, 0], "translation": [-1, 2, 0], "scale": [0.75, 0.75, 0.75]}
+  }
 }
