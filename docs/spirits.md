@@ -116,7 +116,7 @@ territorial ones whose radius holds them.
 | Clue | Tool | What it shows |
 |---|---|---|
 | footprints | **Ash powder** (charcoal, makes 4) | Placed flat like salt. After `ash.reveal_ticks` (30 s), if a spirit that leaves footprints is within `ash.reach` of it, it takes one of four prints (bare foot, paw, hoof, drag), picked by the spirit's seed: the same spirit always leaves the same print. |
-| silhouette | **Camera obscura** (iron, glass pane, black dye) | Use it: a **photograph** with the spirit's type and one trait's hint, `camera.cooldown_ticks` apart. The figure on the picture is drawn from the spirit's type (build: hooded, hunched, horned...) and its seed (small differences), so the same spirit always looks the same (`content/Apparition.java`). |
+| silhouette | **Camera obscura** (iron, glass pane, black dye) | Use it: a **photograph** with the spirit's type only (no trait, no weakness), `camera.cooldown_ticks` apart. The figure on the picture is drawn from the spirit's type (build: hooded, hunched, horned...) and its seed (small differences), so the same spirit always looks the same (`content/Apparition.java`). |
 | voice | **Spirit box** (block: iron, redstone, note block) | Say something in chat within `spirit_box.radius` of it: a moment later it answers with a word of one trait. |
 | planchette | **Ouija board** (block: planks, black dye, salt) | Use it: the planchette spells one trait's hint letter by letter on the action bar. |
 
@@ -158,8 +158,8 @@ traits, the bell of noise-hating ones). The salt, the charm and the scarecrow ha
 ## Banishing
 
 Every trait names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror. A spirit is
-weak to the one most of its traits name; a tie goes to the first in that order. A photograph shows the weakness of the
-trait it names, so a few photos of one spirit tell what it is weak to.
+weak to the one most of its traits name; a tie goes to the first in that order. Nothing shows the weakness directly: the
+player reads the traits (ouija board, spirit box, dreams) and tries a focus at the altar, where a wrong one enrages.
 
 One **altar** item (chiseled stone bricks, salt, candle) places a 3×3 platform centered on the clicked space:
 a worn charcoal-stone offering slab, raised tuff paving with recessed joints, a broken chalk circle and four iron
@@ -225,7 +225,7 @@ The **journal** (book, salt, ink sac) is put in every new player's inventory (`j
 again. It opens as a book; its notebook is saved per player with the world (`notebooks` in the haunt data), not on the
 item, so any journal shows it. It keeps what the player saw, never conclusions: it does not work out a weakness or a type.
 
-Notes are typed (`Notebook.Kind`) and tied to the spirit they came from: a photo (type, hint, weakness), a print in ash
+Notes are typed (`Notebook.Kind`) and tied to the spirit they came from: a photo (type only), a print in ash
 (every player within `ash.reach` of it), a spirit box word, the planchette's letters, the spirit box's word of a grave, a
 read gravestone, a dream, and the chronicle kinds: rested, banished, evolved. Each new note turns a page aloud; the same
 note is never written twice. `JournalPages` lays the notebook out as:
@@ -246,8 +246,7 @@ note is never written twice. `JournalPages` lays the notebook out as:
   the same spirit, so a wrong guess stays wrong. Nothing is archived until the player files it, and a rested spirit is
   not archived.
 - **Loose notes**: clues of spirits not met yet, without saying whose. They move to the dossier on meeting.
-- **Bestiary**: a page per type the player has photographed, with its grown name once a grown one was photographed, and
-  every trait hint a photo showed with what it shrinks from.
+- **Bestiary**: a page per type the player has photographed, with its grown name once a grown one was photographed.
 - **Chronicle**: rested, banished, evolved, and entries from saves before typed notes (read once from the old `journal`
   field).
 

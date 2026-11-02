@@ -136,7 +136,7 @@ First items. The player can learn what haunts them and defend a base.
 | Spirit candle | Flame leans toward the spirit; turns blue 2–3 s before an event (a warning) |
 | Spirit compass | Points at the spirit's position |
 | Ash powder | Scattered on the floor, shows footprints after 30 s; the print shape depends on the spirit |
-| Camera obscura | Takes a photo item with the spirit's silhouette and one trait hint |
+| Camera obscura | Takes a photo item with the spirit's silhouette and type |
 | Spirit box (block) | The player asks in chat nearby, the spirit answers a word from its traits' vocabulary |
 | Ouija board (block) | The planchette moves letter by letter; spells a trait hint or a lie (*lies* trait) |
 

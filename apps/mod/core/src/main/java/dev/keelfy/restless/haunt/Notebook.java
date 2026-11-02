@@ -50,8 +50,8 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
     /** What kind of thing was seen; decides where it goes in the journal. */
     public enum Kind {
         /**
-         * A camera photo. Args: type, hint, weakness; tag: the type id as shown ({@code shade} or
-         * {@code shade_evolved}).
+         * A camera photo. Args: type; tag: the type id as shown ({@code shade} or {@code shade_evolved}). Older notes
+         * also carry a hint and a weakness, which are no longer shown.
          */
         PHOTO(true),
         /** A print in ash. Args: the print. */
@@ -120,7 +120,7 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         HAUNTED(3),
         /** The first clue: reading clues, and that some lie. */
         CLUES(2),
-        /** The first photo, which shows a weakness: the altar and the ritual. */
+        /** The first photo, which names a type: the altar and the ritual. */
         WEAKNESS(3),
         /** The first grave or word of one: unfinished business. */
         GRAVES(2),

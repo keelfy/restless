@@ -66,8 +66,8 @@ public final class Divination {
     }
 
     /**
-     * The camera's photo: the spirit's type and one thing about it; empty when no spirit near the player shows in a
-     * picture.
+     * The camera's photo: only the spirit's type. Its traits and what it fears are for the other tools and the altar to
+     * tell; empty when no spirit near the player shows in a picture.
      */
     public static Optional<ItemStack> photograph(ServerPlayer player) {
         ServerLevel level = player.level();
@@ -82,24 +82,12 @@ public final class Divination {
         }
         HauntData.Haunting spirit = reading.get().spirit().haunting();
         Component type = Evolution.name(spirit);
-        Component hint = hint(reading.get().trait());
-        Component weakness = Component.translatable(
-                "focus.restless." + reading.get().trait().weakness().name().toLowerCase(java.util.Locale.ROOT));
         Journal.tagged(
-                player,
-                Notebook.Kind.PHOTO,
-                spirit,
-                spirit.spirit() + (spirit.evolved() ? "_evolved" : ""),
-                type,
-                hint,
-                weakness);
+                player, Notebook.Kind.PHOTO, spirit, spirit.spirit() + (spirit.evolved() ? "_evolved" : ""), type);
         ItemStack photo = new ItemStack(Content.PHOTO.get());
         photo.set(
                 DataComponents.LORE,
-                new ItemLore(List.of(
-                        Component.translatable("item.restless.photo.silhouette", type),
-                        Component.translatable("item.restless.photo.hint", hint),
-                        Component.translatable("item.restless.photo.weakness", weakness))));
+                new ItemLore(List.of(Component.translatable("item.restless.photo.silhouette", type))));
         if (Platform.get().canReceive(player, ShutterPayload.TYPE)) {
             int film = reading.get().random().nextInt();
             photo.set(Content.FILM.get(), film);
@@ -183,7 +171,7 @@ public final class Divination {
         }));
     }
 
-    /** What the trait is, in a few words, for the camera, the ouija board and dreams. */
+    /** What the trait is, in a few words, for the ouija board and dreams. */
     public static Component hint(Trait trait) {
         return Component.translatable("trait.restless." + trait.id() + ".hint");
     }

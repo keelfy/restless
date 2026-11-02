@@ -105,13 +105,7 @@ final class JournalGameTests {
                     "the first clue must open the clues chapter");
 
             Journal.tagged(
-                    player,
-                    Notebook.Kind.PHOTO,
-                    shade,
-                    "shade",
-                    Component.translatable("spirit.restless.shade"),
-                    "it feeds on light",
-                    Component.translatable("focus.restless.glowstone"));
+                    player, Notebook.Kind.PHOTO, shade, "shade", Component.translatable("spirit.restless.shade"));
             List<String> after = keys(player, data);
             byte[] grey = new byte[Picture.SIZE];
             grey[5] = 77;
@@ -210,14 +204,7 @@ final class JournalGameTests {
                     HauntData.Haunting.born("shade", now, helper.getLevel().getRandom());
             Component shade = Component.translatable("spirit.restless.shade");
             for (HauntData.Haunting met : List.of(first, second)) {
-                Journal.tagged(
-                        player,
-                        Notebook.Kind.PHOTO,
-                        met,
-                        "shade",
-                        shade,
-                        "it feeds on light",
-                        Component.translatable("focus.restless.glowstone"));
+                Journal.tagged(player, Notebook.Kind.PHOTO, met, "shade", shade);
             }
             Journal.tagged(player, Notebook.Kind.BANISHED, first, "shade", shade, "Marta");
             Journal.tagged(player, Notebook.Kind.BANISHED, null, "phantom", shade, "Nobody");

@@ -7,7 +7,6 @@ import dev.keelfy.restless.haunt.Notebook.Note;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -165,13 +164,9 @@ public final class JournalPages {
         return List.of(new Card(Component.translatable("journal.restless.section.loose"), Optional.empty(), all));
     }
 
-    /**
-     * A card per kind of spirit the player has photographed, and one with every trait a photo named and what it shrinks
-     * from.
-     */
+    /** A card per kind of spirit the player has photographed. */
     private static List<Card> bestiary(Notebook notebook) {
         Map<String, Boolean> kinds = new LinkedHashMap<>();
-        Set<Component> traits = new LinkedHashSet<>();
         for (Note note : notebook.notes()) {
             if (note.kind() != Kind.PHOTO || note.tag().isEmpty()) {
                 continue;
@@ -179,10 +174,6 @@ public final class JournalPages {
             String tag = note.tag().get();
             boolean grown = tag.endsWith(EVOLVED);
             kinds.merge(grown ? tag.substring(0, tag.length() - EVOLVED.length()) : tag, grown, Boolean::logicalOr);
-            traits.add(Component.translatable(
-                    "journal.restless.bestiary.trait",
-                    note.args().get(1),
-                    note.args().get(2)));
         }
         List<Card> cards = new ArrayList<>();
         kinds.forEach((kind, grown) -> {
@@ -196,12 +187,6 @@ public final class JournalPages {
             cards.add(new Card(
                     Component.translatable("journal.restless.bestiary." + kind + ".name"), Optional.empty(), entries));
         });
-        if (!traits.isEmpty()) {
-            cards.add(new Card(
-                    Component.translatable("journal.restless.bestiary.traits"),
-                    Optional.empty(),
-                    traits.stream().map(Entry::plain).toList()));
-        }
         return cards;
     }
 
