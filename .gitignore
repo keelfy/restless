@@ -3,6 +3,7 @@
 *.iml
 .vscode/
 out/
+/output/
 
 # Gradle / mod
 .gradle/

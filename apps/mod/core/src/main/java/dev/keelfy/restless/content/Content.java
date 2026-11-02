@@ -15,6 +15,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -56,6 +58,19 @@ public final class Content {
                     BuiltInRegistries.ITEM,
                     "ash",
                     key -> new BlockItem(ASH_LINE.get(), new Item.Properties().setId(key)));
+
+    public static final Supplier<EntityType<?>> ASH_FOOTPRINT = Platform.get()
+            .register(
+                    BuiltInRegistries.ENTITY_TYPE,
+                    "ash_footprint",
+                    key -> EntityType.Builder.<AshFootprint>of(AshFootprint::new, MobCategory.MISC)
+                            .sized(.5f, .02f)
+                            .eyeHeight(0)
+                            .clientTrackingRange(8)
+                            .noUpdateInterval()
+                            .fireImmune()
+                            .noLootTable()
+                            .build(key));
 
     public static final Supplier<Item> SPIRIT_CANDLE = item("spirit_candle", p -> new Item(p.stacksTo(1)));
     public static final Supplier<Item> SPIRIT_COMPASS = item("spirit_compass", p -> new Item(p.stacksTo(1)));

@@ -3,6 +3,8 @@ package dev.keelfy.restless.neoforge;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.content.AltarEntity;
 import dev.keelfy.restless.content.AltarRenderer;
+import dev.keelfy.restless.content.AshFootprint;
+import dev.keelfy.restless.content.AshFootprintRenderer;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.Darkroom;
 import dev.keelfy.restless.content.DreamcatcherEntity;
@@ -21,6 +23,7 @@ import java.util.List;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -84,6 +87,7 @@ public final class RestlessNeoForgeClient {
     @SubscribeEvent
     @SuppressWarnings("unchecked") // the registry is typed BlockEntityType<?>; this one is built for AltarEntity
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer((EntityType<AshFootprint>) Content.ASH_FOOTPRINT.get(), AshFootprintRenderer::new);
         event.registerBlockEntityRenderer(
                 (BlockEntityType<AltarEntity>) Content.ALTAR_ENTITY.get(), AltarRenderer::new);
         event.registerBlockEntityRenderer(

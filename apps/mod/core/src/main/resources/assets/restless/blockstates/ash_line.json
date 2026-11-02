@@ -1,19 +1,21 @@
 {
   "variants": {
-    "print=0": {
-      "model": "restless:block/ash_line"
-    },
-    "print=1": {
-      "model": "restless:block/ash_line_1"
-    },
-    "print=2": {
-      "model": "restless:block/ash_line_2"
-    },
-    "print=3": {
-      "model": "restless:block/ash_line_3"
-    },
-    "print=4": {
-      "model": "restless:block/ash_line_4"
-    }
+    "": [
+      {
+        "model": "restless:block/ash_line"
+      },
+      {
+        "model": "restless:block/ash_line",
+        "y": 90
+      },
+      {
+        "model": "restless:block/ash_line",
+        "y": 180
+      },
+      {
+        "model": "restless:block/ash_line",
+        "y": 270
+      }
+    ]
   }
 }

@@ -44,6 +44,7 @@ public final class AltarGameTests {
     private static final Map<String, Consumer<GameTestHelper>> TESTS = new LinkedHashMap<>();
 
     public AltarGameTests(IEventBus bus) {
+        AshGameTests.register(TESTS);
         DreamcatcherGameTests.register(TESTS);
         LanternGameTests.register(TESTS);
         HeldLightGameTests.register(TESTS);
