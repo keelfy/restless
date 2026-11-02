@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.ShutterPayload;
 import java.util.Optional;
 import java.util.Random;
 import net.minecraft.client.Camera;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
@@ -20,8 +21,8 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * The client side of the camera obscura: grabs the frame after the world is drawn (so without hand or HUD), greys it,
- * puts the spirit in as a pale figure where it stands, and sends it back as the photo's picture. Spirits have no model
- * of their own, so the figure exists only on film.
+ * puts the spirit in, looking as it does, as a pale figure where it stands, and sends it back as the photo's picture.
+ * Spirits have no model of their own, so the figure exists only on film.
  */
 public final class Darkroom {
     /** How tall a spirit stands, in blocks, measured up from its point. */
@@ -30,22 +31,36 @@ public final class Darkroom {
     private static final int FLASH_TICKS = 6;
 
     private static @Nullable ShutterPayload pending;
+    private static @Nullable CameraType viewBeforeShutter;
     private static long flashedAt = Long.MIN_VALUE;
 
     private Darkroom() {}
 
+    /**
+     * The lens sits at the eye, so the frame is always drawn from there: from behind or in front of the player the
+     * camera itself, and the player holding it, would be in the photo. The view is put back once the frame is grabbed.
+     */
     public static void shutter(ShutterPayload payload) {
         pending = payload;
+        Minecraft minecraft = Minecraft.getInstance();
+        if (viewBeforeShutter == null && !minecraft.options.getCameraType().isFirstPerson()) {
+            viewBeforeShutter = minecraft.options.getCameraType();
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+        }
     }
 
     /** Called once the world of a frame is drawn, before the hand and the HUD. */
     public static void afterLevel() {
         ShutterPayload shot = pending;
         Minecraft minecraft = Minecraft.getInstance();
-        if (shot == null || minecraft.level == null) {
+        if (shot == null) {
             return;
         }
         pending = null;
+        restoreView(minecraft);
+        if (minecraft.level == null) {
+            return;
+        }
         flashedAt = minecraft.level.getGameTime();
         Camera camera = minecraft.gameRenderer.mainCamera();
         Matrix4f projection = camera.getViewRotationProjectionMatrix(new Matrix4f());
@@ -53,7 +68,11 @@ public final class Darkroom {
         Optional<Vec3> at = shot.at();
         Screenshot.takeScreenshot(minecraft.gameRenderer.mainRenderTarget(), frame -> {
             try (frame) {
-                byte[] pixels = develop(frame, shot.film(), at.map(p -> project(projection, eye, p, frame)));
+                byte[] pixels = develop(
+                        frame,
+                        shot.film(),
+                        Apparition.of(shot.spirit(), shot.seed()),
+                        at.map(p -> project(projection, eye, p, frame)));
                 if (minecraft.getConnection() != null) {
                     minecraft
                             .getConnection()
@@ -62,6 +81,13 @@ public final class Darkroom {
                 }
             }
         });
+    }
+
+    private static void restoreView(Minecraft minecraft) {
+        if (viewBeforeShutter != null) {
+            minecraft.options.setCameraType(viewBeforeShutter);
+            viewBeforeShutter = null;
+        }
     }
 
     /** The camera flash, as a HUD layer: drawn after the frame was grabbed, so never on the photo. */
@@ -98,7 +124,7 @@ public final class Darkroom {
     }
 
     /** The frame cropped to the picture's shape, scaled down, greyed and aged, with the spirit in it. */
-    private static byte[] develop(NativeImage frame, int film, Optional<Figure> seen) {
+    private static byte[] develop(NativeImage frame, int film, Apparition look, Optional<Figure> seen) {
         int width = frame.getWidth();
         int height = frame.getHeight();
         double scale = Math.min((double) width / Picture.WIDTH, (double) height / Picture.HEIGHT);
@@ -137,7 +163,7 @@ public final class Darkroom {
             feetX = 14 + random.nextInt(Picture.WIDTH - 28);
             feetY = Math.min(Picture.HEIGHT + 4, tall + 6 + random.nextInt(Math.max(1, Picture.HEIGHT - (int) tall)));
         }
-        haunt(grey, feetX, feetY - tall, tall, random.nextDouble() * Math.PI * 2);
+        look.paint(grey, feetX, feetY - tall, tall);
 
         byte[] pixels = new byte[Picture.SIZE];
         for (int y = 0; y < Picture.HEIGHT; y++) {
@@ -150,35 +176,5 @@ public final class Darkroom {
             }
         }
         return pixels;
-    }
-
-    /**
-     * Lays a pale, hollow-eyed figure {@code tall} pixels high, its head at ({@code cx}, {@code top}), over the grey.
-     */
-    private static void haunt(double[] grey, double cx, double top, double tall, double phase) {
-        for (int y = 0; y < Picture.HEIGHT; y++) {
-            for (int x = 0; x < Picture.WIDTH; x++) {
-                double u = (x - cx) / tall;
-                double t = (y - top) / tall;
-                if (t < -0.15 || t > 1.05 || Math.abs(u) > 0.5) {
-                    continue;
-                }
-                double head = soft(0.1 - Math.hypot(u, t - 0.12), 0.035);
-                double half = 0.07 + 0.2 * Math.max(0, t - 0.2) + 0.025 * Math.sin(t * 14 + phase);
-                double body = t < 0.19 ? 0 : soft(half - Math.abs(u), 0.06) * Math.pow(Math.max(0, 1 - t), 0.6);
-                double halo = soft(0.22 - Math.hypot(u * 1.4, (t - 0.45) * 0.8), 0.2) * 0.25;
-                double eyes = soft(
-                        0.022 - Math.min(Math.hypot(u - 0.038, t - 0.115), Math.hypot(u + 0.038, t - 0.115)), 0.012);
-                double mist = Math.max(head, body) * 0.72 + halo;
-                int i = x + y * Picture.WIDTH;
-                grey[i] += (238 - grey[i]) * Math.min(1, mist);
-                grey[i] *= 1 - 0.75 * eyes * head;
-            }
-        }
-    }
-
-    /** 0 outside, 1 inside, ramping over {@code edge} across the border of a signed distance. */
-    private static double soft(double distance, double edge) {
-        return Mth.clamp(distance / edge + 0.5, 0, 1);
     }
 }

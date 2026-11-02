@@ -11,14 +11,19 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Tells a client its camera just caught a spirit: grab the next frame, with the spirit standing at {@code at} (or
- * wherever it likes when unknown), and send it back as the picture of the photo marked with {@code film}.
+ * wherever it likes when unknown), looking as the spirit of that type and seed does, and send it back as the picture of
+ * the photo marked with {@code film}.
  */
-public record ShutterPayload(int film, Optional<Vec3> at) implements CustomPacketPayload {
+public record ShutterPayload(int film, String spirit, long seed, Optional<Vec3> at) implements CustomPacketPayload {
     public static final Type<ShutterPayload> TYPE =
             new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "shutter"));
     public static final StreamCodec<ByteBuf, ShutterPayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             ShutterPayload::film,
+            ByteBufCodecs.STRING_UTF8,
+            ShutterPayload::spirit,
+            ByteBufCodecs.VAR_LONG,
+            ShutterPayload::seed,
             ByteBufCodecs.optional(Vec3.STREAM_CODEC),
             ShutterPayload::at,
             ShutterPayload::new);

@@ -106,7 +106,10 @@ public final class Divination {
                 SUBJECTS.put(film, spirit.uuid());
             }
             player.connection.send(new ClientboundCustomPayloadPacket(new ShutterPayload(
-                    film, Optional.ofNullable(reading.get().spirit().at()))));
+                    film,
+                    spirit.spirit(),
+                    spirit.seed(),
+                    Optional.ofNullable(reading.get().spirit().at()))));
         }
         return Optional.of(photo);
     }

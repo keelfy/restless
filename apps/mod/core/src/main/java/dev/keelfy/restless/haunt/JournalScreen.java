@@ -99,7 +99,7 @@ public final class JournalScreen extends Screen {
         bookHeight = Math.min(330, height - 20);
         left = (width - bookWidth) / 2;
         top = (height - bookHeight) / 2;
-        sidebar = Math.min(138, bookWidth / 3);
+        sidebar = bookWidth / 2 - 10;
         textX = left + sidebar + 22;
         textWidth = bookWidth - sidebar - 40;
         for (int i = 0; i < data.sections().size(); i++) {
@@ -294,15 +294,11 @@ public final class JournalScreen extends Screen {
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // Leather cover, stacked page edges, and a stitched spine, all in GUI pixels.
-        graphics.fill(left + 4, top + 5, left + bookWidth + 4, top + bookHeight + 5, 0x80000000);
-        graphics.fill(left, top, left + bookWidth, top + bookHeight, 0xFF493329);
-        graphics.fill(left + 5, top + 5, left + bookWidth - 5, top + bookHeight - 5, 0xFFAD9470);
-        graphics.fill(left + 8, top + 7, left + bookWidth - 8, top + bookHeight - 8, PAPER);
-        graphics.fill(left + 8, top + 7, left + sidebar + 5, top + bookHeight - 8, 0xFFD2BD94);
-        graphics.fill(left + sidebar + 5, top + 8, left + sidebar + 10, top + bookHeight - 8, 0xFFB49A74);
-        for (int y = top + 17; y < top + bookHeight - 12; y += 12) {
-            graphics.fill(left + sidebar + 6, y, left + sidebar + 8, y + 4, 0xFF765B44);
-        }
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(left, top);
+        graphics.pose().scale(bookWidth / 16.0f, bookHeight / 16.0f);
+        graphics.fakeItem(new ItemStack(Content.JOURNAL.get()), 0, 0);
+        graphics.pose().popMatrix();
         graphics.text(font, title, left + 15, top + 17, INK, false);
         graphics.text(font, data.sections().isEmpty() ? title : sectionTitle(section), textX, top + 17, MUTED, false);
         graphics.fill(textX, top + 32, left + bookWidth - 18, top + 33, 0xFFBEA47C);
@@ -317,6 +313,16 @@ public final class JournalScreen extends Screen {
         Component number = Component.translatable("journal.restless.page", page + 1, pages.size());
         graphics.text(font, number, textX + (textWidth - font.width(number)) / 2, top + bookHeight - 26, MUTED, false);
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    @Override
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        // Keep the world and the reader's hands visible behind the open pages.
     }
 
     private void drawBlock(GuiGraphicsExtractor graphics, Block block, int y) {
