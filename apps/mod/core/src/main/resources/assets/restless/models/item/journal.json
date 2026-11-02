@@ -351,7 +351,7 @@
     "gui": {
       "rotation": [
         0,
-        180,
+        0,
         0
       ],
       "translation": [
@@ -385,7 +385,7 @@
     "fixed": {
       "rotation": [
         0,
-        180,
+        0,
         0
       ],
       "translation": [

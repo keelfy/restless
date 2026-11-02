@@ -64,7 +64,8 @@ public record PhotoTooltip(Picture picture) implements ClientTooltipComponent {
                 Picture.HEIGHT);
     }
 
-    private static Identifier texture(Picture picture) {
+    /** The picture as a sepia texture, made on first use and kept for the last few shown. */
+    public static Identifier texture(Picture picture) {
         return TEXTURES.computeIfAbsent(picture, p -> {
             NativeImage image = new NativeImage(Picture.WIDTH, Picture.HEIGHT, false);
             for (int y = 0; y < Picture.HEIGHT; y++) {
