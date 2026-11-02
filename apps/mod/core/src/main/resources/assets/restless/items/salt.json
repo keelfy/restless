@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:item/salt"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:item/salt"
+  }
+}

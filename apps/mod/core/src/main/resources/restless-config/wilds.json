@@ -1,17 +1,132 @@
 {
   "version": 1,
   "events": {
-    "minecraft:desert_husk_haze": { "weight": 0.3, "distance": 28.0, "max_angle": 40.0, "vanish_distance": 14.0, "max_ticks": 400 },
-    "minecraft:desert_sand_trickle": { "weight": 0.3, "height": 6, "pulses": 12, "interval_ticks": 5, "particles": { "count": 10, "dx": 0.4, "dy": 0.0, "dz": 0.4, "speed": 0.0, "offset_y": -0.1 }, "sound": { "volume": 0.6, "pitch": 0.8 } },
-    "minecraft:desert_plate_click": { "weight": 0.3, "distance": 5.0, "sound": { "volume": 1.0, "pitch": 0.9 } },
-    "minecraft:swamp_lily_drift": { "weight": 0.3, "radius": 10, "steps": 6, "interval_ticks": 20, "stop_distance": 2.5, "restore_ticks": 1200 },
-    "minecraft:cauldron": { "weight": 0.3, "radius": 12, "pulses": 8, "interval_ticks": 10, "sound": { "volume": 0.8, "pitch": 1.0 }, "particles": { "count": 4, "dx": 0.2, "dy": 0.1, "dz": 0.2, "speed": 0.02, "offset_y": 1.0 } },
-    "minecraft:fireflies_dark": { "weight": 0.3, "radius": 12, "ticks": 600 },
-    "minecraft:snow_door_drift": { "weight": 0.3, "radius": 12, "layers": 4, "restore_ticks": 2400 },
-    "minecraft:snow_snowball": { "weight": 0.2, "distance": 10.0, "speed": 1.2, "sound": { "volume": 1.0, "pitch": 1.0 } },
-    "minecraft:snow_powder_path": { "weight": 0.2, "margin": 4.0, "distance": 5.0, "max_angle": 30.0, "restore_ticks": 1200 },
-    "minecraft:mountain_avalanche": { "weight": 0.3, "distance": 50.0, "height": 25.0, "steps": 24, "interval_ticks": 4, "rumble_every": 6, "sound": { "volume": 4.0, "pitch": 0.5 }, "particles": { "count": 60, "dx": 5.0, "dy": 1.5, "dz": 5.0, "speed": 0.05, "offset_y": 0.0 } },
-    "minecraft:mountain_wind_push": { "weight": 0.2, "margin": 4.0, "howls": 3, "interval_ticks": 10, "push": 0.3, "sound": { "volume": 2.0, "pitch": 0.6 } },
-    "minecraft:ocean_ship_bell": { "weight": 0.3, "distance": 40.0, "tolls": 3, "interval_ticks": 40, "sound": { "volume": 4.0, "pitch": 0.5 } }
+    "minecraft:desert_husk_haze": {
+      "weight": 0.3,
+      "distance": 28.0,
+      "max_angle": 40.0,
+      "vanish_distance": 14.0,
+      "max_ticks": 400
+    },
+    "minecraft:desert_sand_trickle": {
+      "weight": 0.3,
+      "height": 6,
+      "pulses": 12,
+      "interval_ticks": 5,
+      "particles": {
+        "count": 10,
+        "dx": 0.4,
+        "dy": 0.0,
+        "dz": 0.4,
+        "speed": 0.0,
+        "offset_y": -0.1
+      },
+      "sound": {
+        "volume": 0.6,
+        "pitch": 0.8
+      }
+    },
+    "minecraft:desert_plate_click": {
+      "weight": 0.3,
+      "distance": 5.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.9
+      }
+    },
+    "minecraft:swamp_lily_drift": {
+      "weight": 0.3,
+      "radius": 10,
+      "steps": 6,
+      "interval_ticks": 20,
+      "stop_distance": 2.5,
+      "restore_ticks": 1200
+    },
+    "minecraft:cauldron": {
+      "weight": 0.3,
+      "radius": 12,
+      "pulses": 8,
+      "interval_ticks": 10,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 1.0
+      },
+      "particles": {
+        "count": 4,
+        "dx": 0.2,
+        "dy": 0.1,
+        "dz": 0.2,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
+    },
+    "minecraft:fireflies_dark": {
+      "weight": 0.3,
+      "radius": 12,
+      "ticks": 600
+    },
+    "minecraft:snow_door_drift": {
+      "weight": 0.3,
+      "radius": 12,
+      "layers": 4,
+      "restore_ticks": 2400
+    },
+    "minecraft:snow_snowball": {
+      "weight": 0.2,
+      "distance": 10.0,
+      "speed": 1.2,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:snow_powder_path": {
+      "weight": 0.2,
+      "margin": 4.0,
+      "distance": 5.0,
+      "max_angle": 30.0,
+      "restore_ticks": 1200
+    },
+    "minecraft:mountain_avalanche": {
+      "weight": 0.3,
+      "distance": 50.0,
+      "height": 25.0,
+      "steps": 24,
+      "interval_ticks": 4,
+      "rumble_every": 6,
+      "sound": {
+        "volume": 4.0,
+        "pitch": 0.5
+      },
+      "particles": {
+        "count": 60,
+        "dx": 5.0,
+        "dy": 1.5,
+        "dz": 5.0,
+        "speed": 0.05,
+        "offset_y": 0.0
+      }
+    },
+    "minecraft:mountain_wind_push": {
+      "weight": 0.2,
+      "margin": 4.0,
+      "howls": 3,
+      "interval_ticks": 10,
+      "push": 0.3,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 0.6
+      }
+    },
+    "minecraft:ocean_ship_bell": {
+      "weight": 0.3,
+      "distance": 40.0,
+      "tolls": 3,
+      "interval_ticks": 40,
+      "sound": {
+        "volume": 4.0,
+        "pitch": 0.5
+      }
+    }
   }
 }

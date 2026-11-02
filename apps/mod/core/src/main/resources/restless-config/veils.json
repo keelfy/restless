@@ -1,21 +1,47 @@
 {
   "version": 2,
   "events": {
-    "minecraft:red_wool": { "weight": 0.3, "radius": 10, "max_blocks": 64, "ticks": 300 },
+    "minecraft:red_wool": {
+      "weight": 0.3,
+      "radius": 10,
+      "max_blocks": 64,
+      "ticks": 300
+    },
     "minecraft:sign_whisper": {
       "weight": 0.3,
       "radius": 10,
       "ticks": 300,
       "texts": [
-        ["I SEE YOU"],
-        ["Do not", "look", "behind you"],
-        ["It is", "still here"],
-        ["Leave"],
-        ["You were", "never alone"],
-        ["Turn around"]
+        [
+          "I SEE YOU"
+        ],
+        [
+          "Do not",
+          "look",
+          "behind you"
+        ],
+        [
+          "It is",
+          "still here"
+        ],
+        [
+          "Leave"
+        ],
+        [
+          "You were",
+          "never alone"
+        ],
+        [
+          "Turn around"
+        ]
       ]
     },
-    "minecraft:wither_roses": { "weight": 0.3, "radius": 12, "max_blocks": 48, "ticks": 300 },
+    "minecraft:wither_roses": {
+      "weight": 0.3,
+      "radius": 12,
+      "max_blocks": 48,
+      "ticks": 300
+    },
     "minecraft:block_flicker": {
       "weight": 0.3,
       "radius": 8,
@@ -45,7 +71,12 @@
       "max_angle": 40.0,
       "ticks": 600
     },
-    "minecraft:broken_portal": { "weight": 0.3, "radius": 16, "holes": 3, "ticks": 300 },
+    "minecraft:broken_portal": {
+      "weight": 0.3,
+      "radius": 16,
+      "holes": 3,
+      "ticks": 300
+    },
     "minecraft:dark_circle": {
       "weight": 0.3,
       "max_light": 5,
@@ -59,8 +90,20 @@
       "interval_ticks": 5,
       "ticks": 600
     },
-    "minecraft:fence_gaps": { "weight": 0.3, "radius": 12, "min_fences": 4, "gaps": 3, "ticks": 400 },
-    "minecraft:corner_cobwebs": { "weight": 0.3, "radius": 8, "min_corners": 3, "max_blocks": 12, "ticks": 400 },
+    "minecraft:fence_gaps": {
+      "weight": 0.3,
+      "radius": 12,
+      "min_fences": 4,
+      "gaps": 3,
+      "ticks": 400
+    },
+    "minecraft:corner_cobwebs": {
+      "weight": 0.3,
+      "radius": 8,
+      "min_corners": 3,
+      "max_blocks": 12,
+      "ticks": 400
+    },
     "minecraft:redstone_trail": {
       "weight": 0.3,
       "start": 3,

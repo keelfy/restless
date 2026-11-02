@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:block/dreamcatcher"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:block/dreamcatcher"
+  }
+}

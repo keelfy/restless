@@ -1,11 +1,55 @@
 {
   "version": 1,
   "events": {
-    "minecraft:border_closes": { "weight": 0.2, "from": 80.0, "to": 40.0, "ticks": 80, "hold_ticks": 40 },
-    "minecraft:false_recipe": { "weight": 0.25, "ticks": 200, "results": ["minecraft:skeleton_skull", "minecraft:wither_skeleton_skull", "minecraft:bone_block", "minecraft:soul_lantern", "minecraft:wither_rose"] },
-    "minecraft:view_narrows": { "weight": 0.25, "speed": 0.02, "ticks": 20 },
-    "minecraft:portal_swirl": { "weight": 0.2, "ticks": 40 },
-    "minecraft:line_pulls": { "weight": 0.25, "pull": 0.6, "lift": 0.25, "sound": { "volume": 0.8, "pitch": 0.8 } },
-    "minecraft:odd_catch": { "weight": 0.3, "items": ["minecraft:player_head", "minecraft:bone", "minecraft:skeleton_skull", "minecraft:rotten_flesh"], "vanish_ticks": 1200, "sound": { "volume": 0.8, "pitch": 1.0 } }
+    "minecraft:border_closes": {
+      "weight": 0.2,
+      "from": 80.0,
+      "to": 40.0,
+      "ticks": 80,
+      "hold_ticks": 40
+    },
+    "minecraft:false_recipe": {
+      "weight": 0.25,
+      "ticks": 200,
+      "results": [
+        "minecraft:skeleton_skull",
+        "minecraft:wither_skeleton_skull",
+        "minecraft:bone_block",
+        "minecraft:soul_lantern",
+        "minecraft:wither_rose"
+      ]
+    },
+    "minecraft:view_narrows": {
+      "weight": 0.25,
+      "speed": 0.02,
+      "ticks": 20
+    },
+    "minecraft:portal_swirl": {
+      "weight": 0.2,
+      "ticks": 40
+    },
+    "minecraft:line_pulls": {
+      "weight": 0.25,
+      "pull": 0.6,
+      "lift": 0.25,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 0.8
+      }
+    },
+    "minecraft:odd_catch": {
+      "weight": 0.3,
+      "items": [
+        "minecraft:player_head",
+        "minecraft:bone",
+        "minecraft:skeleton_skull",
+        "minecraft:rotten_flesh"
+      ],
+      "vanish_ticks": 1200,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 1.0
+      }
+    }
   }
 }

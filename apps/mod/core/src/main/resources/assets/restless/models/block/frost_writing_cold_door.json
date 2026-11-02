@@ -1,1 +1,41 @@
-{"ambientocclusion":false,"textures":{"particle":"restless:block/frost_writing_cold","t":"restless:block/frost_writing_cold"},"elements":[{"from":[0,0,-12.99],"to":[16,16,-12.95],"faces":{"north":{"uv":[0,0,16,16],"texture":"#t"},"south":{"uv":[0,0,16,16],"texture":"#t"}}}]}
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "restless:block/frost_writing_cold",
+    "t": "restless:block/frost_writing_cold"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        -12.99
+      ],
+      "to": [
+        16,
+        16,
+        -12.95
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#t"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#t"
+        }
+      }
+    }
+  ]
+}

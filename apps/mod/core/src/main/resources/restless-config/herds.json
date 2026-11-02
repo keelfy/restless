@@ -1,7 +1,17 @@
 {
   "version": 1,
   "events": {
-    "minecraft:villagers_at_windows": { "weight": 0.3, "radius": 20, "window_radius": 12, "max_villagers": 3, "interval_ticks": 10, "walk_ticks": 400, "hold_ticks": 600, "speed": 0.6, "arrive_distance": 1.2 },
+    "minecraft:villagers_at_windows": {
+      "weight": 0.3,
+      "radius": 20,
+      "window_radius": 12,
+      "max_villagers": 3,
+      "interval_ticks": 10,
+      "walk_ticks": 400,
+      "hold_ticks": 600,
+      "speed": 0.6,
+      "arrive_distance": 1.2
+    },
     "minecraft:strange_trader": {
       "weight": 0.2,
       "distance": 12.0,
@@ -12,17 +22,96 @@
       "look_dot": 0.8,
       "max_uses": 1,
       "offers": [
-        ["minecraft:bone", "1", "minecraft:player_head", "1"],
-        ["minecraft:emerald", "1", "restless:shade_essence", "1"],
-        ["restless:poltergeist_essence", "1", "minecraft:echo_shard", "1"],
-        ["minecraft:rotten_flesh", "3", "minecraft:emerald", "1"]
+        [
+          "minecraft:bone",
+          "1",
+          "minecraft:player_head",
+          "1"
+        ],
+        [
+          "minecraft:emerald",
+          "1",
+          "restless:shade_essence",
+          "1"
+        ],
+        [
+          "restless:poltergeist_essence",
+          "1",
+          "minecraft:echo_shard",
+          "1"
+        ],
+        [
+          "minecraft:rotten_flesh",
+          "3",
+          "minecraft:emerald",
+          "1"
+        ]
       ]
     },
-    "minecraft:golem_in_corner": { "weight": 0.3, "radius": 40, "corner_radius": 6, "min_distance": 2.0, "interval_ticks": 10, "walk_ticks": 600, "hold_ticks": 600, "speed": 0.7, "arrive_distance": 1.6 },
-    "minecraft:dolphins_lead": { "weight": 0.3, "radius": 32, "max_dolphins": 3, "fallback_distance": 60.0, "wait_distance": 12.0, "step": 16.0, "speed": 1.2, "interval_ticks": 20, "pulses": 30, "call_every": 4, "sound": { "volume": 1.0, "pitch": 1.0 } },
-    "minecraft:spiders_at_window": { "weight": 0.25, "radius": 24, "window_radius": 12, "min_spiders": 2, "max_spiders": 5, "max_below": 3, "interval_ticks": 10, "walk_ticks": 400, "hold_ticks": 600, "speed": 1.0, "arrive_distance": 1.5 },
-    "minecraft:squid_goes_dark": { "weight": 0.35, "radius": 32, "dark_ticks": 1200 },
-    "minecraft:pearl_strays": { "weight": 0.15, "radius": 8.0, "interval_ticks": 2, "armed_ticks": 6000, "min_distance": 8, "max_distance": 24, "drop": 1.0, "fall_speed": 0.3 },
-    "minecraft:hoglins_charge": { "weight": 0.2, "radius": 24, "min_hoglins": 2, "stop_distance": 3.2, "interval_ticks": 2, "charge_ticks": 100, "hold_ticks": 80, "retreat_ticks": 200 }
+    "minecraft:golem_in_corner": {
+      "weight": 0.3,
+      "radius": 40,
+      "corner_radius": 6,
+      "min_distance": 2.0,
+      "interval_ticks": 10,
+      "walk_ticks": 600,
+      "hold_ticks": 600,
+      "speed": 0.7,
+      "arrive_distance": 1.6
+    },
+    "minecraft:dolphins_lead": {
+      "weight": 0.3,
+      "radius": 32,
+      "max_dolphins": 3,
+      "fallback_distance": 60.0,
+      "wait_distance": 12.0,
+      "step": 16.0,
+      "speed": 1.2,
+      "interval_ticks": 20,
+      "pulses": 30,
+      "call_every": 4,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:spiders_at_window": {
+      "weight": 0.25,
+      "radius": 24,
+      "window_radius": 12,
+      "min_spiders": 2,
+      "max_spiders": 5,
+      "max_below": 3,
+      "interval_ticks": 10,
+      "walk_ticks": 400,
+      "hold_ticks": 600,
+      "speed": 1.0,
+      "arrive_distance": 1.5
+    },
+    "minecraft:squid_goes_dark": {
+      "weight": 0.35,
+      "radius": 32,
+      "dark_ticks": 1200
+    },
+    "minecraft:pearl_strays": {
+      "weight": 0.15,
+      "radius": 8.0,
+      "interval_ticks": 2,
+      "armed_ticks": 6000,
+      "min_distance": 8,
+      "max_distance": 24,
+      "drop": 1.0,
+      "fall_speed": 0.3
+    },
+    "minecraft:hoglins_charge": {
+      "weight": 0.2,
+      "radius": 24,
+      "min_hoglins": 2,
+      "stop_distance": 3.2,
+      "interval_ticks": 2,
+      "charge_ticks": 100,
+      "hold_ticks": 80,
+      "retreat_ticks": 200
+    }
   }
 }

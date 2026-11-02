@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:item/spirit_candle"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:item/spirit_candle"
+  }
+}

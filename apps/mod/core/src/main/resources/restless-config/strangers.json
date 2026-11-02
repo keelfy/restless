@@ -28,7 +28,10 @@
       "interval_ticks": 8,
       "max_ticks": 200,
       "vanish_distance": 2.5,
-      "sound": { "volume": 0.8, "pitch": 0.9 },
+      "sound": {
+        "volume": 0.8,
+        "pitch": 0.9
+      },
       "cleanup_ticks": 40
     },
     "minecraft:table_figure": {
@@ -100,12 +103,32 @@
     },
     "minecraft:hello_chat": {
       "weight": 0.3,
-      "lines": ["hello?", "anyone here?", "is someone there", "hello??", "can anyone hear me", "hey, wait", "where am I", "who is that"]
+      "lines": [
+        "hello?",
+        "anyone here?",
+        "is someone there",
+        "hello??",
+        "can anyone hear me",
+        "hey, wait",
+        "where am I",
+        "who is that"
+      ]
     },
-    "minecraft:ghost_teleport": { "weight": 0.2, "names": ["???"] },
+    "minecraft:ghost_teleport": {
+      "weight": 0.2,
+      "names": [
+        "???"
+      ]
+    },
     "minecraft:stranger_advancement": {
       "weight": 0.2,
-      "titles": ["Who's There?", "Not Alone", "Behind You", "Stay Still", "Do Not Look"]
+      "titles": [
+        "Who's There?",
+        "Not Alone",
+        "Behind You",
+        "Stay Still",
+        "Do Not Look"
+      ]
     },
     "minecraft:grave_figure": {
       "weight": 0.3,

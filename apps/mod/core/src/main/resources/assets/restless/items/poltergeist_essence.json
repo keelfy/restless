@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:item/poltergeist_essence"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:item/poltergeist_essence"
+  }
+}

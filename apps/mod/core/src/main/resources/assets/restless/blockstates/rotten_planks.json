@@ -1,1 +1,7 @@
-{"variants":{"":{"model":"restless:block/rotten_planks"}}}
+{
+  "variants": {
+    "": {
+      "model": "restless:block/rotten_planks"
+    }
+  }
+}

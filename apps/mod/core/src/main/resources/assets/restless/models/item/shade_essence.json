@@ -1,1 +1,6 @@
-{"parent":"minecraft:item/generated","textures":{"layer0":"restless:item/shade_essence"}}
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "restless:item/shade_essence"
+  }
+}

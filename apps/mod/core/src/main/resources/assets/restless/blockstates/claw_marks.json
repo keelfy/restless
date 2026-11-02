@@ -1,1 +1,49 @@
-{"variants":{"depth=flush,facing=north":{"model":"restless:block/claw_marks_flush"},"depth=flush,facing=east":{"model":"restless:block/claw_marks_flush","y":90},"depth=flush,facing=south":{"model":"restless:block/claw_marks_flush","y":180},"depth=flush,facing=west":{"model":"restless:block/claw_marks_flush","y":270},"depth=pane,facing=north":{"model":"restless:block/claw_marks_pane"},"depth=pane,facing=east":{"model":"restless:block/claw_marks_pane","y":90},"depth=pane,facing=south":{"model":"restless:block/claw_marks_pane","y":180},"depth=pane,facing=west":{"model":"restless:block/claw_marks_pane","y":270},"depth=door,facing=north":{"model":"restless:block/claw_marks_door"},"depth=door,facing=east":{"model":"restless:block/claw_marks_door","y":90},"depth=door,facing=south":{"model":"restless:block/claw_marks_door","y":180},"depth=door,facing=west":{"model":"restless:block/claw_marks_door","y":270}}}
+{
+  "variants": {
+    "depth=flush,facing=north": {
+      "model": "restless:block/claw_marks_flush"
+    },
+    "depth=flush,facing=east": {
+      "model": "restless:block/claw_marks_flush",
+      "y": 90
+    },
+    "depth=flush,facing=south": {
+      "model": "restless:block/claw_marks_flush",
+      "y": 180
+    },
+    "depth=flush,facing=west": {
+      "model": "restless:block/claw_marks_flush",
+      "y": 270
+    },
+    "depth=pane,facing=north": {
+      "model": "restless:block/claw_marks_pane"
+    },
+    "depth=pane,facing=east": {
+      "model": "restless:block/claw_marks_pane",
+      "y": 90
+    },
+    "depth=pane,facing=south": {
+      "model": "restless:block/claw_marks_pane",
+      "y": 180
+    },
+    "depth=pane,facing=west": {
+      "model": "restless:block/claw_marks_pane",
+      "y": 270
+    },
+    "depth=door,facing=north": {
+      "model": "restless:block/claw_marks_door"
+    },
+    "depth=door,facing=east": {
+      "model": "restless:block/claw_marks_door",
+      "y": 90
+    },
+    "depth=door,facing=south": {
+      "model": "restless:block/claw_marks_door",
+      "y": 180
+    },
+    "depth=door,facing=west": {
+      "model": "restless:block/claw_marks_door",
+      "y": 270
+    }
+  }
+}

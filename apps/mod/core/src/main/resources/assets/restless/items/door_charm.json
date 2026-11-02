@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:block/door_charm"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:block/door_charm"
+  }
+}

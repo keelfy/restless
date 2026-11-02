@@ -3,6 +3,8 @@
     "text": "Spirit Horn"
   },
   "range": 256.0,
-  "sound_event": { "sound_id": "restless:haunt.horn" },
+  "sound_event": {
+    "sound_id": "restless:haunt.horn"
+  },
   "use_duration": 7.0
 }

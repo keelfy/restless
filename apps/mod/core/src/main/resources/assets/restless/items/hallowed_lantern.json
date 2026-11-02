@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:block/hallowed_lantern"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:block/hallowed_lantern"
+  }
+}

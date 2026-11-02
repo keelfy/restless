@@ -1,9 +1,39 @@
 {
   "version": 1,
   "events": {
-    "minecraft:mob_eyes": { "weight": 0.3, "radius": 24.0, "ticks": 50, "mobs": ["minecraft:spider", "minecraft:cave_spider", "minecraft:creeper", "minecraft:enderman"] },
-    "minecraft:out_of_body": { "weight": 0.3, "ticks": 60, "distance": 3.5, "height": 0.6, "entity": "minecraft:zombie" },
-    "minecraft:spirit_sight": { "weight": 0.3, "ticks": 20, "height": 0.8, "max_distance": 40.0, "fallback_distance": 10.0, "entity": "minecraft:zombie" },
-    "minecraft:open_door_view": { "weight": 0.3, "ticks": 60, "radius": 12, "min_distance": 3.0, "height": 1.4, "entity": "minecraft:zombie" }
+    "minecraft:mob_eyes": {
+      "weight": 0.3,
+      "radius": 24.0,
+      "ticks": 50,
+      "mobs": [
+        "minecraft:spider",
+        "minecraft:cave_spider",
+        "minecraft:creeper",
+        "minecraft:enderman"
+      ]
+    },
+    "minecraft:out_of_body": {
+      "weight": 0.3,
+      "ticks": 60,
+      "distance": 3.5,
+      "height": 0.6,
+      "entity": "minecraft:zombie"
+    },
+    "minecraft:spirit_sight": {
+      "weight": 0.3,
+      "ticks": 20,
+      "height": 0.8,
+      "max_distance": 40.0,
+      "fallback_distance": 10.0,
+      "entity": "minecraft:zombie"
+    },
+    "minecraft:open_door_view": {
+      "weight": 0.3,
+      "ticks": 60,
+      "radius": 12,
+      "min_distance": 3.0,
+      "height": 1.4,
+      "entity": "minecraft:zombie"
+    }
   }
 }

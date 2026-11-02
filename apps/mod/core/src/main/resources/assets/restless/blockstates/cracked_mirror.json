@@ -1,1 +1,94 @@
-{"variants":{"depth=flush,facing=north,figure=false":{"model":"restless:block/cracked_mirror_flush"},"depth=flush,facing=east,figure=false":{"model":"restless:block/cracked_mirror_flush","y":90},"depth=flush,facing=south,figure=false":{"model":"restless:block/cracked_mirror_flush","y":180},"depth=flush,facing=west,figure=false":{"model":"restless:block/cracked_mirror_flush","y":270},"depth=pane,facing=north,figure=false":{"model":"restless:block/cracked_mirror_pane"},"depth=pane,facing=east,figure=false":{"model":"restless:block/cracked_mirror_pane","y":90},"depth=pane,facing=south,figure=false":{"model":"restless:block/cracked_mirror_pane","y":180},"depth=pane,facing=west,figure=false":{"model":"restless:block/cracked_mirror_pane","y":270},"depth=door,facing=north,figure=false":{"model":"restless:block/cracked_mirror_door"},"depth=door,facing=east,figure=false":{"model":"restless:block/cracked_mirror_door","y":90},"depth=door,facing=south,figure=false":{"model":"restless:block/cracked_mirror_door","y":180},"depth=door,facing=west,figure=false":{"model":"restless:block/cracked_mirror_door","y":270},"depth=flush,facing=north,figure=true":{"model":"restless:block/cracked_mirror_figure_flush"},"depth=flush,facing=east,figure=true":{"model":"restless:block/cracked_mirror_figure_flush","y":90},"depth=flush,facing=south,figure=true":{"model":"restless:block/cracked_mirror_figure_flush","y":180},"depth=flush,facing=west,figure=true":{"model":"restless:block/cracked_mirror_figure_flush","y":270},"depth=pane,facing=north,figure=true":{"model":"restless:block/cracked_mirror_figure_pane"},"depth=pane,facing=east,figure=true":{"model":"restless:block/cracked_mirror_figure_pane","y":90},"depth=pane,facing=south,figure=true":{"model":"restless:block/cracked_mirror_figure_pane","y":180},"depth=pane,facing=west,figure=true":{"model":"restless:block/cracked_mirror_figure_pane","y":270},"depth=door,facing=north,figure=true":{"model":"restless:block/cracked_mirror_figure_door"},"depth=door,facing=east,figure=true":{"model":"restless:block/cracked_mirror_figure_door","y":90},"depth=door,facing=south,figure=true":{"model":"restless:block/cracked_mirror_figure_door","y":180},"depth=door,facing=west,figure=true":{"model":"restless:block/cracked_mirror_figure_door","y":270}}}
+{
+  "variants": {
+    "depth=flush,facing=north,figure=false": {
+      "model": "restless:block/cracked_mirror_flush"
+    },
+    "depth=flush,facing=east,figure=false": {
+      "model": "restless:block/cracked_mirror_flush",
+      "y": 90
+    },
+    "depth=flush,facing=south,figure=false": {
+      "model": "restless:block/cracked_mirror_flush",
+      "y": 180
+    },
+    "depth=flush,facing=west,figure=false": {
+      "model": "restless:block/cracked_mirror_flush",
+      "y": 270
+    },
+    "depth=pane,facing=north,figure=false": {
+      "model": "restless:block/cracked_mirror_pane"
+    },
+    "depth=pane,facing=east,figure=false": {
+      "model": "restless:block/cracked_mirror_pane",
+      "y": 90
+    },
+    "depth=pane,facing=south,figure=false": {
+      "model": "restless:block/cracked_mirror_pane",
+      "y": 180
+    },
+    "depth=pane,facing=west,figure=false": {
+      "model": "restless:block/cracked_mirror_pane",
+      "y": 270
+    },
+    "depth=door,facing=north,figure=false": {
+      "model": "restless:block/cracked_mirror_door"
+    },
+    "depth=door,facing=east,figure=false": {
+      "model": "restless:block/cracked_mirror_door",
+      "y": 90
+    },
+    "depth=door,facing=south,figure=false": {
+      "model": "restless:block/cracked_mirror_door",
+      "y": 180
+    },
+    "depth=door,facing=west,figure=false": {
+      "model": "restless:block/cracked_mirror_door",
+      "y": 270
+    },
+    "depth=flush,facing=north,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_flush"
+    },
+    "depth=flush,facing=east,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_flush",
+      "y": 90
+    },
+    "depth=flush,facing=south,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_flush",
+      "y": 180
+    },
+    "depth=flush,facing=west,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_flush",
+      "y": 270
+    },
+    "depth=pane,facing=north,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_pane"
+    },
+    "depth=pane,facing=east,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_pane",
+      "y": 90
+    },
+    "depth=pane,facing=south,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_pane",
+      "y": 180
+    },
+    "depth=pane,facing=west,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_pane",
+      "y": 270
+    },
+    "depth=door,facing=north,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_door"
+    },
+    "depth=door,facing=east,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_door",
+      "y": 90
+    },
+    "depth=door,facing=south,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_door",
+      "y": 180
+    },
+    "depth=door,facing=west,figure=true": {
+      "model": "restless:block/cracked_mirror_figure_door",
+      "y": 270
+    }
+  }
+}

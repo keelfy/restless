@@ -1,1 +1,11 @@
-{"type":"minecraft:crafting_shapeless","category":"misc","ingredients":["minecraft:candle","minecraft:soul_sand"],"result":{"id":"restless:spirit_candle"}}
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:candle",
+    "minecraft:soul_sand"
+  ],
+  "result": {
+    "id": "restless:spirit_candle"
+  }
+}

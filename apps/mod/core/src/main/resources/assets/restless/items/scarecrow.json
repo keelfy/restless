@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:block/scarecrow"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:block/scarecrow"
+  }
+}

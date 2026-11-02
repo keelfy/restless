@@ -1,1 +1,7 @@
-{"variants":{"":{"model":"restless:block/ouija_board"}}}
+{
+  "variants": {
+    "": {
+      "model": "restless:block/ouija_board"
+    }
+  }
+}

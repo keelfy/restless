@@ -9,7 +9,10 @@
       "min_distance": 8.0,
       "reach": 6,
       "bite_every": 4,
-      "sound": { "volume": 0.6, "pitch": 1.0 },
+      "sound": {
+        "volume": 0.6,
+        "pitch": 1.0
+      },
       "interval_ticks": 20,
       "max_ticks": 600,
       "vanish_distance": 6.0,
@@ -60,7 +63,13 @@
       "stride": 0.36,
       "climb": 1,
       "drop": 2,
-      "notes": ["it was under the bed", "do not follow", "I left this for you", "you are late", "keep it lit"],
+      "notes": [
+        "it was under the bed",
+        "do not follow",
+        "I left this for you",
+        "you are late",
+        "keep it lit"
+      ],
       "interval_ticks": 4,
       "max_ticks": 400,
       "vanish_distance": 2.0,
@@ -104,7 +113,10 @@
       "max_drop": 40,
       "stride": 0.22,
       "cry_after": 5.0,
-      "sound": { "volume": 1.5, "pitch": 1.0 },
+      "sound": {
+        "volume": 1.5,
+        "pitch": 1.0
+      },
       "interval_ticks": 1,
       "max_ticks": 300,
       "vanish_distance": 6.0,
@@ -119,7 +131,10 @@
       "stride": 0.12,
       "near_distance": 6.0,
       "sound_every": 20,
-      "sound": { "volume": 0.5, "pitch": 1.0 },
+      "sound": {
+        "volume": 0.5,
+        "pitch": 1.0
+      },
       "interval_ticks": 1,
       "max_ticks": 600,
       "vanish_distance": 0.0,
@@ -136,7 +151,10 @@
       "drop": 2,
       "near_distance": 5.0,
       "sound_every": 10,
-      "sound": { "volume": 0.5, "pitch": 1.0 },
+      "sound": {
+        "volume": 0.5,
+        "pitch": 1.0
+      },
       "interval_ticks": 1,
       "max_ticks": 400,
       "vanish_distance": 0.0,

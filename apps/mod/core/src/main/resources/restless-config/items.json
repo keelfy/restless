@@ -1,36 +1,230 @@
 {
   "version": 2,
   "events": {
-    "minecraft:swap_slots": { "weight": 0.5 },
-    "minecraft:hotbar_shift": { "weight": 0.5 },
-    "minecraft:book_page": { "weight": 0.5, "pages": ["i can hear you breathing", "do not look behind you", "you were never alone here"] },
-    "minecraft:shuffle_chest": { "weight": 0.5, "radius": 10 },
-    "minecraft:wear": { "weight": 0.5, "fraction": 0.1 },
-    "minecraft:rot": { "weight": 0.5 },
-    "minecraft:tool_look": { "weight": 0.5, "restore_ticks": 6000, "models": ["minecraft:wooden_pickaxe", "minecraft:wooden_axe", "minecraft:wooden_shovel", "minecraft:wooden_hoe", "minecraft:wooden_sword", "minecraft:stone_pickaxe", "minecraft:stone_axe", "minecraft:stone_shovel", "minecraft:stone_hoe", "minecraft:stone_sword", "minecraft:iron_pickaxe", "minecraft:iron_axe", "minecraft:iron_shovel", "minecraft:iron_hoe", "minecraft:iron_sword", "minecraft:diamond_pickaxe", "minecraft:diamond_axe", "minecraft:diamond_shovel", "minecraft:diamond_hoe", "minecraft:diamond_sword"] },
-    "minecraft:armor_off": { "weight": 0.4, "min_pieces": 1, "max_pieces": 4, "sound": { "volume": 1.0, "pitch": 0.6 } },
-    "minecraft:vanishing_item": { "weight": 0.5, "radius": 10, "min_distance": 2 },
-    "minecraft:map_marker": { "weight": 0.5, "spread_pixels": 40, "sound": { "volume": 0.8, "pitch": 0.6 } },
-    "minecraft:false_compass": { "weight": 0.5, "min_offset": 30, "offset_spread": 30, "sound": { "volume": 1.0, "pitch": 0.6 } },
-    "minecraft:elytra_flicker": { "weight": 0.4, "min_height": 12, "ticks": 40, "hardcore_fraction": 0.1 },
-    "minecraft:stew_bowl": { "weight": 0.4, "sound": { "volume": 0.8, "pitch": 0.7 } },
-    "minecraft:bucket_pufferfish": { "weight": 0.4, "ticks": 100 },
-    "minecraft:torch_burn": { "weight": 0.4, "fraction": 0.5, "sound": { "volume": 0.6, "pitch": 1.2 } },
-    "minecraft:bundle_bone": { "weight": 0.4, "sound": { "volume": 0.8, "pitch": 0.6 } },
-    "minecraft:shield_ghost": { "weight": 0.4, "sound": { "volume": 1.0, "pitch": 0.8 } },
-    "minecraft:item_throwback": { "weight": 0.4, "radius": 12, "min_distance": 3, "speed": 0.5, "lift": 0.2 },
-    "minecraft:phantom_horn": { "weight": 0.3, "sound": { "volume": 1.0, "pitch": 1.0 } },
-    "minecraft:armor_dye": { "weight": 0.4, "restore_ticks": 6000, "items": ["minecraft:leather_helmet", "minecraft:leather_chestplate", "minecraft:leather_leggings", "minecraft:leather_boots"] },
-    "minecraft:item_glint": { "weight": 0.4, "restore_ticks": 200 },
-    "minecraft:item_lore": { "weight": 0.4, "restore_ticks": 6000, "lines": ["it remembers you", "it knows where you sleep", "it was waiting"] },
-    "minecraft:tool_mirage": { "weight": 0.4, "ticks": 60, "hardcore_fraction": 0.3 },
-    "minecraft:lodestone_lure": { "weight": 0.3, "restore_ticks": 6000 },
-    "minecraft:ghost_author": { "weight": 0.3, "titles": ["untitled", "for later", "do not read"], "pages": ["i wrote this and i do not remember writing it", "you are reading this again", "i was here before you came"] },
-    "minecraft:potion_swap": { "weight": 0.3, "restore_ticks": 6000, "potions": ["minecraft:water", "minecraft:awkward", "minecraft:night_vision", "minecraft:swiftness", "minecraft:healing", "minecraft:harming", "minecraft:poison", "minecraft:weakness", "minecraft:slowness", "minecraft:invisibility"] },
-    "minecraft:vanishing_arrows": { "weight": 0.3, "count": 6, "interval": 40, "return_ticks": 3600 },
-    "minecraft:crossbow_misfire": { "weight": 0.2, "power": 1.3, "uncertainty": 6.0 },
-    "minecraft:map_elsewhere": { "weight": 0.3, "restore_ticks": 6000 },
-    "minecraft:shy_item": { "weight": 0.3, "radius": 5, "min_distance": 0, "speed": 0.4, "lift": 0.1 },
-    "minecraft:orb_scatter": { "weight": 0.3, "radius": 8, "min_distance": 0, "speed": 0.5, "lift": 0.2 }
+    "minecraft:swap_slots": {
+      "weight": 0.5
+    },
+    "minecraft:hotbar_shift": {
+      "weight": 0.5
+    },
+    "minecraft:book_page": {
+      "weight": 0.5,
+      "pages": [
+        "i can hear you breathing",
+        "do not look behind you",
+        "you were never alone here"
+      ]
+    },
+    "minecraft:shuffle_chest": {
+      "weight": 0.5,
+      "radius": 10
+    },
+    "minecraft:wear": {
+      "weight": 0.5,
+      "fraction": 0.1
+    },
+    "minecraft:rot": {
+      "weight": 0.5
+    },
+    "minecraft:tool_look": {
+      "weight": 0.5,
+      "restore_ticks": 6000,
+      "models": [
+        "minecraft:wooden_pickaxe",
+        "minecraft:wooden_axe",
+        "minecraft:wooden_shovel",
+        "minecraft:wooden_hoe",
+        "minecraft:wooden_sword",
+        "minecraft:stone_pickaxe",
+        "minecraft:stone_axe",
+        "minecraft:stone_shovel",
+        "minecraft:stone_hoe",
+        "minecraft:stone_sword",
+        "minecraft:iron_pickaxe",
+        "minecraft:iron_axe",
+        "minecraft:iron_shovel",
+        "minecraft:iron_hoe",
+        "minecraft:iron_sword",
+        "minecraft:diamond_pickaxe",
+        "minecraft:diamond_axe",
+        "minecraft:diamond_shovel",
+        "minecraft:diamond_hoe",
+        "minecraft:diamond_sword"
+      ]
+    },
+    "minecraft:armor_off": {
+      "weight": 0.4,
+      "min_pieces": 1,
+      "max_pieces": 4,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      }
+    },
+    "minecraft:vanishing_item": {
+      "weight": 0.5,
+      "radius": 10,
+      "min_distance": 2
+    },
+    "minecraft:map_marker": {
+      "weight": 0.5,
+      "spread_pixels": 40,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 0.6
+      }
+    },
+    "minecraft:false_compass": {
+      "weight": 0.5,
+      "min_offset": 30,
+      "offset_spread": 30,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      }
+    },
+    "minecraft:elytra_flicker": {
+      "weight": 0.4,
+      "min_height": 12,
+      "ticks": 40,
+      "hardcore_fraction": 0.1
+    },
+    "minecraft:stew_bowl": {
+      "weight": 0.4,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 0.7
+      }
+    },
+    "minecraft:bucket_pufferfish": {
+      "weight": 0.4,
+      "ticks": 100
+    },
+    "minecraft:torch_burn": {
+      "weight": 0.4,
+      "fraction": 0.5,
+      "sound": {
+        "volume": 0.6,
+        "pitch": 1.2
+      }
+    },
+    "minecraft:bundle_bone": {
+      "weight": 0.4,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 0.6
+      }
+    },
+    "minecraft:shield_ghost": {
+      "weight": 0.4,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      }
+    },
+    "minecraft:item_throwback": {
+      "weight": 0.4,
+      "radius": 12,
+      "min_distance": 3,
+      "speed": 0.5,
+      "lift": 0.2
+    },
+    "minecraft:phantom_horn": {
+      "weight": 0.3,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:armor_dye": {
+      "weight": 0.4,
+      "restore_ticks": 6000,
+      "items": [
+        "minecraft:leather_helmet",
+        "minecraft:leather_chestplate",
+        "minecraft:leather_leggings",
+        "minecraft:leather_boots"
+      ]
+    },
+    "minecraft:item_glint": {
+      "weight": 0.4,
+      "restore_ticks": 200
+    },
+    "minecraft:item_lore": {
+      "weight": 0.4,
+      "restore_ticks": 6000,
+      "lines": [
+        "it remembers you",
+        "it knows where you sleep",
+        "it was waiting"
+      ]
+    },
+    "minecraft:tool_mirage": {
+      "weight": 0.4,
+      "ticks": 60,
+      "hardcore_fraction": 0.3
+    },
+    "minecraft:lodestone_lure": {
+      "weight": 0.3,
+      "restore_ticks": 6000
+    },
+    "minecraft:ghost_author": {
+      "weight": 0.3,
+      "titles": [
+        "untitled",
+        "for later",
+        "do not read"
+      ],
+      "pages": [
+        "i wrote this and i do not remember writing it",
+        "you are reading this again",
+        "i was here before you came"
+      ]
+    },
+    "minecraft:potion_swap": {
+      "weight": 0.3,
+      "restore_ticks": 6000,
+      "potions": [
+        "minecraft:water",
+        "minecraft:awkward",
+        "minecraft:night_vision",
+        "minecraft:swiftness",
+        "minecraft:healing",
+        "minecraft:harming",
+        "minecraft:poison",
+        "minecraft:weakness",
+        "minecraft:slowness",
+        "minecraft:invisibility"
+      ]
+    },
+    "minecraft:vanishing_arrows": {
+      "weight": 0.3,
+      "count": 6,
+      "interval": 40,
+      "return_ticks": 3600
+    },
+    "minecraft:crossbow_misfire": {
+      "weight": 0.2,
+      "power": 1.3,
+      "uncertainty": 6.0
+    },
+    "minecraft:map_elsewhere": {
+      "weight": 0.3,
+      "restore_ticks": 6000
+    },
+    "minecraft:shy_item": {
+      "weight": 0.3,
+      "radius": 5,
+      "min_distance": 0,
+      "speed": 0.4,
+      "lift": 0.1
+    },
+    "minecraft:orb_scatter": {
+      "weight": 0.3,
+      "radius": 8,
+      "min_distance": 0,
+      "speed": 0.5,
+      "lift": 0.2
+    }
   }
 }

@@ -1,1 +1,14 @@
-{"type":"minecraft:crafting_shapeless","category":"misc","ingredients":["minecraft:string","minecraft:feather","minecraft:stick","restless:salt"],"result":{"id":"restless:dreamcatcher","count":1}}
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:string",
+    "minecraft:feather",
+    "minecraft:stick",
+    "restless:salt"
+  ],
+  "result": {
+    "id": "restless:dreamcatcher",
+    "count": 1
+  }
+}

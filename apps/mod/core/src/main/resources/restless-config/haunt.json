@@ -1,6 +1,19 @@
 {
   "version": 2,
-  "director": { "check_interval_ticks": 20, "default_spirits": 1, "territorial_radius": 48, "traits_min": 3, "traits_max": 5, "dark_light_level": 8, "react_chance": 0.25, "sneak_delay_ticks": 10, "rarity_memory": 0.05, "rarity_boost_max": 4.0, "repeat_share": 0.1, "sure_start_factor": 0.5 },
+  "director": {
+    "check_interval_ticks": 20,
+    "default_spirits": 1,
+    "territorial_radius": 48,
+    "traits_min": 3,
+    "traits_max": 5,
+    "dark_light_level": 8,
+    "react_chance": 0.25,
+    "sneak_delay_ticks": 10,
+    "rarity_memory": 0.05,
+    "rarity_boost_max": 4.0,
+    "repeat_share": 0.1,
+    "sure_start_factor": 0.5
+  },
   "power": {
     "maturity_days": 30,
     "maturity_share": 0.6,
@@ -11,7 +24,19 @@
     "cooldown_drop_minutes": 2.5,
     "min_cooldown_ticks": 20
   },
-  "anger": { "kill_cat": 0.15, "break_grave": 0.2, "burn_forest": 0.1, "break_anchor": 0.3, "anchor_reach": 3, "graves": ["minecraft:skeleton_skull", "minecraft:wither_skeleton_skull", "minecraft:bone_block", "restless:gravestone"] },
+  "anger": {
+    "kill_cat": 0.15,
+    "break_grave": 0.2,
+    "burn_forest": 0.1,
+    "break_anchor": 0.3,
+    "anchor_reach": 3,
+    "graves": [
+      "minecraft:skeleton_skull",
+      "minecraft:wither_skeleton_skull",
+      "minecraft:bone_block",
+      "restless:gravestone"
+    ]
+  },
   "births": {
     "cooldown_days": 3,
     "max_personal": 3,
@@ -20,31 +45,96 @@
     "start_anger": 0.5,
     "grace_ticks": 2400,
     "deeds": {
-      "slaughter": { "spirit": "revenant", "chance": 0.3 },
-      "far_death": { "spirit": "lost_one", "chance": 0.5 },
-      "pet_slain": { "spirit": "revenant", "chance": 0.5 },
-      "pet_lost": { "spirit": "banshee", "chance": 0.5 }
+      "slaughter": {
+        "spirit": "revenant",
+        "chance": 0.3
+      },
+      "far_death": {
+        "spirit": "lost_one",
+        "chance": 0.5
+      },
+      "pet_slain": {
+        "spirit": "revenant",
+        "chance": 0.5
+      },
+      "pet_lost": {
+        "spirit": "banshee",
+        "chance": 0.5
+      }
     }
   },
-  "salt": { "max_cells": 400 },
-  "wards": { "lantern_radius": 6, "dreamcatcher_radius": 5, "charm_radius": 8, "scarecrow_radius": 16 },
-  "bell": { "radius": 24, "delay_ticks": 1200 },
-  "compass": { "step_ticks": 4 },
-  "ash": { "reveal_ticks": 600, "reach": 16 },
-  "camera": { "cooldown_ticks": 600 },
-  "spirit_box": { "radius": 6, "delay_ticks": 40 },
-  "ouija": { "delay_ticks": 20, "letter_ticks": 6 },
-  "clues": { "lie_chance": 0.5 },
-  "ritual": { "candles": 4, "candle_radius": 3, "radius": 16, "wave_ticks": 100, "waves": 12, "snuff_chance": 0.25, "fury_chance": 0.5, "fail_anger": 0.3, "bless_ticks": 12000 },
-  "artifacts": { "amulet_radius": 12, "amulet_cooldown_ticks": 40, "eye_radius": 32, "eye_ticks": 200, "eye_cooldown_ticks": 1200 },
+  "salt": {
+    "max_cells": 400
+  },
+  "wards": {
+    "lantern_radius": 6,
+    "dreamcatcher_radius": 5,
+    "charm_radius": 8,
+    "scarecrow_radius": 16
+  },
+  "bell": {
+    "radius": 24,
+    "delay_ticks": 1200
+  },
+  "compass": {
+    "step_ticks": 4
+  },
+  "ash": {
+    "reveal_ticks": 600,
+    "reach": 16
+  },
+  "camera": {
+    "cooldown_ticks": 600
+  },
+  "spirit_box": {
+    "radius": 6,
+    "delay_ticks": 40
+  },
+  "ouija": {
+    "delay_ticks": 20,
+    "letter_ticks": 6
+  },
+  "clues": {
+    "lie_chance": 0.5
+  },
+  "ritual": {
+    "candles": 4,
+    "candle_radius": 3,
+    "radius": 16,
+    "wave_ticks": 100,
+    "waves": 12,
+    "snuff_chance": 0.25,
+    "fury_chance": 0.5,
+    "fail_anger": 0.3,
+    "bless_ticks": 12000
+  },
+  "artifacts": {
+    "amulet_radius": 12,
+    "amulet_cooldown_ticks": 40,
+    "eye_radius": 32,
+    "eye_ticks": 200,
+    "eye_cooldown_ticks": 1200
+  },
   "grave": {
     "check_ticks": 20,
     "min_distance": 100,
     "max_distance": 400,
     "essence": 2,
     "experience": 30,
-    "wants": ["minecraft:golden_apple", "minecraft:diamond", "minecraft:compass", "minecraft:clock", "minecraft:name_tag", "minecraft:jukebox",
-      "minecraft:poppy", "minecraft:cake", "minecraft:iron_pickaxe", "minecraft:lantern", "minecraft:emerald", "minecraft:spyglass"]
+    "wants": [
+      "minecraft:golden_apple",
+      "minecraft:diamond",
+      "minecraft:compass",
+      "minecraft:clock",
+      "minecraft:name_tag",
+      "minecraft:jukebox",
+      "minecraft:poppy",
+      "minecraft:cake",
+      "minecraft:iron_pickaxe",
+      "minecraft:lantern",
+      "minecraft:emerald",
+      "minecraft:spyglass"
+    ]
   },
   "sanity": {
     "check_ticks": 20,
@@ -84,14 +174,39 @@
       "minecraft:cornflower": "minecraft:dead_bush"
     }
   },
-  "evolution": { "check_ticks": 100, "days": 5, "power_floor": 0.7, "extra_waves": 4, "signature_boost": 3.0 },
-  "journal": { "give_on_join": true },
-  "candle": { "step_ticks": 4, "warning_ticks": 60, "lean": 0.5 },
-  "hardcore": { "mode": "auto" },
-  "restore": { "retry_ticks": 20 },
-  "swaps": { "mode": "illusion" },
-  "said": { "rest_ticks": 168000 },
-  "location": { "min_distance": 6.0, "max_distance": 14.0, "step": 3.0, "height": 0.5 },
+  "evolution": {
+    "check_ticks": 100,
+    "days": 5,
+    "power_floor": 0.7,
+    "extra_waves": 4,
+    "signature_boost": 3.0
+  },
+  "journal": {
+    "give_on_join": true
+  },
+  "candle": {
+    "step_ticks": 4,
+    "warning_ticks": 60,
+    "lean": 0.5
+  },
+  "hardcore": {
+    "mode": "auto"
+  },
+  "restore": {
+    "retry_ticks": 20
+  },
+  "swaps": {
+    "mode": "illusion"
+  },
+  "said": {
+    "rest_ticks": 168000
+  },
+  "location": {
+    "min_distance": 6.0,
+    "max_distance": 14.0,
+    "step": 3.0,
+    "height": 0.5
+  },
   "place": {
     "tries": 16,
     "wall_min": 2,

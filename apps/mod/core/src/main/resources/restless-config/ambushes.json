@@ -6,7 +6,13 @@
       "margin": 4.0,
       "radius": 8,
       "min_distance": 3.0,
-      "blocks": ["minecraft:gravel", "minecraft:cobblestone", "minecraft:dirt", "minecraft:sand", "minecraft:stone"],
+      "blocks": [
+        "minecraft:gravel",
+        "minecraft:cobblestone",
+        "minecraft:dirt",
+        "minecraft:sand",
+        "minecraft:stone"
+      ],
       "warn_ticks": 60,
       "dust_every": 10,
       "rise": 0.04,
@@ -15,9 +21,22 @@
       "cleanup_ticks": 40,
       "hit_margin": 0.2,
       "damage": 4.0,
-      "sound": { "volume": 1.0, "pitch": 0.7 },
-      "hit_sound": { "volume": 1.0, "pitch": 0.8 },
-      "particles": { "count": 10, "dx": 0.3, "dy": 0.3, "dz": 0.3, "speed": 0.02, "offset_y": 0.5 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "particles": {
+        "count": 10,
+        "dx": 0.3,
+        "dy": 0.3,
+        "dz": 0.3,
+        "speed": 0.02,
+        "offset_y": 0.5
+      }
     },
     "restless:flung_tools": {
       "weight": 0.3,
@@ -34,9 +53,18 @@
       "pickup_delay_ticks": 60,
       "hit_margin": 0.2,
       "damage": 2.0,
-      "sound": { "volume": 1.0, "pitch": 0.6 },
-      "rattle_sound": { "volume": 1.0, "pitch": 0.8 },
-      "throw_sound": { "volume": 1.0, "pitch": 1.2 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "rattle_sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "throw_sound": {
+        "volume": 1.0,
+        "pitch": 1.2
+      }
     },
     "restless:volley": {
       "weight": 0.4,
@@ -52,8 +80,14 @@
       "power": 1.8,
       "uncertainty": 3.0,
       "arc": 0.2,
-      "sound": { "volume": 1.0, "pitch": 0.7 },
-      "shoot_sound": { "volume": 1.0, "pitch": 1.0 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      "shoot_sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      }
     },
     "restless:cave_in": {
       "weight": 0.3,
@@ -66,9 +100,22 @@
       "dust_every": 10,
       "per_block": 2.0,
       "max_damage": 10,
-      "sound": { "volume": 1.0, "pitch": 0.6 },
-      "fall_sound": { "volume": 1.0, "pitch": 0.7 },
-      "particles": { "count": 12, "dx": 0.3, "dy": 0.1, "dz": 0.3, "speed": 0.02, "offset_y": 0.5 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "fall_sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      "particles": {
+        "count": 12,
+        "dx": 0.3,
+        "dy": 0.1,
+        "dz": 0.3,
+        "speed": 0.02,
+        "offset_y": 0.5
+      }
     },
     "restless:dripstone_rain": {
       "weight": 0.3,
@@ -84,9 +131,22 @@
       "per_wave": 2,
       "per_block": 2.0,
       "max_damage": 10,
-      "sound": { "volume": 1.0, "pitch": 0.8 },
-      "break_sound": { "volume": 1.0, "pitch": 0.9 },
-      "particles": { "count": 6, "dx": 0.2, "dy": 0.1, "dz": 0.2, "speed": 0.02, "offset_y": 0.0 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "break_sound": {
+        "volume": 1.0,
+        "pitch": 0.9
+      },
+      "particles": {
+        "count": 6,
+        "dx": 0.2,
+        "dy": 0.1,
+        "dz": 0.2,
+        "speed": 0.02,
+        "offset_y": 0.0
+      }
     },
     "restless:possessed_mob": {
       "weight": 0.4,
@@ -98,8 +158,18 @@
       "effect_ticks": 400,
       "speed_amplifier": 1,
       "strength_amplifier": 1,
-      "sound": { "volume": 1.0, "pitch": 0.7 },
-      "particles": { "count": 3, "dx": 0.25, "dy": 0.1, "dz": 0.25, "speed": 0.01, "offset_y": 1.6 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      "particles": {
+        "count": 3,
+        "dx": 0.25,
+        "dy": 0.1,
+        "dz": 0.25,
+        "speed": 0.01,
+        "offset_y": 1.6
+      }
     },
     "restless:frenzy": {
       "weight": 0.3,
@@ -113,8 +183,18 @@
       "effect_ticks": 300,
       "speed_amplifier": 1,
       "strength_amplifier": 1,
-      "sound": { "volume": 1.0, "pitch": 0.6 },
-      "particles": { "count": 2, "dx": 0.25, "dy": 0.1, "dz": 0.25, "speed": 0.01, "offset_y": 1.8 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "particles": {
+        "count": 2,
+        "dx": 0.25,
+        "dy": 0.1,
+        "dz": 0.25,
+        "speed": 0.01,
+        "offset_y": 1.8
+      }
     },
     "restless:turned_pets": {
       "weight": 0.3,
@@ -127,7 +207,10 @@
       "speed": 1.4,
       "reach": 2.0,
       "bite_every": 2,
-      "sound": { "volume": 1.0, "pitch": 0.8 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      }
     },
     "restless:vex_swarm": {
       "weight": 0.3,
@@ -139,8 +222,18 @@
       "min_distance": 3,
       "max_distance": 6,
       "life_ticks": 400,
-      "sound": { "volume": 1.0, "pitch": 0.6 },
-      "particles": { "count": 6, "dx": 0.6, "dy": 0.8, "dz": 0.6, "speed": 0.02, "offset_y": 1.0 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "particles": {
+        "count": 6,
+        "dx": 0.6,
+        "dy": 0.8,
+        "dz": 0.6,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
     },
     "restless:ghost_creeper": {
       "weight": 0.3,
@@ -153,9 +246,22 @@
       "damage": 8.0,
       "knockback": 0.8,
       "lift": 0.4,
-      "sound": { "volume": 1.0, "pitch": 0.8 },
-      "blast_sound": { "volume": 1.0, "pitch": 1.2 },
-      "particles": { "count": 4, "dx": 0.2, "dy": 0.2, "dz": 0.2, "speed": 0.01, "offset_y": 0.5 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "blast_sound": {
+        "volume": 1.0,
+        "pitch": 1.2
+      },
+      "particles": {
+        "count": 4,
+        "dx": 0.2,
+        "dy": 0.2,
+        "dz": 0.2,
+        "speed": 0.01,
+        "offset_y": 0.5
+      }
     },
     "restless:stalker": {
       "weight": 0.3,
@@ -172,9 +278,22 @@
       "cleanup_ticks": 40,
       "touch_distance": 1.3,
       "damage": 4.0,
-      "sound": { "volume": 1.0, "pitch": 0.6 },
-      "hit_sound": { "volume": 1.0, "pitch": 0.8 },
-      "particles": { "count": 20, "dx": 0.3, "dy": 0.8, "dz": 0.3, "speed": 0.02, "offset_y": 1.0 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "hit_sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "particles": {
+        "count": 20,
+        "dx": 0.3,
+        "dy": 0.8,
+        "dz": 0.3,
+        "speed": 0.02,
+        "offset_y": 1.0
+      }
     },
     "restless:hail_of_bones": {
       "weight": 0.3,
@@ -187,9 +306,22 @@
       "bones": 10,
       "per_block": 0.5,
       "max_damage": 8,
-      "sound": { "volume": 1.0, "pitch": 0.8 },
-      "drop_sound": { "volume": 1.0, "pitch": 1.0 },
-      "particles": { "count": 12, "dx": 3.0, "dy": 0.5, "dz": 3.0, "speed": 0.02, "offset_y": 0.0 }
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "drop_sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      },
+      "particles": {
+        "count": 12,
+        "dx": 3.0,
+        "dy": 0.5,
+        "dz": 3.0,
+        "speed": 0.02,
+        "offset_y": 0.0
+      }
     }
   }
 }

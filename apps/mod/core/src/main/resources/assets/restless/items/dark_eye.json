@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:item/dark_eye"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:item/dark_eye"
+  }
+}

@@ -1,1 +1,7 @@
-{"variants":{"":{"model":"restless:block/gravestone"}}}
+{
+  "variants": {
+    "": {
+      "model": "restless:block/gravestone"
+    }
+  }
+}

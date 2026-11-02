@@ -1,92 +1,178 @@
 {
   "subtitle.behind_you": {
     "subtitle": "subtitles.restless.behind_you",
-    "sounds": [{ "name": "minecraft:block.wool.step", "type": "event", "volume": 0.001 }]
+    "sounds": [
+      {
+        "name": "minecraft:block.wool.step",
+        "type": "event",
+        "volume": 0.001
+      }
+    ]
   },
   "haunt.scream": {
     "subtitle": "subtitles.restless.scream",
     "sounds": [
-      { "name": "restless:haunt/scream_1" },
-      { "name": "restless:haunt/scream_2" },
-      { "name": "restless:haunt/scream_3" },
-      { "name": "restless:haunt/scream_4" }
+      {
+        "name": "restless:haunt/scream_1"
+      },
+      {
+        "name": "restless:haunt/scream_2"
+      },
+      {
+        "name": "restless:haunt/scream_3"
+      },
+      {
+        "name": "restless:haunt/scream_4"
+      }
     ]
   },
   "haunt.cut_off_scream": {
     "subtitle": "subtitles.restless.scream",
-    "sounds": [{ "name": "restless:haunt/cut_off_scream" }]
+    "sounds": [
+      {
+        "name": "restless:haunt/cut_off_scream"
+      }
+    ]
   },
   "haunt.long_scream": {
     "subtitle": "subtitles.restless.scream",
-    "sounds": [{ "name": "restless:haunt/long_scream" }]
+    "sounds": [
+      {
+        "name": "restless:haunt/long_scream"
+      }
+    ]
   },
   "haunt.moan": {
     "subtitle": "subtitles.restless.moan",
     "sounds": [
-      { "name": "restless:haunt/moan_1" },
-      { "name": "restless:haunt/moan_2" },
-      { "name": "restless:haunt/moan_3" },
-      { "name": "restless:haunt/moan_4" },
-      { "name": "restless:haunt/moan_5" }
+      {
+        "name": "restless:haunt/moan_1"
+      },
+      {
+        "name": "restless:haunt/moan_2"
+      },
+      {
+        "name": "restless:haunt/moan_3"
+      },
+      {
+        "name": "restless:haunt/moan_4"
+      },
+      {
+        "name": "restless:haunt/moan_5"
+      }
     ]
   },
   "haunt.whisper": {
     "subtitle": "subtitles.restless.whisper",
     "sounds": [
-      { "name": "restless:haunt/whisper_1" },
-      { "name": "restless:haunt/whisper_2" },
-      { "name": "restless:haunt/whisper_3" },
-      { "name": "restless:haunt/whisper_4" }
+      {
+        "name": "restless:haunt/whisper_1"
+      },
+      {
+        "name": "restless:haunt/whisper_2"
+      },
+      {
+        "name": "restless:haunt/whisper_3"
+      },
+      {
+        "name": "restless:haunt/whisper_4"
+      }
     ]
   },
   "haunt.laugh": {
     "subtitle": "subtitles.restless.laugh",
     "sounds": [
-      { "name": "restless:haunt/laugh" }
+      {
+        "name": "restless:haunt/laugh"
+      }
     ]
   },
   "haunt.breath": {
     "subtitle": "subtitles.restless.breath",
     "sounds": [
-      { "name": "restless:haunt/breath" }
+      {
+        "name": "restless:haunt/breath"
+      }
     ]
   },
   "haunt.screech": {
     "subtitle": "subtitles.restless.screech",
     "sounds": [
-      { "name": "restless:haunt/screech" }
+      {
+        "name": "restless:haunt/screech"
+      }
     ]
   },
   "haunt.song": {
     "subtitle": "subtitles.restless.song",
-    "sounds": [{ "name": "restless:haunt.moan", "type": "event" }]
+    "sounds": [
+      {
+        "name": "restless:haunt.moan",
+        "type": "event"
+      }
+    ]
   },
   "haunt.horn": {
     "subtitle": "subtitles.restless.horn",
-    "sounds": [{ "name": "minecraft:item.goat_horn.sound.2", "type": "event" }]
+    "sounds": [
+      {
+        "name": "minecraft:item.goat_horn.sound.2",
+        "type": "event"
+      }
+    ]
   },
   "haunt.music_box": {
     "subtitle": "subtitles.restless.music_box",
-    "sounds": [{ "name": "minecraft:block.note_block.chime", "type": "event" }]
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.chime",
+        "type": "event"
+      }
+    ]
   },
   "haunt.lullaby": {
     "subtitle": "subtitles.restless.lullaby",
-    "sounds": [{ "name": "minecraft:block.note_block.flute", "type": "event" }]
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.flute",
+        "type": "event"
+      }
+    ]
   },
   "haunt.claw_scratch": {
     "subtitle": "subtitles.restless.claw_scratch",
-    "sounds": [{ "name": "minecraft:item.axe.scrape", "type": "event" }]
+    "sounds": [
+      {
+        "name": "minecraft:item.axe.scrape",
+        "type": "event"
+      }
+    ]
   },
   "haunt.chair_creak": {
     "subtitle": "subtitles.restless.chair_creak",
-    "sounds": [{ "name": "minecraft:block.wooden_trapdoor.open", "type": "event" }]
+    "sounds": [
+      {
+        "name": "minecraft:block.wooden_trapdoor.open",
+        "type": "event"
+      }
+    ]
   },
   "haunt.mirror_ring": {
     "subtitle": "subtitles.restless.mirror_ring",
-    "sounds": [{ "name": "minecraft:block.amethyst_block.chime", "type": "event" }]
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_block.chime",
+        "type": "event"
+      }
+    ]
   },
   "haunt.mirror_crack": {
     "subtitle": "subtitles.restless.mirror_crack",
-    "sounds": [{ "name": "minecraft:block.glass.hit", "type": "event" }]
+    "sounds": [
+      {
+        "name": "minecraft:block.glass.hit",
+        "type": "event"
+      }
+    ]
   }
 }

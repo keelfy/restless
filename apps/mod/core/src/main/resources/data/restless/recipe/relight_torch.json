@@ -1,1 +1,4 @@
-{"type": "restless:relighting", "light": "restless:unlit_torch"}
+{
+  "type": "restless:relighting",
+  "light": "restless:unlit_torch"
+}

@@ -1,1 +1,6 @@
-{"parent":"minecraft:item/generated","textures":{"layer0":"restless:item/telekinesis_amulet"}}
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "restless:item/telekinesis_amulet"
+  }
+}

@@ -1,15 +1,132 @@
 {
   "version": 1,
   "events": {
-    "minecraft:roof_skeleton": { "weight": 0.25, "radius": 16, "min_distance": 8.0, "min_rise": 2, "interval_ticks": 5, "max_ticks": 400, "vanish_distance": 6.0, "look_angle": 25.0, "look_ticks": 6 },
-    "minecraft:water_guardian": { "weight": 0.2, "radius": 20, "min_distance": 6.0, "depth": 2, "ticks": 80, "sound": { "volume": 1.0, "pitch": 1.0 } },
-    "minecraft:far_warden": { "weight": 0.15, "min_distance": 30, "max_distance": 42, "emerge_ticks": 134, "hold_ticks": 40, "dig_ticks": 100, "sound": { "volume": 3.0, "pitch": 1.0 } },
-    "minecraft:swamp_witch": { "weight": 0.25, "radius": 12, "min_distance": 4.0, "interval_ticks": 5, "max_ticks": 400, "vanish_distance": 2.5, "look_angle": 20.0, "look_ticks": 8 },
-    "minecraft:wall_shulker": { "weight": 0.2, "radius": 8, "min_distance": 3.0, "height": 2, "open_after": 20, "open_ticks": 60, "leave_ticks": 12, "peek": 100, "sound": { "volume": 1.0, "pitch": 1.0 } },
-    "minecraft:allay_thief": { "weight": 0.25, "distance": 3.0, "angle": 50.0, "length": 45.0, "rise": 6.0, "ticks": 110, "sound": { "volume": 1.0, "pitch": 1.0 } },
-    "minecraft:forest_creaking": { "weight": 0.2, "min_distance": 24, "max_distance": 36, "interval_ticks": 2, "speed": 0.35, "climb": 2, "drop": 3, "stuck_steps": 20, "touch_distance": 3.0, "watch_degrees": 50.0, "eye_height": 1.5, "max_ticks": 1200 },
-    "minecraft:cow_herd_blink": { "weight": 0.2, "cows": 6, "min_cows": 3, "distance": 20.0, "spread": 6.0, "max_angle": 35.0, "interval_ticks": 5, "max_ticks": 600, "vanish_distance": 8.0, "look_angle": 40.0, "look_ticks": 4, "fall_ticks": 3, "hold_ticks": 4, "rise_ticks": 5, "peak": 0.95 },
-    "minecraft:spyglass_figure": { "weight": 0.25, "mob": "minecraft:villager", "distance": 48.0, "climb": 6, "drop": 10, "interval_ticks": 2, "wait_ticks": 2400, "max_ticks": 1200 },
-    "minecraft:flash_figure": { "weight": 0.2, "mob": "minecraft:wither_skeleton", "flashes": 4, "distance": 34.0, "step": 7.0, "min_distance": 10.0, "angle": 40.0, "behind": 8.0, "climb": 4, "drop": 6, "first_ticks": 40, "gap_min_ticks": 40, "gap_max_ticks": 90, "flash_ticks": 4 }
+    "minecraft:roof_skeleton": {
+      "weight": 0.25,
+      "radius": 16,
+      "min_distance": 8.0,
+      "min_rise": 2,
+      "interval_ticks": 5,
+      "max_ticks": 400,
+      "vanish_distance": 6.0,
+      "look_angle": 25.0,
+      "look_ticks": 6
+    },
+    "minecraft:water_guardian": {
+      "weight": 0.2,
+      "radius": 20,
+      "min_distance": 6.0,
+      "depth": 2,
+      "ticks": 80,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:far_warden": {
+      "weight": 0.15,
+      "min_distance": 30,
+      "max_distance": 42,
+      "emerge_ticks": 134,
+      "hold_ticks": 40,
+      "dig_ticks": 100,
+      "sound": {
+        "volume": 3.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:swamp_witch": {
+      "weight": 0.25,
+      "radius": 12,
+      "min_distance": 4.0,
+      "interval_ticks": 5,
+      "max_ticks": 400,
+      "vanish_distance": 2.5,
+      "look_angle": 20.0,
+      "look_ticks": 8
+    },
+    "minecraft:wall_shulker": {
+      "weight": 0.2,
+      "radius": 8,
+      "min_distance": 3.0,
+      "height": 2,
+      "open_after": 20,
+      "open_ticks": 60,
+      "leave_ticks": 12,
+      "peek": 100,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:allay_thief": {
+      "weight": 0.25,
+      "distance": 3.0,
+      "angle": 50.0,
+      "length": 45.0,
+      "rise": 6.0,
+      "ticks": 110,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:forest_creaking": {
+      "weight": 0.2,
+      "min_distance": 24,
+      "max_distance": 36,
+      "interval_ticks": 2,
+      "speed": 0.35,
+      "climb": 2,
+      "drop": 3,
+      "stuck_steps": 20,
+      "touch_distance": 3.0,
+      "watch_degrees": 50.0,
+      "eye_height": 1.5,
+      "max_ticks": 1200
+    },
+    "minecraft:cow_herd_blink": {
+      "weight": 0.2,
+      "cows": 6,
+      "min_cows": 3,
+      "distance": 20.0,
+      "spread": 6.0,
+      "max_angle": 35.0,
+      "interval_ticks": 5,
+      "max_ticks": 600,
+      "vanish_distance": 8.0,
+      "look_angle": 40.0,
+      "look_ticks": 4,
+      "fall_ticks": 3,
+      "hold_ticks": 4,
+      "rise_ticks": 5,
+      "peak": 0.95
+    },
+    "minecraft:spyglass_figure": {
+      "weight": 0.25,
+      "mob": "minecraft:villager",
+      "distance": 48.0,
+      "climb": 6,
+      "drop": 10,
+      "interval_ticks": 2,
+      "wait_ticks": 2400,
+      "max_ticks": 1200
+    },
+    "minecraft:flash_figure": {
+      "weight": 0.2,
+      "mob": "minecraft:wither_skeleton",
+      "flashes": 4,
+      "distance": 34.0,
+      "step": 7.0,
+      "min_distance": 10.0,
+      "angle": 40.0,
+      "behind": 8.0,
+      "climb": 4,
+      "drop": 6,
+      "first_ticks": 40,
+      "gap_min_ticks": 40,
+      "gap_max_ticks": 90,
+      "flash_ticks": 4
+    }
   }
 }

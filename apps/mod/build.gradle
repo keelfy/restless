@@ -57,6 +57,12 @@ subprojects {
 
 	// `check` (and so `build`) fails on unformatted code; `spotlessApply` fixes it.
 	spotless {
+		json {
+			target 'src/**/*.json'
+			gson().indentWithSpaces(2)
+			endWithNewline()
+		}
+
 		java {
 			importOrder()
 

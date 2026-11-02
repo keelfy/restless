@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:item/camera_obscura"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:item/camera_obscura"
+  }
+}

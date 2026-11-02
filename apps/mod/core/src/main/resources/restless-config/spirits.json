@@ -18,98 +18,541 @@
     "shade": {
       "kind": "personal",
       "activity": 0.8,
-      "affinity": { "DOORS": 0.3, "LIGHTS": 3.0, "AFFLICTION": 2.0, "ASSAULT": 1.0, "SOUND": 2.5, "ITEMS": 0.5, "PRESENCE": 2.0 }
+      "affinity": {
+        "DOORS": 0.3,
+        "LIGHTS": 3.0,
+        "AFFLICTION": 2.0,
+        "ASSAULT": 1.0,
+        "SOUND": 2.5,
+        "ITEMS": 0.5,
+        "PRESENCE": 2.0
+      }
     },
     "nix": {
       "kind": "territorial",
       "activity": 1.0,
-      "affinity": { "WATER": 8.0, "AFFLICTION": 1.0, "ASSAULT": 0.5, "SOUND": 0.5, "BLOCKS": 0.3, "PRESENCE": 0.3 }
+      "affinity": {
+        "WATER": 8.0,
+        "AFFLICTION": 1.0,
+        "ASSAULT": 0.5,
+        "SOUND": 0.5,
+        "BLOCKS": 0.3,
+        "PRESENCE": 0.3
+      }
     },
     "phantom": {
       "kind": "personal",
       "activity": 1.0,
-      "affinity": { "PLAYER": 6.0, "PRESENCE": 2.0, "DOORS": 0.5, "LIGHTS": 0.5, "AFFLICTION": 0.5, "ASSAULT": 0.3, "ITEMS": 0.5 }
+      "affinity": {
+        "PLAYER": 6.0,
+        "PRESENCE": 2.0,
+        "DOORS": 0.5,
+        "LIGHTS": 0.5,
+        "AFFLICTION": 0.5,
+        "ASSAULT": 0.3,
+        "ITEMS": 0.5
+      }
     },
     "mimic": {
       "kind": "personal",
       "activity": 1.0,
-      "affinity": { "BLOCKS": 3.0, "PLAYER": 2.0, "PRESENCE": 1.5, "MOBS": 1.5, "LIGHTS": 0.5, "DOORS": 0.5, "ASSAULT": 0.5 }
+      "affinity": {
+        "BLOCKS": 3.0,
+        "PLAYER": 2.0,
+        "PRESENCE": 1.5,
+        "MOBS": 1.5,
+        "LIGHTS": 0.5,
+        "DOORS": 0.5,
+        "ASSAULT": 0.5
+      }
     },
     "wraith": {
       "kind": "personal",
       "activity": 2.0,
       "when": "dark",
-      "affinity": { "ASSAULT": 2.5, "LIGHTS": 2.0, "AFFLICTION": 1.5, "PRESENCE": 1.5, "DOORS": 0.5, "ITEMS": 0.3, "BLOCKS": 0.5 }
+      "affinity": {
+        "ASSAULT": 2.5,
+        "LIGHTS": 2.0,
+        "AFFLICTION": 1.5,
+        "PRESENCE": 1.5,
+        "DOORS": 0.5,
+        "ITEMS": 0.3,
+        "BLOCKS": 0.5
+      }
     },
     "mara": {
       "kind": "personal",
       "activity": 1.8,
       "when": "night",
-      "reacts": ["bed"],
-      "affinity": { "AFFLICTION": 3.0, "PRESENCE": 2.0, "SOUND": 1.5, "DOORS": 0.5, "ITEMS": 0.3, "BLOCKS": 0.3 }
+      "reacts": [
+        "bed"
+      ],
+      "affinity": {
+        "AFFLICTION": 3.0,
+        "PRESENCE": 2.0,
+        "SOUND": 1.5,
+        "DOORS": 0.5,
+        "ITEMS": 0.3,
+        "BLOCKS": 0.3
+      }
     },
     "banshee": {
       "kind": "personal",
       "activity": 0.9,
-      "affinity": { "SOUND": 5.0, "PRESENCE": 1.5, "DOORS": 0.5, "ITEMS": 0.3, "BLOCKS": 0.3, "ASSAULT": 0.3 }
+      "affinity": {
+        "SOUND": 5.0,
+        "PRESENCE": 1.5,
+        "DOORS": 0.5,
+        "ITEMS": 0.3,
+        "BLOCKS": 0.3,
+        "ASSAULT": 0.3
+      }
     },
     "revenant": {
       "kind": "personal",
       "activity": 1.0,
-      "reacts": ["kill"],
-      "affinity": { "ASSAULT": 3.0, "MOBS": 2.5, "AFFLICTION": 1.0, "LIGHTS": 0.5, "DOORS": 0.3, "ITEMS": 0.3 }
+      "reacts": [
+        "kill"
+      ],
+      "affinity": {
+        "ASSAULT": 3.0,
+        "MOBS": 2.5,
+        "AFFLICTION": 1.0,
+        "LIGHTS": 0.5,
+        "DOORS": 0.3,
+        "ITEMS": 0.3
+      }
     },
     "lost_one": {
       "kind": "personal",
       "activity": 0.9,
-      "reacts": ["deep"],
-      "affinity": { "PRESENCE": 3.0, "PLAYER": 2.0, "SOUND": 1.5, "BLOCKS": 0.5, "ITEMS": 0.5, "ASSAULT": 0.2 }
+      "reacts": [
+        "deep"
+      ],
+      "affinity": {
+        "PRESENCE": 3.0,
+        "PLAYER": 2.0,
+        "SOUND": 1.5,
+        "BLOCKS": 0.5,
+        "ITEMS": 0.5,
+        "ASSAULT": 0.2
+      }
     },
     "domovoi": {
       "kind": "territorial",
       "activity": 0.7,
-      "affinity": { "DOORS": 2.0, "ITEMS": 2.0, "SOUND": 1.5, "MOBS": 0.5, "AFFLICTION": 0.3, "ASSAULT": 0.2 }
+      "affinity": {
+        "DOORS": 2.0,
+        "ITEMS": 2.0,
+        "SOUND": 1.5,
+        "MOBS": 0.5,
+        "AFFLICTION": 0.3,
+        "ASSAULT": 0.2
+      }
     },
     "hoarder": {
       "kind": "territorial",
       "activity": 1.2,
-      "affinity": { "ITEMS": 5.0, "BLOCKS": 1.5, "DOORS": 1.5, "LIGHTS": 0.5, "ASSAULT": 0.3, "PRESENCE": 0.5 }
+      "affinity": {
+        "ITEMS": 5.0,
+        "BLOCKS": 1.5,
+        "DOORS": 1.5,
+        "LIGHTS": 0.5,
+        "ASSAULT": 0.3,
+        "PRESENCE": 0.5
+      }
     },
     "demon": {
       "kind": "territorial",
       "activity": 1.1,
-      "affinity": { "ASSAULT": 3.0, "AFFLICTION": 2.0, "MOBS": 2.0, "LIGHTS": 1.5, "DOORS": 0.5, "ITEMS": 0.5 }
+      "affinity": {
+        "ASSAULT": 3.0,
+        "AFFLICTION": 2.0,
+        "MOBS": 2.0,
+        "LIGHTS": 1.5,
+        "DOORS": 0.5,
+        "ITEMS": 0.5
+      }
     },
     "trickster": {
       "kind": "territorial",
       "activity": 1.2,
-      "affinity": { "BLOCKS": 2.5, "ITEMS": 2.0, "MOBS": 1.5, "PRESENCE": 1.5, "ASSAULT": 0.2 }
+      "affinity": {
+        "BLOCKS": 2.5,
+        "ITEMS": 2.0,
+        "MOBS": 1.5,
+        "PRESENCE": 1.5,
+        "ASSAULT": 0.2
+      }
     }
   },
   "traits": {
-    "restless_hands": { "affinity": { "ITEMS": 2.0, "DOORS": 1.5 }, "clues": ["footprints", "planchette"], "words": ["fingers", "mine", "take"], "weakness": "iron" },
-    "light_eater": { "affinity": { "LIGHTS": 2.5 }, "clues": ["silhouette", "voice"], "words": ["dark", "hungry", "out"], "weakness": "glowstone" },
-    "door_slammer": { "affinity": { "DOORS": 2.5 }, "clues": ["footprints", "voice"], "words": ["leave", "shut", "slam"], "weakness": "iron" },
-    "whisperer": { "affinity": { "SOUND": 2.0, "PRESENCE": 1.5 }, "clues": ["voice", "planchette"], "words": ["listen", "closer", "hush"], "weakness": "mirror" },
-    "cold_touch": { "affinity": { "AFFLICTION": 2.0 }, "clues": ["silhouette"], "words": ["cold", "chill", "frost"], "weakness": "glowstone" },
-    "vengeful": { "affinity": { "ASSAULT": 2.0 }, "clues": ["voice", "footprints"], "words": ["pay", "blood", "you"], "weakness": "holy_water" },
-    "meddler": { "affinity": { "BLOCKS": 2.5, "MOBS": 1.5 }, "clues": ["planchette", "silhouette"], "words": ["move", "change", "mine"], "weakness": "iron" },
-    "rain_walker": { "affinity": {}, "activity": 2.0, "when": "rain", "clues": ["footprints"], "words": ["wet", "drip", "storm"], "weakness": "holy_water" },
-    "night_stalker": { "affinity": {}, "activity": 1.8, "when": "night", "clues": ["silhouette"], "words": ["behind", "night", "follow"], "weakness": "glowstone" },
-    "dark_dweller": { "affinity": {}, "activity": 1.8, "when": "dark", "clues": ["planchette"], "words": ["below", "black", "deep"], "weakness": "glowstone" },
-    "noise_feeder": { "affinity": {}, "noise": 6.0, "clues": ["voice"], "words": ["loud", "louder", "noise"], "weakness": "mirror" },
-    "chest_watcher": { "affinity": { "ITEMS": 1.5 }, "reacts": ["chest"], "clues": ["footprints", "silhouette"], "words": ["open", "mine", "lid"], "weakness": "iron" },
-    "sleep_thief": { "affinity": { "PRESENCE": 1.5 }, "reacts": ["bed"], "clues": ["planchette"], "words": ["wake", "dream", "bed"], "weakness": "mirror" },
-    "deep_caller": { "affinity": { "SOUND": 1.5 }, "reacts": ["deep"], "clues": ["voice", "silhouette"], "words": ["down", "come", "under"], "weakness": "holy_water" },
-    "grudge": { "affinity": { "ASSAULT": 1.5 }, "reacts": ["kill"], "clues": ["footprints"], "words": ["remember", "kill", "why"], "weakness": "holy_water" },
-    "liar": { "affinity": {}, "clues": ["voice", "planchette"], "words": ["yes", "no", "maybe"], "lies": 1, "weakness": "mirror" }
+    "restless_hands": {
+      "affinity": {
+        "ITEMS": 2.0,
+        "DOORS": 1.5
+      },
+      "clues": [
+        "footprints",
+        "planchette"
+      ],
+      "words": [
+        "fingers",
+        "mine",
+        "take"
+      ],
+      "weakness": "iron"
+    },
+    "light_eater": {
+      "affinity": {
+        "LIGHTS": 2.5
+      },
+      "clues": [
+        "silhouette",
+        "voice"
+      ],
+      "words": [
+        "dark",
+        "hungry",
+        "out"
+      ],
+      "weakness": "glowstone"
+    },
+    "door_slammer": {
+      "affinity": {
+        "DOORS": 2.5
+      },
+      "clues": [
+        "footprints",
+        "voice"
+      ],
+      "words": [
+        "leave",
+        "shut",
+        "slam"
+      ],
+      "weakness": "iron"
+    },
+    "whisperer": {
+      "affinity": {
+        "SOUND": 2.0,
+        "PRESENCE": 1.5
+      },
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "listen",
+        "closer",
+        "hush"
+      ],
+      "weakness": "mirror"
+    },
+    "cold_touch": {
+      "affinity": {
+        "AFFLICTION": 2.0
+      },
+      "clues": [
+        "silhouette"
+      ],
+      "words": [
+        "cold",
+        "chill",
+        "frost"
+      ],
+      "weakness": "glowstone"
+    },
+    "vengeful": {
+      "affinity": {
+        "ASSAULT": 2.0
+      },
+      "clues": [
+        "voice",
+        "footprints"
+      ],
+      "words": [
+        "pay",
+        "blood",
+        "you"
+      ],
+      "weakness": "holy_water"
+    },
+    "meddler": {
+      "affinity": {
+        "BLOCKS": 2.5,
+        "MOBS": 1.5
+      },
+      "clues": [
+        "planchette",
+        "silhouette"
+      ],
+      "words": [
+        "move",
+        "change",
+        "mine"
+      ],
+      "weakness": "iron"
+    },
+    "rain_walker": {
+      "affinity": {},
+      "activity": 2.0,
+      "when": "rain",
+      "clues": [
+        "footprints"
+      ],
+      "words": [
+        "wet",
+        "drip",
+        "storm"
+      ],
+      "weakness": "holy_water"
+    },
+    "night_stalker": {
+      "affinity": {},
+      "activity": 1.8,
+      "when": "night",
+      "clues": [
+        "silhouette"
+      ],
+      "words": [
+        "behind",
+        "night",
+        "follow"
+      ],
+      "weakness": "glowstone"
+    },
+    "dark_dweller": {
+      "affinity": {},
+      "activity": 1.8,
+      "when": "dark",
+      "clues": [
+        "planchette"
+      ],
+      "words": [
+        "below",
+        "black",
+        "deep"
+      ],
+      "weakness": "glowstone"
+    },
+    "noise_feeder": {
+      "affinity": {},
+      "noise": 6.0,
+      "clues": [
+        "voice"
+      ],
+      "words": [
+        "loud",
+        "louder",
+        "noise"
+      ],
+      "weakness": "mirror"
+    },
+    "chest_watcher": {
+      "affinity": {
+        "ITEMS": 1.5
+      },
+      "reacts": [
+        "chest"
+      ],
+      "clues": [
+        "footprints",
+        "silhouette"
+      ],
+      "words": [
+        "open",
+        "mine",
+        "lid"
+      ],
+      "weakness": "iron"
+    },
+    "sleep_thief": {
+      "affinity": {
+        "PRESENCE": 1.5
+      },
+      "reacts": [
+        "bed"
+      ],
+      "clues": [
+        "planchette"
+      ],
+      "words": [
+        "wake",
+        "dream",
+        "bed"
+      ],
+      "weakness": "mirror"
+    },
+    "deep_caller": {
+      "affinity": {
+        "SOUND": 1.5
+      },
+      "reacts": [
+        "deep"
+      ],
+      "clues": [
+        "voice",
+        "silhouette"
+      ],
+      "words": [
+        "down",
+        "come",
+        "under"
+      ],
+      "weakness": "holy_water"
+    },
+    "grudge": {
+      "affinity": {
+        "ASSAULT": 1.5
+      },
+      "reacts": [
+        "kill"
+      ],
+      "clues": [
+        "footprints"
+      ],
+      "words": [
+        "remember",
+        "kill",
+        "why"
+      ],
+      "weakness": "holy_water"
+    },
+    "liar": {
+      "affinity": {},
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "yes",
+        "no",
+        "maybe"
+      ],
+      "lies": 1,
+      "weakness": "mirror"
+    }
   },
   "story": {
     "days_min": 3,
     "days_max": 400,
-    "name_first": ["Cobble", "Diamond", "Creeper", "Sneaky", "Lava", "Pixel", "Obsidian", "Ghast", "Redstone", "Zombie", "Ender", "Gravel", "Cave", "Torch", "Villager", "Bedrock", "Skeleton", "Iron", "Golden", "Emerald", "Nether", "Shadow", "Pro", "Epic", "Mega", "Dark", "Blaze", "Frozen", "Cactus", "Pumpkin", "Wither", "Dragon", "Night", "Silent", "Rusty", "Tiny", "Angry", "Lucky", "Salty", "Mossy", "Dusty", "Glitch", "Phantom", "Sculk", "Amethyst", "Copper", "Crimson", "Husk"],
-    "name_second": ["Digger", "Hugger", "Miner", "Rider", "Slayer", "Hunter", "Builder", "Farmer", "Crafter", "Gamer", "Master", "Lord", "King", "Knight", "Wolf", "Fox", "Panda", "Axolotl", "Steve", "Alex", "Tim", "Bob", "Sam", "Pete", "Ron", "Gus", "Vic", "Ollie", "Eve", "Noob", "Bandit", "Ninja", "Wizard", "Goblin", "Bee", "Cow", "Pig", "Sheep", "Mole", "Bat", "Pickaxe", "Sword", "Shovel", "Anvil", "Chest", "Torch", "Bucket", "Furnace", "Zombie", "Creeper"],
+    "name_first": [
+      "Cobble",
+      "Diamond",
+      "Creeper",
+      "Sneaky",
+      "Lava",
+      "Pixel",
+      "Obsidian",
+      "Ghast",
+      "Redstone",
+      "Zombie",
+      "Ender",
+      "Gravel",
+      "Cave",
+      "Torch",
+      "Villager",
+      "Bedrock",
+      "Skeleton",
+      "Iron",
+      "Golden",
+      "Emerald",
+      "Nether",
+      "Shadow",
+      "Pro",
+      "Epic",
+      "Mega",
+      "Dark",
+      "Blaze",
+      "Frozen",
+      "Cactus",
+      "Pumpkin",
+      "Wither",
+      "Dragon",
+      "Night",
+      "Silent",
+      "Rusty",
+      "Tiny",
+      "Angry",
+      "Lucky",
+      "Salty",
+      "Mossy",
+      "Dusty",
+      "Glitch",
+      "Phantom",
+      "Sculk",
+      "Amethyst",
+      "Copper",
+      "Crimson",
+      "Husk"
+    ],
+    "name_second": [
+      "Digger",
+      "Hugger",
+      "Miner",
+      "Rider",
+      "Slayer",
+      "Hunter",
+      "Builder",
+      "Farmer",
+      "Crafter",
+      "Gamer",
+      "Master",
+      "Lord",
+      "King",
+      "Knight",
+      "Wolf",
+      "Fox",
+      "Panda",
+      "Axolotl",
+      "Steve",
+      "Alex",
+      "Tim",
+      "Bob",
+      "Sam",
+      "Pete",
+      "Ron",
+      "Gus",
+      "Vic",
+      "Ollie",
+      "Eve",
+      "Noob",
+      "Bandit",
+      "Ninja",
+      "Wizard",
+      "Goblin",
+      "Bee",
+      "Cow",
+      "Pig",
+      "Sheep",
+      "Mole",
+      "Bat",
+      "Pickaxe",
+      "Sword",
+      "Shovel",
+      "Anvil",
+      "Chest",
+      "Torch",
+      "Bucket",
+      "Furnace",
+      "Zombie",
+      "Creeper"
+    ],
     "name_number_max": 99,
-    "causes": ["fell_into_lava", "starved_in_a_deep_mine", "was_blown_up_by_a_creeper", "drowned_in_a_flooded_cave", "was_shot_by_a_skeleton", "fell_from_a_high_place", "burned_down_with_the_house", "was_lost_in_the_nether", "suffocated_in_a_collapsed_tunnel", "was_slain_by_a_zombie_horde", "never_found_the_way_back_to_bed", "was_pushed_off_by_a_friend"]
+    "causes": [
+      "fell_into_lava",
+      "starved_in_a_deep_mine",
+      "was_blown_up_by_a_creeper",
+      "drowned_in_a_flooded_cave",
+      "was_shot_by_a_skeleton",
+      "fell_from_a_high_place",
+      "burned_down_with_the_house",
+      "was_lost_in_the_nether",
+      "suffocated_in_a_collapsed_tunnel",
+      "was_slain_by_a_zombie_horde",
+      "never_found_the_way_back_to_bed",
+      "was_pushed_off_by_a_friend"
+    ]
   }
 }

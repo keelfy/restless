@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"restless:item/holy_water"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "restless:item/holy_water"
+  }
+}

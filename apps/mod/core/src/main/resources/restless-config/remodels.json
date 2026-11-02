@@ -1,21 +1,81 @@
 {
   "version": 1,
   "events": {
-    "minecraft:netherrack_behind": { "weight": 0.3, "radius": 8, "min_distance": 2, "max_blocks": 40, "hide_dot": -0.2, "view_dot": 0.35, "interval_ticks": 2, "ticks": 600 },
-    "minecraft:roof_gone": { "weight": 0.3, "radius": 2, "max_depth": 6, "min_blocks": 4, "ticks": 400 },
-    "minecraft:path_rearranged": { "weight": 0.3, "min_distance": 3, "max_distance": 10, "width": 1, "min_blocks": 8, "view_dot": 0.35, "interval_ticks": 2, "ticks": 600 },
-    "minecraft:landmark_tree_gone": { "weight": 0.2, "search": 24, "tries": 24, "max_blocks": 250, "min_leaves": 8, "crown": 4, "min_distance": 18.0, "max_distance": 64.0, "vanish_distance": 12.0, "interval_ticks": 10, "ticks": 1200 },
-    "minecraft:tunnel_filled": { "weight": 0.3, "block": "minecraft:stone", "min_distance": 2, "max_distance": 10, "width": 1, "min_cells": 6, "view_dot": 0.35, "interval_ticks": 2, "ticks": 600 },
+    "minecraft:netherrack_behind": {
+      "weight": 0.3,
+      "radius": 8,
+      "min_distance": 2,
+      "max_blocks": 40,
+      "hide_dot": -0.2,
+      "view_dot": 0.35,
+      "interval_ticks": 2,
+      "ticks": 600
+    },
+    "minecraft:roof_gone": {
+      "weight": 0.3,
+      "radius": 2,
+      "max_depth": 6,
+      "min_blocks": 4,
+      "ticks": 400
+    },
+    "minecraft:path_rearranged": {
+      "weight": 0.3,
+      "min_distance": 3,
+      "max_distance": 10,
+      "width": 1,
+      "min_blocks": 8,
+      "view_dot": 0.35,
+      "interval_ticks": 2,
+      "ticks": 600
+    },
+    "minecraft:landmark_tree_gone": {
+      "weight": 0.2,
+      "search": 24,
+      "tries": 24,
+      "max_blocks": 250,
+      "min_leaves": 8,
+      "crown": 4,
+      "min_distance": 18.0,
+      "max_distance": 64.0,
+      "vanish_distance": 12.0,
+      "interval_ticks": 10,
+      "ticks": 1200
+    },
+    "minecraft:tunnel_filled": {
+      "weight": 0.3,
+      "block": "minecraft:stone",
+      "min_distance": 2,
+      "max_distance": 10,
+      "width": 1,
+      "min_cells": 6,
+      "view_dot": 0.35,
+      "interval_ticks": 2,
+      "ticks": 600
+    },
     "minecraft:ceiling_furniture": {
       "weight": 0.3,
       "radius": 6,
       "count": 6,
       "ticks": 600,
       "pieces": [
-        "minecraft:oak_stairs", "minecraft:spruce_stairs", "minecraft:oak_slab", "minecraft:stone_brick_slab",
-        "minecraft:red_bed", "minecraft:white_bed"
+        "minecraft:oak_stairs",
+        "minecraft:spruce_stairs",
+        "minecraft:oak_slab",
+        "minecraft:stone_brick_slab",
+        "minecraft:red_bed",
+        "minecraft:white_bed"
       ]
     },
-    "minecraft:sea_lights": { "weight": 0.3, "tries": 12, "min_distance": 6.0, "max_distance": 18.0, "length": 14, "min_length": 8, "depth": 3, "trail": 2, "interval_ticks": 4 }
+    "minecraft:sea_lights": {
+      "weight": 0.3,
+      "tries": 12,
+      "min_distance": 6.0,
+      "max_distance": 18.0,
+      "length": 14,
+      "min_length": 8,
+      "depth": 3,
+      "trail": 2,
+      "interval_ticks": 4
+    }
   }
 }

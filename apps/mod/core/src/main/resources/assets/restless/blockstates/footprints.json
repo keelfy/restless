@@ -1,1 +1,19 @@
-{"variants":{"facing=north":{"model":"restless:block/footprints"},"facing=east":{"model":"restless:block/footprints","y":90},"facing=south":{"model":"restless:block/footprints","y":180},"facing=west":{"model":"restless:block/footprints","y":270}}}
+{
+  "variants": {
+    "facing=north": {
+      "model": "restless:block/footprints"
+    },
+    "facing=east": {
+      "model": "restless:block/footprints",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "restless:block/footprints",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "restless:block/footprints",
+      "y": 270
+    }
+  }
+}
