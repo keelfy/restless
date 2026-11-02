@@ -35,3 +35,10 @@ Horror mod: personal and territorial spirits that haunt you with escalating rand
     versionRange="[26.3.824,)"
     ordering="AFTER"
     side="CLIENT"
+
+[[dependencies.${mod_id}]]
+    modId="plasmovoice"
+    type="optional"
+    versionRange="[2.2.0-beta.2,)"
+    ordering="AFTER"
+    side="SERVER"

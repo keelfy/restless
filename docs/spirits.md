@@ -117,7 +117,7 @@ territorial ones whose radius holds them.
 |---|---|---|
 | footprints | **Ash powder** (charcoal, makes 4) | Placed flat like salt. After `ash.reveal_ticks` (30 s), if a spirit that leaves footprints is within `ash.reach` of it, it takes one of four prints (bare foot, paw, hoof, drag), picked by the spirit's seed: the same spirit always leaves the same print. |
 | silhouette | **Camera obscura** (iron, glass pane, black dye) | Use it: a **photograph** with the spirit's type only (no trait, no weakness), `camera.cooldown_ticks` apart. The figure on the picture is drawn from the spirit's type (build: hooded, hunched, horned...) and its seed (small differences), so the same spirit always looks the same (`content/Apparition.java`). |
-| voice | **Spirit box** (block: iron, redstone, note block) | Say something in chat within `spirit_box.radius` of it: a moment later it answers with a word of one trait. |
+| voice | **Spirit box** (block: iron, redstone, note block) | Say something in chat within `spirit_box.radius` of it: `spirit_box.delay_ticks` later (40) it answers with a word of one trait. With [Plasmo Voice](https://github.com/plasmoapp/plasmo-voice) (2.2.0-beta.2+) on the server, finishing a phrase on voice chat does the same; it hears that you spoke, not the words. |
 | planchette | **Ouija board** (block: planks, black dye, salt) | Use it: the planchette spells one trait's hint letter by letter on the action bar. |
 
 A spirit with the `liar` trait lies through the spirit box and the ouija board half the time (`clues.lie_chance`): it

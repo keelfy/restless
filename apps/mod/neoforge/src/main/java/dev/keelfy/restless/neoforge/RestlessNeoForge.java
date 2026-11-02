@@ -27,8 +27,10 @@ import dev.keelfy.restless.haunt.ScreenPayload;
 import dev.keelfy.restless.haunt.ShutterPayload;
 import dev.keelfy.restless.haunt.TurnPayload;
 import dev.keelfy.restless.haunt.VignettePayload;
+import dev.keelfy.restless.neoforge.compat.VoiceAddon;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.PlayLevelSoundEvent;
@@ -47,6 +49,9 @@ public final class RestlessNeoForge {
     public RestlessNeoForge(IEventBus modBus) {
         Restless.init();
         EyesType.init();
+        if (ModList.get().isLoaded("plasmovoice")) {
+            VoiceAddon.register();
+        }
         modBus.addListener((RegisterPayloadHandlersEvent e) -> e.registrar("1")
                 .playToClient(
                         DoorLockPayload.TYPE,

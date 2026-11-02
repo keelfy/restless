@@ -88,6 +88,7 @@ neoForge.ideSyncTask generateModMetadata
 repositories {
 	maven { url = 'https://api.modrinth.com/maven' }
 	maven { url = 'https://maven.shedaniel.me' }
+	maven { url = 'https://repo.plasmoverse.com/releases' }
 }
 
 dependencies {
@@ -95,4 +96,5 @@ dependencies {
 	compileOnly('maven.modrinth:rei:26.3.824+neoforge') { transitive = false }
 	compileOnly 'me.shedaniel.cloth:basic-math:0.6.0'
 	compileOnly('maven.modrinth:architectury-api:22.0.5+neoforge') { transitive = false }
+	compileOnly 'su.plo.voice.api:server:2.2.0-beta.2'
 }

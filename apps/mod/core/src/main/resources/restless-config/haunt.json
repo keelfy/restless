@@ -32,7 +32,7 @@
   "compass": { "step_ticks": 4 },
   "ash": { "reveal_ticks": 600, "reach": 16 },
   "camera": { "cooldown_ticks": 600 },
-  "spirit_box": { "radius": 6, "delay_ticks": 30 },
+  "spirit_box": { "radius": 6, "delay_ticks": 40 },
   "ouija": { "delay_ticks": 20, "letter_ticks": 6 },
   "clues": { "lie_chance": 0.5 },
   "ritual": { "candles": 4, "candle_radius": 3, "radius": 16, "wave_ticks": 100, "waves": 12, "snuff_chance": 0.25, "fury_chance": 0.5, "fail_anger": 0.3, "bless_ticks": 12000 },

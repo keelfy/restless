@@ -123,6 +123,11 @@ public final class Restless {
         Machines.said(player, line);
     }
 
+    /** Call when a player finishes a phrase on voice chat: a spirit box answers it as it does a chat line. */
+    public static void onVoice(ServerPlayer player) {
+        Divination.ask(player);
+    }
+
     /** Call when a player starts to break a block. */
     public static void onStartBreak(ServerPlayer player, BlockPos pos) {
         Swaps.reveal(player, pos);
