@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "restless:block/spirit_box"
+    "model": "restless:item/spirit_box"
   }
 }
