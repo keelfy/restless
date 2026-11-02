@@ -46,6 +46,7 @@ public final class Director {
                     continue;
                 }
                 SpiritType spirit = spirit(haunting);
+                boolean[] fired = new boolean[1];
                 if (canHaunt(player)) {
                     Said.during(
                             haunting.uuid(),
@@ -56,11 +57,12 @@ public final class Director {
                                             power(haunting, now),
                                             haunting.evolved(),
                                             null)
-                                    .ifPresent(event -> fireUnlessWarded(player, event, at)));
+                                    .ifPresent(event -> fired[0] = fireUnlessWarded(player, event, at)));
                 }
+                HauntData.Haunting acted = fired[0] ? Births.noticing(player, haunting) : haunting;
                 spirits.set(
                         i,
-                        haunting.rescheduled(now
+                        acted.rescheduled(now
                                 + cooldown(player.level(), player.blockPosition(), haunting, now, player.getRandom())));
                 changed = true;
             }
@@ -142,8 +144,14 @@ public final class Director {
         return Spirits.byId(haunting.spirit()).orElseThrow();
     }
 
+    /** Binds a spirit to the player; a type they already have is not bound twice, the one they have is returned. */
     public static HauntData.Haunting add(ServerPlayer player, HauntData data, SpiritType spirit, long now) {
         List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
+        Optional<HauntData.Haunting> same =
+                spirits.stream().filter(h -> h.spirit().equals(spirit.id())).findFirst();
+        if (same.isPresent()) {
+            return same.get();
+        }
         HauntData.Haunting bound = bind(player, spirit, now);
         spirits.add(bound);
         data.put(player.getUUID(), spirits);
@@ -221,13 +229,15 @@ public final class Director {
                         }));
     }
 
-    private static void fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
+    /** @return whether the event ran, rather than being stopped by a ward */
+    private static boolean fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
         if (Wards.stops(player, event)) {
             Wards.blocked(player);
-        } else {
-            fire(player, event, at);
-            Journal.unlock(player, Notebook.Chapter.HAUNTED);
+            return false;
         }
+        fire(player, event, at);
+        Journal.unlock(player, Notebook.Chapter.HAUNTED);
+        return true;
     }
 
     /** Runs an event with no spirit behind it; free-source events fall back to a random point around the player. */

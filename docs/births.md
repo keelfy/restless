@@ -1,6 +1,6 @@
 # Personal spirit births (plan)
 
-Today a player gets personal spirits two ways: three random ones on first join, and `/haunt spirit add`. This plan adds
+Today a player gets personal spirits two ways: one random one on first join, and `/haunt spirit add`. This plan adds
 **births**: a personal spirit that appears because of something the player did. It is the "born from the player's deeds"
 line of [design.md](design.md) (Spirit kinds, stage 5). Territorial births (death spot, abandoned build, blood moon) are
 a separate job and not covered here.
@@ -12,6 +12,8 @@ config (`haunt.json`, section `births`).
 
 - A deed the player can recognise, and later explain in hindsight, adds one spirit whose type fits the deed.
 - Births are rare and capped: the world must not fill a player with spirits for farming mobs.
+- Every source works in less than 100% of cases: each deed has a chance below 1, and the cooldown and cap sit on top.
+- A player never has two spirits of one type: `Director.add` returns the one they have instead of binding a second.
 - A born spirit is a normal spirit (traits, anger, clues, grave, ritual, evolution); nothing new to learn or fight.
 - Not here: territorial births, binding or merging spirits, a new journal chapter, new spirit types, new events.
 
@@ -27,16 +29,18 @@ gives its spirit type and chance, so which spirit a deed makes is data, not code
    (`angered(repeat_anger)`) and no new one is born. This keeps farming from stacking revenants, and it applies during
    the cooldown and at the cap too.
 3. **Cooldown**: no birth if the player's newest spirit was born less than `cooldown_days` (3) ago. Derived from
-   `bornAt`, so nothing new is saved and a restart cannot reset it. The three first-join spirits count, so a new
+   `bornAt`, so nothing new is saved and a restart cannot reset it. The first-join spirit counts, so a new
    player's first birth waits three days.
-4. **Cap**: no birth at `max_personal` (6) spirits.
+4. **Cap**: no birth at `max_personal` (3, configurable) spirits.
 5. Otherwise `Director.add` with a head start of `angered(start_anger)` (0.5, about power 0.2), so a born spirit begins
    above harmless. It answers the open question in design.md about fresh spirits for this path only; the first-join
-   three stay at 0. Aging it instead would move `bornAt` and break the cooldown above.
-6. **Telegraph**: a heartbeat sound and an action-bar line ("Something followed you home."). The first event waits
-   `grace_ticks` (2400).
+   one stays at 0. Aging it instead would move `bornAt` and break the cooldown above.
+6. **No telegraph**: no sound and no message on birth, the player learns of it from the events. The first event waits
+   `grace_ticks` (2400). Instead, the new spirit starts with `notice` set to a random 1..`notice_within` (5); every event
+   it runs counts it down, and on the last one the journal gets a `DREAM` line, "Something unknown is near me", with no
+   spirit behind it. The count is saved with the spirit (`notice`, absent means 0).
 
-Counters (kills in a window, minutes in the dark, chests looted) live in memory in `Births`, like `Reactions`; a restart
+Counters (kills in a window, minutes in the dark) live in memory in `Births`, like `Reactions`; a restart
 forgets them, which only makes births rarer.
 
 Debug: `/haunt birth <deed> [player]` fires a deed, skipping the roll but not the cooldown, cap or repeat rules.
@@ -48,17 +52,17 @@ Batch 1 is the three from design.md. Batch 2 reuses hooks that already exist, on
 
 | Deed | Hook | Condition | Born | Batch |
 |---|---|---|---|---|
-| Slaughter | `Restless.onKill`, killer is a player | Animals and villagers killed: animal 1 point, villager 5, hostile mobs 0. 24 points inside 3600 ticks | `revenant` | 1 |
+| Slaughter | `Restless.onKill`, killer is a player | Animals and villagers killed: animal 1 point, villager 5, hostile mobs 0. 24 points inside 3600 ticks. 30% | `revenant` | 1 |
 | Death far from home | `Restless.onKill`, victim is a player | Dies 256+ blocks from their respawn point or below y 0, and not by a spirit event within `relief_window_ticks`. 50% | `lost_one` | 1 |
-| Pet lost | `Restless.onKill`, victim is an owned `TamableAnimal` | Owner is an online player. Killed by the owner: `revenant`. Any other cause: `banshee`. Always rolls | `revenant` or `banshee` | 1 |
+| Pet lost | `Restless.onKill`, victim is an owned `TamableAnimal` | Owner is an online player. Killed by the owner: `revenant`. Any other cause: `banshee`. 50% | `revenant` or `banshee` | 1 |
 | Grave robbed | `Anger.broke`, same `graves` list | Breaks a grave block. 30% | `shade` | 2 |
 | Sleepless | `Reactions.used`, bed | Vanilla rest stat over 7 days when they finally lie down. 60% | `mara` | 2 |
 | Long dark | director check | 20 minutes at light level 0 counted across the session, resets on birth | `wraith` | 2 |
-| Greedy hands | `Reactions.used`, chest | 5 unopened loot-table chests opened within one in-game day | `mimic` | 2 |
-| Witnessed death | `Restless.onKill`, victim is a player | Another player within 32 blocks. Multiplayer only. 50% | `phantom` | 2 |
+| Chest broken | `Anger.broke`-style block break | Breaks a chest that still has a loot table (unopened). 5% | `mimic` | 2 |
+| Witnessed death | `Restless.onKill`, victim is a player | Another player within 32 blocks. Multiplayer only. 25% | `phantom` | 2 |
 
 Mapping to existing hooks: the three batch 1 deeds and "Witnessed death" share one `onKill` branch; "Grave robbed"
-needs one extra call in `Anger.broke`; nothing needs a new loader event. A pet's owner comes from vanilla
+and "Chest broken" need one extra call each in the block-break path next to `Anger.broke`; nothing needs a new loader event. A pet's owner comes from vanilla
 `OwnableEntity`, so it works for wolves, cats and parrots without a list.
 
 ## Opt-in births (later)
@@ -90,9 +94,9 @@ Docs to update per step: `spirits.md` (How it works: births), the design.md bull
 - **Culling farms** kill 24 animals in three minutes without meaning anything. The cooldown, cap and repeat rule limit
   the damage to at most one revenant; if it still feels wrong, the window can count only kills outside a pen (a roof
   and fence check), at the cost of a rule players cannot see.
-- **Which deeds should be loud?** A birth message tells the player the cause; hiding the cause keeps the mystery but
-  makes births feel random. Starting value: the message names no deed, the journal and the spirit's story do.
-- **Cap value.** Six personal spirits at power 0.6 each is a lot of events; the cap may need to drop with hardcore or
-  scale with difficulty.
+- **Births stay unexplained.** No message, no cause in the journal line; the spirit's own story and clues are the only
+  hint. If players cannot connect a spirit to a deed, the journal line can name it later.
+- **Cap value.** Three personal spirits at power 0.6 each is already many events; the cap may still need to drop with
+  hardcore.
 - **Sleepless and long dark** reward not playing normally; if players start gaming them on purpose they become opt-in
   rather than random, which is acceptable.

@@ -47,6 +47,8 @@ public final class HauntData extends SavedData {
      * @param anger 0..1
      * @param nextEventAt overworld game time of the next roll
      * @param evolved grown up after being left alone long enough; it never grows back down
+     * @param notice events it still runs before the journal gets a line about an unknown spirit near the player; the
+     *     event that makes the line is the last one counted, 0 when no line is due
      */
     public record Haunting(
             UUID uuid,
@@ -56,7 +58,8 @@ public final class HauntData extends SavedData {
             long bornAt,
             double anger,
             long nextEventAt,
-            boolean evolved) {
+            boolean evolved,
+            int notice) {
         static final Codec<Haunting> CODEC = RecordCodecBuilder.create(i -> i.group(
                         UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(h -> Optional.of(h.uuid)),
                         Codec.STRING.fieldOf("spirit").forGetter(Haunting::spirit),
@@ -65,8 +68,9 @@ public final class HauntData extends SavedData {
                         Codec.LONG.optionalFieldOf("born_at", 0L).forGetter(Haunting::bornAt),
                         Codec.DOUBLE.optionalFieldOf("anger", 0.0).forGetter(Haunting::anger),
                         Codec.LONG.fieldOf("next_event_at").forGetter(Haunting::nextEventAt),
-                        Codec.BOOL.optionalFieldOf("evolved", false).forGetter(Haunting::evolved))
-                .apply(i, (uuid, spirit, seed, traits, bornAt, anger, next, evolved) -> {
+                        Codec.BOOL.optionalFieldOf("evolved", false).forGetter(Haunting::evolved),
+                        Codec.INT.optionalFieldOf("notice", 0).forGetter(Haunting::notice))
+                .apply(i, (uuid, spirit, seed, traits, bornAt, anger, next, evolved, notice) -> {
                     long rolled =
                             seed.orElseGet(() -> ThreadLocalRandom.current().nextLong());
                     return new Haunting(
@@ -77,30 +81,43 @@ public final class HauntData extends SavedData {
                             bornAt,
                             anger,
                             next,
-                            evolved);
+                            evolved,
+                            notice);
                 }));
 
         public static Haunting born(String spirit, long now, RandomSource random) {
             long seed = random.nextLong();
-            return new Haunting(UUID.randomUUID(), spirit, seed, Traits.roll(seed), now, 0.0, now, false);
+            return new Haunting(UUID.randomUUID(), spirit, seed, Traits.roll(seed), now, 0.0, now, false, 0);
         }
 
         public Haunting rescheduled(long nextEventAt) {
-            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, evolved);
+            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, evolved, notice);
         }
 
         public Haunting angered(double by) {
             return new Haunting(
-                    uuid, spirit, seed, traits, bornAt, Math.max(0.0, Math.min(1.0, anger + by)), nextEventAt, evolved);
+                    uuid,
+                    spirit,
+                    seed,
+                    traits,
+                    bornAt,
+                    Math.max(0.0, Math.min(1.0, anger + by)),
+                    nextEventAt,
+                    evolved,
+                    notice);
         }
 
         /** Born {@code ticks} earlier than it was. */
         public Haunting aged(long ticks) {
-            return new Haunting(uuid, spirit, seed, traits, bornAt - ticks, anger, nextEventAt, evolved);
+            return new Haunting(uuid, spirit, seed, traits, bornAt - ticks, anger, nextEventAt, evolved, notice);
         }
 
         public Haunting evolve() {
-            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, true);
+            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, true, notice);
+        }
+
+        public Haunting noticed(int events) {
+            return new Haunting(uuid, spirit, seed, traits, bornAt, anger, nextEventAt, evolved, events);
         }
     }
 

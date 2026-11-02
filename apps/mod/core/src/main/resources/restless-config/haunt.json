@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "director": { "check_interval_ticks": 20, "default_spirits": 3, "territorial_radius": 48, "traits_min": 3, "traits_max": 5, "dark_light_level": 8, "react_chance": 0.25, "sneak_delay_ticks": 10, "rarity_memory": 0.05, "rarity_boost_max": 4.0, "repeat_share": 0.1, "sure_start_factor": 0.5 },
+  "director": { "check_interval_ticks": 20, "default_spirits": 1, "territorial_radius": 48, "traits_min": 3, "traits_max": 5, "dark_light_level": 8, "react_chance": 0.25, "sneak_delay_ticks": 10, "rarity_memory": 0.05, "rarity_boost_max": 4.0, "repeat_share": 0.1, "sure_start_factor": 0.5 },
   "power": {
     "maturity_days": 30,
     "maturity_share": 0.6,
@@ -14,15 +14,16 @@
   "anger": { "kill_cat": 0.15, "break_grave": 0.2, "burn_forest": 0.1, "break_anchor": 0.3, "anchor_reach": 3, "graves": ["minecraft:skeleton_skull", "minecraft:wither_skeleton_skull", "minecraft:bone_block", "restless:gravestone"] },
   "births": {
     "cooldown_days": 3,
-    "max_personal": 6,
+    "max_personal": 3,
+    "notice_within": 5,
     "repeat_anger": 0.15,
     "start_anger": 0.5,
     "grace_ticks": 2400,
     "deeds": {
-      "slaughter": { "spirit": "revenant", "chance": 1.0 },
+      "slaughter": { "spirit": "revenant", "chance": 0.3 },
       "far_death": { "spirit": "lost_one", "chance": 0.5 },
-      "pet_slain": { "spirit": "revenant", "chance": 1.0 },
-      "pet_lost": { "spirit": "banshee", "chance": 1.0 }
+      "pet_slain": { "spirit": "revenant", "chance": 0.5 },
+      "pet_lost": { "spirit": "banshee", "chance": 0.5 }
     }
   },
   "salt": { "max_cells": 400 },

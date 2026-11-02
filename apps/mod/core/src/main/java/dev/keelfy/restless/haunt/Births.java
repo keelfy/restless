@@ -9,8 +9,6 @@ import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 
 /**
  * A personal spirit that appears because of something the player did. Every deed goes through {@link #deed}; which
@@ -82,19 +80,29 @@ public final class Births {
                 HauntData.Haunting born = Director.add(player, data, spirit, now);
                 data.change(
                         born.uuid(),
-                        h -> h.angered(config.num("start_anger")).rescheduled(now + config.integer("grace_ticks")));
-                player.level()
-                        .playSound(
-                                null,
-                                player.blockPosition(),
-                                SoundEvents.WARDEN_HEARTBEAT,
-                                SoundSource.HOSTILE,
-                                1.0f,
-                                0.6f);
-                player.sendSystemMessage(Component.translatable("message.restless.birth"), true);
+                        h -> h.angered(config.num("start_anger"))
+                                .rescheduled(now + config.integer("grace_ticks"))
+                                .noticed(1 + player.getRandom().nextInt(config.integer("notice_within"))));
             }
             default -> {}
         }
         return verdict;
+    }
+
+    /**
+     * Call when a spirit ran an event on the player. A new spirit says nothing when it comes; on one of its first
+     * events the journal gets a line about something unknown near the player instead.
+     *
+     * @return the spirit with its count moved on
+     */
+    public static HauntData.Haunting noticing(ServerPlayer player, HauntData.Haunting spirit) {
+        if (spirit.notice() == 0) {
+            return spirit;
+        }
+        if (spirit.notice() > 1) {
+            return spirit.noticed(spirit.notice() - 1);
+        }
+        Journal.note(player, Notebook.Kind.DREAM, null, Component.translatable("journal.restless.unknown_near"));
+        return spirit.noticed(0);
     }
 }

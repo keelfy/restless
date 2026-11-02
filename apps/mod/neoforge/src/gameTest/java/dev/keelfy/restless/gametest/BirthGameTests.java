@@ -5,6 +5,8 @@ import dev.keelfy.restless.haunt.BirthRules.Verdict;
 import dev.keelfy.restless.haunt.Births;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;
+import dev.keelfy.restless.haunt.Notebook;
+import dev.keelfy.restless.spirit.Spirits;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -38,6 +40,24 @@ final class BirthGameTests {
                     helper,
                     own.get(0).nextEventAt() >= now + Config.section("births").integer("grace_ticks"),
                     "A born spirit must wait before its first event");
+
+            int within = Config.section("births").integer("notice_within");
+            HauntEventGameTests.check(
+                    helper,
+                    own.get(0).notice() >= 1 && own.get(0).notice() <= within,
+                    "A born spirit must owe the journal a line within its first events");
+            var spirit = own.get(0);
+            for (int i = 0; i < within; i++) {
+                spirit = Births.noticing(player, spirit);
+            }
+            long lines = data.notebook(player.getUUID()).notes().stream()
+                    .filter(n -> n.kind() == Notebook.Kind.DREAM)
+                    .count();
+            HauntEventGameTests.check(
+                    helper, spirit.notice() == 0 && lines == 1, "The journal must get exactly one line, then none");
+            Director.add(player, data, Spirits.byId("revenant").orElseThrow(), now);
+            HauntEventGameTests.check(
+                    helper, data.get(player.getUUID()).size() == 1, "A spirit type must not be bound twice");
 
             HauntEventGameTests.check(
                     helper,

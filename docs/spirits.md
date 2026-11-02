@@ -9,8 +9,8 @@ Update this file when any of them changes. The numbers below are the shipped def
 - A spirit is **personal** (follows one player) or **territorial** (stays at an anchor); the kind is `kind` in `spirits.json`.
   `shade`, `phantom`, `mimic`, `wraith`, `mara`, `banshee`, `revenant` and `lost_one` are personal; `poltergeist`, `nix`,
   `domovoi`, `hoarder`, `demon` and `trickster` are territorial.
-- Each player gets 3 personal spirits (`director.default_spirits`) on first check, each chosen uniformly at random
-  (repeats allowed), and keeps them. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`. A poltergeist
+- Each player gets 1 personal spirit (`director.default_spirits`) on first check, chosen uniformly at random, and keeps it.
+  A player never has two spirits of one type, whether they come from the first check, a deed or `/haunt spirit add`. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`. A poltergeist
   in an older save is dropped.
 - A territorial spirit has an anchor, a dimension and a radius (`director.territorial_radius`, 48 blocks), saved per world.
   When its cooldown expires it acts on one random player (survival or adventure) inside the radius, and does nothing, but
