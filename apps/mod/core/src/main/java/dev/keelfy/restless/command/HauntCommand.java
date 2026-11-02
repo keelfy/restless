@@ -16,6 +16,7 @@ import dev.keelfy.restless.haunt.Graves;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
+import dev.keelfy.restless.haunt.History;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -37,10 +39,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Debug/admin command: /haunt opens the debug screen; info|force (optionally after a delay in
- * seconds)|sanity|birth|spirit add|age|remove [player] work from chat.
+ * seconds)|act|history|sanity|birth|spirit add|age|remove [player] work from chat.
  */
 public final class HauntCommand {
     private static final DynamicCommandExceptionType UNKNOWN_EVENT =
@@ -81,6 +84,15 @@ public final class HauntCommand {
                                                         IntegerArgumentType.getInteger(c, "seconds")))))
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(c -> force(c, EntityArgument.getPlayer(c, "player"), 0)))))
+                .then(Commands.literal("act")
+                        .then(Commands.argument("index", IntegerArgumentType.integer(1))
+                                .executes(c -> act(c, c.getSource().getPlayerOrException()))
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(c -> act(c, EntityArgument.getPlayer(c, "player"))))))
+                .then(Commands.literal("history")
+                        .executes(c -> history(c.getSource(), null))
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(c -> history(c.getSource(), EntityArgument.getPlayer(c, "player")))))
                 .then(Commands.literal("sanity")
                         .then(Commands.argument("value", DoubleArgumentType.doubleArg(0, 1))
                                 .executes(c -> sanity(c, c.getSource().getPlayerOrException()))
@@ -230,6 +242,63 @@ public final class HauntCommand {
         Director.fire(player, event);
         source.sendSuccess(() -> Component.literal("Forced " + id + " on " + name), true);
         return 1;
+    }
+
+    /**
+     * The spirit at this /haunt info index acts on the player now: it rolls the event it would roll on its own, as
+     * itself, outside its timer and past wards.
+     */
+    private static int act(CommandContext<CommandSourceStack> c, ServerPlayer player) {
+        int index = IntegerArgumentType.getInteger(c, "index");
+        long now = c.getSource().getServer().overworld().getGameTime();
+        HauntData data = HauntData.get(c.getSource().getServer());
+        List<HauntData.Haunting> personal = Director.hauntings(player, data, now);
+        List<HauntData.Territorial> places = Director.territorial(data, player.level());
+        String name = player.getName().getString();
+        if (index > personal.size() + places.size()) {
+            c.getSource().sendFailure(Component.literal(name + " has no spirit #" + index));
+            return 0;
+        }
+        HauntData.Haunting spirit;
+        Vec3 at;
+        if (index <= personal.size()) {
+            spirit = personal.get(index - 1);
+            at = Location.roaming(spirit.uuid());
+        } else {
+            HauntData.Territorial place = places.get(index - personal.size() - 1);
+            spirit = place.haunting();
+            at = Vec3.atCenterOf(place.anchor());
+        }
+        Optional<HauntEvent> acted = Director.act(player, spirit, at, null);
+        if (acted.isEmpty()) {
+            c.getSource().sendFailure(Component.literal(Director.label(spirit) + " has nothing to do to " + name));
+            return 0;
+        }
+        c.getSource()
+                .sendSuccess(
+                        () -> Component.literal(Director.label(spirit) + " forced "
+                                + acted.get().id() + " on " + name),
+                        true);
+        return 1;
+    }
+
+    /** The newest events and the spirit behind each, of one player or of everyone. */
+    private static int history(CommandSourceStack source, @Nullable ServerPlayer player) {
+        long now = source.getServer().overworld().getGameTime();
+        List<History.Entry> entries =
+                History.last(player == null ? null : player.getName().getString(), 15);
+        StringBuilder text = new StringBuilder(entries.isEmpty() ? "No events yet" : "Latest events:");
+        for (History.Entry e : entries) {
+            text.append(String.format(
+                    Locale.ROOT,
+                    "%n  %ds ago %s %s by %s",
+                    Math.max(0, (now - e.at()) / Ticks.SECOND),
+                    e.player(),
+                    e.event(),
+                    e.spirit() == null ? "no spirit" : e.spirit()));
+        }
+        source.sendSuccess(() -> Component.literal(text.toString()), false);
+        return entries.size();
     }
 
     private static int birth(CommandContext<CommandSourceStack> c, ServerPlayer player) throws CommandSyntaxException {

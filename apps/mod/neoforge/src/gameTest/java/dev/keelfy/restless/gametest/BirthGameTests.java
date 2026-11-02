@@ -5,13 +5,17 @@ import dev.keelfy.restless.haunt.BirthRules.Verdict;
 import dev.keelfy.restless.haunt.Births;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;
+import dev.keelfy.restless.haunt.History;
 import dev.keelfy.restless.haunt.Notebook;
+import dev.keelfy.restless.haunt.SanityPayload;
 import dev.keelfy.restless.spirit.Spirits;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.world.level.GameType;
+import net.neoforged.neoforge.network.registration.ChannelAttributes;
 
 final class BirthGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
@@ -82,6 +86,34 @@ final class BirthGameTests {
                     Births.deed(creative, Births.Deed.SLAUGHTER, false) == Verdict.NOTHING,
                     "Creative players must not be haunted");
             creative.discard();
+            helper.succeed();
+        });
+        tests.put("spirit_act_history", helper -> {
+            var player = HauntEventGameTests.connected(helper);
+            ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
+                    .add(SanityPayload.TYPE.id());
+            var server = helper.getLevel().getServer();
+            var data = HauntData.get(server);
+            data.put(player.getUUID(), List.of());
+            var spirit = Director.add(
+                    player,
+                    data,
+                    Spirits.byId("revenant").orElseThrow(),
+                    server.overworld().getGameTime());
+            var event = Director.act(player, spirit, null, null);
+            HauntEventGameTests.check(helper, event.isPresent(), "A revenant must have an event it can act with");
+            var entry = History.last(player.getName().getString(), 1).get(0);
+            HauntEventGameTests.check(
+                    helper,
+                    entry.event().equals(event.get().id().toString())
+                            && entry.spirit().startsWith("revenant "),
+                    "The history must name the event and the spirit that acted");
+            Director.fire(player, event.get());
+            HauntEventGameTests.check(
+                    helper,
+                    History.last(player.getName().getString(), 1).get(0).spirit() == null,
+                    "An event with no spirit behind it must be listed without one");
+            player.discard();
             helper.succeed();
         });
     }

@@ -67,9 +67,7 @@ public final class Content {
     public static final Supplier<DataComponentType<Picture>> PICTURE =
             component("picture", Picture.CODEC, Picture.STREAM_CODEC);
 
-    public static final Supplier<Block> SPIRIT_BOX = block(
-            "spirit_box",
-            p -> new ShapedBlock(p.strength(1.0f).sound(SoundType.METAL).noOcclusion(), Block.box(3, 0, 3, 13, 6, 13)));
+    public static final Supplier<Block> SPIRIT_BOX = block("spirit_box", SpiritBox::new);
     public static final Supplier<Item> SPIRIT_BOX_ITEM = blockItem("spirit_box", SPIRIT_BOX);
     public static final Supplier<Block> OUIJA_BOARD = block("ouija_board", OuijaBoard::new);
     public static final Supplier<Item> OUIJA_BOARD_ITEM = blockItem("ouija_board", OUIJA_BOARD);

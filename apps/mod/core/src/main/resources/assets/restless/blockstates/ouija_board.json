@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
+      "model": "restless:block/ouija_board",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "restless:block/ouija_board",
+      "y": 270
+    },
+    "facing=south": {
       "model": "restless:block/ouija_board"
+    },
+    "facing=west": {
+      "model": "restless:block/ouija_board",
+      "y": 90
     }
   }
 }

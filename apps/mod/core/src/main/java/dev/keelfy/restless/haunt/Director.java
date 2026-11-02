@@ -4,6 +4,7 @@ import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -140,6 +142,11 @@ public final class Director {
         return known;
     }
 
+    /** The spirit as /haunt history names it: its type and the story of who it was. */
+    public static String label(HauntData.Haunting haunting) {
+        return haunting.spirit() + " \"" + Story.of(haunting.seed()) + "\"";
+    }
+
     public static SpiritType spirit(HauntData.Haunting haunting) {
         return Spirits.byId(haunting.spirit()).orElseThrow();
     }
@@ -210,10 +217,13 @@ public final class Director {
     /**
      * The spirit acts on the player now, outside its timer and past every ward (a ritual has called it in);
      * {@code tier}, when given, is the only kind of event it may pick.
+     *
+     * @return the event it ran, empty when none could run
      */
-    public static void act(
+    public static Optional<HauntEvent> act(
             ServerPlayer player, HauntData.Haunting haunting, @Nullable Vec3 at, @Nullable HauntTier tier) {
         long now = player.level().getServer().overworld().getGameTime();
+        HauntEvent[] acted = new HauntEvent[1];
         Said.during(
                 haunting.uuid(),
                 () -> pick(
@@ -226,7 +236,9 @@ public final class Director {
                         .ifPresent(event -> {
                             fire(player, event, at);
                             Journal.unlock(player, Notebook.Chapter.HAUNTED);
+                            acted[0] = event;
                         }));
+        return Optional.ofNullable(acted[0]);
     }
 
     /** @return whether the event ran, rather than being stopped by a ward */
@@ -249,6 +261,18 @@ public final class Director {
     public static void fire(ServerPlayer player, HauntEvent event, @Nullable Vec3 at) {
         Restless.LOGGER.debug("Haunt {} -> {}", event.id(), player.getName().getString());
         Recent.record(player.getUUID(), event.id().toString(), repeatGap());
+        MinecraftServer server = player.level().getServer();
+        UUID speaker = Said.current();
+        History.record(
+                server.overworld().getGameTime(),
+                player.getName().getString(),
+                event.id().toString(),
+                speaker == null
+                        ? null
+                        : HauntData.get(server)
+                                .find(speaker)
+                                .map(Director::label)
+                                .orElse(null));
         Location.during(at, () -> event.run(player));
         Bands.fired(event, player);
         Sanity.shock(player);

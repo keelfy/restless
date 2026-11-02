@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "restless:block/spirit_box"
+    },
+    "facing=east": {
+      "model": "restless:block/spirit_box",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "restless:block/spirit_box",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "restless:block/spirit_box",
+      "y": 270
     }
   }
 }
