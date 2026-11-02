@@ -17,7 +17,7 @@ import net.minecraft.util.ARGB;
 public record PhotoTooltip(Picture picture) implements ClientTooltipComponent {
     public static final int BORDER = 3;
     private static final int DARK = 0xFF1E140C;
-    private static final int LIGHT = 0xFFEEDFC0;
+    public static final int LIGHT = 0xFFEEDFC0;
     /** The last pictures shown, kept as textures; the oldest is released past this many. */
     private static final int CACHED = 16;
 

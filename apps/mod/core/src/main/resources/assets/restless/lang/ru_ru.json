@@ -68,6 +68,7 @@
   "subtitles.restless.chair_creak": "Скрип кресла",
   "subtitles.restless.mirror_ring": "Звон стекла",
   "subtitles.restless.mirror_crack": "Треск стекла",
+  "key.restless.journal_point": "Указывать на страницы журнала",
   "message.restless.journal_chapter": "Новое в журнале: %s.",
   "message.restless.journal_filed": "Убрано в архив.",
   "journal.restless.contents": "Содержание",

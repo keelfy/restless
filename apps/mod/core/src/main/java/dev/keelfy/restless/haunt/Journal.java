@@ -5,6 +5,7 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.Picture;
 import dev.keelfy.restless.haunt.Notebook.Chapter;
 import dev.keelfy.restless.haunt.Notebook.Kind;
+import dev.keelfy.restless.platform.Platform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +55,7 @@ public final class Journal {
         if (grown != null) {
             data.putNotebook(player.getUUID(), grown);
             turnPage(player, Component.translatable("message.restless.journal_written"));
+            sync(player);
         }
         for (Chapter chapter : chapters(kind)) {
             unlock(player, chapter);
@@ -64,6 +66,7 @@ public final class Journal {
     public static void paste(ServerPlayer player, UUID spirit, Picture picture) {
         HauntData data = HauntData.get(player.level().getServer());
         data.putNotebook(player.getUUID(), data.notebook(player.getUUID()).pasted(spirit, picture));
+        sync(player);
     }
 
     /** Opens a guide chapter the first time the player runs into what it is about. */
@@ -73,6 +76,7 @@ public final class Journal {
         if (opened != null) {
             data.putNotebook(player.getUUID(), opened);
             turnPage(player, Component.translatable("message.restless.journal_chapter", JournalPages.title(chapter)));
+            sync(player);
         }
     }
 
@@ -100,7 +104,7 @@ public final class Journal {
         if (started != null) {
             data.putNotebook(player.getUUID(), started);
         }
-        show(player);
+        show(player, true);
     }
 
     /**
@@ -113,14 +117,21 @@ public final class Journal {
         if (filed != null) {
             data.putNotebook(player.getUUID(), filed);
             turnPage(player, Component.translatable("message.restless.journal_filed"));
-            show(player);
+            sync(player);
         }
     }
 
-    private static void show(ServerPlayer player) {
+    /** Sends the pages for the book in the player's hands, which is read without opening a screen. */
+    public static void sync(ServerPlayer player) {
+        if (Platform.get().canReceive(player, JournalPayload.TYPE)) {
+            show(player, false);
+        }
+    }
+
+    private static void show(ServerPlayer player, boolean open) {
         HauntData data = HauntData.get(player.level().getServer());
         player.connection.send(new ClientboundCustomPayloadPacket(
-                new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())))));
+                new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())), open)));
     }
 
     private static List<Chapter> chapters(Kind kind) {

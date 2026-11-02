@@ -18,6 +18,7 @@ import dev.keelfy.restless.haunt.HeadTurn;
 import dev.keelfy.restless.haunt.Journal;
 import dev.keelfy.restless.haunt.JournalPayload;
 import dev.keelfy.restless.haunt.JournalScreen;
+import dev.keelfy.restless.haunt.ReadPayload;
 import dev.keelfy.restless.haunt.RedVignette;
 import dev.keelfy.restless.haunt.SanityOverlay;
 import dev.keelfy.restless.haunt.SanityPayload;
@@ -67,7 +68,7 @@ public final class RestlessNeoForge {
                         SanityPayload.CODEC,
                         (payload, context) -> SanityOverlay.set(payload.sanity()))
                 .playToClient(
-                        JournalPayload.TYPE, JournalPayload.CODEC, (payload, context) -> JournalScreen.open(payload))
+                        JournalPayload.TYPE, JournalPayload.CODEC, (payload, context) -> JournalScreen.receive(payload))
                 .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))
                 .playToClient(
                         ShutterPayload.TYPE, ShutterPayload.CODEC, (payload, context) -> Darkroom.shutter(payload))
@@ -75,6 +76,10 @@ public final class RestlessNeoForge {
                         DevelopPayload.TYPE,
                         DevelopPayload.CODEC,
                         (payload, context) -> Divination.develop((ServerPlayer) context.player(), payload))
+                .playToServer(
+                        ReadPayload.TYPE,
+                        ReadPayload.CODEC,
+                        (payload, context) -> Journal.sync((ServerPlayer) context.player()))
                 .playToServer(
                         FilePayload.TYPE,
                         FilePayload.CODEC,

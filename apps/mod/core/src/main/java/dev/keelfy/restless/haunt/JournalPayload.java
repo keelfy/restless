@@ -11,8 +11,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
-/** Only discovered, displayable text and pictures are sent; hidden spirit state stays on the server. */
-public record JournalPayload(List<JournalPages.Section> sections) implements CustomPacketPayload {
+/**
+ * Only discovered, displayable text and pictures are sent; hidden spirit state stays on the server. {@code open} asks
+ * the reader's screen to open; without it the pages are only kept for the book in their hands.
+ */
+public record JournalPayload(List<JournalPages.Section> sections, boolean open) implements CustomPacketPayload {
     public static final Type<JournalPayload> TYPE =
             new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "journal"));
     private static final StreamCodec<RegistryFriendlyByteBuf, JournalPages.Filing> FILING_CODEC = StreamCodec.composite(
@@ -45,7 +48,11 @@ public record JournalPayload(List<JournalPages.Section> sections) implements Cus
                     JournalPages.Section::cards,
                     JournalPages.Section::new);
     public static final StreamCodec<RegistryFriendlyByteBuf, JournalPayload> CODEC = StreamCodec.composite(
-            SECTION_CODEC.apply(ByteBufCodecs.list()), JournalPayload::sections, JournalPayload::new);
+            SECTION_CODEC.apply(ByteBufCodecs.list()),
+            JournalPayload::sections,
+            ByteBufCodecs.BOOL,
+            JournalPayload::open,
+            JournalPayload::new);
 
     @Override
     public Type<JournalPayload> type() {

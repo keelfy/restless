@@ -125,7 +125,7 @@ final class JournalGameTests {
                             .anyMatch(
                                     card -> card.picture().filter(shot::equals).isPresent()),
                     "a developed photo must be pasted onto its spirit's card");
-            JournalPayload sent = new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())));
+            JournalPayload sent = new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())), true);
             check(
                     helper,
                     sent.sections().stream()

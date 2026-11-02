@@ -27,7 +27,7 @@ import net.neoforged.neoforge.client.event.RenderHandEvent;
  */
 @EventBusSubscriber(modid = Restless.MOD_ID, value = Dist.CLIENT)
 public final class PhotoHands {
-    private static final Identifier CARD = Identifier.withDefaultNamespace("textures/map/map_background.png");
+    private static final Identifier CARD = Identifier.fromNamespaceAndPath(Restless.MOD_ID, "textures/item/photo.png");
     /** Units of the photo's {@link Picture#WIDTH} by {@link Picture#HEIGHT} grid, as a map's 128 by 128. */
     private static final float UNIT = 1f / Picture.WIDTH;
 
@@ -59,13 +59,18 @@ public final class PhotoHands {
     }
 
     /** Vanilla's two-handed map: raised and tilted towards the face as the head looks down. */
-    private static void twoHanded(RenderHandEvent event, PoseStack pose, AvatarRenderState avatar) {
+    static void twoHanded(RenderHandEvent event, PoseStack pose, AvatarRenderState avatar) {
+        twoHanded(event, pose, avatar, 0);
+    }
+
+    /** @param lift how far the reader has raised it to face-on regardless of where they look, 0 to 1 */
+    static void twoHanded(RenderHandEvent event, PoseStack pose, AvatarRenderState avatar, float lift) {
         float swing = event.getSwingProgress();
         float swingRoot = Mth.sqrt(swing);
         pose.pushPose();
         pose.translate(0, 0.1f * Mth.sin(swing * Mth.PI), -0.4f * Mth.sin(swingRoot * Mth.PI));
         float tilt = Mth.clamp(1 - event.getInterpolatedPitch() / 45f + 0.1f, 0, 1);
-        tilt = -Mth.cos(tilt * Mth.PI) * 0.5f + 0.5f;
+        tilt = (-Mth.cos(tilt * Mth.PI) * 0.5f + 0.5f) * (1 - lift);
         pose.translate(0, 0.04f - event.getEquipProgress() * 1.2f - tilt * 0.5f, -0.72f);
         pose.rotateDegrees(Axis.XP, tilt * -85f);
         if (!avatar.isInvisible) {
@@ -155,10 +160,38 @@ public final class PhotoHands {
         pose.scale(0.38f, 0.38f, 0.38f);
         pose.translate(-0.5f, -0.5f * Picture.HEIGHT / Picture.WIDTH, 0);
         pose.scale(UNIT, UNIT, UNIT);
-        int border = PhotoTooltip.BORDER * 2;
-        quad(pose, collector, CARD, light, 0, -border, -border, Picture.WIDTH + border, Picture.HEIGHT + border);
+        // The 32x32 item sprite has a card at [2, 5]–[30, 27], with a 22x16 image inset by three pixels.
+        float borderX = Picture.WIDTH * 3f / 22;
+        float borderY = Picture.HEIGHT * 3f / 16;
+        quad(
+                pose,
+                collector,
+                CARD,
+                light,
+                0,
+                -borderX,
+                -borderY,
+                Picture.WIDTH + borderX,
+                Picture.HEIGHT + borderY,
+                2 / 32f,
+                5 / 32f,
+                30 / 32f,
+                27 / 32f);
         // The picture sits a hair in front of its card, as a map does of its frame.
-        quad(pose, collector, PhotoTooltip.texture(picture), light, -0.01f, 0, 0, Picture.WIDTH, Picture.HEIGHT);
+        quad(
+                pose,
+                collector,
+                PhotoTooltip.texture(picture),
+                light,
+                -0.01f,
+                0,
+                0,
+                Picture.WIDTH,
+                Picture.HEIGHT,
+                0,
+                0,
+                1,
+                1);
     }
 
     private static void quad(
@@ -167,15 +200,19 @@ public final class PhotoHands {
             Identifier texture,
             int light,
             float z,
-            int x0,
-            int y0,
-            int x1,
-            int y1) {
+            float x0,
+            float y0,
+            float x1,
+            float y1,
+            float u0,
+            float v0,
+            float u1,
+            float v1) {
         collector.submitCustomGeometry(pose, RenderTypes.text(texture), (last, buffer) -> {
-            buffer.addVertex(last, x0, y1, z).setColor(-1).setUv(0, 1).setLight(light);
-            buffer.addVertex(last, x1, y1, z).setColor(-1).setUv(1, 1).setLight(light);
-            buffer.addVertex(last, x1, y0, z).setColor(-1).setUv(1, 0).setLight(light);
-            buffer.addVertex(last, x0, y0, z).setColor(-1).setUv(0, 0).setLight(light);
+            buffer.addVertex(last, x0, y1, z).setColor(-1).setUv(u0, v1).setLight(light);
+            buffer.addVertex(last, x1, y1, z).setColor(-1).setUv(u1, v1).setLight(light);
+            buffer.addVertex(last, x1, y0, z).setColor(-1).setUv(u1, v0).setLight(light);
+            buffer.addVertex(last, x0, y0, z).setColor(-1).setUv(u0, v0).setLight(light);
         });
     }
 }
