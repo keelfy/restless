@@ -1,0 +1,23 @@
+{
+  "parent": "restless:block/door_charm",
+  "gui_light": "side",
+  "display": {
+    "gui": {
+      "rotation": [
+        8,
+        155,
+        0
+      ],
+      "translation": [
+        -4.43749,
+        -3.48353,
+        8.83909
+      ],
+      "scale": [
+        1.4,
+        1.4,
+        1.4
+      ]
+    }
+  }
+}
