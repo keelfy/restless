@@ -90,11 +90,7 @@ public final class Content {
 
     public static final Supplier<Block> DOOR_CHARM = block(
             "door_charm",
-            p -> new WornWard(
-                    p.instabreak().sound(SoundType.WOOL).noOcclusion(),
-                    Block.box(5, 0, 7, 11, 10, 9),
-                    WardBlock.Kind.CHARM,
-                    5));
+            p -> new DoorCharm(p.instabreak().sound(SoundType.WOOL).noOcclusion()));
     public static final Supplier<Item> DOOR_CHARM_ITEM = blockItem("door_charm", DOOR_CHARM);
     public static final Supplier<Block> DREAMCATCHER = block(
             "dreamcatcher",

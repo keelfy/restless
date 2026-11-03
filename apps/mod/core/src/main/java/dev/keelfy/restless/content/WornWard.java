@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** A ward that wears out: every event it stops costs a use, and the last one breaks it. */
-public final class WornWard extends ShapedBlock implements WardBlock {
+public class WornWard extends ShapedBlock implements WardBlock {
     public static final int MAX_USES = 10;
     public static final IntegerProperty WEAR = IntegerProperty.create("wear", 0, MAX_USES - 1);
 

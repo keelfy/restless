@@ -1,34 +1,19 @@
 {
   "variants": {
-    "wear=0": {
+    "facing=north": {
       "model": "restless:block/door_charm"
     },
-    "wear=1": {
-      "model": "restless:block/door_charm"
+    "facing=east": {
+      "model": "restless:block/door_charm",
+      "y": 90
     },
-    "wear=2": {
-      "model": "restless:block/door_charm"
+    "facing=south": {
+      "model": "restless:block/door_charm",
+      "y": 180
     },
-    "wear=3": {
-      "model": "restless:block/door_charm"
-    },
-    "wear=4": {
-      "model": "restless:block/door_charm"
-    },
-    "wear=5": {
-      "model": "restless:block/door_charm"
-    },
-    "wear=6": {
-      "model": "restless:block/door_charm"
-    },
-    "wear=7": {
-      "model": "restless:block/door_charm"
-    },
-    "wear=8": {
-      "model": "restless:block/door_charm"
-    },
-    "wear=9": {
-      "model": "restless:block/door_charm"
+    "facing=west": {
+      "model": "restless:block/door_charm",
+      "y": 270
     }
   }
 }
