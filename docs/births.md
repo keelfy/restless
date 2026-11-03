@@ -2,8 +2,8 @@
 
 Today a player gets personal spirits two ways: one random one on first join, and `/haunt spirit add`. This plan adds
 **births**: a personal spirit that appears because of something the player did. It is the "born from the player's deeds"
-line of [design.md](design.md) (Spirit kinds, stage 5). Territorial births (death spot, abandoned build, blood moon) are
-a separate job and not covered here.
+line of [design.md](design.md) (Spirit kinds, stage 5). Territorial spirits generated with structures are planned in
+[places.md](places.md).
 
 Step 1 (the seam) is built; the deeds themselves are not hooked up yet. Numbers are starting values, all of them in
 config (`haunt.json`, section `births`).

@@ -12,6 +12,8 @@ public final class BirthRules {
         COOLDOWN,
         /** The player has as many personal spirits as allowed. */
         FULL,
+        /** Another territorial spirit is too close to a generated structure. */
+        CROWDED,
         /** The chance roll failed or the player cannot be haunted. */
         NOTHING
     }
@@ -32,5 +34,16 @@ public final class BirthRules {
             return Verdict.COOLDOWN;
         }
         return count >= max ? Verdict.FULL : Verdict.BORN;
+    }
+
+    /**
+     * Whether a territorial spirit may be born at a generated structure: not if one already stands within
+     * {@code spacing} blocks.
+     *
+     * @param nearestSqr squared distance to the nearest anchor in the dimension; {@link Long#MAX_VALUE} for none
+     * @return {@link Verdict#BORN} or {@link Verdict#CROWDED}
+     */
+    static Verdict settle(long nearestSqr, int spacing) {
+        return nearestSqr < (long) spacing * spacing ? Verdict.CROWDED : Verdict.BORN;
     }
 }

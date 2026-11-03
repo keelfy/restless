@@ -7,6 +7,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import dev.keelfy.restless.debug.DebugMenu;
 import dev.keelfy.restless.haunt.BirthRules;
 import dev.keelfy.restless.haunt.Births;
@@ -38,13 +39,15 @@ import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Debug/admin command: /haunt opens the debug screen; info|force (optionally after a delay in
- * seconds)|act|history|sanity|birth|spirit add|age|remove [player] work from chat.
+ * seconds)|act|history|sanity|birth [structure]|spirit add|age|remove [player] work from chat.
  */
 public final class HauntCommand {
     private static final DynamicCommandExceptionType UNKNOWN_EVENT =
@@ -54,6 +57,9 @@ public final class HauntCommand {
 
     private static final DynamicCommandExceptionType UNKNOWN_DEED =
             new DynamicCommandExceptionType(id -> Component.literal("Unknown deed: " + id));
+
+    private static final SimpleCommandExceptionType NO_STRUCTURE =
+            new SimpleCommandExceptionType(Component.literal("Not inside a structure"));
 
     private HauntCommand() {}
 
@@ -100,6 +106,8 @@ public final class HauntCommand {
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(c -> sanity(c, EntityArgument.getPlayer(c, "player"))))))
                 .then(Commands.literal("birth")
+                        .then(Commands.literal("structure")
+                                .executes(c -> birthStructure(c, c.getSource().getPlayerOrException())))
                         .then(Commands.argument("deed", StringArgumentType.word())
                                 .suggests((c, b) -> SharedSuggestionProvider.suggest(
                                         Arrays.stream(Births.Deed.values()).map(Births.Deed::key), b))
@@ -317,6 +325,20 @@ public final class HauntCommand {
                 .sendSuccess(
                         () -> Component.literal(key + " on " + player.getName().getString() + ": " + verdict), true);
         return verdict == BirthRules.Verdict.BORN || verdict == BirthRules.Verdict.FED ? 1 : 0;
+    }
+
+    /** Rolls the territorial birth for the structure the player stands in, as if it had just been generated. */
+    private static int birthStructure(CommandContext<CommandSourceStack> c, ServerPlayer player)
+            throws CommandSyntaxException {
+        ServerLevel level = player.level();
+        StructureStart start = level.structureManager().getAllStructuresAt(player.blockPosition()).keySet().stream()
+                .map(structure -> level.structureManager().getStructureAt(player.blockPosition(), structure))
+                .filter(StructureStart::isValid)
+                .findFirst()
+                .orElseThrow(() -> NO_STRUCTURE.create());
+        BirthRules.Verdict verdict = Births.generated(level, start, false);
+        c.getSource().sendSuccess(() -> Component.literal("structure here: " + verdict), true);
+        return verdict == BirthRules.Verdict.BORN ? 1 : 0;
     }
 
     private static int add(CommandContext<CommandSourceStack> c, ServerPlayer player) throws CommandSyntaxException {

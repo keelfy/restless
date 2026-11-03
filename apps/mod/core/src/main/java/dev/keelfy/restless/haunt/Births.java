@@ -6,14 +6,19 @@ import dev.keelfy.restless.spirit.Spirits;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 /**
- * A personal spirit that appears because of something the player did. Every deed goes through {@link #deed}; which
- * spirit it makes and how often is the {@code births.deeds.<key>} config, the rules shared by all deeds are
- * {@code births}. See docs/births.md.
+ * Spirits the world makes. A personal one appears because of something the player did: every deed goes through
+ * {@link #deed}; which spirit it makes and how often is the {@code births.deeds.<key>} config, the rules shared by all
+ * deeds are {@code births}. A territorial one appears with a generated structure, through {@link #generated}, by the
+ * {@code births.structures.<id>} config. See docs/births.md and docs/places.md.
  */
 public final class Births {
     /** What a player can do to get a spirit; {@code key} names it in the config. */
@@ -85,6 +90,42 @@ public final class Births {
                                 .noticed(1 + player.getRandom().nextInt(config.integer("notice_within"))));
             }
             default -> {}
+        }
+        return verdict;
+    }
+
+    /**
+     * Call once for each structure start of a freshly generated chunk. A configured structure may get a territorial
+     * spirit at the centre of its bounding box, unless another one is within {@code births.structure_spacing}.
+     *
+     * @param roll whether the structure's chance is rolled; false for the debug command
+     */
+    public static BirthRules.Verdict generated(ServerLevel level, StructureStart start, boolean roll) {
+        String id = level.registryAccess()
+                .lookupOrThrow(Registries.STRUCTURE)
+                .getResourceKey(start.getStructure())
+                .map(key -> key.identifier().toString())
+                .orElse("");
+        Config.Section config = Config.section("births");
+        Config.Section structures = config.section("structures");
+        if (!structures.has(id)) {
+            return BirthRules.Verdict.NOTHING;
+        }
+        Config.Section of = structures.section(id);
+        if (roll && level.getRandom().nextDouble() >= of.num("chance")) {
+            return BirthRules.Verdict.NOTHING;
+        }
+        SpiritType spirit = Spirits.byId(of.text("spirit")).orElseThrow();
+        HauntData data = HauntData.get(level.getServer());
+        BlockPos centre = start.getBoundingBox().getCenter();
+        long nearest = Director.territorial(data, level).stream()
+                .mapToLong(t -> (long) t.anchor().distSqr(centre))
+                .min()
+                .orElse(Long.MAX_VALUE);
+        BirthRules.Verdict verdict = BirthRules.settle(nearest, config.integer("structure_spacing"));
+        if (verdict == BirthRules.Verdict.BORN) {
+            Director.anchor(
+                    data, spirit, level, centre, level.getServer().overworld().getGameTime());
         }
         return verdict;
     }

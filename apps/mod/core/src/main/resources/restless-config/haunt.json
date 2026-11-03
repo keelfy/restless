@@ -44,6 +44,109 @@
     "repeat_anger": 0.15,
     "start_anger": 0.5,
     "grace_ticks": 2400,
+    "structure_spacing": 96,
+    "structures": {
+      "minecraft:woodland_mansion": {
+        "spirit": "poltergeist",
+        "chance": 0.6
+      },
+      "minecraft:trail_ruins": {
+        "spirit": "poltergeist",
+        "chance": 0.3
+      },
+      "minecraft:shipwreck": {
+        "spirit": "nix",
+        "chance": 0.25
+      },
+      "minecraft:shipwreck_beached": {
+        "spirit": "nix",
+        "chance": 0.25
+      },
+      "minecraft:ocean_ruin_cold": {
+        "spirit": "nix",
+        "chance": 0.25
+      },
+      "minecraft:ocean_ruin_warm": {
+        "spirit": "nix",
+        "chance": 0.25
+      },
+      "minecraft:ruined_portal": {
+        "spirit": "demon",
+        "chance": 0.2
+      },
+      "minecraft:ruined_portal_desert": {
+        "spirit": "demon",
+        "chance": 0.2
+      },
+      "minecraft:ruined_portal_jungle": {
+        "spirit": "demon",
+        "chance": 0.2
+      },
+      "minecraft:ruined_portal_mountain": {
+        "spirit": "demon",
+        "chance": 0.2
+      },
+      "minecraft:ruined_portal_nether": {
+        "spirit": "demon",
+        "chance": 0.2
+      },
+      "minecraft:ruined_portal_ocean": {
+        "spirit": "demon",
+        "chance": 0.2
+      },
+      "minecraft:ruined_portal_swamp": {
+        "spirit": "demon",
+        "chance": 0.2
+      },
+      "minecraft:ancient_city": {
+        "spirit": "demon",
+        "chance": 0.5
+      },
+      "minecraft:bastion_remnant": {
+        "spirit": "demon",
+        "chance": 0.2
+      },
+      "minecraft:fortress": {
+        "spirit": "demon",
+        "chance": 0.2
+      },
+      "minecraft:swamp_hut": {
+        "spirit": "trickster",
+        "chance": 0.5
+      },
+      "minecraft:igloo": {
+        "spirit": "hoarder",
+        "chance": 0.3
+      },
+      "minecraft:desert_pyramid": {
+        "spirit": "hoarder",
+        "chance": 0.3
+      },
+      "minecraft:jungle_pyramid": {
+        "spirit": "hoarder",
+        "chance": 0.3
+      },
+      "minecraft:village_plains": {
+        "spirit": "domovoi",
+        "chance": 0.1
+      },
+      "minecraft:village_desert": {
+        "spirit": "domovoi",
+        "chance": 0.1
+      },
+      "minecraft:village_savanna": {
+        "spirit": "domovoi",
+        "chance": 0.1
+      },
+      "minecraft:village_snowy": {
+        "spirit": "domovoi",
+        "chance": 0.1
+      },
+      "minecraft:village_taiga": {
+        "spirit": "domovoi",
+        "chance": 0.1
+      }
+    },
     "deeds": {
       "slaughter": {
         "spirit": "revenant",

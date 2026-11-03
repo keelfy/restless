@@ -29,4 +29,11 @@ class BirthRulesTest {
     void sameTypeIsFedEvenDuringCooldownOrWhenFull() {
         assertEquals(Verdict.FED, BirthRules.decide(true, 2, NOW, NOW, COOLDOWN, 2));
     }
+
+    @Test
+    void generatedStructureIsFreeOnlyOutsideTheSpacing() {
+        assertEquals(Verdict.BORN, BirthRules.settle(Long.MAX_VALUE, 96));
+        assertEquals(Verdict.CROWDED, BirthRules.settle(95L * 95, 96));
+        assertEquals(Verdict.BORN, BirthRules.settle(96L * 96, 96));
+    }
 }

@@ -37,7 +37,7 @@ Two kinds with different jobs. The kind belongs to the spirit type.
 | Bound to | A player; follows them everywhere | An anchor: a place (structure, death spot, grave, nest) |
 | Job | **Scare**: sounds, presence, lights, afflictions, the stalkers (shadow, double, edge figure) | **Foul the land**: corruption, blocks, mobs, doors; anything that changes the place |
 | Acts on | Its player, wherever they are | Any player within its radius (about 48 blocks); corruption ticks while the anchor chunk is loaded, with or without players |
-| How you meet it | Bound on first join (as today), born from the player's deeds (a revenant after mass killing, a lost one after death) | Generated in structures, born in places (death spot, abandoned build, blood moon) |
+| How you meet it | Bound on first join (as today), born from the player's deeds (a revenant after mass killing, a lost one after death) | Generated with structures, only at world generation |
 | How you escape it | You cannot walk away: identify and banish, or ward the places you sleep in | Leave the area, or cleanse it: banish the spirit and the corruption recedes |
 | Harm | Grows with power, always telegraphed | Mostly to the place and what is in it; harm to players stays low |
 
@@ -209,9 +209,9 @@ The world gets worse unless the player acts.
 - **Corruption** (territorial only): a spirit left alone corrupts chunks around its anchor. Grass greys, fog, crops stop growing, mobs are
   replaced by possessed variants. Spreads slowly; recedes when the spirit is banished. Block changes go through
   `Restore`-style rules so they can be undone.
-- **World-born spirits**: territorial ones appear at a player's death spot, in abandoned structures, on a blood moon;
+- **World-born spirits**: territorial ones are generated with structures (a haunted mansion, a nix in a shipwreck);
   personal ones are born from deeds (mass killing, a pet's death). `/haunt spirit add` stops being the only way in.
-  Personal births are planned in [births.md](births.md).
+  Personal births are planned in [births.md](births.md), territorial ones (generated with structures) in [places.md](places.md).
 - **Evolution**: a spirit not banished for N days grows up: poltergeist → raging, shade → light-eater. New events,
   new clues, a harder ritual, and a higher power floor.
 - **Merging**: two spirits of one player can merge into a stronger one.
