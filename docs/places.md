@@ -5,7 +5,7 @@ them: **when a structure is generated, it may get a territorial spirit** whose t
 haunted from the moment it exists, before any player arrives. It is the "generated in structures" line of
 [design.md](design.md) (Spirit kinds). The personal half is [births.md](births.md).
 
-Step 1 is built (rules, config, `Births.generated`, debug command); the chunk hook (step 2) is not. Numbers are starting values, all in config (`haunt.json`, section `births.structures`).
+Built (rules, config, `Births.generated`, debug command, chunk hook). Numbers are starting values, all in config (`haunt.json`, section `births.structures`).
 
 ## Goals and non-goals
 
@@ -56,15 +56,14 @@ same way.
 | Step | Content | Done when |
 |---|---|---|
 | 1 (done) | `BirthRules.settle` (spacing), `births.structures` config, `Births.generated`, `/haunt birth structure` | A unit test covers spacing (empty world, an anchor inside 96 blocks, one just outside). Standing in a mansion, `/haunt birth structure` anchors a poltergeist at its centre; a second call does nothing |
-| 2 | `Restless.onNewChunk` hooked on NeoForge | A game test generates a structure start in a new chunk with chance 1 and finds one anchor; reloading the chunk adds none; a structure not in config adds none |
+| 2 (done) | `Restless.onNewChunk` hooked on NeoForge | The game test `birth_generated` builds structure starts and finds one anchor, none inside the spacing, one outside it, and none for a structure not in config. The chunk hook is glue and the chance roll is not tested (config cannot be overridden); try it by exploring |
 
-Docs to update: `spirits.md` (How it works, and drop "abandoned structures" from "Not built yet"), the design.md
-bullet in stage 5, the frontend `content/spirits.md` page.
+Docs updated: `spirits.md`, the frontend `content/spirits.md`, design.md.
 
 ## Risks and open questions
 
-- **Thread.** `ChunkEvent.Load` must run on the server thread to touch `HauntData`. If NeoForge fires it during
-  generation off-thread, queue the starts and anchor them on the next server tick instead.
+- **Thread.** `ChunkEvent.Load` must run on the server thread to touch `HauntData`. `Restless.onNewChunk` re-queues
+  itself with `server.execute` when called from another thread.
 - **Anchor height.** The bounding box centre of a tall or buried structure (ancient city, ocean ruin) may sit inside
   stone. The radius (48) still covers the structure; a source of sounds inside rock may be audible oddly. If it is,
   snap the anchor to the nearest air.

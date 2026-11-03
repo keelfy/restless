@@ -12,9 +12,16 @@ import dev.keelfy.restless.spirit.Spirits;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
+import net.minecraft.world.level.levelgen.structure.structures.BuriedTreasurePieces;
 import net.neoforged.neoforge.network.registration.ChannelAttributes;
 
 final class BirthGameTests {
@@ -88,6 +95,44 @@ final class BirthGameTests {
             creative.discard();
             helper.succeed();
         });
+        tests.put("birth_generated", helper -> {
+            var level = helper.getLevel();
+            var data = HauntData.get(level.getServer());
+            data.putTerritorial(List.of());
+            var shipwreck = start(helper, "shipwreck", new BlockPos(4000, 70, 4000));
+            HauntEventGameTests.check(
+                    helper,
+                    Births.generated(level, shipwreck, false) == Verdict.BORN
+                            && Director.territorial(data, level).size() == 1,
+                    "A configured structure must get one territorial spirit");
+            HauntEventGameTests.check(
+                    helper,
+                    Director.territorial(data, level)
+                            .get(0)
+                            .anchor()
+                            .equals(shipwreck.getBoundingBox().getCenter()),
+                    "The spirit must sit at the centre of the structure");
+            HauntEventGameTests.check(
+                    helper,
+                    Births.generated(level, start(helper, "shipwreck", new BlockPos(4040, 70, 4000)), false)
+                                    == Verdict.CROWDED
+                            && Director.territorial(data, level).size() == 1,
+                    "A structure near another haunted one must stay empty");
+            HauntEventGameTests.check(
+                    helper,
+                    Births.generated(level, start(helper, "shipwreck", new BlockPos(4300, 70, 4000)), false)
+                                    == Verdict.BORN
+                            && Director.territorial(data, level).size() == 2,
+                    "A far structure must get its own spirit");
+            HauntEventGameTests.check(
+                    helper,
+                    Births.generated(level, start(helper, "buried_treasure", new BlockPos(-4000, 70, 4000)), false)
+                                    == Verdict.NOTHING
+                            && Director.territorial(data, level).size() == 2,
+                    "A structure not in the config must stay empty");
+            data.putTerritorial(List.of());
+            helper.succeed();
+        });
         tests.put("spirit_act_history", helper -> {
             var player = HauntEventGameTests.connected(helper);
             ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
@@ -116,5 +161,20 @@ final class BirthGameTests {
             player.discard();
             helper.succeed();
         });
+    }
+
+    /** A structure start of the named vanilla kind with one piece at {@code pos}. */
+    private static StructureStart start(GameTestHelper helper, String id, BlockPos pos) {
+        var structure = helper.getLevel()
+                .registryAccess()
+                .lookupOrThrow(Registries.STRUCTURE)
+                .getOrThrow(net.minecraft.resources.ResourceKey.create(
+                        Registries.STRUCTURE, Identifier.withDefaultNamespace(id)))
+                .value();
+        return new StructureStart(
+                structure,
+                ChunkPos.containing(pos),
+                0,
+                new PiecesContainer(List.of(new BuriedTreasurePieces.BuriedTreasurePiece(pos))));
     }
 }

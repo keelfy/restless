@@ -28,7 +28,9 @@ import dev.keelfy.restless.haunt.ShutterPayload;
 import dev.keelfy.restless.haunt.TurnPayload;
 import dev.keelfy.restless.haunt.VignettePayload;
 import dev.keelfy.restless.neoforge.compat.VoiceAddon;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
@@ -39,6 +41,7 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -94,6 +97,13 @@ public final class RestlessNeoForge {
                         FirePayload.CODEC,
                         (payload, context) -> DebugMenu.fire((ServerPlayer) context.player(), payload)));
         NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post e) -> Restless.onServerTick(e.getServer()));
+        NeoForge.EVENT_BUS.addListener((ChunkEvent.Load e) -> {
+            if (e.isNewChunk()
+                    && e.getLevel() instanceof ServerLevel level
+                    && e.getChunk() instanceof LevelChunk chunk) {
+                Restless.onNewChunk(level, chunk);
+            }
+        });
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> Restless.registerCommands(e.getDispatcher()));
         NeoForge.EVENT_BUS.addListener((ServerStoppingEvent e) -> Restless.onServerStopping());
         NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtPosition e) -> Restless.onPlaySound(

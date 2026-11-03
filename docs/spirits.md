@@ -15,6 +15,11 @@ Update this file when any of them changes. The numbers below are the shipped def
 - A territorial spirit has an anchor, a dimension and a radius (`director.territorial_radius`, 48 blocks), saved per world.
   When its cooldown expires it acts on one random player (survival or adventure) inside the radius, and does nothing, but
   still reschedules, if nobody is there.
+- A territorial spirit can be born with a structure. When a chunk is generated for the first time, each structure start
+  in it listed under `births.structures` rolls its `chance`; the spirit is anchored at the centre of the structure's
+  box, unless another territorial spirit of that dimension is within `births.structure_spacing` (96) blocks. Each
+  structure rolls once, ever; chunks generated earlier stay empty. `/haunt birth structure` does it for the structure
+  you stand in, without the roll.
 - Every spirit has a location. A personal spirit roams in a ring `location.min_distance` to `location.max_distance`
   blocks from its player, drifting `location.step` blocks per second, and is forgotten on restart; a territorial spirit
   stays at its anchor. Sound events with no fixed source (creeper hiss, crying child, eating behind a wall, enderman
@@ -329,7 +334,7 @@ territorial one tries `corruption.evolved_factor` (3) times as many columns. The
 those in its radius) hear a heartbeat, are told, and it goes in their journal; from then on it goes by its grown name.
 A personal spirit grows only while its player is online.
 
-Not built yet: world-born spirits (death spots, abandoned structures, blood moon, deeds), merging, the calendar (full
+Not built yet: world-born spirits (death spots, blood moon), merging, the calendar (full
 moon, blood night, day of the dead), possessed mobs in corrupted land, crops stopping, and new events or clues
 for evolved spirits.
 
@@ -1053,6 +1058,7 @@ Permission level: gamemaster. `[player]` defaults to the caller.
 - `/haunt info [player]`: the player's sanity and the numbered spirit list with each spirit's kind, story, seed, traits, power, anger, time to its next event, its grave and the item it wants, whether it has evolved, and its fouled land as `blight=<spots>/<biome columns>`.
 - `/haunt sanity <0..1> [player]`: sets sanity.
 - `/haunt force <event> [seconds] [player]`: runs an event now (fails if it cannot run), or after `seconds`, when its conditions are checked, so you can first get into the state it needs (sprinting, in bed). The event is a namespaced id, `minecraft:cat_hiss`; the namespace is optional for `minecraft`.
+- `/haunt birth structure`: gives the structure you stand in its territorial spirit now, skipping the chance but not the spacing.
 - `/haunt spirit add <spirit> [player]`: binds one more personal spirit; for a territorial one, anchors it where the player stands.
 - `/haunt spirit age <n> <days> [player]`: makes spirit number `n` that many in-game days older (maturity, blight reach, evolution).
 - `/haunt spirit remove <n> [player]`: removes spirit number `n` (1-based, as listed by `info`: the player's personal spirits, then the territorial ones in their dimension).

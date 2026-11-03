@@ -76,7 +76,7 @@ Wanders: figures, strangers and steps, may act when the player goes below y 0 (`
 
 ## Territorial
 
-Territorial spirits stay at one place and act on players nearby.
+Territorial spirits stay at one place and act on players nearby. Some are born with the world: a newly generated woodland mansion, shipwreck, ancient city, swamp hut, desert temple, village or ruined portal may hold one, and two such places never lie within 96 blocks of each other.
 
 ### Poltergeist
 

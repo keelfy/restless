@@ -8,6 +8,7 @@ import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Anger;
 import dev.keelfy.restless.haunt.Bands;
+import dev.keelfy.restless.haunt.Births;
 import dev.keelfy.restless.haunt.Candle;
 import dev.keelfy.restless.haunt.Compass;
 import dev.keelfy.restless.haunt.Corruption;
@@ -50,6 +51,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -82,6 +84,23 @@ public final class Restless {
         Sanity.tick(server);
         Corruption.tick(server);
         Evolution.tick(server);
+    }
+
+    /**
+     * Call when a chunk loads for the first time, so each structure start in it is met exactly once. A territorial
+     * spirit may be born for each configured structure. Off the server thread, the work waits for it.
+     */
+    public static void onNewChunk(ServerLevel level, LevelChunk chunk) {
+        var server = level.getServer();
+        if (!server.isSameThread()) {
+            server.execute(() -> onNewChunk(level, chunk));
+            return;
+        }
+        for (var start : chunk.getAllStarts().values()) {
+            if (start.isValid()) {
+                Births.generated(level, start, true);
+            }
+        }
     }
 
     /** Call when the server starts to stop, before the worlds are saved. */
