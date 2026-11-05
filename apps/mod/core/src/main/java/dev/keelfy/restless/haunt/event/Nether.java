@@ -561,9 +561,9 @@ final class Nether {
         BlockPos nearest = null;
         double best = Double.MAX_VALUE;
         for (HauntData.Territorial spirit :
-                HauntData.get(player.level().getServer()).territorial()) {
+                HauntData.get(player.level().getServer()).territorialReaching(player)) {
             double distance = spirit.anchor().distSqr(player.blockPosition());
-            if (spirit.reaches(player) && distance < best) {
+            if (distance < best) {
                 nearest = spirit.anchor();
                 best = distance;
             }

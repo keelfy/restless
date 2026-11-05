@@ -7,9 +7,12 @@ import dev.keelfy.restless.spirit.Traits;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
@@ -246,7 +249,7 @@ public final class HauntData extends SavedData {
     private static final Codec<HauntData> CODEC = Codec.withAlternative(
             RecordCodecBuilder.create(i -> i.group(
                             PERSONAL.fieldOf("players").forGetter(data -> data.hauntings),
-                            Territorial.CODEC.listOf().fieldOf("territorial").forGetter(data -> data.territorial),
+                            Territorial.CODEC.listOf().fieldOf("territorial").forGetter(HauntData::territorial),
                             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Grave.CODEC)
                                     .optionalFieldOf("graves", Map.of())
                                     .forGetter(data -> data.graves),
@@ -312,8 +315,19 @@ public final class HauntData extends SavedData {
     private static final SavedDataType<HauntData> TYPE = new SavedDataType<>(
             Identifier.fromNamespaceAndPath(Restless.MOD_ID, "hauntings"), HauntData::new, CODEC, null);
 
+    private static final int CELL_SHIFT = 6;
+
     private final Map<UUID, List<Haunting>> hauntings;
-    private List<Territorial> territorial;
+    /** Which player each personal spirit belongs to. */
+    private final Map<UUID, UUID> owners = new HashMap<>();
+    /** Keyed by spirit, in saved order (the order /haunt info lists them). */
+    private final Map<UUID, Territorial> territorial = new LinkedHashMap<>();
+    /** The territorial spirits of {@link #territorial} as one list, rebuilt when it is asked for after a change. */
+    private @Nullable List<Territorial> territorialList;
+    /** Spirits by dimension and 64-block square of their anchor; an anchor never moves once placed. */
+    private final Map<ResourceKey<Level>, Map<Long, List<UUID>>> cells = new HashMap<>();
+    /** The largest radius any territorial spirit has had; it bounds how far from an anchor a spirit can reach. */
+    private int widest;
     /** Keyed by spirit. */
     private final Map<UUID, Grave> graves;
     /** Keyed by player, 0..1; a player not in it is fully sane. */
@@ -344,7 +358,8 @@ public final class HauntData extends SavedData {
             Map<UUID, Notebook> notebooks,
             Map<UUID, Blight> blight) {
         this.hauntings = new HashMap<>(hauntings);
-        this.territorial = List.copyOf(territorial);
+        hauntings.forEach((player, spirits) -> spirits.forEach(h -> owners.put(h.uuid(), player)));
+        territorial.forEach(this::index);
         this.graves = new HashMap<>(graves);
         this.sanity = new HashMap<>(sanity);
         this.notebooks = new HashMap<>(notebooks);
@@ -369,55 +384,165 @@ public final class HauntData extends SavedData {
         setDirty();
     }
 
+    /** Every territorial spirit in saved order; a snapshot, so it can be walked while spirits change. */
     public List<Territorial> territorial() {
-        return territorial;
+        if (territorialList == null) {
+            territorialList = List.copyOf(territorial.values());
+        }
+        return territorialList;
     }
 
+    /** Replaces every territorial spirit. */
     public void putTerritorial(List<Territorial> spirits) {
-        territorial = List.copyOf(spirits);
+        Set<UUID> gone = new HashSet<>(territorial.keySet());
+        territorial.clear();
+        cells.clear();
+        widest = 0;
+        for (Territorial t : spirits) {
+            gone.remove(t.haunting().uuid());
+            index(t);
+        }
+        gone.forEach(said::remove);
+        territorialList = null;
         setDirty();
     }
 
+    /** Adds the spirit, or replaces the one with its uuid keeping its place in the saved order. */
+    public void putTerritorial(Territorial spirit) {
+        Territorial old = territorial.get(spirit.haunting().uuid());
+        if (old != null
+                && (!old.dimension().equals(spirit.dimension()) || !old.anchor().equals(spirit.anchor()))) {
+            unindex(old);
+            old = null;
+        }
+        if (old == null) {
+            index(spirit);
+        } else {
+            territorial.put(spirit.haunting().uuid(), spirit);
+        }
+        territorialList = null;
+        setDirty();
+    }
+
+    public void removeTerritorial(UUID spirit) {
+        Territorial old = territorial.get(spirit);
+        if (old != null) {
+            unindex(old);
+            said.remove(spirit);
+            territorialList = null;
+            setDirty();
+        }
+    }
+
+    /** The territorial spirits whose anchor is within {@code distance} blocks of {@code pos} in {@code dimension}. */
+    public List<Territorial> territorialWithin(ResourceKey<Level> dimension, BlockPos pos, int distance) {
+        Map<Long, List<UUID>> grid = cells.get(dimension);
+        if (grid == null) {
+            return List.of();
+        }
+        List<Territorial> found = new ArrayList<>();
+        long limit = (long) distance * distance;
+        for (int x = (pos.getX() - distance) >> CELL_SHIFT; x <= (pos.getX() + distance) >> CELL_SHIFT; x++) {
+            for (int z = (pos.getZ() - distance) >> CELL_SHIFT; z <= (pos.getZ() + distance) >> CELL_SHIFT; z++) {
+                for (UUID id : grid.getOrDefault(pack(x, z), List.of())) {
+                    Territorial t = territorial.get(id);
+                    if (t.anchor().distSqr(pos) <= limit) {
+                        found.add(t);
+                    }
+                }
+            }
+        }
+        return found;
+    }
+
+    /** The territorial spirits whose radius holds the entity. */
+    public List<Territorial> territorialReaching(Entity entity) {
+        return territorialWithin(entity.level().dimension(), entity.blockPosition(), widest + 1).stream()
+                .filter(t -> t.reaches(entity))
+                .toList();
+    }
+
+    /** The territorial spirits that {@link Territorial#covers} {@code pos} at this reach. */
+    public List<Territorial> territorialCovering(ResourceKey<Level> dimension, BlockPos pos, int reach) {
+        return territorialWithin(dimension, pos, Math.min(reach, widest)).stream()
+                .filter(t -> t.covers(pos, reach))
+                .toList();
+    }
+
     public void put(UUID player, List<Haunting> spirits) {
-        hauntings.put(player, List.copyOf(spirits));
+        List<Haunting> old = hauntings.put(player, List.copyOf(spirits));
+        if (old != null) {
+            old.forEach(h -> owners.remove(h.uuid()));
+        }
+        spirits.forEach(h -> owners.put(h.uuid(), player));
+        if (old != null) {
+            old.stream()
+                    .map(Haunting::uuid)
+                    .filter(id -> !owners.containsKey(id))
+                    .forEach(said::remove);
+        }
         setDirty();
     }
 
     /** Changes the spirit with this uuid, wherever it is saved; a null result removes it. */
     public void change(UUID spirit, Function<Haunting, @Nullable Haunting> how) {
-        for (Map.Entry<UUID, List<Haunting>> entry : hauntings.entrySet()) {
-            if (entry.getValue().stream().anyMatch(h -> h.uuid().equals(spirit))) {
-                List<Haunting> changed = new ArrayList<>();
-                for (Haunting h : entry.getValue()) {
-                    Haunting kept = h.uuid().equals(spirit) ? how.apply(h) : h;
-                    if (kept != null) {
-                        changed.add(kept);
-                    }
+        UUID player = owners.get(spirit);
+        if (player != null) {
+            List<Haunting> changed = new ArrayList<>();
+            for (Haunting h : hauntings.get(player)) {
+                Haunting kept = h.uuid().equals(spirit) ? how.apply(h) : h;
+                if (kept != null) {
+                    changed.add(kept);
                 }
-                entry.setValue(List.copyOf(changed));
+            }
+            put(player, changed);
+            return;
+        }
+        Territorial t = territorial.get(spirit);
+        if (t != null) {
+            Haunting kept = how.apply(t.haunting());
+            if (kept == null) {
+                removeTerritorial(spirit);
+            } else {
+                putTerritorial(new Territorial(kept, t.dimension(), t.anchor(), t.radius()));
             }
         }
-        List<Territorial> changed = new ArrayList<>();
-        for (Territorial t : territorial) {
-            Haunting kept = t.haunting().uuid().equals(spirit) ? how.apply(t.haunting()) : t.haunting();
-            if (kept != null) {
-                changed.add(new Territorial(kept, t.dimension(), t.anchor(), t.radius()));
-            }
-        }
-        territorial = List.copyOf(changed);
-        setDirty();
     }
 
     /** The spirit with this uuid, personal or territorial. */
     public Optional<Haunting> find(UUID spirit) {
-        return hauntings.values().stream()
-                .flatMap(List::stream)
-                .filter(h -> h.uuid().equals(spirit))
-                .findFirst()
-                .or(() -> territorial.stream()
-                        .map(Territorial::haunting)
-                        .filter(h -> h.uuid().equals(spirit))
-                        .findFirst());
+        UUID player = owners.get(spirit);
+        if (player != null) {
+            return hauntings.get(player).stream()
+                    .filter(h -> h.uuid().equals(spirit))
+                    .findFirst();
+        }
+        return Optional.ofNullable(territorial.get(spirit)).map(Territorial::haunting);
+    }
+
+    private void index(Territorial spirit) {
+        territorial.put(spirit.haunting().uuid(), spirit);
+        cells.computeIfAbsent(spirit.dimension(), k -> new HashMap<>())
+                .computeIfAbsent(cell(spirit.anchor()), k -> new ArrayList<>())
+                .add(spirit.haunting().uuid());
+        widest = Math.max(widest, spirit.radius());
+    }
+
+    private void unindex(Territorial spirit) {
+        territorial.remove(spirit.haunting().uuid());
+        Map<Long, List<UUID>> grid = cells.get(spirit.dimension());
+        if (grid != null) {
+            grid.getOrDefault(cell(spirit.anchor()), new ArrayList<>())
+                    .remove(spirit.haunting().uuid());
+        }
+    }
+
+    private static long pack(int x, int z) {
+        return (long) x << 32 | z & 0xFFFFFFFFL;
+    }
+
+    private static long cell(BlockPos pos) {
+        return pack(pos.getX() >> CELL_SHIFT, pos.getZ() >> CELL_SHIFT);
     }
 
     public Map<UUID, Grave> graves() {

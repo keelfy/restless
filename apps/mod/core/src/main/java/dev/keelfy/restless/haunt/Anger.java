@@ -79,17 +79,8 @@ public final class Anger {
 
     /** @param reach how close to the anchor {@code at} must be; a very large value means the spirit's whole radius */
     private static void raiseTerritorial(HauntData data, ServerPlayer player, BlockPos at, double by, int reach) {
-        List<HauntData.Territorial> spirits = new ArrayList<>(data.territorial());
-        boolean changed = false;
-        for (int i = 0; i < spirits.size(); i++) {
-            HauntData.Territorial t = spirits.get(i);
-            if (t.dimension().equals(player.level().dimension()) && t.covers(at, reach)) {
-                spirits.set(i, t.angered(by));
-                changed = true;
-            }
-        }
-        if (changed) {
-            data.putTerritorial(spirits);
+        for (HauntData.Territorial t : data.territorialCovering(player.level().dimension(), at, reach)) {
+            data.putTerritorial(t.angered(by));
         }
     }
 }

@@ -34,7 +34,8 @@ final class FaultGameTests {
      * The smoke test fires every event at once, so it runs apart, with room around it; stopping the server wipes the
      * state of every test running beside it, so that test is here too.
      */
-    static final Set<String> BATCH = Set.of("every_event_survives_a_bare_plot", "stopping_forgets_the_world");
+    static final Set<String> BATCH =
+            Set.of("every_event_survives_a_bare_plot", "stopping_forgets_the_world", ScaleGameTests.MANY);
 
     private static final int SETTLE_TICKS = 60;
 

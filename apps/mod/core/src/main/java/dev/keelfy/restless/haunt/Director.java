@@ -79,10 +79,7 @@ public final class Director {
      * A due territorial spirit acts on one random player inside its radius; it reschedules even when nobody is near.
      */
     private static void tickTerritorial(MinecraftServer server, HauntData data, long now) {
-        List<HauntData.Territorial> spirits = new ArrayList<>(data.territorial());
-        boolean changed = false;
-        for (int i = 0; i < spirits.size(); i++) {
-            HauntData.Territorial territorial = spirits.get(i);
+        for (HauntData.Territorial territorial : data.territorial()) {
             ServerLevel level = server.getLevel(territorial.dimension());
             if (now < territorial.haunting().nextEventAt() || level == null) {
                 continue;
@@ -105,11 +102,7 @@ public final class Director {
                                         fireUnlessWarded(player, event, Vec3.atCenterOf(territorial.anchor()))));
             }
             long next = now + cooldown(level, territorial.anchor(), territorial.haunting(), now, level.getRandom());
-            spirits.set(i, territorial.rescheduled(next));
-            changed = true;
-        }
-        if (changed) {
-            data.putTerritorial(spirits);
+            data.change(territorial.haunting().uuid(), h -> h.rescheduled(next));
         }
     }
 
@@ -167,15 +160,13 @@ public final class Director {
 
     /** Places a territorial spirit of the given type at {@code anchor} with the configured radius. */
     public static void anchor(HauntData data, SpiritType spirit, ServerLevel level, BlockPos anchor, long now) {
-        List<HauntData.Territorial> spirits = new ArrayList<>(data.territorial());
         HauntData.Haunting born = HauntData.Haunting.born(spirit.id(), now, level.getRandom());
         int radius = Config.section("director").integer("territorial_radius");
-        spirits.add(new HauntData.Territorial(
+        data.putTerritorial(new HauntData.Territorial(
                 born.rescheduled(now + cooldown(level, anchor, born, now, level.getRandom())),
                 level.dimension(),
                 anchor,
                 radius));
-        data.putTerritorial(spirits);
     }
 
     /** Territorial spirits of one dimension in saved order, as listed by /haunt info after the personal ones. */
@@ -196,9 +187,7 @@ public final class Director {
             if (index - spirits.size() >= here.size()) {
                 return false;
             }
-            List<HauntData.Territorial> all = new ArrayList<>(data.territorial());
-            all.remove(here.get(index - spirits.size()));
-            data.putTerritorial(all);
+            data.removeTerritorial(here.get(index - spirits.size()).haunting().uuid());
             return true;
         }
         if (index < 0) {

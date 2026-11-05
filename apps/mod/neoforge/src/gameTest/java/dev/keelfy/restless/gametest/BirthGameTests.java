@@ -164,7 +164,7 @@ final class BirthGameTests {
     }
 
     /** A structure start of the named vanilla kind with one piece at {@code pos}. */
-    private static StructureStart start(GameTestHelper helper, String id, BlockPos pos) {
+    static StructureStart start(GameTestHelper helper, String id, BlockPos pos) {
         var structure = helper.getLevel()
                 .registryAccess()
                 .lookupOrThrow(Registries.STRUCTURE)

@@ -139,10 +139,8 @@ public final class Wards {
                                 .toList());
             }
         }
-        data.putTerritorial(data.territorial().stream()
-                .map(t -> t.dimension().equals(level.dimension()) && t.covers(pos, reach)
-                        ? t.rescheduled(t.haunting().nextEventAt() + delay)
-                        : t)
-                .toList());
+        for (HauntData.Territorial t : data.territorialCovering(level.dimension(), pos, reach)) {
+            data.putTerritorial(t.rescheduled(t.haunting().nextEventAt() + delay));
+        }
     }
 }

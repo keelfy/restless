@@ -25,10 +25,8 @@ public final class Sense {
                 found.add(new Spirit(haunting, Location.roaming(haunting.uuid())));
             }
         }
-        for (HauntData.Territorial territorial : data.territorial()) {
-            if (territorial.reaches(player)) {
-                found.add(new Spirit(territorial.haunting(), Vec3.atCenterOf(territorial.anchor())));
-            }
+        for (HauntData.Territorial territorial : data.territorialReaching(player)) {
+            found.add(new Spirit(territorial.haunting(), Vec3.atCenterOf(territorial.anchor())));
         }
         return found;
     }
@@ -45,10 +43,8 @@ public final class Sense {
                 personal.forEach(h -> found.add(new Spirit(h, Location.roaming(h.uuid()))));
             }
         }
-        for (HauntData.Territorial territorial : data.territorial()) {
-            if (territorial.dimension().equals(level.dimension()) && territorial.covers(pos, reach)) {
-                found.add(new Spirit(territorial.haunting(), Vec3.atCenterOf(territorial.anchor())));
-            }
+        for (HauntData.Territorial territorial : data.territorialCovering(level.dimension(), pos, reach)) {
+            found.add(new Spirit(territorial.haunting(), Vec3.atCenterOf(territorial.anchor())));
         }
         return found;
     }

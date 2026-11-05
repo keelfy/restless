@@ -383,9 +383,9 @@ public final class Machines {
         ServerLevel level = player.level();
         BlockPos nearest = null;
         double best = Double.MAX_VALUE;
-        for (HauntData.Territorial spirit : HauntData.get(level.getServer()).territorial()) {
+        for (HauntData.Territorial spirit : HauntData.get(level.getServer()).territorialReaching(player)) {
             double distance = spirit.anchor().distSqr(player.blockPosition());
-            if (spirit.dimension().equals(level.dimension()) && spirit.reaches(player) && distance < best) {
+            if (distance < best) {
                 nearest = spirit.anchor();
                 best = distance;
             }

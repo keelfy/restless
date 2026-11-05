@@ -57,7 +57,7 @@ public final class Sanity {
         } else if (light >= config.integer("lit_light")) {
             drift += config.num("lit_gain");
         }
-        if (data.territorial().stream().anyMatch(t -> t.reaches(player))) {
+        if (!data.territorialReaching(player).isEmpty()) {
             drift -= config.num("spirit_loss");
         }
         if (player.isSleeping()) {

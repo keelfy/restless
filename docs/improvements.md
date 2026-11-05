@@ -1,7 +1,7 @@
 # Improvement plan
 
 Result of a code and architecture review of `apps/mod` (2026-11-03). Ordered by priority. Line numbers are as of commit
-`9446372`. Steps 1, 3 (mostly), 4 (mostly) and 7 are done, step 2 is partly done; the rest is not built yet.
+`9446372`. Steps 1, 3 (mostly), 4 (mostly), 5 (mostly) and 7 are done, step 2 is partly done; the rest is not built yet.
 
 What stays as it is: `core` on vanilla only behind `Platform`, versioned config with migrations and the key coverage
 test, `optionalFieldOf` codecs for old saves, payload validation, `Hardcore` / `Restore.revert` as one policy.
@@ -90,7 +90,16 @@ steps of other events lose the spirit's voice and source point.
 **Done when.** A delayed step of a plain event speaks as its spirit and sounds from its point; a nested act does not
 clear the outer context.
 
-## 5. Scale `HauntData` before structure births fill worlds
+## 5. Scale `HauntData` before structure births fill worlds (mostly done)
+
+Done, with the save format unchanged (so no migration): `HauntData` keeps territorial spirits in a map by uuid (saved
+order kept) with a grid by dimension and 64-block square, and personal spirits have an owner index. `find` / `change`
+are O(1); `territorialReaching` / `territorialCovering` / `territorialWithin` replace the walks in `Sanity`, `Sense`,
+`Births`, `Anger`, `Wards` and the three `anchor` helpers; `tickTerritorial` reschedules one spirit at a time instead
+of rewriting the list; a removed spirit takes its `said` entry with it. GameTest `ten_thousand_territorial_spirits`:
+100 `Sense.of` + 1000 `find`+`change` + 100 births + 100 bells took ~330 ms, now ~3 ms; `territorial_index_follows_changes`
+covers the index. Left: blight is still one map in the same file (no chunk attachments); `menace` is keyed by player and
+never dropped; saving still encodes every spirit (not measured).
 
 **Problem.** One `SavedData` holds personal and territorial spirits, graves, blight, sanity, notebooks, `said`,
 `menace`.

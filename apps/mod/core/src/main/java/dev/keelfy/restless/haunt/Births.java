@@ -118,7 +118,7 @@ public final class Births {
         SpiritType spirit = Spirits.byId(of.text("spirit")).orElseThrow();
         HauntData data = HauntData.get(level.getServer());
         BlockPos centre = start.getBoundingBox().getCenter();
-        long nearest = Director.territorial(data, level).stream()
+        long nearest = data.territorialWithin(level.dimension(), centre, config.integer("structure_spacing")).stream()
                 .mapToLong(t -> (long) t.anchor().distSqr(centre))
                 .min()
                 .orElse(Long.MAX_VALUE);
