@@ -613,8 +613,44 @@ final class HauntEventGameTests {
                         "lava_leak",
                         player -> helper.setBlock(FEET.above(3), Blocks.STONE),
                         () -> helper.assertBlockPresent(Blocks.STONE, FEET.above(3))));
+        TIMEOUT.put("event_mock_grave", 50);
+        tests.put("event_mock_grave", helper -> {
+            for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 0, 9)) {
+                helper.setBlock(pos, Blocks.STONE);
+            }
+            for (BlockPos pos : BlockPos.betweenClosed(-12, 0, -12, 21, 0, 21)) {
+                helper.getLevel().setBlockAndUpdate(helper.absolutePos(pos), Blocks.STONE.defaultBlockState());
+            }
+            ServerPlayer player = connected(helper);
+            BlockPos feet = helper.absolutePos(FEET);
+            player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
+            HauntEvent event = HauntEvents.byId(Identifier.parse("restless:mock_grave")).orElseThrow();
+            boolean can = event.canRun(player);
+            event.run(player);
+            BlockPos grave = BlockPos.betweenClosedStream(feet.offset(-14, -3, -14), feet.offset(14, 4, 14))
+                    .filter(pos -> helper.getLevel().getBlockState(pos).is(Content.GRAVESTONE.get()))
+                    .findFirst()
+                    .map(BlockPos::immutable)
+                    .orElse(null);
+            System.out.println("MOCKGRAVE start can=" + can + " grave=" + grave + " feet=" + feet);
+            for (int t = 1; t <= 40; t++) {
+                int tick = t;
+                helper.runAfterDelay(t, () -> {
+                    if (grave != null
+                            && !helper.getLevel().getBlockState(grave).is(Content.GRAVESTONE.get())) {
+                        System.out.println("MOCKGRAVE gone tick=" + tick + " now="
+                                + helper.getLevel().getBlockState(grave) + " below="
+                                + helper.getLevel().getBlockState(grave.below()));
+                    }
+                });
+            }
+            helper.runAfterDelay(41, () -> {
+                player.discard();
+                helper.succeed();
+            });
+        });
         tests.put(
-                "event_mock_grave",
+                "event_mock_grave_orig",
                 helper -> runs(
                         helper,
                         "restless:mock_grave",
