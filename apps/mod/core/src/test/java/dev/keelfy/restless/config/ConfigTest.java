@@ -2,6 +2,8 @@ package dev.keelfy.restless.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -45,6 +47,17 @@ class ConfigTest {
         } finally {
             Config.load(dir.resolve("none"));
         }
+    }
+
+    @Test
+    void sectionsAreCachedUntilTheNextLoad(@TempDir Path dir) {
+        Config.load(dir);
+        assertSame(Config.section("director"), Config.section("director"));
+        Config.Section before = Config.section("director");
+        Config.load(dir);
+        assertNotSame(before, Config.section("director"));
+        assertThrows(IllegalStateException.class, () -> Config.section("no.such.path"));
+        assertThrows(IllegalStateException.class, () -> Config.section("no.such.path"));
     }
 
     @Test
@@ -121,6 +134,18 @@ class ConfigTest {
         assertEquals(
                 2, events.getAsJsonObject("restless:mock_grave").get("tries").getAsInt());
         assertFalse(events.has("minecraft:ouija_hi") || events.has("minecraft:mock_grave"));
+    }
+
+    @Test
+    void playerSettingsLeaveTheDataFiles(@TempDir Path dir) throws IOException {
+        Files.writeString(
+                dir.resolve("haunt.json"),
+                "{\"version\":2,\"hardcore\":{\"mode\":\"true\"},\"swaps\":{\"mode\":\"real\"},"
+                        + "\"journal\":{\"give_on_join\":false},\"said\":{\"rest_ticks\":5}}");
+        JsonObject tree = Config.read(dir, Config::bundledText, Migrations.BUILT_IN);
+        assertFalse(tree.has("hardcore") || tree.has("swaps") || tree.has("journal"));
+        assertEquals(5, tree.getAsJsonObject("said").get("rest_ticks").getAsInt());
+        assertFalse(Config.defaults().has("hardcore") || Config.defaults().has("swaps"));
     }
 
     @Test

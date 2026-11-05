@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * The surroundings are rebuilt in this player's view alone, mostly where they are not looking; see {@link Swaps}. Out
  * of view the blocks are shown changed and put back for them the moment they turn towards the change. The server keeps
- * its own blocks throughout (unless {@code swaps.mode} is {@code real}, when they are changed for a short while
+ * its own blocks throughout (unless the swaps setting is {@code REAL}, when they are changed for a short while
  * instead).
  */
 final class Remodels {

@@ -1,6 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
-import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.config.Settings;
 import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -16,26 +16,21 @@ import net.minecraft.world.level.block.state.BlockState;
 /**
  * Where every event that shows other blocks in place of the real ones goes through. By default it is an illusion only
  * the haunted player sees: their client is told of other blocks, the server keeps its own, and the client is told the
- * truth again when it is due (a click on one shows the real block, as does the chunk being sent again). With
- * {@code swaps.mode} set to {@code real} the blocks are changed in the world for everyone and put back through
- * {@link Restore#swap}; under {@linkplain Hardcore hardcore} they are changed for good. A block that holds something (a
- * chest, a furnace) is never changed for real, since its contents would have nowhere to go: it is only shown.
+ * truth again when it is due (a click on one shows the real block, as does the chunk being sent again). With the swaps
+ * setting at {@code REAL} the blocks are changed in the world for everyone and put back through {@link Restore#swap};
+ * under {@linkplain Hardcore hardcore} they are changed for good. A block that holds something (a chest, a furnace) is
+ * never changed for real, since its contents would have nowhere to go: it is only shown.
  */
 public final class Swaps {
     private Swaps() {}
 
     /** Whether swaps are made in the world rather than shown: the config says so, or the world is hardcore. */
     static boolean real(ServerLevel level) {
-        return real(Hardcore.on(level), Config.section("swaps").text("mode"));
+        return real(Hardcore.on(level), Settings.get().swaps());
     }
 
-    static boolean real(boolean hardcore, String mode) {
-        return hardcore
-                || switch (mode) {
-                    case "illusion" -> false;
-                    case "real" -> true;
-                    default -> throw new IllegalStateException("swaps.mode must be illusion or real");
-                };
+    static boolean real(boolean hardcore, Settings.SwapMode mode) {
+        return hardcore || mode == Settings.SwapMode.REAL;
     }
 
     /**

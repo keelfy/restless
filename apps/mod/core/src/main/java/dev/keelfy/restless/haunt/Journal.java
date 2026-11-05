@@ -1,6 +1,6 @@
 package dev.keelfy.restless.haunt;
 
-import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.config.Settings;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.Picture;
 import dev.keelfy.restless.haunt.Notebook.Chapter;
@@ -90,7 +90,7 @@ public final class Journal {
         if (opened != null) {
             data.putNotebook(player.getUUID(), opened);
         }
-        if (Config.section("journal").flag("give_on_join")) {
+        if (Settings.get().journalOnJoin()) {
             player.getInventory()
                     .placeItemBackInInventory(new ItemStack(Content.JOURNAL.get()), Prediction.SERVER_ONLY);
         }

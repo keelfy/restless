@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import org.slf4j.Logger;
 
@@ -81,16 +82,24 @@ public final class Config {
             new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     private static volatile JsonObject root;
+    /** Sections already found, by path: the hot loops ask for the same few thousand again and again. */
+    private static final Map<String, Section> SECTIONS = new ConcurrentHashMap<>();
 
     private Config() {}
 
     /** Reads (or first writes) the files in {@code <configDir>/restless/}; call once, before any event can run. */
     public static void load(Path configDir) {
         root = read(configDir.resolve(DIR), Config::bundledText, Migrations.BUILT_IN);
+        SECTIONS.clear();
     }
 
     /** One group of values by dotted path, e.g. {@code danger} or {@code spirits.shade.affinity}. */
     public static Section section(String path) {
+        // A missing path throws, so it is never cached.
+        return SECTIONS.computeIfAbsent(path, Config::find);
+    }
+
+    private static Section find(String path) {
         JsonObject json = root();
         for (String part : path.split("\\.")) {
             json = json.has(part) && json.get(part).isJsonObject()

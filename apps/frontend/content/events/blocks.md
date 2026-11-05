@@ -114,7 +114,7 @@ Runs when: Room for a plus of five free blocks on solid ground 3–6 blocks away
 ## `infested_stone`
 
 **Harmful.**
-The block is shown as its infested kind (a swap, see `swaps.mode`); restored after 30 s
+The block is shown as its infested kind (a swap, see the `swaps` setting); restored after 30 s
 
 Runs when: Stone, cobblestone, deepslate or stone bricks in sight within 6
 
@@ -367,13 +367,13 @@ Runs when: A lectern with a book within 12
 
 ## `skulls_turn`
 
-Every such skull is shown turned to face the player (a swap, see `swaps.mode`); restored after 30 s
+Every such skull is shown turned to face the player (a swap, see the `swaps` setting); restored after 30 s
 
 Runs when: Any floor or wall skull within 12, in any dimension
 
 ## `anchor_charge`
 
-One of them shows one more charge, with the charging sound (a swap, see `swaps.mode`); restored after 30 s, and under hardcore it stays
+One of them shows one more charge, with the charging sound (a swap, see the `swaps` setting); restored after 30 s, and under hardcore it stays
 
 Runs when: Nether, a respawn anchor below full charge within 10
 
@@ -584,7 +584,7 @@ Runs when: Indoors, a carpet that is not black within 8
 
 ## `netherrack_behind`
 
-Only this player's client is told that the 40 nearest such blocks are netherrack. They get the real blocks back when the player looks within 70° of any of them, or after 30 s. Nothing on the server (with `swaps.mode` real, changed for 30 s)
+Only this player's client is told that the 40 nearest such blocks are netherrack. They get the real blocks back when the player looks within 70° of any of them, or after 30 s. Nothing on the server (with the `swaps` setting `REAL`, changed for 30 s)
 
 Runs when: A solid block with a free face 2 to 8 away, more than 100° from where the player looks
 

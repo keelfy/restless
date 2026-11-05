@@ -121,7 +121,18 @@ Structure births (`Restless.onNewChunk`) make N grow with explored area.
 
 **Done when.** A world with 10 000 territorial spirits ticks and saves without visible cost.
 
-## 6. Typed, cached config
+## 6. Typed, cached config (done)
+
+Done: player choices are split from the data files. `config/restless/settings.toml` (NeoForge `ModConfigSpec`, type
+`LOCAL`, with a screen in the mod list) holds `hardcore`, `swaps` and `journal_on_join`; core reads them as the
+immutable `config.Settings`, which `neoforge/RestlessSettings` replaces on every load and reload. The three keys left
+`haunt.json` (version 3; a migration drops them, so an edited old value is not carried over; worlds keep the hardcore
+answer they already have). GameTests `settings_file_is_written`, `journal_on_join_follows_the_setting`.
+`Config.section` caches each path until the next `Config.load`. The refusal sound of a locked door now travels in
+`DoorLockPayload` and is kept with the lock, so a client never reads its own config for it (GameTest
+`locked_door_carries_the_servers_refusal_sound`). Still open: parsing each section once into immutable records (the
+cache already removes the path walk). Candidates for settings later: event intensity, disabled events or tags,
+births and corruption on/off.
 
 **Problem.** 967 `Config.section("x").integer("y")` calls, each splitting the path and walking the JSON tree, also in
 the hot `pick` loop. No reload. The client reads its own local copy (`Restless.onUseBlock` →

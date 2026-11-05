@@ -168,12 +168,12 @@ public final class Restless {
                         || level.getBlockState(pos).is(BlockTags.LEAVES))) {
             Anger.provoke(server, Anger.Source.BURN_FOREST, pos);
         }
-        if (!DoorLocks.isLocked(level, pos)) {
+        Config.Tone tone = DoorLocks.denial(level, pos);
+        if (tone == null) {
             return false;
         }
         // The client refuses on its own, so the server hears nothing and only the client plays the sound.
         if (hand == InteractionHand.MAIN_HAND) {
-            Config.Tone tone = Config.event("locked_door").tone("denied_sound");
             if (level.isClientSide()) {
                 level.playLocalSound(
                         pos, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, tone.volume(), tone.pitch(), false);

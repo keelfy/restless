@@ -11,7 +11,7 @@ Difficulty uses the same 1–10 scale as [event-ideas-2.md](event-ideas-2.md#sca
 
 | Piece | What changes | Difficulty |
 |---|---|---|
-| Setting | `hardcore` in the main config: `auto` (follow the world's vanilla hardcore flag, `LevelData.isHardcore()`), `true`, `false`. Fixed per world on first load and saved in `HauntData`, so toggling the config mid-world does not flip it. `config/Migrations.java` adds the key. | 2 |
+| Setting | `hardcore` in `config/restless/settings.toml`: `AUTO` (follow the world's vanilla hardcore flag, `LevelData.isHardcore()`), `ON`, `OFF`. Fixed per world on first ask and saved in `HauntData`, so toggling it mid-world does not flip it. | 2 |
 | `haunt/Restore.java` | Split by intent. `Restore.after` stays for cleanup (despawning the double, the shadow, figures: entity lifecycle, not a world change). A new `Restore.revert` and the existing `Restore.swap` register their undo only when hardcore is off; with it on, the change is applied and forgotten, and the shutdown flush has nothing to undo. Call sites in `BlockEvents` and `Lights` move to `revert`. | 2 |
 | Visual-only events | Each picks its branch at the event: `Hardcore.on() ? real : fake`. The real counterpart is listed per idea in the `Hardcore` column of [event-ideas-2.md](event-ideas-2.md). | per event |
 | Docs and wiki | `spirits.md` "Restoring and locks" gets a hardcore paragraph; the wiki gets a page. | 1 |
@@ -62,14 +62,14 @@ Total for the seam itself: about 3. The cost is in the per-event real branches.
 Every event that shows other blocks in place of the real ones goes through `haunt/event/Swaps.show`, which has three
 modes:
 
-1. **Illusion** (the default, `swaps.mode` is `illusion` in `haunt.json`): only the haunted player's client is told of the
+1. **Illusion** (the default, the `swaps` setting is `ILLUSION` in `config/restless/settings.toml`): only the haunted player's client is told of the
    other blocks, and after the event's ticks it is told the real ones again. The server's world is not touched, so other
    players see nothing and nothing needs undoing. The player's own movement is still checked against the real blocks. Starting to
    break a shown block tells the client the real one at once (`Swaps.reveal`), so a shown block that is not there cannot be
    dug at but is gone at the click.
-2. **Real for a time** (`swaps.mode` is `real`): the blocks are changed in the world for everyone and put back through
+2. **Real for a time** (the `swaps` setting is `REAL`): the blocks are changed in the world for everyone and put back through
    `Restore.swap` when due (and at server stop), so every player sees the event.
-3. **Hardcore**: as real, but the change stays, whatever `swaps.mode` says.
+3. **Hardcore**: as real, but the change stays, whatever the `swaps` setting says.
 
 In the two real modes a block that holds something (a chest, a furnace) is still only shown, since its contents would
 have nowhere to go. Events that change a block entity, move things or put out lights for good (`new_sign`,

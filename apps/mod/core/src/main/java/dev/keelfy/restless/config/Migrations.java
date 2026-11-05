@@ -21,9 +21,11 @@ public final class Migrations {
 
     /**
      * Version 2 of haunt: the world-wide {@code danger} section became per-spirit {@code power}; its progression keys
-     * are gone.
+     * are gone. Version 3: {@code hardcore}, {@code swaps} and {@code journal} are player settings now (see
+     * {@link Settings}), no longer part of the data files.
      */
-    private static final List<UnaryOperator<JsonObject>> POWER = List.of(Migrations::dangerToPower);
+    private static final List<UnaryOperator<JsonObject>> POWER =
+            List.of(Migrations::dangerToPower, Migrations::settingsLeave);
 
     /**
      * Version 2 of lies: strangers' names are made up, not listed; {@code false_slot} has more items; the head turn is
@@ -153,6 +155,13 @@ public final class Migrations {
     private static JsonObject presenceWalker(JsonObject root) {
         for (String gone : List.of("distant_walker.max_ticks", "nametag.names")) {
             remove(root, "events.minecraft:" + gone);
+        }
+        return root;
+    }
+
+    private static JsonObject settingsLeave(JsonObject root) {
+        for (String gone : List.of("hardcore", "swaps", "journal")) {
+            remove(root, gone);
         }
         return root;
     }

@@ -1,7 +1,9 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.DoorLockPayload;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.Faults;
@@ -14,6 +16,8 @@ import dev.keelfy.restless.haunt.Recent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.SanityPayload;
 import dev.keelfy.restless.haunt.Scheduler;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -119,6 +123,21 @@ final class FaultGameTests {
                 player.discard();
                 helper.succeed();
             });
+        });
+        tests.put("locked_door_carries_the_servers_refusal_sound", helper -> {
+            BlockPos door = helper.absolutePos(new BlockPos(2, 1, 2));
+            helper.setBlock(new BlockPos(2, 1, 2), Blocks.OAK_DOOR);
+            DoorLocks.lock(helper.getLevel(), door, 100);
+            Config.Tone sent = Config.event("locked_door").tone("denied_sound");
+            check(
+                    helper,
+                    sent.equals(DoorLocks.denial(helper.getLevel(), door)),
+                    "a lock must keep the server's sound");
+            DoorLockPayload payload = new DoorLockPayload(door, 100, sent.volume(), sent.pitch());
+            ByteBuf buf = Unpooled.buffer();
+            DoorLockPayload.CODEC.encode(buf, payload);
+            check(helper, payload.equals(DoorLockPayload.CODEC.decode(buf)), "the sound must survive the wire");
+            helper.succeed();
         });
         tests.put("stopping_forgets_the_world", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);

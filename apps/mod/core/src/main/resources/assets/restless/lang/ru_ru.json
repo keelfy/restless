@@ -273,5 +273,9 @@
   "message.restless.altar_space": "Алтарю нужна свободная площадка 3×3 на твёрдой земле.",
   "message.restless.altar_rebuild": "Сломай и поставь алтарь заново, чтобы построить площадку 3×3.",
   "biome.restless.blighted": "Проклятая земля",
-  "subtitles.restless.behind_you": "Что-то дышит за спиной"
+  "subtitles.restless.behind_you": "Что-то дышит за спиной",
+  "restless.configuration.title": "Restless",
+  "restless.configuration.hardcore": "Хардкорные явления",
+  "restless.configuration.swaps": "Подмена блоков",
+  "restless.configuration.journal_on_join": "Дневник при входе"
 }

@@ -1,6 +1,7 @@
 package dev.keelfy.restless.neoforge;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Darkroom;
 import dev.keelfy.restless.content.EyesType;
 import dev.keelfy.restless.debug.DebugMenu;
@@ -32,6 +33,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -49,7 +51,8 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 @Mod(Restless.MOD_ID)
 public final class RestlessNeoForge {
-    public RestlessNeoForge(IEventBus modBus) {
+    public RestlessNeoForge(IEventBus modBus, ModContainer container) {
+        RestlessSettings.register(modBus, container);
         Restless.init();
         EyesType.init();
         if (ModList.get().isLoaded("plasmovoice")) {
@@ -59,7 +62,11 @@ public final class RestlessNeoForge {
                 .playToClient(
                         DoorLockPayload.TYPE,
                         DoorLockPayload.CODEC,
-                        (payload, context) -> DoorLocks.put(context.player().level(), payload.pos(), payload.ticks()))
+                        (payload, context) -> DoorLocks.put(
+                                context.player().level(),
+                                payload.pos(),
+                                payload.ticks(),
+                                new Config.Tone(payload.volume(), payload.pitch())))
                 .playToClient(DimPayload.TYPE, DimPayload.CODEC, (payload, context) -> Dimming.start(payload))
                 .playToClient(
                         ScreenPayload.TYPE, ScreenPayload.CODEC, (payload, context) -> ScreenOverlay.start(payload))

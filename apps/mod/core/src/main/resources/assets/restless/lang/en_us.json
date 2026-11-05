@@ -273,5 +273,9 @@
   "story.restless.cause.was_slain_by_a_zombie_horde": "was slain by a zombie horde",
   "story.restless.cause.never_found_the_way_back_to_bed": "never found the way back to bed",
   "story.restless.cause.was_pushed_off_by_a_friend": "was pushed off by a friend",
-  "story.restless.cause.was_lost_in_the_nether": "was lost in the Nether"
+  "story.restless.cause.was_lost_in_the_nether": "was lost in the Nether",
+  "restless.configuration.title": "Restless",
+  "restless.configuration.hardcore": "Hardcore haunting",
+  "restless.configuration.swaps": "Block swaps",
+  "restless.configuration.journal_on_join": "Journal on join"
 }
