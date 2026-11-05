@@ -7,6 +7,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Session;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,7 +68,7 @@ final class ArmorStandEvent implements HauntEvent {
                     new Rotations(20, 0, 0)));
 
     /** The stand each player has now; one at a time. */
-    private static final Map<UUID, ArmorStand> ACTIVE = new ConcurrentHashMap<>();
+    private static final Map<UUID, ArmorStand> ACTIVE = Session.SERVER.keep(new ConcurrentHashMap<>());
 
     @Override
     public Identifier id() {

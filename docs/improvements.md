@@ -1,7 +1,7 @@
 # Improvement plan
 
 Result of a code and architecture review of `apps/mod` (2026-11-03). Ordered by priority. Line numbers are as of commit
-`9446372`. Steps 1 and 7 are done; the rest is not built yet.
+`9446372`. Steps 1, 3 (mostly) and 7 are done, step 2 is partly done; the rest is not built yet.
 
 What stays as it is: `core` on vanilla only behind `Platform`, versioned config with migrations and the key coverage
 test, `optionalFieldOf` codecs for old saves, payload validation, `Hardcore` / `Restore.revert` as one policy.
@@ -22,7 +22,12 @@ server tick.
 
 **Done when.** A deliberately throwing test event is logged and skipped, the server keeps running.
 
-## 2. Make the event roll cheap
+## 2. Make the event roll cheap (partly done)
+
+Done: `Nearby` skips every chunk section whose palette has no matching state and `any` stops at the first hit;
+`Director.pick` checks `opensAt` and `Bands.open` before `canRun`, so closed events are not scanned (and no longer feed
+`Rarity`). Measured with a GameTest on a 10x10 stone plot: all `canRun`s took ~100 ms, now ~8 ms. Not at the 1 ms goal;
+left is the shared neighbourhood snapshot (last bullet) and the weights-first option. Real terrain is not measured.
 
 **Problem.** `pick` calls `canRun` on every event (`Director.java:349`). ~190 `canRun`s use `Nearby.any`, which scans
 the whole cube and collects every hit before picking one (`haunt/event/Nearby.java:48-60`). Radii in config: 16 for
@@ -37,7 +42,14 @@ the whole cube and collects every hit before picking one (`haunt/event/Nearby.ja
 
 **Done when.** A profiled roll for one spirit at default config stays well under 1 ms.
 
-## 3. Per-server session instead of static state
+## 3. Per-server session instead of static state (mostly done)
+
+Done: `haunt/Session` has a `SERVER` and a `CLIENT` scope; the 28 runtime collections (`Scheduler`, `Restore`, `Recent`,
+`Rarity`, the event `ACTIVE` maps, `Followers`, ...) are created through `Session.SERVER.keep(...)` and emptied by
+`Restless.onServerStopping`. `DoorLocks` has a map per side; the client one is emptied on logout. The statics stay
+statics: no `HauntSession` object, no per-server instances. Test: `stopping_forgets_the_world`, `SessionTest`. Left: the
+client overlays (`SanityOverlay`, `Dimming`, `HeadTurn`, ...) keep their last value across worlds; the `Afflictions`
+sets are still plain `HashSet`s; a collection added later has to be wrapped by hand.
 
 **Problem.** ~40 static maps and lists (`Scheduler.TASKS`, `ShadowEvent` / `DoubleEvent` / `ArmorStandEvent.ACTIVE`,
 `DoorLocks`, `Candle.OUT`, `Echoes`, `Recent`, `History`, `Afflictions.DREAMERS`, `Rarity`, `Machines`,

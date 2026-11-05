@@ -35,7 +35,7 @@ public final class Scheduler {
         }
     }
 
-    private static final List<Task> TASKS = new ArrayList<>();
+    private static final List<Task> TASKS = Session.SERVER.keep(new ArrayList<>());
 
     private Scheduler() {}
 

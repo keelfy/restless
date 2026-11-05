@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class Candle {
     /** Until when each player's candle is out, in overworld game time. */
-    private static final Map<UUID, Long> OUT = new ConcurrentHashMap<>();
+    private static final Map<UUID, Long> OUT = Session.SERVER.keep(new ConcurrentHashMap<>());
 
     private Candle() {}
 

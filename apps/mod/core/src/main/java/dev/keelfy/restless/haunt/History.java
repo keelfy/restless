@@ -13,7 +13,7 @@ import org.jspecify.annotations.Nullable;
  */
 public final class History {
     private static final int LIMIT = 100;
-    private static final Deque<Entry> ENTRIES = new ArrayDeque<>();
+    private static final Deque<Entry> ENTRIES = Session.SERVER.keep(new ArrayDeque<>());
 
     private History() {}
 

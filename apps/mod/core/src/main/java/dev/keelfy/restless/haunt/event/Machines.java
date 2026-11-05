@@ -11,6 +11,7 @@ import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.ScenarioContext;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Sense;
+import dev.keelfy.restless.haunt.Session;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.Story;
 import java.util.ArrayList;
@@ -74,9 +75,9 @@ public final class Machines {
     /** A chat line and the game time it was said. */
     private record Line(String text, long at) {}
 
-    private static final Map<UUID, Line> SAID = new ConcurrentHashMap<>();
+    private static final Map<UUID, Line> SAID = Session.SERVER.keep(new ConcurrentHashMap<>());
     /** Who the mirror is to name on its next use, and until when (game time). */
-    private static final Map<UUID, Long> MIRROR = new ConcurrentHashMap<>();
+    private static final Map<UUID, Long> MIRROR = Session.SERVER.keep(new ConcurrentHashMap<>());
 
     /** Where a golem's item goes. */
     private record Move(ChestBlockEntity from, int slot, ChestBlockEntity to) {}

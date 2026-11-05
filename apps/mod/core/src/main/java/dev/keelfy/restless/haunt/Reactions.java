@@ -22,19 +22,14 @@ import net.minecraft.world.level.block.state.BlockState;
  * runs the event, so power, tiers and cooldowns apply as always. In memory only.
  */
 public final class Reactions {
-    private static final Map<UUID, AtomicInteger> SOUNDS = new ConcurrentHashMap<>();
-    private static final Set<UUID> DEEP = ConcurrentHashMap.newKeySet();
+    private static final Map<UUID, AtomicInteger> SOUNDS = Session.SERVER.keep(new ConcurrentHashMap<>());
+    private static final Set<UUID> DEEP = Session.SERVER.keep(ConcurrentHashMap.newKeySet());
 
     private Reactions() {}
 
     /** Call for every sound a player makes. */
     public static void heard(UUID player) {
         SOUNDS.computeIfAbsent(player, id -> new AtomicInteger()).incrementAndGet();
-    }
-
-    public static void clear() {
-        SOUNDS.clear();
-        DEEP.clear();
     }
 
     /** The sounds the player made since the last call. */

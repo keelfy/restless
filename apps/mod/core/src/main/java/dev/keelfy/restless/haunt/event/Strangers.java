@@ -8,6 +8,7 @@ import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Said;
 import dev.keelfy.restless.haunt.ScenarioContext;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Session;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -407,7 +408,7 @@ final class Strangers {
 
     // 390
     /** Players with a waking waited for. */
-    private static final Set<UUID> WAITING = ConcurrentHashMap.newKeySet();
+    private static final Set<UUID> WAITING = Session.SERVER.keep(ConcurrentHashMap.newKeySet());
 
     private static void bedside(ServerPlayer player) {
         Config.Section config = Config.event("bedside_figure");

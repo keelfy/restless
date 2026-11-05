@@ -2,6 +2,7 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Session;
 import dev.keelfy.restless.haunt.Ticks;
 import io.netty.buffer.Unpooled;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ final class Eyes {
     /** Grace after the planned end before the safety net resets a view the scheduler dropped (death, logout). */
     private static final int NET_TICKS = Ticks.SECOND;
 
-    private static final Map<UUID, Eyes> ACTIVE = new HashMap<>();
+    private static final Map<UUID, Eyes> ACTIVE = Session.SERVER.keep(new HashMap<>());
 
     private final ServerPlayer player;
     private final ServerLevel level;

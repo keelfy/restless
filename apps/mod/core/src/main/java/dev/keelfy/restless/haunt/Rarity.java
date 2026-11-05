@@ -11,7 +11,7 @@ import java.util.Map;
  * that can always run keep their weight. Pure math on ids, so it is unit-testable; server-thread only.
  */
 public final class Rarity {
-    private static final Map<String, Double> AVAILABILITY = new HashMap<>();
+    private static final Map<String, Double> AVAILABILITY = Session.SERVER.keep(new HashMap<>());
 
     private Rarity() {}
 

@@ -333,7 +333,15 @@ public final class Director {
             List<Trait> traits,
             double power,
             boolean evolved) {
-        return weight(event, Faults.canRun(event, player), player, spirit, traits, power, evolved);
+        return open(event, player, spirit, power, evolved)
+                ? weight(event, Faults.canRun(event, player), spirit, traits, power, evolved)
+                : 0.0;
+    }
+
+    /** The checks that cost nothing, made before {@link HauntEvent#canRun} looks around the player. */
+    private static boolean open(
+            HauntEvent event, ServerPlayer player, SpiritType spirit, double power, boolean evolved) {
+        return event.opensAt(power, evolved) && Bands.open(event, player, spirit, power, evolved);
     }
 
     /**
@@ -341,14 +349,8 @@ public final class Director {
      * {@link HauntEvent#signature}: an evolved spirit's own scenario is likelier still.
      */
     private static double weight(
-            HauntEvent event,
-            boolean ready,
-            ServerPlayer player,
-            SpiritType spirit,
-            List<Trait> traits,
-            double power,
-            boolean evolved) {
-        return ready && event.opensAt(power, evolved) && Bands.open(event, player, spirit, power, evolved)
+            HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power, boolean evolved) {
+        return ready
                 ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power)
                         * Rarity.boost(event.id().toString())
                         * event.signature(spirit, evolved)
@@ -371,10 +373,13 @@ public final class Director {
             if (tier != null && event.tier() != tier) {
                 continue;
             }
+            if (!open(event, player, spirit, power, evolved)) {
+                continue;
+            }
             String id = event.id().toString();
             boolean ready = Faults.canRun(event, player);
             Rarity.observe(id, ready);
-            double weight = weight(event, ready, player, spirit, traits, power, evolved);
+            double weight = weight(event, ready, spirit, traits, power, evolved);
             if (weight > 0) {
                 boolean repeat = Recent.blocks(player.getUUID(), id);
                 candidates.add(event);

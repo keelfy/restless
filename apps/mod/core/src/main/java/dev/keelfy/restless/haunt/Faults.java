@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
  * logged and dropped by {@link Scheduler} and {@link Restore}. Call events through here, never directly, outside tests.
  */
 public final class Faults {
-    private static final Set<Identifier> BROKEN = ConcurrentHashMap.newKeySet();
+    private static final Set<Identifier> BROKEN = Session.SERVER.keep(ConcurrentHashMap.newKeySet());
 
     private Faults() {}
 
@@ -45,11 +45,6 @@ public final class Faults {
 
     public static boolean broken(HauntEvent event) {
         return BROKEN.contains(event.id());
-    }
-
-    /** Call when the server stops: a fixed event gets another chance in the next world. */
-    public static void clear() {
-        BROKEN.clear();
     }
 
     private static void broke(HauntEvent event, String where, RuntimeException e) {

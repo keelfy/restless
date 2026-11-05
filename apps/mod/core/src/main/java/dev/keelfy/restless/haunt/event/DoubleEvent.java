@@ -7,6 +7,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Session;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public final class DoubleEvent implements HauntEvent {
     };
 
     /** The double each player has now; one at a time. */
-    private static final Map<UUID, Mannequin> ACTIVE = new ConcurrentHashMap<>();
+    private static final Map<UUID, Mannequin> ACTIVE = Session.SERVER.keep(new ConcurrentHashMap<>());
 
     private final Identifier id;
     private final Band band;

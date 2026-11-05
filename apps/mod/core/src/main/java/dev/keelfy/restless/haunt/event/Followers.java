@@ -7,6 +7,7 @@ import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Session;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -172,9 +173,11 @@ final class Followers {
     }
 
     /** Per-figure state of the acts that walk, kept only while the figure lives. */
-    private static final Map<Mannequin, Gait> GAITS = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final Map<Mannequin, Gait> GAITS =
+            Session.SERVER.keep(Collections.synchronizedMap(new WeakHashMap<>()));
     /** The yaw a figure travels along, in degrees as entities face. */
-    private static final Map<Mannequin, Float> HEADINGS = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final Map<Mannequin, Float> HEADINGS =
+            Session.SERVER.keep(Collections.synchronizedMap(new WeakHashMap<>()));
 
     private static Gait gait(Mannequin figure, Config.Section config) {
         return GAITS.computeIfAbsent(figure, f -> new Gait(config.integer("climb"), config.integer("drop")));
@@ -328,7 +331,8 @@ final class Followers {
         @Nullable Vec3 last;
     }
 
-    private static final Map<Mannequin, Trail> TRAILS = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final Map<Mannequin, Trail> TRAILS =
+            Session.SERVER.keep(Collections.synchronizedMap(new WeakHashMap<>()));
 
     private static boolean trail(ServerPlayer player, Mannequin figure, Config.Section config, int n) {
         if (looked(player, figure, config.num("vanish_degrees"))) {
@@ -528,7 +532,8 @@ final class Followers {
     }
 
     // 382
-    private static final Map<Mannequin, int[]> STARES = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final Map<Mannequin, int[]> STARES =
+            Session.SERVER.keep(Collections.synchronizedMap(new WeakHashMap<>()));
 
     private static void drawSword(Mannequin figure) {
         figure.setPose(Pose.CROUCHING);
@@ -559,7 +564,8 @@ final class Followers {
         }
     }
 
-    private static final Map<Mannequin, Fall> FALLS = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final Map<Mannequin, Fall> FALLS =
+            Session.SERVER.keep(Collections.synchronizedMap(new WeakHashMap<>()));
 
     /** A direction in which flat ground ends in a drop of the configured depth onto solid ground. */
     private static @Nullable Direction cliff(ServerLevel level, BlockPos base, Config.Section config) {
@@ -648,7 +654,7 @@ final class Followers {
 
     // 383, 416
     /** The vehicle each riding figure sits in; it is removed with the figure. */
-    private static final Map<Mannequin, Entity> VEHICLES = new ConcurrentHashMap<>();
+    private static final Map<Mannequin, Entity> VEHICLES = Session.SERVER.keep(new ConcurrentHashMap<>());
 
     private interface Heading {
         float pick(Mannequin figure, Config.Section config);

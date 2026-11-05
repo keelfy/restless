@@ -10,6 +10,7 @@ import dev.keelfy.restless.haunt.Notebook;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Sense;
+import dev.keelfy.restless.haunt.Session;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Trait;
@@ -170,7 +171,7 @@ final class Afflictions {
     }
 
     /** Players with a dream waiting, so a second one is not stacked on the first. */
-    private static final Set<UUID> DREAMERS = new HashSet<>();
+    private static final Set<UUID> DREAMERS = Session.SERVER.keep(new HashSet<>());
 
     private static void dream(ServerPlayer player) {
         Config.Section config = Config.event("dream");
@@ -206,7 +207,7 @@ final class Afflictions {
     }
 
     /** Players with a walk waiting. */
-    private static final Set<UUID> SLEEPWALKERS = new HashSet<>();
+    private static final Set<UUID> SLEEPWALKERS = Session.SERVER.keep(new HashSet<>());
 
     private static void sleepwalk(ServerPlayer player) {
         Config.Section config = Config.event("sleepwalk");

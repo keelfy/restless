@@ -8,6 +8,7 @@ import dev.keelfy.restless.haunt.JournalPayload;
 import dev.keelfy.restless.haunt.JournalScreen;
 import dev.keelfy.restless.haunt.JournalView;
 import dev.keelfy.restless.haunt.ReadPayload;
+import dev.keelfy.restless.haunt.Session;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -102,6 +103,7 @@ public final class JournalHands {
     @SubscribeEvent
     public static void leave(ClientPlayerNetworkEvent.LoggingOut event) {
         JournalScreen.forget();
+        Session.CLIENT.end();
         view = null;
         shown = null;
         wasHeld = false;

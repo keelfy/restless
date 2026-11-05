@@ -36,12 +36,12 @@ public final class Divination {
     /**
      * Who each undeveloped photo shows, by film, so its picture can be pasted into the journal; the oldest are dropped.
      */
-    private static final Map<Integer, UUID> SUBJECTS = new LinkedHashMap<>() {
+    private static final Map<Integer, UUID> SUBJECTS = Session.SERVER.keep(new LinkedHashMap<>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<Integer, UUID> eldest) {
             return size() > 64;
         }
-    };
+    });
 
     /**
      * What a clue showed: the spirit it came from and the trait it named, which for a liar may not be the spirit's own.

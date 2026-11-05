@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 public final class Echoes {
     private record Heard(Holder<SoundEvent> sound, Vec3 at, float volume, float pitch, long time) {}
 
-    private static final Map<UUID, Heard> LAST = new ConcurrentHashMap<>();
+    private static final Map<UUID, Heard> LAST = Session.SERVER.keep(new ConcurrentHashMap<>());
 
     private Echoes() {}
 

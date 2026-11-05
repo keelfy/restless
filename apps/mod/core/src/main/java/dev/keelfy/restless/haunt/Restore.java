@@ -34,7 +34,7 @@ public final class Restore {
         }
     }
 
-    private static final List<Entry> PENDING = new ArrayList<>();
+    private static final List<Entry> PENDING = Session.SERVER.keep(new ArrayList<>());
 
     private Restore() {}
 

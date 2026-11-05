@@ -13,11 +13,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 /**
- * Doors the haunting has locked, by the lower half's position, until a game time. In memory only: a restart frees them.
- * The server tells nearby clients too ({@link DoorLockPayload}); in a single-player game both sides share this map.
+ * Doors the haunting has locked, by the lower half's position, until a game time. In memory only: a restart frees them,
+ * and so does leaving the world ({@link Session}). The server tells nearby clients too ({@link DoorLockPayload}); each
+ * side keeps its own map, so a single-player game does not mix them up.
  */
 public final class DoorLocks {
-    private static final Map<GlobalPos, Long> LOCKED = new ConcurrentHashMap<>();
+    private static final Map<GlobalPos, Long> ON_SERVER = Session.SERVER.keep(new ConcurrentHashMap<>());
+    private static final Map<GlobalPos, Long> ON_CLIENT = Session.CLIENT.keep(new ConcurrentHashMap<>());
 
     private DoorLocks() {}
 
@@ -40,21 +42,27 @@ public final class DoorLocks {
 
     /** Records a lock; a client calls this when the server's message arrives. */
     public static void put(Level level, BlockPos lower, int ticks) {
+        Map<GlobalPos, Long> locked = on(level);
         long now = level.getGameTime();
-        LOCKED.values().removeIf(until -> until <= now);
-        LOCKED.put(GlobalPos.of(level.dimension(), lower), now + ticks);
+        locked.values().removeIf(until -> until <= now);
+        locked.put(GlobalPos.of(level.dimension(), lower), now + ticks);
     }
 
     public static boolean isLocked(Level level, BlockPos pos) {
-        if (LOCKED.isEmpty()) {
+        Map<GlobalPos, Long> locked = on(level);
+        if (locked.isEmpty()) {
             return false;
         }
         BlockState state = level.getBlockState(pos);
         if (!(state.getBlock() instanceof DoorBlock)) {
             return false;
         }
-        Long until = LOCKED.get(GlobalPos.of(level.dimension(), lower(state, pos)));
+        Long until = locked.get(GlobalPos.of(level.dimension(), lower(state, pos)));
         return until != null && until > level.getGameTime();
+    }
+
+    private static Map<GlobalPos, Long> on(Level level) {
+        return level.isClientSide() ? ON_CLIENT : ON_SERVER;
     }
 
     private static BlockPos lower(BlockState state, BlockPos pos) {

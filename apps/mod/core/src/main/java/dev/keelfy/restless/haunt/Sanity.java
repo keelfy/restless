@@ -17,7 +17,7 @@ import net.minecraft.world.item.Items;
  */
 public final class Sanity {
     /** What each client last heard; a new player object (join, respawn) is told again. */
-    private static final Map<ServerPlayer, Float> SENT = new WeakHashMap<>();
+    private static final Map<ServerPlayer, Float> SENT = Session.SERVER.keep(new WeakHashMap<>());
 
     private Sanity() {}
 

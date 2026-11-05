@@ -11,7 +11,7 @@ import java.util.UUID;
  * {@code gap} others have happened. In memory only; server-thread only.
  */
 public final class Recent {
-    private static final Map<UUID, Deque<String>> HISTORY = new HashMap<>();
+    private static final Map<UUID, Deque<String>> HISTORY = Session.SERVER.keep(new HashMap<>());
 
     private Recent() {}
 

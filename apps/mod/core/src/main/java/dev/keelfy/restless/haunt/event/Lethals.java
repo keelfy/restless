@@ -10,6 +10,7 @@ import dev.keelfy.restless.haunt.Journal;
 import dev.keelfy.restless.haunt.Notebook;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Session;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.Wards;
 import java.util.List;
@@ -47,7 +48,7 @@ final class Lethals {
     private static final String FORETOLD = "restless:foretold";
 
     /** The player's mob kills when an avenger last came, so a new one needs a fresh killing spree. */
-    private static final Map<UUID, Integer> AVENGED = new ConcurrentHashMap<>();
+    private static final Map<UUID, Integer> AVENGED = Session.SERVER.keep(new ConcurrentHashMap<>());
 
     private static final HauntEvent FORETELLING = SimpleEvent.harmful(
             FORETOLD,

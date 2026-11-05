@@ -1,11 +1,15 @@
 package dev.keelfy.restless.gametest;
 
+import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.Faults;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.HauntTier;
+import dev.keelfy.restless.haunt.Rarity;
+import dev.keelfy.restless.haunt.Recent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.SanityPayload;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -24,8 +28,11 @@ import net.neoforged.neoforge.network.registration.ChannelAttributes;
 
 /** A broken event, step or undo is logged and skipped, and the tick goes on; no shipped event throws on a bare plot. */
 final class FaultGameTests {
-    /** The smoke test fires every event at once, so it runs alone, with room around it. */
-    static final Set<String> BATCH = Set.of("every_event_survives_a_bare_plot");
+    /**
+     * The smoke test fires every event at once, so it runs apart, with room around it; stopping the server wipes the
+     * state of every test running beside it, so that test is here too.
+     */
+    static final Set<String> BATCH = Set.of("every_event_survives_a_bare_plot", "stopping_forgets_the_world");
 
     private static final int SETTLE_TICKS = 60;
 
@@ -59,6 +66,26 @@ final class FaultGameTests {
             });
             helper.runAfterDelay(5, () -> {
                 check(helper, after[0] == 2, "the tasks after a failure must still run");
+                player.discard();
+                helper.succeed();
+            });
+        });
+        tests.put("stopping_forgets_the_world", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            BlockPos door = helper.absolutePos(new BlockPos(2, 1, 2));
+            helper.setBlock(new BlockPos(2, 1, 2), Blocks.OAK_DOOR);
+            DoorLocks.lock(helper.getLevel(), door, 100_000);
+            Recent.record(player.getUUID(), "some_event", 5);
+            Rarity.observe("some_event", false);
+            int[] ran = {0};
+            Scheduler.later(player, 5, p -> ran[0]++);
+            check(helper, DoorLocks.isLocked(helper.getLevel(), door), "the door must be locked before the stop");
+            Restless.onServerStopping();
+            check(helper, !DoorLocks.isLocked(helper.getLevel(), door), "a stopped server must not keep a door locked");
+            check(helper, !Recent.blocks(player.getUUID(), "some_event"), "a stopped server must forget the history");
+            check(helper, Rarity.boost("some_event") == 1.0, "a stopped server must forget the availability");
+            helper.runAfterDelay(10, () -> {
+                check(helper, ran[0] == 0, "a step scheduled before the stop must not outlive it");
                 player.discard();
                 helper.succeed();
             });

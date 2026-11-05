@@ -17,13 +17,12 @@ import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Evolution;
-import dev.keelfy.restless.haunt.Faults;
 import dev.keelfy.restless.haunt.Graves;
-import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Reactions;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Session;
 import dev.keelfy.restless.haunt.Wards;
 import dev.keelfy.restless.haunt.event.DoubleEvent;
 import dev.keelfy.restless.haunt.event.Machines;
@@ -107,9 +106,7 @@ public final class Restless {
     /** Call when the server starts to stop, before the worlds are saved. */
     public static void onServerStopping() {
         Restore.flush();
-        Faults.clear();
-        Location.clear();
-        Reactions.clear();
+        Session.SERVER.end();
     }
 
     /** Call when a living thing dies; {@code killer} is whoever dealt the blow, if anyone. */

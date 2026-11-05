@@ -13,7 +13,7 @@ import org.jspecify.annotations.Nullable;
  * stays at its anchor. Events whose source is free take {@link #source} as the point they come from.
  */
 public final class Location {
-    private static final Map<UUID, Vec3> ROAMING = new HashMap<>();
+    private static final Map<UUID, Vec3> ROAMING = Session.SERVER.keep(new HashMap<>());
     /** The point of the spirit whose event is running right now; set only for the duration of {@link Director#fire}. */
     private static @Nullable Vec3 current;
 
@@ -52,10 +52,6 @@ public final class Location {
 
     public static void forget(UUID spirit) {
         ROAMING.remove(spirit);
-    }
-
-    public static void clear() {
-        ROAMING.clear();
     }
 
     static void during(@Nullable Vec3 point, Runnable action) {

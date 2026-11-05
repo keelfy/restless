@@ -7,6 +7,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Session;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -37,7 +38,7 @@ import org.jspecify.annotations.Nullable;
  */
 public final class ShadowEvent implements HauntEvent {
     /** The shadow each player has now; one at a time. */
-    private static final Map<UUID, Mob> ACTIVE = new ConcurrentHashMap<>();
+    private static final Map<UUID, Mob> ACTIVE = Session.SERVER.keep(new ConcurrentHashMap<>());
 
     private final Identifier id;
     private final Band band;
