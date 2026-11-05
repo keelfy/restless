@@ -36,6 +36,7 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.gossip.GossipType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
@@ -63,6 +64,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerData;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
+import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.DyeColor;
@@ -264,15 +266,17 @@ final class MobEvents {
                         "goat_rams", EventTag.MOBS, player -> !goats(player).isEmpty(), player -> {
                             List<Goat> goats = goats(player);
                             Goat goat = goats.get(player.getRandom().nextInt(goats.size()));
-                            // A stroll in progress would erase the charge's walk target when it stops, so let it stop
-                            // first.
-                            goat.getNavigation().stop();
-                            goat.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
-                            goat.getBrain().eraseMemory(MemoryModuleType.PATH);
-                            goat.getBrain().eraseMemory(MemoryModuleType.RAM_COOLDOWN_TICKS);
                             Scheduler.later(player, 2, p -> {
                                 if (goat.isAlive()) {
-                                    goat.getBrain().setMemory(MemoryModuleType.RAM_TARGET, p.position());
+                                    // All at once. A stroll still running would erase the charge's walk target when
+                                    // it stops, and a ram activity without a target would look for one, find none and
+                                    // put the goat back on its cooldown.
+                                    Brain<Goat> brain = goat.getBrain();
+                                    goat.getNavigation().stop();
+                                    brain.stopAll(p.level(), goat);
+                                    brain.eraseMemory(MemoryModuleType.RAM_COOLDOWN_TICKS);
+                                    brain.setActiveActivityIfPossible(Activity.RAM);
+                                    brain.setMemory(MemoryModuleType.RAM_TARGET, p.position());
                                 }
                             });
                             Config.Tone tone = Config.event("goat_rams").tone("sound");

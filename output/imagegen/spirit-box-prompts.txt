@@ -1,9 +1,0 @@
-Generator: built-in image_gen. Use case: stylized-concept.
-
-FRONT
-Use case: stylized-concept. Asset type: Minecraft block front UV texture. Create ONLY the flat front panel of a vintage paranormal spirit box radio, exact straight-on orthographic elevation, wide rectangular panel aspect 20:9 filling canvas edge to edge. Dark charcoal worn metal casing, bronze corners, large rectangular speaker grille on LEFT, small amber frequency display on upper RIGHT, two small round tuning knobs below display. No antenna, no handle, no surrounding background, no perspective, no cast shadows, no labels or words. Strict pixel art designed for 40 by 18 logical pixels, hard square pixels, limited 12-color palette, no gradients or antialiasing. Clear readable silhouette and broad details at tiny size, Minecraft aesthetic.
-
-ITEM
-Use case: stylized-concept. Asset type: Minecraft inventory item sprite. Single vintage paranormal spirit box radio, wide dark charcoal metal body with bronze corners, large speaker grille on left, amber display upper right and two tuning knobs below, small handle on top and short silver antenna. Straight-on flat 2D pixel art icon, no perspective, no 3D render. Entire radio fits with clear transparent margin. Designed as 32 by 32 logical pixels enlarged nearest neighbor, hard square pixels, limited 12-color palette, no antialiasing, no shadow, no labels or words. Genuinely transparent background.
-
-Processing: front downsampled to 40x16, quantized to 16 colors, placed in 64x64 atlas. Item fitted proportionally into transparent 32x32 using nearest neighbor, retaining generated alpha. Casing and trim use procedural palette-matched pixel patterns. All model UVs use four texels per model unit. Rebuild: python output/imagegen/spirit-box-build.py (Pillow required).
