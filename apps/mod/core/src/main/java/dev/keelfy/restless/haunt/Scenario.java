@@ -161,7 +161,7 @@ public final class Scenario implements HauntEvent {
     /** Only the opening beat is checked: the rest may find nothing to act on and are skipped. */
     @Override
     public boolean canRun(ServerPlayer player) {
-        return beats.getFirst().event().canRun(player);
+        return Faults.canRun(beats.getFirst().event(), player);
     }
 
     @Override
@@ -169,8 +169,9 @@ public final class Scenario implements HauntEvent {
         Vec3 at = Location.current();
         UUID spirit = Said.current();
         ScenarioContext.start(() -> {
-            beats.getFirst().event().run(player);
-            follow(player, 1, 0, at, spirit);
+            if (Faults.run(beats.getFirst().event(), player)) {
+                follow(player, 1, 0, at, spirit);
+            }
         });
     }
 
@@ -205,14 +206,14 @@ public final class Scenario implements HauntEvent {
     }
 
     private static void play(ServerPlayer player, HauntEvent event, @Nullable Vec3 at, @Nullable UUID spirit) {
-        if (!event.canRun(player)) {
+        if (!Faults.canRun(event, player)) {
             return;
         }
         Location.during(at, () -> {
             if (spirit == null) {
-                event.run(player);
+                Faults.run(event, player);
             } else {
-                Said.during(spirit, () -> event.run(player));
+                Said.during(spirit, () -> Faults.run(event, player));
             }
         });
     }

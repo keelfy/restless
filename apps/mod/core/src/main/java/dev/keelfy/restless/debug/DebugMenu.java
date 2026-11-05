@@ -1,6 +1,7 @@
 package dev.keelfy.restless.debug;
 
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.Faults;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
@@ -65,7 +66,7 @@ public final class DebugMenu {
                             event.tier(),
                             List.copyOf(event.tags()),
                             event.baseWeight(),
-                            event.canRun(viewer),
+                            Faults.canRun(event, viewer),
                             chances);
                 })
                 .toList();
@@ -87,10 +88,10 @@ public final class DebugMenu {
     }
 
     private static void run(ServerPlayer player, HauntEvent event) {
-        if (event.canRun(player)) {
-            Director.fire(player, event);
-        } else {
-            player.sendSystemMessage(Component.literal(event.id() + ": nothing to act on here"));
+        if (Faults.canRun(event, player) && Director.fire(player, event)) {
+            return;
         }
+        player.sendSystemMessage(Component.literal(
+                event.id() + (Faults.broken(event) ? ": failed, see the server log" : ": nothing to act on here")));
     }
 }

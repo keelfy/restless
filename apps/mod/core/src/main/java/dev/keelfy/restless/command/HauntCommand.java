@@ -13,6 +13,7 @@ import dev.keelfy.restless.haunt.BirthRules;
 import dev.keelfy.restless.haunt.Births;
 import dev.keelfy.restless.haunt.Corruption;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.Faults;
 import dev.keelfy.restless.haunt.Graves;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
@@ -240,24 +241,27 @@ public final class HauntCommand {
         String name = player.getName().getString();
         if (seconds > 0) {
             Scheduler.later(player, seconds * Ticks.SECOND, p -> {
-                if (event.canRun(p)) {
-                    Director.fire(p, event);
+                if (Faults.canRun(event, p) && Director.fire(p, event)) {
                     source.sendSuccess(() -> Component.literal("Forced " + id + " on " + name), true);
                 } else {
-                    source.sendFailure(Component.literal(id + ": nothing to act on near " + name));
+                    source.sendFailure(notForced(event, name));
                 }
             });
             source.sendSuccess(
                     () -> Component.literal("Will force " + id + " on " + name + " in " + seconds + "s"), true);
             return 1;
         }
-        if (!event.canRun(player)) {
-            source.sendFailure(Component.literal(id + ": nothing to act on near " + name));
+        if (!Faults.canRun(event, player) || !Director.fire(player, event)) {
+            source.sendFailure(notForced(event, name));
             return 0;
         }
-        Director.fire(player, event);
         source.sendSuccess(() -> Component.literal("Forced " + id + " on " + name), true);
         return 1;
+    }
+
+    private static Component notForced(HauntEvent event, String name) {
+        return Component.literal(event.id()
+                + (Faults.broken(event) ? ": failed, see the server log" : ": nothing to act on near " + name));
     }
 
     /**

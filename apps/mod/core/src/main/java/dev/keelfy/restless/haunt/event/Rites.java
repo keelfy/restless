@@ -5,6 +5,7 @@ import dev.keelfy.restless.content.Altar;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.Faults;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
@@ -297,7 +298,7 @@ final class Rites {
     // 531
 
     private static @Nullable HauntEvent dream(ServerPlayer player) {
-        return HauntEvents.byId(DREAM).filter(e -> e.canRun(player)).orElse(null);
+        return HauntEvents.byId(DREAM).filter(e -> Faults.canRun(e, player)).orElse(null);
     }
 
     private static void dreamcatcherFails(ServerPlayer player) {

@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt;
 
+import dev.keelfy.restless.Restless;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -70,11 +71,21 @@ public final class Scheduler {
                     || task.player.level().getServer() != server) {
                 task.done = true;
             } else if (now >= task.due) {
-                task.done = !task.step.run(task.player, task.n++);
+                task.done = !step(task);
                 task.due = now + task.interval;
             }
         }
         TASKS.removeIf(task -> task.done);
+    }
+
+    /** @return whether to run again; a step that throws is logged and dropped, the rest keep going */
+    private static boolean step(Task task) {
+        try {
+            return task.step.run(task.player, task.n++);
+        } catch (RuntimeException e) {
+            Restless.LOGGER.error("A scheduled haunt step failed and was dropped", e);
+            return false;
+        }
     }
 
     private static long now(ServerPlayer player) {

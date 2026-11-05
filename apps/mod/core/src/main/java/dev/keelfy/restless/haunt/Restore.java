@@ -88,12 +88,22 @@ public final class Restore {
         long now = server.getTickCount();
         for (Entry entry : List.copyOf(PENDING)) {
             if (now >= entry.due) {
-                if (entry.undo.run(false)) {
+                if (undo(entry)) {
                     PENDING.remove(entry);
                 } else {
                     entry.due = now + Config.section("restore").integer("retry_ticks");
                 }
             }
+        }
+    }
+
+    /** @return whether the entry is finished; one that throws is logged and dropped, never retried */
+    private static boolean undo(Entry entry) {
+        try {
+            return entry.undo.run(false);
+        } catch (RuntimeException e) {
+            Restless.LOGGER.error("A haunt change could not be undone and was dropped", e);
+            return true;
         }
     }
 

@@ -55,6 +55,7 @@ public final class AltarGameTests {
         SanityGameTests.register(TESTS);
         BirthGameTests.register(TESTS);
         ScenarioGameTests.register(TESTS);
+        FaultGameTests.register(TESTS);
         TESTS.put("placement", helper -> {
             place(helper);
             check(
@@ -265,12 +266,15 @@ public final class AltarGameTests {
             var environment = event.registerEnvironment(id("altar"));
             // Hardcore is one switch for the whole server, so the tests that need it run in a batch of their own.
             var hardcore = event.registerEnvironment(id("hardcore"));
+            var smoke = event.registerEnvironment(id("smoke"));
             TESTS.forEach((name, test) -> event.registerTest(
                     id(name),
                     new FunctionGameTestInstance(
                             ResourceKey.create(Registries.TEST_FUNCTION, id(name)),
                             new TestData<>(
-                                    HardcoreGameTests.BATCH.contains(name) ? hardcore : environment,
+                                    HardcoreGameTests.BATCH.contains(name)
+                                            ? hardcore
+                                            : FaultGameTests.BATCH.contains(name) ? smoke : environment,
                                     net.minecraft.world.level.Level.OVERWORLD,
                                     id("empty"),
                                     HauntEventGameTests.TIMEOUT.getOrDefault(name, 40),

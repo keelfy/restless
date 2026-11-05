@@ -247,18 +247,23 @@ public final class Director {
             Wards.blocked(player);
             return false;
         }
-        fire(player, event, at);
+        if (!fire(player, event, at)) {
+            return false;
+        }
         Journal.unlock(player, Notebook.Chapter.HAUNTED);
         return true;
     }
 
     /** Runs an event with no spirit behind it; free-source events fall back to a random point around the player. */
-    public static void fire(ServerPlayer player, HauntEvent event) {
-        fire(player, event, null);
+    public static boolean fire(ServerPlayer player, HauntEvent event) {
+        return fire(player, event, null);
     }
 
-    /** @param at where the spirit is; free-source events come from there */
-    public static void fire(ServerPlayer player, HauntEvent event, @Nullable Vec3 at) {
+    /**
+     * @param at where the spirit is; free-source events come from there
+     * @return whether the event ran to the end, rather than failing ({@link Faults})
+     */
+    public static boolean fire(ServerPlayer player, HauntEvent event, @Nullable Vec3 at) {
         Restless.LOGGER.debug("Haunt {} -> {}", event.id(), player.getName().getString());
         Recent.record(player.getUUID(), event.id().toString(), repeatGap());
         MinecraftServer server = player.level().getServer();
@@ -273,9 +278,13 @@ public final class Director {
                                 .find(speaker)
                                 .map(Director::label)
                                 .orElse(null));
-        Location.during(at, () -> event.run(player));
-        Bands.fired(event, player);
-        Sanity.shock(player);
+        boolean[] ran = {false};
+        Location.during(at, () -> ran[0] = Faults.run(event, player));
+        if (ran[0]) {
+            Bands.fired(event, player);
+            Sanity.shock(player);
+        }
+        return ran[0];
     }
 
     /**
@@ -324,7 +333,7 @@ public final class Director {
             List<Trait> traits,
             double power,
             boolean evolved) {
-        return weight(event, event.canRun(player), player, spirit, traits, power, evolved);
+        return weight(event, Faults.canRun(event, player), player, spirit, traits, power, evolved);
     }
 
     /**
@@ -363,7 +372,7 @@ public final class Director {
                 continue;
             }
             String id = event.id().toString();
-            boolean ready = event.canRun(player);
+            boolean ready = Faults.canRun(event, player);
             Rarity.observe(id, ready);
             double weight = weight(event, ready, player, spirit, traits, power, evolved);
             if (weight > 0) {

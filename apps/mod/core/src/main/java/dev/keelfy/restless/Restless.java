@@ -17,6 +17,7 @@ import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Evolution;
+import dev.keelfy.restless.haunt.Faults;
 import dev.keelfy.restless.haunt.Graves;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Reactions;
@@ -106,6 +107,7 @@ public final class Restless {
     /** Call when the server starts to stop, before the worlds are saved. */
     public static void onServerStopping() {
         Restore.flush();
+        Faults.clear();
         Location.clear();
         Reactions.clear();
     }
