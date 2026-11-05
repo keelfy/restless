@@ -1,7 +1,7 @@
 # Improvement plan
 
 Result of a code and architecture review of `apps/mod` (2026-11-03). Ordered by priority. Line numbers are as of commit
-`9446372`. Step 1 is done; the rest is not built yet.
+`9446372`. Steps 1 and 7 are done; the rest is not built yet.
 
 What stays as it is: `core` on vanilla only behind `Platform`, versioned config with migrations and the key coverage
 test, `optionalFieldOf` codecs for old saves, payload validation, `Hardcore` / `Restore.revert` as one policy.
@@ -104,7 +104,10 @@ the hot `pick` loop. No reload. The client reads its own local copy (`Restless.o
 - Cache `Section` by path (cheap first step), later parse once into immutable records per section.
 - Send the values the client needs on join.
 
-## 7. GameTests in CI
+## 7. GameTests in CI (done)
+
+Added a `:neoforge:runGameTestServer` step to `mod.yml`, after `build`. `event_goat_rams` failed once in a baseline run
+(timing); if it flakes in CI, fix the test.
 
 **Problem.** `.github/workflows/mod.yml:26` runs only `./gradlew build`; `runGameTestServer` is not part of `check`.
 12 GameTest classes never run in CI. Unit tests in `core` cover mostly pure math.
