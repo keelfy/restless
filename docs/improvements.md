@@ -1,7 +1,7 @@
 # Improvement plan
 
 Result of a code and architecture review of `apps/mod` (2026-11-03). Ordered by priority. Line numbers are as of commit
-`9446372`. Steps 1, 3 (mostly) and 7 are done, step 2 is partly done; the rest is not built yet.
+`9446372`. Steps 1, 3 (mostly), 4 (mostly) and 7 are done, step 2 is partly done; the rest is not built yet.
 
 What stays as it is: `core` on vanilla only behind `Platform`, versioned config with migrations and the key coverage
 test, `optionalFieldOf` codecs for old saves, payload validation, `Hardcore` / `Restore.revert` as one policy.
@@ -68,7 +68,13 @@ sets are still plain `HashSet`s; a collection added later has to be wrapped by h
 
 **Done when.** Quitting and opening another world leaves no mod object referencing the old server.
 
-## 4. Explicit haunt context
+## 4. Explicit haunt context (mostly done)
+
+Done: `haunt/HauntContext(spirit, at, scenario)` captures `Said`, `Location` and `ScenarioContext` and runs work inside
+them. `Said.during` and `Location.during` restore the outer value. `Scheduler.repeat` and `Restore.after` capture it, so
+every delayed step and undo keeps its spirit and point; `Scenario` no longer carries them by hand. Tests:
+`HauntContextTest`, GameTest `delayed_step_keeps_the_spirit_point`. Left: the context is still three statics, not
+passed to `run` explicitly (the "Later" item); `Wards` and other callers that read `Said.current` are unchanged.
 
 **Problem.** `Said.during` and `Location.during` reset to `null` instead of restoring the previous value
 (`haunt/Said.java:22`, `haunt/Location.java:57`); `ScenarioContext.during` restores correctly. A nested

@@ -19,16 +19,17 @@ public final class Said {
 
     private Said() {}
 
-    static void during(UUID spirit, Runnable action) {
+    static void during(@Nullable UUID spirit, Runnable action) {
+        UUID previous = speaker;
         speaker = spirit;
         try {
             action.run();
         } finally {
-            speaker = null;
+            speaker = previous;
         }
     }
 
-    /** The spirit set by {@link #during}, if any; to carry it into a later step. */
+    /** The spirit set by {@link #during}, if any. */
     static @Nullable UUID current() {
         return speaker;
     }

@@ -26,11 +26,18 @@ public final class Restore {
 
     private static final class Entry {
         final Undo undo;
+        final HauntContext context = HauntContext.capture();
         long due;
 
         Entry(Undo undo, long due) {
             this.undo = undo;
             this.due = due;
+        }
+
+        boolean run(boolean force) {
+            boolean[] done = {false};
+            context.during(() -> done[0] = undo.run(force));
+            return done[0];
         }
     }
 
@@ -100,7 +107,7 @@ public final class Restore {
     /** @return whether the entry is finished; one that throws is logged and dropped, never retried */
     private static boolean undo(Entry entry) {
         try {
-            return entry.undo.run(false);
+            return entry.run(false);
         } catch (RuntimeException e) {
             Restless.LOGGER.error("A haunt change could not be undone and was dropped", e);
             return true;
@@ -111,7 +118,7 @@ public final class Restore {
     public static void flush() {
         for (Entry entry : List.copyOf(PENDING)) {
             try {
-                entry.undo.run(true);
+                entry.run(true);
             } catch (RuntimeException e) {
                 Restless.LOGGER.warn("A haunt change could not be undone at shutdown", e);
             }

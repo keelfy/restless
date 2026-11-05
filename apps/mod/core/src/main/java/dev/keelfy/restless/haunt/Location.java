@@ -55,15 +55,16 @@ public final class Location {
     }
 
     static void during(@Nullable Vec3 point, Runnable action) {
+        Vec3 previous = current;
         current = point;
         try {
             action.run();
         } finally {
-            current = null;
+            current = previous;
         }
     }
 
-    /** The point set by {@link #during}, if any; to carry it into a later step. */
+    /** The point set by {@link #during}, if any. */
     static @Nullable Vec3 current() {
         return current;
     }

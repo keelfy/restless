@@ -8,6 +8,7 @@ import dev.keelfy.restless.haunt.Faults;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.HauntTier;
+import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Rarity;
 import dev.keelfy.restless.haunt.Recent;
 import dev.keelfy.restless.haunt.Restore;
@@ -24,6 +25,7 @@ import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.registration.ChannelAttributes;
 
 /** A broken event, step or undo is logged and skipped, and the tick goes on; no shipped event throws on a bare plot. */
@@ -66,6 +68,53 @@ final class FaultGameTests {
             });
             helper.runAfterDelay(5, () -> {
                 check(helper, after[0] == 2, "the tasks after a failure must still run");
+                player.discard();
+                helper.succeed();
+            });
+        });
+        tests.put("delayed_step_keeps_the_spirit_point", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            // Like a modded client: firing an event sends the sanity update to it.
+            ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
+                    .add(SanityPayload.TYPE.id());
+            Vec3 point = new Vec3(10, 20, 30);
+            Vec3 fallback = new Vec3(0, 0, 0);
+            Vec3[] seen = new Vec3[2];
+            HauntEvent schedules = new HauntEvent() {
+                @Override
+                public Identifier id() {
+                    // Firing records the id against the config, so it has to be a shipped one.
+                    return HauntEvents.all().getFirst().id();
+                }
+
+                @Override
+                public HauntTier tier() {
+                    return HauntTier.values()[0];
+                }
+
+                @Override
+                public Set<EventTag> tags() {
+                    return Set.of();
+                }
+
+                @Override
+                public boolean canRun(ServerPlayer p) {
+                    return true;
+                }
+
+                @Override
+                public void run(ServerPlayer p) {
+                    Scheduler.later(p, 1, q -> seen[0] = Location.source(fallback));
+                    Restore.after(helper.getLevel(), 1, force -> {
+                        seen[1] = Location.source(fallback);
+                        return true;
+                    });
+                }
+            };
+            check(helper, Director.fire(player, schedules, point), "the scheduling event must run");
+            helper.runAfterDelay(5, () -> {
+                check(helper, point.equals(seen[0]), "a delayed step must sound from its spirit's point: " + seen[0]);
+                check(helper, point.equals(seen[1]), "a delayed undo must sound from its spirit's point: " + seen[1]);
                 player.discard();
                 helper.succeed();
             });

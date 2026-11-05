@@ -43,10 +43,10 @@ public final class Scheduler {
      * Runs {@code step} after {@code delay} ticks, then every {@code interval} ticks for as long as it returns true.
      */
     public static void repeat(ServerPlayer player, int delay, int interval, Step step) {
-        ScenarioContext context = ScenarioContext.current();
+        HauntContext context = HauntContext.capture();
         TASKS.add(new Task(player, now(player) + delay, Math.max(1, interval), (p, n) -> {
             boolean[] again = {false};
-            ScenarioContext.during(context, () -> again[0] = step.run(p, n));
+            context.during(() -> again[0] = step.run(p, n));
             return again[0];
         }));
     }

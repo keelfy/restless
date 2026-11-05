@@ -7,11 +7,9 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Function;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -166,30 +164,28 @@ public final class Scenario implements HauntEvent {
 
     @Override
     public void run(ServerPlayer player) {
-        Vec3 at = Location.current();
-        UUID spirit = Said.current();
         ScenarioContext.start(() -> {
             if (Faults.run(beats.getFirst().event(), player)) {
-                follow(player, 1, 0, at, spirit);
+                follow(player, 1, 0);
             }
         });
     }
 
     /** Schedules the beats from {@code from} on; a waiting beat schedules the ones after it once its wait is over. */
-    private void follow(ServerPlayer player, int from, int start, @Nullable Vec3 at, @Nullable UUID spirit) {
+    private void follow(ServerPlayer player, int from, int start) {
         int delay = start;
         for (int i = from; i < beats.size(); i++) {
             Beat beat = beats.get(i);
             if (beat.until() != null) {
-                wait(player, i, delay, at, spirit);
+                wait(player, i, delay);
                 return;
             }
             delay += beat.after() * Ticks.SECOND;
-            Scheduler.later(player, delay, p -> play(p, beat.event(), at, spirit));
+            Scheduler.later(player, delay, p -> play(p, beat.event()));
         }
     }
 
-    private void wait(ServerPlayer player, int index, int delay, @Nullable Vec3 at, @Nullable UUID spirit) {
+    private void wait(ServerPlayer player, int index, int delay) {
         Beat beat = beats.get(index);
         Wait wait = beat.until();
         HauntEvent before = beats.get(index - 1).event();
@@ -199,22 +195,15 @@ public final class Scenario implements HauntEvent {
             if (!wait.met(p, before, slept)) {
                 return n * POLL < wait.timeout * Ticks.SECOND;
             }
-            Scheduler.later(p, hold, q -> play(q, beat.event(), at, spirit));
-            follow(p, index + 1, hold, at, spirit);
+            Scheduler.later(p, hold, q -> play(q, beat.event()));
+            follow(p, index + 1, hold);
             return false;
         });
     }
 
-    private static void play(ServerPlayer player, HauntEvent event, @Nullable Vec3 at, @Nullable UUID spirit) {
-        if (!Faults.canRun(event, player)) {
-            return;
+    private static void play(ServerPlayer player, HauntEvent event) {
+        if (Faults.canRun(event, player)) {
+            Faults.run(event, player);
         }
-        Location.during(at, () -> {
-            if (spirit == null) {
-                Faults.run(event, player);
-            } else {
-                Said.during(spirit, () -> Faults.run(event, player));
-            }
-        });
     }
 }
