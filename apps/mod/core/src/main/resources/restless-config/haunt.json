@@ -12,7 +12,8 @@
     "rarity_memory": 0.05,
     "rarity_boost_max": 4.0,
     "repeat_share": 0.1,
-    "sure_start_factor": 0.5
+    "sure_start_factor": 0.5,
+    "retry_ticks": 600
   },
   "power": {
     "maturity_days": 30,

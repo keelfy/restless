@@ -48,24 +48,31 @@ public final class Director {
                     continue;
                 }
                 SpiritType spirit = spirit(haunting);
-                boolean[] fired = new boolean[1];
+                Outcome[] outcome = {Outcome.QUIET};
                 if (canHaunt(player)) {
                     Said.during(
                             haunting.uuid(),
-                            () -> pick(
+                            () -> outcome[0] = pick(
                                             player,
                                             spirit,
                                             Traits.of(haunting.traits()),
                                             power(haunting, now),
                                             haunting.evolved(),
                                             null)
-                                    .ifPresent(event -> fired[0] = fireUnlessWarded(player, event, at)));
+                                    .map(event -> fireUnlessWarded(player, event, at))
+                                    .orElse(Outcome.NOTHING));
                 }
-                HauntData.Haunting acted = fired[0] ? Births.noticing(player, haunting) : haunting;
+                HauntData.Haunting acted = outcome[0] == Outcome.FIRED ? Births.noticing(player, haunting) : haunting;
                 spirits.set(
                         i,
                         acted.rescheduled(now
-                                + cooldown(player.level(), player.blockPosition(), haunting, now, player.getRandom())));
+                                + next(
+                                        outcome[0],
+                                        player.level(),
+                                        player.blockPosition(),
+                                        haunting,
+                                        now,
+                                        player.getRandom())));
                 changed = true;
             }
             if (changed) {
@@ -87,23 +94,53 @@ public final class Director {
             List<ServerPlayer> near = level.players().stream()
                     .filter(p -> canHaunt(p) && territorial.reaches(p))
                     .toList();
+            Outcome[] outcome = {Outcome.QUIET};
             if (!near.isEmpty()) {
                 ServerPlayer player = near.get(level.getRandom().nextInt(near.size()));
                 Said.during(
                         territorial.haunting().uuid(),
-                        () -> pick(
+                        () -> outcome[0] = pick(
                                         player,
                                         spirit(territorial.haunting()),
                                         Traits.of(territorial.haunting().traits()),
                                         power(territorial.haunting(), now),
                                         territorial.haunting().evolved(),
                                         null)
-                                .ifPresent(event ->
-                                        fireUnlessWarded(player, event, Vec3.atCenterOf(territorial.anchor()))));
+                                .map(event -> fireUnlessWarded(player, event, Vec3.atCenterOf(territorial.anchor())))
+                                .orElse(Outcome.NOTHING));
             }
-            long next = now + cooldown(level, territorial.anchor(), territorial.haunting(), now, level.getRandom());
+            long next =
+                    now + next(outcome[0], level, territorial.anchor(), territorial.haunting(), now, level.getRandom());
             data.change(territorial.haunting().uuid(), h -> h.rescheduled(next));
         }
+    }
+
+    /** How a due spirit's turn ended. */
+    private enum Outcome {
+        /** An event ran. */
+        FIRED,
+        /** A ward stopped the event: the spirit was beaten, so it waits out a full cooldown. */
+        WARDED,
+        /** Nobody to haunt, or nothing to act on: the spirit waits out a full cooldown. */
+        QUIET,
+        /** It tried and nothing could run (no event had anything to act on, or the event failed). */
+        NOTHING
+    }
+
+    /**
+     * Ticks until the spirit's next turn: a turn where it had somebody to haunt but nothing could run comes back after
+     * {@code director.retry_ticks}, not a full cooldown, so a bare surrounding does not silence it for minutes.
+     */
+    private static long next(
+            Outcome outcome,
+            ServerLevel level,
+            BlockPos at,
+            HauntData.Haunting haunting,
+            long now,
+            RandomSource random) {
+        return outcome == Outcome.NOTHING
+                ? Config.section("director").integer("retry_ticks")
+                : cooldown(level, at, haunting, now, random);
     }
 
     private static boolean canHaunt(ServerPlayer player) {
@@ -230,17 +267,16 @@ public final class Director {
         return Optional.ofNullable(acted[0]);
     }
 
-    /** @return whether the event ran, rather than being stopped by a ward */
-    private static boolean fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
+    private static Outcome fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
         if (Wards.stops(player, event)) {
             Wards.blocked(player);
-            return false;
+            return Outcome.WARDED;
         }
         if (!fire(player, event, at)) {
-            return false;
+            return Outcome.NOTHING;
         }
         Journal.unlock(player, Notebook.Chapter.HAUNTED);
-        return true;
+        return Outcome.FIRED;
     }
 
     /** Runs an event with no spirit behind it; free-source events fall back to a random point around the player. */

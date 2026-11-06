@@ -29,7 +29,9 @@ Update this file when any of them changes. The numbers below are the shipped def
   current point as `at=`.
 - Every spirit has its own cooldown. When it expires, the Director picks one event for that player using that spirit's
   affinities and schedules the spirit's next one. More spirits means proportionally more events.
-  Spectators and creative players get no event, but the cooldown still resets.
+  Spectators and creative players get no event, but the cooldown still resets. If the spirit had somebody to haunt but
+  no event could run (nothing to act on, or the event failed), it tries again after `director.retry_ticks` (600, 30 s)
+  instead of a full cooldown; a ward-stopped event still costs the full cooldown.
 - The pick is a weighted random choice among events that can run right now (`canRun`):
 
   `weight = baseWeight × tierFactor(tier, power) × Π affinity(spirit, tag) × Π affinity(trait, tag)`
