@@ -41,6 +41,8 @@ public final class DoubleEvent implements HauntEvent {
         EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.MAINHAND
     };
 
+    private static final double DECOY_HEALTH = 200.0;
+
     /** The double each player has now; one at a time. */
     private static final Map<UUID, Mannequin> ACTIVE = Session.SERVER.keep(new ConcurrentHashMap<>());
 
@@ -112,6 +114,35 @@ public final class DoubleEvent implements HauntEvent {
         });
         Scheduler.repeat(
                 player, 0, config.integer("interval_ticks"), new Chase(twin, owner, id.toString(), band)::step);
+    }
+
+    /**
+     * A harmless copy of the player in their skin and gear, standing where they do, gone after {@code ticks}. It is the
+     * mimic charm's, not a spirit's: it does not walk or hit.
+     */
+    public static @Nullable Mannequin decoy(ServerPlayer player, int ticks) {
+        ServerLevel level = player.level();
+        Mannequin twin =
+                Figure.spawn(player, player.blockPosition(), ResolvableProfile.createResolved(player.getGameProfile()));
+        if (twin == null) {
+            return null;
+        }
+        for (EquipmentSlot slot : WORN) {
+            twin.setItemSlot(slot, player.getItemBySlot(slot).copy());
+        }
+        // A hostile takes only what it can hurt as a target, so the copy bleeds, but far longer than it stays.
+        twin.setPermanentlyInvulnerable(false);
+        twin.getAttribute(Attributes.MAX_HEALTH).setBaseValue(DECOY_HEALTH);
+        twin.setHealth(twin.getMaxHealth());
+        Restore.after(level, ticks, force -> {
+            if (twin.isAlive()) {
+                level.sendParticles(
+                        ParticleTypes.POOF, twin.getX(), twin.getY() + 1.0, twin.getZ(), 12, 0.3, 0.5, 0.3, 0.02);
+                twin.discard();
+            }
+            return true;
+        });
+        return twin;
     }
 
     /** Sends away the player's double, if there is one: the player died, so there is nothing left to chase. */

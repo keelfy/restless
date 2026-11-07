@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.WardBlock;
 import dev.keelfy.restless.content.WornWard;
@@ -54,7 +55,7 @@ public final class Wards {
             wear(level, near.get(WardBlock.Kind.SCARECROW));
             return true;
         }
-        return false;
+        return Charms.keeps(player);
     }
 
     private static double square(int radius) {
@@ -88,6 +89,20 @@ public final class Wards {
                 pos.getZ(),
                 (x, z) -> cell(level, new BlockPos(x, pos.getY(), z)),
                 Config.section("salt").integer("max_cells"));
+    }
+
+    /** Whether {@code pos} is in a room walls close and a roof covers, with no salt needed. */
+    public static boolean housed(ServerLevel level, BlockPos pos) {
+        return level.getHeight(
+                                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,
+                                pos.getX(),
+                                pos.getZ())
+                        > pos.getY() + 1
+                && Enclosure.closed(
+                        pos.getX(),
+                        pos.getZ(),
+                        (x, z) -> cell(level, new BlockPos(x, pos.getY(), z)),
+                        Config.section("charms").integer("house_cells"));
     }
 
     private static Enclosure.Cell cell(ServerLevel level, BlockPos pos) {

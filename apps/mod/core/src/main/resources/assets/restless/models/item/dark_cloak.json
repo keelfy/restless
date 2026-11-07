@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "restless:item/hearth_charm"
+    "layer0": "restless:item/dark_cloak"
   }
 }

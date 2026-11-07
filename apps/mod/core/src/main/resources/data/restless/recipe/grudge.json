@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "restless:nix_essence",
-    "minecraft:nautilus_shell"
+    "restless:revenant_essence",
+    "minecraft:iron_sword"
   ],
   "result": {
-    "id": "restless:tide_charm",
+    "id": "restless:grudge",
     "count": 1
   }
 }

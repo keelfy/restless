@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "restless:revenant_essence",
-    "minecraft:iron_sword"
+    "restless:nix_essence",
+    "minecraft:nautilus_shell"
   ],
   "result": {
-    "id": "restless:revenant_brand",
+    "id": "restless:drowned_stone",
     "count": 1
   }
 }

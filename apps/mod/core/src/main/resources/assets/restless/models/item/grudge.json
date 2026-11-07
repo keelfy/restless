@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "restless:item/wraith_fang"
+    "layer0": "restless:item/grudge"
   }
 }

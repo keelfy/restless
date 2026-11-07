@@ -19,7 +19,8 @@ public final class Anger {
         KILL_CAT("kill_cat"),
         BREAK_GRAVE("break_grave"),
         BURN_FOREST("burn_forest"),
-        BARGAIN("bargain");
+        BARGAIN("bargain"),
+        DREAM("dream");
 
         private final String key;
 

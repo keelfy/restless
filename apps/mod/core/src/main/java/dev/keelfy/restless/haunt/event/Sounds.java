@@ -500,7 +500,9 @@ final class Sounds {
                         SoundEvents.LAVA_POP,
                         SoundEvents.LAVA_POP),
                 // 341: chains rattle round the player
-                orbit("chain_rattle", SoundEvents.CHAIN_STEP));
+                orbit("chain_rattle", SoundEvents.CHAIN_STEP),
+                // 342: the next block the player breaks sounds a second time, from a little way off
+                SimpleEvent.light("phantom_break", EventTag.SOUND, Breaks::canMark, Breaks::mark));
     }
 
     /** On the nearest wooden door if there is one, otherwise out of thin air nearby. */

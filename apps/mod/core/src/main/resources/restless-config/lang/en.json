@@ -1377,6 +1377,10 @@
       "name": "Chain Rattle",
       "description": "Chains rattle round the player through the house."
     },
+    "minecraft:phantom_break": {
+      "name": "Phantom Break",
+      "description": "The next block the player breaks sounds a second time, a few blocks away."
+    },
     "minecraft:pumpkin_head": {
       "name": "Pumpkin Head",
       "description": "The blur of a carved pumpkin falls over the screen for a few seconds, though nothing is on the player's head."

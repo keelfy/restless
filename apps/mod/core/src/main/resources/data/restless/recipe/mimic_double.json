@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "restless:domovoi_essence",
-    "minecraft:campfire"
+    "restless:mimic_essence",
+    "minecraft:leather"
   ],
   "result": {
-    "id": "restless:hearth_charm",
+    "id": "restless:mimic_double",
     "count": 1
   }
 }

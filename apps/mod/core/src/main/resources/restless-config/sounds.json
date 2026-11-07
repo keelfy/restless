@@ -548,6 +548,16 @@
         "volume": 0.8,
         "pitch": 1.0
       }
+    },
+    "minecraft:phantom_break": {
+      "weight": 0.3,
+      "max_age_ticks": 1200,
+      "delay_ticks": 8,
+      "distance": 5.0,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 1.0
+      }
     }
   }
 }

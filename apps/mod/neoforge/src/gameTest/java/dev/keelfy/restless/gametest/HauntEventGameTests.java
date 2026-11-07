@@ -184,6 +184,7 @@ final class HauntEventGameTests {
                 "bubble_columns",
                 "lava_pops",
                 "chain_rattle",
+                "phantom_break",
                 "bat_swarm",
                 "hello_chat",
                 "ghost_teleport",
@@ -198,6 +199,17 @@ final class HauntEventGameTests {
                 "dead_silence")) {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
+        // The mark is spent by the next break, so the event may run again right after it and not before.
+        tests.put("event_phantom_break_spent_on_break", helper -> {
+            ServerPlayer player = connected(helper);
+            HauntEvent event = HauntEvents.byId(Identifier.parse("phantom_break")).orElseThrow();
+            event.run(player);
+            check(helper, !event.canRun(player), "a marked player must not be marked again");
+            dev.keelfy.restless.Restless.onBreakBlock(player, Blocks.STONE.defaultBlockState(), player.blockPosition());
+            check(helper, event.canRun(player), "the first break must spend the mark");
+            player.discard();
+            helper.succeed();
+        });
         tests.put(
                 "event_false_advancement",
                 helper -> runs(helper, "false_advancement", player -> {}, () -> {

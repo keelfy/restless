@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "restless:item/mara_lullaby"
+    "layer0": "restless:item/borrowed_dream"
   }
 }

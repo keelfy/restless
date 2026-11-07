@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "restless:item/tide_charm"
+    "layer0": "restless:item/house_key"
   }
 }

@@ -3,13 +3,15 @@ package dev.keelfy.restless.gametest;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Charms;
-import dev.keelfy.restless.content.Relic;
+import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -20,16 +22,29 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.Blocks;
 
 /** What a spirit leaves behind: an essence for every type, and a charm that answers to its nature. */
 final class CharmGameTests {
-    /** The charms with a mechanism of their own, besides {@link Relic#ALL}. */
-    private static final List<String> OWN = List.of("borrowed_face", "death_wail", "stash", "bargain", "way_back");
+    private static final List<String> CHARMS = List.of(
+            "drowned_stone",
+            "borrowed_face",
+            "mimic_double",
+            "dark_cloak",
+            "borrowed_dream",
+            "death_wail",
+            "grudge",
+            "way_back",
+            "house_key",
+            "stash",
+            "bargain",
+            "trickster_coin");
 
     private CharmGameTests() {}
 
@@ -39,10 +54,8 @@ final class CharmGameTests {
                 Identifier essence = Identifier.fromNamespaceAndPath(Restless.MOD_ID, type.id() + "_essence");
                 check(helper, BuiltInRegistries.ITEM.containsKey(essence), type.id() + " leaves no essence");
             }
-            List<String> charms = new java.util.ArrayList<>(OWN);
-            Relic.ALL.forEach(k -> charms.add(k.id()));
-            check(helper, charms.size() + 2 == Spirits.all().size(), "a spirit has no charm, or one has two");
-            for (String id : charms) {
+            check(helper, CHARMS.size() + 2 == Spirits.all().size(), "a spirit has no charm, or one has two");
+            for (String id : CHARMS) {
                 ResourceKey<Recipe<?>> recipe =
                         ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(Restless.MOD_ID, id));
                 check(
@@ -52,23 +65,130 @@ final class CharmGameTests {
             }
             helper.succeed();
         });
-        tests.put("relics_answer_their_spirit", helper -> {
+        tests.put("borrowed_dream_fills_sanity_and_angers", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
-            player.addEffect(new MobEffectInstance(MobEffects.POISON, 200));
-            use(helper, player, "mara_lullaby");
+            sanityChannel(player);
+            Sanity.set(player, 0.1);
+            use(helper, player, "borrowed_dream");
+            check(helper, Sanity.of(player) == 1.0, "the dream must restore sanity in full");
             check(
                     helper,
-                    !player.hasEffect(MobEffects.POISON) && player.hasEffect(MobEffects.REGENERATION),
-                    "the lullaby must lift what ails and heal");
-            use(helper, player, "tide_charm");
-            check(helper, player.hasEffect(MobEffects.WATER_BREATHING), "the tide charm must give the water");
-            ServerPlayer gambler = HauntEventGameTests.connected(helper);
-            use(helper, gambler, "trickster_coin");
-            check(helper, gambler.getActiveEffects().size() == 1, "the coin must land on one effect");
+                    player.getCooldowns().isOnCooldown(stack("borrowed_dream")),
+                    "the dream must be a day's wait");
+            helper.succeed();
+        });
+        tests.put("trickster_coin_doubles_or_takes_the_drops", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            Zombie zombie = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 1, 1, 1);
+            use(helper, player, "trickster_coin");
+            boolean won = false;
+            boolean lost = false;
+            for (int i = 0; i < 200 && !(won && lost); i++) {
+                if (!player.hasEffect(Charms.holder(Content.GAMBLE))) {
+                    player.addEffect(new MobEffectInstance(Charms.holder(Content.GAMBLE), 100));
+                }
+                List<ItemEntity> drops = new ArrayList<>();
+                drops.add(new ItemEntity(helper.getLevel(), 0, 0, 0, new ItemStack(Items.BONE)));
+                Restless.onDrops(player, zombie, drops);
+                check(helper, !player.hasEffect(Charms.holder(Content.GAMBLE)), "one kill must settle the wager");
+                check(helper, drops.size() == 0 || drops.size() == 2, "the coin must double or take all");
+                won |= drops.size() == 2;
+                lost |= drops.isEmpty();
+            }
+            check(helper, won && lost, "the coin must land on both sides");
+            List<ItemEntity> plain =
+                    new ArrayList<>(List.of(new ItemEntity(helper.getLevel(), 0, 0, 0, new ItemStack(Items.BONE))));
+            Restless.onDrops(player, zombie, plain);
+            check(helper, plain.size() == 1, "without a wager the drops must stay as they are");
+            helper.succeed();
+        });
+        tests.put("grudge_returns_half_of_what_hurt", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            Zombie zombie = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 1, 1, 1);
+            player.setItemInHand(InteractionHand.OFF_HAND, stack("grudge"));
+            var blow = player.damageSources().playerAttack(player);
+            check(helper, Restless.onHurt(zombie, blow, 4.0f) == 4.0f, "a grudge with nothing stored must add nothing");
+            Restless.onHurt(player, player.damageSources().generic(), 6.0f);
+            check(helper, Restless.onHurt(zombie, blow, 4.0f) == 7.0f, "the blow must carry half of what hurt");
+            check(helper, Restless.onHurt(zombie, blow, 4.0f) == 4.0f, "the grudge must be spent by one blow");
+            Restless.onHurt(player, player.damageSources().generic(), 40.0f);
+            check(helper, Restless.onHurt(zombie, blow, 4.0f) == 14.0f, "the grudge must stop at its cap");
+            player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+            Restless.onHurt(player, player.damageSources().generic(), 6.0f);
+            player.setItemInHand(InteractionHand.OFF_HAND, stack("grudge"));
+            check(helper, Restless.onHurt(zombie, blow, 4.0f) == 4.0f, "a grudge must store nothing while not held");
+            helper.succeed();
+        });
+        tests.put("mimic_double_draws_hostiles_away", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            Zombie zombie = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 1, 1, 1);
+            player.setPos(zombie.position().add(2, 0, 0));
+            zombie.setTarget(player);
+            use(helper, player, "mimic_double");
             check(
                     helper,
-                    gambler.getCooldowns().isOnCooldown(stack("trickster_coin")),
-                    "a used relic must rest before its next use");
+                    zombie.getTarget() instanceof net.minecraft.world.entity.decoration.Mannequin,
+                    "the hostile must go for the double");
+            check(helper, Charms.unseen(zombie, player), "the hostile must not turn back to the player");
+            helper.succeed();
+        });
+        tests.put("drowned_stone_is_a_weight_on_land", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            Charms.held(player);
+            check(helper, !player.hasEffect(MobEffects.SLOWNESS), "without the stone nothing must weigh");
+            player.setItemInHand(InteractionHand.OFF_HAND, stack("drowned_stone"));
+            Charms.held(player);
+            check(helper, player.hasEffect(MobEffects.SLOWNESS), "the stone must weigh on dry ground");
+            helper.succeed();
+        });
+        tests.put("dark_cloak_hides_far_hostiles_in_the_dark", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            Zombie zombie = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 1, 1, 1);
+            BlockPos at = helper.absolutePos(new BlockPos(6, 2, 6));
+            for (BlockPos pos : BlockPos.betweenClosed(at.offset(-5, -1, -5), at.offset(5, 3, 5))) {
+                boolean shell = pos.getX() == at.getX() - 5
+                        || pos.getX() == at.getX() + 5
+                        || pos.getZ() == at.getZ() - 5
+                        || pos.getZ() == at.getZ() + 5
+                        || pos.getY() == at.getY() - 1
+                        || pos.getY() == at.getY() + 3;
+                helper.getLevel()
+                        .setBlock(pos, shell ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 3);
+            }
+            player.setPos(at.getX() - 3.5, at.getY(), at.getZ() + 0.5);
+            zombie.setPos(player.position().add(1.5, 0, 0));
+            helper.runAfterDelay(20, () -> {
+                check(helper, !Charms.unseen(zombie, player), "without the cloak a hostile must see the player");
+                player.setItemInHand(InteractionHand.OFF_HAND, stack("dark_cloak"));
+                check(helper, !Charms.unseen(zombie, player), "a hostile close by must still see the cloaked player");
+                zombie.setPos(player.position().add(7, 0, 0));
+                check(
+                        helper,
+                        Charms.unseen(zombie, player),
+                        "a hostile far off must not see the cloaked player in the dark");
+                helper.succeed();
+            });
+        });
+        tests.put("house_key_shelters_a_shut_roofed_room_and_wears", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            BlockPos at = helper.absolutePos(new BlockPos(4, 2, 4));
+            for (BlockPos pos : BlockPos.betweenClosed(at.offset(-2, -1, -2), at.offset(2, 2, 2))) {
+                boolean shell = pos.getX() == at.getX() - 2
+                        || pos.getX() == at.getX() + 2
+                        || pos.getZ() == at.getZ() - 2
+                        || pos.getZ() == at.getZ() + 2
+                        || pos.getY() == at.getY() - 1
+                        || pos.getY() == at.getY() + 2;
+                helper.getLevel()
+                        .setBlock(pos, shell ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 3);
+            }
+            player.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+            check(helper, !Charms.keeps(player), "without the key a room must not shelter");
+            player.setItemInHand(InteractionHand.OFF_HAND, stack("house_key"));
+            check(helper, Charms.keeps(player), "a shut, roofed room must shelter the holder");
+            check(helper, player.getOffhandItem().getDamageValue() == 1, "every event stopped must wear the key");
+            helper.getLevel().setBlock(at.offset(0, 2, 0), Blocks.AIR.defaultBlockState(), 3);
+            check(helper, !Charms.keeps(player), "an opened room must not shelter");
             helper.succeed();
         });
         tests.put("borrowed_face_hides_until_a_blow", helper -> {
@@ -139,9 +259,7 @@ final class CharmGameTests {
         });
         tests.put("way_back_returns_at_a_cost", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
-            net.neoforged.neoforge.network.registration.ChannelAttributes.getOrCreateCommonChannels(
-                            player.connection.getConnection(), net.minecraft.network.ConnectionProtocol.PLAY)
-                    .add(dev.keelfy.restless.haunt.SanityPayload.TYPE.id());
+            sanityChannel(player);
             net.minecraft.world.phys.Vec3 home = player.position();
             Sanity.set(player, 1.0);
             use(helper, player, "way_back");
@@ -154,6 +272,13 @@ final class CharmGameTests {
                     "the way must cost sanity");
             helper.succeed();
         });
+    }
+
+    /** The sanity payload may go only to a client that has its channel; the mock player has none, so it gets one. */
+    private static void sanityChannel(ServerPlayer player) {
+        net.neoforged.neoforge.network.registration.ChannelAttributes.getOrCreateCommonChannels(
+                        player.connection.getConnection(), net.minecraft.network.ConnectionProtocol.PLAY)
+                .add(dev.keelfy.restless.haunt.SanityPayload.TYPE.id());
     }
 
     private static ItemStack stack(String id) {

@@ -25,11 +25,13 @@ import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Session;
 import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.haunt.event.Breaks;
 import dev.keelfy.restless.haunt.event.DoubleEvent;
 import dev.keelfy.restless.haunt.event.Machines;
 import dev.keelfy.restless.haunt.event.Swaps;
 import dev.keelfy.restless.platform.Platform;
 import dev.keelfy.restless.spirit.Trait;
+import java.util.Collection;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -46,6 +48,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.feline.Cat;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -85,6 +88,7 @@ public final class Restless {
         Sanity.tick(server);
         Corruption.tick(server);
         Evolution.tick(server);
+        Charms.tick(server);
     }
 
     /**
@@ -130,12 +134,18 @@ public final class Restless {
     /** Call when a player breaks a block, before it is gone; {@code state} is what stood there. */
     public static void onBreakBlock(ServerPlayer player, BlockState state, BlockPos pos) {
         Anger.broke(player, state, pos);
+        Breaks.broke(player, state);
     }
 
     /** Call before a player takes damage; returns the amount to apply, capped if a spirit's creature dealt it. */
     public static float onHurt(Entity victim, DamageSource source, float amount) {
-        Charms.hurt(victim, source, amount);
-        return victim instanceof ServerPlayer player ? Bands.cap(source, player, amount) : amount;
+        float dealt = Charms.hurt(victim, source, amount);
+        return victim instanceof ServerPlayer player ? Bands.cap(source, player, dealt) : dealt;
+    }
+
+    /** Call when a living thing's drops are settled but not yet dropped; the list may be changed. */
+    public static void onDrops(@Nullable Entity killer, LivingEntity dead, Collection<ItemEntity> drops) {
+        Charms.drops(killer, dead, drops);
     }
 
     /** Call when a living thing is about to take a new target; true means it must not. */

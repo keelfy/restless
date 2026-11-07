@@ -409,6 +409,12 @@ Twelve chain step sounds on a point circling 4 blocks out at ground level
 
 Runs when: Always
 
+## `phantom_break`
+
+The player is marked; the next block they break plays its break sound a second time 0.4 s later, 5 blocks away. The mark lapses after 1 min. Heard through the loader's block break hook, `Restless.onBreakBlock`
+
+Runs when: The player is not marked already
+
 ## `dead_silence`
 
 A stop-all-sounds packet every tick for 5 s, so nothing plays

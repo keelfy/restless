@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "restless:item/hearth_charm"
+    "model": "restless:item/drowned_stone"
   }
 }

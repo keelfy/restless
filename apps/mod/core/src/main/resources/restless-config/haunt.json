@@ -30,6 +30,7 @@
     "break_grave": 0.2,
     "burn_forest": 0.1,
     "bargain": 0.3,
+    "dream": 0.2,
     "break_anchor": 0.3,
     "anchor_reach": 3,
     "graves": [
@@ -228,16 +229,30 @@
     "bargain_ticks": 12000,
     "way_ticks": 6000,
     "way_cooldown_ticks": 600,
-    "way_sanity_cost": 0.25
+    "way_sanity_cost": 0.25,
+    "house_uses": 10,
+    "stone_slowness": 1,
+    "cloak_dark_light": 4,
+    "cloak_notice": 6,
+    "cloak_bright_light": 12,
+    "double_ticks": 160,
+    "double_radius": 16,
+    "double_cooldown_ticks": 1200,
+    "dream_cooldown_ticks": 24000,
+    "grudge_window_ticks": 200,
+    "grudge_share": 0.5,
+    "grudge_cap": 10.0,
+    "house_cells": 400,
+    "coin_ticks": 12000,
+    "coin_cooldown_ticks": 1200,
+    "coin_odds": 0.5
   },
   "artifacts": {
     "amulet_radius": 12,
     "amulet_cooldown_ticks": 40,
     "eye_radius": 32,
     "eye_ticks": 200,
-    "eye_cooldown_ticks": 1200,
-    "relic_radius": 12,
-    "relic_cooldown_ticks": 1200
+    "eye_cooldown_ticks": 1200
   },
   "grave": {
     "check_ticks": 20,

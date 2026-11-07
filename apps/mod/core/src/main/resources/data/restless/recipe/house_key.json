@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "restless:mimic_essence",
-    "minecraft:leather"
+    "restless:domovoi_essence",
+    "minecraft:campfire"
   ],
   "result": {
-    "id": "restless:mimic_skin",
+    "id": "restless:house_key",
     "count": 1
   }
 }

@@ -134,15 +134,15 @@ Banishing a spirit at an altar leaves one of its essence; putting its grave righ
 | --- | --- | --- | --- |
 | Poltergeist | gold ingot, string | Telekinesis Amulet | pulls dropped items to you |
 | Shade | ender eye | Dark Eye | night vision, and living things glow through walls |
-| Nix | nautilus shell | Tide Charm | water breathing, dolphin's grace |
+| Nix | nautilus shell | Drowned Stone | in the off hand: endless breath in water, but a weight (slowness) on dry ground |
 | Phantom | phantom membrane | Borrowed Face | hostile mobs ignore you until you strike (2 min rest) |
-| Mimic | leather | Mimic Skin | absorption |
-| Wraith | iron ingot | Wraith Fang | speed, strength, night vision |
-| Mara | honey bottle | Mara's Lullaby | cures harmful effects, regeneration |
+| Mimic | leather | Mimic Double | a false copy of you stands for 8 seconds and hostiles within 16 blocks go for it; other players see it too (1 min rest) |
+| Wraith | iron ingot | Cloak of Dark | in the off hand: in the dark, hostiles notice you only within 6 blocks; in bright light it weakens you |
+| Mara | honey bottle | Borrowed Dream | sanity to full; your spirits grow angrier (once a day) |
 | Banshee | bell | Death Wail | in the off hand: below 3 hearts it throws hostiles back, once a day |
-| Revenant | iron sword | Revenant Brand | strength, resistance, briefly |
+| Revenant | iron sword | Grudge | in the off hand: stores the damage you take for 10 seconds; your next blow adds half of it, up to 10 |
 | Lost one | lantern | Way Back | use to mark, use again within 5 minutes to return, at a cost in sanity |
-| Domovoi | campfire | Hearth Charm | saturation, regeneration |
+| Domovoi | campfire | House Key | in the off hand, inside a shut, roofed room: spirits' events do not run; each one stopped wears the key (10 uses) |
 | Hoarder | emerald | Stash | holds a stack; in the off hand when you die, the stack stays with you and the stash is spent |
 | Demon | blaze powder | Bargain | all health at once; for 10 minutes two hearts fewer and angrier spirits |
-| Trickster | gold nugget | Trickster's Coin | one effect drawn at random, good or bad |
+| Trickster | gold nugget | Trickster's Coin | wagers your next mob kill: its drops are doubled or lost, evenly |

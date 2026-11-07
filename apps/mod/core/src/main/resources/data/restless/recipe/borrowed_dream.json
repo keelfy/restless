@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "restless:wraith_essence",
-    "minecraft:iron_ingot"
+    "restless:mara_essence",
+    "minecraft:honey_bottle"
   ],
   "result": {
-    "id": "restless:wraith_fang",
+    "id": "restless:borrowed_dream",
     "count": 1
   }
 }

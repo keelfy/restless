@@ -25,6 +25,15 @@ public final class Enclosure {
      * The start cell counts as open even when it holds salt. Walls alone do not shelter: a plain room is not warded.
      */
     public static boolean sealed(int x, int z, Floor floor, int maxCells) {
+        return flood(x, z, floor, maxCells, true);
+    }
+
+    /** Whether the cell is shut in by walls and salt together, salt or not. */
+    public static boolean closed(int x, int z, Floor floor, int maxCells) {
+        return flood(x, z, floor, maxCells, false);
+    }
+
+    private static boolean flood(int x, int z, Floor floor, int maxCells, boolean needSalt) {
         Set<Long> seen = new HashSet<>();
         ArrayDeque<int[]> queue = new ArrayDeque<>();
         queue.add(new int[] {x, z});
@@ -50,7 +59,7 @@ public final class Enclosure {
                 }
             }
         }
-        return touchedSalt;
+        return touchedSalt || !needSalt;
     }
 
     private static long key(int x, int z) {

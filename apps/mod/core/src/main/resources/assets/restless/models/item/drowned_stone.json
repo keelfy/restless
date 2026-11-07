@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "restless:item/mimic_skin"
+    "layer0": "restless:item/drowned_stone"
   }
 }

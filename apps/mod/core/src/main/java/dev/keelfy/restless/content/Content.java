@@ -2,6 +2,7 @@ package dev.keelfy.restless.content;
 
 import com.mojang.serialization.Codec;
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.platform.Platform;
 import java.util.List;
 import java.util.Map;
@@ -136,7 +137,7 @@ public final class Content {
     public static final Supplier<Item> POLTERGEIST_ESSENCE = item("poltergeist_essence", Item::new);
 
     public static final Supplier<Item> SHADE_ESSENCE = item("shade_essence", Item::new);
-    /** The essences of every other type; the charms made of them are {@link Relic#ALL} and the five below. */
+    /** The essences of every other type; the charms made of them are below. */
     public static final List<Supplier<Item>> ESSENCES = List.of(
                     "nix",
                     "phantom",
@@ -152,10 +153,6 @@ public final class Content {
                     "trickster")
             .stream()
             .map(spirit -> item(spirit + "_essence", Item::new))
-            .toList();
-
-    public static final List<Supplier<Item>> RELICS = Relic.ALL.stream()
-            .map(k -> item(k.id(), p -> new Relic(p.stacksTo(1), k.spec())))
             .toList();
 
     /** Marks the player; hostile things look past them, see {@link Charms#unseen}. */
@@ -175,6 +172,12 @@ public final class Content {
                         AttributeModifier.Operation.ADD_VALUE);
                 return effect;
             });
+    /** Hostiles near the holder look to their double instead, see {@link MimicDouble}. */
+    public static final Supplier<MobEffect> DECOY = Platform.get()
+            .register(BuiltInRegistries.MOB_EFFECT, "decoy", key -> new Pact(MobEffectCategory.BENEFICIAL, 0xB08050));
+    /** The next kill of a mob is wagered, see {@link TricksterCoin}. */
+    public static final Supplier<MobEffect> GAMBLE = Platform.get()
+            .register(BuiltInRegistries.MOB_EFFECT, "gamble", key -> new Pact(MobEffectCategory.NEUTRAL, 0xF0BE28));
     /** What a stash holds. */
     public static final Supplier<DataComponentType<ItemContainerContents>> STASHED =
             component("stashed", ItemContainerContents.CODEC, ItemContainerContents.STREAM_CODEC);
@@ -187,6 +190,16 @@ public final class Content {
     public static final Supplier<Item> STASH = item("stash", p -> new Stash(p.stacksTo(1)));
     public static final Supplier<Item> BARGAIN = item("bargain", p -> new Bargain(p.stacksTo(1)));
     public static final Supplier<Item> WAY_BACK = item("way_back", p -> new WayBack(p.stacksTo(1)));
+    /** Held in the off hand; what they do is in {@link Charms}. */
+    public static final Supplier<Item> DROWNED_STONE = item("drowned_stone", p -> new Item(p.stacksTo(1)));
+
+    public static final Supplier<Item> DARK_CLOAK = item("dark_cloak", p -> new Item(p.stacksTo(1)));
+    public static final Supplier<Item> GRUDGE = item("grudge", p -> new Item(p.stacksTo(1)));
+    public static final Supplier<Item> HOUSE_KEY = item(
+            "house_key", p -> new Item(p.durability(Config.section("charms").integer("house_uses"))));
+    public static final Supplier<Item> MIMIC_DOUBLE = item("mimic_double", p -> new MimicDouble(p.stacksTo(1)));
+    public static final Supplier<Item> BORROWED_DREAM = item("borrowed_dream", p -> new BorrowedDream(p.stacksTo(1)));
+    public static final Supplier<Item> TRICKSTER_COIN = item("trickster_coin", p -> new TricksterCoin(p.stacksTo(1)));
     public static final Supplier<Item> TELEKINESIS_AMULET =
             item("telekinesis_amulet", p -> new TelekinesisAmulet(p.stacksTo(1)));
     public static final Supplier<Item> DARK_EYE = item("dark_eye", p -> new DarkEye(p.stacksTo(1)));
@@ -330,8 +343,19 @@ public final class Content {
                 GRAVESTONE_ITEM,
                 TEST_ITEM));
         tabItems.addAll(ESSENCES);
-        tabItems.addAll(RELICS);
-        tabItems.addAll(List.of(BORROWED_FACE_ITEM, DEATH_WAIL, STASH, BARGAIN, WAY_BACK));
+        tabItems.addAll(List.of(
+                BORROWED_FACE_ITEM,
+                DEATH_WAIL,
+                STASH,
+                BARGAIN,
+                WAY_BACK,
+                DROWNED_STONE,
+                DARK_CLOAK,
+                GRUDGE,
+                HOUSE_KEY,
+                MIMIC_DOUBLE,
+                BORROWED_DREAM,
+                TRICKSTER_COIN));
         Platform.get()
                 .registerTab(
                         "restless",

@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "restless:mara_essence",
-    "minecraft:honey_bottle"
+    "restless:wraith_essence",
+    "minecraft:iron_ingot"
   ],
   "result": {
-    "id": "restless:mara_lullaby",
+    "id": "restless:dark_cloak",
     "count": 1
   }
 }

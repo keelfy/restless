@@ -42,6 +42,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -128,6 +129,8 @@ public final class RestlessNeoForge {
                 e.setAmount(Restless.onHurt(e.getEntity(), e.getSource(), e.getAmount())));
         NeoForge.EVENT_BUS.addListener(
                 (LivingDeathEvent e) -> Restless.onKill(e.getSource().getEntity(), e.getEntity()));
+        NeoForge.EVENT_BUS.addListener(
+                (LivingDropsEvent e) -> Restless.onDrops(e.getSource().getEntity(), e.getEntity(), e.getDrops()));
         NeoForge.EVENT_BUS.addListener((LivingChangeTargetEvent e) -> {
             if (Restless.onTarget(e.getEntity(), e.getNewAboutToBeSetTarget())) {
                 e.setNewAboutToBeSetTarget(null);
