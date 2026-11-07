@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.config.Lang;
+import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Anger;
 import dev.keelfy.restless.haunt.Bands;
@@ -114,6 +115,7 @@ public final class Restless {
         if (dead instanceof ServerPlayer victim) {
             Bands.died(victim);
             DoubleEvent.dismiss(victim);
+            Charms.died(victim);
         }
         if (killer instanceof ServerPlayer player) {
             if (dead instanceof Mob) {
@@ -132,7 +134,18 @@ public final class Restless {
 
     /** Call before a player takes damage; returns the amount to apply, capped if a spirit's creature dealt it. */
     public static float onHurt(Entity victim, DamageSource source, float amount) {
+        Charms.hurt(victim, source, amount);
         return victim instanceof ServerPlayer player ? Bands.cap(source, player, amount) : amount;
+    }
+
+    /** Call when a living thing is about to take a new target; true means it must not. */
+    public static boolean onTarget(LivingEntity looker, @Nullable LivingEntity target) {
+        return target != null && Charms.unseen(looker, target);
+    }
+
+    /** Call when a player is back after dying. */
+    public static void onRespawn(ServerPlayer player) {
+        Charms.respawned(player);
     }
 
     /** Call when a player says something in chat. */

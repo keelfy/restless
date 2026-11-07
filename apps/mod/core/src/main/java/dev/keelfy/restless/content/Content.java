@@ -16,11 +16,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -131,6 +136,57 @@ public final class Content {
     public static final Supplier<Item> POLTERGEIST_ESSENCE = item("poltergeist_essence", Item::new);
 
     public static final Supplier<Item> SHADE_ESSENCE = item("shade_essence", Item::new);
+    /** The essences of every other type; the charms made of them are {@link Relic#ALL} and the five below. */
+    public static final List<Supplier<Item>> ESSENCES = List.of(
+                    "nix",
+                    "phantom",
+                    "mimic",
+                    "wraith",
+                    "mara",
+                    "banshee",
+                    "revenant",
+                    "lost_one",
+                    "domovoi",
+                    "hoarder",
+                    "demon",
+                    "trickster")
+            .stream()
+            .map(spirit -> item(spirit + "_essence", Item::new))
+            .toList();
+
+    public static final List<Supplier<Item>> RELICS = Relic.ALL.stream()
+            .map(k -> item(k.id(), p -> new Relic(p.stacksTo(1), k.spec())))
+            .toList();
+
+    /** Marks the player; hostile things look past them, see {@link Charms#unseen}. */
+    public static final Supplier<MobEffect> BORROWED_FACE = Platform.get()
+            .register(
+                    BuiltInRegistries.MOB_EFFECT,
+                    "borrowed_face",
+                    key -> new Pact(MobEffectCategory.BENEFICIAL, 0x9FD3E6));
+    /** Two hearts fewer ({@code -4}) while it lasts. */
+    public static final Supplier<MobEffect> BARGAIN_EFFECT = Platform.get()
+            .register(BuiltInRegistries.MOB_EFFECT, "bargain", key -> {
+                MobEffect effect = new Pact(MobEffectCategory.HARMFUL, 0x8A1C1C);
+                effect.addAttributeModifier(
+                        Attributes.MAX_HEALTH,
+                        Identifier.fromNamespaceAndPath(Restless.MOD_ID, "bargain"),
+                        -8.0,
+                        AttributeModifier.Operation.ADD_VALUE);
+                return effect;
+            });
+    /** What a stash holds. */
+    public static final Supplier<DataComponentType<ItemContainerContents>> STASHED =
+            component("stashed", ItemContainerContents.CODEC, ItemContainerContents.STREAM_CODEC);
+    /** Where a way back leads, and until when. */
+    public static final Supplier<DataComponentType<WayBack.Mark>> MARK =
+            component("mark", WayBack.Mark.CODEC, WayBack.Mark.STREAM_CODEC);
+
+    public static final Supplier<Item> BORROWED_FACE_ITEM = item("borrowed_face", p -> new BorrowedFace(p.stacksTo(1)));
+    public static final Supplier<Item> DEATH_WAIL = item("death_wail", p -> new DeathWail(p.stacksTo(1)));
+    public static final Supplier<Item> STASH = item("stash", p -> new Stash(p.stacksTo(1)));
+    public static final Supplier<Item> BARGAIN = item("bargain", p -> new Bargain(p.stacksTo(1)));
+    public static final Supplier<Item> WAY_BACK = item("way_back", p -> new WayBack(p.stacksTo(1)));
     public static final Supplier<Item> TELEKINESIS_AMULET =
             item("telekinesis_amulet", p -> new TelekinesisAmulet(p.stacksTo(1)));
     public static final Supplier<Item> DARK_EYE = item("dark_eye", p -> new DarkEye(p.stacksTo(1)));
@@ -273,6 +329,9 @@ public final class Content {
                 DIARY_PAGE,
                 GRAVESTONE_ITEM,
                 TEST_ITEM));
+        tabItems.addAll(ESSENCES);
+        tabItems.addAll(RELICS);
+        tabItems.addAll(List.of(BORROWED_FACE_ITEM, DEATH_WAIL, STASH, BARGAIN, WAY_BACK));
         Platform.get()
                 .registerTab(
                         "restless",

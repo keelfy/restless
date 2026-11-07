@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:trickster_essence",
+    "minecraft:gold_nugget"
+  ],
+  "result": {
+    "id": "restless:trickster_coin",
+    "count": 1
+  }
+}

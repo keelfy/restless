@@ -18,7 +18,8 @@ public final class Anger {
     public enum Source {
         KILL_CAT("kill_cat"),
         BREAK_GRAVE("break_grave"),
-        BURN_FOREST("burn_forest");
+        BURN_FOREST("burn_forest"),
+        BARGAIN("bargain");
 
         private final String key;
 

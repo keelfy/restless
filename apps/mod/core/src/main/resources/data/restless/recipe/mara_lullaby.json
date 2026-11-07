@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:mara_essence",
+    "minecraft:honey_bottle"
+  ],
+  "result": {
+    "id": "restless:mara_lullaby",
+    "count": 1
+  }
+}

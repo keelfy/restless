@@ -52,6 +52,7 @@ public final class AltarGameTests {
         HardcoreGameTests.register(TESTS);
         JournalGameTests.register(TESTS);
         RitualGameTests.register(TESTS);
+        CharmGameTests.register(TESTS);
         SanityGameTests.register(TESTS);
         BirthGameTests.register(TESTS);
         ScenarioGameTests.register(TESTS);

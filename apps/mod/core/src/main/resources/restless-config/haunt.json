@@ -29,6 +29,7 @@
     "kill_cat": 0.15,
     "break_grave": 0.2,
     "burn_forest": 0.1,
+    "bargain": 0.3,
     "break_anchor": 0.3,
     "anchor_reach": 3,
     "graves": [
@@ -216,12 +217,27 @@
     "wrong_age_ticks": 24000,
     "bless_ticks": 12000
   },
+  "charms": {
+    "face_ticks": 1200,
+    "face_radius": 24,
+    "face_cooldown_ticks": 2400,
+    "wail_health": 6.0,
+    "wail_radius": 8,
+    "wail_knockback": 2.0,
+    "wail_cooldown_ticks": 24000,
+    "bargain_ticks": 12000,
+    "way_ticks": 6000,
+    "way_cooldown_ticks": 600,
+    "way_sanity_cost": 0.25
+  },
   "artifacts": {
     "amulet_radius": 12,
     "amulet_cooldown_ticks": 40,
     "eye_radius": 32,
     "eye_ticks": 200,
-    "eye_cooldown_ticks": 1200
+    "eye_cooldown_ticks": 1200,
+    "relic_radius": 12,
+    "relic_cooldown_ticks": 1200
   },
   "grave": {
     "check_ticks": 20,

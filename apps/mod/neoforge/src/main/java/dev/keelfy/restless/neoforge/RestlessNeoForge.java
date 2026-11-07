@@ -40,8 +40,10 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.PlayLevelSoundEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
@@ -126,6 +128,16 @@ public final class RestlessNeoForge {
                 e.setAmount(Restless.onHurt(e.getEntity(), e.getSource(), e.getAmount())));
         NeoForge.EVENT_BUS.addListener(
                 (LivingDeathEvent e) -> Restless.onKill(e.getSource().getEntity(), e.getEntity()));
+        NeoForge.EVENT_BUS.addListener((LivingChangeTargetEvent e) -> {
+            if (Restless.onTarget(e.getEntity(), e.getNewAboutToBeSetTarget())) {
+                e.setNewAboutToBeSetTarget(null);
+            }
+        });
+        NeoForge.EVENT_BUS.addListener((PlayerEvent.PlayerRespawnEvent e) -> {
+            if (e.getEntity() instanceof ServerPlayer player) {
+                Restless.onRespawn(player);
+            }
+        });
         NeoForge.EVENT_BUS.addListener((BreakBlockEvent e) -> {
             if (e.getPlayer() instanceof ServerPlayer player) {
                 Restless.onBreakBlock(player, e.getState(), e.getPos());

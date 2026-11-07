@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:banshee_essence",
+    "minecraft:bell"
+  ],
+  "result": {
+    "id": "restless:death_wail",
+    "count": 1
+  }
+}

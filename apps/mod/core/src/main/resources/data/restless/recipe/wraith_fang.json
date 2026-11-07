@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:wraith_essence",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "restless:wraith_fang",
+    "count": 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:nix_essence",
+    "minecraft:nautilus_shell"
+  ],
+  "result": {
+    "id": "restless:tide_charm",
+    "count": 1
+  }
+}

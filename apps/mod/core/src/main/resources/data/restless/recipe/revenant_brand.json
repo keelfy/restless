@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:revenant_essence",
+    "minecraft:iron_sword"
+  ],
+  "result": {
+    "id": "restless:revenant_brand",
+    "count": 1
+  }
+}

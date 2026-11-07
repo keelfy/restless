@@ -125,3 +125,24 @@ Territorial prankster: changes blocks and items, shows things.
 - Favors: blocks ×2.5, items ×2, mobs ×1.5, presence ×1.5
 - Avoids: assaults ×0.2
 - Activity: 1.2
+
+## Rewards
+
+Banishing a spirit at an altar leaves one of its essence; putting its grave right leaves two. Each essence is crafted with one common item into a charm. Charms that work while carried work from the off hand only, so one answers at a time.
+
+| Spirit | Essence + | Charm | Does |
+| --- | --- | --- | --- |
+| Poltergeist | gold ingot, string | Telekinesis Amulet | pulls dropped items to you |
+| Shade | ender eye | Dark Eye | night vision, and living things glow through walls |
+| Nix | nautilus shell | Tide Charm | water breathing, dolphin's grace |
+| Phantom | phantom membrane | Borrowed Face | hostile mobs ignore you until you strike (2 min rest) |
+| Mimic | leather | Mimic Skin | absorption |
+| Wraith | iron ingot | Wraith Fang | speed, strength, night vision |
+| Mara | honey bottle | Mara's Lullaby | cures harmful effects, regeneration |
+| Banshee | bell | Death Wail | in the off hand: below 3 hearts it throws hostiles back, once a day |
+| Revenant | iron sword | Revenant Brand | strength, resistance, briefly |
+| Lost one | lantern | Way Back | use to mark, use again within 5 minutes to return, at a cost in sanity |
+| Domovoi | campfire | Hearth Charm | saturation, regeneration |
+| Hoarder | emerald | Stash | holds a stack; in the off hand when you die, the stack stays with you and the stash is spent |
+| Demon | blaze powder | Bargain | all health at once; for 10 minutes two hearts fewer and angrier spirits |
+| Trickster | gold nugget | Trickster's Coin | one effect drawn at random, good or bad |

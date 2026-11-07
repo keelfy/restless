@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:lost_one_essence",
+    "minecraft:lantern"
+  ],
+  "result": {
+    "id": "restless:way_back",
+    "count": 1
+  }
+}

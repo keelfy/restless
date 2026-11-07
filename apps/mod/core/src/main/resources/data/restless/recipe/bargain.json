@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:demon_essence",
+    "minecraft:blaze_powder"
+  ],
+  "result": {
+    "id": "restless:bargain",
+    "count": 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:mimic_essence",
+    "minecraft:leather"
+  ],
+  "result": {
+    "id": "restless:mimic_skin",
+    "count": 1
+  }
+}
