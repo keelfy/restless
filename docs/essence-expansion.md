@@ -409,6 +409,8 @@ and no territorial events, and ringing the bell gives three spirits back. A unit
 - `apps/frontend/content/spirits.md`: the rewards table grows into charms, consumables, advanced charms, relics and the
   Requiem; plus `docs/spirit-rewards.md` status.
 
+**Built:** lang (en, ru) is in step, 494 keys each; the wiki has Items pages (essences, charms, consumables, advanced, relics, tools, Requiem) in en and ru and the `spirits.md` rewards section; `docs/spirit-rewards.md` status points here. Every model and texture the code references exists. The Requiem's two item textures were replaced with generated art. No new block-entity renderer was needed: Hoarder's Hollow is a plain block model and Mimic Clay is an item. **Still open:** nothing from this phase.
+
 ### Size and order
 
 | Phase | New items / blocks | Relative size |

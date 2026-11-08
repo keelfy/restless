@@ -38,3 +38,8 @@ Both phases are built, all twelve charms. Left out of the plan: the House Key is
 roofed room does, and a gap in it or its roof stops it) and wears out rather than breaking when the house opens; the
 Drowned Stone does not hold the bearer down, its cost is slowness on land. The rebalance of [essence-expansion.md](essence-expansion.md) Part A is built (the table above is as it now is), but for
 the House Key's repair with Domovoi's Porridge, which is built with the consumables (see [essence-expansion.md](essence-expansion.md) Part C).
+
+The essences feed more than the twelve charms. Everything built on top is in [essence-expansion.md](essence-expansion.md):
+consumables (Part C), advanced charms (Part D, an essence added to a charm), relics (Part E) and the Requiem (Part F),
+the finale that takes one essence of each of the fourteen types. The player-facing list is the wiki's Items section
+(`apps/frontend/content/{en,ru}/items`) and the rewards table in `spirits.md`.
