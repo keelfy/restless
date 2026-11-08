@@ -52,7 +52,7 @@ Domovoi essence + campfire. In the off hand, inside a shut, roofed room: the eve
 
 ## Hoarder: Stash
 
-Hoarder essence + emerald. Holds one stack. Use it with something in the other hand and it takes that in; use it full and it gives the stack back. In the off hand when you die, the stack stays with you, even through a server stop, and the stash is spent. It does not work with `keepInventory`.
+Hoarder essence + emerald. Holds one stack. Use it with something in the other hand and it takes that in; use it full and it gives the stack back. Anywhere in your inventory when you die, the stack stays with you, even through a server stop, and the stash is spent. It does not work with `keepInventory`.
 
 ## Demon: Bargain
 
@@ -60,4 +60,4 @@ Demon essence + blaze powder. Use it: all your health at once, and 30 seconds of
 
 ## Trickster: Trickster's Coin
 
-Trickster essence + gold nugget. Use it: you wager your next mob kill for 10 minutes. When it dies, its drops and experience are doubled or lost, evenly. Each win in a row pays one more, up to x5; a loss starts over. A streak fades by one a day. Rest: 1 minute.
+Trickster essence + gold nugget. Use it: you wager your next mob kill for 10 minutes. When it dies, its drops and experience are doubled or lost, evenly. Each win in a row pays one more, up to x5; a loss starts over. A streak fades by one a day. A win bursts gold sparks from the mob (more with each streak step) with a chime; a loss leaves grey smoke and a hiss. Rest: 1 minute.

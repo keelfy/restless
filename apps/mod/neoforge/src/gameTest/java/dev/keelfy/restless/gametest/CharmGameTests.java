@@ -354,10 +354,11 @@ final class CharmGameTests {
             player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.DIAMOND, 3));
             player.getMainHandItem().use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
             check(helper, player.getOffhandItem().isEmpty(), "the stash must take what the other hand held");
-            player.setItemInHand(InteractionHand.OFF_HAND, player.getMainHandItem());
+            // Any slot will do: the stash goes to the far end of the inventory, away from the hands.
+            player.getInventory().setItem(20, player.getMainHandItem());
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             Restless.onKill(null, player);
-            check(helper, player.getOffhandItem().isEmpty(), "the stash must not drop with the rest");
+            check(helper, player.getInventory().getItem(20).isEmpty(), "the stash must not drop with the rest");
             // What a server stop keeps is what the saved data holds, so it must be there and not only in memory.
             HauntData data = HauntData.get(helper.getLevel().getServer());
             ItemStack saved = data.takeKept(player.getUUID());

@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -42,6 +43,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
@@ -310,8 +312,8 @@ public final class Charms {
         long now = player.level().getGameTime();
         Luck luck = coin.getOrDefault(Content.LUCK.get(), Luck.NONE);
         boolean won = player.getRandom().nextDouble() < config.num("coin_odds");
+        int times = luck.payout(now);
         if (won) {
-            int times = luck.payout(now);
             List<ItemEntity> twins = new ArrayList<>();
             for (ItemEntity drop : drops) {
                 for (int i = 1; i < times; i++) {
@@ -336,11 +338,24 @@ public final class Charms {
         if (!coin.isEmpty()) {
             coin.set(Content.LUCK.get(), luck);
         }
-        player.sendSystemMessage(
-                won
-                        ? Component.translatable("message.restless.coin_won", luck.live(now))
-                        : Component.translatable("message.restless.coin_lost"),
-                true);
+        flip(dead, won, times);
+    }
+
+    /** Shows how the wager fell at the dead mob: a gold burst that grows with the payout, or grey smoke. */
+    private static void flip(LivingEntity dead, boolean won, int times) {
+        if (!(dead.level() instanceof ServerLevel level)) {
+            return;
+        }
+        double y = dead.getY() + dead.getBbHeight() / 2;
+        if (won) {
+            level.sendParticles(
+                    ParticleTypes.TOTEM_OF_UNDYING, dead.getX(), y, dead.getZ(), 12 * times, 0.4, 0.5, 0.4, 0.4);
+            level.playSound(null, dead.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1.0f, 1.5f);
+        } else {
+            level.sendParticles(ParticleTypes.LARGE_SMOKE, dead.getX(), y, dead.getZ(), 16, 0.3, 0.4, 0.3, 0.02);
+            level.sendParticles(ParticleTypes.SOUL, dead.getX(), y, dead.getZ(), 6, 0.3, 0.4, 0.3, 0.02);
+            level.playSound(null, dead.blockPosition(), SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 1.0f, 0.6f);
+        }
     }
 
     /** Whether a held house key shelters the player from a spirit's event, and wears from it. */
@@ -416,7 +431,10 @@ public final class Charms {
                         || Advanced.walking(target));
     }
 
-    /** Call when a player dies, before the drops: a filled stash in the off hand keeps its stack for the player. */
+    /**
+     * Call when a player dies, before the drops: a filled stash anywhere in the inventory keeps its stack for the
+     * player.
+     */
     public static void died(ServerPlayer player) {
         ItemStack satchel = player.getOffhandItem();
         if (satchel.is(Content.GRAVE_SATCHEL.get())
@@ -431,16 +449,18 @@ public final class Charms {
             player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
             return;
         }
-        ItemStack stash = player.getOffhandItem();
-        if (!stash.is(Content.STASH.get()) || keepsInventory(player)) {
+        if (keepsInventory(player)) {
             return;
         }
-        ItemStack held = stashed(stash);
-        if (held.isEmpty()) {
-            return;
+        Inventory inventory = player.getInventory();
+        for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+            ItemStack stash = inventory.getItem(slot);
+            if (stash.is(Content.STASH.get()) && !stashed(stash).isEmpty()) {
+                HauntData.get(player.level().getServer()).keep(player.getUUID(), stashed(stash));
+                inventory.setItem(slot, ItemStack.EMPTY);
+                return;
+            }
         }
-        HauntData.get(player.level().getServer()).keep(player.getUUID(), held);
-        player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
     }
 
     private static boolean keepsInventory(ServerPlayer player) {

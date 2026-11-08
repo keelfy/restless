@@ -13,8 +13,8 @@ import net.minecraft.world.level.Level;
 
 /**
  * The hoarder's charm: holds one stack. Used with something in the other hand, it takes that in; used with a full
- * stash, it gives the stack back. Carried in the off hand when the holder dies, its stack stays with the holder and the
- * stash is spent, see {@link Charms}.
+ * stash, it gives the stack back. Carried anywhere in the inventory when the holder dies, its stack stays with the
+ * holder and the stash is spent, see {@link Charms}.
  */
 public final class Stash extends Item {
     public Stash(Item.Properties properties) {
