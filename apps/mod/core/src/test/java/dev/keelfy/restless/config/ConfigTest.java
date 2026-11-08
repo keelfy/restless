@@ -122,6 +122,18 @@ class ConfigTest {
     }
 
     @Test
+    void charmsStillAtTheirOldDefaultsTakeTheRebalance(@TempDir Path dir) throws IOException {
+        Files.writeString(
+                dir.resolve("haunt.json"),
+                "{\"version\":3,\"charms\":{\"face_ticks\":1200,\"shroud_ticks\":300,\"house_uses\":10}}");
+        JsonObject charms =
+                Config.read(dir, Config::bundledText, Migrations.BUILT_IN).getAsJsonObject("charms");
+        assertEquals(500, charms.get("face_ticks").getAsInt());
+        assertEquals(300, charms.get("shroud_ticks").getAsInt());
+        assertEquals(16, charms.get("house_uses").getAsInt());
+    }
+
+    @Test
     void modItemEventsMoveToRestlessNamespace(@TempDir Path dir) throws IOException {
         Files.writeString(
                 dir.resolve("rites.json"), "{\"version\":1,\"events\":{\"minecraft:ouija_hi\":{\"radius\":3}}}");

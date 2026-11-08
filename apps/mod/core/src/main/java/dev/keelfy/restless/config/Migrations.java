@@ -22,10 +22,11 @@ public final class Migrations {
     /**
      * Version 2 of haunt: the world-wide {@code danger} section became per-spirit {@code power}; its progression keys
      * are gone. Version 3: {@code hardcore}, {@code swaps} and {@code journal} are player settings now (see
-     * {@link Settings}), no longer part of the data files.
+     * {@link Settings}), no longer part of the data files. Version 4: the charms were rebalanced, see
+     * {@link #charmsRebalance}.
      */
     private static final List<UnaryOperator<JsonObject>> POWER =
-            List.of(Migrations::dangerToPower, Migrations::settingsLeave);
+            List.of(Migrations::dangerToPower, Migrations::settingsLeave, Migrations::charmsRebalance);
 
     /**
      * Version 2 of lies: strangers' names are made up, not listed; {@code false_slot} has more items; the head turn is
@@ -155,6 +156,27 @@ public final class Migrations {
     private static JsonObject presenceWalker(JsonObject root) {
         for (String gone : List.of("distant_walker.max_ticks", "nametag.names")) {
             remove(root, "events.minecraft:" + gone);
+        }
+        return root;
+    }
+
+    /** A charm value still at its old default goes, so the bundled new one is used; one the player changed stays. */
+    private static JsonObject charmsRebalance(JsonObject root) {
+        Map<String, Double> was = Map.of(
+                "face_ticks", 1200.0,
+                "shroud_ticks", 120.0,
+                "shroud_cooldown_ticks", 1200.0,
+                "shroud_sanity_cost", 0.15,
+                "house_uses", 10.0);
+        JsonElement charms = root.get("charms");
+        if (charms != null && charms.isJsonObject()) {
+            JsonObject section = charms.getAsJsonObject();
+            was.forEach((key, old) -> {
+                JsonElement value = section.get(key);
+                if (value != null && value.isJsonPrimitive() && value.getAsDouble() == old) {
+                    section.remove(key);
+                }
+            });
         }
         return root;
     }

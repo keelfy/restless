@@ -26,6 +26,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
@@ -275,7 +276,10 @@ public final class HauntData extends SavedData {
                                     .forGetter(data -> data.said),
                             Codec.unboundedMap(UUIDUtil.STRING_CODEC, MENACE)
                                     .optionalFieldOf("menace", Map.of())
-                                    .forGetter(data -> data.menace))
+                                    .forGetter(data -> data.menace),
+                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, ItemStack.CODEC)
+                                    .optionalFieldOf("kept", Map.of())
+                                    .forGetter(data -> data.kept))
                     .apply(
                             i,
                             (players,
@@ -287,7 +291,8 @@ public final class HauntData extends SavedData {
                                     blight,
                                     hardcore,
                                     said,
-                                    menace) -> {
+                                    menace,
+                                    kept) -> {
                                 HauntData data = new HauntData(players, territorial, graves, sanity, notebooks, blight);
                                 journal.forEach((player, entries) -> {
                                     List<Notebook.Note> notes = new ArrayList<>();
@@ -305,6 +310,7 @@ public final class HauntData extends SavedData {
                                 data.hardcore = hardcore.orElse(null);
                                 said.forEach((speaker, events) -> data.said.put(speaker, new HashMap<>(events)));
                                 data.menace.putAll(menace);
+                                data.kept.putAll(kept);
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -340,6 +346,8 @@ public final class HauntData extends SavedData {
     private final Map<UUID, Map<String, Spoken>> said = new HashMap<>();
     /** Keyed by player. */
     private final Map<UUID, Menace> menace = new HashMap<>();
+    /** What a charm saved from a player's death, until the player is back. Keyed by player. */
+    private final Map<UUID, ItemStack> kept = new HashMap<>();
     /**
      * Decided the first time anyone asks and never again, so changing the config later does not flip a world; null
      * until then.
@@ -382,6 +390,22 @@ public final class HauntData extends SavedData {
     public void putMenace(UUID player, Menace state) {
         menace.put(player, state);
         setDirty();
+    }
+
+    /** Saves a stack for a player who has just died; it is kept through a restart until {@link #takeKept}. */
+    public void keep(UUID player, ItemStack stack) {
+        kept.put(player, stack.copy());
+        setDirty();
+    }
+
+    /** The stack kept for a player, which is no longer kept; empty if there is none. */
+    public ItemStack takeKept(UUID player) {
+        ItemStack stack = kept.remove(player);
+        if (stack == null) {
+            return ItemStack.EMPTY;
+        }
+        setDirty();
+        return stack;
     }
 
     /** Every territorial spirit in saved order; a snapshot, so it can be walked while spirits change. */

@@ -135,6 +135,7 @@ public final class Restless {
     public static void onBreakBlock(ServerPlayer player, BlockState state, BlockPos pos) {
         Anger.broke(player, state, pos);
         Breaks.broke(player, state);
+        Charms.noise(player);
     }
 
     /** Call before a player takes damage; returns the amount to apply, capped if a spirit's creature dealt it. */
@@ -179,6 +180,7 @@ public final class Restless {
         Level level = player.level();
         if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
             Reactions.used(server, level.getBlockState(pos));
+            Charms.used(server, pos);
         }
         if (level instanceof ServerLevel server
                 && hand == InteractionHand.MAIN_HAND

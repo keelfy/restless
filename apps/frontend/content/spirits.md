@@ -128,21 +128,21 @@ Territorial prankster: changes blocks and items, shows things.
 
 ## Rewards
 
-Banishing a spirit at an altar leaves one of its essence; putting its grave right leaves two. Each essence is crafted with one common item into a charm. Charms that work while carried work from the off hand only, so one answers at a time.
+Banishing a spirit at an altar leaves one of its essence; putting its grave right leaves two. Each essence is crafted with one common item into a charm. Charms that work while carried work from the off hand only, so one answers at a time; the Death Wail is the exception and works from anywhere in the inventory.
 
 | Spirit | Essence + | Charm | Does |
 | --- | --- | --- | --- |
-| Poltergeist | gold ingot, string | Telekinesis Amulet | pulls dropped items to you |
-| Shade | ender eye | Dark Eye | night vision, and living things glow through walls |
-| Nix | nautilus shell | Drowned Stone | in the off hand: endless breath in water, but a weight (slowness) on dry ground |
-| Phantom | phantom membrane | Borrowed Face | hostile mobs ignore you until you strike (2 min rest) |
-| Mimic | leather | Mimic Double | a false copy of you stands for 8 seconds and hostiles within 16 blocks go for it; other players see it too (1 min rest) |
-| Wraith | iron ingot | Cloak of Dark | in the off hand: in the dark, hostiles notice you only within 6 blocks; in bright light it weakens you |
-| Mara | honey bottle | Borrowed Dream | sanity to full; your spirits grow angrier (once a day) |
-| Banshee | bell | Death Wail | in the off hand: below 3 hearts it throws hostiles back, once a day |
+| Poltergeist | gold ingot, string | Telekinesis Amulet | pulls dropped items and experience to you |
+| Shade | ender eye | Dark Eye | night vision; living things glow through walls and the spirits around you are marked by columns of soul fire |
+| Nix | nautilus shell | Drowned Stone | in the off hand: endless breath, Dolphin's Grace and full mining speed in water, and water spirits' events do not run on you; but a weight (slowness) on dry ground |
+| Phantom | phantom membrane | Phantom Double | a false copy of you stands for 8 seconds and hostiles within 16 blocks go for it; other players see it too (1 min rest) |
+| Mimic | leather | Borrowed Face | hostile mobs ignore you for 25 seconds, until you strike, or until you open a chest or break a block under a hostile's eyes (2 min rest) |
+| Wraith | iron ingot | Wraith Shroud | 5 seconds as a shade: blows pass through you and yours through them, but a fall or fire still hurts; costs sanity (90 s rest) |
+| Mara | honey bottle | Borrowed Dream | sanity to full; your spirits grow angrier (once a day, even across a relog) |
+| Banshee | bell | Death Wail | anywhere in your inventory: below 3 hearts it throws hostiles back, slowed and blinded, once a day; it keens 3 seconds before a spirit's assault |
 | Revenant | iron sword | Grudge | in the off hand: stores the damage you take for 10 seconds; your next blow adds half of it, up to 10 |
-| Lost one | lantern | Way Back | use to mark, use again within 5 minutes to return, at a cost in sanity |
-| Domovoi | campfire | House Key | in the off hand, inside a shut, roofed room: spirits' events do not run; each one stopped wears the key (10 uses) |
-| Hoarder | emerald | Stash | holds a stack; in the off hand when you die, the stack stays with you and the stash is spent |
-| Demon | blaze powder | Bargain | all health at once; for 10 minutes two hearts fewer and angrier spirits |
-| Trickster | gold nugget | Trickster's Coin | wagers your next mob kill: its drops are doubled or lost, evenly |
+| Lost one | lantern | Lost Step | slip up to 8 blocks ahead, through a wall of a block or two, but not through obsidian, iron doors or bars, or bedrock; costs sanity (20 s rest) |
+| Domovoi | campfire | House Key | in the off hand, inside a shut, roofed room: spirits' events do not run; each one stopped wears the key (16 uses) |
+| Hoarder | emerald | Stash | holds a stack; in the off hand when you die, the stack stays with you, even through a server stop, and the stash is spent (not with `keepInventory`) |
+| Demon | blaze powder | Bargain | all health at once and 30 seconds of strength II, resistance II and fire proof; then 10 minutes with two hearts fewer and angrier spirits |
+| Trickster | gold nugget | Trickster's Coin | wagers your next mob kill: its drops and experience are doubled or lost, evenly; each win in a row pays one more (up to x5), a loss starts over |

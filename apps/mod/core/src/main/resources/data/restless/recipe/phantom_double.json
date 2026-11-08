@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "restless:mimic_essence",
-    "minecraft:leather"
+    "restless:phantom_essence",
+    "minecraft:phantom_membrane"
   ],
   "result": {
-    "id": "restless:mimic_double",
+    "id": "restless:phantom_double",
     "count": 1
   }
 }

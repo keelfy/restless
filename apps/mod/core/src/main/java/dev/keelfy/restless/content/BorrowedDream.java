@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 /** The mara's charm: sanity back to full at once, paid for by the holder's spirits being angrier. Once a day. */
@@ -24,16 +25,21 @@ public final class BorrowedDream extends Item {
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
+        ItemStack dream = player.getItemInHand(hand);
+        if (!Rest.ready(dream, level)) {
+            if (player instanceof ServerPlayer server) {
+                server.sendSystemMessage(Component.translatable("message.restless.charm_resting"), true);
+            }
+            return InteractionResult.FAIL;
+        }
         if (player instanceof ServerPlayer server) {
+            Rest.start(server, dream, Config.section("charms").integer("dream_cooldown_ticks"));
             Sanity.set(server, 1.0);
             Anger.provoke(server, Anger.Source.DREAM, player.blockPosition());
             server.sendSystemMessage(Component.translatable("message.restless.dream_taken"), true);
         }
         level.playSound(
                 null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0f, 0.5f);
-        player.getCooldowns()
-                .addCooldown(
-                        player.getItemInHand(hand), Config.section("charms").integer("dream_cooldown_ticks"));
         return InteractionResult.SUCCESS_SERVER;
     }
 }

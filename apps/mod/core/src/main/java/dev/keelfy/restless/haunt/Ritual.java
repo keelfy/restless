@@ -1,6 +1,5 @@
 package dev.keelfy.restless.haunt;
 
-import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Altar;
 import dev.keelfy.restless.content.Content;
@@ -12,11 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -175,11 +173,11 @@ public final class Ritual {
         clear(level, altar);
         HauntData.get(level.getServer()).change(spirit.haunting().uuid(), h -> null);
         Location.forget(spirit.haunting().uuid());
-        Identifier essence = Identifier.fromNamespaceAndPath(
-                Restless.MOD_ID, spirit.haunting().spirit() + "_essence");
-        Optional<Item> item = BuiltInRegistries.ITEM.getOptional(essence);
-        item.ifPresent(i -> level.addFreshEntity(
-                new ItemEntity(level, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, new ItemStack(i))));
+        Supplier<Item> essence = Content.ESSENCE.get(spirit.haunting().spirit());
+        if (essence != null) {
+            level.addFreshEntity(new ItemEntity(
+                    level, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, new ItemStack(essence.get())));
+        }
         level.sendParticles(
                 ParticleTypes.SOUL_FIRE_FLAME,
                 altar.getX() + 0.5,

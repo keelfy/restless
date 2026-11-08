@@ -1,6 +1,5 @@
 package dev.keelfy.restless.haunt;
 
-import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.spirit.Story;
@@ -9,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -146,10 +146,11 @@ public final class Graves {
         data.putGrave(spirit.uuid(), null);
         Location.forget(spirit.uuid());
         Vec3 above = Vec3.atCenterOf(pos).add(0, 0.8, 0);
-        BuiltInRegistries.ITEM
-                .getOptional(Identifier.fromNamespaceAndPath(Restless.MOD_ID, spirit.spirit() + "_essence"))
-                .ifPresent(essence -> level.addFreshEntity(new ItemEntity(
-                        level, above.x, above.y, above.z, new ItemStack(essence, config.integer("essence")))));
+        Supplier<Item> essence = Content.ESSENCE.get(spirit.spirit());
+        if (essence != null) {
+            level.addFreshEntity(new ItemEntity(
+                    level, above.x, above.y, above.z, new ItemStack(essence.get(), config.integer("essence"))));
+        }
         ExperienceOrb.award(level, above, config.integer("experience"));
         level.sendParticles(ParticleTypes.END_ROD, above.x, above.y, above.z, 30, 0.3, 0.8, 0.3, 0.03);
         level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.BLOCKS, 1.0f, 0.7f);

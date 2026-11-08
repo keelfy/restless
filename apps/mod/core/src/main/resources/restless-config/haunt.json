@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "director": {
     "check_interval_ticks": 20,
     "default_spirits": 1,
@@ -219,22 +219,27 @@
     "bless_ticks": 12000
   },
   "charms": {
-    "face_ticks": 1200,
+    "face_ticks": 500,
+    "face_noise_radius": 6,
     "face_radius": 24,
     "face_cooldown_ticks": 2400,
     "wail_health": 6.0,
     "wail_radius": 8,
     "wail_knockback": 2.0,
     "wail_cooldown_ticks": 24000,
+    "wail_dazzle_ticks": 60,
+    "wail_warn_ticks": 60,
     "bargain_ticks": 12000,
-    "way_ticks": 6000,
-    "way_cooldown_ticks": 600,
-    "way_sanity_cost": 0.25,
-    "house_uses": 10,
+    "bargain_boost_ticks": 600,
+    "step_distance": 8.0,
+    "step_cooldown_ticks": 400,
+    "step_sanity_cost": 0.1,
+    "shroud_ticks": 100,
+    "shroud_cooldown_ticks": 1800,
+    "shroud_sanity_cost": 0.2,
+    "house_uses": 16,
     "stone_slowness": 1,
-    "cloak_dark_light": 4,
-    "cloak_notice": 6,
-    "cloak_bright_light": 12,
+    "stone_mining_bonus": 0.8,
     "double_ticks": 160,
     "double_radius": 16,
     "double_cooldown_ticks": 1200,
@@ -245,14 +250,16 @@
     "house_cells": 400,
     "coin_ticks": 12000,
     "coin_cooldown_ticks": 1200,
-    "coin_odds": 0.5
+    "coin_odds": 0.5,
+    "coin_streak_cap": 3
   },
   "artifacts": {
     "amulet_radius": 12,
     "amulet_cooldown_ticks": 40,
     "eye_radius": 32,
     "eye_ticks": 200,
-    "eye_cooldown_ticks": 1200
+    "eye_cooldown_ticks": 1200,
+    "eye_column_height": 3.0
   },
   "grave": {
     "check_ticks": 20,

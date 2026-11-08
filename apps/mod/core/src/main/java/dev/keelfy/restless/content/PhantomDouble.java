@@ -15,11 +15,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
 /**
- * The mimic's charm: a false copy of the holder stands where they are for a few seconds, and every hostile thing near
+ * The phantom's charm: a false copy of the holder stands where they are for a few seconds, and every hostile thing near
  * goes for it. Other players see the copy too.
  */
-public final class MimicDouble extends Item {
-    public MimicDouble(Item.Properties properties) {
+public final class PhantomDouble extends Item {
+    public PhantomDouble(Item.Properties properties) {
         super(properties);
     }
 

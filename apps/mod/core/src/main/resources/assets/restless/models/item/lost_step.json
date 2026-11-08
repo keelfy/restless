@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "restless:item/dark_cloak"
+    "layer0": "restless:item/lost_step"
   }
 }

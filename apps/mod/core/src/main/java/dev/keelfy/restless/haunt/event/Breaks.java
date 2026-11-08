@@ -24,8 +24,8 @@ public final class Breaks {
     }
 
     static void mark(ServerPlayer player) {
-        long lapse = player.level().getGameTime()
-                + Config.event("phantom_break").integer("max_age_ticks");
+        long lapse =
+                player.level().getGameTime() + Config.event("phantom_break").integer("max_age_ticks");
         MARKED.put(player.getUUID(), lapse);
     }
 

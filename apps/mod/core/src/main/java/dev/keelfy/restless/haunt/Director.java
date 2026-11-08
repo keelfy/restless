@@ -2,6 +2,7 @@ package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;
@@ -116,7 +117,7 @@ public final class Director {
     }
 
     /** How a due spirit's turn ended. */
-    private enum Outcome {
+    public enum Outcome {
         /** An event ran. */
         FIRED,
         /** A ward stopped the event: the spirit was beaten, so it waits out a full cooldown. */
@@ -267,10 +268,22 @@ public final class Director {
         return Optional.ofNullable(acted[0]);
     }
 
-    private static Outcome fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
+    /** Runs an event on a player unless a ward stops it; an assault waits out a carried wail first. */
+    public static Outcome fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
         if (Wards.stops(player, event)) {
             Wards.blocked(player);
             return Outcome.WARDED;
+        }
+        if (event.tags().contains(EventTag.ASSAULT) && Charms.warn(player, at)) {
+            // A wail keens first; the player has the warning's length to act, and wards set up in it still count.
+            Scheduler.later(player, Config.section("charms").integer("wail_warn_ticks"), p -> {
+                if (Wards.stops(p, event)) {
+                    Wards.blocked(p);
+                } else if (fire(p, event, at)) {
+                    Journal.unlock(p, Notebook.Chapter.HAUNTED);
+                }
+            });
+            return Outcome.FIRED;
         }
         if (!fire(player, event, at)) {
             return Outcome.NOTHING;

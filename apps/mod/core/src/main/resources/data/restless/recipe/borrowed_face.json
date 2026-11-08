@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "restless:phantom_essence",
-    "minecraft:phantom_membrane"
+    "restless:mimic_essence",
+    "minecraft:leather"
   ],
   "result": {
     "id": "restless:borrowed_face",

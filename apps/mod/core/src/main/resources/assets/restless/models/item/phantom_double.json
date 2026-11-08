@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "restless:item/mimic_double"
+    "layer0": "restless:item/phantom_double"
   }
 }

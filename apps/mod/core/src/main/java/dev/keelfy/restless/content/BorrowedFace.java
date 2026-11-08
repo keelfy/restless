@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
-/** The phantom's charm: hostile things take the holder for one of their own until the holder strikes. */
+/** The mimic's charm: hostile things take the holder for one of their own until the holder strikes. */
 public final class BorrowedFace extends Item {
     public BorrowedFace(Item.Properties properties) {
         super(properties);

@@ -1,6 +1,7 @@
 package dev.keelfy.restless.content;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.platform.Platform;
@@ -133,27 +134,22 @@ public final class Content {
                     key -> new BlockEntityType<>(AltarEntity::new, Set.of(ALTAR.get())));
     public static final Supplier<Item> HOLY_WATER = item("holy_water", p -> new Item(p.stacksTo(16)));
     public static final Supplier<Item> MIRROR = item("mirror", p -> new Item(p.stacksTo(16)));
-    /** A banished spirit drops the essence named after its type: {@code <type>_essence}. */
-    public static final Supplier<Item> POLTERGEIST_ESSENCE = item("poltergeist_essence", Item::new);
-
-    public static final Supplier<Item> SHADE_ESSENCE = item("shade_essence", Item::new);
-    /** The essences of every other type; the charms made of them are below. */
-    public static final List<Supplier<Item>> ESSENCES = List.of(
-                    "nix",
-                    "phantom",
-                    "mimic",
-                    "wraith",
-                    "mara",
-                    "banshee",
-                    "revenant",
-                    "lost_one",
-                    "domovoi",
-                    "hoarder",
-                    "demon",
-                    "trickster")
-            .stream()
-            .map(spirit -> item(spirit + "_essence", Item::new))
-            .toList();
+    /** A banished spirit drops the essence named after its type: {@code <type>_essence}. Keyed by spirit id. */
+    public static final Map<String, Supplier<Item>> ESSENCE = essences(
+            "poltergeist",
+            "shade",
+            "nix",
+            "phantom",
+            "mimic",
+            "wraith",
+            "mara",
+            "banshee",
+            "revenant",
+            "lost_one",
+            "domovoi",
+            "hoarder",
+            "demon",
+            "trickster");
 
     /** Marks the player; hostile things look past them, see {@link Charms#unseen}. */
     public static final Supplier<MobEffect> BORROWED_FACE = Platform.get()
@@ -172,32 +168,43 @@ public final class Content {
                         AttributeModifier.Operation.ADD_VALUE);
                 return effect;
             });
-    /** Hostiles near the holder look to their double instead, see {@link MimicDouble}. */
+    /** Hostiles near the holder look to their double instead, see {@link PhantomDouble}. */
     public static final Supplier<MobEffect> DECOY = Platform.get()
             .register(BuiltInRegistries.MOB_EFFECT, "decoy", key -> new Pact(MobEffectCategory.BENEFICIAL, 0xB08050));
+    /** Blows pass through the holder and through what they strike, see {@link Charms#hurt}. */
+    public static final Supplier<MobEffect> PHASED = Platform.get()
+            .register(BuiltInRegistries.MOB_EFFECT, "phased", key -> new Pact(MobEffectCategory.BENEFICIAL, 0x8FA0B8));
     /** The next kill of a mob is wagered, see {@link TricksterCoin}. */
     public static final Supplier<MobEffect> GAMBLE = Platform.get()
             .register(BuiltInRegistries.MOB_EFFECT, "gamble", key -> new Pact(MobEffectCategory.NEUTRAL, 0xF0BE28));
+    /** The game time a charm rests until, see {@link Rest}. */
+    public static final Supplier<DataComponentType<Long>> REST_UNTIL =
+            component("rest_until", Codec.LONG, ByteBufCodecs.VAR_LONG);
+    /** How far the trickster's coin has run its luck, see {@link Luck}. */
+    public static final Supplier<DataComponentType<Luck>> LUCK = component(
+            "luck",
+            RecordCodecBuilder.create(i -> i.group(
+                            Codec.INT.fieldOf("streak").forGetter(Luck::streak),
+                            Codec.LONG.fieldOf("at").forGetter(Luck::at))
+                    .apply(i, Luck::new)),
+            StreamCodec.composite(ByteBufCodecs.VAR_INT, Luck::streak, ByteBufCodecs.VAR_LONG, Luck::at, Luck::new));
     /** What a stash holds. */
     public static final Supplier<DataComponentType<ItemContainerContents>> STASHED =
             component("stashed", ItemContainerContents.CODEC, ItemContainerContents.STREAM_CODEC);
-    /** Where a way back leads, and until when. */
-    public static final Supplier<DataComponentType<WayBack.Mark>> MARK =
-            component("mark", WayBack.Mark.CODEC, WayBack.Mark.STREAM_CODEC);
 
     public static final Supplier<Item> BORROWED_FACE_ITEM = item("borrowed_face", p -> new BorrowedFace(p.stacksTo(1)));
     public static final Supplier<Item> DEATH_WAIL = item("death_wail", p -> new DeathWail(p.stacksTo(1)));
     public static final Supplier<Item> STASH = item("stash", p -> new Stash(p.stacksTo(1)));
     public static final Supplier<Item> BARGAIN = item("bargain", p -> new Bargain(p.stacksTo(1)));
-    public static final Supplier<Item> WAY_BACK = item("way_back", p -> new WayBack(p.stacksTo(1)));
+    public static final Supplier<Item> LOST_STEP = item("lost_step", p -> new LostStep(p.stacksTo(1)));
     /** Held in the off hand; what they do is in {@link Charms}. */
     public static final Supplier<Item> DROWNED_STONE = item("drowned_stone", p -> new Item(p.stacksTo(1)));
 
-    public static final Supplier<Item> DARK_CLOAK = item("dark_cloak", p -> new Item(p.stacksTo(1)));
+    public static final Supplier<Item> WRAITH_SHROUD = item("wraith_shroud", p -> new WraithShroud(p.stacksTo(1)));
     public static final Supplier<Item> GRUDGE = item("grudge", p -> new Item(p.stacksTo(1)));
     public static final Supplier<Item> HOUSE_KEY = item(
             "house_key", p -> new Item(p.durability(Config.section("charms").integer("house_uses"))));
-    public static final Supplier<Item> MIMIC_DOUBLE = item("mimic_double", p -> new MimicDouble(p.stacksTo(1)));
+    public static final Supplier<Item> PHANTOM_DOUBLE = item("phantom_double", p -> new PhantomDouble(p.stacksTo(1)));
     public static final Supplier<Item> BORROWED_DREAM = item("borrowed_dream", p -> new BorrowedDream(p.stacksTo(1)));
     public static final Supplier<Item> TRICKSTER_COIN = item("trickster_coin", p -> new TricksterCoin(p.stacksTo(1)));
     public static final Supplier<Item> TELEKINESIS_AMULET =
@@ -259,6 +266,14 @@ public final class Content {
             Platform.get().register(BuiltInRegistries.PARTICLE_TYPE, "mist", key -> new SimpleParticleType(false) {});
 
     private Content() {}
+
+    private static Map<String, Supplier<Item>> essences(String... spirits) {
+        Map<String, Supplier<Item>> found = new java.util.LinkedHashMap<>();
+        for (String spirit : spirits) {
+            found.put(spirit, item(spirit + "_essence", Item::new));
+        }
+        return java.util.Collections.unmodifiableMap(found);
+    }
 
     private static Supplier<Item> item(String name, java.util.function.Function<Item.Properties, Item> factory) {
         return Platform.get()
@@ -334,26 +349,24 @@ public final class Content {
                 ALTAR_ITEM,
                 HOLY_WATER,
                 MIRROR,
-                POLTERGEIST_ESSENCE,
-                SHADE_ESSENCE,
                 TELEKINESIS_AMULET,
                 DARK_EYE,
                 JOURNAL,
                 DIARY_PAGE,
                 GRAVESTONE_ITEM,
                 TEST_ITEM));
-        tabItems.addAll(ESSENCES);
+        tabItems.addAll(ESSENCE.values());
         tabItems.addAll(List.of(
                 BORROWED_FACE_ITEM,
                 DEATH_WAIL,
                 STASH,
                 BARGAIN,
-                WAY_BACK,
+                LOST_STEP,
                 DROWNED_STONE,
-                DARK_CLOAK,
+                WRAITH_SHROUD,
                 GRUDGE,
                 HOUSE_KEY,
-                MIMIC_DOUBLE,
+                PHANTOM_DOUBLE,
                 BORROWED_DREAM,
                 TRICKSTER_COIN));
         Platform.get()

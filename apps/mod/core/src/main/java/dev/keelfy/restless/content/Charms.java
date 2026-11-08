@@ -1,6 +1,10 @@
 package dev.keelfy.restless.content;
 
+import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.HauntData;
+import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Session;
 import dev.keelfy.restless.haunt.Wards;
 import java.util.ArrayList;
@@ -10,13 +14,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -24,13 +33,19 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -39,8 +54,7 @@ import org.jspecify.annotations.Nullable;
  * held work from the off hand only, so no more than one answers at a time.
  */
 public final class Charms {
-    /** What a stash saved from its holder's death, until the holder is back; lost if the server stops before. */
-    private static final Map<UUID, ItemStack> KEPT = Session.SERVER.keep(new HashMap<>());
+    private static final Identifier STONE_MINING = Identifier.fromNamespaceAndPath(Restless.MOD_ID, "drowned_stone");
 
     private Charms() {}
 
@@ -48,9 +62,30 @@ public final class Charms {
         return BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect.get());
     }
 
+    private static boolean shade(@Nullable Entity entity) {
+        return entity instanceof LivingEntity living && living.hasEffect(holder(Content.PHASED));
+    }
+
     private static boolean offhand(Entity entity, Supplier<Item> item) {
         return entity instanceof LivingEntity living
                 && living.getItemInHand(InteractionHand.OFF_HAND).is(item.get());
+    }
+
+    /** The first stack of {@code item} the player carries anywhere, off hand included; empty if none. */
+    private static ItemStack carried(Entity entity, Supplier<Item> item) {
+        if (!(entity instanceof ServerPlayer player)) {
+            return ItemStack.EMPTY;
+        }
+        if (player.getOffhandItem().is(item.get())) {
+            return player.getOffhandItem();
+        }
+        for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
+            ItemStack stack = player.getInventory().getItem(slot);
+            if (stack.is(item.get())) {
+                return stack;
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     /** What the grudge has stored and until when. */
@@ -60,17 +95,27 @@ public final class Charms {
 
     /** Call before anything takes damage; returns the amount to deal, which a held grudge may raise. */
     public static float hurt(Entity victim, DamageSource source, float amount) {
+        // A shade is hit by nothing and hits nothing, but the world still hurts it: a blow is stopped only when someone
+        // struck it, and what ignores bodies altogether, the void and the like, still reaches it.
+        boolean blow = source.getEntity() != null || source.getDirectEntity() != null;
+        if (blow
+                && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)
+                && (shade(victim) || shade(source.getEntity()))) {
+            return 0.0f;
+        }
         float dealt = amount;
         if (source.getEntity() instanceof ServerPlayer attacker && attacker.hasEffect(holder(Content.BORROWED_FACE))) {
             attacker.removeEffect(holder(Content.BORROWED_FACE));
             attacker.sendSystemMessage(Component.translatable("message.restless.face_off"), true);
         }
-        if (victim instanceof ServerPlayer player && offhand(player, Content.DEATH_WAIL)) {
+        if (victim instanceof ServerPlayer player) {
+            ItemStack wail = carried(player, Content.DEATH_WAIL);
             Config.Section config = Config.section("charms");
-            ItemStack wail = player.getOffhandItem();
-            if (!player.getCooldowns().isOnCooldown(wail) && player.getHealth() - amount < config.num("wail_health")) {
+            if (!wail.isEmpty()
+                    && Rest.ready(wail, player.level())
+                    && player.getHealth() - amount < config.num("wail_health")) {
                 scream(player, config);
-                player.getCooldowns().addCooldown(wail, config.integer("wail_cooldown_ticks"));
+                Rest.start(player, wail, config.integer("wail_cooldown_ticks"));
             }
         }
         return grudge(victim, source, dealt);
@@ -116,25 +161,77 @@ public final class Charms {
     /** What the charms in a player's off hand do for the moment. */
     public static void held(ServerPlayer player) {
         Config.Section config = Config.section("charms");
-        if (offhand(player, Content.DROWNED_STONE)) {
+        boolean stone = offhand(player, Content.DROWNED_STONE);
+        if (stone) {
             // Water is its own: breath without end there, and on dry ground the stone is a weight.
             if (player.isInWater()) {
                 player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 40, 0, true, false));
+                player.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 40, 0, true, false));
             } else {
                 player.addEffect(
                         new MobEffectInstance(MobEffects.SLOWNESS, 40, config.integer("stone_slowness"), true, false));
             }
         }
-        if (offhand(player, Content.DARK_CLOAK) && light(player) >= config.integer("cloak_bright_light")) {
-            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 0, true, false));
+        AttributeInstance mining = player.getAttribute(Attributes.SUBMERGED_MINING_SPEED);
+        if (mining != null) {
+            if (stone && player.isUnderWater()) {
+                mining.addOrUpdateTransientModifier(new AttributeModifier(
+                        STONE_MINING, config.num("stone_mining_bonus"), AttributeModifier.Operation.ADD_VALUE));
+            } else {
+                mining.removeModifier(STONE_MINING);
+            }
         }
     }
 
-    private static int light(Entity entity) {
-        return entity.level().getMaxLocalRawBrightness(entity.blockPosition());
+    /** Whether a held stone keeps a nix off its holder: a spirit of water does not drown its own. */
+    public static boolean spared(ServerPlayer player, HauntEvent event) {
+        return event.tags().contains(EventTag.WATER) && offhand(player, Content.DROWNED_STONE);
     }
 
-    /** Call when a wagered mob dies and its drops are settled: the coin doubles them or takes them all. */
+    /**
+     * Call before a spirit's assault lands: a carried wail keens from the spirit, and true means the event must wait
+     * the warning out.
+     */
+    public static boolean warn(ServerPlayer player, @Nullable Vec3 at) {
+        if (carried(player, Content.DEATH_WAIL).isEmpty()) {
+            return false;
+        }
+        Vec3 from = at == null ? player.position() : at;
+        player.level()
+                .playSound(null, from.x, from.y, from.z, SoundEvents.GHAST_SCREAM, SoundSource.HOSTILE, 2.0f, 0.5f);
+        return true;
+    }
+
+    /** Call when a player opens a container or breaks a block: a face is dropped if a hostile close by would see it. */
+    public static void noise(ServerPlayer player) {
+        if (!player.hasEffect(holder(Content.BORROWED_FACE))) {
+            return;
+        }
+        double radius = Config.section("charms").num("face_noise_radius");
+        boolean seen = !player.level()
+                .getEntitiesOfClass(
+                        Mob.class,
+                        player.getBoundingBox().inflate(radius),
+                        m -> m instanceof Enemy && m.hasLineOfSight(player))
+                .isEmpty();
+        if (seen) {
+            player.removeEffect(holder(Content.BORROWED_FACE));
+            player.sendSystemMessage(Component.translatable("message.restless.face_off"), true);
+        }
+    }
+
+    /** Call when a player uses a block. */
+    public static void used(ServerPlayer player, BlockPos pos) {
+        if (player.level().getBlockEntity(pos) instanceof Container
+                || player.level().getBlockState(pos).is(Blocks.ENDER_CHEST)) {
+            noise(player);
+        }
+    }
+
+    /**
+     * Call when a wagered mob dies and its drops are settled: the coin multiplies them and the experience, or takes
+     * them all. Each win lifts the next one's payout, see {@link Luck}.
+     */
     public static void drops(@Nullable Entity killer, LivingEntity dead, Collection<ItemEntity> drops) {
         if (!(killer instanceof ServerPlayer player)
                 || !(dead instanceof Mob)
@@ -142,23 +239,41 @@ public final class Charms {
             return;
         }
         player.removeEffect(holder(Content.GAMBLE));
-        boolean won = player.getRandom().nextDouble() < Config.section("charms").num("coin_odds");
+        Config.Section config = Config.section("charms");
+        ItemStack coin = carried(player, Content.TRICKSTER_COIN);
+        long now = player.level().getGameTime();
+        Luck luck = coin.getOrDefault(Content.LUCK.get(), Luck.NONE);
+        boolean won = player.getRandom().nextDouble() < config.num("coin_odds");
         if (won) {
+            int times = luck.payout(now);
             List<ItemEntity> twins = new ArrayList<>();
             for (ItemEntity drop : drops) {
-                twins.add(new ItemEntity(
-                        dead.level(),
-                        drop.getX(),
-                        drop.getY(),
-                        drop.getZ(),
-                        drop.getItem().copy()));
+                for (int i = 1; i < times; i++) {
+                    twins.add(new ItemEntity(
+                            dead.level(),
+                            drop.getX(),
+                            drop.getY(),
+                            drop.getZ(),
+                            drop.getItem().copy()));
+                }
             }
             drops.addAll(twins);
+            if (dead.level() instanceof ServerLevel level) {
+                ExperienceOrb.award(level, dead.position(), dead.getExperienceReward(level, player) * (times - 1));
+            }
+            luck = luck.won(now, config.integer("coin_streak_cap"));
         } else {
             drops.clear();
+            luck = luck.lost(now);
+        }
+        if (!coin.isEmpty()) {
+            coin.set(Content.LUCK.get(), luck);
         }
         player.sendSystemMessage(
-                Component.translatable(won ? "message.restless.coin_won" : "message.restless.coin_lost"), true);
+                won
+                        ? Component.translatable("message.restless.coin_won", luck.live(now))
+                        : Component.translatable("message.restless.coin_lost"),
+                true);
     }
 
     /** Whether a held house key shelters the player from a spirit's event, and wears from it. */
@@ -183,6 +298,9 @@ public final class Charms {
                         e -> e instanceof Enemy)) {
             Vec3 away = new Vec3(mob.getX() - player.getX(), 0, mob.getZ() - player.getZ()).normalize();
             mob.push(away.x * strength, 0.4, away.z * strength);
+            int dazzle = config.integer("wail_dazzle_ticks");
+            mob.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, dazzle, 2));
+            mob.addEffect(new MobEffectInstance(MobEffects.DARKNESS, dazzle, 0));
         }
         player.level()
                 .playSound(
@@ -196,31 +314,26 @@ public final class Charms {
 
     /** Call when a hostile is about to take a new target; true means it must not take this one. */
     public static boolean unseen(LivingEntity looker, LivingEntity target) {
-        if (!(looker instanceof Enemy)) {
-            return false;
-        }
-        if (target.hasEffect(holder(Content.BORROWED_FACE)) || target.hasEffect(holder(Content.DECOY))) {
-            return true;
-        }
-        // The cloak hides the holder in the dark from all but what stands close.
-        Config.Section config = Config.section("charms");
-        return offhand(target, Content.DARK_CLOAK)
-                && light(target) <= config.integer("cloak_dark_light")
-                && looker.distanceToSqr(target) > config.num("cloak_notice") * config.num("cloak_notice");
+        return looker instanceof Enemy
+                && (target.hasEffect(holder(Content.BORROWED_FACE)) || target.hasEffect(holder(Content.DECOY)));
     }
 
     /** Call when a player dies, before the drops: a filled stash in the off hand keeps its stack for the player. */
     public static void died(ServerPlayer player) {
         ItemStack stash = player.getOffhandItem();
-        if (!stash.is(Content.STASH.get())) {
+        if (!stash.is(Content.STASH.get()) || keepsInventory(player)) {
             return;
         }
         ItemStack held = stashed(stash);
         if (held.isEmpty()) {
             return;
         }
-        KEPT.put(player.getUUID(), held.copy());
+        HauntData.get(player.level().getServer()).keep(player.getUUID(), held);
         player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+    }
+
+    private static boolean keepsInventory(ServerPlayer player) {
+        return player.level().getGameRules().get(GameRules.KEEP_INVENTORY);
     }
 
     /** What the stash holds; empty if nothing. */
@@ -239,8 +352,8 @@ public final class Charms {
 
     /** Call when a player comes back after dying. */
     public static void respawned(ServerPlayer player) {
-        ItemStack kept = KEPT.remove(player.getUUID());
-        if (kept != null) {
+        ItemStack kept = HauntData.get(player.level().getServer()).takeKept(player.getUUID());
+        if (!kept.isEmpty()) {
             give(player, kept);
             player.sendSystemMessage(Component.translatable("message.restless.stash_kept"), true);
         }
