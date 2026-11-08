@@ -359,6 +359,8 @@ Tests: `AdvancedCharmGameTests`, one per charm, plus one that every upgrade matc
 - Mara's Cradle: a bed block; a personal skip (sanity and the owner's rest, not the world's time); the spawn point
   survives a broken bed once.
 
+**Built:** all five, with `content/Relics.java` as their one seam (the hooks are `Restless.onDeath`, `onWake`, `onSleepFinished`, `onRespawnPosition`). Where it differs from Part E: the Ferryman's Coin fades the holder in place for `relics.ferry_fade_ticks` (no teleport back), clearing effects and setting sanity to 0 at once; the Censer's "+1 essence only if no candle went out" is always met, since a candle lost any other way fails the ritual first; the Hoarder's Hollow store is its own saved 27 slots in `HauntData`, and a hoarder's item event takes from it with `relics.hollow_theft_chance`; the Cradle's "no world skip" is a cancelled `SleepFinishedTimeEvent` when every sleeper is in a cradle, and its spared spawn is the cradle's spot, once. Tests: `RelicGameTests`.
+
 ### Phase 6. The Requiem (Part F)
 
 1. **Reliquary** item: a component holding the set of type ids; insert by using an essence on it; refuses unknown or

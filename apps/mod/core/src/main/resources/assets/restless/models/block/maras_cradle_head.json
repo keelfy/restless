@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/template_bed_head",
+  "textures": {
+    "particle": "restless:block/maras_cradle",
+    "north": "restless:block/maras_cradle",
+    "east": "restless:block/maras_cradle",
+    "west": "restless:block/maras_cradle",
+    "up": "restless:block/maras_cradle",
+    "down": "restless:block/maras_cradle"
+  }
+}

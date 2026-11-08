@@ -7,6 +7,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.content.Advanced;
 import dev.keelfy.restless.content.Charms;
+import dev.keelfy.restless.content.Relics;
 import dev.keelfy.restless.content.Consumables;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Anger;
@@ -60,6 +61,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -118,6 +120,11 @@ public final class Restless {
     public static void onServerStopping() {
         Restore.flush();
         Session.SERVER.end();
+    }
+
+    /** Call when a living thing is about to die; true means it must not. */
+    public static boolean onDeath(LivingEntity dying, DamageSource source) {
+        return Relics.ferried(dying, source);
     }
 
     /** Call when a living thing dies; {@code killer} is whoever dealt the blow, if anyone. */
@@ -182,6 +189,21 @@ public final class Restless {
         return Consumables.sleepsAnyway(player);
     }
 
+    /** Call when a player wakes. */
+    public static void onWake(ServerPlayer player) {
+        Relics.woke(player);
+    }
+
+    /** Call when the sleepers would skip the night; true means it must not pass. */
+    public static boolean onSleepFinished(ServerLevel level) {
+        return Relics.keepsNight(level);
+    }
+
+    /** Call when a respawning player's destination is chosen; a non-null result replaces it. */
+    public static @Nullable TeleportTransition onRespawnPosition(ServerPlayer player, TeleportTransition chosen) {
+        return Relics.respawn(player, chosen);
+    }
+
     /** Call when a player says something in chat. */
     public static void onChat(ServerPlayer player, String line) {
         Divination.ask(player);
@@ -200,6 +222,9 @@ public final class Restless {
 
     /** Call before a player uses a block; true means the use must be cancelled. */
     public static boolean onUseBlock(Player player, InteractionHand hand, BlockPos pos) {
+        if (Relics.faded(player)) {
+            return true;
+        }
         Level level = player.level();
         if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
             Reactions.used(server, level.getBlockState(pos));

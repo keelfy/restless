@@ -5,6 +5,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Draughts;
 import dev.keelfy.restless.content.OmenCandle;
+import dev.keelfy.restless.content.Relics;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;
@@ -296,7 +297,22 @@ public final class Director {
             return Outcome.NOTHING;
         }
         Journal.unlock(player, Notebook.Chapter.HAUNTED);
+        hoard(player, event);
         return Outcome.FIRED;
+    }
+
+    /** A hoarder's event on belongings may also reach into the player's hollows, and take a stack from them. */
+    private static void hoard(ServerPlayer player, HauntEvent event) {
+        UUID id = Said.current();
+        if (id == null
+                || !event.tags().contains(EventTag.ITEMS)
+                || player.getRandom().nextDouble() >= Config.section("relics").num("hollow_theft_chance")) {
+            return;
+        }
+        HauntData.get(player.level().getServer())
+                .find(id)
+                .filter(h -> h.spirit().equals("hoarder"))
+                .ifPresent(h -> Relics.pilfer(player));
     }
 
     /** Runs an event with no spirit behind it; free-source events fall back to a random point around the player. */

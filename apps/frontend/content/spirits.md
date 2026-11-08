@@ -155,4 +155,4 @@ Banishing a spirit at an altar leaves one of its essence, and one more if it had
 | Demon | [Bargain](/items/charms#demon-bargain) | [Infernal Contract](/items/consumables#demon-infernal-contract) |
 | Trickster | [Trickster's Coin](/items/charms#trickster-tricksters-coin) | [Changeling Dust](/items/consumables#trickster-changeling-dust) |
 
-See [Items](/items) for how they work, [Advanced charms](/items/advanced) for what two essences make, and [Essences](/items/essences) for where each type is met.
+See [Items](/items) for how they work, [Advanced charms](/items/advanced) for what two essences make, [Relics](/items/relics) for what three make, and [Essences](/items/essences) for where each type is met.

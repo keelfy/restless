@@ -5,4 +5,5 @@ export default {
   charms: 'Charms',
   advanced: 'Advanced charms',
   consumables: 'Consumables',
+  relics: 'Relics',
 }

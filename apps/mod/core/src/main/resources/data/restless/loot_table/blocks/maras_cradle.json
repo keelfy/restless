@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "restless:maras_cradle",
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "restless:maras_cradle",
+            "state": {
+              "part": "head"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

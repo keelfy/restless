@@ -5,6 +5,7 @@ import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.WardBlock;
 import dev.keelfy.restless.content.WornWard;
+import dev.keelfy.restless.spirit.Clue;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -34,13 +35,19 @@ public final class Wards {
         Map<WardBlock.Kind, BlockPos> near = new EnumMap<>(WardBlock.Kind.class);
         int radius = Math.max(
                 Math.max(config.integer("lantern_radius"), config.integer("dreamcatcher_radius")),
-                Math.max(config.integer("charm_radius"), config.integer("scarecrow_radius")));
+                Math.max(
+                        Math.max(config.integer("charm_radius"), config.integer("scarecrow_radius")),
+                        Config.section("relics").integer("hollow_radius")));
         BlockPos at = player.blockPosition();
         Scan.each(level, at, radius, (pos, state) -> {
             if (state.getBlock() instanceof WardBlock ward && pos.distSqr(at) <= square(reach(config, ward.kind()))) {
                 near.putIfAbsent(ward.kind(), pos.immutable());
             }
         });
+        if (near.containsKey(WardBlock.Kind.HOLLOW)) {
+            hollowClue(player);
+            return true;
+        }
         if (near.containsKey(WardBlock.Kind.LANTERN)) {
             return true;
         }
@@ -58,6 +65,12 @@ public final class Wards {
         return Charms.keeps(player);
     }
 
+    /** What a hollow lantern gives for the event it blocked: one trait of a spirit near the player, in the journal. */
+    private static void hollowClue(ServerPlayer player) {
+        Divination.read(player, Clue.PLANCHETTE).ifPresent(reading -> Journal.note(
+                player, Notebook.Kind.PLANCHETTE, reading.spirit().haunting(), Divination.hint(reading.trait())));
+    }
+
     private static double square(int radius) {
         return (double) radius * radius;
     }
@@ -68,6 +81,7 @@ public final class Wards {
             case DREAMCATCHER -> config.integer("dreamcatcher_radius");
             case CHARM -> config.integer("charm_radius");
             case SCARECROW -> config.integer("scarecrow_radius");
+            case HOLLOW -> Config.section("relics").integer("hollow_radius");
         };
     }
 

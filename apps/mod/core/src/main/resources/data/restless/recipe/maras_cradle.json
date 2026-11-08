@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:mara_essence",
+    "restless:phantom_essence",
+    "restless:lost_one_essence",
+    "minecraft:white_bed",
+    "minecraft:amethyst_block"
+  ],
+  "result": {
+    "id": "restless:maras_cradle",
+    "count": 1
+  }
+}

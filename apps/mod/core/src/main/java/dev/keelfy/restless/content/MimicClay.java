@@ -32,6 +32,10 @@ public final class MimicClay extends Item {
         ItemStack clay = context.getItemInHand();
         ServerPlayer player = context.getPlayer() instanceof ServerPlayer p ? p : null;
         Look held = clay.get(Content.LOOK.get());
+        BlockState clicked = level.getBlockState(context.getClickedPos());
+        if (held != null && clicked.getBlock() instanceof HoardersHollow) {
+            return disguise(level, context.getClickedPos(), clicked, clay, held, player);
+        }
         if (held != null && !(player != null && player.isShiftKeyDown())) {
             return place(level, context, clay, held, player);
         }
@@ -49,6 +53,20 @@ public final class MimicClay extends Item {
                     Component.translatable(
                             "message.restless.clay_pressed", seen.getBlock().getName()),
                     true);
+        }
+        return InteractionResult.SUCCESS_SERVER;
+    }
+
+    /** A hoarder's hollow takes the look the clay holds. */
+    private static InteractionResult disguise(
+            ServerLevel level, BlockPos pos, BlockState state, ItemStack clay, Look look, ServerPlayer player) {
+        level.setBlock(pos, state.setValue(HoardersHollow.DISGUISED, true), 3);
+        if (level.getBlockEntity(pos) instanceof MimicBlockEntity entity) {
+            entity.setLook(look.state());
+        }
+        level.playSound(null, pos, SoundEvents.MUD_PLACE, SoundSource.BLOCKS, 1.0f, 0.8f);
+        if (player != null) {
+            clay.consume(1, player);
         }
         return InteractionResult.SUCCESS_SERVER;
     }

@@ -4,7 +4,7 @@ title: Items
 
 # Items
 
-Everything a spirit leaves behind is an **essence**, and nearly everything in this section is made from one. There are three tiers, each costing more essences than the last. The [tools](/items/tools) need none: salt, ash, the journal, the altar, the clue tools and the wards that keep spirits off.
+Everything a spirit leaves behind is an **essence**, and nearly everything in this section is made from one. There are four tiers, each costing more essences than the last. The [tools](/items/tools) need none: salt, ash, the journal, the altar, the clue tools and the wards that keep spirits off.
 
 | Tier | Made from | Used |
 | --- | --- | --- |
@@ -12,6 +12,7 @@ Everything a spirit leaves behind is an **essence**, and nearly everything in th
 | [Charm](/items/charms) | one essence + one common item | carried; works again and again, with a rest between uses |
 | [Advanced charm](/items/advanced) | a charm + the essence of another type | carried; the charm, but more, or different |
 | [Consumable](/items/consumables) | one essence + common items | spent as it is used; one essence makes several |
+| [Relic](/items/relics) | three essences of different types + rare finds | carried, placed or slept in; one of a kind, never spent |
 
 [Essences](/items/essences) says where they come from and how to call a spirit on purpose when you need a type you have not met.
 

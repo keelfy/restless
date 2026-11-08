@@ -31,7 +31,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * snuffing candles. Every candle lit and the offering in place at the end banishes it, and it leaves its essence. A
  * form the spirit's type does not take makes the ritual longer. A category no spirit is weak to enrages one of them
  * instead, snuffs every candle and makes it wary: it refuses the altar for a while, and grows toward evolving. Rituals
- * live in memory only, like every {@link Scheduler} task.
+ * live in memory only, like every {@link Scheduler} task. An Exorcist's Censer in the off hand shortens it, keeps the
+ * spirit from snuffing candles and from using anything but harmful events, and brings one more essence.
  */
 public final class Ritual {
     private Ritual() {}
@@ -75,7 +76,14 @@ public final class Ritual {
         }
         Sense.Spirit spirit = weak.get();
         boolean offForm = offForm(spirit.haunting(), held);
-        int total = waves(spirit.haunting(), held);
+        boolean censer = censed(player);
+        int total = waves(spirit.haunting(), held, censer);
+        if (censer) {
+            HauntData.get(level.getServer())
+                    .change(
+                            spirit.haunting().uuid(),
+                            h -> h.angered(Config.section("relics").num("censer_anger")));
+        }
         player.sendSystemMessage(
                 Component.translatable(offForm ? "message.restless.ritual_off_form" : "message.restless.ritual_begins"),
                 true);
@@ -84,7 +92,7 @@ public final class Ritual {
         Scheduler.repeat(player, 1, 1, (p, n) -> {
             int elapsed = n + 1;
             if (elapsed % waveTicks == 0
-                    && !wave(p, level, altar, held, candles, spirit, elapsed / waveTicks - 1, total)) {
+                    && !wave(p, level, altar, held, candles, spirit, elapsed / waveTicks - 1, total, censer)) {
                 return false;
             }
             if (elapsed % 2 == 0) {
@@ -102,10 +110,20 @@ public final class Ritual {
                 .isPresent();
     }
 
+    /** Whether the player holds the Exorcist's Censer in the off hand. */
+    static boolean censed(ServerPlayer player) {
+        return player.getOffhandItem().is(Content.EXORCISTS_CENSER.get());
+    }
+
     /** How many waves the ritual runs: longer against a grown spirit, and for a form it does not take. */
     public static int waves(HauntData.Haunting spirit, Altar.Held held) {
+        return waves(spirit, held, false);
+    }
+
+    /** As {@link #waves(HauntData.Haunting, Altar.Held)}; a censer shortens the base length. */
+    public static int waves(HauntData.Haunting spirit, Altar.Held held, boolean censer) {
         Config.Section config = Config.section("ritual");
-        return config.integer("waves")
+        return (censer ? Config.section("relics").integer("censer_waves") : config.integer("waves"))
                 + (spirit.evolved() ? Config.section("evolution").integer("extra_waves") : 0)
                 + (offForm(spirit, held) ? config.integer("off_form_waves") : 0);
     }
@@ -141,7 +159,8 @@ public final class Ritual {
             List<BlockPos> candles,
             Sense.Spirit spirit,
             int n,
-            int total) {
+            int total,
+            boolean censer) {
         Config.Section config = Config.section("ritual");
         BlockState state = level.getBlockState(altar);
         boolean laid =
@@ -153,29 +172,32 @@ public final class Ritual {
             return false;
         }
         if (n + 1 >= total) {
-            banish(player, level, altar, spirit);
+            banish(player, level, altar, spirit, censer);
             return false;
         }
         level.sendParticles(
                 ParticleTypes.SOUL, altar.getX() + 0.5, altar.getY() + 1.2, altar.getZ() + 0.5, 8, 0.4, 0.4, 0.4, 0.02);
-        if (player.getRandom().nextDouble() < config.num("snuff_chance")) {
+        if (!censer && player.getRandom().nextDouble() < config.num("snuff_chance")) {
             BlockPos candle = candles.get(player.getRandom().nextInt(candles.size()));
             AbstractCandleBlock.extinguish(null, level.getBlockState(candle), level, candle); // all lit: checked above
             player.sendSystemMessage(Component.translatable("message.restless.candle_snuffed"), true);
         }
         if (player.getRandom().nextDouble() < config.num("fury_chance")) {
-            Director.act(player, spirit.haunting(), spirit.at(), null);
+            Director.act(player, spirit.haunting(), spirit.at(), censer ? HauntTier.HARMFUL : null);
         }
         return true;
     }
 
-    private static void banish(ServerPlayer player, ServerLevel level, BlockPos altar, Sense.Spirit spirit) {
+    private static void banish(
+            ServerPlayer player, ServerLevel level, BlockPos altar, Sense.Spirit spirit, boolean censer) {
         clear(level, altar);
         HauntData data = HauntData.get(level.getServer());
+        // A censer's circle never lost a candle to the spirit, and a candle lost any other way fails the ritual first.
         int essences = essences(
-                spirit.haunting().evolved(),
-                Corruption.spots(data, spirit.haunting().uuid()),
-                Config.section("ritual").integer("blight_reward_spots"));
+                        spirit.haunting().evolved(),
+                        Corruption.spots(data, spirit.haunting().uuid()),
+                        Config.section("ritual").integer("blight_reward_spots"))
+                + (censer ? 1 : 0);
         data.change(spirit.haunting().uuid(), h -> null);
         Location.forget(spirit.haunting().uuid());
         Supplier<Item> essence = Content.ESSENCE.get(spirit.haunting().spirit());

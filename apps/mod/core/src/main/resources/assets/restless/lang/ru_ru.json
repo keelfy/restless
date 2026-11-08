@@ -404,5 +404,14 @@
   "message.restless.truth_spent": "Око уберегло это чтение от лжи.",
   "message.restless.hearth_open": "Такой сон нужен в закрытой комнате под крышей.",
   "message.restless.key_bound": "Ключ запомнил эту комнату.",
-  "item.restless.grave_satchel.holding": "Могильная сумка: стаков %s"
+  "item.restless.grave_satchel.holding": "Могильная сумка: стаков %s",
+  "block.restless.hollow_lantern": "Пустой фонарь",
+  "block.restless.hoarders_hollow": "Тайник скопидома",
+  "block.restless.maras_cradle": "Колыбель Мары",
+  "item.restless.ferrymans_coin": "Монета перевозчика",
+  "item.restless.exorcists_censer": "Кадило изгоняющего",
+  "effect.restless.faded": "Растворение",
+  "message.restless.ferried": "Вы растворяетесь, и вода вас не берёт.",
+  "message.restless.hollow_robbed": "Тайник стал легче.",
+  "container.restless.hoarders_hollow": "Тайник скопидома"
 }

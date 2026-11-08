@@ -295,11 +295,16 @@ public final class Content {
                                     .stacksTo(16)));
     public static final Supplier<Block> MIMIC_BLOCK =
             block("mimic_block", p -> new MimicBlock(p.strength(1.0f).noOcclusion()));
+    public static final Supplier<Block> HOARDERS_HOLLOW = block(
+            "hoarders_hollow",
+            p -> new HoardersHollow(p.strength(2.0f).sound(SoundType.WOOD).noOcclusion()));
+    public static final Supplier<Item> HOARDERS_HOLLOW_ITEM = blockItem("hoarders_hollow", HOARDERS_HOLLOW);
     public static final Supplier<BlockEntityType<?>> MIMIC_ENTITY = Platform.get()
             .register(
                     BuiltInRegistries.BLOCK_ENTITY_TYPE,
                     "mimic_block",
-                    key -> new BlockEntityType<>(MimicBlockEntity::new, Set.of(MIMIC_BLOCK.get())));
+                    key -> new BlockEntityType<>(
+                            MimicBlockEntity::new, Set.of(MIMIC_BLOCK.get(), HOARDERS_HOLLOW.get())));
     /** The pale figure of a sighting mark. */
     public static final Supplier<EntityType<?>> MARK_ENTITY = Platform.get()
             .register(
@@ -312,6 +317,30 @@ public final class Content {
                             .fireImmune()
                             .noLootTable()
                             .build(key));
+
+    /** What a player is while a ferryman's coin holds them off death, see {@link Relics}. */
+    public static final Supplier<MobEffect> FADED = Platform.get()
+            .register(BuiltInRegistries.MOB_EFFECT, "faded", key -> new Pact(MobEffectCategory.BENEFICIAL, 0xB9D8D0));
+    /** The relics: rare, made of three essences and a rare find, see {@link Relics}. */
+    public static final Supplier<Item> FERRYMANS_COIN = item("ferrymans_coin", p -> new Item(p.stacksTo(1)));
+
+    public static final Supplier<Item> EXORCISTS_CENSER = item("exorcists_censer", p -> new Item(p.stacksTo(1)));
+    public static final Supplier<Block> HOLLOW_LANTERN = block(
+            "hollow_lantern",
+            p -> new WardLantern(
+                    p.strength(1.0f).sound(SoundType.LANTERN).lightLevel(s -> 8).noOcclusion(),
+                    WardBlock.Kind.HOLLOW));
+    public static final Supplier<Item> HOLLOW_LANTERN_ITEM = blockItem("hollow_lantern", HOLLOW_LANTERN);
+    public static final Supplier<Block> MARAS_CRADLE = block(
+            "maras_cradle",
+            p -> new MarasCradle(p.strength(0.4f).sound(SoundType.WOOL).noOcclusion()));
+    public static final Supplier<Item> MARAS_CRADLE_ITEM = Platform.get()
+            .register(
+                    BuiltInRegistries.ITEM,
+                    "maras_cradle",
+                    key -> new BlockItem(
+                            MARAS_CRADLE.get(),
+                            new Item.Properties().setId(key).useBlockDescriptionPrefix().stacksTo(1)));
 
     /** Built by the world, never crafted: it drops nothing. */
     public static final Supplier<Block> GRAVESTONE = block(
@@ -500,7 +529,12 @@ public final class Content {
                 SIGHTING_MARK,
                 MIMIC_CLAY,
                 OMEN_CANDLE_ITEM,
-                DOMOVOIS_PORRIDGE_ITEM));
+                DOMOVOIS_PORRIDGE_ITEM,
+                FERRYMANS_COIN,
+                EXORCISTS_CENSER,
+                HOLLOW_LANTERN_ITEM,
+                HOARDERS_HOLLOW_ITEM,
+                MARAS_CRADLE_ITEM));
         Platform.get()
                 .registerTab(
                         "restless",

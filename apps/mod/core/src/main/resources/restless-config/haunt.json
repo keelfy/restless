@@ -404,6 +404,17 @@
     "black_rest_ticks": 12000,
     "black_sanity_cost": 0.4
   },
+  "relics": {
+    "hollow_radius": 24,
+    "ferry_fade_ticks": 200,
+    "ferry_rest_ticks": 72000,
+    "ferry_health": 0.5,
+    "censer_waves": 8,
+    "censer_anger": 0.1,
+    "hollow_theft_chance": 0.2,
+    "cradle_mara_chance": 0.25,
+    "cradle_wake_delay_ticks": 100
+  },
   "consumables": {
     "still_clear_ticks": 24000,
     "still_storm_ticks": 12000,

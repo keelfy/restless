@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "disguised=false": {
+      "model": "restless:block/hoarders_hollow"
+    },
+    "disguised=true": {
+      "model": "restless:block/hoarders_hollow"
+    }
+  }
+}

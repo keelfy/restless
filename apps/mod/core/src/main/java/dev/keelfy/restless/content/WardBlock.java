@@ -6,7 +6,8 @@ public interface WardBlock {
         LANTERN,
         DREAMCATCHER,
         CHARM,
-        SCARECROW
+        SCARECROW,
+        HOLLOW
     }
 
     Kind kind();

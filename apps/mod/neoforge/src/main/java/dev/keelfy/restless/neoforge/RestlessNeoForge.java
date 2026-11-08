@@ -48,6 +48,9 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerRespawnPositionEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
+import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
@@ -150,8 +153,31 @@ public final class RestlessNeoForge {
                 e.getNewPitch()));
         NeoForge.EVENT_BUS.addListener((LivingIncomingDamageEvent e) ->
                 e.setAmount(Restless.onHurt(e.getEntity(), e.getSource(), e.getAmount())));
-        NeoForge.EVENT_BUS.addListener(
-                (LivingDeathEvent e) -> Restless.onKill(e.getSource().getEntity(), e.getEntity()));
+        NeoForge.EVENT_BUS.addListener((LivingDeathEvent e) -> {
+            if (Restless.onDeath(e.getEntity(), e.getSource())) {
+                e.setCanceled(true);
+                return;
+            }
+            Restless.onKill(e.getSource().getEntity(), e.getEntity());
+        });
+        NeoForge.EVENT_BUS.addListener((PlayerWakeUpEvent e) -> {
+            if (e.getEntity() instanceof ServerPlayer player) {
+                Restless.onWake(player);
+            }
+        });
+        NeoForge.EVENT_BUS.addListener((SleepFinishedTimeEvent e) -> {
+            if (e.getLevel() instanceof ServerLevel level && Restless.onSleepFinished(level)) {
+                e.setCanceled(true);
+            }
+        });
+        NeoForge.EVENT_BUS.addListener((PlayerRespawnPositionEvent e) -> {
+            if (e.getEntity() instanceof ServerPlayer player) {
+                var replaced = Restless.onRespawnPosition(player, e.getTeleportTransition());
+                if (replaced != null) {
+                    e.setTeleportTransition(replaced);
+                }
+            }
+        });
         NeoForge.EVENT_BUS.addListener(
                 (LivingDropsEvent e) -> Restless.onDrops(e.getSource().getEntity(), e.getEntity(), e.getDrops()));
         NeoForge.EVENT_BUS.addListener((LivingChangeTargetEvent e) -> {

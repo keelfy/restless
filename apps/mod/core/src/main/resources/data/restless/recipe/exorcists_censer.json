@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:revenant_essence",
+    "restless:demon_essence",
+    "restless:wraith_essence",
+    "minecraft:soul_lantern",
+    "minecraft:blaze_rod"
+  ],
+  "result": {
+    "id": "restless:exorcists_censer",
+    "count": 1
+  }
+}

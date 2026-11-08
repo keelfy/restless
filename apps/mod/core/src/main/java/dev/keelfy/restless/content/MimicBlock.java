@@ -18,7 +18,7 @@ import org.jspecify.annotations.Nullable;
  * is a full cube whatever it looks like, breaks as slowly as what it shows, and when broken gives the clay back, still
  * pressed to the same look.
  */
-public final class MimicBlock extends Block implements EntityBlock {
+public class MimicBlock extends Block implements EntityBlock {
     public MimicBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }

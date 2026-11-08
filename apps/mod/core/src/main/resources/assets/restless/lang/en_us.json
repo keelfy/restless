@@ -404,5 +404,14 @@
   "message.restless.truth_spent": "The eye keeps this reading honest.",
   "message.restless.hearth_open": "A dream like this needs a shut, roofed room.",
   "message.restless.key_bound": "The key knows this room.",
-  "item.restless.grave_satchel.holding": "Grave Satchel: %s stacks"
+  "item.restless.grave_satchel.holding": "Grave Satchel: %s stacks",
+  "block.restless.hollow_lantern": "Hollow Lantern",
+  "block.restless.hoarders_hollow": "Hoarder's Hollow",
+  "block.restless.maras_cradle": "Mara's Cradle",
+  "item.restless.ferrymans_coin": "Ferryman's Coin",
+  "item.restless.exorcists_censer": "Exorcist's Censer",
+  "effect.restless.faded": "Faded",
+  "message.restless.ferried": "You fade, and the water does not take you.",
+  "message.restless.hollow_robbed": "A hollow is lighter than it was.",
+  "container.restless.hoarders_hollow": "Hoarder's Hollow"
 }

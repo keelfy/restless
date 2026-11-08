@@ -104,6 +104,11 @@ public final class Charms {
     public static float hurt(Entity victim, DamageSource source, float amount) {
         // A shade is hit by nothing and hits nothing, but the world still hurts it: a blow is stopped only when someone
         // struck it, and what ignores bodies altogether, the void and the like, still reaches it.
+        // A faded player is touched by nothing at all, and touches nothing.
+        if ((Relics.faded(victim) || Relics.faded(source.getEntity()))
+                && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            return 0.0f;
+        }
         boolean blow = source.getEntity() != null || source.getDirectEntity() != null;
         if (blow
                 && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)
@@ -399,6 +404,7 @@ public final class Charms {
         return looker instanceof Enemy
                 && (target.hasEffect(holder(Content.BORROWED_FACE))
                         || target.hasEffect(holder(Content.DECOY))
+                        || Relics.faded(target)
                         || Advanced.walking(target));
     }
 

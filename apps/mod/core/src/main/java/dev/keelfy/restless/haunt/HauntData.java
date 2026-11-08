@@ -18,6 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -27,6 +28,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
@@ -279,7 +281,16 @@ public final class HauntData extends SavedData {
                                     .forGetter(data -> data.menace),
                             Codec.unboundedMap(UUIDUtil.STRING_CODEC, ItemStack.CODEC)
                                     .optionalFieldOf("kept", Map.of())
-                                    .forGetter(data -> data.kept))
+                                    .forGetter(data -> data.kept),
+                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, ItemContainerContents.CODEC)
+                                    .optionalFieldOf("hollow", Map.of())
+                                    .forGetter(data -> data.hollow),
+                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, GlobalPos.CODEC)
+                                    .optionalFieldOf("cradles", Map.of())
+                                    .forGetter(data -> data.cradles),
+                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, GlobalPos.CODEC)
+                                    .optionalFieldOf("cradle_lost", Map.of())
+                                    .forGetter(data -> data.lost))
                     .apply(
                             i,
                             (players,
@@ -292,7 +303,10 @@ public final class HauntData extends SavedData {
                                     hardcore,
                                     said,
                                     menace,
-                                    kept) -> {
+                                    kept,
+                                    hollow,
+                                    cradles,
+                                    lost) -> {
                                 HauntData data = new HauntData(players, territorial, graves, sanity, notebooks, blight);
                                 journal.forEach((player, entries) -> {
                                     List<Notebook.Note> notes = new ArrayList<>();
@@ -311,6 +325,9 @@ public final class HauntData extends SavedData {
                                 said.forEach((speaker, events) -> data.said.put(speaker, new HashMap<>(events)));
                                 data.menace.putAll(menace);
                                 data.kept.putAll(kept);
+                                data.hollow.putAll(hollow);
+                                data.cradles.putAll(cradles);
+                                data.lost.putAll(lost);
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -348,6 +365,12 @@ public final class HauntData extends SavedData {
     private final Map<UUID, Menace> menace = new HashMap<>();
     /** What a charm saved from a player's death, until the player is back. Keyed by player. */
     private final Map<UUID, ItemStack> kept = new HashMap<>();
+    /** What each player has put in their hoarder's hollows, which share it. Keyed by player. */
+    private final Map<UUID, ItemContainerContents> hollow = new HashMap<>();
+    /** The cradle each player last slept in, keyed by player. */
+    private final Map<UUID, GlobalPos> cradles = new HashMap<>();
+    /** The cradle a player's spawn point stood on when it was broken, until the spawn has used it once. */
+    private final Map<UUID, GlobalPos> lost = new HashMap<>();
     /**
      * Decided the first time anyone asks and never again, so changing the config later does not flip a world; null
      * until then.
@@ -406,6 +429,49 @@ public final class HauntData extends SavedData {
         }
         setDirty();
         return stack;
+    }
+
+    public ItemContainerContents hollow(UUID player) {
+        return hollow.getOrDefault(player, ItemContainerContents.EMPTY);
+    }
+
+    public void putHollow(UUID player, ItemContainerContents stacks) {
+        hollow.put(player, stacks);
+        setDirty();
+    }
+
+    /** The cradle the player last slept in; null if none. */
+    public @Nullable GlobalPos cradle(UUID player) {
+        return cradles.get(player);
+    }
+
+    public void putCradle(UUID player, GlobalPos at) {
+        cradles.put(player, at);
+        setDirty();
+    }
+
+    /** A cradle was broken: every player whose spawn point it was now has it spared once. */
+    public void cradleBroken(GlobalPos at) {
+        boolean any = false;
+        for (var e : cradles.entrySet()) {
+            if (e.getValue().equals(at)) {
+                lost.put(e.getKey(), at);
+                any = true;
+            }
+        }
+        cradles.values().removeIf(at::equals);
+        if (any) {
+            setDirty();
+        }
+    }
+
+    /** The broken cradle a player's spawn point is still spared on, which is no longer spared; null if none. */
+    public @Nullable GlobalPos takeLost(UUID player) {
+        GlobalPos at = lost.remove(player);
+        if (at != null) {
+            setDirty();
+        }
+        return at;
     }
 
     /** Every territorial spirit in saved order; a snapshot, so it can be walked while spirits change. */

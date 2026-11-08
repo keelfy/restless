@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "restless:block/hollow_lantern"
+    },
+    "hanging=true": {
+      "model": "restless:block/hollow_lantern_hanging"
+    }
+  }
+}

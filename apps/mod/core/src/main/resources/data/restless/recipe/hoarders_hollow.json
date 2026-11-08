@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:hoarder_essence",
+    "restless:poltergeist_essence",
+    "restless:mimic_essence",
+    "minecraft:ender_chest",
+    "minecraft:shulker_shell"
+  ],
+  "result": {
+    "id": "restless:hoarders_hollow",
+    "count": 1
+  }
+}
