@@ -97,7 +97,9 @@ final class RelicGameTests {
         tests.put("hollow_lantern_wards_wide_and_stands_once_in_a_chunk", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             ServerLevel level = helper.getLevel();
-            BlockPos lantern = helper.absolutePos(new BlockPos(2, 2, 2));
+            // Test spots land anywhere in the world: pin the lantern inside one chunk so its neighbours share it.
+            BlockPos spot = helper.absolutePos(new BlockPos(2, 2, 2));
+            BlockPos lantern = new BlockPos((spot.getX() & ~15) + 2, spot.getY(), (spot.getZ() & ~15) + 2);
             check(helper, !Relics.hollowLanternIn(level, lantern), "no hollow lantern stands yet");
             level.setBlock(lantern, Content.HOLLOW_LANTERN.get().defaultBlockState(), 3);
             check(helper, Relics.hollowLanternIn(level, lantern.offset(1, 0, 3)), "the chunk must now hold one");

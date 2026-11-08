@@ -145,17 +145,21 @@ final class AdvancedCharmGameTests {
             player.getInventory().setItem(5, player.getMainHandItem());
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             check(helper, Charms.unseen(zombie, player), "hostiles must lose track of a walker");
-            // Light is worked out by the engine between ticks.
-            helper.runAfterDelay(10, () -> {
-                Charms.held(player);
-                check(helper, Sanity.of(player) < 1.0, "the walk must cost sanity");
-                check(helper, Charms.unseen(zombie, player), "a walk in the dark must go on");
-                helper.getLevel().setBlock(at.above(), Blocks.TORCH.defaultBlockState(), 3);
-                helper.runAfterDelay(10, () -> {
+            // Light is worked out by the engine off-thread. The walk ends for good on the first bright reading,
+            // so only let it read once the engine has settled: poll the light, never guess a delay.
+            boolean[] torched = {false};
+            helper.succeedWhen(() -> {
+                if (!torched[0]) {
+                    check(helper, lightAt(player) <= WALK_LIGHT, "the box must settle dark");
                     Charms.held(player);
-                    check(helper, !Charms.unseen(zombie, player), "light must end the walk");
-                    helper.succeed();
-                });
+                    check(helper, Sanity.of(player) < 1.0, "the walk must cost sanity");
+                    check(helper, Charms.unseen(zombie, player), "a walk in the dark must go on");
+                    helper.getLevel().setBlock(at.above(), Blocks.TORCH.defaultBlockState(), 3);
+                    torched[0] = true;
+                }
+                check(helper, lightAt(player) > WALK_LIGHT, "the torch must light the walker");
+                Charms.held(player);
+                check(helper, !Charms.unseen(zombie, player), "light must end the walk");
             });
         });
         tests.put("blood_debt_has_no_cap_and_heals_on_a_kill", helper -> {
@@ -435,5 +439,12 @@ final class AdvancedCharmGameTests {
 
     private static void check(GameTestHelper helper, boolean condition, String message) {
         HauntEventGameTests.check(helper, condition, message);
+    }
+
+    /** The walk ends above this light; the default of {@code walk_light}. */
+    private static final int WALK_LIGHT = 4;
+
+    private static int lightAt(ServerPlayer player) {
+        return player.level().getMaxLocalRawBrightness(player.blockPosition());
     }
 }
