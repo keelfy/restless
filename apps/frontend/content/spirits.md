@@ -6,6 +6,8 @@ title: Spirits
 
 Every player is haunted by personal spirits. A spirit's type decides which events it favors most, so watching the events tells you who is near you. Besides personal spirits, there are territorial ones, bound to a place.
 
+To tell which one is near you, keep it off or banish it, see [Tools](/items/tools).
+
 ## Personal
 
 Personal spirits follow one player.

@@ -4,13 +4,19 @@ title: Lights
 
 # Lights
 
-18 events.
+19 events.
 
 ## `extinguish_light`
 
 Snuffs a lit candle; a torch is knocked off and drops as an item
 
 Runs when: A lit candle or a torch / soul torch (floor or wall) is within 10 blocks
+
+## `held_light_out`
+
+The torch or lantern stack in one hand goes out: the whole stack becomes its unlit item, with a fire hiss (volume 0.6, pitch 1.4). One hand at random if both hold one
+
+Runs when: A torch or lantern in either hand that can be snuffed
 
 ## `candles_out`
 

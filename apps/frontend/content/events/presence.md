@@ -4,7 +4,7 @@ title: Presence
 
 # Presence
 
-85 events.
+87 events.
 
 ## `dragon_flyover`
 
@@ -29,6 +29,12 @@ Runs when: Open sky and rain or darkness outside, standing room 40 blocks away w
 A silent, unhurtable mannequin in a random default skin (Steve, Alex and the rest) stands there facing them. Gone, silently, when the player comes within 35 blocks, or after 60 s
 
 Runs when: Standing room 60 blocks away within 40° of where the player looks (up to 16 bearings tried; grass and flowers count as room)
+
+## `friend_double`
+
+A silent, unhurtable mannequin with the skin and name of another player who stands near (within 16 blocks, same dimension, not a spectator; one at random) stands 50 blocks away facing the player, its name shown over its head. Gone, silently, when the player comes within 30 blocks, or after 60 s
+
+Runs when: No such figure already, another such player near, standing room 50 blocks away within 40° of where the player looks (up to 16 bearings tried)
 
 ## `distant_walker`
 
@@ -517,3 +523,10 @@ Runs when: Indoors, a run of glass within 8 with free blocks on the player's sid
 A doll appears and, whenever it is not watched, turns to face the player and hops to another spot up to 4 times. It keeps still while watched. Gone after 2 min or when broken
 
 Runs when: A spot of free floor under a roof within 10, 4+ away and outside 55° of where the player looks
+
+## `armor_stand`
+
+**Harmful.**
+A real armor stand with arms, in one of four poses (reaching, arms raised, head lolling, lunging), stands facing the player. Every 0.2 s it steps up to 0.6 blocks toward them (climbing 1, dropping up to 3), but only while they are over 2 blocks off and not looking within 50° of it with a clear line; one move in four strikes a new pose. It breaks at the first blow and drops nothing. After 2 min it falls apart with plank particles (under hardcore it stays where it ended up)
+
+Runs when: No such stand already, standing room 8 blocks away at 150–180° to either side of where the player looks, which is behind them (up to 16 bearings tried)

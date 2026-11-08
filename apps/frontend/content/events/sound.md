@@ -4,7 +4,7 @@ title: Sound
 
 # Sound
 
-81 events.
+83 events.
 
 ## `footsteps`
 

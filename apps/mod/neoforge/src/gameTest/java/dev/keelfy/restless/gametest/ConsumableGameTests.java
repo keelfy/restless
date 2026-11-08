@@ -572,6 +572,24 @@ final class ConsumableGameTests {
             discard(player);
             helper.succeed();
         });
+        tests.put("domovois_porridge_drops_only_whole", helper -> {
+            ServerLevel level = helper.getLevel();
+            BlockPos at = helper.absolutePos(new BlockPos(4, 2, 4));
+            var block = Content.DOMOVOIS_PORRIDGE.get();
+            for (int left = 1; left <= 8; left++) {
+                var state = block.defaultBlockState().setValue(dev.keelfy.restless.content.DomovoiPorridge.LEFT, left);
+                var drops = state.getDrops(new net.minecraft.world.level.storage.loot.LootParams.Builder(level)
+                        .withParameter(
+                                net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN,
+                                Vec3.atCenterOf(at))
+                        .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_STATE, state)
+                        .withParameter(
+                                net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL,
+                                ItemStack.EMPTY));
+                check(helper, drops.size() == (left == 8 ? 1 : 0), "only a whole bowl drops, left=" + left);
+            }
+            helper.succeed();
+        });
         tests.put("domovois_porridge_feeds_growth_in_one_shut_room", helper -> {
             ServerPlayer player = fresh(helper);
             ServerLevel level = helper.getLevel();

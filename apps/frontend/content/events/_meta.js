@@ -10,4 +10,5 @@ export default {
   items: 'Items',
   blocks: 'Blocks',
   presence: 'Presence',
+  scenarios: 'Scenarios',
 }

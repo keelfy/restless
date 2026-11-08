@@ -4,7 +4,7 @@ title: Mobs
 
 # Mobs
 
-100 events.
+103 events.
 
 ## `double`
 
@@ -99,6 +99,20 @@ Runs when: Not peaceful, standing room 3 blocks behind
 It holds out its poppy for 15 s, to nobody
 
 Runs when: An iron golem within 24 with no target
+
+## `golem_rage`
+
+**Harmful.**
+The nearest idle iron golem within 24 blocks puts away any flower and turns on the player, with vanilla persistent anger. A golem the player built stays friendly
+
+Runs when: Not creative, spectator or peaceful; an iron golem within 24 with no target that can attack the player
+
+## `wolf_rage`
+
+**Harmful.**
+Every idle wild wolf within 16 blocks turns on the player, with vanilla persistent anger. Tamed wolves stay friendly
+
+Runs when: Not creative, spectator or peaceful; an untamed wolf within 16 with no target that can attack the player
 
 ## `dog_growls`
 

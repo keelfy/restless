@@ -4,7 +4,7 @@ title: Affliction
 
 # Affliction
 
-23 events.
+26 events.
 
 ## `blindness`
 
@@ -89,6 +89,20 @@ Runs when: Player has XP
 Bad luck 5 min
 
 Runs when: No bad luck
+
+## `sanity_crash`
+
+**Harmful.**
+Takes 90 points off the sanity bar (of 100), never below 0, on top of the 4 points every event costs. Creative and spectator players are untouched
+
+Runs when: Not creative or spectator, and sanity above 0
+
+## `sanity_drain`
+
+**Harmful.**
+Takes a random 10 to 25 points off the sanity bar (of 100), never below 0, on top of the 4 points every event costs. Creative and spectator players are untouched
+
+Runs when: Not creative or spectator, and sanity above 0
 
 ## `insomnia`
 

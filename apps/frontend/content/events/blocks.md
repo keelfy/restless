@@ -4,7 +4,7 @@ title: Blocks
 
 # Blocks
 
-112 events.
+115 events.
 
 ## `wilted_flowers`
 
@@ -232,6 +232,12 @@ Runs when: Standing room under open sky 8 to 14 blocks away
 Only this player's client is told that the 24 nearest torches are the burnt-out `unlit_` ones. 30 s later it gets the real blocks back. Nothing on the server
 
 Runs when: A torch within 12
+
+## `torch_line`
+
+Only this player's client is told that up to 8 torches stand in a line along where they look, the first 10 blocks away and one every 3, following the ground up and down. Each is gone for them once they come within 4 blocks (checked every 0.25 s), and the rest after 60 s. Nothing on the server (really placed in `real` mode, put back after 60 s; stays under hardcore)
+
+Runs when: Outdoors at night under open sky, or under leaves with a log within 8; room for a torch at 3 or more spots in a row
 
 ## `fake_ore`
 
@@ -611,6 +617,20 @@ Runs when: The player's bed is in this dimension; a tree of at most 250 blocks a
 Only this player's client is told that both blocks of each such cell are stone. They get the real blocks back when the player looks within 70° of any of them, or after 30 s. Nothing on the server. Not limited to tunnels the player dug
 
 Runs when: Under no sky; at least 6 walkway cells 2 to 10 behind the player (1 to either side) with a solid block 2 above and no sky
+
+## `walled_in`
+
+**Harmful.**
+Four knocks, 0.25 s apart, come from random sides at head height, with the hit sound of the surrounding block. 1 s after the first the player is pulled to the middle of their block and every free block around their feet and head and over their head (up to 9) turns into the commonest plain block within 2 blocks (stone if none; never ores, beacon blocks, ancient debris or falling blocks), with Mining Fatigue III for 20 s. The walls are put back after 20 s (stay under hardcore). Nothing happens if the player is dead or in water at the 1 s mark
+
+Runs when: On the ground, not in water, not riding, and at least 5 of those blocks are empty with nobody in them
+
+## `sealed_tunnel`
+
+**Harmful.**
+The cross-section of the tunnel 2 to 5 blocks straight behind the player (up to 6 air blocks) is filled in, wall to wall, with the commonest plain block of its walls (stone if none). It is put back after 60 s (stays under hardcore)
+
+Runs when: On the ground, not in water, under a roof, and open tunnel behind the player (opposite their facing) leading to a cross-section 2 to 5 away that full blocks shut in, with nobody in it
 
 ## `ceiling_furniture`
 

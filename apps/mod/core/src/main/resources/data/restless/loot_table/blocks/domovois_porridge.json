@@ -2,18 +2,21 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        },
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "restless:domovois_porridge",
-          "properties": {
-            "left": "8"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:survives_explosion"
+          },
+          {
+            "type": "minecraft:match_block",
+            "blocks": "restless:domovois_porridge",
+            "state": {
+              "left": "8"
+            }
           }
-        }
-      ],
+        ]
+      },
       "rolls": 1,
       "entries": [
         {
