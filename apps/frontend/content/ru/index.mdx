@@ -1,0 +1,78 @@
+---
+title: Restless
+---
+
+import Link from 'next/link'
+
+export const personal = [
+  ['Тень', 'shade', 'гасит свет и шепчет'],
+  ['Фантом', 'phantom', 'прикидывается другими игроками'],
+  ['Мимик', 'mimic', 'показывает то, чего нет'],
+  ['Призрак', 'wraith', 'охотится в темноте'],
+  ['Мара', 'mara', 'приходит, пока вы спите'],
+  ['Банши', 'banshee', 'голос, и редко что-то ещё'],
+  ['Ревенант', 'revenant', 'платит за каждое убийство'],
+  ['Потерянный', 'lost-one', 'бродит в глубине'],
+]
+
+export const territorial = [
+  ['Полтергейст', 'poltergeist', 'двери и вещи'],
+  ['Никс', 'nix', 'живёт в воде'],
+  ['Домовой', 'domovoi', 'хранит дом'],
+  ['Скопидом', 'hoarder', 'забирает ваши вещи'],
+  ['Демон', 'demon', 'опасный'],
+  ['Трикстер', 'trickster', 'меняет блоки и предметы'],
+]
+
+export const events = [
+  ['Свет', 'lights'], ['Двери', 'doors'], ['Недуги', 'affliction'],
+  ['Нападения', 'assault'], ['Звуки', 'sound'], ['Вода', 'water'],
+  ['Мобы', 'mobs'], ['Предметы', 'items'], ['Блоки', 'blocks'], ['Присутствие', 'presence'],
+  ['Сценарии', 'scenarios'],
+]
+
+export const Roster = ({ title, note, spirits }) => (
+  <section className="roster">
+    <h2>{title}</h2>
+    <p className="roster-note">{note}</p>
+    <ul>
+      {spirits.map(([name, id, line]) => (
+        <li key={id}>
+          <Link href={`/ru/spirits#${id}`}>{name}</Link>
+          <span>{line}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+)
+
+export const EventLinks = () => (
+  <p>
+    <Link href="/ru/events">695 ивентов</Link>, разложенных по тому, чего они касаются:{' '}
+    {events.map(([name, id], i) => (
+      <span key={id}>{i > 0 && ', '}<Link href={`/ru/events/${id}`}>{name.toLowerCase()}</Link></span>
+    ))}.
+  </p>
+)
+
+<div className="home">
+  <header className="home-hero">
+    <h1>Restless</h1>
+    <div className="home-lede">{'Хоррор-мод для Minecraft. Духи селятся рядом и действуют сами по себе: гаснет факел, за спиной открывается дверь, шаги идут за вами до самого дома. Чем старше и злее дух, тем больнее он бьёт.'}</div>
+  </header>
+
+  <div className="home-rosters">
+    <Roster title="Духи, что ходят за вами" note="У каждого игрока свои." spirits={personal} />
+    <Roster title="Духи, привязанные к месту" note="Они действуют на любого, кто подойдёт близко." spirits={territorial} />
+  </div>
+
+  <footer className="home-events">
+    <p>
+      Что они оставляют: <Link href="/ru/items/essences">эссенции</Link>, из которых делают{' '}
+      <Link href="/ru/items/charms">обереги</Link>, <Link href="/ru/items/advanced">усиленные обереги</Link>,{' '}
+      <Link href="/ru/items/consumables">расходники</Link> и{' '}
+      <Link href="/ru/items/relics">реликвии</Link>.
+    </p>
+    <EventLinks />
+  </footer>
+</div>

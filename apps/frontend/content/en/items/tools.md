@@ -138,7 +138,7 @@ Then it runs **12 waves of 5 seconds**. A form the type does not take adds 6 wav
 - 25%: it snuffs one candle. Relight it before the next wave.
 - 50%: it runs one of its events on you.
 
-Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offering is taken off, or you wander off: what lay on the altar is lost and the spirit grows 0.3 angrier. If every candle burns at the end, it is **banished**. For the essences it leaves, see [Essences](/items/essences#where-they-come-from).
+Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offering is taken off, or you wander off: what lay on the altar is lost and the spirit grows 0.3 angrier. If every candle burns at the end, it is **banished**. For the essences it leaves, see [Essences](/en/items/essences#where-they-come-from).
 
 **The wrong nature.** No spirit you sense is weak to it: the spirit eats the offering, every candle goes out, its anger peaks and it strikes at once with something harmful. It then refuses the altar for a day (24000 ticks) and ages by a day toward evolving.
 
@@ -156,7 +156,7 @@ Salt + paper + string. Sticks to the side of a block. Within **8 blocks** it sto
 
 ## Scarecrow
 
-Hay block + carved pumpkin + stick + salt. Within **16 blocks** it stops any event. Every event it stops takes one use, and the **tenth** breaks it. The scarecrow is also the base of the [effigy](/items/essences#the-effigy).
+Hay block + carved pumpkin + stick + salt. Within **16 blocks** it stops any event. Every event it stops takes one use, and the **tenth** breaks it. The scarecrow is also the base of the [effigy](/en/items/essences#the-effigy).
 
 ### How wards stack
 
@@ -178,4 +178,4 @@ Spirits put lights out. A torch or lantern put out is its **unlit** twin: same b
 
 ## Spirits tamper
 
-Spirits meddle with these too: [`spirit_candle_out`](/events/lights#spirit_candle_out), [`holy_water_cloudy`](/events/items#holy_water_cloudy), [`mirror_names`](/events/items#mirror_names), [`ouija_hi`](/events/blocks#ouija_hi), [`spirit_box_word`](/events/blocks#spirit_box_word), [`salt_gap`](/events/blocks#salt_gap), [`dreamcatcher_fails`](/events/blocks#dreamcatcher_fails), [`lantern_soul_fire`](/events/blocks#lantern_soul_fire), [`charm_falls`](/events/blocks#charm_falls), [`scarecrow_closer`](/events/blocks#scarecrow_closer), [`altar_midnight`](/events/blocks#altar_midnight), [`journal_page_torn`](/events/blocks#journal_page_torn).
+Spirits meddle with these too: [`spirit_candle_out`](/en/events/lights#spirit_candle_out), [`holy_water_cloudy`](/en/events/items#holy_water_cloudy), [`mirror_names`](/en/events/items#mirror_names), [`ouija_hi`](/en/events/blocks#ouija_hi), [`spirit_box_word`](/en/events/blocks#spirit_box_word), [`salt_gap`](/en/events/blocks#salt_gap), [`dreamcatcher_fails`](/en/events/blocks#dreamcatcher_fails), [`lantern_soul_fire`](/en/events/blocks#lantern_soul_fire), [`charm_falls`](/en/events/blocks#charm_falls), [`scarecrow_closer`](/en/events/blocks#scarecrow_closer), [`altar_midnight`](/en/events/blocks#altar_midnight), [`journal_page_torn`](/en/events/blocks#journal_page_torn).

@@ -9,7 +9,7 @@ that grow more dangerous as they age and are angered.
 |---|---|
 | `apps/mod/core` | Mod logic. Vanilla Minecraft only, no loader API |
 | `apps/mod/neoforge` | NeoForge adapter: entry point, `Platform` implementation, final jar assembly |
-| `apps/frontend` | Player wiki (Nextra on Next.js, Bun). Pages are Markdown in `apps/frontend/content`; `docs/` is for mod developers |
+| `apps/frontend` | Player wiki (Nextra on Next.js, Bun). Pages are Markdown in `apps/frontend/content/<lang>` (`en`, `ru`); `docs/` is for mod developers |
 
 `core` gets everything loader-dependent through `dev.keelfy.restless.platform.Platform`
 (ServiceLoader). A Fabric port = a new `apps/mod/fabric` module with its own `Platform` implementation.

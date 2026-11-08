@@ -18,7 +18,7 @@ The rarest things in the mod. A relic is made of the essences of **three differe
 
 A lantern that wards a wide place and teaches while it does.
 
-- **Ward:** like the [Hallowed Lantern](/items/tools#hallowed-lantern), no spirit's event runs on a player within **24 blocks**, four times the reach of the old one. The event is lost, not put off.
+- **Ward:** like the [Hallowed Lantern](/en/items/tools#hallowed-lantern), no spirit's event runs on a player within **24 blocks**, four times the reach of the old one. The event is lost, not put off.
 - **Clue:** each event it stops writes one trait of a spirit near you into the journal, in the words the ouija board uses. Protection that teaches.
 - **One to a chunk.** A second one cannot be placed in the same chunk.
 - It does not add to a Hallowed Lantern's ward: near both, you are warded once, and the hollow one still leaves its clue.
@@ -34,7 +34,7 @@ Carry it in the **off hand**. When a blow would kill you, you **fade** instead:
 
 ## Exorcist's Censer
 
-Carry it in the **off hand** when you offer at an [altar](/items/tools#altar). The ritual changes:
+Carry it in the **off hand** when you offer at an [altar](/en/items/tools#altar). The ritual changes:
 
 - It runs **8 waves** instead of 12. A spirit that has evolved still adds its 4, and a form it does not take still adds 6.
 - The spirit cannot snuff the candles.
@@ -47,8 +47,8 @@ Carry it in the **off hand** when you offer at an [altar](/items/tools#altar). T
 A block that is a chest, and looks like a plain one until you give it a face.
 
 - **Store:** use it to open a store of 27 slots. It is **one store for you**, the same in every hollow you have, like an ender chest. It is kept in the saved data and not dropped when the block is broken, so you lose nothing by moving it.
-- **Disguise:** sneak and use [Mimic Clay](/items/consumables#mimic-mimic-clay) that has taken a look on it: it draws as that block from then on. Breaking it gives the clay back, still pressed.
-- The [Dark Eye](/items/charms#shade-dark-eye) shows it as it is.
+- **Disguise:** sneak and use [Mimic Clay](/en/items/consumables#mimic-mimic-clay) that has taken a look on it: it draws as that block from then on. Breaking it gives the clay back, still pressed.
+- The [Dark Eye](/en/items/charms#shade-dark-eye) shows it as it is.
 - **Theft:** when a hoarder's event on your belongings runs, there is a 1 in 5 chance that it also takes one stack from your hollows.
 
 ## Mara's Cradle

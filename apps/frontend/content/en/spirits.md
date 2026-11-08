@@ -6,7 +6,7 @@ title: Spirits
 
 Every player is haunted by personal spirits. A spirit's type decides which events it favors most, so watching the events tells you who is near you. Besides personal spirits, there are territorial ones, bound to a place.
 
-To tell which one is near you, keep it off or banish it, see [Tools](/items/tools).
+To tell which one is near you, keep it off or banish it, see [Tools](/en/items/tools).
 
 ## Personal
 
@@ -132,7 +132,7 @@ Territorial prankster: changes blocks and items, shows things.
 
 Each type shows up in its own way, and the journal's bestiary page says how once you have a photograph of one. A banshee comes when a villager or a pet dies before you, a lost one when you die far from home or go two days awake, a revenant after a slaughter or the killing of your own pet. Territorial spirits are born with structures.
 
-An **effigy** calls any type on purpose: stuff it with one essence of that type and light it. See [Essences](/items/essences#the-effigy).
+An **effigy** calls any type on purpose: stuff it with one essence of that type and light it. See [Essences](/en/items/essences#the-effigy).
 
 ## Rewards
 
@@ -140,19 +140,19 @@ Banishing a spirit at an altar leaves one of its essence, and one more if it had
 
 | Spirit | Charm | Consumable |
 | --- | --- | --- |
-| Poltergeist | [Telekinesis Amulet](/items/charms#poltergeist-telekinesis-amulet) | [Restless Knot](/items/consumables#poltergeist-restless-knot) |
-| Shade | [Dark Eye](/items/charms#shade-dark-eye) | [Dusk Salt](/items/consumables#shade-dusk-salt) |
-| Nix | [Drowned Stone](/items/charms#nix-drowned-stone) | [Still Water](/items/consumables#nix-still-water) |
-| Phantom | [Phantom Double](/items/charms#phantom-phantom-double) | [Sighting Mark](/items/consumables#phantom-sighting-mark) |
-| Mimic | [Borrowed Face](/items/charms#mimic-borrowed-face) | [Mimic Clay](/items/consumables#mimic-mimic-clay) |
-| Wraith | [Wraith Shroud](/items/charms#wraith-wraith-shroud) | [Wraith Oil](/items/consumables#wraith-wraith-oil) |
-| Mara | [Borrowed Dream](/items/charms#mara-borrowed-dream) | [Dreamless Draught](/items/consumables#mara-dreamless-draught) |
-| Banshee | [Death Wail](/items/charms#banshee-death-wail) | [Omen Candle](/items/consumables#banshee-omen-candle) |
-| Revenant | [Grudge](/items/charms#revenant-grudge) | [Bloodied Rag](/items/consumables#revenant-bloodied-rag) |
-| Lost one | [Lost Step](/items/charms#lost-one-lost-step) | [Wayfinder's Ash](/items/consumables#lost-one-wayfinders-ash) |
-| Domovoi | [House Key](/items/charms#domovoi-house-key) | [Domovoi's Porridge](/items/consumables#domovoi-domovois-porridge) |
-| Hoarder | [Stash](/items/charms#hoarder-stash) | [Magpie Feather](/items/consumables#hoarder-magpie-feather) |
-| Demon | [Bargain](/items/charms#demon-bargain) | [Infernal Contract](/items/consumables#demon-infernal-contract) |
-| Trickster | [Trickster's Coin](/items/charms#trickster-tricksters-coin) | [Changeling Dust](/items/consumables#trickster-changeling-dust) |
+| Poltergeist | [Telekinesis Amulet](/en/items/charms#poltergeist-telekinesis-amulet) | [Restless Knot](/en/items/consumables#poltergeist-restless-knot) |
+| Shade | [Dark Eye](/en/items/charms#shade-dark-eye) | [Dusk Salt](/en/items/consumables#shade-dusk-salt) |
+| Nix | [Drowned Stone](/en/items/charms#nix-drowned-stone) | [Still Water](/en/items/consumables#nix-still-water) |
+| Phantom | [Phantom Double](/en/items/charms#phantom-phantom-double) | [Sighting Mark](/en/items/consumables#phantom-sighting-mark) |
+| Mimic | [Borrowed Face](/en/items/charms#mimic-borrowed-face) | [Mimic Clay](/en/items/consumables#mimic-mimic-clay) |
+| Wraith | [Wraith Shroud](/en/items/charms#wraith-wraith-shroud) | [Wraith Oil](/en/items/consumables#wraith-wraith-oil) |
+| Mara | [Borrowed Dream](/en/items/charms#mara-borrowed-dream) | [Dreamless Draught](/en/items/consumables#mara-dreamless-draught) |
+| Banshee | [Death Wail](/en/items/charms#banshee-death-wail) | [Omen Candle](/en/items/consumables#banshee-omen-candle) |
+| Revenant | [Grudge](/en/items/charms#revenant-grudge) | [Bloodied Rag](/en/items/consumables#revenant-bloodied-rag) |
+| Lost one | [Lost Step](/en/items/charms#lost-one-lost-step) | [Wayfinder's Ash](/en/items/consumables#lost-one-wayfinders-ash) |
+| Domovoi | [House Key](/en/items/charms#domovoi-house-key) | [Domovoi's Porridge](/en/items/consumables#domovoi-domovois-porridge) |
+| Hoarder | [Stash](/en/items/charms#hoarder-stash) | [Magpie Feather](/en/items/consumables#hoarder-magpie-feather) |
+| Demon | [Bargain](/en/items/charms#demon-bargain) | [Infernal Contract](/en/items/consumables#demon-infernal-contract) |
+| Trickster | [Trickster's Coin](/en/items/charms#trickster-tricksters-coin) | [Changeling Dust](/en/items/consumables#trickster-changeling-dust) |
 
-See [Items](/items) for how they work, [Advanced charms](/items/advanced) for what two essences make, [Relics](/items/relics) for what three make, and [Essences](/items/essences) for where each type is met.
+See [Items](/en/items) for how they work, [Advanced charms](/en/items/advanced) for what two essences make, [Relics](/en/items/relics) for what three make, and [Essences](/en/items/essences) for where each type is met.

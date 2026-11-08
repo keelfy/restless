@@ -63,8 +63,8 @@ The journal's page for a type says where it is met once you have identified one.
 
 ## What to spend them on
 
-- One essence and a common item makes a [charm](/items/charms).
-- A charm and the essence of another type makes an [advanced charm](/items/advanced).
-- Three essences of different types and a rare find make a [relic](/items/relics).
-- One essence and common items makes several [consumables](/items/consumables).
+- One essence and a common item makes a [charm](/en/items/charms).
+- A charm and the essence of another type makes an [advanced charm](/en/items/advanced).
+- Three essences of different types and a rare find make a [relic](/en/items/relics).
+- One essence and common items makes several [consumables](/en/items/consumables).
 - One essence lights an effigy.

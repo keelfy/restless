@@ -4,13 +4,15 @@ title: Scenarios
 
 # Scenarios
 
+> Эта страница пока на английском: ивенты ещё не переведены.
+
 104 scenarios.
 
 A scenario is an event made of other events, played as one haunt: a short script of beats a few seconds apart, such as a light going out, a whisper, then a cold touch. The first beat runs at once and is always light, so harm is announced. The rest follow, as the same spirit and from the same point. A later beat with nothing to act on is skipped, and death or logging out drops the rest.
 
 A scenario is rolled like any other event, counts once for the cooldown and for what a spirit just did, and is harmful if any beat is. Its weight is 0.06 (halved when the opening beat can run anywhere).
 
-A spirit can roll a scenario only once its power reaches the scenario's **min power** (0 for a newborn calm spirit, 1 for a mature, angry one). A scenario marked **evolved** needs an evolved spirit. A scenario that names a spirit is that spirit's **signature**: an evolved spirit of that type rolls it 3 times as often. The **brink** and **lethal** bands are the same gates the [assault events](/events/assault) use.
+A spirit can roll a scenario only once its power reaches the scenario's **min power** (0 for a newborn calm spirit, 1 for a mature, angry one). A scenario marked **evolved** needs an evolved spirit. A scenario that names a spirit is that spirit's **signature**: an evolved spirit of that type rolls it 3 times as often. The **brink** and **lethal** bands are the same gates the [assault events](/ru/events/assault) use.
 
 | Scenario | Min power | Gate | What happens |
 | --- | --- | --- | --- |

@@ -4,7 +4,7 @@ title: Charms
 
 # Charms
 
-One essence and one common item, crafted together, shapeless. Each charm answers to one spirit type. Read the [rules every charm shares](/items#rules-every-charm-shares) first: most work from the off hand, one at a time.
+One essence and one common item, crafted together, shapeless. Each charm answers to one spirit type. Read the [rules every charm shares](/en/items#rules-every-charm-shares) first: most work from the off hand, one at a time.
 
 ## Poltergeist: Telekinesis Amulet
 

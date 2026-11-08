@@ -1,0 +1,14 @@
+export default {
+  index: 'Обзор',
+  lights: 'Свет',
+  doors: 'Двери',
+  affliction: 'Недуги',
+  assault: 'Нападения',
+  sound: 'Звуки',
+  water: 'Вода',
+  mobs: 'Мобы',
+  items: 'Предметы',
+  blocks: 'Блоки',
+  presence: 'Присутствие',
+  scenarios: 'Сценарии',
+}

@@ -38,7 +38,7 @@ export const Roster = ({ title, note, spirits }) => (
     <ul>
       {spirits.map(([name, id, line]) => (
         <li key={id}>
-          <Link href={`/spirits#${id}`}>{name}</Link>
+          <Link href={`/en/spirits#${id}`}>{name}</Link>
           <span>{line}</span>
         </li>
       ))}
@@ -48,9 +48,9 @@ export const Roster = ({ title, note, spirits }) => (
 
 export const EventLinks = () => (
   <p>
-    <Link href="/events">695 events</Link>, sorted by what they touch:{' '}
+    <Link href="/en/events">695 events</Link>, sorted by what they touch:{' '}
     {events.map(([name, id], i) => (
-      <span key={id}>{i > 0 && ', '}<Link href={`/events/${id}`}>{name.toLowerCase()}</Link></span>
+      <span key={id}>{i > 0 && ', '}<Link href={`/en/events/${id}`}>{name.toLowerCase()}</Link></span>
     ))}.
   </p>
 )
@@ -68,10 +68,10 @@ export const EventLinks = () => (
 
   <footer className="home-events">
     <p>
-      What they leave behind: <Link href="/items/essences">essences</Link>, made into{' '}
-      <Link href="/items/charms">charms</Link>, <Link href="/items/advanced">advanced charms</Link>,{' '}
-      <Link href="/items/consumables">consumables</Link> and{' '}
-      <Link href="/items/relics">relics</Link>.
+      What they leave behind: <Link href="/en/items/essences">essences</Link>, made into{' '}
+      <Link href="/en/items/charms">charms</Link>, <Link href="/en/items/advanced">advanced charms</Link>,{' '}
+      <Link href="/en/items/consumables">consumables</Link> and{' '}
+      <Link href="/en/items/relics">relics</Link>.
     </p>
     <EventLinks />
   </footer>
