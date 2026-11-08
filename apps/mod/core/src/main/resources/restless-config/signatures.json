@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:phantom_self_join": {
+      "weight": 2.0,
+      "spirit": "phantom",
+      "seconds": 40,
+      "latency": 120
+    },
+    "minecraft:nix_catch": {
+      "weight": 2.0,
+      "spirit": "nix",
+      "radius": 16,
+      "tries": 40,
+      "min_cells": 3,
+      "max_cells": 5,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:nix_call": {
+      "weight": 2.0,
+      "spirit": "nix",
+      "radius": 12,
+      "tries": 12,
+      "min_distance": 3,
+      "min_cells": 3,
+      "max_cells": 12,
+      "interval_ticks": 3,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:mimic_voice": {
+      "weight": 2.0,
+      "spirit": "mimic",
+      "radius": 12,
+      "times": 3,
+      "interval_ticks": 20,
+      "sound": {
+        "volume": 0.9,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:wraith_taken": {
+      "weight": 2.0,
+      "spirit": "wraith",
+      "radius": 16,
+      "dark_level": 4
+    },
+    "minecraft:domovoi_supper": {
+      "weight": 2.0,
+      "spirit": "domovoi",
+      "radius": 12,
+      "sound": {
+        "volume": 0.6,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:domovoi_hearth": {
+      "weight": 2.0,
+      "spirit": "domovoi",
+      "radius": 12
+    },
+    "minecraft:hoarder_payment": {
+      "weight": 2.0,
+      "spirit": "hoarder",
+      "radius": 10,
+      "junk": [
+        "minecraft:dirt",
+        "minecraft:stick",
+        "minecraft:rotten_flesh",
+        "minecraft:string"
+      ]
+    },
+    "minecraft:demon_offer": {
+      "weight": 2.0,
+      "spirit": "demon",
+      "radius": 8,
+      "min_distance": 3,
+      "restore_ticks": 6000,
+      "texts": [
+        [
+          "a diamond",
+          "for your bed"
+        ],
+        [
+          "strength",
+          "for your sleep"
+        ],
+        [
+          "sign here",
+          "and be rich"
+        ],
+        [
+          "one heart",
+          "for a mine"
+        ]
+      ]
+    },
+    "minecraft:lost_one_sign": {
+      "weight": 2.0,
+      "spirit": "lost_one",
+      "radius": 8,
+      "min_distance": 3,
+      "restore_ticks": 6000,
+      "texts": [
+        [
+          "which way",
+          "is home?"
+        ],
+        [
+          "is this",
+          "the way?"
+        ],
+        [
+          "where is",
+          "spawn?"
+        ],
+        [
+          "has anyone",
+          "seen my bed?"
+        ]
+      ]
+    }
+  }
+}

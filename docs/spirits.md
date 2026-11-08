@@ -361,7 +361,7 @@ for evolved spirits.
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
-The ten types after `nix` only pick from the existing events. Their own gimmicks from [design.md](design.md) are not built:
+Besides a few signature events (below), the ten types after `nix` only pick from the existing events. Their own gimmicks from [design.md](design.md) are not built:
 fake chat (mimic), the nightmare room (mara), honest warnings (banshee), birth from killing (revenant), replaying a death
 path (lost one), winning a domovoi with offerings, the nest (hoarder), pacts (demon) and fake gifts (trickster). None has
 an essence or artifact.
@@ -369,6 +369,12 @@ an essence or artifact.
 ## Events
 
 `Idea` is the number in [event-ideas.md](event-ideas.md).
+
+Signature events: an event with `spirit` in its config is rolled by that type only (`HauntEvent.only`, checked with the
+other free checks in `Director.open`; `/haunt force` ignores it). Its `weight` is raised (2.0, against 0.3 for the
+average event) so that a player sees it. Ten are built, the other 33 are planned in
+[signature-events.md](signature-events.md). A scenario's `spirit` is not a filter: it only boosts an evolved spirit's
+own scenario.
 
 Text events (`whisper`, `own_voice`, `subliminal_title`, `false_death`, `false_advancement`, `stranger_death`, `book_page`,
 `new_sign`, `cave_sign`, `item_trail`) never repeat a variant for the same spirit: each spirit remembers what it has said through each of
@@ -966,6 +972,16 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `hellring` | — | HARMFUL | ASSAULT | 0.2 | Evolved `demon` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown | A roar and a ring of fire that closes in over ten seconds. Whoever is still inside when it shuts burns to death. |
 | `the_double` | — | HARMFUL | ASSAULT | 0.2 | Evolved `phantom` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, standing room for the double | A copy of the player walks up and kills with one touch. Three blows from the player drive it away. |
 | `foretold` | — | HARMFUL | ASSAULT | 0.2 | Evolved `banshee` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown | A bell and a true omen in the journal: at dusk the spirit takes the player, unless they are in a bed or inside a ward by then. |
+| `phantom_self_join` | — | LIGHT | PRESENCE, PLAYER | 2.0 | None | Only this player gets "<name> joined the game" and a player list entry with their own name and skin (a fresh id). 40 s later the entry goes and "<name> left the game" follows. Nothing on the server. Only `phantom`. |
+| `nix_catch` | — | LIGHT | WATER | 2.0 | Water within 16 with a bank of 3 free cells beside it | 3 to 5 raw cod and salmon lie in a row on the bank, with a splash. Real items. Only `nix`. |
+| `nix_call` | — | LIGHT | WATER | 2.0 | The player is out of water, water 3 to 12 away that runs 3+ cells toward them | A line of bubbles runs through the water toward the player, one cell per 3 ticks, and a conduit sound plays at its end. Only `nix`. |
+| `mimic_voice` | — | LIGHT | MOBS | 2.0 | An adult animal within 12 | The animal makes another mob's sound 3 times, a second apart: a cow or mooshroom the villager's "hmm", a sheep the zombie's groan, a chicken an ocelot's mew, any other one of those three. Only `mimic`. |
+| `wraith_taken` | — | HARMFUL | MOBS | 2.0 | Light level under 4 at the player, a wild animal within 16 (not named, tamed, leashed or ridden) | The animal is gone in a puff of smoke, no sound and no drops. Lost for good. Only `wraith`. |
+| `domovoi_supper` | — | LIGHT | ITEMS | 2.0 | A chest within 12 holding bread, a cookie, a milk bucket or a stew (mushroom, rabbit, beetroot) | One is eaten, with an eating sound: one bread or cookie is gone, the milk bucket becomes a bucket, the stew a bowl. Only `domovoi`. |
+| `domovoi_hearth` | — | LIGHT | LIGHTS | 2.0 | A cold campfire within 12, or a furnace, smoker or blast furnace with input and no fuel | The campfire lights, or one coal goes into the furnace. Only `domovoi`. |
+| `hoarder_payment` | — | HARMFUL | ITEMS | 2.0 | A chest within 10 holding something that is not junk | One stack becomes junk (dirt, sticks, rotten flesh or string) of the same size, up to its stack limit. Lost for good. Only `hoarder`. |
+| `demon_offer` | — | LIGHT | BLOCKS | 2.0 | Standing room 3 to 8 away, an offer left unsaid | A crimson sign with an offer ("a diamond for your bed") stands there for `restore_ticks` (5 min), turned to the player. Nothing more. Never repeats a variant. Only `demon`. |
+| `lost_one_sign` | — | LIGHT | BLOCKS | 2.0 | Standing room 3 to 8 away, a question left unasked | An oak sign that asks the way ("which way is home?") stands there for `restore_ticks` (5 min). Never repeats a variant. Only `lost_one`. |
 
 ## Chances
 
@@ -1030,7 +1046,7 @@ Every tunable value lives in `core/src/main/resources/restless-config/`, split i
 |---|---|
 | `haunt.json` | `director`, `power`, `anger`, `salt`, `wards`, `bell`, `candle`, `compass`, `ash`, `camera`, `spirit_box`, `ouija`, `clues`, `ritual`, `artifacts`, `grave`, `sanity`, `corruption`, `evolution`, `journal`, `hardcore`, `restore`, `swaps`, `place`, `said` |
 | `spirits.json` | `spirits` (activity, tag affinities), `traits` (the trait catalog, with each trait's clues, words, hint and weakness), `story` (nickname words, days, causes) |
-| `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `ambushes`, `torments`, `brinks`, `lethals`, `items`, `blocks`, `mobs`, `presence`, `lies` | `events.<namespace>:<id>` for that group (`assaults.json` also holds the `assaults` section: `safe_health`, `brink_health`, `mercy_ticks`, `lethal`, `lethal_cooldown_days`, `death_relief`, `relief_window_ticks`; see [assaults.md](assaults.md)) |
+| `lights`, `mechanisms`, `sounds`, `afflictions`, `assaults`, `ambushes`, `torments`, `brinks`, `lethals`, `items`, `blocks`, `mobs`, `presence`, `lies`, `signatures` | `events.<namespace>:<id>` for that group (`assaults.json` also holds the `assaults` section: `safe_health`, `brink_health`, `mercy_ticks`, `lethal`, `lethal_cooldown_days`, `death_relief`, `relief_window_ticks`; see [assaults.md](assaults.md)) |
 
 Names and descriptions of events live apart, in `restless-config/lang/en.json` and `ru.json` (copied to `config/restless/lang/` on first run,
 edit the copy). The debug screen shows them in the client's language, falling back to English, then to the id. A new event needs an entry in both.

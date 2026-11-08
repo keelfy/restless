@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,6 +30,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -54,7 +57,7 @@ public final class Content {
             .register(
                     BuiltInRegistries.ITEM,
                     "salt",
-                    key -> new BlockItem(SALT_LINE.get(), new Item.Properties().setId(key)));
+                    key -> new BlockItem(SALT_LINE.get(), tipped(new Item.Properties().setId(key), "salt")));
 
     public static final Supplier<Block> ASH_LINE = Platform.get()
             .register(
@@ -65,7 +68,7 @@ public final class Content {
             .register(
                     BuiltInRegistries.ITEM,
                     "ash",
-                    key -> new BlockItem(ASH_LINE.get(), new Item.Properties().setId(key)));
+                    key -> new BlockItem(ASH_LINE.get(), tipped(new Item.Properties().setId(key), "ash")));
 
     public static final Supplier<EntityType<?>> ASH_FOOTPRINT = Platform.get()
             .register(
@@ -300,8 +303,7 @@ public final class Content {
                     "domovois_porridge",
                     key -> new DomovoiPorridge.Bowl(
                             DOMOVOIS_PORRIDGE.get(),
-                            new Item.Properties()
-                                    .setId(key)
+                            tipped(new Item.Properties().setId(key), "domovois_porridge")
                                     .useBlockDescriptionPrefix()
                                     .stacksTo(16)));
     public static final Supplier<Block> MIMIC_BLOCK =
@@ -350,8 +352,7 @@ public final class Content {
                     "maras_cradle",
                     key -> new BlockItem(
                             MARAS_CRADLE.get(),
-                            new Item.Properties()
-                                    .setId(key)
+                            tipped(new Item.Properties().setId(key), "maras_cradle")
                                     .useBlockDescriptionPrefix()
                                     .stacksTo(1)));
 
@@ -414,14 +415,31 @@ public final class Content {
     private static Map<String, Supplier<Item>> essences(String... spirits) {
         Map<String, Supplier<Item>> found = new java.util.LinkedHashMap<>();
         for (String spirit : spirits) {
-            found.put(spirit, item(spirit + "_essence", Item::new));
+            found.put(spirit, item(spirit + "_essence", "essence", Item::new));
         }
         return java.util.Collections.unmodifiableMap(found);
     }
 
     private static Supplier<Item> item(String name, java.util.function.Function<Item.Properties, Item> factory) {
+        return item(name, name, factory);
+    }
+
+    /** {@code tip} names the lang key {@code item.restless.<tip>.tip}, so items may share a line. */
+    private static Supplier<Item> item(
+            String name, String tip, java.util.function.Function<Item.Properties, Item> factory) {
         return Platform.get()
-                .register(BuiltInRegistries.ITEM, name, key -> factory.apply(new Item.Properties().setId(key)));
+                .register(
+                        BuiltInRegistries.ITEM,
+                        name,
+                        key -> factory.apply(tipped(new Item.Properties().setId(key), tip)));
+    }
+
+    /** Gives an item its one-line reminder of what it does, shown under its name. */
+    private static Item.Properties tipped(Item.Properties properties, String tip) {
+        return properties.component(
+                DataComponents.LORE,
+                new ItemLore(List.of(
+                        Component.translatable("item.restless." + tip + ".tip").withStyle(ChatFormatting.GRAY))));
     }
 
     @SuppressWarnings("unchecked") // the registry is typed DataComponentType<?>; this entry is built for T
@@ -471,7 +489,8 @@ public final class Content {
                         BuiltInRegistries.ITEM,
                         name,
                         key -> new BlockItem(
-                                block.get(), new Item.Properties().setId(key).useBlockDescriptionPrefix()));
+                                block.get(),
+                                tipped(new Item.Properties().setId(key), name).useBlockDescriptionPrefix()));
     }
 
     /** Forces the class to load, which declares every entry and the creative tab that holds the items. */

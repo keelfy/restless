@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -23,9 +24,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.Mannequin;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.item.component.SwingAnimation;
 import org.jspecify.annotations.Nullable;
@@ -42,6 +46,9 @@ public final class DoubleEvent implements HauntEvent {
     };
 
     private static final double DECOY_HEALTH = 200.0;
+
+    /** Marks a ghost made by {@link #decoy}. */
+    private static final String GHOST = "restless_ghost";
 
     /** The double each player has now; one at a time. */
     private static final Map<UUID, Mannequin> ACTIVE = Session.SERVER.keep(new ConcurrentHashMap<>());
@@ -117,39 +124,64 @@ public final class DoubleEvent implements HauntEvent {
     }
 
     /**
-     * A harmless copy of the player in their skin and gear, standing where they do, gone after {@code ticks}. It is the
-     * mimic charm's, not a spirit's: it does not walk or hit.
+     * A harmless ghost of the player in their skin, standing where they do, gone after {@code ticks}. It is the mimic
+     * charm's, not a spirit's: it does not walk or hit.
      */
     public static @Nullable Mannequin decoy(ServerPlayer player, int ticks) {
         return decoy(player, ticks, player.blockPosition(), false);
     }
 
-    /** The same copy standing at {@code at}, holding the player's main-hand item too if {@code armed}. */
+    /**
+     * The same ghost standing at {@code at}, holding the player's main-hand item if {@code armed}. It is invisible to a
+     * client that does not know the mod and drawn translucent by one that does, wears no armor (armor would stay solid
+     * on a ghost), has no body to push or be pushed, and only mobs can hurt it.
+     */
     public static @Nullable Mannequin decoy(ServerPlayer player, int ticks, BlockPos at, boolean armed) {
         ServerLevel level = player.level();
         Mannequin twin = Figure.spawn(player, at, ResolvableProfile.createResolved(player.getGameProfile()));
         if (twin == null) {
             return null;
         }
-        for (EquipmentSlot slot : WORN) {
-            twin.setItemSlot(slot, player.getItemBySlot(slot).copy());
-        }
         if (armed) {
             twin.setItemSlot(EquipmentSlot.MAINHAND, player.getMainHandItem().copy());
         }
+        twin.addTag(GHOST);
+        twin.setInvisible(true);
+        twin.noPhysics = true;
         // A hostile takes only what it can hurt as a target, so the copy bleeds, but far longer than it stays.
         twin.setPermanentlyInvulnerable(false);
         twin.getAttribute(Attributes.MAX_HEALTH).setBaseValue(DECOY_HEALTH);
         twin.setHealth(twin.getMaxHealth());
+        mist(level, twin, ParticleTypes.SCULK_SOUL, 16);
+        Scheduler.repeat(player, 0, 3, (p, n) -> {
+            if (!twin.isAlive()) {
+                return false;
+            }
+            mist(level, twin, ParticleTypes.SOUL, 2);
+            if (n % 3 == 0) {
+                mist(level, twin, ParticleTypes.WHITE_ASH, 3);
+            }
+            return true;
+        });
         Restore.after(level, ticks, force -> {
             if (twin.isAlive()) {
-                level.sendParticles(
-                        ParticleTypes.POOF, twin.getX(), twin.getY() + 1.0, twin.getZ(), 12, 0.3, 0.5, 0.3, 0.02);
+                mist(level, twin, ParticleTypes.SCULK_SOUL, 24);
                 twin.discard();
             }
             return true;
         });
         return twin;
+    }
+
+    /** Whether {@code victim} is a ghost the player cannot strike. */
+    public static boolean spared(LivingEntity victim, DamageSource source) {
+        return victim instanceof Mannequin
+                && victim.entityTags().contains(GHOST)
+                && source.getEntity() instanceof Player;
+    }
+
+    private static void mist(ServerLevel level, Mannequin twin, ParticleOptions particle, int count) {
+        level.sendParticles(particle, twin.getX(), twin.getY() + 1.0, twin.getZ(), count, 0.25, 0.6, 0.25, 0.01);
     }
 
     /** Sends away the player's double, if there is one: the player died, so there is nothing left to chase. */

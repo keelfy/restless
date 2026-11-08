@@ -10,4 +10,4 @@ Backlog of ideas, added by hand. Move an idea out (or delete it) once it is impl
 - Third batch, about 330 ideas toward 500 events, with signatures per spirit type: [event-ideas-3.md](event-ideas-3.md).
 - Hardcore mode (temporary and visual effects become permanent and real), plan only: [hardcore.md](hardcore.md).
 - 100 scenarios, scripted mixes of existing events for older and evolved spirits: [scenarios.md](scenarios.md).
-- Per-type spirit arcs (banshee courtship, domovoi offerings, demon contracts and more), plan only: [spirit-arcs.md](spirit-arcs.md).
+- Signature events, a few per spirit type that only it rolls, plan only: [signature-events.md](signature-events.md).

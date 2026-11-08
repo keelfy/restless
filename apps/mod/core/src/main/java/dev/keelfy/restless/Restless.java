@@ -163,6 +163,16 @@ public final class Restless {
         return victim instanceof ServerPlayer player ? Bands.cap(source, player, dealt) : dealt;
     }
 
+    /** Call before a living thing takes damage; true means the blow must not land (a ghost double cannot be struck). */
+    public static boolean onStrike(LivingEntity victim, DamageSource source) {
+        return Charms.passes(victim, source) || DoubleEvent.spared(victim, source);
+    }
+
+    /** Call when a player swings at an entity, or a projectile meets one; true means it passes through, untouched. */
+    public static boolean onMeet(@Nullable Entity striker, Entity target) {
+        return Charms.passes(striker, target);
+    }
+
     /** Call when a living thing's drops are settled but not yet dropped; the list may be changed. */
     public static void onDrops(@Nullable Entity killer, LivingEntity dead, Collection<ItemEntity> drops) {
         Charms.drops(killer, dead, drops);

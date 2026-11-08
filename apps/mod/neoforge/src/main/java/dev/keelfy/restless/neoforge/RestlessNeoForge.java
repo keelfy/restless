@@ -35,6 +35,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -44,11 +45,13 @@ import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.PlayLevelSoundEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -154,8 +157,24 @@ public final class RestlessNeoForge {
                 e.getSource(),
                 e.getNewVolume(),
                 e.getNewPitch()));
-        NeoForge.EVENT_BUS.addListener((LivingIncomingDamageEvent e) ->
-                e.setAmount(Restless.onHurt(e.getEntity(), e.getSource(), e.getAmount())));
+        NeoForge.EVENT_BUS.addListener((LivingIncomingDamageEvent e) -> {
+            if (Restless.onStrike(e.getEntity(), e.getSource())) {
+                e.setCanceled(true);
+                return;
+            }
+            e.setAmount(Restless.onHurt(e.getEntity(), e.getSource(), e.getAmount()));
+        });
+        NeoForge.EVENT_BUS.addListener((AttackEntityEvent e) -> {
+            if (Restless.onMeet(e.getEntity(), e.getTarget())) {
+                e.setCanceled(true);
+            }
+        });
+        NeoForge.EVENT_BUS.addListener((ProjectileImpactEvent e) -> {
+            if (e.getRayTraceResult() instanceof EntityHitResult hit
+                    && Restless.onMeet(e.getProjectile().getOwner(), hit.getEntity())) {
+                e.setCanceled(true);
+            }
+        });
         NeoForge.EVENT_BUS.addListener((LivingDeathEvent e) -> {
             if (Restless.onDeath(e.getEntity(), e.getSource())) {
                 e.setCanceled(true);

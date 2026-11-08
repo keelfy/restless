@@ -11,4 +11,5 @@ export default {
   blocks: 'Blocks',
   presence: 'Presence',
   scenarios: 'Scenarios',
+  signatures: 'Signatures',
 }

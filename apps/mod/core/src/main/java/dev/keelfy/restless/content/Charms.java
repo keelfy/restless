@@ -67,6 +67,17 @@ public final class Charms {
         return entity instanceof LivingEntity living && living.hasEffect(holder(Content.PHASED));
     }
 
+    /** Whether a shade is on either side of this meeting: it strikes nothing and nothing strikes it. */
+    public static boolean passes(@Nullable Entity first, @Nullable Entity second) {
+        return shade(first) || shade(second);
+    }
+
+    /** Whether this damage is a blow between bodies that a shade is part of, so it must not land at all. */
+    public static boolean passes(Entity victim, DamageSource source) {
+        boolean blow = source.getEntity() != null || source.getDirectEntity() != null;
+        return blow && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) && passes(victim, source.getEntity());
+    }
+
     private static boolean offhand(Entity entity, Supplier<Item> item) {
         return entity instanceof LivingEntity living
                 && living.getItemInHand(InteractionHand.OFF_HAND).is(item.get());
@@ -109,10 +120,7 @@ public final class Charms {
                 && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             return 0.0f;
         }
-        boolean blow = source.getEntity() != null || source.getDirectEntity() != null;
-        if (blow
-                && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)
-                && (shade(victim) || shade(source.getEntity()))) {
+        if (passes(victim, source)) {
             return 0.0f;
         }
         float dealt = Advanced.requited(victim, amount);

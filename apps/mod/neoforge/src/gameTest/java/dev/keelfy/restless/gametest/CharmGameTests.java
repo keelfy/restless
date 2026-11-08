@@ -21,9 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,6 +39,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.Blocks;
 
@@ -58,6 +62,20 @@ final class CharmGameTests {
     private CharmGameTests() {}
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("every_item_has_a_tip", helper -> {
+            for (Item item : BuiltInRegistries.ITEM) {
+                Identifier id = BuiltInRegistries.ITEM.getKey(item);
+                if (!id.getNamespace().equals(Restless.MOD_ID) || id.getPath().startsWith("unlit_")) {
+                    continue;
+                }
+                ItemLore lore = item.components().get(DataComponents.LORE);
+                check(helper, lore != null && lore.lines().size() == 1, id + " has no tip");
+                if (lore != null && lore.lines().getFirst().getContents() instanceof TranslatableContents tip) {
+                    check(helper, Language.getInstance().has(tip.getKey()), id + " tip is untranslated");
+                }
+            }
+            helper.succeed();
+        });
         tests.put("every_spirit_leaves_a_charm", helper -> {
             for (SpiritType type : Spirits.all()) {
                 Identifier essence = Identifier.fromNamespaceAndPath(Restless.MOD_ID, type.id() + "_essence");
@@ -178,6 +196,34 @@ final class CharmGameTests {
                     zombie.getTarget() instanceof net.minecraft.world.entity.decoration.Mannequin,
                     "the hostile must go for the double");
             check(helper, Charms.unseen(zombie, player), "the hostile must not turn back to the player");
+            var twin = zombie.getTarget();
+            check(helper, twin.isInvisible() && twin.noPhysics, "the double must be a ghost with no body to bump");
+            check(
+                    helper,
+                    Restless.onStrike(twin, player.damageSources().playerAttack(player))
+                            && !Restless.onStrike(twin, player.damageSources().mobAttack(zombie)),
+                    "the player must not strike the double, but a mob can");
+            helper.succeed();
+        });
+        tests.put("phased_blows_never_land", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            Zombie zombie = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 1, 1, 1);
+            check(helper, !Restless.onMeet(player, zombie), "without the effect a swing must land");
+            player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                    Charms.holder(dev.keelfy.restless.content.Content.PHASED), 200));
+            check(
+                    helper,
+                    Restless.onStrike(zombie, player.damageSources().playerAttack(player))
+                            && Restless.onStrike(player, player.damageSources().mobAttack(zombie)),
+                    "a shade must neither strike nor be struck");
+            check(
+                    helper,
+                    Restless.onMeet(player, zombie) && Restless.onMeet(zombie, player),
+                    "swings must pass through");
+            check(
+                    helper,
+                    !Restless.onStrike(player, player.damageSources().fellOutOfWorld()),
+                    "the void still reaches it");
             helper.succeed();
         });
         tests.put("drowned_stone_is_a_weight_on_land", helper -> {

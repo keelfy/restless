@@ -2780,6 +2780,46 @@
     "restless:bound": {
       "name": "Bound",
       "description": "You are held in place while a hostile is dragged to you. Kill it."
+    },
+    "minecraft:phantom_self_join": {
+      "name": "Own Name Joins",
+      "description": "\"<player> joined the game\" with the player's own name and skin in the player list; 40 s later it leaves. Nothing on the server. Only a phantom."
+    },
+    "minecraft:nix_catch": {
+      "name": "Catch on the Shore",
+      "description": "3 to 5 raw cod and salmon lie in a row on the shore by the water, with a splash. The fish are real items. Only a nix."
+    },
+    "minecraft:nix_call": {
+      "name": "Bubble Line",
+      "description": "A line of bubbles crosses the water toward the player and ends with a conduit sound at the shore. Only a nix."
+    },
+    "minecraft:mimic_voice": {
+      "name": "Wrong Voice",
+      "description": "A nearby animal makes another mob's sound three times: a cow says the villager's \"hmm\", a sheep groans like a zombie, a chicken mews. Only a mimic."
+    },
+    "minecraft:wraith_taken": {
+      "name": "Taken in the Dark",
+      "description": "In the dark, a wild animal nearby vanishes in a puff of smoke, with no sound and no drops. Named, tamed and leashed animals are left alone. Lost for good. Only a wraith."
+    },
+    "minecraft:domovoi_supper": {
+      "name": "Supper Eaten",
+      "description": "One bread or cookie is gone from a nearby chest, a milk bucket becomes an empty bucket, a stew a bowl, with an eating sound. Only a domovoi."
+    },
+    "minecraft:domovoi_hearth": {
+      "name": "Hearth Kept",
+      "description": "A cold campfire nearby is lit, or a furnace with input and no fuel gets one coal. Only a domovoi."
+    },
+    "minecraft:hoarder_payment": {
+      "name": "Payment in Junk",
+      "description": "A stack in a nearby chest is swapped for junk of the same size: dirt, sticks, rotten flesh or string. Lost for good. Only a hoarder."
+    },
+    "minecraft:demon_offer": {
+      "name": "Offer on a Sign",
+      "description": "A crimson sign with an offer (\"a diamond for your bed\") stands on the ground nearby for five minutes. Nothing more happens. Only a demon."
+    },
+    "minecraft:lost_one_sign": {
+      "name": "Sign That Asks",
+      "description": "A sign on the ground nearby asks the way (\"which way is home?\") and is gone after five minutes. Only a lost one."
     }
   }
 }

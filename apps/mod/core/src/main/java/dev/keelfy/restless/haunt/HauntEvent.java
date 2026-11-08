@@ -5,6 +5,7 @@ import dev.keelfy.restless.spirit.SpiritType;
 import java.util.Set;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import org.jspecify.annotations.Nullable;
 
 public interface HauntEvent {
     /**
@@ -20,6 +21,15 @@ public interface HauntEvent {
     /** Relative likelihood against other events, from {@code events.<id>.weight}. */
     default double baseWeight() {
         return Config.event(id().toString()).num("weight");
+    }
+
+    /**
+     * The one spirit type that may roll the event, from {@code events.<id>.spirit}; null when any type may. A
+     * {@link Scenario} reads the same key as a boost instead, see {@link #signature}.
+     */
+    default @Nullable String only() {
+        Config.Section config = Config.event(id().toString());
+        return config.has("spirit") ? config.text("spirit") : null;
     }
 
     /** Whether a spirit this strong may roll the event at all; only {@link Scenario}s are gated. */

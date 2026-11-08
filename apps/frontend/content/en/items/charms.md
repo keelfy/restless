@@ -20,7 +20,7 @@ Nix essence + nautilus shell. In the off hand: endless breath, Dolphin's Grace a
 
 ## Phantom: Phantom Double
 
-Phantom essence + phantom membrane. Use it: a false copy of you stands where you are for 8 seconds and hostile mobs within 16 blocks go for it. Other players see the copy too. Rest: 1 minute.
+Phantom essence + phantom membrane. Use it: a faint, see-through ghost of you stands where you are for 8 seconds and hostile mobs within 16 blocks go for it. It is bodiless: nothing bumps into it, and players cannot strike it, only mobs can. It wears no armor. Other players see it too. Rest: 1 minute.
 
 ## Mimic: Borrowed Face
 
@@ -28,7 +28,7 @@ Mimic essence + leather. Use it: for 25 seconds hostile mobs take you for one of
 
 ## Wraith: Wraith Shroud
 
-Wraith essence + iron ingot. Use it: for 5 seconds you are a shade. Blows pass through you and yours pass through what you strike, but a fall or fire still hurts. Costs 0.2 sanity. Rest: 90 seconds.
+Wraith essence + iron ingot. Use it: for 5 seconds you are a shade. Blows pass through you and yours pass through what you strike, with no hit, knockback or hurt flash (arrows fly through too), but a fall or fire still hurts. Costs 0.2 sanity. Rest: 90 seconds.
 
 ## Mara: Borrowed Dream
 

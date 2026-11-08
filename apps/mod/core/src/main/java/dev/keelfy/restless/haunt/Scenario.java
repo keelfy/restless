@@ -156,6 +156,12 @@ public final class Scenario implements HauntEvent {
                 : 1.0;
     }
 
+    /** The {@code spirit} key only boosts a scenario, it does not shut other types out. */
+    @Override
+    public @Nullable String only() {
+        return null;
+    }
+
     /** Only the opening beat is checked: the rest may find nothing to act on and are skipped. */
     @Override
     public boolean canRun(ServerPlayer player) {

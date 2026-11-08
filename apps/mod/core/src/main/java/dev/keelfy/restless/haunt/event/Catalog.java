@@ -51,7 +51,8 @@ public final class Catalog {
                         Followers.all(),
                         Machines.all(),
                         Relics.all(),
-                        Fittings.all())
+                        Fittings.all(),
+                        Signatures.all())
                 .flatMap(List::stream)
                 .toList();
     }

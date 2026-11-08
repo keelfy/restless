@@ -28,7 +28,7 @@ export const events = [
   ['Lights', 'lights'], ['Doors', 'doors'], ['Affliction', 'affliction'],
   ['Assault', 'assault'], ['Sound', 'sound'], ['Water', 'water'],
   ['Mobs', 'mobs'], ['Items', 'items'], ['Blocks', 'blocks'], ['Presence', 'presence'],
-  ['Scenarios', 'scenarios'],
+  ['Scenarios', 'scenarios'], ['Signatures', 'signatures'],
 ]
 
 export const Roster = ({ title, note, spirits }) => (
@@ -48,7 +48,7 @@ export const Roster = ({ title, note, spirits }) => (
 
 export const EventLinks = () => (
   <p>
-    <Link href="/en/events">695 events</Link>, sorted by what they touch:{' '}
+    <Link href="/en/events">705 events</Link>, sorted by what they touch:{' '}
     {events.map(([name, id], i) => (
       <span key={id}>{i > 0 && ', '}<Link href={`/en/events/${id}`}>{name.toLowerCase()}</Link></span>
     ))}.

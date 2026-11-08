@@ -412,10 +412,16 @@ public final class Director {
                 : 0.0;
     }
 
-    /** The checks that cost nothing, made before {@link HauntEvent#canRun} looks around the player. */
+    /**
+     * The checks that cost nothing (the event's own spirit type among them), made before {@link HauntEvent#canRun}
+     * looks around the player.
+     */
     private static boolean open(
             HauntEvent event, ServerPlayer player, SpiritType spirit, double power, boolean evolved) {
-        return event.opensAt(power, evolved) && Bands.open(event, player, spirit, power, evolved);
+        String only = event.only();
+        return (only == null || only.equals(spirit.id()))
+                && event.opensAt(power, evolved)
+                && Bands.open(event, player, spirit, power, evolved);
     }
 
     /**

@@ -26,9 +26,11 @@ import dev.keelfy.restless.haunt.ScreenOverlay;
 import java.util.List;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -41,6 +43,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /** Client-only wiring; the dedicated server never loads this class. */
@@ -116,6 +119,19 @@ public final class RestlessNeoForgeClient {
         event.register(
                 List.of(BlockTintSources.constant(-8345771)),
                 Content.GHOST_WOODS.get("birch").leaves().get());
+    }
+
+    /**
+     * An invisible mannequin is the phantom's ghost double: draw it as vanilla draws a teammate's invisible body, a
+     * faint translucent one, with no shadow.
+     */
+    @SubscribeEvent
+    public static void ghost(RenderLivingEvent.Pre<?, ?, ?> event) {
+        LivingEntityRenderState state = event.getRenderState();
+        if (state.entityType == EntityTypes.MANNEQUIN && state.isInvisible) {
+            state.isInvisibleToPlayer = false;
+            state.shadowRadius = 0.0f;
+        }
     }
 
     @SubscribeEvent

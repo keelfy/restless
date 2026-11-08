@@ -17,6 +17,8 @@ Everything a spirit leaves behind is an **essence**, and nearly everything in th
 
 [Essences](/en/items/essences) says where they come from and how to call a spirit on purpose when you need a type you have not met.
 
+Every item carries a one-line reminder of what it does, shown under its name in the tooltip.
+
 ## Rules every charm shares
 
 - **One at a time.** A charm that works while carried works from the **off hand** only, so one answers at a time. The Death Wail and its upgrade, the Requital Wail, are the exceptions: they work from anywhere in the inventory.

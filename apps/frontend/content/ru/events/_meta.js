@@ -11,4 +11,5 @@ export default {
   blocks: 'Блоки',
   presence: 'Присутствие',
   scenarios: 'Сценарии',
+  signatures: 'Знаковые',
 }

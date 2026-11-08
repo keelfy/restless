@@ -893,7 +893,7 @@ final class BlockEvents {
                 && pot.getPotted().defaultBlockState().is(BlockTags.FLOWERS);
     }
 
-    private static void centre(SignText.Mutable text, List<String> lines) {
+    static void centre(SignText.Mutable text, List<String> lines) {
         int first = (SIGN_LINES - lines.size()) / 2;
         for (int i = 0; i < SIGN_LINES; i++) {
             text.setLine(i, Component.literal(i >= first && i - first < lines.size() ? lines.get(i - first) : ""));

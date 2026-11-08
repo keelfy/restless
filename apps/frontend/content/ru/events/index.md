@@ -6,7 +6,7 @@ title: Events
 
 > Эта страница пока на английском: ивенты ещё не переведены.
 
-695 things a spirit can do to you: 591 events and 104 scenarios (a scenario is a short script of other events, played as one haunt). Light events are mostly a scare; harmful events hurt, and become more likely as a spirit grows older and angrier.
+705 things a spirit can do to you: 601 events and 104 scenarios (a scenario is a short script of other events, played as one haunt). Light events are mostly a scare; harmful events hurt, and become more likely as a spirit grows older and angrier.
 
 - [Lights](/ru/events/lights) (19)
 - [Doors](/ru/events/doors) (45)
@@ -19,3 +19,4 @@ title: Events
 - [Blocks](/ru/events/blocks) (115)
 - [Presence](/ru/events/presence) (87)
 - [Scenarios](/ru/events/scenarios) (104)
+- [Signatures](/ru/events/signatures) (10)

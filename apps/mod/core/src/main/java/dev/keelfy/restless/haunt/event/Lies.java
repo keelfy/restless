@@ -559,7 +559,7 @@ final class Lies {
      * A player list entry for {@code profile}. The packet can only be built from a real player, so it is read back from
      * its own wire format, written with its own codecs.
      */
-    private static ClientboundPlayerInfoUpdatePacket listed(ServerPlayer player, GameProfile profile, int latency) {
+    static ClientboundPlayerInfoUpdatePacket listed(ServerPlayer player, GameProfile profile, int latency) {
         RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), player.registryAccess());
         try {
             // Each entry's fields come in the actions' declared order.
