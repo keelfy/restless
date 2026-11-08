@@ -130,67 +130,27 @@ Territorial prankster: changes blocks and items, shows things.
 
 Each type shows up in its own way, and the journal's bestiary page says how once you have a photograph of one. A banshee comes when a villager or a pet dies before you, a lost one when you die far from home or go two days awake, a revenant after a slaughter or the killing of your own pet. Territorial spirits are born with structures.
 
-An **effigy** (scarecrow, candle, salt) calls any type on purpose: stuff it with one essence of that type, light it, and it burns for half a night. A personal spirit is born on the nearest player, a territorial one stays where the effigy stood. It will not light when the call could not be answered: the newest spirit is too young, the player has all they can carry, or another territorial spirit is near.
+An **effigy** calls any type on purpose: stuff it with one essence of that type and light it. See [Essences](/items/essences#the-effigy).
 
 ## Rewards
 
-Banishing a spirit at an altar leaves one of its essence, and one more if it had evolved, and one more if its blight had grown to 64 spots; putting its grave right leaves two. Each essence is crafted with one common item into a charm. Charms that work while carried work from the off hand only, so one answers at a time; the Death Wail is the exception and works from anywhere in the inventory.
+Banishing a spirit at an altar leaves one of its essence, and one more if it had evolved, and one more if its blight had grown to 64 spots; putting its grave right leaves two. Each type's essence makes a charm, an advanced charm and a consumable of its own:
 
-| Spirit | Essence + | Charm | Does |
-| --- | --- | --- | --- |
-| Poltergeist | gold ingot, string | Telekinesis Amulet | pulls dropped items and experience to you |
-| Shade | ender eye | Dark Eye | night vision; living things glow through walls and the spirits around you are marked by columns of soul fire |
-| Nix | nautilus shell | Drowned Stone | in the off hand: endless breath, Dolphin's Grace and full mining speed in water, and water spirits' events do not run on you; but a weight (slowness) on dry ground |
-| Phantom | phantom membrane | Phantom Double | a false copy of you stands for 8 seconds and hostiles within 16 blocks go for it; other players see it too (1 min rest) |
-| Mimic | leather | Borrowed Face | hostile mobs ignore you for 25 seconds, until you strike, or until you open a chest or break a block under a hostile's eyes (2 min rest) |
-| Wraith | iron ingot | Wraith Shroud | 5 seconds as a shade: blows pass through you and yours through them, but a fall or fire still hurts; costs sanity (90 s rest) |
-| Mara | honey bottle | Borrowed Dream | sanity to full; your spirits grow angrier (once a day, even across a relog) |
-| Banshee | bell | Death Wail | anywhere in your inventory: below 3 hearts it throws hostiles back, slowed and blinded, once a day; it keens 3 seconds before a spirit's assault |
-| Revenant | iron sword | Grudge | in the off hand: stores the damage you take for 10 seconds; your next blow adds half of it, up to 10 |
-| Lost one | lantern | Lost Step | slip up to 8 blocks ahead, through a wall of a block or two, but not through obsidian, iron doors or bars, or bedrock; costs sanity (20 s rest) |
-| Domovoi | campfire | House Key | in the off hand, inside a shut, roofed room: spirits' events do not run; each one stopped wears the key (16 uses) |
-| Hoarder | emerald | Stash | holds a stack; in the off hand when you die, the stack stays with you, even through a server stop, and the stash is spent (not with `keepInventory`) |
-| Demon | blaze powder | Bargain | all health at once and 30 seconds of strength II, resistance II and fire proof; then 10 minutes with two hearts fewer and angrier spirits |
-| Trickster | gold nugget | Trickster's Coin | wagers your next mob kill: its drops and experience are doubled or lost, evenly; each win in a row pays one more (up to x5), a loss starts over |
-
-## Advanced charms
-
-A charm and one more essence, crafted together, make an advanced charm. It keeps what the base held: a stash's stack, a rest not yet over.
-
-| Charm | Base + essence | Does more |
+| Spirit | Charm | Consumable |
 | --- | --- | --- |
-| Fetch's Path | Lost Step + phantom | a double of you stays where the step began, and hostiles within 16 blocks go for it; a little more sanity, a longer rest |
-| Changeling Mask | Borrowed Face + trickster | the first blow does not break the face: the struck mob is framed, and the nearest hostile turns on it; the second blow breaks it |
-| Nightwalk Shroud | Wraith Shroud + shade | a toggle: while on and in light 4 or less, hostiles lose track of you, at a little sanity a second; light ends it |
-| Blood Debt | Grudge + demon | in the off hand: no cap on the blow; if it kills, you heal what was stored; each blow costs sanity |
-| Requital Wail | Death Wail + revenant | those thrown back glow and take half again for 10 seconds |
-| Tidecaller | Drowned Stone + lost one | all the stone does, and in water or rain a riptide-like dash; none on dry ground |
-| Magpie's Hook | Telekinesis Amulet + hoarder | in the off hand items within 6 blocks come to you; sneak-use on a container links it, and what does not fit goes there within 64 blocks; the link breaks with the container |
-| Truthseer's Eye | Dark Eye + banshee | once a day the next voice or planchette reading cannot lie |
-| Hearth Dream | Borrowed Dream + domovoi | sanity to full without angering spirits, but only in a shut, roofed room; once a day |
-| Keeper's Key | House Key + hoarder | bound to the first room it shelters, where it never wears; elsewhere it does nothing; craft it with a campfire to unbind |
-| Grave Satchel | Stash + lost one | holds three stacks; in the off hand at death it stays with you, full, and rests three days |
-| Devil's Coin | Trickster's Coin + demon | the wager stands for every kill for 30 seconds, each settled on its own; a loss ends it; each toss angers your spirits |
-| Twin's Mirror | Phantom Double + mimic | the double stands where you look (up to 16 blocks) and holds what you hold |
-| Black Bargain | Bargain + wraith | the fury lasts 45 seconds; the debt is 0.4 sanity at once, not hearts; 10 minutes' rest |
+| Poltergeist | [Telekinesis Amulet](/items/charms#poltergeist-telekinesis-amulet) | [Restless Knot](/items/consumables#poltergeist-restless-knot) |
+| Shade | [Dark Eye](/items/charms#shade-dark-eye) | [Dusk Salt](/items/consumables#shade-dusk-salt) |
+| Nix | [Drowned Stone](/items/charms#nix-drowned-stone) | [Still Water](/items/consumables#nix-still-water) |
+| Phantom | [Phantom Double](/items/charms#phantom-phantom-double) | [Sighting Mark](/items/consumables#phantom-sighting-mark) |
+| Mimic | [Borrowed Face](/items/charms#mimic-borrowed-face) | [Mimic Clay](/items/consumables#mimic-mimic-clay) |
+| Wraith | [Wraith Shroud](/items/charms#wraith-wraith-shroud) | [Wraith Oil](/items/consumables#wraith-wraith-oil) |
+| Mara | [Borrowed Dream](/items/charms#mara-borrowed-dream) | [Dreamless Draught](/items/consumables#mara-dreamless-draught) |
+| Banshee | [Death Wail](/items/charms#banshee-death-wail) | [Omen Candle](/items/consumables#banshee-omen-candle) |
+| Revenant | [Grudge](/items/charms#revenant-grudge) | [Bloodied Rag](/items/consumables#revenant-bloodied-rag) |
+| Lost one | [Lost Step](/items/charms#lost-one-lost-step) | [Wayfinder's Ash](/items/consumables#lost-one-wayfinders-ash) |
+| Domovoi | [House Key](/items/charms#domovoi-house-key) | [Domovoi's Porridge](/items/consumables#domovoi-domovois-porridge) |
+| Hoarder | [Stash](/items/charms#hoarder-stash) | [Magpie Feather](/items/consumables#hoarder-magpie-feather) |
+| Demon | [Bargain](/items/charms#demon-bargain) | [Infernal Contract](/items/consumables#demon-infernal-contract) |
+| Trickster | [Trickster's Coin](/items/charms#trickster-tricksters-coin) | [Changeling Dust](/items/consumables#trickster-changeling-dust) |
 
-## Consumables
-
-Each essence also makes one thing that is spent as it is used. Crafted without a table of its own: the essence and common items, shapeless.
-
-| Spirit | Essence + | Makes | Does |
-| --- | --- | --- | --- |
-| Poltergeist | string, 2 iron chains | 4 Restless Knots | tied on a container, for 10 minutes it takes in items dropped within 8 blocks, like a hopper with no pipe; a full container lets them lie; one knot to a container |
-| Shade | salt, coal | 4 Dusk Salt | scattered on a block: for a day no hostile mob spawns of itself within 12 blocks; spawners and spirits' events are not stopped |
-| Nix | water bottle, prismarine shard | 2 Still Water | drunk: clears rain and thunder and holds the sky for a day; drunk sneaking: calls a storm for 10 minutes; overworld only |
-| Phantom | paper, glowstone dust | 4 Sighting Marks | set on a block: a pale figure glows through walls where you can see it from afar, for three days; a renamed mark names it; eight at most |
-| Mimic | 4 clay balls | 8 Mimic Clay | pressed on a block it takes its look; set down, it is a solid block that looks like it and breaks as slowly; the Dark Eye shows it bare; breaking it gives the clay back |
-| Wraith | glass bottle, ink sac | 2 Wraith Oil | with a weapon in the other hand: 30 blows that, in light 7 or less, hit half again as hard through armor |
-| Mara | honey bottle, poppy | 3 Dreamless Draughts | drunk before bed: sleep is allowed with monsters near and the night passes with only you in bed; you wake with 0.3 sanity more, and your mara does not act that night |
-| Banshee | candle, bone meal | 4 Omen Candles | lit with fire, burns for a day: a harmful event on a player within 16 blocks is announced by its wail 5 seconds before; the lights events snuff it |
-| Revenant | 2 rotten flesh, red dye | 4 Bloodied Rags | thrown at a mob: for 15 seconds every mob of its type within 24 blocks goes for it; not bosses |
-| Lost one | ash, bone | 4 Wayfinder's Ash | used: footprints lead to where you last died for 3 minutes; sneaking, to your respawn point |
-| Domovoi | bowl, wheat, milk bucket | 4 Domovoi's Porridge | set in a shut, roofed room, eaten by the house spirit over a day: crops and saplings within 16 blocks grow three times as fast, young animals grow up sooner and breed again sooner; one bowl to a room; mends a House Key by 8 uses in an anvil |
-| Hoarder | feather, gold nugget | 4 Magpie Feathers | used: for 2 minutes a stream of light leads to the nearest chest, barrel or pot nobody has opened |
-| Demon | paper, blaze powder | 1 Infernal Contract | with an enchanted item in the other hand: one enchantment that stands at its highest level goes one past it; the item takes the Curse of Vanishing and your spirits grow angrier; once per item |
-| Trickster | gold nugget, redstone | 4 Changeling Dust | on a block: turns it into another of its family (wool, logs, planks, stone variants, concrete, glass, terracotta); on a villager who never traded: deals their trades again |
+See [Items](/items) for how they work, [Advanced charms](/items/advanced) for what two essences make, and [Essences](/items/essences) for where each type is met.

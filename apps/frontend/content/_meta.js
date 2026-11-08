@@ -5,5 +5,6 @@ export default {
     theme: { layout: 'full', toc: false, sidebar: false, breadcrumb: false, pagination: false, timestamp: false, copyPage: false },
   },
   spirits: 'Spirits',
+  items: 'Items',
   events: 'Events',
 }
