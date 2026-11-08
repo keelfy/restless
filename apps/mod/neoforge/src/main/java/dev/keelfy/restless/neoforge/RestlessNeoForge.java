@@ -144,7 +144,7 @@ public final class RestlessNeoForge {
             }
         });
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> Restless.registerCommands(e.getDispatcher()));
-        NeoForge.EVENT_BUS.addListener((ServerStoppingEvent e) -> Restless.onServerStopping());
+        NeoForge.EVENT_BUS.addListener((ServerStoppingEvent e) -> Restless.onServerStopping(e.getServer()));
         NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtPosition e) -> Restless.onPlaySound(
                 e.getLevel(), e.getPosition(), e.getSound(), e.getSource(), e.getNewVolume(), e.getNewPitch()));
         NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtEntity e) -> Restless.onPlaySound(

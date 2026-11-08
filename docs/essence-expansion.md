@@ -2,7 +2,7 @@
 
 What spirit essences become after the first twelve charms (see [spirit-rewards.md](spirit-rewards.md)): a rebalance of
 the charms, a working essence economy, a consumable per spirit, advanced charms and relics made of several essences,
-and the **Requiem**, the finale that lets the player go. Phases 0 to 4 are built (see the notes at their heads); the rest is not. Numbers are
+and the **Requiem**, the finale that lets the player go. All phases are built (see the notes at their heads); the gaps and deviations are listed there. Numbers are
 starting values, all in config.
 
 ## Goals
@@ -337,7 +337,7 @@ a tick budget).
 
 **Built:** all fourteen: `UpgradeRecipe` (`restless:upgrade`, shapeless, base + essence, copies the base's components), one item class each in `content/` (the base classes were opened up with small hooks, so an upgrade extends its base), what is more than a few lines in `content/Advanced.java`, config section `advanced`, recipes, lang (en, ru), textures. **Differences from the plan:**
 
-- Nightwalk Shroud: hostiles lose track of the holder (and drop a target), but the holder does not walk through them; vanilla gives no clean no-collision with mobs. The toggle is in memory, so a server stop ends it.
+- Nightwalk Shroud: hostiles lose track of the holder (and drop a target), and the holder passes through mobs. Vanilla mobs never block a player, they only shove; a walker is moved into a scoreboard team (`restless_walk`) whose collision rule is `never`, which removes the shove both ways on server and client, and is put back in the team they had when the walk ends, at a server stop, or (after a crash) on the next walk check. The toggle is in memory, so a server stop ends it. A player in a team that others see will show as teamless while walking.
 - Keeper's Key: its "room" is the spot where it first sheltered, and what lies within `advanced.keeper_radius` of it while that is a shut, roofed room; not a hash of the room's cells.
 - Grave Satchel: at death the whole satchel, resting for `advanced.satchel_rest_ticks`, goes into the same saved `kept` slot the Stash uses, so there is one slot per player and a server stop keeps it.
 - Tidecaller: in the off hand it is a Drowned Stone in every way (the weight on dry ground too) and also dashes in water or rain.
@@ -409,7 +409,7 @@ and no territorial events, and ringing the bell gives three spirits back. A unit
 - `apps/frontend/content/spirits.md`: the rewards table grows into charms, consumables, advanced charms, relics and the
   Requiem; plus `docs/spirit-rewards.md` status.
 
-**Built:** lang (en, ru) is in step, 494 keys each; the wiki has Items pages (essences, charms, consumables, advanced, relics, tools, Requiem) in en and ru and the `spirits.md` rewards section; `docs/spirit-rewards.md` status points here. Every model and texture the code references exists. The Requiem's two item textures were replaced with generated art. No new block-entity renderer was needed: Hoarder's Hollow is a plain block model and Mimic Clay is an item. **Still open:** nothing from this phase.
+**Built:** lang (en, ru) is in step, 494 keys each; the wiki has Items pages (essences, charms, consumables, advanced, relics, tools, Requiem) in en and ru and the `spirits.md` rewards section; `docs/spirit-rewards.md` status points here. Every model and texture the code references exists. The Requiem's two item textures were replaced with generated art. The one block-entity renderer, `MimicRenderer`, draws the look a Mimic Clay block (and a Hoarder's Hollow that wears clay) holds. **Still open:** nothing from this phase.
 
 ### Size and order
 
@@ -433,7 +433,7 @@ best after 3 and 4, because its movements lean on those items.
   is fun, but it splits the arc that makes the finale personal.
 - **Released and the land.** Should a released player's presence slow territorial blight, as a reward that still keeps
   them in the world's story?
-- **Art.** About 40 new textures; Mimic Clay and Hoarder's Hollow need block-entity renderers.
+- **Art.** The textures were drawn by an image model and downscaled to 16x16; none has been looked at in a running client yet.
 - **Dreamless Draught on servers.** Skipping the night alone is a big lever over other players; the default may be
   better false on dedicated servers.
 - **Infernal Contract stacking with other mods' enchantments** past their maximum: limit to vanilla enchantments, or to

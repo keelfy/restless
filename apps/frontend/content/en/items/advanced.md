@@ -33,7 +33,7 @@ The Borrowed Face, but the first blow does not break it. The mob you struck is *
 
 ## Nightwalk Shroud
 
-A toggle: use it to put it on, again to take it off. While it is on and the light at your feet is 4 or lower, hostile mobs lose track of you, and drop a target they had. It costs 0.01 sanity a second. Light of 5 or more ends it, and so does putting the shroud away or a server stop. You do not walk through mobs: only their eyes are fooled.
+A toggle: use it to put it on, again to take it off. While it is on and the light at your feet is 4 or lower, hostile mobs lose track of you, and drop a target they had. It costs 0.01 sanity a second. Light of 5 or more ends it, and so does putting the shroud away or a server stop. While it is on you also pass through mobs: nothing shoves you and you shove nothing.
 
 ## Blood Debt
 

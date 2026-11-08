@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -26,6 +27,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.Team;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -85,13 +89,68 @@ public final class Advanced {
 
     // --- Nightwalk Shroud ------------------------------------------------------------------------------------------
 
+    /** The scoreboard team a walker stands in: it pushes nothing and is pushed by nothing. */
+    private static final String WALK_TEAM = "restless_walk";
+    /** The team a walker stood in before, by player; {@code ""} for none. */
+    private static final Map<UUID, String> BEFORE = Session.SERVER.keep(new HashMap<>());
+
     /** Toggles the walk; @return whether it is on now. */
     static boolean toggleWalk(ServerPlayer player) {
-        boolean on = NIGHTWALKERS.add(player.getUUID());
-        if (!on) {
-            NIGHTWALKERS.remove(player.getUUID());
+        if (NIGHTWALKERS.remove(player.getUUID())) {
+            unghost(player);
+            return false;
         }
-        return on;
+        NIGHTWALKERS.add(player.getUUID());
+        ghost(player);
+        return true;
+    }
+
+    /**
+     * Vanilla mobs never block a player; they shove, a little each tick, in both directions. A team whose collision
+     * rule is never takes the shove away on both sides, server and client, so the walker passes through.
+     */
+    private static void ghost(ServerPlayer player) {
+        Scoreboard board = player.level().getServer().getScoreboard();
+        String name = player.getScoreboardName();
+        PlayerTeam team = board.getPlayerTeam(WALK_TEAM);
+        if (team == null) {
+            team = board.addPlayerTeam(WALK_TEAM);
+            team.setCollisionRule(Team.CollisionRule.NEVER);
+        }
+        PlayerTeam old = board.getPlayersTeam(name);
+        if (old != team) {
+            BEFORE.put(player.getUUID(), old == null ? "" : old.getName());
+            board.addPlayerToTeam(name, team);
+        }
+    }
+
+    /** Puts the walker back in the team they stood in, or none. */
+    private static void unghost(ServerPlayer player) {
+        Scoreboard board = player.level().getServer().getScoreboard();
+        String name = player.getScoreboardName();
+        PlayerTeam team = board.getPlayerTeam(WALK_TEAM);
+        if (team == null || board.getPlayersTeam(name) != team) {
+            BEFORE.remove(player.getUUID());
+            return;
+        }
+        board.removePlayerFromTeam(name, team);
+        String before = BEFORE.remove(player.getUUID());
+        PlayerTeam back = before == null || before.isEmpty() ? null : board.getPlayerTeam(before);
+        if (back != null) {
+            board.addPlayerToTeam(name, back);
+        }
+        if (team.getPlayers().isEmpty()) {
+            board.removePlayerTeam(team);
+        }
+    }
+
+    /** Call when the server stops: no walker is left in the walking team in the saved world. */
+    public static void endWalks(MinecraftServer server) {
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            if (NIGHTWALKERS.remove(player.getUUID())) {
+                unghost(player);
+            }
+        }
     }
 
     /** Whether {@code entity} walks in the night, and so is looked past by hostile things. */
@@ -102,11 +161,16 @@ public final class Advanced {
     /** Every half second for a player walking in the night: the light ends it, it costs sanity, hostiles lose track. */
     static void walk(ServerPlayer player) {
         if (!NIGHTWALKERS.contains(player.getUUID())) {
+            // A crash can leave a walker in the walking team; a walk that is not on lets them out.
+            if (player.getTeam() != null && WALK_TEAM.equals(player.getTeam().getName())) {
+                unghost(player);
+            }
             return;
         }
         boolean lit = player.level().getMaxLocalRawBrightness(player.blockPosition()) > config().integer("walk_light");
         if (carried(player, Content.NIGHTWALK_SHROUD).isEmpty() || lit) {
             NIGHTWALKERS.remove(player.getUUID());
+            unghost(player);
             player.sendSystemMessage(Component.translatable("message.restless.walk_ended"), true);
             return;
         }

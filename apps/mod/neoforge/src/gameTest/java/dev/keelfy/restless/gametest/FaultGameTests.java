@@ -149,7 +149,7 @@ final class FaultGameTests {
             int[] ran = {0};
             Scheduler.later(player, 5, p -> ran[0]++);
             check(helper, DoorLocks.isLocked(helper.getLevel(), door), "the door must be locked before the stop");
-            Restless.onServerStopping();
+            Restless.onServerStopping(helper.getLevel().getServer());
             check(helper, !DoorLocks.isLocked(helper.getLevel(), door), "a stopped server must not keep a door locked");
             check(helper, !Recent.blocks(player.getUUID(), "some_event"), "a stopped server must forget the history");
             check(helper, Rarity.boost("some_event") == 1.0, "a stopped server must forget the availability");

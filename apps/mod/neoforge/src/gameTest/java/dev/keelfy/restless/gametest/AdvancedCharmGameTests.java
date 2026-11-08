@@ -34,6 +34,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -161,6 +162,30 @@ final class AdvancedCharmGameTests {
                 Charms.held(player);
                 check(helper, !Charms.unseen(zombie, player), "light must end the walk");
             });
+        });
+        tests.put("nightwalk_shroud_walker_is_pushed_by_nothing_and_gets_their_team_back", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            Zombie zombie = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 1, 1, 1);
+            var board = helper.getLevel().getServer().getScoreboard();
+            var home = board.addPlayerTeam("restless_test_home");
+            board.addPlayerToTeam(player.getScoreboardName(), home);
+            player.setPos(zombie.position());
+            check(
+                    helper,
+                    EntitySelector.pushableBy(zombie).test(player),
+                    "a player is shoved by a mob before the walk");
+            use(helper, player, "nightwalk_shroud");
+            check(helper, !EntitySelector.pushableBy(zombie).test(player), "a walker must not be shoved by a mob");
+            check(helper, !EntitySelector.pushableBy(player).test(zombie), "a walker must not shove a mob");
+            use(helper, player, "nightwalk_shroud");
+            check(
+                    helper,
+                    player.getTeam() != null
+                            && "restless_test_home".equals(player.getTeam().getName()),
+                    "ending the walk must give back the old team");
+            check(helper, EntitySelector.pushableBy(zombie).test(player), "a player is shoved again after the walk");
+            board.removePlayerTeam(home);
+            helper.succeed();
         });
         tests.put("blood_debt_has_no_cap_and_heals_on_a_kill", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);

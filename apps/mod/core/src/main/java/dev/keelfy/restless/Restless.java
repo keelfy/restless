@@ -119,9 +119,10 @@ public final class Restless {
     }
 
     /** Call when the server starts to stop, before the worlds are saved. */
-    public static void onServerStopping() {
+    public static void onServerStopping(MinecraftServer server) {
         Requiem.abortAll();
         Restore.flush();
+        Advanced.endWalks(server);
         Session.SERVER.end();
     }
 
