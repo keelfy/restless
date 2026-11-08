@@ -183,6 +183,7 @@ public final class JournalPages {
             Spirits.byId(kind)
                     .ifPresent(type -> entries.add(Entry.plain(Component.translatable(
                             "journal.restless.form." + type.form().name().toLowerCase(Locale.ROOT)))));
+            entries.add(Entry.plain(Component.translatable("journal.restless.met." + kind)));
             if (grown) {
                 entries.add(Entry.plain(Component.translatable(
                         "journal.restless.bestiary.grown",

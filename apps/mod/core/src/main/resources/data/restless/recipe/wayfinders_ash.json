@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:lost_one_essence",
+    "restless:ash",
+    "minecraft:bone"
+  ],
+  "result": {
+    "id": "restless:wayfinders_ash",
+    "count": 4
+  }
+}

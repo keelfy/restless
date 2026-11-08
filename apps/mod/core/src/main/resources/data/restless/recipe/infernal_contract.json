@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:demon_essence",
+    "minecraft:paper",
+    "minecraft:blaze_powder"
+  ],
+  "result": {
+    "id": "restless:infernal_contract",
+    "count": 1
+  }
+}

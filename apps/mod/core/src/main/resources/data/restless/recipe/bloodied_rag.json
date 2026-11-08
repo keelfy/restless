@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:revenant_essence",
+    "minecraft:rotten_flesh",
+    "minecraft:rotten_flesh",
+    "minecraft:red_dye"
+  ],
+  "result": {
+    "id": "restless:bloodied_rag",
+    "count": 4
+  }
+}

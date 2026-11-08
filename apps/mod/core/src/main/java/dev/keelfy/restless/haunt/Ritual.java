@@ -171,12 +171,21 @@ public final class Ritual {
 
     private static void banish(ServerPlayer player, ServerLevel level, BlockPos altar, Sense.Spirit spirit) {
         clear(level, altar);
-        HauntData.get(level.getServer()).change(spirit.haunting().uuid(), h -> null);
+        HauntData data = HauntData.get(level.getServer());
+        int essences = essences(
+                spirit.haunting().evolved(),
+                Corruption.spots(data, spirit.haunting().uuid()),
+                Config.section("ritual").integer("blight_reward_spots"));
+        data.change(spirit.haunting().uuid(), h -> null);
         Location.forget(spirit.haunting().uuid());
         Supplier<Item> essence = Content.ESSENCE.get(spirit.haunting().spirit());
         if (essence != null) {
             level.addFreshEntity(new ItemEntity(
-                    level, altar.getX() + 0.5, altar.getY() + 1.0, altar.getZ() + 0.5, new ItemStack(essence.get())));
+                    level,
+                    altar.getX() + 0.5,
+                    altar.getY() + 1.0,
+                    altar.getZ() + 0.5,
+                    new ItemStack(essence.get(), essences)));
         }
         level.sendParticles(
                 ParticleTypes.SOUL_FIRE_FLAME,
@@ -190,7 +199,11 @@ public final class Ritual {
                 0.05);
         level.playSound(null, altar, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0f, 0.6f);
         Component type = Evolution.name(spirit.haunting());
-        player.sendSystemMessage(Component.translatable("message.restless.banished", type), true);
+        player.sendSystemMessage(
+                essences > 1
+                        ? Component.translatable("message.restless.banished_more", type, essences)
+                        : Component.translatable("message.restless.banished", type),
+                true);
         Journal.tagged(
                 player,
                 Notebook.Kind.BANISHED,
@@ -198,6 +211,14 @@ public final class Ritual {
                 spirit.haunting().spirit() + (spirit.haunting().evolved() ? "_evolved" : ""),
                 type,
                 Story.of(spirit.haunting().seed()).name());
+    }
+
+    /**
+     * What a banishing leaves: one essence, one more for a spirit that had evolved (its ritual is longer), one more for
+     * a territorial spirit whose blight had grown to {@code blightSpots} spots.
+     */
+    public static int essences(boolean evolved, int blightSpots, int blightReward) {
+        return 1 + (evolved ? 1 : 0) + (blightSpots >= blightReward ? 1 : 0);
     }
 
     private static void fail(ServerPlayer player, ServerLevel level, BlockPos altar, Sense.Spirit spirit) {

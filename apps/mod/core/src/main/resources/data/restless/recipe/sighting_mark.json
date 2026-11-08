@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:phantom_essence",
+    "minecraft:paper",
+    "minecraft:glowstone_dust"
+  ],
+  "result": {
+    "id": "restless:sighting_mark",
+    "count": 4
+  }
+}

@@ -20,7 +20,8 @@ public final class Anger {
         BREAK_GRAVE("break_grave"),
         BURN_FOREST("burn_forest"),
         BARGAIN("bargain"),
-        DREAM("dream");
+        DREAM("dream"),
+        CONTRACT("contract");
 
         private final String key;
 

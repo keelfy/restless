@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:mimic_essence",
+    "minecraft:clay_ball",
+    "minecraft:clay_ball",
+    "minecraft:clay_ball",
+    "minecraft:clay_ball"
+  ],
+  "result": {
+    "id": "restless:mimic_clay",
+    "count": 8
+  }
+}

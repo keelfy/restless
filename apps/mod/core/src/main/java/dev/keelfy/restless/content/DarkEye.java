@@ -2,10 +2,12 @@ package dev.keelfy.restless.content;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.HauntData;
+import dev.keelfy.restless.haunt.Scan;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Sense;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -44,10 +46,20 @@ public final class DarkEye extends Item {
         }
         if (player instanceof ServerPlayer server && level instanceof ServerLevel world) {
             mark(server, world, config, ticks);
+            reveal(world, player.blockPosition(), config.integer("eye_radius"), world.getGameTime() + ticks);
         }
         level.playSound(null, player.blockPosition(), SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 0.8f, 0.6f);
         player.getCooldowns().addCooldown(player.getItemInHand(hand), config.integer("eye_cooldown_ticks"));
         return InteractionResult.SUCCESS_SERVER;
+    }
+
+    /** The mimics in reach show their true face for as long as the eye sees. */
+    private static void reveal(ServerLevel level, BlockPos centre, int radius, long until) {
+        Scan.each(level, centre, radius, (pos, state) -> {
+            if (state.getBlock() instanceof MimicBlock && level.getBlockEntity(pos) instanceof MimicBlockEntity mimic) {
+                mimic.reveal(until);
+            }
+        });
     }
 
     /** Where the spirits are that the eye of {@code player} sees within {@code reach}. */

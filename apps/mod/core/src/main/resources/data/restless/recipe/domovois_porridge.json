@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:domovoi_essence",
+    "minecraft:bowl",
+    "minecraft:wheat",
+    "minecraft:milk_bucket"
+  ],
+  "result": {
+    "id": "restless:domovois_porridge",
+    "count": 4
+  }
+}

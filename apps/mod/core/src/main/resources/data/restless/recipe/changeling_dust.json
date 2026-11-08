@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:trickster_essence",
+    "minecraft:gold_nugget",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "id": "restless:changeling_dust",
+    "count": 4
+  }
+}

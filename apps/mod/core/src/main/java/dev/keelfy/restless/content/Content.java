@@ -123,6 +123,9 @@ public final class Content {
                     WardBlock.Kind.SCARECROW,
                     10));
     public static final Supplier<Item> SCARECROW_ITEM = blockItem("scarecrow", SCARECROW);
+    public static final Supplier<Block> EFFIGY = block(
+            "effigy", p -> new Effigy(p.strength(0.5f).sound(SoundType.GRASS).noOcclusion()));
+    public static final Supplier<Item> EFFIGY_ITEM = blockItem("effigy", EFFIGY);
 
     public static final Supplier<Block> ALTAR = block(
             "altar", p -> new Altar(p.strength(2.0f).sound(SoundType.STONE).noOcclusion()));
@@ -210,6 +213,79 @@ public final class Content {
     public static final Supplier<Item> TELEKINESIS_AMULET =
             item("telekinesis_amulet", p -> new TelekinesisAmulet(p.stacksTo(1)));
     public static final Supplier<Item> DARK_EYE = item("dark_eye", p -> new DarkEye(p.stacksTo(1)));
+
+    /** What a drinker of the Dreamless Draught is until they have slept it off, see {@link Draughts}. */
+    public static final Supplier<MobEffect> DREAMLESS = Platform.get()
+            .register(BuiltInRegistries.MOB_EFFECT, "dreamless", key -> new Pact(MobEffectCategory.NEUTRAL, 0x6C5B9E));
+    /** How many hits a weapon coated in wraith oil has left, see {@link WraithOil}. */
+    public static final Supplier<DataComponentType<Charges>> CHARGES =
+            component("charges", Charges.CODEC, Charges.STREAM_CODEC);
+    /** The thrown bloodied rag. */
+    public static final Supplier<EntityType<?>> RAG_ENTITY = Platform.get()
+            .register(
+                    BuiltInRegistries.ENTITY_TYPE,
+                    "bloodied_rag",
+                    key -> EntityType.Builder.<RagEntity>of(RagEntity::new, MobCategory.MISC)
+                            .sized(0.25f, 0.25f)
+                            .clientTrackingRange(4)
+                            .updateInterval(10)
+                            .build(key));
+
+    /** The consumables, one to each spirit that leaves an essence: each is spent as it is used. */
+    public static final Supplier<Item> STILL_WATER =
+            item("still_water", p -> new Draught(p.stacksTo(16), Draughts::still));
+
+    public static final Supplier<Item> DREAMLESS_DRAUGHT =
+            item("dreamless_draught", p -> new Draught(p.stacksTo(16), Draughts::dreamless));
+    public static final Supplier<Item> WAYFINDERS_ASH = item("wayfinders_ash", Wayfinder::new);
+    public static final Supplier<Item> MAGPIE_FEATHER = item("magpie_feather", MagpieFeather::new);
+    public static final Supplier<Item> CHANGELING_DUST = item("changeling_dust", ChangelingDust::new);
+    public static final Supplier<Item> BLOODIED_RAG = item("bloodied_rag", p -> new BloodiedRag(p.stacksTo(16)));
+    public static final Supplier<Item> WRAITH_OIL = item("wraith_oil", p -> new WraithOil(p.stacksTo(16)));
+    public static final Supplier<Item> INFERNAL_CONTRACT = item("infernal_contract", InfernalContract::new);
+    public static final Supplier<Item> RESTLESS_KNOT = item("restless_knot", RestlessKnot::new);
+    public static final Supplier<Item> DUSK_SALT = item("dusk_salt", DuskSalt::new);
+    public static final Supplier<Item> SIGHTING_MARK = item("sighting_mark", SightingMarkItem::new);
+    public static final Supplier<Item> MIMIC_CLAY = item("mimic_clay", MimicClay::new);
+    /** What a lump of mimic clay shows as, once pressed against a block. */
+    public static final Supplier<DataComponentType<Look>> LOOK = component("look", Look.CODEC, Look.STREAM_CODEC);
+
+    public static final Supplier<Block> OMEN_CANDLE = block(
+            "omen_candle",
+            p -> new OmenCandle(p.instabreak().sound(SoundType.CANDLE).noOcclusion()));
+    public static final Supplier<Item> OMEN_CANDLE_ITEM = blockItem("omen_candle", OMEN_CANDLE);
+    public static final Supplier<Block> DOMOVOIS_PORRIDGE = block(
+            "domovois_porridge",
+            p -> new DomovoiPorridge(p.strength(0.2f).sound(SoundType.WOOD).noOcclusion()));
+    public static final Supplier<Item> DOMOVOIS_PORRIDGE_ITEM = Platform.get()
+            .register(
+                    BuiltInRegistries.ITEM,
+                    "domovois_porridge",
+                    key -> new DomovoiPorridge.Bowl(
+                            DOMOVOIS_PORRIDGE.get(),
+                            new Item.Properties()
+                                    .setId(key)
+                                    .useBlockDescriptionPrefix()
+                                    .stacksTo(16)));
+    public static final Supplier<Block> MIMIC_BLOCK =
+            block("mimic_block", p -> new MimicBlock(p.strength(1.0f).noOcclusion()));
+    public static final Supplier<BlockEntityType<?>> MIMIC_ENTITY = Platform.get()
+            .register(
+                    BuiltInRegistries.BLOCK_ENTITY_TYPE,
+                    "mimic_block",
+                    key -> new BlockEntityType<>(MimicBlockEntity::new, Set.of(MIMIC_BLOCK.get())));
+    /** The pale figure of a sighting mark. */
+    public static final Supplier<EntityType<?>> MARK_ENTITY = Platform.get()
+            .register(
+                    BuiltInRegistries.ENTITY_TYPE,
+                    "sighting_mark",
+                    key -> EntityType.Builder.<SightingMark>of(SightingMark::new, MobCategory.MISC)
+                            .sized(0.5f, 0.5f)
+                            .clientTrackingRange(Config.section("consumables").integer("mark_range"))
+                            .updateInterval(20)
+                            .fireImmune()
+                            .noLootTable()
+                            .build(key));
 
     /** Built by the world, never crafted: it drops nothing. */
     public static final Supplier<Block> GRAVESTONE = block(
@@ -346,6 +422,7 @@ public final class Content {
                 DREAMCATCHER_ITEM,
                 HALLOWED_LANTERN_ITEM,
                 SCARECROW_ITEM,
+                EFFIGY_ITEM,
                 ALTAR_ITEM,
                 HOLY_WATER,
                 MIRROR,
@@ -368,7 +445,21 @@ public final class Content {
                 HOUSE_KEY,
                 PHANTOM_DOUBLE,
                 BORROWED_DREAM,
-                TRICKSTER_COIN));
+                TRICKSTER_COIN,
+                STILL_WATER,
+                DREAMLESS_DRAUGHT,
+                WAYFINDERS_ASH,
+                MAGPIE_FEATHER,
+                CHANGELING_DUST,
+                BLOODIED_RAG,
+                WRAITH_OIL,
+                INFERNAL_CONTRACT,
+                RESTLESS_KNOT,
+                DUSK_SALT,
+                SIGHTING_MARK,
+                MIMIC_CLAY,
+                OMEN_CANDLE_ITEM,
+                DOMOVOIS_PORRIDGE_ITEM));
         Platform.get()
                 .registerTab(
                         "restless",

@@ -5,7 +5,7 @@ Today a player gets personal spirits two ways: one random one on first join, and
 line of [design.md](design.md) (Spirit kinds, stage 5). Territorial spirits generated with structures are planned in
 [places.md](places.md).
 
-Step 1 (the seam) is built; the deeds themselves are not hooked up yet. Numbers are starting values, all of them in
+Step 1 (the seam) is built. Hooked up, in `haunt/Deeds.java`: slaughter, far death, pet slain and pet lost (batch 1), and witnessed death (a villager or a pet dies near a player who did not do it) and a long wake (two days without rest) as new ones; batch 2 is still to do. The Effigy (see essence-expansion.md) is the first opt-in birth. Numbers are starting values, all of them in
 config (`haunt.json`, section `births`).
 
 ## Goals and non-goals

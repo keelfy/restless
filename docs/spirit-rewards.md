@@ -37,4 +37,4 @@ replaced, and the Bargain given a short fury.
 Both phases are built, all twelve charms. Left out of the plan: the House Key is not bound to one house (any shut,
 roofed room does, and a gap in it or its roof stops it) and wears out rather than breaking when the house opens; the
 Drowned Stone does not hold the bearer down, its cost is slowness on land. The rebalance of [essence-expansion.md](essence-expansion.md) Part A is built (the table above is as it now is), but for
-the House Key's repair with Domovoi's Porridge, which waits for the consumables.
+the House Key's repair with Domovoi's Porridge, which is built with the consumables (see [essence-expansion.md](essence-expansion.md) Part C).

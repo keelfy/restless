@@ -195,6 +195,10 @@ final class JournalGameTests {
                     "a photographed kind must get a bestiary page");
             check(
                     helper,
+                    after.contains("journal.restless.met.shade"),
+                    "a bestiary page must say where the kind is met");
+            check(
+                    helper,
                     data.notebook(player.getUUID()).has(Notebook.Chapter.WEAKNESS),
                     "the first photo must open the altar chapter");
 

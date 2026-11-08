@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:hoarder_essence",
+    "minecraft:feather",
+    "minecraft:gold_nugget"
+  ],
+  "result": {
+    "id": "restless:magpie_feather",
+    "count": 4
+  }
+}

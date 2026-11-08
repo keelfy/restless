@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "restless:block/omen_candle"
+    },
+    "lit=true": {
+      "model": "restless:block/omen_candle_lit"
+    }
+  }
+}

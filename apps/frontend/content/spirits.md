@@ -126,9 +126,15 @@ Territorial prankster: changes blocks and items, shows things.
 - Avoids: assaults ×0.2
 - Activity: 1.2
 
+## Meeting a type
+
+Each type shows up in its own way, and the journal's bestiary page says how once you have a photograph of one. A banshee comes when a villager or a pet dies before you, a lost one when you die far from home or go two days awake, a revenant after a slaughter or the killing of your own pet. Territorial spirits are born with structures.
+
+An **effigy** (scarecrow, candle, salt) calls any type on purpose: stuff it with one essence of that type, light it, and it burns for half a night. A personal spirit is born on the nearest player, a territorial one stays where the effigy stood. It will not light when the call could not be answered: the newest spirit is too young, the player has all they can carry, or another territorial spirit is near.
+
 ## Rewards
 
-Banishing a spirit at an altar leaves one of its essence; putting its grave right leaves two. Each essence is crafted with one common item into a charm. Charms that work while carried work from the off hand only, so one answers at a time; the Death Wail is the exception and works from anywhere in the inventory.
+Banishing a spirit at an altar leaves one of its essence, and one more if it had evolved, and one more if its blight had grown to 64 spots; putting its grave right leaves two. Each essence is crafted with one common item into a charm. Charms that work while carried work from the off hand only, so one answers at a time; the Death Wail is the exception and works from anywhere in the inventory.
 
 | Spirit | Essence + | Charm | Does |
 | --- | --- | --- | --- |
@@ -146,3 +152,24 @@ Banishing a spirit at an altar leaves one of its essence; putting its grave righ
 | Hoarder | emerald | Stash | holds a stack; in the off hand when you die, the stack stays with you, even through a server stop, and the stash is spent (not with `keepInventory`) |
 | Demon | blaze powder | Bargain | all health at once and 30 seconds of strength II, resistance II and fire proof; then 10 minutes with two hearts fewer and angrier spirits |
 | Trickster | gold nugget | Trickster's Coin | wagers your next mob kill: its drops and experience are doubled or lost, evenly; each win in a row pays one more (up to x5), a loss starts over |
+
+## Consumables
+
+Each essence also makes one thing that is spent as it is used. Crafted without a table of its own: the essence and common items, shapeless.
+
+| Spirit | Essence + | Makes | Does |
+| --- | --- | --- | --- |
+| Poltergeist | string, 2 iron chains | 4 Restless Knots | tied on a container, for 10 minutes it takes in items dropped within 8 blocks, like a hopper with no pipe; a full container lets them lie; one knot to a container |
+| Shade | salt, coal | 4 Dusk Salt | scattered on a block: for a day no hostile mob spawns of itself within 12 blocks; spawners and spirits' events are not stopped |
+| Nix | water bottle, prismarine shard | 2 Still Water | drunk: clears rain and thunder and holds the sky for a day; drunk sneaking: calls a storm for 10 minutes; overworld only |
+| Phantom | paper, glowstone dust | 4 Sighting Marks | set on a block: a pale figure glows through walls where you can see it from afar, for three days; a renamed mark names it; eight at most |
+| Mimic | 4 clay balls | 8 Mimic Clay | pressed on a block it takes its look; set down, it is a solid block that looks like it and breaks as slowly; the Dark Eye shows it bare; breaking it gives the clay back |
+| Wraith | glass bottle, ink sac | 2 Wraith Oil | with a weapon in the other hand: 30 blows that, in light 7 or less, hit half again as hard through armor |
+| Mara | honey bottle, poppy | 3 Dreamless Draughts | drunk before bed: sleep is allowed with monsters near and the night passes with only you in bed; you wake with 0.3 sanity more, and your mara does not act that night |
+| Banshee | candle, bone meal | 4 Omen Candles | lit with fire, burns for a day: a harmful event on a player within 16 blocks is announced by its wail 5 seconds before; the lights events snuff it |
+| Revenant | 2 rotten flesh, red dye | 4 Bloodied Rags | thrown at a mob: for 15 seconds every mob of its type within 24 blocks goes for it; not bosses |
+| Lost one | ash, bone | 4 Wayfinder's Ash | used: footprints lead to where you last died for 3 minutes; sneaking, to your respawn point |
+| Domovoi | bowl, wheat, milk bucket | 4 Domovoi's Porridge | set in a shut, roofed room, eaten by the house spirit over a day: crops and saplings within 16 blocks grow three times as fast, young animals grow up sooner and breed again sooner; one bowl to a room; mends a House Key by 8 uses in an anvil |
+| Hoarder | feather, gold nugget | 4 Magpie Feathers | used: for 2 minutes a stream of light leads to the nearest chest, barrel or pot nobody has opened |
+| Demon | paper, blaze powder | 1 Infernal Contract | with an enchanted item in the other hand: one enchantment that stands at its highest level goes one past it; the item takes the Curse of Vanishing and your spirits grow angrier; once per item |
+| Trickster | gold nugget, redstone | 4 Changeling Dust | on a block: turns it into another of its family (wool, logs, planks, stone variants, concrete, glass, terracotta); on a villager who never traded: deals their trades again |

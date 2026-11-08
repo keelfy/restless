@@ -21,6 +21,10 @@ public final class AshFootprint extends Entity {
             SynchedEntityData.defineId(AshFootprint.class, EntityDataSerializers.BOOLEAN);
     public static final int LIFETIME = 2400;
     private int age;
+    /** Ticks it lasts; a free print (not on ash) fades sooner than the ones in the powder. */
+    private int life = LIFETIME;
+    /** Whether it stands on no ash: it holds on its own, for {@link #life}. */
+    private boolean free;
 
     public AshFootprint(EntityType<? extends AshFootprint> type, Level level) {
         super(type, level);
@@ -82,6 +86,23 @@ public final class AshFootprint extends Entity {
         return count > 0;
     }
 
+    /**
+     * Sets down one print on any ground, which fades after {@code ticks}: the trail of Wayfinder's Ash, laid where the
+     * dead walked, with no powder under it.
+     */
+    public static boolean lay(ServerLevel level, Vec3 at, double angle, int shape, boolean left, int ticks) {
+        @SuppressWarnings("unchecked")
+        var type = (EntityType<AshFootprint>) Content.ASH_FOOTPRINT.get();
+        AshFootprint print = new AshFootprint(type, level);
+        print.setPos(at);
+        print.setYRot((float) (angle * 180 / Math.PI + 90));
+        print.entityData.set(SHAPE, Math.clamp(shape, 1, AshBlock.PRINTS));
+        print.entityData.set(LEFT, left);
+        print.free = true;
+        print.life = ticks;
+        return level.addFreshEntity(print);
+    }
+
     /** All corners must lie on powder, including when a print crosses a block boundary. */
     private static boolean covered(Level level, Vec3 at, double angle) {
         double cos = Math.cos(angle);
@@ -103,7 +124,7 @@ public final class AshFootprint extends Entity {
         super.tick();
         if (!level().isClientSide()) {
             age++;
-            if (age >= LIFETIME || !covered(level(), position(), Math.toRadians(getYRot() - 90))) {
+            if (age >= life || (!free && !covered(level(), position(), Math.toRadians(getYRot() - 90)))) {
                 discard();
             } else if (age >= 0 && isInvisible()) {
                 setInvisible(false);
@@ -119,6 +140,8 @@ public final class AshFootprint extends Entity {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         age = input.getIntOr("Age", 0);
+        life = input.getIntOr("Life", LIFETIME);
+        free = input.getBooleanOr("Free", false);
         entityData.set(SHAPE, Math.clamp(input.getIntOr("Shape", 1), 1, AshBlock.PRINTS));
         entityData.set(LEFT, input.getBooleanOr("Left", true));
         setInvisible(age < 0);
@@ -127,6 +150,8 @@ public final class AshFootprint extends Entity {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         output.putInt("Age", age);
+        output.putInt("Life", life);
+        output.putBoolean("Free", free);
         output.putInt("Shape", shape());
         output.putBoolean("Left", left());
     }

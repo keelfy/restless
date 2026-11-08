@@ -6,6 +6,7 @@ import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.config.Lang;
 import dev.keelfy.restless.content.Charms;
+import dev.keelfy.restless.content.Consumables;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Anger;
 import dev.keelfy.restless.haunt.Bands;
@@ -13,6 +14,7 @@ import dev.keelfy.restless.haunt.Births;
 import dev.keelfy.restless.haunt.Candle;
 import dev.keelfy.restless.haunt.Compass;
 import dev.keelfy.restless.haunt.Corruption;
+import dev.keelfy.restless.haunt.Deeds;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.DoorLocks;
@@ -45,6 +47,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.feline.Cat;
@@ -89,6 +92,8 @@ public final class Restless {
         Corruption.tick(server);
         Evolution.tick(server);
         Charms.tick(server);
+        Deeds.tick(server);
+        Consumables.tick(server);
     }
 
     /**
@@ -116,6 +121,7 @@ public final class Restless {
 
     /** Call when a living thing dies; {@code killer} is whoever dealt the blow, if anyone. */
     public static void onKill(@Nullable Entity killer, LivingEntity dead) {
+        Deeds.killed(killer, dead);
         if (dead instanceof ServerPlayer victim) {
             Bands.died(victim);
             DoubleEvent.dismiss(victim);
@@ -157,6 +163,21 @@ public final class Restless {
     /** Call when a player is back after dying. */
     public static void onRespawn(ServerPlayer player) {
         Charms.respawned(player);
+    }
+
+    /** Call before a mob is let into the world; true means it must not be. */
+    public static boolean onSpawn(ServerLevel level, Mob mob, EntitySpawnReason reason) {
+        return Consumables.spawn(level, mob, reason);
+    }
+
+    /** Call when an anvil is asked what two stacks make; an empty stack is no result of ours. */
+    public static ItemStack onAnvil(ItemStack left, ItemStack right) {
+        return Consumables.anvil(left, right);
+    }
+
+    /** Call when a player tries a bed and the game finds a problem; true means the problem is waived. */
+    public static boolean onSleepProblem(ServerPlayer player) {
+        return Consumables.sleepsAnyway(player);
     }
 
     /** Call when a player says something in chat. */

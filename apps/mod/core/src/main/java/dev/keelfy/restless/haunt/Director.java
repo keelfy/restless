@@ -3,6 +3,8 @@ package dev.keelfy.restless.haunt;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Charms;
+import dev.keelfy.restless.content.Draughts;
+import dev.keelfy.restless.content.OmenCandle;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;
@@ -50,7 +52,8 @@ public final class Director {
                 }
                 SpiritType spirit = spirit(haunting);
                 Outcome[] outcome = {Outcome.QUIET};
-                if (canHaunt(player)) {
+                // A drinker of the Dreamless Draught is left alone by their mara while the night goes by.
+                if (canHaunt(player) && !(Draughts.dreamless(player) && "mara".equals(haunting.spirit()))) {
                     Said.during(
                             haunting.uuid(),
                             () -> outcome[0] = pick(
@@ -274,9 +277,13 @@ public final class Director {
             Wards.blocked(player);
             return Outcome.WARDED;
         }
-        if (event.tags().contains(EventTag.ASSAULT) && Charms.warn(player, at)) {
+        boolean keened = event.tags().contains(EventTag.ASSAULT) && Charms.warn(player, at);
+        boolean omen = !keened && event.tier() == HauntTier.HARMFUL && OmenCandle.warn(player);
+        if (keened || omen) {
             // A wail keens first; the player has the warning's length to act, and wards set up in it still count.
-            Scheduler.later(player, Config.section("charms").integer("wail_warn_ticks"), p -> {
+            int warning = Config.section(keened ? "charms" : "consumables")
+                    .integer(keened ? "wail_warn_ticks" : "omen_warn_ticks");
+            Scheduler.later(player, warning, p -> {
                 if (Wards.stops(p, event)) {
                     Wards.blocked(p);
                 } else if (fire(p, event, at)) {

@@ -31,6 +31,7 @@
     "burn_forest": 0.1,
     "bargain": 0.3,
     "dream": 0.2,
+    "contract": 0.3,
     "break_anchor": 0.3,
     "anchor_reach": 3,
     "graves": [
@@ -48,6 +49,14 @@
     "start_anger": 0.5,
     "grace_ticks": 2400,
     "structure_spacing": 96,
+    "witness_radius": 16,
+    "far_distance": 256,
+    "sleepless_ticks": 48000,
+    "slaughter": {
+      "points": 24,
+      "window_ticks": 3600,
+      "villager_points": 5
+    },
     "structures": {
       "minecraft:woodland_mansion": {
         "spirit": "poltergeist",
@@ -166,8 +175,20 @@
       "pet_lost": {
         "spirit": "banshee",
         "chance": 0.5
+      },
+      "witness_death": {
+        "spirit": "banshee",
+        "chance": 0.2
+      },
+      "lost_long": {
+        "spirit": "lost_one",
+        "chance": 0.3
       }
     }
+  },
+  "effigy": {
+    "burn_ticks": 12000,
+    "radius": 24
   },
   "salt": {
     "max_cells": 400
@@ -216,7 +237,8 @@
     "off_form_waves": 6,
     "wary_ticks": 24000,
     "wrong_age_ticks": 24000,
-    "bless_ticks": 12000
+    "bless_ticks": 12000,
+    "blight_reward_spots": 64
   },
   "charms": {
     "face_ticks": 500,
@@ -356,5 +378,39 @@
     "ledge_max_drop": 7,
     "patch_layers": 1,
     "sound_height": 0.5
+  },
+  "consumables": {
+    "still_clear_ticks": 24000,
+    "still_storm_ticks": 12000,
+    "ash_ticks": 3600,
+    "ash_reach": 24,
+    "ash_step": 1.4,
+    "ash_print_ticks": 300,
+    "ash_arrive": 4,
+    "feather_ticks": 2400,
+    "feather_radius": 128,
+    "feather_rescan_ticks": 40,
+    "dust_trade_xp": 0,
+    "rag_ticks": 300,
+    "rag_radius": 24,
+    "oil_charges": 30,
+    "oil_light": 7,
+    "oil_bonus": 0.5,
+    "omen_ticks": 24000,
+    "omen_radius": 16,
+    "omen_warn_ticks": 100,
+    "knot_ticks": 12000,
+    "knot_radius": 8,
+    "porridge_ticks": 24000,
+    "porridge_radius": 16,
+    "porridge_boost": 3,
+    "porridge_repair": 8,
+    "dusk_ticks": 24000,
+    "dusk_radius": 12,
+    "mark_ticks": 72000,
+    "mark_max": 8,
+    "mark_range": 10,
+    "draught_sanity": 0.3,
+    "draught_skips_alone": true
   }
 }

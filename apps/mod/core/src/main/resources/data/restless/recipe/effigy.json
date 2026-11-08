@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:scarecrow",
+    "minecraft:candle",
+    "restless:salt"
+  ],
+  "result": {
+    "id": "restless:effigy",
+    "count": 1
+  }
+}

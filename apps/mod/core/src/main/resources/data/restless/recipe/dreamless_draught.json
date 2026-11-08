@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:mara_essence",
+    "minecraft:honey_bottle",
+    "minecraft:poppy"
+  ],
+  "result": {
+    "id": "restless:dreamless_draught",
+    "count": 3
+  }
+}

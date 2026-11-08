@@ -31,19 +31,23 @@ import dev.keelfy.restless.haunt.VignettePayload;
 import dev.keelfy.restless.neoforge.compat.VoiceAddon;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.PlayLevelSoundEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
@@ -112,6 +116,25 @@ public final class RestlessNeoForge {
                     && e.getLevel() instanceof ServerLevel level
                     && e.getChunk() instanceof LevelChunk chunk) {
                 Restless.onNewChunk(level, chunk);
+            }
+        });
+        NeoForge.EVENT_BUS.addListener((FinalizeSpawnEvent e) -> {
+            if (e.getLevel().getLevel() instanceof ServerLevel level
+                    && Restless.onSpawn(level, e.getEntity(), e.getSpawnType())) {
+                e.setSpawnCancelled(true);
+            }
+        });
+        NeoForge.EVENT_BUS.addListener((AnvilUpdateEvent e) -> {
+            ItemStack mended = Restless.onAnvil(e.getLeft(), e.getRight());
+            if (!mended.isEmpty()) {
+                e.setOutput(mended);
+                e.setMaterialCost(1);
+                e.setXpCost(1);
+            }
+        });
+        NeoForge.EVENT_BUS.addListener((CanPlayerSleepEvent e) -> {
+            if (e.getProblem() != null && Restless.onSleepProblem(e.getEntity())) {
+                e.setProblem(null);
             }
         });
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> Restless.registerCommands(e.getDispatcher()));

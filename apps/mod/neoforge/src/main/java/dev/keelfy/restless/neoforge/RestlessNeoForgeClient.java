@@ -11,9 +11,13 @@ import dev.keelfy.restless.content.DreamcatcherEntity;
 import dev.keelfy.restless.content.DreamcatcherRenderer;
 import dev.keelfy.restless.content.EyesParticle;
 import dev.keelfy.restless.content.EyesType;
+import dev.keelfy.restless.content.MimicBlockEntity;
+import dev.keelfy.restless.content.MimicRenderer;
 import dev.keelfy.restless.content.MistParticle;
 import dev.keelfy.restless.content.PhotoTooltip;
 import dev.keelfy.restless.content.Picture;
+import dev.keelfy.restless.content.RagEntity;
+import dev.keelfy.restless.content.SightingMark;
 import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.HeadTurn;
 import dev.keelfy.restless.haunt.RedVignette;
@@ -21,6 +25,7 @@ import dev.keelfy.restless.haunt.SanityOverlay;
 import dev.keelfy.restless.haunt.ScreenOverlay;
 import java.util.List;
 import net.minecraft.client.color.block.BlockTintSources;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
@@ -93,6 +98,12 @@ public final class RestlessNeoForgeClient {
         event.registerBlockEntityRenderer(
                 (BlockEntityType<DreamcatcherEntity>) Content.DREAMCATCHER_ENTITY.get(),
                 context -> new DreamcatcherRenderer());
+        event.registerBlockEntityRenderer(
+                (BlockEntityType<MimicBlockEntity>) Content.MIMIC_ENTITY.get(), MimicRenderer::new);
+        event.registerEntityRenderer((EntityType<RagEntity>) Content.RAG_ENTITY.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(
+                (EntityType<SightingMark>) Content.MARK_ENTITY.get(),
+                context -> new ThrownItemRenderer<>(context, 1.5f, true));
     }
 
     /** Ghost leaves are tinted as the leaves they copy; pale oak's are not tinted at all. */

@@ -27,6 +27,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -118,7 +119,39 @@ public final class Charms {
                 Rest.start(player, wail, config.integer("wail_cooldown_ticks"));
             }
         }
-        return grudge(victim, source, dealt);
+        return grudge(victim, source, oiled(victim, source, dealt));
+    }
+
+    /**
+     * A weapon coated in wraith oil, struck with in the dark, hits harder and through armor, one charge a blow. The
+     * armor is ignored by asking for as much more as it is about to take off.
+     */
+    private static float oiled(Entity victim, DamageSource source, float amount) {
+        if (!(source.getEntity() instanceof ServerPlayer attacker)
+                || source.getDirectEntity() != attacker
+                || !(victim instanceof LivingEntity target)) {
+            return amount;
+        }
+        ItemStack weapon = attacker.getMainHandItem();
+        Charges charges = weapon.get(Content.CHARGES.get());
+        Config.Section config = Config.section("consumables");
+        if (charges == null
+                || charges.left() <= 0
+                || attacker.level().getMaxLocalRawBrightness(attacker.blockPosition()) > config.integer("oil_light")) {
+            return amount;
+        }
+        if (charges.left() > 1) {
+            weapon.set(Content.CHARGES.get(), new Charges(charges.left() - 1));
+        } else {
+            weapon.remove(Content.CHARGES.get());
+        }
+        float boosted = amount * (1.0f + (float) config.num("oil_bonus"));
+        float soaked = CombatRules.getDamageAfterAbsorb(target, boosted, source, (float) target.getArmorValue(), (float)
+                target.getAttributeValue(Attributes.ARMOR_TOUGHNESS));
+        attacker.level()
+                .playSound(
+                        null, target.blockPosition(), SoundEvents.SOUL_ESCAPE.value(), SoundSource.PLAYERS, 0.6f, 1.5f);
+        return soaked > 0.0f ? Math.min(boosted * boosted / soaked, boosted * 5.0f) : boosted;
     }
 
     /** A holder stores what hurts them for a while; their next blow on anyone returns part of it. */

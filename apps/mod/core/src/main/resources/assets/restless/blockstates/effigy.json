@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "restless:block/effigy"
+    },
+    "lit=true": {
+      "model": "restless:block/effigy_lit"
+    }
+  }
+}

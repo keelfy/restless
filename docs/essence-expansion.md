@@ -2,7 +2,7 @@
 
 What spirit essences become after the first twelve charms (see [spirit-rewards.md](spirit-rewards.md)): a rebalance of
 the charms, a working essence economy, a consumable per spirit, advanced charms and relics made of several essences,
-and the **Requiem**, the finale that lets the player go. Phases 0 and 1 are built (see the notes at their heads); the rest is not. Numbers are
+and the **Requiem**, the finale that lets the player go. Phases 0 to 3 are built (see the notes at their heads); the rest is not. Numbers are
 starting values, all in config.
 
 ## Goals
@@ -287,6 +287,8 @@ works from the inventory, the step stops at obsidian, a coin streak pays ×3, a 
 
 ### Phase 2. Economy (Part B)
 
+**Built:** an evolved spirit and a blight of 64 spots (`ritual.blight_reward_spots`) each add an essence (`Ritual.essences`); the deeds `witness_death` and `lost_long`; the bestiary line "where met" (`journal.restless.met.<kind>`); the Effigy (`content/Effigy.java`, config `effigy`, a scarecrow + candle + salt recipe). The four older deeds (`slaughter`, `far_death`, `pet_slain`, `pet_lost`) had a seam and config but no hooks, so Banshee, Lost one and Revenant could not be met at all; they are hooked now, with the new ones, in `haunt/Deeds.java`. **Differences from the plan:** the effigy is lit with flint and steel or a fire charge (no candle in the block), and it calls its spirit onto the nearest player within `effigy.radius`, not onto whoever lit it (nothing about the lighter is saved); it will not light when the call could not be answered (cooldown, cap, spacing), so no essence is wasted; `lost_long` is the vanilla "time since rest" stat reaching two days, so setting a spawn point does not reset it; the model reuses the scarecrow with other wool and a jack-o'-lantern face when lit, no new art.
+
 - Evolved +1 and blight +1: `Ritual` at the essence drop; `Corruption.size` for the blight check.
 - Deeds `witness_death` and `lost_long`: `Births.Deed`, config `births.deeds`, hooks in `Restless.onKill` (nearby
   death) and in a slow tick (`lost_long`, using the player's last sleep or spawn time).
@@ -298,6 +300,19 @@ Tests: `BirthGameTests` (a witnessed death births a banshee, an effigy respects 
 (an evolved spirit drops 2).
 
 ### Phase 3. Consumables (Part C)
+
+**Built:** all fourteen, in `content/` (one class each, `Consumables` for the server clock and loader hooks), config section `consumables`, recipes, lang (en, ru), textures. State that must outlast a restart is in `haunt/Spells.java` (a second `SavedData`: knots, dusk salt, the marks each player set); the rest is block state, block scheduled ticks, or entities. **New hooks** (loader side, `RestlessNeoForge`): `FinalizeSpawnEvent` (Dusk Salt), `AnvilUpdateEvent` (Porridge mends the House Key), `CanPlayerSleepEvent` (Dreamless Draught). **Differences from the plan:**
+
+- **Wraith Oil** and **Infernal Contract** are used with the weapon or item in the other hand, not crafted with it (no custom recipe class). The oil's charges are a `charges` component with a tooltip; armor is ignored by asking for as much more damage as the armor is about to take off. The contract raises one enchantment that is at its peak, refuses an item with any enchantment already past its peak (once per item), and a book holds no enchantment of its own.
+- **Mimic Clay** drops the clay (with its look) when its block breaks, not the copied block's drops: that would copy any block for the price of one clay. A mimic is drawn by a block entity renderer from the look it holds, is full-collision, breaks as slowly as what it shows, and shows a bare clay face to the Dark Eye (reveal while the eye sees). It can take the look of any block drawn from a model.
+- **Sighting Mark** is a glowing entity (a billboard of the mark item), seen as far as the game sends entities: its tracking range is `consumables.mark_range` (10 chunks), not 256 blocks. It is counted per player in `Spells`, takes no blows, and fades after three days.
+- **Magpie Feather** scans the loaded chunks only, for any `RandomizableContainer` with a loot table (chests, barrels, decorated pots); vaults are left out.
+- **Wayfinder's Ash** lays free `AshFootprint`s (a `free` flag on the entity, no ash needed) ahead of the player toward the last death or, sneaking, the respawn point, one second at a time; the trail ends on arrival or after three minutes, and only one at a time.
+- **Dreamless Draught** is an effect that lasts until its drinker has slept deep and woken. The night is skipped by lowering `playersSleepingPercentage` for one tick while the drinker is deep asleep (`draught_skips_alone`), and the drinker's mara does not act meanwhile.
+- **Domovoi's Porridge** is a block eaten in eight bites over the day, working through scheduled ticks, so it works as long as its chunk is loaded; it refuses a place that is not a shut, roofed room, or a room another bowl serves.
+- **Bloodied Rag** is a thrown entity (`RagEntity`); bosses (the `c:bosses` tag, the wither and the dragon) are exempt. Its work stops if the thrower dies or leaves, like every `Scheduler` task.
+- **Changeling Dust** families: wool, carpets, natural logs, planks, terracotta, glazed terracotta, and three tags of the mod (stone variants, concrete, glass). A villager is rerolled only while their experience is 0.
+- **Omen Candle** counts as a candle (it is in `minecraft:candles`), so the lights events snuff it; only fire in a hand lights it, and a lit one burns out after a day.
 
 Grouped by technique, simplest first:
 

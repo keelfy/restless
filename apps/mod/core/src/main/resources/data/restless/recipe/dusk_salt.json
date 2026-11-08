@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:shade_essence",
+    "restless:salt",
+    "minecraft:coal"
+  ],
+  "result": {
+    "id": "restless:dusk_salt",
+    "count": 4
+  }
+}

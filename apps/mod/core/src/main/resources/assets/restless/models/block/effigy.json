@@ -1,0 +1,7 @@
+{
+  "parent": "restless:block/scarecrow",
+  "textures": {
+    "coat": "minecraft:block/black_wool",
+    "patch": "minecraft:block/red_wool"
+  }
+}

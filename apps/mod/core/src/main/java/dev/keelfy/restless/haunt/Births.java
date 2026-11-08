@@ -26,7 +26,9 @@ public final class Births {
         SLAUGHTER("slaughter"),
         FAR_DEATH("far_death"),
         PET_SLAIN("pet_slain"),
-        PET_LOST("pet_lost");
+        PET_LOST("pet_lost"),
+        WITNESS_DEATH("witness_death"),
+        LOST_LONG("lost_long");
 
         private final String key;
 
@@ -59,23 +61,52 @@ public final class Births {
         if (roll && player.getRandom().nextDouble() >= of.num("chance")) {
             return BirthRules.Verdict.NOTHING;
         }
-        SpiritType spirit = Spirits.byId(of.text("spirit")).orElseThrow();
+        return bind(player, Spirits.byId(of.text("spirit")).orElseThrow());
+    }
+
+    /**
+     * A player calls a personal spirit on purpose (an effigy burning down): the deed's rules without its chance. A type
+     * they already have is angered, a new one is born, and the cooldown and the cap hold.
+     */
+    public static BirthRules.Verdict lure(ServerPlayer player, SpiritType spirit) {
+        if (player.isSpectator() || player.isCreative()) {
+            return BirthRules.Verdict.NOTHING;
+        }
+        return bind(player, spirit);
+    }
+
+    /** What {@link #lure} would do now, with nothing changed. */
+    public static BirthRules.Verdict outlook(ServerPlayer player, SpiritType spirit) {
+        if (player.isSpectator() || player.isCreative()) {
+            return BirthRules.Verdict.NOTHING;
+        }
         MinecraftServer server = player.level().getServer();
-        HauntData data = HauntData.get(server);
         long now = server.overworld().getGameTime();
+        return decide(player, spirit, HauntData.get(server), now, Config.section("births"));
+    }
+
+    private static BirthRules.Verdict decide(
+            ServerPlayer player, SpiritType spirit, HauntData data, long now, Config.Section config) {
         List<HauntData.Haunting> own = Director.hauntings(player, data, now);
-        long cooldown = (long) (config.num("cooldown_days") * Ticks.DAY);
-        BirthRules.Verdict verdict = BirthRules.decide(
+        return BirthRules.decide(
                 own.stream().anyMatch(h -> h.spirit().equals(spirit.id())),
                 own.size(),
                 own.stream().mapToLong(HauntData.Haunting::bornAt).max().orElse(0),
                 now,
-                cooldown,
+                (long) (config.num("cooldown_days") * Ticks.DAY),
                 config.integer("max_personal"));
+    }
+
+    private static BirthRules.Verdict bind(ServerPlayer player, SpiritType spirit) {
+        Config.Section config = Config.section("births");
+        MinecraftServer server = player.level().getServer();
+        HauntData data = HauntData.get(server);
+        long now = server.overworld().getGameTime();
+        BirthRules.Verdict verdict = decide(player, spirit, data, now, config);
         switch (verdict) {
             case FED -> {
                 double by = config.num("repeat_anger");
-                HauntData.Haunting same = own.stream()
+                HauntData.Haunting same = Director.hauntings(player, data, now).stream()
                         .filter(h -> h.spirit().equals(spirit.id()))
                         .findFirst()
                         .orElseThrow();
@@ -115,19 +146,41 @@ public final class Births {
         if (roll && level.getRandom().nextDouble() >= of.num("chance")) {
             return BirthRules.Verdict.NOTHING;
         }
-        SpiritType spirit = Spirits.byId(of.text("spirit")).orElseThrow();
-        HauntData data = HauntData.get(level.getServer());
-        BlockPos centre = start.getBoundingBox().getCenter();
-        long nearest = data.territorialWithin(level.dimension(), centre, config.integer("structure_spacing")).stream()
-                .mapToLong(t -> (long) t.anchor().distSqr(centre))
-                .min()
-                .orElse(Long.MAX_VALUE);
-        BirthRules.Verdict verdict = BirthRules.settle(nearest, config.integer("structure_spacing"));
+        return place(
+                level,
+                Spirits.byId(of.text("spirit")).orElseThrow(),
+                start.getBoundingBox().getCenter());
+    }
+
+    /**
+     * A territorial spirit of the type stands at {@code at}, unless another one is within
+     * {@code births.structure_spacing}. Used by structures and by effigies.
+     *
+     * @return {@link BirthRules.Verdict#BORN} or {@link BirthRules.Verdict#CROWDED}
+     */
+    public static BirthRules.Verdict place(ServerLevel level, SpiritType spirit, BlockPos at) {
+        BirthRules.Verdict verdict = room(level, at);
         if (verdict == BirthRules.Verdict.BORN) {
             Director.anchor(
-                    data, spirit, level, centre, level.getServer().overworld().getGameTime());
+                    HauntData.get(level.getServer()),
+                    spirit,
+                    level,
+                    at,
+                    level.getServer().overworld().getGameTime());
         }
         return verdict;
+    }
+
+    /** What {@link #place} would do at {@code at}, with nothing changed. */
+    public static BirthRules.Verdict room(ServerLevel level, BlockPos at) {
+        Config.Section config = Config.section("births");
+        long nearest = HauntData.get(level.getServer())
+                .territorialWithin(level.dimension(), at, config.integer("structure_spacing"))
+                .stream()
+                .mapToLong(t -> (long) t.anchor().distSqr(at))
+                .min()
+                .orElse(Long.MAX_VALUE);
+        return BirthRules.settle(nearest, config.integer("structure_spacing"));
     }
 
     /**

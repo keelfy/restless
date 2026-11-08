@@ -244,4 +244,10 @@ public final class Corruption {
                 ? ""
                 : blight.spots().size() + "/" + blight.columns().size();
     }
+
+    /** How many spots of this spirit's land are fouled right now. */
+    public static int spots(HauntData data, UUID spirit) {
+        HauntData.Blight blight = data.blight().get(spirit);
+        return blight == null ? 0 : blight.spots().size();
+    }
 }

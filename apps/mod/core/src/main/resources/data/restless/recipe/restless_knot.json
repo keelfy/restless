@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:poltergeist_essence",
+    "minecraft:string",
+    "minecraft:iron_chain",
+    "minecraft:iron_chain"
+  ],
+  "result": {
+    "id": "restless:restless_knot",
+    "count": 4
+  }
+}

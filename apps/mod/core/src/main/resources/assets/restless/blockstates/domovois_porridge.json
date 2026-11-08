@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "left=1": {
+      "model": "restless:block/domovois_porridge_low"
+    },
+    "left=2": {
+      "model": "restless:block/domovois_porridge_low"
+    },
+    "left=3": {
+      "model": "restless:block/domovois_porridge_half"
+    },
+    "left=4": {
+      "model": "restless:block/domovois_porridge_half"
+    },
+    "left=5": {
+      "model": "restless:block/domovois_porridge_half"
+    },
+    "left=6": {
+      "model": "restless:block/domovois_porridge"
+    },
+    "left=7": {
+      "model": "restless:block/domovois_porridge"
+    },
+    "left=8": {
+      "model": "restless:block/domovois_porridge"
+    }
+  }
+}
