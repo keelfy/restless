@@ -73,7 +73,16 @@ final class RelicGameTests {
         });
         tests.put("exorcists_censer_shortens_the_ritual_and_angers_the_spirit", helper -> {
             var spirit = new HauntData.Haunting(
-                    java.util.UUID.randomUUID(), "poltergeist", 7L, List.of(), 0L, 0.0, Long.MAX_VALUE / 2, false, 0, 0L);
+                    java.util.UUID.randomUUID(),
+                    "poltergeist",
+                    7L,
+                    List.of(),
+                    0L,
+                    0.0,
+                    Long.MAX_VALUE / 2,
+                    false,
+                    0,
+                    0L);
             check(helper, Ritual.waves(spirit, dev.keelfy.restless.content.Altar.Held.IRON) == 12, "a plain ritual");
             check(
                     helper,
@@ -134,7 +143,8 @@ final class RelicGameTests {
             check(helper, state.getValue(HoardersHollow.DISGUISED), "clay must disguise the hollow");
             check(
                     helper,
-                    level.getBlockEntity(at) instanceof MimicBlockEntity mimic && mimic.look().is(Blocks.STONE),
+                    level.getBlockEntity(at) instanceof MimicBlockEntity mimic
+                            && mimic.look().is(Blocks.STONE),
                     "the hollow must wear stone");
             level.setBlock(at, Blocks.AIR.defaultBlockState(), 3);
             helper.succeed();
@@ -147,8 +157,14 @@ final class RelicGameTests {
             BlockPos head = helper.absolutePos(new BlockPos(4, 2, 4));
             BlockPos foot = head.relative(Direction.SOUTH);
             BlockState base = Content.MARAS_CRADLE.get().defaultBlockState();
-            level.setBlock(head, base.setValue(MarasCradle.PART, BedPart.HEAD).setValue(MarasCradle.FACING, Direction.NORTH), 3);
-            level.setBlock(foot, base.setValue(MarasCradle.PART, BedPart.FOOT).setValue(MarasCradle.FACING, Direction.NORTH), 3);
+            level.setBlock(
+                    head,
+                    base.setValue(MarasCradle.PART, BedPart.HEAD).setValue(MarasCradle.FACING, Direction.NORTH),
+                    3);
+            level.setBlock(
+                    foot,
+                    base.setValue(MarasCradle.PART, BedPart.FOOT).setValue(MarasCradle.FACING, Direction.NORTH),
+                    3);
             Relics.slept(player, head);
             check(
                     helper,

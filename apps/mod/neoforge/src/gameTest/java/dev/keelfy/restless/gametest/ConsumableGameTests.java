@@ -582,7 +582,8 @@ final class ConsumableGameTests {
                         .withParameter(
                                 net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN,
                                 Vec3.atCenterOf(at))
-                        .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_STATE, state)
+                        .withParameter(
+                                net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_STATE, state)
                         .withParameter(
                                 net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL,
                                 ItemStack.EMPTY));

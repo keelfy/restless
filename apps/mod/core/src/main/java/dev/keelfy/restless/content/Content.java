@@ -328,8 +328,7 @@ public final class Content {
     public static final Supplier<Block> HOLLOW_LANTERN = block(
             "hollow_lantern",
             p -> new WardLantern(
-                    p.strength(1.0f).sound(SoundType.LANTERN).lightLevel(s -> 8).noOcclusion(),
-                    WardBlock.Kind.HOLLOW));
+                    p.strength(1.0f).sound(SoundType.LANTERN).lightLevel(s -> 8).noOcclusion(), WardBlock.Kind.HOLLOW));
     public static final Supplier<Item> HOLLOW_LANTERN_ITEM = blockItem("hollow_lantern", HOLLOW_LANTERN);
     public static final Supplier<Block> MARAS_CRADLE = block(
             "maras_cradle",
@@ -340,7 +339,10 @@ public final class Content {
                     "maras_cradle",
                     key -> new BlockItem(
                             MARAS_CRADLE.get(),
-                            new Item.Properties().setId(key).useBlockDescriptionPrefix().stacksTo(1)));
+                            new Item.Properties()
+                                    .setId(key)
+                                    .useBlockDescriptionPrefix()
+                                    .stacksTo(1)));
 
     /** Built by the world, never crafted: it drops nothing. */
     public static final Supplier<Block> GRAVESTONE = block(

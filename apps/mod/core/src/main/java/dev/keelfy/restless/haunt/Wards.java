@@ -67,8 +67,12 @@ public final class Wards {
 
     /** What a hollow lantern gives for the event it blocked: one trait of a spirit near the player, in the journal. */
     private static void hollowClue(ServerPlayer player) {
-        Divination.read(player, Clue.PLANCHETTE).ifPresent(reading -> Journal.note(
-                player, Notebook.Kind.PLANCHETTE, reading.spirit().haunting(), Divination.hint(reading.trait())));
+        Divination.read(player, Clue.PLANCHETTE)
+                .ifPresent(reading -> Journal.note(
+                        player,
+                        Notebook.Kind.PLANCHETTE,
+                        reading.spirit().haunting(),
+                        Divination.hint(reading.trait())));
     }
 
     private static double square(int radius) {

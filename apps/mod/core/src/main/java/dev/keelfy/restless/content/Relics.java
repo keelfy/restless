@@ -93,7 +93,8 @@ public final class Relics {
         Sanity.set(player, 0.0);
         Rest.start(player, coin, config.integer("ferry_rest_ticks"));
         ServerLevel level = player.level();
-        level.sendParticles(ParticleTypes.SOUL, player.getX(), player.getY() + 1.0, player.getZ(), 30, 0.4, 0.8, 0.4, 0.05);
+        level.sendParticles(
+                ParticleTypes.SOUL, player.getX(), player.getY() + 1.0, player.getZ(), 30, 0.4, 0.8, 0.4, 0.05);
         level.playSound(null, player.blockPosition(), SoundEvents.SOUL_ESCAPE.value(), SoundSource.PLAYERS, 1.5f, 0.5f);
         player.sendSystemMessage(Component.translatable("message.restless.ferried"), true);
         return true;
@@ -153,7 +154,8 @@ public final class Relics {
         if (!player.isSleeping()) {
             return;
         }
-        List<HauntData.Haunting> spirits = HauntData.get(player.level().getServer()).get(player.getUUID());
+        List<HauntData.Haunting> spirits =
+                HauntData.get(player.level().getServer()).get(player.getUUID());
         if (spirits != null) {
             spirits.stream()
                     .filter(h -> h.spirit().equals("mara"))
@@ -177,8 +179,9 @@ public final class Relics {
 
     /** Call when the sleepers would skip the night: it does not pass when every one of them lies in a cradle. */
     public static boolean keepsNight(ServerLevel level) {
-        List<ServerPlayer> asleep =
-                level.players().stream().filter(p -> !p.isSpectator() && p.isSleeping()).toList();
+        List<ServerPlayer> asleep = level.players().stream()
+                .filter(p -> !p.isSpectator() && p.isSleeping())
+                .toList();
         return !asleep.isEmpty() && asleep.stream().allMatch(Relics::inCradle);
     }
 
