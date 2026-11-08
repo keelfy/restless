@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:lost_step",
+  "essence": "restless:phantom_essence",
+  "result": "restless:fetch_path"
+}

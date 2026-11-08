@@ -13,7 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
 /** The trickster's charm: a wager on the next mob the holder kills, settled in {@link Charms#drops}. */
-public final class TricksterCoin extends Item {
+public class TricksterCoin extends Item {
     public TricksterCoin(Item.Properties properties) {
         super(properties);
     }
@@ -24,13 +24,22 @@ public final class TricksterCoin extends Item {
             return InteractionResult.SUCCESS;
         }
         Config.Section config = Config.section("charms");
-        player.addEffect(new MobEffectInstance(Charms.holder(Content.GAMBLE), config.integer("coin_ticks")));
+        player.addEffect(new MobEffectInstance(Charms.holder(Content.GAMBLE), window(config)));
         level.playSound(
                 null, player.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 1.0f, 1.4f);
         player.getCooldowns().addCooldown(player.getItemInHand(hand), config.integer("coin_cooldown_ticks"));
         if (player instanceof ServerPlayer server) {
             server.sendSystemMessage(Component.translatable("message.restless.coin_tossed"), true);
+            toss(server);
         }
         return InteractionResult.SUCCESS_SERVER;
     }
+
+    /** How long the wager stands. */
+    protected int window(Config.Section config) {
+        return config.integer("coin_ticks");
+    }
+
+    /** What a toss costs beyond the rest. */
+    protected void toss(ServerPlayer player) {}
 }

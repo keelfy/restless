@@ -121,14 +121,21 @@ public final class DoubleEvent implements HauntEvent {
      * mimic charm's, not a spirit's: it does not walk or hit.
      */
     public static @Nullable Mannequin decoy(ServerPlayer player, int ticks) {
+        return decoy(player, ticks, player.blockPosition(), false);
+    }
+
+    /** The same copy standing at {@code at}, holding the player's main-hand item too if {@code armed}. */
+    public static @Nullable Mannequin decoy(ServerPlayer player, int ticks, BlockPos at, boolean armed) {
         ServerLevel level = player.level();
-        Mannequin twin =
-                Figure.spawn(player, player.blockPosition(), ResolvableProfile.createResolved(player.getGameProfile()));
+        Mannequin twin = Figure.spawn(player, at, ResolvableProfile.createResolved(player.getGameProfile()));
         if (twin == null) {
             return null;
         }
         for (EquipmentSlot slot : WORN) {
             twin.setItemSlot(slot, player.getItemBySlot(slot).copy());
+        }
+        if (armed) {
+            twin.setItemSlot(EquipmentSlot.MAINHAND, player.getMainHandItem().copy());
         }
         // A hostile takes only what it can hurt as a target, so the copy bleeds, but far longer than it stays.
         twin.setPermanentlyInvulnerable(false);

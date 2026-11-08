@@ -32,6 +32,7 @@
     "bargain": 0.3,
     "dream": 0.2,
     "contract": 0.3,
+    "devil": 0.1,
     "break_anchor": 0.3,
     "anchor_reach": 3,
     "graves": [
@@ -378,6 +379,30 @@
     "ledge_max_drop": 7,
     "patch_layers": 1,
     "sound_height": 0.5
+  },
+  "advanced": {
+    "fetch_double_ticks": 80,
+    "fetch_sanity_cost": 0.05,
+    "fetch_cooldown_ticks": 500,
+    "mask_radius": 16,
+    "walk_light": 4,
+    "walk_sanity_per_second": 0.01,
+    "requital_ticks": 200,
+    "requital_bonus": 0.5,
+    "debt_sanity_cost": 0.05,
+    "tide_speed": 1.8,
+    "tide_cooldown_ticks": 60,
+    "hook_radius": 6,
+    "hook_link_range": 64,
+    "truth_rest_ticks": 24000,
+    "keeper_radius": 12,
+    "satchel_stacks": 3,
+    "satchel_rest_ticks": 72000,
+    "devil_ticks": 600,
+    "mirror_reach": 16.0,
+    "black_boost_ticks": 900,
+    "black_rest_ticks": 12000,
+    "black_sanity_cost": 0.4
   },
   "consumables": {
     "still_clear_ticks": 24000,

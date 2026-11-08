@@ -73,7 +73,7 @@ public final class Charms {
     }
 
     /** The first stack of {@code item} the player carries anywhere, off hand included; empty if none. */
-    private static ItemStack carried(Entity entity, Supplier<Item> item) {
+    static ItemStack carried(Entity entity, Supplier<Item> item) {
         if (!(entity instanceof ServerPlayer player)) {
             return ItemStack.EMPTY;
         }
@@ -87,6 +87,12 @@ public final class Charms {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    /** The wail a player carries, the requital wail too. */
+    private static ItemStack wail(ServerPlayer player) {
+        ItemStack wail = carried(player, Content.DEATH_WAIL);
+        return wail.isEmpty() ? carried(player, Content.REQUITAL_WAIL) : wail;
     }
 
     /** What the grudge has stored and until when. */
@@ -104,13 +110,15 @@ public final class Charms {
                 && (shade(victim) || shade(source.getEntity()))) {
             return 0.0f;
         }
-        float dealt = amount;
-        if (source.getEntity() instanceof ServerPlayer attacker && attacker.hasEffect(holder(Content.BORROWED_FACE))) {
+        float dealt = Advanced.requited(victim, amount);
+        if (source.getEntity() instanceof ServerPlayer attacker
+                && attacker.hasEffect(holder(Content.BORROWED_FACE))
+                && !Advanced.framed(attacker, victim)) {
             attacker.removeEffect(holder(Content.BORROWED_FACE));
             attacker.sendSystemMessage(Component.translatable("message.restless.face_off"), true);
         }
         if (victim instanceof ServerPlayer player) {
-            ItemStack wail = carried(player, Content.DEATH_WAIL);
+            ItemStack wail = wail(player);
             Config.Section config = Config.section("charms");
             if (!wail.isEmpty()
                     && Rest.ready(wail, player.level())
@@ -161,10 +169,15 @@ public final class Charms {
         Config.Section config = Config.section("charms");
         if (source.getEntity() instanceof ServerPlayer attacker
                 && attacker != victim
-                && offhand(attacker, Content.GRUDGE)) {
+                && (offhand(attacker, Content.GRUDGE) || offhand(attacker, Content.BLOOD_DEBT))) {
             Stored stored = GRUDGES.remove(attacker.getUUID());
             if (stored != null && stored.until() > now) {
-                dealt += (float) Math.min(config.num("grudge_cap"), stored.amount() * config.num("grudge_share"));
+                boolean debt = offhand(attacker, Content.BLOOD_DEBT);
+                float share = (float) (stored.amount() * config.num("grudge_share"));
+                dealt += debt ? share : (float) Math.min(config.num("grudge_cap"), share);
+                if (debt) {
+                    Advanced.owe(attacker, victim, stored.amount());
+                }
                 attacker.level()
                         .playSound(
                                 null,
@@ -175,7 +188,8 @@ public final class Charms {
                                 0.6f);
             }
         }
-        if (victim instanceof ServerPlayer holder && offhand(holder, Content.GRUDGE)) {
+        if (victim instanceof ServerPlayer holder
+                && (offhand(holder, Content.GRUDGE) || offhand(holder, Content.BLOOD_DEBT))) {
             Stored old = GRUDGES.get(holder.getUUID());
             float kept = old != null && old.until() > now ? old.amount() : 0.0f;
             GRUDGES.put(holder.getUUID(), new Stored(kept + amount, now + config.integer("grudge_window_ticks")));
@@ -194,7 +208,9 @@ public final class Charms {
     /** What the charms in a player's off hand do for the moment. */
     public static void held(ServerPlayer player) {
         Config.Section config = Config.section("charms");
-        boolean stone = offhand(player, Content.DROWNED_STONE);
+        Advanced.walk(player);
+        Advanced.hook(player);
+        boolean stone = offhand(player, Content.DROWNED_STONE) || offhand(player, Content.TIDECALLER);
         if (stone) {
             // Water is its own: breath without end there, and on dry ground the stone is a weight.
             if (player.isInWater()) {
@@ -218,7 +234,8 @@ public final class Charms {
 
     /** Whether a held stone keeps a nix off its holder: a spirit of water does not drown its own. */
     public static boolean spared(ServerPlayer player, HauntEvent event) {
-        return event.tags().contains(EventTag.WATER) && offhand(player, Content.DROWNED_STONE);
+        return event.tags().contains(EventTag.WATER)
+                && (offhand(player, Content.DROWNED_STONE) || offhand(player, Content.TIDECALLER));
     }
 
     /**
@@ -226,7 +243,7 @@ public final class Charms {
      * the warning out.
      */
     public static boolean warn(ServerPlayer player, @Nullable Vec3 at) {
-        if (carried(player, Content.DEATH_WAIL).isEmpty()) {
+        if (wail(player).isEmpty()) {
             return false;
         }
         Vec3 from = at == null ? player.position() : at;
@@ -271,9 +288,12 @@ public final class Charms {
                 || !player.hasEffect(holder(Content.GAMBLE))) {
             return;
         }
-        player.removeEffect(holder(Content.GAMBLE));
         Config.Section config = Config.section("charms");
-        ItemStack coin = carried(player, Content.TRICKSTER_COIN);
+        ItemStack devil = carried(player, Content.DEVILS_COIN);
+        ItemStack coin = devil.isEmpty() ? carried(player, Content.TRICKSTER_COIN) : devil;
+        if (devil.isEmpty()) {
+            player.removeEffect(holder(Content.GAMBLE));
+        }
         long now = player.level().getGameTime();
         Luck luck = coin.getOrDefault(Content.LUCK.get(), Luck.NONE);
         boolean won = player.getRandom().nextDouble() < config.num("coin_odds");
@@ -298,6 +318,7 @@ public final class Charms {
         } else {
             drops.clear();
             luck = luck.lost(now);
+            player.removeEffect(holder(Content.GAMBLE));
         }
         if (!coin.isEmpty()) {
             coin.set(Content.LUCK.get(), luck);
@@ -312,7 +333,13 @@ public final class Charms {
     /** Whether a held house key shelters the player from a spirit's event, and wears from it. */
     public static boolean keeps(ServerPlayer player) {
         ItemStack key = player.getOffhandItem();
-        if (!key.is(Content.HOUSE_KEY.get()) || !Wards.housed(player.level(), player.blockPosition())) {
+        if (!Wards.housed(player.level(), player.blockPosition())) {
+            return false;
+        }
+        if (key.is(Content.KEEPERS_KEY.get())) {
+            return keeper(player, key);
+        }
+        if (!key.is(Content.HOUSE_KEY.get())) {
             return false;
         }
         key.hurtAndBreak(1, player, EquipmentSlot.OFFHAND);
@@ -322,8 +349,27 @@ public final class Charms {
         return true;
     }
 
+    /**
+     * A keeper's key shelters the room it was first used in, and never wears there; anywhere else it does nothing. A
+     * room is the place the key was bound to and what lies within {@code keeper_radius} of it.
+     */
+    private static boolean keeper(ServerPlayer player, ItemStack key) {
+        net.minecraft.core.GlobalPos room = key.get(Content.KEY_ROOM.get());
+        if (room == null) {
+            key.set(
+                    Content.KEY_ROOM.get(),
+                    net.minecraft.core.GlobalPos.of(player.level().dimension(), player.blockPosition()));
+            player.sendSystemMessage(Component.translatable("message.restless.key_bound"), true);
+            return true;
+        }
+        double radius = Config.section("advanced").num("keeper_radius");
+        return room.dimension() == player.level().dimension()
+                && room.pos().distSqr(player.blockPosition()) <= radius * radius;
+    }
+
     private static void scream(ServerPlayer player, Config.Section config) {
         double strength = config.num("wail_knockback");
+        boolean requital = !carried(player, Content.REQUITAL_WAIL).isEmpty();
         for (LivingEntity mob : player.level()
                 .getEntitiesOfClass(
                         LivingEntity.class,
@@ -334,6 +380,9 @@ public final class Charms {
             int dazzle = config.integer("wail_dazzle_ticks");
             mob.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, dazzle, 2));
             mob.addEffect(new MobEffectInstance(MobEffects.DARKNESS, dazzle, 0));
+            if (requital) {
+                Advanced.requite(mob);
+            }
         }
         player.level()
                 .playSound(
@@ -348,11 +397,26 @@ public final class Charms {
     /** Call when a hostile is about to take a new target; true means it must not take this one. */
     public static boolean unseen(LivingEntity looker, LivingEntity target) {
         return looker instanceof Enemy
-                && (target.hasEffect(holder(Content.BORROWED_FACE)) || target.hasEffect(holder(Content.DECOY)));
+                && (target.hasEffect(holder(Content.BORROWED_FACE))
+                        || target.hasEffect(holder(Content.DECOY))
+                        || Advanced.walking(target));
     }
 
     /** Call when a player dies, before the drops: a filled stash in the off hand keeps its stack for the player. */
     public static void died(ServerPlayer player) {
+        ItemStack satchel = player.getOffhandItem();
+        if (satchel.is(Content.GRAVE_SATCHEL.get())
+                && !keepsInventory(player)
+                && Rest.ready(satchel, player.level())
+                && !GraveSatchel.held(satchel).isEmpty()) {
+            ItemStack kept = satchel.copy();
+            kept.set(
+                    Content.REST_UNTIL.get(),
+                    player.level().getGameTime() + Config.section("advanced").integer("satchel_rest_ticks"));
+            HauntData.get(player.level().getServer()).keep(player.getUUID(), kept);
+            player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+            return;
+        }
         ItemStack stash = player.getOffhandItem();
         if (!stash.is(Content.STASH.get()) || keepsInventory(player)) {
             return;

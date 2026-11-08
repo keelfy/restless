@@ -2,7 +2,7 @@
 
 What spirit essences become after the first twelve charms (see [spirit-rewards.md](spirit-rewards.md)): a rebalance of
 the charms, a working essence economy, a consumable per spirit, advanced charms and relics made of several essences,
-and the **Requiem**, the finale that lets the player go. Phases 0 to 3 are built (see the notes at their heads); the rest is not. Numbers are
+and the **Requiem**, the finale that lets the player go. Phases 0 to 4 are built (see the notes at their heads); the rest is not. Numbers are
 starting values, all in config.
 
 ## Goals
@@ -335,13 +335,17 @@ a tick budget).
 
 ### Phase 4. Advanced charms (Part D)
 
-- One `UpgradeRecipe` json per charm; each advanced charm is its own item class that extends or calls into its base
-  (for example `FetchPath` calls `LostStep.landing` and `DoubleEvent.decoy`).
-- Toggle charms (Nightwalk Shroud): a held effect plus a per-tick check in `Charms.tick`.
-- Truthseer's Eye: one flag in `Clues.reveal` (a "true once" mark on the player, cleared on use).
-- Keeper's Key: the bound room is saved as the room's interior positions' hash plus an anchor pos on the item.
+**Built:** all fourteen: `UpgradeRecipe` (`restless:upgrade`, shapeless, base + essence, copies the base's components), one item class each in `content/` (the base classes were opened up with small hooks, so an upgrade extends its base), what is more than a few lines in `content/Advanced.java`, config section `advanced`, recipes, lang (en, ru), textures. **Differences from the plan:**
 
-Tests: `CharmGameTests` per advanced charm, plus one recipe test that upgrading a filled Stash keeps its stack.
+- Nightwalk Shroud: hostiles lose track of the holder (and drop a target), but the holder does not walk through them; vanilla gives no clean no-collision with mobs. The toggle is in memory, so a server stop ends it.
+- Keeper's Key: its "room" is the spot where it first sheltered, and what lies within `advanced.keeper_radius` of it while that is a shut, roofed room; not a hash of the room's cells.
+- Grave Satchel: at death the whole satchel, resting for `advanced.satchel_rest_ticks`, goes into the same saved `kept` slot the Stash uses, so there is one slot per player and a server stop keeps it.
+- Tidecaller: in the off hand it is a Drowned Stone in every way (the weight on dry ground too) and also dashes in water or rain.
+- Truthseer's Eye: only the speaking tools (voice, planchette) can lie, so only they use the eye, and a reading spends it only when the spirit read has a lying trait.
+- Requital Wail's mark, the Changeling Mask's frame state and Blood Debt's pending payout are in memory (seconds long).
+- Devil's Coin and Hearth Dream: a new anger source `devil` (0.1) for the coin; the dream is Borrowed Dream with the anger and the open air taken out.
+
+Tests: `AdvancedCharmGameTests`, one per charm, plus one that every upgrade matches and a filled Stash becomes a Satchel with its stack.
 
 ### Phase 5. Relics (Part E)
 

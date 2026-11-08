@@ -21,7 +21,8 @@ public final class Anger {
         BURN_FOREST("burn_forest"),
         BARGAIN("bargain"),
         DREAM("dream"),
-        CONTRACT("contract");
+        CONTRACT("contract"),
+        DEVIL("devil");
 
         private final String key;
 

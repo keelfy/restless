@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:death_wail",
+  "essence": "restless:revenant_essence",
+  "result": "restless:requital_wail"
+}

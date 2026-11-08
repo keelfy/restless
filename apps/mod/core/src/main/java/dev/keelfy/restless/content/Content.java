@@ -214,6 +214,32 @@ public final class Content {
             item("telekinesis_amulet", p -> new TelekinesisAmulet(p.stacksTo(1)));
     public static final Supplier<Item> DARK_EYE = item("dark_eye", p -> new DarkEye(p.stacksTo(1)));
 
+    /** Where a magpie's hook sends what its holder cannot carry. */
+    public static final Supplier<DataComponentType<net.minecraft.core.GlobalPos>> HOOK_LINK =
+            component("hook_link", net.minecraft.core.GlobalPos.CODEC, net.minecraft.core.GlobalPos.STREAM_CODEC);
+    /** The room a keeper's key is bound to, see {@link Charms#keeps}. */
+    public static final Supplier<DataComponentType<net.minecraft.core.GlobalPos>> KEY_ROOM =
+            component("key_room", net.minecraft.core.GlobalPos.CODEC, net.minecraft.core.GlobalPos.STREAM_CODEC);
+
+    /** The advanced charms: a base charm and one more essence each, see {@link UpgradeRecipe}. */
+    public static final Supplier<Item> FETCH_PATH = item("fetch_path", p -> new FetchPath(p.stacksTo(1)));
+
+    public static final Supplier<Item> CHANGELING_MASK =
+            item("changeling_mask", p -> new ChangelingMask(p.stacksTo(1)));
+    public static final Supplier<Item> NIGHTWALK_SHROUD =
+            item("nightwalk_shroud", p -> new NightwalkShroud(p.stacksTo(1)));
+    public static final Supplier<Item> BLOOD_DEBT = item("blood_debt", p -> new Item(p.stacksTo(1)));
+    public static final Supplier<Item> REQUITAL_WAIL = item("requital_wail", p -> new RequitalWail(p.stacksTo(1)));
+    public static final Supplier<Item> TIDECALLER = item("tidecaller", p -> new Tidecaller(p.stacksTo(1)));
+    public static final Supplier<Item> MAGPIES_HOOK = item("magpies_hook", p -> new MagpiesHook(p.stacksTo(1)));
+    public static final Supplier<Item> TRUTHSEERS_EYE = item("truthseers_eye", p -> new TruthseersEye(p.stacksTo(1)));
+    public static final Supplier<Item> HEARTH_DREAM = item("hearth_dream", p -> new HearthDream(p.stacksTo(1)));
+    public static final Supplier<Item> KEEPERS_KEY = item("keepers_key", p -> new KeepersKey(p.stacksTo(1)));
+    public static final Supplier<Item> GRAVE_SATCHEL = item("grave_satchel", p -> new GraveSatchel(p.stacksTo(1)));
+    public static final Supplier<Item> DEVILS_COIN = item("devils_coin", p -> new DevilsCoin(p.stacksTo(1)));
+    public static final Supplier<Item> TWINS_MIRROR = item("twins_mirror", p -> new TwinsMirror(p.stacksTo(1)));
+    public static final Supplier<Item> BLACK_BARGAIN = item("black_bargain", p -> new BlackBargain(p.stacksTo(1)));
+
     /** What a drinker of the Dreamless Draught is until they have slept it off, see {@link Draughts}. */
     public static final Supplier<MobEffect> DREAMLESS = Platform.get()
             .register(BuiltInRegistries.MOB_EFFECT, "dreamless", key -> new Pact(MobEffectCategory.NEUTRAL, 0x6C5B9E));
@@ -409,6 +435,7 @@ public final class Content {
     /** Forces the class to load, which declares every entry and the creative tab that holds the items. */
     public static void init() {
         RelightingRecipe.init();
+        UpgradeRecipe.init();
         var tabItems = new java.util.ArrayList<Supplier<Item>>(UnlitLights.ITEMS);
         tabItems.addAll(List.of(
                 SALT,
@@ -446,6 +473,20 @@ public final class Content {
                 PHANTOM_DOUBLE,
                 BORROWED_DREAM,
                 TRICKSTER_COIN,
+                FETCH_PATH,
+                CHANGELING_MASK,
+                NIGHTWALK_SHROUD,
+                BLOOD_DEBT,
+                REQUITAL_WAIL,
+                TIDECALLER,
+                MAGPIES_HOOK,
+                TRUTHSEERS_EYE,
+                HEARTH_DREAM,
+                KEEPERS_KEY,
+                GRAVE_SATCHEL,
+                DEVILS_COIN,
+                TWINS_MIRROR,
+                BLACK_BARGAIN,
                 STILL_WATER,
                 DREAMLESS_DRAUGHT,
                 WAYFINDERS_ASH,

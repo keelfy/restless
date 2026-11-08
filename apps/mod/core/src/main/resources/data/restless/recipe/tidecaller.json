@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:drowned_stone",
+  "essence": "restless:lost_one_essence",
+  "result": "restless:tidecaller"
+}

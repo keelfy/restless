@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.config.Lang;
+import dev.keelfy.restless.content.Advanced;
 import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Consumables;
 import dev.keelfy.restless.content.Content;
@@ -122,6 +123,7 @@ public final class Restless {
     /** Call when a living thing dies; {@code killer} is whoever dealt the blow, if anyone. */
     public static void onKill(@Nullable Entity killer, LivingEntity dead) {
         Deeds.killed(killer, dead);
+        Advanced.killed(killer, dead);
         if (dead instanceof ServerPlayer victim) {
             Bands.died(victim);
             DoubleEvent.dismiss(victim);

@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:trickster_coin",
+  "essence": "restless:demon_essence",
+  "result": "restless:devils_coin"
+}

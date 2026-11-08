@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:telekinesis_amulet",
+  "essence": "restless:hoarder_essence",
+  "result": "restless:magpies_hook"
+}

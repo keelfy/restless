@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:wraith_shroud",
+  "essence": "restless:shade_essence",
+  "result": "restless:nightwalk_shroud"
+}

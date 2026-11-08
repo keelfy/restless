@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:grudge",
+  "essence": "restless:demon_essence",
+  "result": "restless:blood_debt"
+}

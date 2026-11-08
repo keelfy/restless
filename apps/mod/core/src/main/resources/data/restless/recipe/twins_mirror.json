@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:phantom_double",
+  "essence": "restless:mimic_essence",
+  "result": "restless:twins_mirror"
+}

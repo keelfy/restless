@@ -27,7 +27,7 @@ import net.minecraft.world.phys.Vec3;
  * The shade's artifact: its holder sees in the dark, every living thing around shows through walls for a while, and the
  * spirits in reach are marked where they are.
  */
-public final class DarkEye extends Item {
+public class DarkEye extends Item {
     public DarkEye(Item.Properties properties) {
         super(properties);
     }

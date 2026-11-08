@@ -27,7 +27,7 @@ import net.minecraft.world.phys.Vec3;
  * The lost one's charm: the holder slips a few steps ahead, through whatever is in the way, and comes out where there
  * is room. It costs a little sanity and rests before the next.
  */
-public final class LostStep extends Item {
+public class LostStep extends Item {
     /** Blocks the step does not pass; builders use this to answer it. */
     public static final TagKey<Block> STEP_PROOF =
             TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(Restless.MOD_ID, "step_proof"));
@@ -50,13 +50,26 @@ public final class LostStep extends Item {
             return InteractionResult.FAIL;
         }
         Vec3 from = server.position();
+        leave(server);
         world.sendParticles(ParticleTypes.PORTAL, from.x, from.y + 1.0, from.z, 24, 0.3, 0.6, 0.3, 0.2);
         server.teleportTo(world, to.x, to.y, to.z, Set.of(), server.getYRot(), server.getXRot(), true);
         world.sendParticles(ParticleTypes.PORTAL, to.x, to.y + 1.0, to.z, 24, 0.3, 0.6, 0.3, 0.2);
         world.playSound(null, server.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.6f, 1.6f);
-        Sanity.set(server, Sanity.of(server) - config.num("step_sanity_cost"));
-        server.getCooldowns().addCooldown(server.getItemInHand(hand), config.integer("step_cooldown_ticks"));
+        Sanity.set(server, Sanity.of(server) - config.num("step_sanity_cost") - extraCost());
+        server.getCooldowns().addCooldown(server.getItemInHand(hand), cooldown(config));
         return InteractionResult.SUCCESS_SERVER;
+    }
+
+    /** What an upgrade does at the spot the step leaves, before the holder is gone from it. */
+    protected void leave(ServerPlayer player) {}
+
+    /** Sanity an upgrade costs beyond the step's own. */
+    protected double extraCost() {
+        return 0.0;
+    }
+
+    protected int cooldown(Config.Section config) {
+        return config.integer("step_cooldown_ticks");
     }
 
     /**

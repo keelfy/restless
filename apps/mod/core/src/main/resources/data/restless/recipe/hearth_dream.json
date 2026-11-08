@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:borrowed_dream",
+  "essence": "restless:domovoi_essence",
+  "result": "restless:hearth_dream"
+}

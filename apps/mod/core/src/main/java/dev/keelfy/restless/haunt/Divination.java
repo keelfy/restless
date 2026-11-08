@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Advanced;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.platform.Platform;
 import dev.keelfy.restless.spirit.Clue;
@@ -57,8 +58,13 @@ public final class Divination {
         Collections.shuffle(spirits, random);
         List<Trait> catalog = Traits.all();
         for (Sense.Spirit spirit : spirits) {
-            Optional<Trait> trait = Clues.reveal(Traits.of(spirit.haunting().traits()), catalog, clue, random);
+            List<Trait> owned = Traits.of(spirit.haunting().traits());
+            boolean honest = Advanced.truthful(player, clue) && owned.stream().anyMatch(Trait::lies);
+            Optional<Trait> trait = Clues.reveal(owned, catalog, clue, random, honest);
             if (trait.isPresent()) {
+                if (honest) {
+                    Advanced.truthSpent(player);
+                }
                 return Optional.of(new Reading(spirit, trait.get(), random));
             }
         }

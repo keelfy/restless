@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
  * fewer hearts ({@link Content#BARGAIN_EFFECT} takes them) and with the holder's spirits angrier. It will not strike a
  * second bargain while the first is paid.
  */
-public final class Bargain extends Item {
+public class Bargain extends Item {
     public Bargain(Item.Properties properties) {
         super(properties);
     }

@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
  * The wraith's charm: for a few seconds the holder is no more than a shade. Blows pass through them, and theirs pass
  * through whatever they strike (see {@link Charms#hurt}). It costs sanity and rests long.
  */
-public final class WraithShroud extends Item {
+public class WraithShroud extends Item {
     public WraithShroud(Item.Properties properties) {
         super(properties);
     }

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "restless:keepers_key",
+    "minecraft:campfire"
+  ],
+  "result": {
+    "id": "restless:keepers_key",
+    "count": 1
+  }
+}

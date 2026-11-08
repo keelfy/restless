@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:bargain",
+  "essence": "restless:wraith_essence",
+  "result": "restless:black_bargain"
+}

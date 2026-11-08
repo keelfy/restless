@@ -468,23 +468,23 @@ final class CharmGameTests {
     }
 
     /** The sanity payload may go only to a client that has its channel; the mock player has none, so it gets one. */
-    private static void sanityChannel(ServerPlayer player) {
+    static void sanityChannel(ServerPlayer player) {
         net.neoforged.neoforge.network.registration.ChannelAttributes.getOrCreateCommonChannels(
                         player.connection.getConnection(), net.minecraft.network.ConnectionProtocol.PLAY)
                 .add(dev.keelfy.restless.haunt.SanityPayload.TYPE.id());
     }
 
     /** A relog drops the vanilla cooldowns, which are not saved; what the stack itself keeps stays. */
-    private static void relog(ServerPlayer player, ItemStack stack) {
+    static void relog(ServerPlayer player, ItemStack stack) {
         player.getCooldowns().removeCooldown(player.getCooldowns().getCooldownGroup(stack));
     }
 
-    private static ItemStack stack(String id) {
+    static ItemStack stack(String id) {
         Item item = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(Restless.MOD_ID, id));
         return new ItemStack(item);
     }
 
-    private static void use(GameTestHelper helper, ServerPlayer player, String id) {
+    static void use(GameTestHelper helper, ServerPlayer player, String id) {
         player.setItemInHand(InteractionHand.MAIN_HAND, stack(id));
         check(
                 helper,

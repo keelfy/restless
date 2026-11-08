@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:borrowed_face",
+  "essence": "restless:trickster_essence",
+  "result": "restless:changeling_mask"
+}

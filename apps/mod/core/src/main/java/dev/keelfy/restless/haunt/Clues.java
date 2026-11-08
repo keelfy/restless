@@ -20,10 +20,21 @@ public final class Clues {
      * @return empty only when {@code owned} is
      */
     public static Optional<Trait> reveal(List<Trait> owned, List<Trait> catalog, Clue clue, Random random) {
+        return reveal(owned, catalog, clue, random, false);
+    }
+
+    /** Whether the tool behind {@code clue} speaks, and so may lie. */
+    public static boolean speaks(Clue clue) {
+        return clue == Clue.VOICE || clue == Clue.PLANCHETTE;
+    }
+
+    /** As above; {@code honest} makes this one reveal tell no lie. */
+    public static Optional<Trait> reveal(
+            List<Trait> owned, List<Trait> catalog, Clue clue, Random random, boolean honest) {
         if (owned.isEmpty()) {
             return Optional.empty();
         }
-        boolean speaks = clue == Clue.VOICE || clue == Clue.PLANCHETTE;
+        boolean speaks = speaks(clue) && !honest;
         if (speaks
                 && owned.stream().anyMatch(Trait::lies)
                 && random.nextDouble() < Config.section("clues").num("lie_chance")) {

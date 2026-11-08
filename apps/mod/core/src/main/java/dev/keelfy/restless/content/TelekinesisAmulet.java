@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
  * The poltergeist's artifact: pulls every dropped item and every orb of experience around to its holder; what lies in
  * lava stays.
  */
-public final class TelekinesisAmulet extends Item {
+public class TelekinesisAmulet extends Item {
     public TelekinesisAmulet(Item.Properties properties) {
         super(properties);
     }

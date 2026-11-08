@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:stash",
+  "essence": "restless:lost_one_essence",
+  "result": "restless:grave_satchel"
+}

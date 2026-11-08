@@ -1,0 +1,6 @@
+{
+  "type": "restless:upgrade",
+  "base": "restless:house_key",
+  "essence": "restless:hoarder_essence",
+  "result": "restless:keepers_key"
+}

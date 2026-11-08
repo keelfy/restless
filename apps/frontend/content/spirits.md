@@ -153,6 +153,27 @@ Banishing a spirit at an altar leaves one of its essence, and one more if it had
 | Demon | blaze powder | Bargain | all health at once and 30 seconds of strength II, resistance II and fire proof; then 10 minutes with two hearts fewer and angrier spirits |
 | Trickster | gold nugget | Trickster's Coin | wagers your next mob kill: its drops and experience are doubled or lost, evenly; each win in a row pays one more (up to x5), a loss starts over |
 
+## Advanced charms
+
+A charm and one more essence, crafted together, make an advanced charm. It keeps what the base held: a stash's stack, a rest not yet over.
+
+| Charm | Base + essence | Does more |
+| --- | --- | --- |
+| Fetch's Path | Lost Step + phantom | a double of you stays where the step began, and hostiles within 16 blocks go for it; a little more sanity, a longer rest |
+| Changeling Mask | Borrowed Face + trickster | the first blow does not break the face: the struck mob is framed, and the nearest hostile turns on it; the second blow breaks it |
+| Nightwalk Shroud | Wraith Shroud + shade | a toggle: while on and in light 4 or less, hostiles lose track of you, at a little sanity a second; light ends it |
+| Blood Debt | Grudge + demon | in the off hand: no cap on the blow; if it kills, you heal what was stored; each blow costs sanity |
+| Requital Wail | Death Wail + revenant | those thrown back glow and take half again for 10 seconds |
+| Tidecaller | Drowned Stone + lost one | all the stone does, and in water or rain a riptide-like dash; none on dry ground |
+| Magpie's Hook | Telekinesis Amulet + hoarder | in the off hand items within 6 blocks come to you; sneak-use on a container links it, and what does not fit goes there within 64 blocks; the link breaks with the container |
+| Truthseer's Eye | Dark Eye + banshee | once a day the next voice or planchette reading cannot lie |
+| Hearth Dream | Borrowed Dream + domovoi | sanity to full without angering spirits, but only in a shut, roofed room; once a day |
+| Keeper's Key | House Key + hoarder | bound to the first room it shelters, where it never wears; elsewhere it does nothing; craft it with a campfire to unbind |
+| Grave Satchel | Stash + lost one | holds three stacks; in the off hand at death it stays with you, full, and rests three days |
+| Devil's Coin | Trickster's Coin + demon | the wager stands for every kill for 30 seconds, each settled on its own; a loss ends it; each toss angers your spirits |
+| Twin's Mirror | Phantom Double + mimic | the double stands where you look (up to 16 blocks) and holds what you hold |
+| Black Bargain | Bargain + wraith | the fury lasts 45 seconds; the debt is 0.4 sanity at once, not hearts; 10 minutes' rest |
+
 ## Consumables
 
 Each essence also makes one thing that is spent as it is used. Crafted without a table of its own: the essence and common items, shapeless.
