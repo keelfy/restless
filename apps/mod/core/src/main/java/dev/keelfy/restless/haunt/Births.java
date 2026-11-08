@@ -53,7 +53,7 @@ public final class Births {
      * @param roll whether the deed's chance is rolled; false for the debug command
      */
     public static BirthRules.Verdict deed(ServerPlayer player, Deed deed, boolean roll) {
-        if (player.isSpectator() || player.isCreative()) {
+        if (player.isSpectator() || player.isCreative() || Requiem.released(player)) {
             return BirthRules.Verdict.NOTHING;
         }
         Config.Section config = Config.section("births");
@@ -69,7 +69,7 @@ public final class Births {
      * they already have is angered, a new one is born, and the cooldown and the cap hold.
      */
     public static BirthRules.Verdict lure(ServerPlayer player, SpiritType spirit) {
-        if (player.isSpectator() || player.isCreative()) {
+        if (player.isSpectator() || player.isCreative() || Requiem.released(player)) {
             return BirthRules.Verdict.NOTHING;
         }
         return bind(player, spirit);
@@ -77,7 +77,7 @@ public final class Births {
 
     /** What {@link #lure} would do now, with nothing changed. */
     public static BirthRules.Verdict outlook(ServerPlayer player, SpiritType spirit) {
-        if (player.isSpectator() || player.isCreative()) {
+        if (player.isSpectator() || player.isCreative() || Requiem.released(player)) {
             return BirthRules.Verdict.NOTHING;
         }
         MinecraftServer server = player.level().getServer();
@@ -114,6 +114,9 @@ public final class Births {
             }
             case BORN -> {
                 HauntData.Haunting born = Director.add(player, data, spirit, now);
+                if (born == null) {
+                    return BirthRules.Verdict.NOTHING;
+                }
                 data.change(
                         born.uuid(),
                         h -> h.angered(config.num("start_anger"))

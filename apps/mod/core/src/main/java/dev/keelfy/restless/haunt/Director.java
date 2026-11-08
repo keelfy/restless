@@ -149,11 +149,17 @@ public final class Director {
     }
 
     private static boolean canHaunt(ServerPlayer player) {
-        return !player.isSpectator() && !player.isCreative();
+        return !player.isSpectator() && !player.isCreative() && !Requiem.released(player);
     }
 
-    /** Spirits haunting the player; rolls the configured number of random ones on first sight. */
+    /**
+     * Spirits haunting the player; rolls the configured number of random ones on first sight. A released player has
+     * none.
+     */
     public static List<HauntData.Haunting> hauntings(ServerPlayer player, HauntData data, long now) {
+        if (data.released(player.getUUID())) {
+            return List.of();
+        }
         List<HauntData.Haunting> spirits = data.get(player.getUUID());
         if (spirits == null) {
             List<SpiritType> all = Spirits.personal();
@@ -186,8 +192,15 @@ public final class Director {
         return Spirits.byId(haunting.spirit()).orElseThrow();
     }
 
-    /** Binds a spirit to the player; a type they already have is not bound twice, the one they have is returned. */
-    public static HauntData.Haunting add(ServerPlayer player, HauntData data, SpiritType spirit, long now) {
+    /**
+     * Binds a spirit to the player; a type they already have is not bound twice, the one they have is returned.
+     *
+     * @return null when the player is released: nothing is born on them
+     */
+    public static HauntData.@Nullable Haunting add(ServerPlayer player, HauntData data, SpiritType spirit, long now) {
+        if (data.released(player.getUUID())) {
+            return null;
+        }
         List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
         Optional<HauntData.Haunting> same =
                 spirits.stream().filter(h -> h.spirit().equals(spirit.id())).findFirst();

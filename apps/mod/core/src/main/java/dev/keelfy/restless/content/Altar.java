@@ -1,6 +1,7 @@
 package dev.keelfy.restless.content;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.Requiem;
 import dev.keelfy.restless.haunt.Ritual;
 import dev.keelfy.restless.haunt.event.Machines;
 import dev.keelfy.restless.spirit.Focus;
@@ -53,7 +54,8 @@ import org.jspecify.annotations.Nullable;
 /**
  * The center of a ritual. It holds one thing: a focus, which starts a ritual on the spirit weak to it (see
  * {@link Ritual}), or a bottle of water, which turns holy after a night on it. Using it with an empty hand takes the
- * thing back.
+ * thing back. A full {@link Reliquary} is not laid on it: it starts the Requiem (see {@link Requiem}) and stays with
+ * the player.
  */
 public final class Altar extends Block implements EntityBlock {
     /** Offsets from the bowl; only the center owns an offering or a block entity. */
@@ -280,6 +282,14 @@ public final class Altar extends Block implements EntityBlock {
         }
     }
 
+    /** A false altar set up by the Requiem cannot be mined, so it cannot be kept. */
+    @Override
+    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        return Requiem.decoy(state.getValue(PART).center(pos))
+                ? 0.0f
+                : super.getDestroyProgress(state, player, level, pos);
+    }
+
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (!level.isClientSide() && player.preventsBlockDrops() && state.getValue(PART) != Part.CENTER) {
@@ -326,15 +336,25 @@ public final class Altar extends Block implements EntityBlock {
             return InteractionResult.FAIL;
         }
         Held held = Held.from(stack);
-        if (held == null || state.getValue(HELD) != Held.EMPTY) {
+        boolean vessel = stack.getItem() instanceof Reliquary;
+        if ((held == null && !vessel) || state.getValue(HELD) != Held.EMPTY) {
             return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         if (!(level instanceof ServerLevel server) || !(player instanceof ServerPlayer caster)) {
             return InteractionResult.SUCCESS;
         }
+        if (Requiem.running(pos)) {
+            return Requiem.used(caster, pos, stack);
+        }
         if (!isComplete(level, pos)) {
             caster.sendSystemMessage(Component.translatable("message.restless.altar_rebuild"), true);
             return InteractionResult.FAIL;
+        }
+        if (vessel) {
+            // The reliquary is not given up: the player keeps it, and the rite takes essences from it only on failure.
+            return Requiem.begin(caster, server, pos, stack)
+                    ? InteractionResult.SUCCESS_SERVER
+                    : InteractionResult.FAIL;
         }
         if (held == Held.HOLY_WATER && Machines.cloudy(stack, server)) {
             caster.sendSystemMessage(Component.translatable("message.restless.holy_water_cloudy"), true);

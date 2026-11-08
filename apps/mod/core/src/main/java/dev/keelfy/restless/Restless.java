@@ -24,6 +24,7 @@ import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Evolution;
 import dev.keelfy.restless.haunt.Graves;
 import dev.keelfy.restless.haunt.Reactions;
+import dev.keelfy.restless.haunt.Requiem;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -86,6 +87,7 @@ public final class Restless {
     /** Call once per server tick, after the world has ticked. */
     public static void onServerTick(MinecraftServer server) {
         Scheduler.tick(server);
+        Requiem.tick(server);
         Restore.tick(server);
         Director.tick(server);
         Candle.tick(server);
@@ -118,6 +120,7 @@ public final class Restless {
 
     /** Call when the server starts to stop, before the worlds are saved. */
     public static void onServerStopping() {
+        Requiem.abortAll();
         Restore.flush();
         Session.SERVER.end();
     }
@@ -234,6 +237,7 @@ public final class Restless {
                 && hand == InteractionHand.MAIN_HAND
                 && level.getBlockState(pos).is(Blocks.BELL)) {
             Wards.rung(server, pos);
+            Requiem.rung(server, pos);
         }
         if (player instanceof ServerPlayer server
                 && isFire(player.getItemInHand(hand))

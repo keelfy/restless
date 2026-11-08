@@ -20,6 +20,7 @@ import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.History;
 import dev.keelfy.restless.haunt.Location;
+import dev.keelfy.restless.haunt.Requiem;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
@@ -65,6 +66,16 @@ public final class HauntCommand {
     private HauntCommand() {}
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        // The demon's bargain in the Requiem is answered by clicking the chat line; it is for anyone.
+        dispatcher.register(Commands.literal("requiem")
+                .then(Commands.literal("accept").executes(c -> {
+                    Requiem.answer(c.getSource().getPlayerOrException(), true);
+                    return 1;
+                }))
+                .then(Commands.literal("refuse").executes(c -> {
+                    Requiem.answer(c.getSource().getPlayerOrException(), false);
+                    return 1;
+                })));
         dispatcher.register(Commands.literal("haunt")
                 .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .executes(c -> {
@@ -359,7 +370,12 @@ public final class HauntCommand {
                             true);
             return 1;
         }
-        Director.add(player, data, spirit, now);
+        if (Director.add(player, data, spirit, now) == null) {
+            c.getSource()
+                    .sendFailure(Component.literal(
+                            player.getName().getString() + " is released by the Requiem: nothing is born on them"));
+            return 0;
+        }
         c.getSource()
                 .sendSuccess(
                         () -> Component.literal(

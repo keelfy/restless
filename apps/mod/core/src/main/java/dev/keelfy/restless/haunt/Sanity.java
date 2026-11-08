@@ -88,7 +88,8 @@ public final class Sanity {
     }
 
     public static void set(ServerPlayer player, double value) {
-        double clamped = Math.clamp(value, 0.0, 1.0);
+        // A released player's grip holds at full.
+        double clamped = Requiem.released(player) ? 1.0 : Math.clamp(value, 0.0, 1.0);
         if (clamped != of(player)) {
             HauntData.get(player.level().getServer()).putSanity(player.getUUID(), clamped);
         }

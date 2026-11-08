@@ -29,11 +29,11 @@ import org.jspecify.annotations.Nullable;
  * A human-shaped figure for events that only need something to stand, watch or walk: the vanilla mannequin entity. Also
  * its nameplate alone.
  */
-final class Figure {
+public final class Figure {
     private Figure() {}
 
     /** A silent, unhurtable mannequin wearing {@code profile}, standing on {@code spot} and facing the player. */
-    static @Nullable Mannequin spawn(ServerPlayer player, BlockPos spot, ResolvableProfile profile) {
+    public static @Nullable Mannequin spawn(ServerPlayer player, BlockPos spot, ResolvableProfile profile) {
         ServerLevel level = player.level();
         Mannequin figure = EntityTypes.MANNEQUIN.create(level, EntitySpawnReason.EVENT);
         if (figure == null) {
@@ -57,7 +57,7 @@ final class Figure {
      * A skin of no one: a fresh id with no textures, dressed in a random default skin, Steve, Alex and the rest, wide
      * or slim.
      */
-    static ResolvableProfile stranger(ServerPlayer player) {
+    public static ResolvableProfile stranger(ServerPlayer player) {
         ResolvableProfile profile = ResolvableProfile.createResolved(nobody(player, "Steve"));
         String model = player.getRandom().nextBoolean() ? "wide" : "slim";
         String skin = SKINS.get(player.getRandom().nextInt(SKINS.size()));

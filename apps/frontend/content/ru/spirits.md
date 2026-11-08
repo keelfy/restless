@@ -155,4 +155,6 @@ title: Духи
 | Демон | [Сделка](/ru/items/charms#demon-bargain) | [Адский договор](/ru/items/consumables#demon-infernal-contract) |
 | Трикстер | [Монета трикстера](/ru/items/charms#trickster-tricksters-coin) | [Пыль подменыша](/ru/items/consumables#trickster-changeling-dust) |
 
+Соберите по одной эссенции каждого типа в [Реликварий](/ru/items/requiem#the-reliquary) и спойте [Реквием](/ru/items/requiem): последняя награда навсегда освобождает от личных духов, а Колокол Реквиема может вернуть всё назад.
+
 О том, как они работают, читайте в разделе [Предметы](/ru/items), о результате двух эссенций в [Усиленных оберегах](/ru/items/advanced), о результате трёх в [Реликвиях](/ru/items/relics), а о том, где встречается каждый тип, в [Эссенциях](/ru/items/essences).

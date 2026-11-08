@@ -1,0 +1,22 @@
+{
+  "parent": "minecraft:story/root",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "restless:requiem_bell"
+    },
+    "title": {
+      "translate": "advancements.restless.requiem.title"
+    },
+    "description": {
+      "translate": "advancements.restless.requiem.description"
+    },
+    "frame": "goal",
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}

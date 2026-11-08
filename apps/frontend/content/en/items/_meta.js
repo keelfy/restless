@@ -6,4 +6,5 @@ export default {
   advanced: 'Advanced charms',
   consumables: 'Consumables',
   relics: 'Relics',
+  requiem: 'The Requiem',
 }

@@ -195,6 +195,10 @@ public final class Content {
     public static final Supplier<DataComponentType<ItemContainerContents>> STASHED =
             component("stashed", ItemContainerContents.CODEC, ItemContainerContents.STREAM_CODEC);
 
+    /** The essences a reliquary holds, in the order they went in, see {@link Essences}. */
+    public static final Supplier<DataComponentType<Essences>> ESSENCES =
+            component("essences", Essences.CODEC, Essences.STREAM_CODEC);
+
     public static final Supplier<Item> BORROWED_FACE_ITEM = item("borrowed_face", p -> new BorrowedFace(p.stacksTo(1)));
     public static final Supplier<Item> DEATH_WAIL = item("death_wail", p -> new DeathWail(p.stacksTo(1)));
     public static final Supplier<Item> STASH = item("stash", p -> new Stash(p.stacksTo(1)));
@@ -273,6 +277,13 @@ public final class Content {
     public static final Supplier<Item> DUSK_SALT = item("dusk_salt", DuskSalt::new);
     public static final Supplier<Item> SIGHTING_MARK = item("sighting_mark", SightingMarkItem::new);
     public static final Supplier<Item> MIMIC_CLAY = item("mimic_clay", MimicClay::new);
+    /**
+     * Holds one essence of each type; full and sung over, it becomes the bell. See
+     * {@link dev.keelfy.restless.haunt.Requiem}.
+     */
+    public static final Supplier<Item> RELIQUARY = item("reliquary", p -> new Reliquary(p.stacksTo(1)));
+
+    public static final Supplier<Item> REQUIEM_BELL = item("requiem_bell", p -> new RequiemBell(p.stacksTo(1)));
     /** What a lump of mimic clay shows as, once pressed against a block. */
     public static final Supplier<DataComponentType<Look>> LOOK = component("look", Look.CODEC, Look.STREAM_CODEC);
 
@@ -536,7 +547,9 @@ public final class Content {
                 EXORCISTS_CENSER,
                 HOLLOW_LANTERN_ITEM,
                 HOARDERS_HOLLOW_ITEM,
-                MARAS_CRADLE_ITEM));
+                MARAS_CRADLE_ITEM,
+                RELIQUARY,
+                REQUIEM_BELL));
         Platform.get()
                 .registerTab(
                         "restless",

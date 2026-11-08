@@ -290,7 +290,14 @@ public final class HauntData extends SavedData {
                                     .forGetter(data -> data.cradles),
                             Codec.unboundedMap(UUIDUtil.STRING_CODEC, GlobalPos.CODEC)
                                     .optionalFieldOf("cradle_lost", Map.of())
-                                    .forGetter(data -> data.lost))
+                                    .forGetter(data -> data.lost),
+                            UUIDUtil.CODEC
+                                    .listOf()
+                                    .optionalFieldOf("released", List.of())
+                                    .forGetter(data -> List.copyOf(data.released)),
+                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
+                                    .optionalFieldOf("requiem_wary", Map.of())
+                                    .forGetter(data -> data.requiemWary))
                     .apply(
                             i,
                             (players,
@@ -306,7 +313,9 @@ public final class HauntData extends SavedData {
                                     kept,
                                     hollow,
                                     cradles,
-                                    lost) -> {
+                                    lost,
+                                    released,
+                                    requiemWary) -> {
                                 HauntData data = new HauntData(players, territorial, graves, sanity, notebooks, blight);
                                 journal.forEach((player, entries) -> {
                                     List<Notebook.Note> notes = new ArrayList<>();
@@ -328,6 +337,8 @@ public final class HauntData extends SavedData {
                                 data.hollow.putAll(hollow);
                                 data.cradles.putAll(cradles);
                                 data.lost.putAll(lost);
+                                data.released.addAll(released);
+                                data.requiemWary.putAll(requiemWary);
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -371,6 +382,10 @@ public final class HauntData extends SavedData {
     private final Map<UUID, GlobalPos> cradles = new HashMap<>();
     /** The cradle a player's spawn point stood on when it was broken, until the spawn has used it once. */
     private final Map<UUID, GlobalPos> lost = new HashMap<>();
+    /** The players the Requiem released: no spirit is born on them or acts on them. */
+    private final Set<UUID> released = new HashSet<>();
+    /** The game time until which the altar refuses a player a Requiem, after a failed one. Keyed by player. */
+    private final Map<UUID, Long> requiemWary = new HashMap<>();
     /**
      * Decided the first time anyone asks and never again, so changing the config later does not flip a world; null
      * until then.
@@ -404,6 +419,26 @@ public final class HauntData extends SavedData {
     /** @return null for a player never seen before; an empty list means every spirit was removed */
     public @Nullable List<Haunting> get(UUID player) {
         return hauntings.get(player);
+    }
+
+    public boolean released(UUID player) {
+        return released.contains(player);
+    }
+
+    public void putReleased(UUID player, boolean on) {
+        if (on ? released.add(player) : released.remove(player)) {
+            setDirty();
+        }
+    }
+
+    /** 0 when the player was never refused. */
+    public long requiemWary(UUID player) {
+        return requiemWary.getOrDefault(player, 0L);
+    }
+
+    public void putRequiemWary(UUID player, long until) {
+        requiemWary.put(player, until);
+        setDirty();
     }
 
     public Menace menace(UUID player) {

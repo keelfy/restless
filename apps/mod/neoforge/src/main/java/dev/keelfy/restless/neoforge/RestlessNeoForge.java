@@ -21,6 +21,8 @@ import dev.keelfy.restless.haunt.JournalPayload;
 import dev.keelfy.restless.haunt.JournalScreen;
 import dev.keelfy.restless.haunt.ReadPayload;
 import dev.keelfy.restless.haunt.RedVignette;
+import dev.keelfy.restless.haunt.RequiemPayload;
+import dev.keelfy.restless.haunt.RequiemScreen;
 import dev.keelfy.restless.haunt.SanityOverlay;
 import dev.keelfy.restless.haunt.SanityPayload;
 import dev.keelfy.restless.haunt.ScreenOverlay;
@@ -94,6 +96,7 @@ public final class RestlessNeoForge {
                         (payload, context) -> SanityOverlay.set(payload.sanity()))
                 .playToClient(
                         JournalPayload.TYPE, JournalPayload.CODEC, (payload, context) -> JournalScreen.receive(payload))
+                .playToClient(RequiemPayload.TYPE, RequiemPayload.CODEC, (payload, context) -> RequiemScreen.open())
                 .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))
                 .playToClient(
                         ShutterPayload.TYPE, ShutterPayload.CODEC, (payload, context) -> Darkroom.shutter(payload))

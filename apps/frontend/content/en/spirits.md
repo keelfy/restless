@@ -155,4 +155,6 @@ Banishing a spirit at an altar leaves one of its essence, and one more if it had
 | Demon | [Bargain](/en/items/charms#demon-bargain) | [Infernal Contract](/en/items/consumables#demon-infernal-contract) |
 | Trickster | [Trickster's Coin](/en/items/charms#trickster-tricksters-coin) | [Changeling Dust](/en/items/consumables#trickster-changeling-dust) |
 
+Collect one essence of every type in a [Reliquary](/en/items/requiem#the-reliquary) and sing the [Requiem](/en/items/requiem): the last reward releases you from your personal spirits for good, and the Requiem Bell can give it back.
+
 See [Items](/en/items) for how they work, [Advanced charms](/en/items/advanced) for what two essences make, [Relics](/en/items/relics) for what three make, and [Essences](/en/items/essences) for where each type is met.

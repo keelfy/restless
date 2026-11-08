@@ -72,6 +72,8 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         BANISHED(true),
         /** Args: name, old type, new type. */
         EVOLVED(true),
+        /** A spirit laid to rest at the Requiem: the last line of its dossier. Args: name, type. */
+        LAID(true),
         /** An entry from before the journal had kinds. Args: its text. */
         OLD(true);
 
@@ -129,7 +131,9 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         /** The first spirit that grew up. */
         EVOLUTION(2),
         /** The first spirit gone for good: essences. */
-        ESSENCE(2);
+        ESSENCE(2),
+        /** The Requiem was sung: the closing chapter. */
+        REQUIEM(2);
 
         /** How many book pages its text takes. */
         public final int pages;
@@ -210,6 +214,13 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         Map<UUID, UUID> grown = new HashMap<>(filed);
         grown.put(notes.get(record).spirit().get(), met().get(dossier));
         return new Notebook(notes, chapters, pictures, Map.copyOf(grown));
+    }
+
+    /** Whether a photograph named a spirit of this type: it has been met, and the journal can name it. */
+    public boolean identified(String type) {
+        return notes.stream()
+                .anyMatch(n -> n.kind() == Kind.PHOTO
+                        && n.tag().filter(tag -> base(tag).equals(type)).isPresent());
     }
 
     static String base(String tag) {

@@ -6,4 +6,5 @@ export default {
   advanced: 'Усиленные обереги',
   consumables: 'Расходники',
   relics: 'Реликвии',
+  requiem: 'Реквием',
 }

@@ -141,7 +141,7 @@ public final class Journal {
             case GRAVE, GRAVE_WHISPER -> List.of(Chapter.GRAVES);
             case EVOLVED -> List.of(Chapter.EVOLUTION);
             case RESTED, BANISHED -> List.of(Chapter.ESSENCE);
-            case DREAM, OLD -> List.of();
+            case DREAM, OLD, LAID -> List.of();
         };
     }
 
