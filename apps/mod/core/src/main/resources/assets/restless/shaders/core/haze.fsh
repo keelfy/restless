@@ -49,9 +49,10 @@ float fbm(vec2 p) {
 // Cloud density at a point of the quad, 0..~1.3: round soft body times warped noise.
 float density(vec2 p, vec2 warp) {
     float r2 = dot(p, p);
-    float body = exp(-r2 * 2.6) * (1.0 - smoothstep(0.55, 1.0, sqrt(r2)));
+    float soft = 1.0 - smoothstep(0.0, 0.8, sqrt(r2));
+    float body = soft * soft;
     float cloud = fbm(p * 1.7 + warp * 1.6);
-    return body * mix(0.25, 1.35, cloud);
+    return body * mix(0.55, 1.15, cloud);
 }
 
 vec4 calculateFinalColor(vec4 color) {
@@ -74,12 +75,12 @@ void main() {
     float here = density(p, warp);
     // The cloud is thicker where more of it lies toward the light, so the lit side reads as the cloud's surface.
     float toward = density(p + vec2(0.22, 0.3), warp);
-    float shade = clamp(0.55 + (here - toward) * 1.8, 0.0, 1.0);
+    float shade = clamp(0.5 + (here - toward) * 0.8, 0.0, 1.0);
     float nearFade = smoothstep(1.0, 4.5, sphericalVertexDistance);
     // The sampler stays bound by the shared particle layout, so it has to be read once; the weight keeps it from showing.
     float keep = 1.0 + 0.00001 * texture(Sampler0, texCoord0).a;
-    vec3 rgb = vertexColor.rgb * mix(0.6, 1.6, shade);
-    float alpha = vertexColor.a * clamp(here * 1.15, 0.0, 1.0) * nearFade * keep;
+    vec3 rgb = vertexColor.rgb * mix(0.85, 1.15, shade);
+    float alpha = vertexColor.a * clamp(here * 0.9, 0.0, 1.0) * nearFade * keep;
     vec4 color = vec4(rgb, alpha) * ColorModulator;
     if (color.a < 0.002) {
         discard;

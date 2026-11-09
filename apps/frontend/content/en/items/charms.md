@@ -52,7 +52,7 @@ Domovoi essence + campfire. Worn on the belt (off hand without Curios), inside a
 
 ## Hoarder: Stash
 
-Hoarder essence + emerald. Holds one stack. Use it with something in the other hand and it takes that in; use it full and it gives the stack back. Anywhere in your inventory when you die, the stack stays with you, even through a server stop, and the stash is spent. It does not work with `keepInventory`.
+Hoarder essence + emerald. Holds one stack. Right-click it to open its slot: put a stack in, or take it out. It will not hold another stash or satchel. Anywhere in your inventory when you die, the stack stays with you, even through a server stop, and the stash is spent. It does not work with `keepInventory`.
 
 ## Demon: Bargain
 

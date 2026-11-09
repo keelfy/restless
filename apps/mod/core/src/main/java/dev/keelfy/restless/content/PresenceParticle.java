@@ -1,24 +1,29 @@
 package dev.keelfy.restless.content;
 
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import org.joml.Quaternionf;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A puff of a spirit's haze, see {@link Presence}: a soft dark-grey cloud facing the camera, so faint it only darkens
- * what is behind it. It hangs almost still, drifts and slowly turns, fades in and out; a few together make a shape. The
- * layer it is drawn in (the loader gives the haze one, with a shader that paints a soft, lit, turbulent cloud) runs the
- * quad 0..1 in texture space, so the sprite is not sampled.
+ * A puff of a spirit's haze, see {@link Presence}: a soft dark-grey cloud hanging in a fixed plane, so faint it only
+ * darkens what is behind it. It hangs almost still, drifts and slowly turns, fades in and out; a few together make a
+ * shape. The layer it is drawn in (the loader gives the haze one, with a shader that paints a soft, lit, turbulent
+ * cloud) runs the quad 0..1 in texture space, so the sprite is not sampled.
  */
 public final class PresenceParticle extends SingleQuadParticle {
-    private static final float PEAK = 0.5f;
+    private static final float PEAK = 0.4f;
     private static final int FADE = 20;
 
     private final float spin;
+    private final Quaternionf facing;
     private final Layer layer;
 
     private PresenceParticle(
@@ -33,10 +38,12 @@ public final class PresenceParticle extends SingleQuadParticle {
         this.hasPhysics = false;
         this.quadSize = 1.2f + random.nextFloat() * 0.7f;
         this.lifetime = 60 + random.nextInt(30);
+        this.facing = new Quaternionf()
+                .rotationYXZ(random.nextFloat() * (float) Math.TAU, (random.nextFloat() - 0.5f) * (float) Math.PI, 0);
         this.roll = random.nextFloat() * (float) Math.TAU;
         this.oRoll = this.roll;
         this.spin = (random.nextFloat() - 0.5f) * 0.012f;
-        float grey = 0.12f + random.nextFloat() * 0.08f;
+        float grey = 0.42f + random.nextFloat() * 0.1f;
         setColor(grey, grey, grey * 1.05f);
         this.alpha = 0;
     }
@@ -47,6 +54,13 @@ public final class PresenceParticle extends SingleQuadParticle {
         super.tick();
         this.roll += spin;
         this.alpha = PEAK * Math.max(0, Math.min(1.0f, Math.min(age, lifetime - age) / (float) FADE));
+    }
+
+    /** Fixed plane instead of facing the camera, so the layers stay in the world as the player moves around. */
+    @Override
+    public void extract(QuadParticleRenderState state, Camera camera, float partialTickTime) {
+        Quaternionf rotation = new Quaternionf(facing).rotateZ(Mth.lerp(partialTickTime, oRoll, roll));
+        extractRotatedQuad(state, camera, rotation, partialTickTime);
     }
 
     @Override

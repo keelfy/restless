@@ -39,6 +39,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.Blocks;
@@ -351,9 +352,20 @@ final class CharmGameTests {
         tests.put("stash_keeps_its_stack_through_death", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             player.setItemInHand(InteractionHand.MAIN_HAND, stack("stash"));
-            player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.DIAMOND, 3));
+            // Using it opens its slot; what goes in is saved to the item at once.
             player.getMainHandItem().use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
-            check(helper, player.getOffhandItem().isEmpty(), "the stash must take what the other hand held");
+            check(helper, player.containerMenu != player.inventoryMenu, "using the stash must open its slots");
+            player.containerMenu.getSlot(0).set(new ItemStack(Items.DIAMOND, 3));
+            player.containerMenu.getSlot(1).set(new ItemStack(Items.GOLD_INGOT, 1));
+            check(
+                    helper,
+                    player.getMainHandItem()
+                                    .getOrDefault(Content.STASHED.get(), ItemContainerContents.EMPTY)
+                                    .copyOne()
+                                    .getCount()
+                            == 3,
+                    "the stash must hold what was put in");
+            check(helper, !player.containerMenu.getSlot(1).mayPlace(new ItemStack(Items.GOLD_INGOT)), "one slot only");
             // Any slot will do: the stash goes to the far end of the inventory, away from the hands.
             player.getInventory().setItem(20, player.getMainHandItem());
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);

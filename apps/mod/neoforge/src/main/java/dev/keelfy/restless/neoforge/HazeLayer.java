@@ -21,12 +21,15 @@ public final class HazeLayer {
     public static final RenderPipeline PIPELINE = RenderPipeline.builder(RenderPipelines.PARTICLE_SNIPPET)
             .withLocation(Identifier.fromNamespaceAndPath("restless", "pipeline/haze_particle"))
             .withFragmentShader(SHADER)
+            .withCull(false)
             .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
             .build();
 
     public static final OitPipelineSet OIT = OitPipelineSet.builder(
                     Identifier.fromNamespaceAndPath("restless", "haze_particle"),
-                    RenderPipeline.builder(RenderPipelines.OIT_PARTICLE_SNIPPET).withFragmentShader(SHADER))
+                    RenderPipeline.builder(RenderPipelines.OIT_PARTICLE_SNIPPET)
+                            .withFragmentShader(SHADER)
+                            .withCull(false))
             .build();
 
     public static final SingleQuadParticle.Layer LAYER =

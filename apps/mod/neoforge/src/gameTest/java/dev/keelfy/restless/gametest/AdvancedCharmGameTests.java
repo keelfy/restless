@@ -345,21 +345,31 @@ final class AdvancedCharmGameTests {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             ItemStack satchel = stack("grave_satchel");
             player.setItemInHand(InteractionHand.MAIN_HAND, satchel);
+            satchel.use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
+            check(helper, player.containerMenu != player.inventoryMenu, "using the satchel must open its slots");
             for (int i = 0; i < 4; i++) {
-                player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.DIAMOND, 1 + i));
-                satchel.use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
+                player.containerMenu.getSlot(i).set(new ItemStack(Items.DIAMOND, 1 + i));
             }
-            // The fourth could not go in, so the satchel gave all three back and took nothing.
+            // The fourth slot is closed: the satchel keeps three stacks.
+            check(helper, !player.containerMenu.getSlot(3).mayPlace(new ItemStack(Items.DIAMOND)), "three slots only");
             check(
                     helper,
-                    player.getInventory().countItem(Items.DIAMOND) >= 1 + 2 + 3,
-                    "a full satchel must empty on use");
+                    satchel.getOrDefault(Content.STASHED.get(), ItemContainerContents.EMPTY)
+                                    .nonEmptyItemCopyStream()
+                                    .count()
+                            == 3,
+                    "the satchel must keep what the slots held");
+            player.containerMenu.getSlot(0).set(ItemStack.EMPTY);
+            player.containerMenu.getSlot(1).set(ItemStack.EMPTY);
+            player.containerMenu.getSlot(2).set(ItemStack.EMPTY);
             check(helper, !satchel.has(Content.STASHED.get()), "an emptied satchel must hold nothing");
-            player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-            for (int i = 0; i < 3; i++) {
-                player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.GOLD_INGOT, 1));
-                satchel.use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
-            }
+            player.closeContainer();
+            satchel.set(
+                    Content.STASHED.get(),
+                    ItemContainerContents.fromItems(List.of(
+                            new ItemStack(Items.GOLD_INGOT, 1),
+                            new ItemStack(Items.GOLD_INGOT, 1),
+                            new ItemStack(Items.GOLD_INGOT, 1))));
             player.setItemInHand(InteractionHand.OFF_HAND, satchel);
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             Restless.onKill(null, player);

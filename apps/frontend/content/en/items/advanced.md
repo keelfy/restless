@@ -65,7 +65,7 @@ The House Key, bound to the first room it shelters. There it **never wears**, wi
 
 ## Grave Satchel
 
-The Stash for three stacks. Use it with something in the other hand to add that stack (up to three); use it with nothing in the other hand, or when it is full, and all the stacks come back at once. Worn on the belt (off hand without Curios) when you die, the whole satchel stays with you, full, even through a server stop, and rests for three days before it can be used again.
+The Stash for three stacks. Right-click it to open its three slots: put stacks in or take them out. It will not hold a stash or another satchel. Worn on the belt (off hand without Curios) when you die, the whole satchel stays with you, full, even through a server stop, and rests for three days before it can be used again.
 
 ## Devil's Coin
 
