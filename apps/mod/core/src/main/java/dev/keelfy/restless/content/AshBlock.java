@@ -10,11 +10,13 @@ import dev.keelfy.restless.spirit.Clue;
 import dev.keelfy.restless.spirit.Focus;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CarpetBlock;
@@ -79,8 +81,16 @@ public final class AshBlock extends CarpetBlock {
                     continue;
                 }
                 int reach = Config.section("ash").integer("reach");
-                level.players().stream()
-                        .filter(p -> p.blockPosition().closerThan(pos, reach))
+                List<ServerPlayer> near = level.players().stream()
+                        .filter(p -> p.blockPosition().distSqr(pos) <= (double) reach * reach)
+                        .toList();
+                // A personal spirit's prints go only to whoever it haunts; a territorial one's to all who stand near.
+                List<ServerPlayer> owners = near.stream()
+                        .filter(p -> Optional.ofNullable(data.get(p.getUUID()))
+                                .filter(own -> own.stream().anyMatch(h -> h.uuid().equals(haunting.uuid())))
+                                .isPresent())
+                        .toList();
+                (owners.isEmpty() ? near : owners)
                         .forEach(p -> Journal.note(
                                 p,
                                 Notebook.Kind.FOOTPRINTS,

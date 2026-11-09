@@ -91,11 +91,6 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         public boolean chronicle() {
             return this == RESTED || this == BANISHED || this == EVOLVED || this == OLD;
         }
-
-        /** A spirit is met, and gets its own pages, once it was photographed or its grave read. */
-        public boolean meets() {
-            return this == PHOTO || this == GRAVE;
-        }
     }
 
     /**
@@ -242,10 +237,13 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         return chapters.contains(chapter.id());
     }
 
-    /** Spirits the player has met, in the order they met them. */
+    /**
+     * Spirits the player has met, in the order they met them: any clue that came from a spirit gives it its own pages,
+     * named by kind only once it is photographed.
+     */
     public List<UUID> met() {
         return notes.stream()
-                .filter(n -> n.kind().meets())
+                .filter(n -> !n.kind().chronicle())
                 .flatMap(n -> n.spirit().stream())
                 .distinct()
                 .toList();

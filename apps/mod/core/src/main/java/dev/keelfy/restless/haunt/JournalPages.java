@@ -151,7 +151,7 @@ public final class JournalPages {
 
     /**
      * Its name once its grave was read; until then its kind, numbered when the player has met several of one kind
-     * unnamed.
+     * unnamed; an unknown spirit while it is neither named nor photographed.
      */
     private static Component who(List<Note> notes, Map<String, Integer> unnamed) {
         Optional<Note> photo = last(notes, Kind.PHOTO);
@@ -162,12 +162,17 @@ public final class JournalPages {
             return Component.translatable("journal.restless.named", name.get(), kind);
         }
         int number = unnamed.merge(photo.flatMap(Note::tag).orElse(""), 1, Integer::sum);
+        if (photo.isEmpty()) {
+            return number == 1
+                    ? Component.translatable("journal.restless.unknown_spirit")
+                    : Component.translatable("journal.restless.unknown_spirit_numbered", number);
+        }
         return number == 1
                 ? Component.translatable("journal.restless.unnamed", kind)
                 : Component.translatable("journal.restless.unnamed_numbered", kind, number);
     }
 
-    /** What was seen of spirits the player has not met yet, or of nobody in particular: it stays theirs to sort out. */
+    /** What was seen of nobody in particular: it stays theirs to sort out. */
     private static List<Card> loose(Notebook notebook) {
         Set<UUID> met = Set.copyOf(notebook.met());
         List<Entry> entries = notebook.notes().stream()

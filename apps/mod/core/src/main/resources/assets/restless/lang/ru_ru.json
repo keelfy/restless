@@ -89,6 +89,8 @@
   "journal.restless.unnamed": "Безымянный %s",
   "journal.restless.unnamed_numbered": "Безымянный %s №%s",
   "journal.restless.unknown_kind": "вид неизвестен",
+  "journal.restless.unknown_spirit": "Неизвестный дух",
+  "journal.restless.unknown_spirit_numbered": "Неизвестный дух №%s",
   "journal.restless.loose.intro": "Чьи это записи, пока неясно.",
   "journal.restless.may_lie": "(может врать)",
   "journal.restless.note.photo": "Снимок: %s.",

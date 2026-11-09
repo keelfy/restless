@@ -35,7 +35,7 @@ The same ring is needed by the [altar](#altar).
 
 ## Ash
 
-1 charcoal makes **4**. Place it like salt. Every 30 seconds each ash block asks the spirits within 16 blocks for a clue (your own, and any territorial one whose reach covers the spot). A spirit that answers leaves a trail of prints across the ash, one every 8 ticks. A print fades after 2 minutes. Ash with a print within 1.5 blocks stays quiet.
+1 charcoal makes **4**. Place it like salt. Every 30 seconds each ash block asks the spirits within 16 blocks for a clue (your own, and any territorial one whose reach covers the spot). A spirit that answers leaves a trail of prints across the ash, one every 8 ticks, and the print goes into the journal: a personal spirit's only into the journal of the player it haunts, a territorial one's into that of everyone within 16 blocks. A print fades after 2 minutes. Ash with a print within 1.5 blocks stays quiet.
 
 The print is the **nature** of one of the spirit's traits. Ash never lies, but a spirit has exactly one trait foreign to its nature, so go by the print you see most:
 
@@ -118,9 +118,9 @@ Sections show once they have something to say:
 | Section | Holds |
 | --- | --- |
 | Guide | chapters that open as you run into what they are about: *Read this first* (given), *Signs* (the first event), *Telling them apart* (the first clue), *The altar* (the first photo; it also shows the altar's recipe), *Graves*, *Your head* (the first darkening of the edges), *Left alone* (the first evolution), *Essence* (the first banishing or rest) |
-| Spirits | a dossier per spirit you have met, in order: met means photographed or its grave read. Notes under it, and the latest photo |
+| Spirits | a dossier per spirit you have met, in order: met means any clue came from it. Until photographed it is an *Unknown spirit*; the photo names its type, its grave its name. Notes under it, and the latest photo |
 | Archive | spirits you banished and filed |
-| Loose notes | what was seen of a spirit you have not met yet |
+| Loose notes | what was seen of nobody in particular, such as an omen dream |
 | Bestiary | a card per type you have photographed: what it does, the **form** it takes at the altar, where it is met |
 | Charms | a page per [charm](/en/items/charms) and [advanced charm](/en/items/advanced) you can read about: what it does and its recipe. It opens once the journal knows the spirit of every essence in the recipe (photographed or banished); an advanced charm also needs its base charm's page |
 | Relics | a page per [relic](/en/items/relics), opened the same way: when all three spirits it is made of are known |

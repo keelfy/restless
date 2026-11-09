@@ -109,13 +109,14 @@ final class JournalGameTests {
             List<String> before = keys(player, data);
             check(
                     helper,
-                    before.contains("journal.restless.section.loose"),
-                    "a clue of an unmet spirit must go to loose notes");
+                    !before.contains("journal.restless.section.loose")
+                            && before.contains("journal.restless.unknown_spirit"),
+                    "a clue of an unphotographed spirit must open an unknown spirit's dossier");
             check(
                     helper,
                     before.contains("journal.restless.may_lie"),
                     "a spirit box word must be marked as possibly a lie");
-            check(helper, !before.contains("journal.restless.unnamed"), "an unmet spirit must not get its own pages");
+            check(helper, !before.contains("journal.restless.unnamed"), "an unphotographed spirit must not have a kind");
             check(
                     helper,
                     data.notebook(player.getUUID()).has(Notebook.Chapter.CLUES),
@@ -185,11 +186,13 @@ final class JournalGameTests {
             check(
                     helper,
                     !after.contains("journal.restless.section.loose"),
-                    "once met, the spirit's earlier clues must move to its pages");
+                    "a spirit's clues must stay on its pages");
             check(
                     helper,
-                    after.contains("journal.restless.unnamed") && after.contains("journal.restless.note.voice"),
-                    "the met spirit's pages must hold its earlier clues");
+                    after.contains("journal.restless.unnamed")
+                            && !after.contains("journal.restless.unknown_spirit")
+                            && after.contains("journal.restless.note.voice"),
+                    "once photographed, the dossier must name the kind and keep its earlier clues");
             check(
                     helper,
                     after.contains("journal.restless.bestiary.shade"),

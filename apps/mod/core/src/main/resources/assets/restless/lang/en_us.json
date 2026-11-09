@@ -232,6 +232,8 @@
   "journal.restless.unnamed": "Unnamed %s",
   "journal.restless.unnamed_numbered": "Unnamed %s #%s",
   "journal.restless.unknown_kind": "kind unknown",
+  "journal.restless.unknown_spirit": "Unknown spirit",
+  "journal.restless.unknown_spirit_numbered": "Unknown spirit #%s",
   "journal.restless.loose.intro": "Don't know whose these are yet.",
   "journal.restless.may_lie": "(could be lying)",
   "journal.restless.note.photo": "Photo: a %s.",
