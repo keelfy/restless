@@ -472,7 +472,7 @@ Runs when: Overworld, raining, sky visible
 
 ## `overnight_shrine`
 
-A row of bone blocks with two skulls and lit candles on top and a sign with a few words in front; removed after 10 min, stays under hardcore
+A row of bone blocks with two skulls and lit candles on top and a sign with a few words in front. Phantom: only this player's client is told of it, the server keeps open ground, a click shows the real air; gone after 10 min (with the swaps setting `REAL` or under hardcore the bone, skulls and candles are real blocks, put back after the time or never under hardcore)
 
 Runs when: Overworld; open ground for a 3×3 shrine 6–14 away; a sign text the spirit has not used
 

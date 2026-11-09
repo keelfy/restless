@@ -344,7 +344,7 @@
   },
   "evolution": {
     "check_ticks": 100,
-    "days": 5,
+    "days": 10,
     "power_floor": 0.7,
     "extra_waves": 4,
     "signature_boost": 3.0

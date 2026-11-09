@@ -164,7 +164,7 @@ Checked in this order, for each event about to run on you: salt ring, hallowed l
 
 ## Gravestone
 
-Not crafted. Every spirit you can sense gets a grave in the overworld, 100 to 400 blocks from you, built when its chunk first loads. Use the stone to read it: the name, days dead, the cause, and what the spirit **wants back**. Use it holding that item and the spirit is laid to rest: **2 essences** and 30 experience, no anger, and the spirit is gone. The item is spent.
+Not crafted. Every spirit you can sense gets a grave in the overworld, 100 to 400 blocks from you, built when its chunk first loads. Use the stone to read it: the name, days dead, the cause, and what the spirit **wants back**. Use it holding that item and the spirit is laid to rest: **2 essences** and 30 experience, no anger, and the spirit is gone. The item is spent. If someone else lays your personal spirit to rest, your journal notes it, even while you are away.
 
 What a spirit wants is fixed for its life, and is one of: golden apple, diamond, compass, clock, name tag, jukebox, poppy, cake, iron pickaxe, lantern, emerald, spyglass. Breaking a gravestone angers your spirits (0.2).
 

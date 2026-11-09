@@ -7,11 +7,13 @@ import dev.keelfy.restless.haunt.Notebook.Chapter;
 import dev.keelfy.restless.haunt.Notebook.Kind;
 import dev.keelfy.restless.platform.Platform;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -36,6 +38,31 @@ public final class Journal {
      */
     public static void note(ServerPlayer player, Kind kind, HauntData.@Nullable Haunting spirit, Object... args) {
         tagged(player, kind, spirit, null, args);
+    }
+
+    /**
+     * Notes something for a player who may be away: online they get it as from {@link #note}; offline it waits in their
+     * notebook until they read it.
+     */
+    public static void noteFor(
+            MinecraftServer server, UUID player, Kind kind, HauntData.@Nullable Haunting spirit, Object... args) {
+        ServerPlayer online = server.getPlayerList().getPlayer(player);
+        if (online != null) {
+            note(online, kind, spirit, args);
+            return;
+        }
+        HauntData data = HauntData.get(server);
+        Notebook grown = data.notebook(player)
+                .with(new Notebook.Note(
+                        kind,
+                        Optional.ofNullable(spirit).map(HauntData.Haunting::uuid),
+                        Optional.empty(),
+                        Arrays.stream(args)
+                                .map(arg -> arg instanceof Component c ? c : Component.literal(String.valueOf(arg)))
+                                .toList()));
+        if (grown != null) {
+            data.putNotebook(player, grown);
+        }
     }
 
     /** @param tag see {@link Kind} */

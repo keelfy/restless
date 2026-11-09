@@ -328,7 +328,7 @@ left as it is.
 
 ### Evolution
 
-A spirit `evolution.days` (5) in-game days old grows up, once and for good: a poltergeist turns **raging**, a shade a
+A spirit `evolution.days` (10) in-game days old grows up, once and for good: a poltergeist turns **raging**, a shade a
 **light-eater**, a phantom a **doppelganger**, a nix a **drowner**, a mimic a **skinwalker**, a wraith a **dread wraith**, a mara a
 **night hag**, a banshee a **keening banshee**, a revenant an **avenger**, a lost one the **forsaken**, a domovoi a **house master**,
 a hoarder a **glutton**, a demon an **archdemon** and a trickster a **jester**. Its power never drops below `power_floor` (0.7), its ritual takes `extra_waves` (4) more waves, and a
@@ -905,7 +905,7 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `bedroom_lullaby` | 519 | LIGHT | SOUND | 0.25 | A bed within 14 | A 23-note flute melody from the bed. Nothing changes |
 | `abandoned_camp` | 375 | LIGHT | BLOCKS | 0.3 | Overworld; open standing room for a 4×3 camp 6–14 away; the spirit still has a book page it has not said | A bed, a campfire and a chest holding a signed book in the spirit's voice (a page from a pool, never repeated for the same spirit); every block is removed after 10 min unless it was changed, a chest with the player's own items stays; stays under hardcore |
 | `dirt_hut` | 381 | LIGHT | BLOCKS | 0.3 | Overworld; open ground for a 3×3 hut 5–12 away | A dirt hut with a two-high doorway and a roof; removed block by block after 7.5 min, stays under hardcore |
-| `overnight_shrine` | 520 | LIGHT | PRESENCE | 0.3 | Overworld; open ground for a 3×3 shrine 6–14 away; a sign text the spirit has not used | A row of bone blocks with two skulls and lit candles on top and a sign with a few words in front; removed after 10 min, stays under hardcore |
+| `overnight_shrine` | 520 | LIGHT | PRESENCE | 0.3 | Overworld; open ground for a 3×3 shrine 6–14 away; a sign text the spirit has not used | A row of bone blocks with two skulls and lit candles on top and a sign with a few words in front; phantom (only this player's client is told, see `Swaps`); gone after 10 min |
 | `far_house` | 521 | LIGHT | LIGHTS | 0.2 | Overworld at night, under a roof; open ground 28–44 away | The 9×9×5 volume round the player is shown as fake blocks on open ground far off, with a lantern lit on the floor; only this player's client, put back after 30 s |
 | `ash_sign` | 526 | LIGHT | PRESENCE | 0.3 | Under a roof; bare floor ahead (3 away, within 25° of the view) for the shape | Ash laid as a ring of radius 3 or as the initial of the spirit's name, readable from the player's side (cells on bare floor only, at least 70%); swept away after 5 min, stays under hardcore |
 | `screen_handprint` | 512 | LIGHT | PRESENCE | 0.3 | The client has the mod | A pale handprint over the player's view for 3.5 s (peak 80%), quick in and slow out; client-side overlay under the HUD |

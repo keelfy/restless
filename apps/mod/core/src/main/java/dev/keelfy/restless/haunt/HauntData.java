@@ -634,6 +634,11 @@ public final class HauntData extends SavedData {
         }
     }
 
+    /** The player a personal spirit haunts; empty for a territorial one. */
+    public Optional<UUID> owner(UUID spirit) {
+        return Optional.ofNullable(owners.get(spirit));
+    }
+
     /** The spirit with this uuid, personal or territorial. */
     public Optional<Haunting> find(UUID spirit) {
         UUID player = owners.get(spirit);

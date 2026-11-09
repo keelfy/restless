@@ -16,7 +16,10 @@ import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -177,6 +180,10 @@ final class Shrines {
         return Templates.find(player, template, config.integer("min_distance"), config.integer("max_distance"));
     }
 
+    /**
+     * The shrine as only this player's client is told of it: the server keeps open ground, so it can be walked through
+     * and the first click on a block shows the real air. The real ground comes back after {@code restore_ticks}.
+     */
     private static void buildShrine(ServerPlayer player) {
         Config.Section config = Config.event(SHRINE);
         List<Templates.Cell> cells = shrine(player);
@@ -184,25 +191,29 @@ final class Shrines {
         if (cells == null || lines == null) {
             return;
         }
-        Templates.put(
-                player.level(),
-                cells,
-                Map.of("s", entity -> {
-                    if (entity instanceof SignBlockEntity sign) {
-                        SignText.Mutable text = sign.getText(SignTextSlot.FRONT).asMutable();
-                        int first = (SIGN_LINES - lines.size()) / 2;
-                        for (int i = 0; i < SIGN_LINES; i++) {
-                            text.setLine(
-                                    i,
-                                    Component.literal(
-                                            i >= first && i - first < lines.size() ? lines.get(i - first) : ""));
-                        }
-                        sign.setText(text.asImmutable(), SignTextSlot.FRONT);
-                    }
-                }),
-                config.integer("restore_ticks"));
+        ServerLevel level = player.level();
+        Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
+        cells.forEach(cell -> shown.put(cell.pos().immutable(), cell.state()));
+        Swaps.show(player, shown, config.integer("restore_ticks"));
+        cells.stream().filter(cell -> cell.slot().equals("s")).forEach(cell -> {
+            SignBlockEntity sign = new SignBlockEntity(cell.pos(), cell.state());
+            sign.setLevel(level);
+            SignText.Mutable text = sign.getText(SignTextSlot.FRONT).asMutable();
+            int first = (SIGN_LINES - lines.size()) / 2;
+            for (int i = 0; i < SIGN_LINES; i++) {
+                text.setLine(i, Component.literal(i >= first && i - first < lines.size() ? lines.get(i - first) : ""));
+            }
+            SignText.CODEC
+                    .encodeStart(level.registryAccess().createSerializationContext(NbtOps.INSTANCE), text.asImmutable())
+                    .result()
+                    .ifPresent(front ->
+                            player.connection.send(ClientboundBlockEntityDataPacket.create(sign, (be, access) -> {
+                                CompoundTag tag = be.getUpdateTag(access);
+                                tag.put("front_text", front);
+                                return tag;
+                            })));
+        });
     }
-
     // 521
 
     /**

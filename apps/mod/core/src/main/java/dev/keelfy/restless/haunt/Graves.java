@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -84,6 +85,11 @@ public final class Graves {
             return;
         }
         BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos);
+        if (!level.getFluidState(top.below()).isEmpty()
+                || !level.getBlockState(top.below()).isFaceSturdy(level, top.below(), Direction.UP)) {
+            data.putGrave(spirit, null); // water or no floor here: the next check picks a new column
+            return;
+        }
         level.setBlock(top, Content.GRAVESTONE.get().defaultBlockState(), 3);
         data.putGrave(spirit, new HauntData.Grave(top, true));
     }
@@ -142,6 +148,7 @@ public final class Graves {
         ServerLevel level = player.level();
         Config.Section config = Config.section("grave");
         HauntData data = HauntData.get(level.getServer());
+        Optional<UUID> owner = data.owner(spirit.uuid()).filter(id -> !id.equals(player.getUUID()));
         data.change(spirit.uuid(), h -> null);
         data.putGrave(spirit.uuid(), null);
         Location.forget(spirit.uuid());
@@ -157,5 +164,7 @@ public final class Graves {
         Component type = Evolution.name(spirit);
         player.sendSystemMessage(Component.translatable("message.restless.rested", story.name()), true);
         Journal.note(player, Notebook.Kind.RESTED, spirit, story.name(), type);
+        // Somebody else laid it to rest: its owner is told too, even if they are away.
+        owner.ifPresent(id -> Journal.noteFor(level.getServer(), id, Notebook.Kind.RESTED, spirit, story.name(), type));
     }
 }

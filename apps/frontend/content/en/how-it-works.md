@@ -48,7 +48,7 @@ Nothing wears anger down with time. It falls when a spirit's anger is spent: you
 
 ## Evolving
 
-A spirit left alone for **5 days** grows up: a poltergeist turns raging, a shade a light-eater. Personal spirits grow while their player is online. You are told, and the journal notes it.
+A spirit left alone for **10 days** grows up: a poltergeist turns raging, a shade a light-eater. Personal spirits grow while their player is online. You are told, and the journal notes it.
 
 An evolved spirit:
 

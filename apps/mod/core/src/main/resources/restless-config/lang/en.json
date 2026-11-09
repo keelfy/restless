@@ -2507,7 +2507,7 @@
     },
     "minecraft:overnight_shrine": {
       "name": "Overnight Shrine",
-      "description": "Bone blocks, skulls, lit candles and a sign with a few words stand on open ground nearby. It is taken down after a while."
+      "description": "Bone blocks, skulls, lit candles and a sign with a few words stand on open ground nearby. Only this player sees it, and it can be walked through; it is gone after a while."
     },
     "minecraft:far_house": {
       "name": "House in the Distance",
