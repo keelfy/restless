@@ -105,7 +105,7 @@ Runs when: Always
 
 ## `red_vignette`
 
-The client draws a red tint at the screen's edges, peaking at 80%, fading in and out over 5 s (`RedVignette`). A client without the mod gets its border warning distance raised instead, so the vanilla tint shows (only with the vignette setting on)
+The client draws a red tint at the screen's edges, peaking at 80%, fading in and out over 5 s (`RedVignette`).
 
 Runs when: Always
 
@@ -466,21 +466,21 @@ Runs when: Overworld, raining, sky visible
 
 ## `jolt_behind`
 
-A loud bang 4 blocks behind the player, at 140–180° from where they look, and only this player's client is told of an enderman standing there. It is not shown until the player looks at it; 12 ticks after they first do it is gone (or after 6 s if they never turn). Nothing on the server
+A loud bang 1.6 blocks behind the player, at 150–180° from where they look, and only this player's client is told of a black figure of no known kind standing there, one of five wrong shapes (tall and thin with arms to the knees; low and wide on all fours; a head hung on one shoulder; a small child with arms up; many thin arms). It is not shown until the player looks at it; 12 ticks after they first do it is gone (or after 6 s if they never turn). Nothing on the server. The figure twitches in sudden small jerks, its head sways, and its two pale eyes glow in the dark. A jump scare: after one runs for a player (this or any other jump scare), none rolls for them again for 10 min
 
-Runs when: Standing room 4 blocks behind
+Runs when: Standing room 1.6 blocks behind
 
 ## `jolt_side`
 
-A loud bang 6 blocks away at 70–110° to one side, with an enderman there for this player's client only, unseen until the player looks at it, and gone 10 ticks after (or after 5 s unseen). Nothing on the server
+A loud bang 1.8 blocks away at 60–100° to one side, with a black figure of one of the five shapes there for this player's client only, unseen until the player looks at it, and gone 10 ticks after (or after 5 s unseen). Nothing on the server
 
-Runs when: Standing room 6 blocks to the side
+Runs when: Standing room 1.8 blocks to the side
 
 ## `jolt_dark`
 
-An enderman 5 blocks ahead, within 25° of the player's view, in a spot no brighter than light level 4, shown only to this player's client at the same instant as a loud bang. Gone 8 ticks later. Nothing on the server
+A black figure of one of the five shapes 2 blocks ahead, within 20° of the player's view, in a spot no brighter than light level 4, shown only to this player's client at the same instant as a loud bang. Gone 8 ticks later. Nothing on the server
 
-Runs when: A dark standing spot 5 blocks ahead
+Runs when: A dark standing spot 2 blocks ahead
 
 ## `overnight_shrine`
 
@@ -516,7 +516,7 @@ Runs when: The client has the mod
 
 A pair of eyes hangs 1.5 blocks above a dark spot for 2–3 s, blinks once and goes out; a client-only particle, fully lit
 
-Runs when: The client has the mod; standing room 7–14 blocks ahead (within 60°) with light level at most 3
+Runs when: Standing room 7–14 blocks ahead (within 60°) with light level at most 3
 
 ## `frost_prints`
 

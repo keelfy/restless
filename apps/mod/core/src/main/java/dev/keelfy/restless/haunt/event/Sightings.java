@@ -6,7 +6,6 @@ import dev.keelfy.restless.haunt.DimPayload;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
-import dev.keelfy.restless.platform.Platform;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -104,8 +103,7 @@ final class Sightings {
                 SimpleEvent.light(
                         "cow_herd_blink",
                         EventTag.MOBS,
-                        player -> Platform.get().canReceive(player, DimPayload.TYPE)
-                                && herd(player).size() >= minCows(),
+                        player -> herd(player).size() >= minCows(),
                         Sightings::cowHerd),
                 // 417: a figure stands far off, but only in the spyglass
                 SimpleEvent.light(

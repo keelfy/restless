@@ -21,6 +21,8 @@ import dev.keelfy.restless.content.PresenceParticle;
 import dev.keelfy.restless.content.RagEntity;
 import dev.keelfy.restless.content.SightingMark;
 import dev.keelfy.restless.content.SightingMarkHud;
+import dev.keelfy.restless.content.Silhouette;
+import dev.keelfy.restless.content.SilhouetteRenderer;
 import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.HeadTurn;
 import dev.keelfy.restless.haunt.RedVignette;
@@ -122,6 +124,7 @@ public final class RestlessNeoForgeClient {
     @SuppressWarnings("unchecked") // the registry is typed BlockEntityType<?>; this one is built for AltarEntity
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer((EntityType<AshFootprint>) Content.ASH_FOOTPRINT.get(), AshFootprintRenderer::new);
+        event.registerEntityRenderer((EntityType<Silhouette>) Content.SILHOUETTE.get(), SilhouetteRenderer::new);
         event.registerBlockEntityRenderer(
                 (BlockEntityType<AltarEntity>) Content.ALTAR_ENTITY.get(), AltarRenderer::new);
         event.registerBlockEntityRenderer(

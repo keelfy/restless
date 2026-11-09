@@ -7,7 +7,6 @@ import dev.keelfy.restless.content.Photo;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.ScreenPayload;
-import dev.keelfy.restless.platform.Platform;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.core.BlockPos;
@@ -32,34 +31,25 @@ final class Screens {
                 SimpleEvent.light(
                         "screen_handprint",
                         EventTag.PRESENCE,
-                        Screens::modded,
+                        SimpleEvent.ALWAYS,
                         player -> overlay(player, "screen_handprint", ScreenPayload.HANDPRINT)),
                 // 513: frost creeps in along the screen's edges and melts
                 SimpleEvent.light(
                         "screen_frost",
                         EventTag.PRESENCE,
-                        Screens::modded,
+                        SimpleEvent.ALWAYS,
                         player -> overlay(player, "screen_frost", ScreenPayload.FROST)),
                 // 514: a face for two ticks; rare, off by default (weight 0)
                 SimpleEvent.light(
                         "screen_face",
                         EventTag.PRESENCE,
-                        Screens::modded,
+                        SimpleEvent.ALWAYS,
                         player -> overlay(player, "screen_face", ScreenPayload.FACE)),
                 // 511: a pair of eyes in a dark spot ahead; they blink and go out
-                SimpleEvent.light(
-                        "eyes_in_dark",
-                        EventTag.PRESENCE,
-                        player -> modded(player) && darkSpot(player) != null,
-                        Screens::eyes),
+                SimpleEvent.light("eyes_in_dark", EventTag.PRESENCE, player -> darkSpot(player) != null, Screens::eyes),
                 // 529: a developed photo in the inventory now shows a figure that was not there
                 SimpleEvent.light(
                         "photo_figure", EventTag.ITEMS, player -> developed(player) != null, Screens::photoFigure));
-    }
-
-    /** The client must have the mod: only then does it know the overlay payload and the eyes particle. */
-    private static boolean modded(ServerPlayer player) {
-        return Platform.get().canReceive(player, ScreenPayload.TYPE);
     }
 
     private static void overlay(ServerPlayer player, String id, int kind) {

@@ -10,7 +10,6 @@ import dev.keelfy.restless.content.RequiemBell;
 import dev.keelfy.restless.haunt.requiem.Movement;
 import dev.keelfy.restless.haunt.requiem.Movements;
 import dev.keelfy.restless.haunt.requiem.Rite;
-import dev.keelfy.restless.platform.Platform;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;
@@ -361,9 +360,7 @@ public final class Requiem {
         if (advancement != null) {
             player.getAdvancements().award(advancement, ADVANCEMENT_CRITERION);
         }
-        if (Platform.get().canReceive(player, RequiemPayload.TYPE)) {
-            player.connection.send(new ClientboundCustomPayloadPacket(new RequiemPayload()));
-        }
+        player.connection.send(new ClientboundCustomPayloadPacket(new RequiemPayload()));
     }
 
     /**

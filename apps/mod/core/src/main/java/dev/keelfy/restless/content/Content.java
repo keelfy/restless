@@ -70,6 +70,19 @@ public final class Content {
                     "ash",
                     key -> new BlockItem(ASH_LINE.get(), tipped(new Item.Properties().setId(key), "ash")));
 
+    public static final Supplier<EntityType<?>> SILHOUETTE = Platform.get()
+            .register(
+                    BuiltInRegistries.ENTITY_TYPE,
+                    "silhouette",
+                    key -> EntityType.Builder.<Silhouette>of(Silhouette::new, MobCategory.MISC)
+                            .sized(.6f, 1.8f)
+                            .clientTrackingRange(8)
+                            .noUpdateInterval()
+                            .fireImmune()
+                            .noLootTable()
+                            .noSave()
+                            .build(key));
+
     public static final Supplier<EntityType<?>> ASH_FOOTPRINT = Platform.get()
             .register(
                     BuiltInRegistries.ENTITY_TYPE,

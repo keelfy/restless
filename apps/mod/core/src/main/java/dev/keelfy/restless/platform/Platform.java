@@ -7,9 +7,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,9 +33,6 @@ public interface Platform {
     /** Declares a creative tab of this mod that lists {@code items}; they are looked up when the tab is filled. */
     void registerTab(
             String name, Component title, Supplier<ItemStack> icon, List<? extends Supplier<? extends Item>> items);
-
-    /** The player's client takes payloads of this type: it has this mod (a test's mock player does not). */
-    boolean canReceive(ServerPlayer player, CustomPacketPayload.Type<?> type);
 
     /** Whether an accessory-slot mod is present: worn charms then work from its slots instead of the off hand. */
     default boolean hasAccessories() {

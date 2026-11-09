@@ -21,6 +21,11 @@ real harm as it ages, gains power and gets angry. Player loop: notice → invest
 protect (wards, salt, offerings) or banish (Requiem ritual) → rewards (essences, relics, charms) → face stronger
 spirits. Design: [docs/design.md](docs/design.md), spirits: [docs/spirits.md](docs/spirits.md).
 
+## Client and server
+
+The mod is required on both the client and the server. Never add fallbacks, guards or `canReceive` checks for a
+player without the mod; custom entities, payloads, particles and sounds may be used freely.
+
 ## Events
 
 **Index of every event id → defining class: [docs/events-index.md](docs/events-index.md).** Read it before touching,

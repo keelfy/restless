@@ -1948,6 +1948,22 @@ final class HauntEventGameTests {
                 connection,
                 player,
                 CommonListenerCookie.createInitial(player.getGameProfile(), false));
+        // The client has this mod, so it takes every payload sent to it; a mock one has no channels until told.
+        var channels = net.neoforged.neoforge.network.registration.ChannelAttributes.getOrCreateCommonChannels(
+                connection, net.minecraft.network.ConnectionProtocol.PLAY);
+        for (var type : List.of(
+                dev.keelfy.restless.haunt.DoorLockPayload.TYPE,
+                dev.keelfy.restless.haunt.DimPayload.TYPE,
+                dev.keelfy.restless.haunt.ScreenPayload.TYPE,
+                dev.keelfy.restless.haunt.TurnPayload.TYPE,
+                dev.keelfy.restless.haunt.VignettePayload.TYPE,
+                dev.keelfy.restless.haunt.SanityPayload.TYPE,
+                dev.keelfy.restless.haunt.JournalPayload.TYPE,
+                dev.keelfy.restless.haunt.RequiemPayload.TYPE,
+                dev.keelfy.restless.debug.DebugPayload.TYPE,
+                dev.keelfy.restless.haunt.ShutterPayload.TYPE)) {
+            channels.add(type.id());
+        }
         return player;
     }
 

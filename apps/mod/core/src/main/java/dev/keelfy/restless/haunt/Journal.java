@@ -5,7 +5,6 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.Picture;
 import dev.keelfy.restless.haunt.Notebook.Chapter;
 import dev.keelfy.restless.haunt.Notebook.Kind;
-import dev.keelfy.restless.platform.Platform;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -150,9 +149,7 @@ public final class Journal {
 
     /** Sends the pages for the book in the player's hands, which is read without opening a screen. */
     public static void sync(ServerPlayer player) {
-        if (Platform.get().canReceive(player, JournalPayload.TYPE)) {
-            show(player, false);
-        }
+        show(player, false);
     }
 
     private static void show(ServerPlayer player, boolean open) {

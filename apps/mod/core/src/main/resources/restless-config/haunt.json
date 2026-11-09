@@ -12,6 +12,7 @@
     "rarity_memory": 0.05,
     "rarity_boost_max": 4.0,
     "repeat_share": 0.1,
+    "startle_gap_ticks": 12000,
     "sure_start_factor": 0.5,
     "retry_ticks": 600
   },

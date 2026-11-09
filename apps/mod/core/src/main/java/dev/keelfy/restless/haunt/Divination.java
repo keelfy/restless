@@ -3,7 +3,6 @@ package dev.keelfy.restless.haunt;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Advanced;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.platform.Platform;
 import dev.keelfy.restless.spirit.Clue;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
@@ -94,18 +93,16 @@ public final class Divination {
         photo.set(
                 DataComponents.LORE,
                 new ItemLore(List.of(Component.translatable("item.restless.photo.silhouette", type))));
-        if (Platform.get().canReceive(player, ShutterPayload.TYPE)) {
-            int film = reading.get().random().nextInt();
-            photo.set(Content.FILM.get(), film);
-            synchronized (SUBJECTS) {
-                SUBJECTS.put(film, spirit.uuid());
-            }
-            player.connection.send(new ClientboundCustomPayloadPacket(new ShutterPayload(
-                    film,
-                    spirit.spirit(),
-                    spirit.seed(),
-                    Optional.ofNullable(reading.get().spirit().at()))));
+        int film = reading.get().random().nextInt();
+        photo.set(Content.FILM.get(), film);
+        synchronized (SUBJECTS) {
+            SUBJECTS.put(film, spirit.uuid());
         }
+        player.connection.send(new ClientboundCustomPayloadPacket(new ShutterPayload(
+                film,
+                spirit.spirit(),
+                spirit.seed(),
+                Optional.ofNullable(reading.get().spirit().at()))));
         return Optional.of(photo);
     }
 

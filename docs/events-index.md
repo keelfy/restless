@@ -179,7 +179,7 @@ The mod's own wards, tools, gravestone, journal, altar misbehaving. [blocks]
 
 ### `event/Jolts.java` (3)
 
-Jump scares: a loud bang, then a dark figure for a second. Weights are the lowest of any group. [presence]
+Jump scares: a loud bang, then a black figure of a wrong shape, close, for a second. Weights are the lowest of any group. [presence]
 
 `jolt_behind`, `jolt_side`, `jolt_dark`
 

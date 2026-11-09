@@ -13,7 +13,6 @@ import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.TurnPayload;
 import dev.keelfy.restless.haunt.VignettePayload;
-import dev.keelfy.restless.platform.Platform;
 import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -46,7 +45,6 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket.Action;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
-import net.minecraft.network.protocol.game.ClientboundSetBorderWarningDistancePacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.network.protocol.game.ClientboundSetHealthPacket;
@@ -85,7 +83,6 @@ import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.MoonPhase;
-import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -195,25 +192,11 @@ final class Lies {
                             config.integer("ticks") + 1,
                             p -> p.connection.send(new ClientboundClearTitlesPacket(true)));
                 }),
-                // 160: the screen's edges go red, as at the world border; see RedVignette. A client without the mod is
-                // shown the
-                // border warning tint instead, with the border where it always was.
+                // 160: the screen's edges go red, as at the world border; see RedVignette
                 light("red_vignette", EventTag.PRESENCE, player -> {
                     Config.Section config = Config.event("red_vignette");
-                    if (Platform.get().canReceive(player, VignettePayload.TYPE)) {
-                        player.connection.send(new ClientboundCustomPayloadPacket(new VignettePayload(
-                                (float) config.num("strength"), Ticks.SECOND * config.integer("seconds"))));
-                        return;
-                    }
-                    double distance = player.level().getWorldBorder().getDistanceToBorder(player);
-                    WorldBorder fake = new WorldBorder();
-                    fake.setWarningBlocks((int) Math.min(Integer.MAX_VALUE, distance / (1 - config.num("strength"))));
-                    player.connection.send(new ClientboundSetBorderWarningDistancePacket(fake));
-                    Scheduler.later(
-                            player,
-                            Ticks.SECOND * config.integer("seconds"),
-                            p -> p.connection.send(new ClientboundSetBorderWarningDistancePacket(
-                                    p.level().getWorldBorder())));
+                    player.connection.send(new ClientboundCustomPayloadPacket(new VignettePayload(
+                            (float) config.num("strength"), Ticks.SECOND * config.integer("seconds"))));
                 }),
                 // 162: a chat line in their own name that they never wrote
                 saying(
@@ -344,9 +327,6 @@ final class Lies {
                             config.tone("sound"));
                     // Turned smoothly on the client, see HeadTurn; from wherever the player looks by then.
                     Scheduler.later(player, config.integer("delay_ticks"), p -> {
-                        if (!Platform.get().canReceive(p, TurnPayload.TYPE)) {
-                            return;
-                        }
                         float toward = (float) (Mth.atan2(at.z - p.getZ(), at.x - p.getX()) * Mth.RAD_TO_DEG) - 90.0F;
                         // Up or down as well, so a player looking at the floor ends up looking at the spirit, not at
                         // the floor.

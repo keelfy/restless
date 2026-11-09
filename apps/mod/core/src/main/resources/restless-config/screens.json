@@ -13,6 +13,7 @@
     },
     "minecraft:screen_face": {
       "weight": 0.0,
+      "startle": true,
       "ticks": 2,
       "strength": 0.9
     },

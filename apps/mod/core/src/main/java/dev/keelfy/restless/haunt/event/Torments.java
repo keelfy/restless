@@ -6,7 +6,6 @@ import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.VignettePayload;
-import dev.keelfy.restless.platform.Platform;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -166,10 +165,8 @@ final class Torments {
     }
 
     private static void vignette(ServerPlayer player, Config.Section config) {
-        if (Platform.get().canReceive(player, VignettePayload.TYPE)) {
-            player.connection.send(new ClientboundCustomPayloadPacket(
-                    new VignettePayload((float) config.num("vignette_strength"), config.integer("vignette_ticks"))));
-        }
+        player.connection.send(new ClientboundCustomPayloadPacket(
+                new VignettePayload((float) config.num("vignette_strength"), config.integer("vignette_ticks"))));
     }
 
     private static void sound(ServerPlayer player, SoundEvent sound, Config.Tone tone) {

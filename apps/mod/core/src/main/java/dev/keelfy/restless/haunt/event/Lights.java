@@ -8,7 +8,6 @@ import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
-import dev.keelfy.restless.platform.Platform;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -342,9 +341,6 @@ final class Lights {
     }
 
     private static void dim(ServerPlayer player, String id) {
-        if (!Platform.get().canReceive(player, DimPayload.TYPE)) {
-            return;
-        }
         Config.Section config = Config.event(id);
         int times = config.integer("times_min")
                 + player.getRandom().nextInt(config.integer("times_max") - config.integer("times_min") + 1);

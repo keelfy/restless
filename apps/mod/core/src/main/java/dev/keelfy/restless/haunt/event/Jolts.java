@@ -1,14 +1,17 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.Silhouette;
+import dev.keelfy.restless.content.SilhouetteRenderer;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
@@ -18,9 +21,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Jump scares: a loud sound, then a dark figure that is not a player, there for about a second and gone. Rare by
- * weight. The figure is a {@link PacketEntity}, so only this player's client is told of it and nothing is left on the
- * server.
+ * Jump scares: a loud sound, then a black figure of no known kind, close enough to crowd the player, there for about a
+ * second and gone. Rare by weight. The figure is a {@link Silhouette} sent as a {@link PacketEntity}, so only this
+ * player's client is told of it and nothing is left on the server.
  */
 final class Jolts {
     private Jolts() {}
@@ -59,10 +62,7 @@ final class Jolts {
     private static void scare(ServerPlayer player, String id, boolean waits) {
         Config.Section config = Config.event(id);
         BlockPos spot = spot(player, id);
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE
-                .getOptional(Identifier.parse(config.text("mob")))
-                .orElse(null);
-        if (spot == null || type == null) {
+        if (spot == null) {
             return;
         }
         ServerLevel level = player.level();
@@ -72,7 +72,9 @@ final class Jolts {
                 HauntSounds.JOLT,
                 at.add(0, Config.section("place").num("sound_height"), 0),
                 config.tone("sound"));
-        PacketEntity figure = PacketEntity.show(player, type, at, PacketEntity.yawToward(at, player.position()));
+        PacketEntity figure =
+                PacketEntity.show(player, Content.SILHOUETTE.get(), at, PacketEntity.yawToward(at, player.position()));
+        shape(player, figure);
         int[] seen = {-1};
         Scheduler.repeat(player, 1, 1, (p, n) -> {
             if (seen[0] < 0 && (!waits || watched(p, at.add(0, 1.0, 0), config.num("look_angle")))) {
@@ -86,6 +88,17 @@ final class Jolts {
             }
             return !over;
         });
+    }
+
+    /** A random one of the silhouette shapes: the client is sent the entity data of a model that is never added. */
+    @SuppressWarnings("unchecked") // the registry is typed EntityType<?>; this one is built for Silhouette
+    private static void shape(ServerPlayer player, PacketEntity figure) {
+        Silhouette model = new Silhouette((EntityType<Silhouette>) Content.SILHOUETTE.get(), player.level());
+        model.setShape(player.getRandom().nextInt(SilhouetteRenderer.SHAPES));
+        List<SynchedEntityData.DataValue<?>> values = model.getEntityData().getNonDefaultValues();
+        if (values != null && !values.isEmpty()) {
+            player.connection.send(new ClientboundSetEntityDataPacket(figure.id(), values));
+        }
     }
 
     /** Whether {@code at} is within {@code degrees} of where the player looks, with nothing solid between. */

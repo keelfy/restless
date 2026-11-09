@@ -340,6 +340,7 @@ public final class Director {
     public static boolean fire(ServerPlayer player, HauntEvent event, @Nullable Vec3 at) {
         Restless.LOGGER.debug("Haunt {} -> {}", event.id(), player.getName().getString());
         Recent.record(player.getUUID(), event.id().toString(), repeatGap());
+        Startle.record(player, event);
         MinecraftServer server = player.level().getServer();
         UUID speaker = Said.current();
         History.record(
@@ -421,6 +422,7 @@ public final class Director {
         String only = event.only();
         return (only == null || only.equals(spirit.id()))
                 && event.opensAt(power, evolved)
+                && !Startle.blocks(player, event)
                 && Bands.open(event, player, spirit, power, evolved);
     }
 

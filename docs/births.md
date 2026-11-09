@@ -5,7 +5,8 @@ Today a player gets personal spirits two ways: one random one on first join, and
 line of [design.md](design.md) (Spirit kinds, stage 5). Territorial spirits generated with structures are planned in
 [places.md](places.md).
 
-Step 1 (the seam) is built. Hooked up, in `haunt/Deeds.java`: slaughter, far death, pet slain and pet lost (batch 1), and witnessed death (a villager or a pet dies near a player who did not do it) and a long wake (two days without rest) as new ones; batch 2 is still to do. The Effigy (see essence-expansion.md) is the first opt-in birth. Numbers are starting values, all of them in
+Step 1 (the seam) and batch 1 are built, in `haunt/Deeds.java`: slaughter, far death, pet slain, pet lost, witnessed
+death and a long wake. Five personal types still have no deed; batch 2 below gives each one. The Effigy (see essence-expansion.md) is the first opt-in birth. Numbers are starting values, all of them in
 config (`haunt.json`, section `births`).
 
 ## Goals and non-goals
@@ -48,22 +49,80 @@ The deeds known so far are the batch 1 ones; batch 2 adds its keys to `Deed` and
 
 ## Deeds
 
-Batch 1 is the three from design.md. Batch 2 reuses hooks that already exist, one small class of conditions each.
+### Built
 
-| Deed | Hook | Condition | Born | Batch |
+| Deed key | Hook | Condition | Born |
+|---|---|---|---|
+| `slaughter` | `Restless.onKill`, killer is a player | Animal 1 point, villager 5, hostile 0; 24 points inside 3600 ticks. 30% | `revenant` |
+| `pet_slain` | `Restless.onKill`, owned pet | Killed by its owner. 50% | `revenant` |
+| `pet_lost` | `Restless.onKill`, owned pet | Any other cause, owner online. 50% | `banshee` |
+| `witness_death` | `Restless.onKill` | A villager or pet dies within `witness_radius` (16) of a player who did not kill or own it. 20% | `banshee` |
+| `far_death` | `Restless.onKill`, victim is a player | Dies 256+ blocks from respawn or below y 0, not by a spirit event. 50% | `lost_one` |
+| `lost_long` | `Deeds.tick` (every 200 ticks) | Vanilla `TIME_SINCE_REST` reaches `sleepless_ticks` (48000, two days). 30% | `lost_one` |
+
+### Coverage today
+
+Every territorial type has a structure (see [places.md](places.md)). Five of the eight personal types have **no deed**:
+`shade`, `phantom`, `mimic`, `wraith`, `mara`. They come only from the first-join roll (1 of 8), the Requiem bell
+(3 random) and `/haunt spirit add`. The Effigy does not help: its essence drops only from banishing or a grave of the same
+type, so a player who never met a mara cannot lure one. In a normal game these five are luck of the first roll.
+
+| Type | Kind | Paths now | Gap |
+|---|---|---|---|
+| `revenant` | personal | slaughter, pet slain | none |
+| `banshee` | personal | pet lost, witness death | none |
+| `lost_one` | personal | far death, sleepless | none |
+| `shade` | personal | first join, bell | no deed |
+| `phantom` | personal | first join, bell | no deed |
+| `mimic` | personal | first join, bell | no deed |
+| `wraith` | personal | first join, bell | no deed |
+| `mara` | personal | first join, bell | no deed; its theme (sleep) went to `lost_long` |
+| `poltergeist` | territorial | mansion 60%, trail ruins 30% | both structures rare |
+| `nix` | territorial | shipwrecks, ocean ruins 25% | none |
+| `demon` | territorial | ruined portals, ancient city, bastion, fortress | none |
+| `hoarder` | territorial | igloo, desert and jungle pyramid 30% | none |
+| `trickster` | territorial | swamp hut 50% | one rare structure |
+| `domovoi` | territorial | villages 10% | low |
+
+### Batch 2: one deed per orphan
+
+Goal: every personal type has at least one deed. Each reuses a hook that exists; no new loader event, no mixin.
+
+| Deed key | Hook | Condition | Chance | Born |
 |---|---|---|---|---|
-| Slaughter | `Restless.onKill`, killer is a player | Animals and villagers killed: animal 1 point, villager 5, hostile mobs 0. 24 points inside 3600 ticks. 30% | `revenant` | 1 |
-| Death far from home | `Restless.onKill`, victim is a player | Dies 256+ blocks from their respawn point or below y 0, and not by a spirit event within `relief_window_ticks`. 50% | `lost_one` | 1 |
-| Pet lost | `Restless.onKill`, victim is an owned `TamableAnimal` | Owner is an online player. Killed by the owner: `revenant`. Any other cause: `banshee`. 50% | `revenant` or `banshee` | 1 |
-| Grave robbed | `Anger.broke`, same `graves` list | Breaks a grave block. 30% | `shade` | 2 |
-| Sleepless | `Reactions.used`, bed | Vanilla rest stat over 7 days when they finally lie down. 60% | `mara` | 2 |
-| Long dark | director check | 20 minutes at light level 0 counted across the session, resets on birth | `wraith` | 2 |
-| Chest broken | `Anger.broke`-style block break | Breaks a chest that still has a loot table (unopened). 5% | `mimic` | 2 |
-| Witnessed death | `Restless.onKill`, victim is a player | Another player within 32 blocks. Multiplayer only. 25% | `phantom` | 2 |
+| `grave_robbed` | `Restless.onBreakBlock`, next to `Anger.broke` | Block is in `anger.graves` | 30% | `shade` |
+| `long_dark` | `Deeds.tick` | Player at block light 0 and sky light 0, counted 200 ticks per check; `dark_ticks` (24000, 20 min) in a session; counter resets on roll | 40% | `wraith` |
+| `loot_opened` | `Restless.onUseBlock`, before vanilla unpacks | Block entity is a `RandomizableContainerBlockEntity` with a loot table still set | 5% | `mimic` |
+| `nightmare` | `Reactions.used`, bed | Player lies down while one of their spirits has anger above `nightmare_anger` (0.5) or sanity below half | 25% | `mara` |
+| `lonely` | `Deeds.tick` | Online `lonely_ticks` (72000, 3 days) in a row with no other player in the same dimension; counter resets when one comes or on roll | 30% | `phantom` |
 
-Mapping to existing hooks: the three batch 1 deeds and "Witnessed death" share one `onKill` branch; "Grave robbed"
-and "Chest broken" need one extra call each in the block-break path next to `Anger.broke`; nothing needs a new loader event. A pet's owner comes from vanilla
-`OwnableEntity`, so it works for wolves, cats and parrots without a list.
+Notes:
+
+- `long_dark` and `lonely` keep counters in memory in `Deeds`, like `WAKING`; a restart forgets them, which only makes
+  births rarer.
+- `lonely` fires in single player too: that is the point. A phantom is the other players you do not have.
+- `nightmare` gives mara its own sleep path without taking `lost_long` back. Alternative: move `lost_long` to `mara`
+  (one config line, needs a `Migrations` step for saved configs) and give `lost_one` a "deep" deed (20 min below y 0).
+  Recommended: keep `lost_long` as is, add `nightmare`.
+- `loot_opened` at 5%: loot chests are common, the cooldown and cap still hold. Breaking an unopened loot chest counts
+  the same (check in `onBreakBlock`), so smashing does not dodge it.
+
+Acceptance: `/haunt birth <key>` adds the right type for each new key; a game test per condition (grave block broken,
+20 min in the dark, loot chest opened, bed with an angry spirit, 3 days alone). Wiki pages for the five types and the
+births page list the deed in both languages.
+
+### Batch 3 (later): territorial births from deeds
+
+Out of scope for batch 2; design.md says territorial spirits come only with structures. Listed so the gaps above have
+an answer if that changes. Each anchors with `Births.place`, so spacing holds.
+
+| Deed | Condition | Born |
+|---|---|---|
+| Home kept | Same respawn bed used 7 nights | `domovoi` at the bed |
+| Home left | Respawn bed not visited for 7 days | `poltergeist` at the bed |
+| Drowned | Player drowns | `nix` at the death spot |
+| Portal lit | Player lights a nether portal. 5% | `demon` at the portal |
+| Witch killed | Player kills a witch. 10% | `trickster` at the spot |
 
 ## Opt-in births (later)
 
@@ -83,7 +142,8 @@ that does not exist yet, so they wait for their own stage.
 |---|---|---|
 | 1 (done) | `Births` + `BirthRules`, `births` section in `haunt.json` (new keys need no migration), `/haunt birth` | A unit test on the pure rules (cooldown, cap, repeat, head start) passes. `/haunt birth slaughter` adds a revenant with power around 0.2; a second one within 3 days does nothing; with a revenant it raises that one's anger instead |
 | 2 | Batch 1: slaughter, death far from home, pet lost | A game test kills 24 cows and finds a revenant; kills a player far from spawn and finds a lost one; kills an owned wolf and finds a banshee. Hostile mobs alone never trigger |
-| 3 | Batch 2 | Each deed has a game test on its condition, and the "no spirit event" check of death far from home is covered |
+| 3 | Batch 2: `grave_robbed`, `long_dark`, `loot_opened`, `nightmare`, `lonely` | Each personal type has a deed; each deed has a game test on its condition |
+| 3b | Batch 3, territorial deeds, only if design.md allows it | Decided after batch 2 plays |
 | 4 | Opt-in births | Decided when the board, scarecrow and loot items are built |
 
 Docs to update per step: `spirits.md` (How it works: births), the design.md bullet in stage 5, the frontend
