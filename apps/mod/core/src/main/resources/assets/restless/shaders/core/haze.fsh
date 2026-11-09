@@ -17,8 +17,10 @@ layout(location = 0) out vec4 fragColor;
 #endif
 
 // Volumetric-looking haze drawn on a camera-facing quad. The quad's texture coordinates run 0..1 across it (the
-// particle sets them), so the shader paints a soft round body broken up by drifting noise, and fades out near the
-// camera so walking into the haze never shows the quad's plane.
+// particle sets them). The shader treats the quad as a thick soft cloud: a smooth density (a gaussian body broken up by
+// domain-warped noise, with no hard thresholds, so there is no contour anywhere), lit by a fixed light so the side of
+// the cloud facing it is lighter and the far side darker. It fades out near the camera so walking into the haze never
+// shows the quad's plane.
 
 float hash(vec2 p) {
     p = fract(p * vec2(123.34, 456.21));
@@ -36,12 +38,20 @@ float valueNoise(vec2 p) {
 float fbm(vec2 p) {
     float sum = 0.0;
     float amplitude = 0.5;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
         sum += amplitude * valueNoise(p);
         p = p * 2.03 + 17.1;
         amplitude *= 0.5;
     }
-    return sum;
+    return sum / 0.875;
+}
+
+// Cloud density at a point of the quad, 0..~1.3: round soft body times warped noise.
+float density(vec2 p, vec2 warp) {
+    float r2 = dot(p, p);
+    float body = exp(-r2 * 2.6) * (1.0 - smoothstep(0.55, 1.0, sqrt(r2)));
+    float cloud = fbm(p * 1.7 + warp * 1.6);
+    return body * mix(0.25, 1.35, cloud);
 }
 
 vec4 calculateFinalColor(vec4 color) {
@@ -60,12 +70,17 @@ void main() {
     if (r2 >= 1.0) {
         discard;
     }
-    float body = (1.0 - r2) * (1.0 - r2);
-    float wisps = smoothstep(0.28, 0.78, fbm(p * 2.4));
+    vec2 warp = vec2(fbm(p * 1.3 + 3.1), fbm(p * 1.3 - 7.7)) - 0.5;
+    float here = density(p, warp);
+    // The cloud is thicker where more of it lies toward the light, so the lit side reads as the cloud's surface.
+    float toward = density(p + vec2(0.22, 0.3), warp);
+    float shade = clamp(0.55 + (here - toward) * 1.8, 0.0, 1.0);
     float nearFade = smoothstep(1.0, 4.5, sphericalVertexDistance);
     // The sampler stays bound by the shared particle layout, so it has to be read once; the weight keeps it from showing.
     float keep = 1.0 + 0.00001 * texture(Sampler0, texCoord0).a;
-    vec4 color = vec4(vertexColor.rgb, vertexColor.a * body * wisps * nearFade * keep) * ColorModulator;
+    vec3 rgb = vertexColor.rgb * mix(0.6, 1.6, shade);
+    float alpha = vertexColor.a * clamp(here * 1.15, 0.0, 1.0) * nearFade * keep;
+    vec4 color = vec4(rgb, alpha) * ColorModulator;
     if (color.a < 0.002) {
         discard;
     }

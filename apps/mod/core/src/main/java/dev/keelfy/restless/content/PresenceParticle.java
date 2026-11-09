@@ -11,11 +11,11 @@ import org.jspecify.annotations.Nullable;
 /**
  * A puff of a spirit's haze, see {@link Presence}: a soft dark-grey cloud facing the camera, so faint it only darkens
  * what is behind it. It hangs almost still, drifts and slowly turns, fades in and out; a few together make a shape. The
- * layer it is drawn in (the loader gives the haze one, with a shader that paints a wispy, round volume) runs the quad
- * 0..1 in texture space, so the sprite is not sampled.
+ * layer it is drawn in (the loader gives the haze one, with a shader that paints a soft, lit, turbulent cloud) runs the
+ * quad 0..1 in texture space, so the sprite is not sampled.
  */
 public final class PresenceParticle extends SingleQuadParticle {
-    private static final float PEAK = 0.42f;
+    private static final float PEAK = 0.5f;
     private static final int FADE = 20;
 
     private final float spin;
@@ -31,7 +31,7 @@ public final class PresenceParticle extends SingleQuadParticle {
         this.gravity = 0;
         this.friction = 1.0f;
         this.hasPhysics = false;
-        this.quadSize = 0.8f + random.nextFloat() * 0.5f;
+        this.quadSize = 1.2f + random.nextFloat() * 0.7f;
         this.lifetime = 60 + random.nextInt(30);
         this.roll = random.nextFloat() * (float) Math.TAU;
         this.oRoll = this.roll;
