@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 638 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 639 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -177,11 +177,11 @@ The mod's own wards, tools, gravestone, journal, altar misbehaving. [blocks]
 
 `scarecrow_closer`, `ouija_hi`, `spirit_box_word`, `salt_gap`, `grave_name`, `journal_page_torn`, `dreamcatcher_fails`, `lantern_soul_fire`, `charm_falls`, `altar_midnight`
 
-### `event/Jolts.java` (3)
+### `event/Jolts.java` (4)
 
-Jump scares: a loud bang, then a black figure of a wrong shape, close, for a second. Weights are the lowest of any group. [presence]
+Jump scares: a loud bang, then a black figure of a wrong shape, close, for a second; or a rustle out of sight and a figure that lunges at the face. Weights are the lowest of any group. [presence]
 
-`jolt_behind`, `jolt_side`, `jolt_dark`
+`jolt_behind`, `jolt_side`, `jolt_dark`, `jolt_lunge`
 
 ### `event/Sightings.java` (10)
 

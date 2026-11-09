@@ -169,5 +169,13 @@
         "type": "event"
       }
     ]
+  },
+  "haunt.rustle": {
+    "sounds": [
+      {
+        "name": "minecraft:block.azalea_leaves.step",
+        "type": "event"
+      }
+    ]
   }
 }

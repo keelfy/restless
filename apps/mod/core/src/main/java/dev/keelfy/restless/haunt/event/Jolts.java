@@ -22,8 +22,9 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Jump scares: a loud sound, then a black figure of no known kind, close enough to crowd the player, there for about a
- * second and gone. Rare by weight. The figure is a {@link Silhouette} sent as a {@link PacketEntity}, so only this
- * player's client is told of it and nothing is left on the server.
+ * second and gone; or a rustle out of sight and a figure that crosses the gap to the player's face in a few ticks. Rare
+ * by weight. The figure is a {@link Silhouette} sent as a {@link PacketEntity}, so only this player's client is told of
+ * it and nothing is left on the server.
  */
 final class Jolts {
     private Jolts() {}
@@ -35,7 +36,9 @@ final class Jolts {
                 // 537: the same, at the edge of the view
                 jolt("jolt_side", true),
                 // 538: in a dark spot ahead, the figure and the bang at the same instant
-                jolt("jolt_dark", false));
+                jolt("jolt_dark", false),
+                // 539: a faint rustle in the dark out of sight; come close and the figure is in your face at once
+                SimpleEvent.light("jolt_lunge", EventTag.PRESENCE, player -> lair(player) != null, Jolts::ambush));
     }
 
     private static HauntEvent jolt(String id, boolean waits) {
@@ -90,6 +93,73 @@ final class Jolts {
         });
     }
 
+    /** A dark empty spot out of the player's sight, {@code min_distance} to {@code max_distance} blocks away. */
+    private static @Nullable BlockPos lair(ServerPlayer player) {
+        Config.Section config = Config.event("jolt_lunge");
+        ServerLevel level = player.level();
+        return Place.near(
+                player,
+                player.blockPosition(),
+                config.integer("min_distance"),
+                config.integer("max_distance"),
+                pos -> Place.floored(level, pos)
+                        && level.getMaxLocalRawBrightness(pos) <= config.integer("dark_max")
+                        && !clear(player, Vec3.atBottomCenterOf(pos).add(0, 1.0, 0)));
+    }
+
+    /**
+     * A rustle from the lair every {@code rustle_gap_ticks}. When the player comes within {@code trigger_distance} the
+     * figure is there, crosses to their face in {@code lunge_ticks}, bangs, and is gone {@code hold_ticks} later. Given
+     * up after {@code max_ticks} if nobody comes.
+     */
+    private static void ambush(ServerPlayer player) {
+        Config.Section config = Config.event("jolt_lunge");
+        BlockPos lair = lair(player);
+        if (lair == null) {
+            return;
+        }
+        ServerLevel level = player.level();
+        Vec3 home = Vec3.atBottomCenterOf(lair);
+        PacketEntity[] figure = {null};
+        int[] struck = {0};
+        Scheduler.repeat(player, 1, 1, (p, n) -> {
+            if (p.level() != level || figure[0] == null && n >= config.integer("max_ticks")) {
+                return false;
+            }
+            if (figure[0] == null) {
+                if (n % config.integer("rustle_gap_ticks") == 0) {
+                    Nearby.sound(
+                            p,
+                            HauntSounds.RUSTLE,
+                            home.add(0, Config.section("place").num("sound_height"), 0),
+                            config.tone("sound"));
+                }
+                if (p.position().distanceTo(home) <= config.num("trigger_distance")) {
+                    figure[0] = PacketEntity.show(
+                            p, Content.SILHOUETTE.get(), home, PacketEntity.yawToward(home, p.position()));
+                    shape(p, figure[0]);
+                    struck[0] = n;
+                }
+                return true;
+            }
+            int t = n - struck[0];
+            int lunge = config.integer("lunge_ticks");
+            Vec3 look = p.getLookAngle();
+            Vec3 face = p.position().add(new Vec3(look.x, 0, look.z).normalize().scale(config.num("face_distance")));
+            if (t <= lunge) {
+                figure[0].move(p, home.lerp(face, (double) t / lunge), PacketEntity.yawToward(face, p.position()));
+                if (t == lunge) {
+                    Nearby.sound(p, HauntSounds.JOLT, face.add(0, p.getEyeHeight(), 0), config.tone("bang"));
+                }
+            }
+            boolean over = t >= lunge + config.integer("hold_ticks");
+            if (over) {
+                figure[0].remove(p);
+            }
+            return !over;
+        });
+    }
+
     /** A random one of the silhouette shapes: the client is sent the entity data of a model that is never added. */
     @SuppressWarnings("unchecked") // the registry is typed EntityType<?>; this one is built for Silhouette
     private static void shape(ServerPlayer player, PacketEntity figure) {
@@ -105,10 +175,19 @@ final class Jolts {
     private static boolean watched(ServerPlayer player, Vec3 at, double degrees) {
         Vec3 eye = player.getEyePosition();
         return player.getLookAngle().dot(at.subtract(eye).normalize()) >= Math.cos(Math.toRadians(degrees))
-                && player.level()
-                                .clip(new ClipContext(
-                                        eye, at, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player))
-                                .getType()
-                        == HitResult.Type.MISS;
+                && clear(player, at);
+    }
+
+    /** Whether nothing solid lies between the player's eyes and {@code at}. */
+    private static boolean clear(ServerPlayer player, Vec3 at) {
+        return player.level()
+                        .clip(new ClipContext(
+                                player.getEyePosition(),
+                                at,
+                                ClipContext.Block.COLLIDER,
+                                ClipContext.Fluid.NONE,
+                                player))
+                        .getType()
+                == HitResult.Type.MISS;
     }
 }

@@ -24,6 +24,7 @@ public final class HauntSounds {
     public static final SoundEvent MIRROR_RING = event("haunt.mirror_ring");
     public static final SoundEvent MIRROR_CRACK = event("haunt.mirror_crack");
     public static final SoundEvent JOLT = event("haunt.jolt");
+    public static final SoundEvent RUSTLE = event("haunt.rustle");
 
     private HauntSounds() {}
 

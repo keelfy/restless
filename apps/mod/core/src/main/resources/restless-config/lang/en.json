@@ -2357,6 +2357,10 @@
       "name": "Face in the Dark",
       "description": "In a dark spot ahead, a loud bang and a dark figure at once. It is gone almost before it is seen."
     },
+    "minecraft:jolt_lunge": {
+      "name": "Rustle Beyond the Wall",
+      "description": "Out of sight in the dark, something rustles. If the player comes near, a dark figure is in their face in a moment, with a loud bang."
+    },
     "minecraft:netherrack_behind": {
       "name": "Netherrack Behind",
       "description": "Stone and earth behind the player turn to netherrack until they look round. Only the player sees it."

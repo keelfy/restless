@@ -4,7 +4,7 @@ title: Presence
 
 # Presence
 
-89 events.
+90 events.
 
 ## `dragon_flyover`
 
@@ -466,21 +466,27 @@ Runs when: Overworld, raining, sky visible
 
 ## `jolt_behind`
 
-A loud bang 1.6 blocks behind the player, at 150–180° from where they look, and only this player's client is told of a black figure of no known kind standing there, one of five wrong shapes (tall and thin with arms to the knees; low and wide on all fours; a head hung on one shoulder; a small child with arms up; many thin arms). It is not shown until the player looks at it; 12 ticks after they first do it is gone (or after 6 s if they never turn). Nothing on the server. The figure twitches in sudden small jerks, its head sways, and its two pale eyes glow in the dark. A jump scare: after one runs for a player (this or any other jump scare), none rolls for them again for 10 min
+A loud bang 1.6 blocks behind the player, at 150–180° from where they look, and only this player's client is told of a black figure of no known kind standing there, one of ten wrong shapes (tall and thin with arms to the knees; low and wide on all fours; a head hung on one shoulder; a small child with arms up; many thin arms; a stooped giant; bent double with its head held up; a tall one and a small one joined by the hands; a body on a very long neck; hung off the ground with its head dropped on a shoulder). It is not shown until the player looks at it; 12 ticks after they first do it is gone (or after 6 s if they never turn). Nothing on the server. The figure twitches in sudden small jerks, its head sways, and its two pale eyes glow in the dark. A jump scare: after one runs for a player (this or any other jump scare), none rolls for them again for 10 min
 
 Runs when: Standing room 1.6 blocks behind
 
 ## `jolt_side`
 
-A loud bang 1.8 blocks away at 60–100° to one side, with a black figure of one of the five shapes there for this player's client only, unseen until the player looks at it, and gone 10 ticks after (or after 5 s unseen). Nothing on the server
+A loud bang 1.8 blocks away at 60–100° to one side, with a black figure of one of the ten shapes there for this player's client only, unseen until the player looks at it, and gone 10 ticks after (or after 5 s unseen). Nothing on the server
 
 Runs when: Standing room 1.8 blocks to the side
 
 ## `jolt_dark`
 
-A black figure of one of the five shapes 2 blocks ahead, within 20° of the player's view, in a spot no brighter than light level 4, shown only to this player's client at the same instant as a loud bang. Gone 8 ticks later. Nothing on the server
+A black figure of one of the ten shapes 2 blocks ahead, within 20° of the player's view, in a spot no brighter than light level 4, shown only to this player's client at the same instant as a loud bang. Gone 8 ticks later. Nothing on the server
 
 Runs when: A dark standing spot 2 blocks ahead
+
+## `jolt_lunge`
+
+Out of sight, 8–12 blocks away, in a spot no brighter than light level 6 behind a wall or a corner, a faint rustle sounds every 2 s for up to 30 s. If the player comes within 4.5 blocks of the spot, a black figure of one of the ten shapes stands there for this player's client only and is at their face (0.7 blocks ahead) 3 ticks later, with a loud bang as it arrives. Gone 6 ticks after that. If nobody comes near, it just stops. Nothing on the server. A jump scare, so it shares the 10 min pause with the other jump scares
+
+Runs when: A dark standing spot 8–12 blocks away that the player cannot see
 
 ## `overnight_shrine`
 

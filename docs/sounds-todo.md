@@ -21,8 +21,9 @@ Put files in `apps/mod/core/src/main/resources/assets/restless/sounds/haunt/`.
 | `haunt.mirror_ring` | `mirror_ring_1..2` | 1–2 s | `mirror_names`: mirror is marked | A thin glass or crystal ring with a faint shimmer. Quiet, it plays at the player. | amethyst chime |
 | `haunt.mirror_crack` | `mirror_crack_1..3` | 0.5–1.5 s | `restless:cracked_mirror` | A hairline crack slowly running across glass. No shatter. | glass hit |
 | `haunt.jolt` | `jolt_1..3` | 0.3–1 s | `jolt_behind`, `jolt_side`, `jolt_dark` | A sudden loud bang or sting, sharp attack, no tail. Plays at volume 2.0 right behind or beside the player. | anvil land |
+| `haunt.rustle` | `rustle_1..3` | 0.5–1.5 s | `jolt_lunge`: heard from 8–12 blocks, through a wall, every 2 s | Something shifting in the dark: cloth or dry leaves, a slow drag. Very quiet and soft, no clear attack, nothing that reads as a bang. | azalea leaves step |
 
-**Total:** 9 events, about 21 files.
+**Total:** 10 events, about 24 files.
 
 ## Notes
 

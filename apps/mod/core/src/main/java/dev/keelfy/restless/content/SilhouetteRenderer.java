@@ -40,7 +40,8 @@ public final class SilhouetteRenderer extends EntityRenderer<Silhouette, Silhoue
     record Part(float x, float y, float z, float w, float h, float d, float tiltX, float tiltZ) {}
 
     /**
-     * Tall and thin, arms to the knees; low and wide on all fours; a head hung on one shoulder; a child with arms up.
+     * Tall and thin, arms to the knees; low and wide on all fours; a head hung on one shoulder; a child with arms up;
+     * many arms; a stooped giant; bent double; a tall one and a small one; a long neck; hung off the ground.
      */
     private static final List<List<Part>> SHAPE_PARTS = List.of(
             List.of(
@@ -81,10 +82,48 @@ public final class SilhouetteRenderer extends EntityRenderer<Silhouette, Silhoue
                     new Part(-.15f, 1.6f, 0, .05f, 1.4f, .05f, 0, 95),
                     new Part(.15f, 1.6f, 0, .05f, 1.4f, .05f, 0, -95),
                     new Part(-.15f, 1.3f, 0, .05f, 1.4f, .05f, 0, 140),
-                    new Part(.15f, 1.3f, 0, .05f, 1.4f, .05f, 0, -140)));
+                    new Part(.15f, 1.3f, 0, .05f, 1.4f, .05f, 0, -140)),
+            // stooped giant, head nearly on its chest, hands at its feet
+            List.of(
+                    new Part(-.1f, 0, 0, .07f, 1.9f, .07f, 0, 0),
+                    new Part(.1f, 0, 0, .07f, 1.9f, .07f, 0, 0),
+                    new Part(0, 1.9f, 0, .3f, 1.3f, .2f, 25, 0),
+                    new Part(0, 3.0f, .55f, .2f, .26f, .2f, 35, 0),
+                    new Part(-.24f, .1f, .25f, .05f, 2.6f, .05f, -8, 0),
+                    new Part(.24f, .1f, .25f, .05f, 2.6f, .05f, -8, 0)),
+            // bent double at the hip, the head held up on the end of its back
+            List.of(
+                    new Part(-.1f, 0, 0, .08f, 1.0f, .08f, 0, 0),
+                    new Part(.1f, 0, 0, .08f, 1.0f, .08f, 0, 0),
+                    new Part(0, 1.0f, 0, .3f, 1.1f, .2f, 85, 0),
+                    new Part(0, 1.1f, 1.1f, .26f, .34f, .26f, 0, 0),
+                    new Part(-.2f, .05f, .95f, .06f, 1.0f, .06f, 0, 0),
+                    new Part(.2f, .05f, .95f, .06f, 1.0f, .06f, 0, 0)),
+            // a tall one and a small one, joined by the hands
+            List.of(
+                    new Part(-.35f, 0, 0, .3f, 1.7f, .2f, 0, 0),
+                    new Part(-.35f, 1.7f, 0, .24f, .3f, .24f, 0, 0),
+                    new Part(.35f, 0, 0, .22f, .9f, .16f, 0, 0),
+                    new Part(.35f, .9f, 0, .2f, .24f, .2f, 0, 0),
+                    new Part(0, .85f, 0, .7f, .05f, .05f, 0, 0)),
+            // a thick low body on a neck as long as it is
+            List.of(
+                    new Part(0, 0, 0, .5f, 1.0f, .3f, 0, 0),
+                    new Part(0, 1.0f, 0, .06f, 1.8f, .06f, 10, 0),
+                    new Part(0, 2.77f, .31f, .3f, .32f, .3f, 20, 0),
+                    new Part(-.3f, .2f, 0, .07f, .9f, .07f, 0, 8),
+                    new Part(.3f, .2f, 0, .07f, .9f, .07f, 0, -8)),
+            // off the ground, limp, the head dropped on one shoulder
+            List.of(
+                    new Part(-.1f, .3f, 0, .07f, .9f, .07f, 0, 0),
+                    new Part(.1f, .3f, 0, .07f, .9f, .07f, 0, 0),
+                    new Part(0, 1.2f, 0, .3f, 1.0f, .2f, -8, 0),
+                    new Part(0, 2.2f, 0, .26f, .32f, .26f, 0, 55),
+                    new Part(-.22f, .7f, 0, .06f, 1.4f, .06f, 0, 6),
+                    new Part(.22f, .7f, 0, .06f, 1.4f, .06f, 0, -6)));
 
     /** Which part of each shape is the head, as an index into its parts. */
-    private static final int[] HEAD = {3, 1, 3, 3, 3};
+    private static final int[] HEAD = {3, 1, 3, 3, 3, 3, 3, 1, 2, 3};
 
     /** How many shapes there are, for picking one. */
     public static final int SHAPES = SHAPE_PARTS.size();
