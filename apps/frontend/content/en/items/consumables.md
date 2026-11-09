@@ -20,7 +20,7 @@ Nix essence + water bottle + prismarine shard makes **2**. Drink it: the rain an
 
 ## Phantom: Sighting Mark
 
-Phantom essence + paper + glowstone dust makes **4**. Set it on a block: a waypoint marks the spot until you take it up again. Its icon shows through walls on the screen of every player who has it in view, from afar, and keeps one size however far it is, with the distance beneath. Use your hand on the mark to take it back. Rename the mark to name it. Eight at most at a time.
+Phantom essence + paper + glowstone dust makes **4**. Set it on a block: a waypoint marks the spot until you take it up again. Its icon shows through walls on the screen of every player who has it in view, from afar, and keeps one small, slightly see-through size however far it is, with the distance beneath. Use your hand on the mark to take it back. Rename the mark to name it. Eight at most at a time.
 
 ## Mimic: Mimic Clay
 

@@ -467,6 +467,8 @@
     "dust_blocks": 64,
     "mark_max": 8,
     "mark_range": 10,
+    "mark_icon_scale": 0.6,
+    "mark_icon_alpha": 0.75,
     "draught_sanity": 0.3,
     "draught_skips_alone": true
   }

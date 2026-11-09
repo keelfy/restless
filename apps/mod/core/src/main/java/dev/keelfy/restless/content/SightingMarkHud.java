@@ -1,13 +1,17 @@
 package dev.keelfy.restless.content;
 
+import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.config.Config;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -15,10 +19,13 @@ import org.joml.Vector4f;
 /**
  * The client side of a {@link SightingMark}: a waypoint on the screen, as a minimap mod draws one. The icon is drawn
  * over the world, so it shows through blocks, and at one size however far the mark is; beneath it go its name, if it
- * has one, and the distance.
+ * has one, and the distance. It is placed at the exact fractional screen position, so it glides as you turn instead of
+ * stepping a whole GUI pixel at a time; its size and opacity come from the {@code consumables} config.
  */
 public final class SightingMarkHud {
-    private static final int HALF_ICON = 8;
+    private static final Identifier ICON =
+            Identifier.fromNamespaceAndPath(Restless.MOD_ID, "textures/item/sighting_mark.png");
+    private static final int TEXTURE = 16;
     private static final int WHITE = 0xFFFFFFFF;
     private static final int PALE = 0xFFC9D6F2;
 
@@ -36,7 +43,10 @@ public final class SightingMarkHud {
         int width = graphics.guiWidth();
         int height = graphics.guiHeight();
         Font font = minecraft.font;
-        ItemStack icon = new ItemStack(Content.SIGHTING_MARK.get());
+        Config.Section config = Config.section("consumables");
+        float scale = (float) config.num("mark_icon_scale");
+        int color = ARGB.white(Math.clamp((float) config.num("mark_icon_alpha"), 0f, 1f));
+        float half = TEXTURE * scale / 2;
         for (Entity entity : minecraft.level.entitiesForRendering()) {
             if (!(entity instanceof SightingMark mark)) {
                 continue;
@@ -46,18 +56,37 @@ public final class SightingMarkHud {
             if (clip.w <= 0.05f) {
                 continue; // behind the camera
             }
-            int x = (int) ((clip.x / clip.w + 1) / 2 * width);
-            int y = (int) ((1 - clip.y / clip.w) / 2 * height);
-            if (x < HALF_ICON || x > width - HALF_ICON || y < HALF_ICON || y > height - HALF_ICON) {
+            float x = (clip.x / clip.w + 1) / 2 * width;
+            float y = (1 - clip.y / clip.w) / 2 * height;
+            if (x < half || x > width - half || y < half || y > height - half) {
                 continue;
             }
-            graphics.item(icon, x - HALF_ICON, y - HALF_ICON);
-            int line = y + HALF_ICON + 2;
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(x, y);
+            graphics.pose().pushMatrix();
+            graphics.pose().scale(scale, scale);
+            graphics.blit(
+                    RenderPipelines.GUI_TEXTURED,
+                    ICON,
+                    -TEXTURE / 2,
+                    -TEXTURE / 2,
+                    0,
+                    0,
+                    TEXTURE,
+                    TEXTURE,
+                    TEXTURE,
+                    TEXTURE,
+                    TEXTURE,
+                    TEXTURE,
+                    color);
+            graphics.pose().popMatrix();
+            int line = Math.round(half) + 2;
             if (mark.hasCustomName()) {
-                graphics.centeredText(font, mark.getCustomName(), x, line, WHITE);
+                graphics.centeredText(font, mark.getCustomName(), 0, line, WHITE);
                 line += font.lineHeight + 1;
             }
-            graphics.centeredText(font, Component.literal(Math.round(offset.length()) + " m"), x, line, PALE);
+            graphics.centeredText(font, Component.literal(Math.round(offset.length()) + " m"), 0, line, PALE);
+            graphics.pose().popMatrix();
         }
     }
 }
