@@ -153,8 +153,8 @@ public final class Director {
     }
 
     /**
-     * Spirits haunting the player; rolls the configured number of random ones on first sight. A released player has
-     * none.
+     * Spirits haunting the player; rolls the configured number of random ones, each of a different type, on first
+     * sight. A released player has none.
      */
     public static List<HauntData.Haunting> hauntings(ServerPlayer player, HauntData data, long now) {
         if (data.released(player.getUUID())) {
@@ -162,10 +162,10 @@ public final class Director {
         }
         List<HauntData.Haunting> spirits = data.get(player.getUUID());
         if (spirits == null) {
-            List<SpiritType> all = Spirits.personal();
+            List<SpiritType> pool = new ArrayList<>(Spirits.personal());
             List<HauntData.Haunting> rolled = new ArrayList<>();
-            for (int i = 0, n = Config.section("director").integer("default_spirits"); i < n; i++) {
-                rolled.add(bind(player, all.get(player.getRandom().nextInt(all.size())), now));
+            for (int i = 0, n = Config.section("director").integer("default_spirits"); i < n && !pool.isEmpty(); i++) {
+                rolled.add(bind(player, pool.remove(player.getRandom().nextInt(pool.size())), now));
             }
             data.put(player.getUUID(), rolled);
             Journal.begin(player);
