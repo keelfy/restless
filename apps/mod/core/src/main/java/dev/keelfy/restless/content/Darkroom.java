@@ -49,6 +49,14 @@ public final class Darkroom {
         }
     }
 
+    /**
+     * The frame is waiting to be grabbed: the hand must not be drawn. Vanilla draws it after the grab, but a shader
+     * pack draws it into the world's frame, and the camera in it would smudge the photo.
+     */
+    public static boolean exposing() {
+        return pending != null;
+    }
+
     /** Called once the world of a frame is drawn, before the hand and the HUD. */
     public static void afterLevel() {
         ShutterPayload shot = pending;

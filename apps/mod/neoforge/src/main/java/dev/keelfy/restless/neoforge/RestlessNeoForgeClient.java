@@ -47,6 +47,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.neoforged.neoforge.client.event.RenderHandEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -100,6 +101,14 @@ public final class RestlessNeoForgeClient {
     @SubscribeEvent
     public static void afterLevel(RenderLevelStageEvent.AfterLevel event) {
         Darkroom.afterLevel();
+    }
+
+    /** No hand in the frame of a photo, even when a shader pack draws the hand before the frame is grabbed. */
+    @SubscribeEvent
+    public static void noHandInPhoto(RenderHandEvent event) {
+        if (Darkroom.exposing()) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
