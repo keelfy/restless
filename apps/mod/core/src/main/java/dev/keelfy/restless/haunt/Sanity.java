@@ -13,8 +13,8 @@ import net.minecraft.world.item.Items;
 
 /**
  * Each player's grip, 0..1. It slips in the dark, inside a territorial spirit's reach and with every event; light,
- * sleep, a full stomach, sweets and a salt-warded home bring it back. Low sanity shows what is otherwise hidden; the client
- * sees it as darkness closing in from the edges ({@link SanityOverlay}).
+ * sleep, a full stomach, sweets and a salt-warded home bring it back. Low sanity shows what is otherwise hidden; the
+ * client sees it as darkness closing in from the edges ({@link SanityOverlay}).
  */
 public final class Sanity {
     /** What each client last heard; a new player object (join, respawn) is told again. */

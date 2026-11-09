@@ -1929,7 +1929,8 @@ final class HauntEventGameTests {
      * mod's payloads, and a mock connection has no channels for them.
      */
     private static EmbeddedChannel channel(ServerPlayer player) {
-        EmbeddedChannel channel = (EmbeddedChannel) player.connection.getConnection().channel();
+        EmbeddedChannel channel =
+                (EmbeddedChannel) player.connection.getConnection().channel();
         channel.outboundMessages().clear();
         return channel;
     }

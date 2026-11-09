@@ -19,8 +19,8 @@ import dev.keelfy.restless.haunt.Corruption;
 import dev.keelfy.restless.haunt.Deeds;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Divination;
-import dev.keelfy.restless.haunt.Earshot;
 import dev.keelfy.restless.haunt.DoorLocks;
+import dev.keelfy.restless.haunt.Earshot;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Evolution;
 import dev.keelfy.restless.haunt.Graves;
@@ -262,7 +262,8 @@ public final class Restless {
             // Cake is eaten at the block, only by a hungry player whose hand does not take the click first.
             if (level.getBlockState(pos).is(Blocks.CAKE)
                     && server.canEat(false)
-                    && !(server.isSecondaryUseActive() && !server.getMainHandItem().isEmpty())) {
+                    && !(server.isSecondaryUseActive()
+                            && !server.getMainHandItem().isEmpty())) {
                 Sanity.sweet(server, "minecraft:cake");
             }
         }

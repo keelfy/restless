@@ -47,7 +47,14 @@ public final class Earshot {
         double range = sound.value().getRange(volume);
         if (server.getPlayerByUUID(owner) instanceof ServerPlayer player && player.distanceToSqr(at) < range * range) {
             player.connection.send(new ClientboundSoundPacket(
-                    sound, source, at.x, at.y, at.z, volume, pitch, level.getRandom().nextLong()));
+                    sound,
+                    source,
+                    at.x,
+                    at.y,
+                    at.z,
+                    volume,
+                    pitch,
+                    level.getRandom().nextLong()));
         }
         return true;
     }
