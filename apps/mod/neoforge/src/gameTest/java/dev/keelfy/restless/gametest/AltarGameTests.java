@@ -66,6 +66,7 @@ public final class AltarGameTests {
         FaultGameTests.register(TESTS);
         ScaleGameTests.register(TESTS);
         SettingsGameTests.register(TESTS);
+        TagGameTests.register(TESTS);
         TESTS.put("placement", helper -> {
             place(helper);
             check(

@@ -55,7 +55,7 @@ final class Illusions {
                 SimpleEvent.light(
                         "false_windows",
                         EventTag.BLOCKS,
-                        player -> Nearby.any(player, "false_windows", Illusions::isGlass),
+                        player -> Nearby.any(player, "false_windows", Place::glass),
                         Illusions::falseWindows),
                 // 106: blocks one uses look like others of the kind: a crafting table like a furnace, a stonecutter
                 // like a loom
@@ -361,8 +361,8 @@ final class Illusions {
         List<String> modes = config.texts("modes");
         String mode = modes.get(player.getRandom().nextInt(modes.size()));
         Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
-        for (BlockPos pos : nearest(
-                player, Nearby.all(player, "false_windows", Illusions::isGlass), config.integer("max_blocks"))) {
+        for (BlockPos pos :
+                nearest(player, Nearby.all(player, "false_windows", Place::glass), config.integer("max_blocks"))) {
             shown.put(
                     pos,
                     switch (mode) {
@@ -376,18 +376,12 @@ final class Illusions {
         Swaps.show(player, shown, config.integer("ticks"));
     }
 
-    /** Glass blocks and panes, plain, stained or tinted. */
-    private static boolean isGlass(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE)
-                || BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().endsWith("glass_pane");
-    }
-
     /** The full block most of its neighbours are, so the hole looks bricked up; air if none is. */
     private static BlockState commonNeighbour(ServerLevel level, BlockPos pos) {
         Map<BlockState, Integer> counts = new HashMap<>();
         for (Direction d : Direction.values()) {
             BlockState next = level.getBlockState(pos.relative(d));
-            if (next.isSolidRender() && !isGlass(next) && !next.hasBlockEntity()) {
+            if (next.isSolidRender() && !Place.glass(next) && !next.hasBlockEntity()) {
                 counts.merge(next, 1, Integer::sum);
             }
         }

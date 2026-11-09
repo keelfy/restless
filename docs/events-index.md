@@ -19,7 +19,7 @@ Paths below are under `apps/mod/core/src/main/java/dev/keelfy/restless/haunt/` u
 | Damage bands: safe / threat / brink / lethal | `Band.java`, `Bands.java`, `docs/assaults.md` |
 | World changes undone later | `Restore.java`, `event/Swaps.java` (client-only blocks), `event/PacketEntity.java` (client-only mobs) |
 | Tunables, `events.<namespace:id>` (`weight` + event keys) | `apps/mod/core/src/main/resources/restless-config/<group>.json`, read via `Config.event(id)` |
-| Scenarios: scripts of beats | `Scenarios.java`, `restless-config/scenarios.json`, `docs/scenarios.md` |
+| Scenarios: scripts of beats | `restless-config/scenarios.json` (`script`), loaded by `Scenarios.java`; `docs/scenarios.md` |
 | Wiki page per tag | `apps/frontend/content/{en,ru}/events/<tag>.md` |
 | Debug run | `/haunt force <id>` |
 
@@ -395,9 +395,9 @@ What the territorial spirits do to a place. The hoarder's nest remembers what it
 
 `nix_returns`, `domovoi_tidy`, `hoarder_shiny`, `hoarder_nest`, `demon_trail`, `demon_contract`
 
-## Scenarios (`Scenarios.java`, 104)
+## Scenarios (`scenarios.json`, 104)
 
-Each is a script of the events above (`"a +2 b +3 c"`: event, delay in seconds, event). Gates and weights in
+Each is a script of the events above (`"a +2 b +3 c"`: event, delay in seconds, event). Scripts, gates and weights in
 `restless-config/scenarios.json`; numbered design notes in `docs/scenarios.md`.
 
 `lights_out`, `playing_with_candles`, `behind_you`, `hearth_dies`, `between_blinks`, `lamp_code`, `soul_fire`, `pocket_dark`, `the_path_of_lights`, `jack_o_lanterns`, `knock_knock`, `unlocked_house`, `locked_in`, `rearranged`, `midnight_kitchen`, `a_visitor`, `trap_room`, `ticking_chest`, `nothing_works`, `last_song`, `company`, `someone_at_my_crops`, `closing_in`, `gone_in_the_fog`, `a_name_below`, `the_other_builder`, `died_out_there`, `the_dead_party`, `friend_far_off`, `statue_game`, `your_armor_fits_it`, `who_said_that`, `your_grave`, `behind_the_glass`, `same_steps`, `someone_in_my_bed`, `walking_in_sleep`, `bad_dream`, `no_rest`, `shattered_sleep`, `night_at_noon`, `lost_hour`, `sleep_paralysis`, `the_other_miner`, `overhead`, `floor_gives_way`, `deep_calling`, `nest`, `lava_tears`, `no_way_back`, `buried_alive`, `ancient_city`, `hole_in_the_wall`, `dead_lake`, `adrift`, `voice_from_the_water`, `frozen_pond`, `leaky_roof`, `into_the_corner`, `the_dog_sees_it`, `cats_know`, `not_my_dog`, `swarm`, `wrong_herd`, `the_golem_mourns`, `the_golem_turns`, `stolen_block`, `runaway_cart`, `pack`, `billy_goat`, `you_died`, `saved_by_nothing`, `achievement_get`, `starving`, `what_s_in_my_pocket`, `silence`, `seeing_red`, `the_sky_lies`, `mind_slipping`, `hoard`, `butterfingers`, `x_marks_the_spot`, `the_journal`, `blight`, `funeral`, `walking_woods`, `tantrum`, `supper`, `replacement`, `taken_under`, `wearing_faces`, `lights_at_your_back`, `rider`, `foretold`, `blood_for_blood`, `the_way_they_went`, `house_rules`, `feast`, `the_debt`, `punchline`, `the_hunt`, `the_last_night`, `debt`, `drowning_season`

@@ -208,15 +208,6 @@ final class Fittings {
 
     // 502, 503: glass
 
-    private static boolean isGlass(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE)
-                || state.getBlock() instanceof IronBarsBlock
-                        && net.minecraft.core.registries.BuiltInRegistries.BLOCK
-                                .getKey(state.getBlock())
-                                .getPath()
-                                .endsWith("glass_pane");
-    }
-
     /** The faces of a glass block or pane that a flat picture can lie against. */
     private static List<Direction> faces(BlockState state) {
         if (!(state.getBlock() instanceof IronBarsBlock)) {
@@ -239,7 +230,7 @@ final class Fittings {
     private static List<Surface> windows(ServerPlayer player, String event, boolean inside) {
         ServerLevel level = player.level();
         List<Surface> found = new ArrayList<>();
-        for (BlockPos pos : Nearby.all(player, event, Fittings::isGlass)) {
+        for (BlockPos pos : Nearby.all(player, event, Place::glass)) {
             BlockState state = level.getBlockState(pos);
             Decal.Depth depth = state.getBlock() instanceof IronBarsBlock ? Decal.Depth.PANE : Decal.Depth.FLUSH;
             for (Direction side : faces(state)) {

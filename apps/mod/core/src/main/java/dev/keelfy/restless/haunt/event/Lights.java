@@ -27,7 +27,6 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Block;
@@ -274,10 +273,7 @@ final class Lights {
     }
 
     private static boolean isHot(ItemStack stack) {
-        return stack.is(Items.TORCH)
-                || stack.is(Items.SOUL_TORCH)
-                || stack.is(Items.LANTERN)
-                || stack.is(Items.SOUL_LANTERN);
+        return stack.is(RestlessTags.HELD_LIGHTS);
     }
 
     private static boolean isTorch(BlockState state) {

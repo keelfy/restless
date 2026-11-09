@@ -54,14 +54,14 @@ final class Mirages {
                         "boarded_windows",
                         EventTag.BLOCKS,
                         player -> player.level().canSeeSky(player.blockPosition())
-                                && Nearby.any(player, "boarded_windows", Mirages::isGlass),
+                                && Nearby.any(player, "boarded_windows", Place::glass),
                         player -> {
                             Config.Section config = Config.event("boarded_windows");
                             Swaps.show(
                                     player,
                                     nearest(
                                             player,
-                                            Nearby.all(player, "boarded_windows", Mirages::isGlass),
+                                            Nearby.all(player, "boarded_windows", Place::glass),
                                             "boarded_windows"),
                                     block(config.text("board")).defaultBlockState(),
                                     config.integer("ticks"));
@@ -166,12 +166,12 @@ final class Mirages {
                 SimpleEvent.light(
                         "black_glass",
                         EventTag.BLOCKS,
-                        player -> Nearby.any(player, "black_glass", Mirages::isGlass),
+                        player -> Nearby.any(player, "black_glass", Place::glass),
                         player -> {
                             ServerLevel level = player.level();
                             Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
-                            for (BlockPos pos : nearest(
-                                    player, Nearby.all(player, "black_glass", Mirages::isGlass), "black_glass")) {
+                            for (BlockPos pos :
+                                    nearest(player, Nearby.all(player, "black_glass", Place::glass), "black_glass")) {
                                 BlockState state = level.getBlockState(pos);
                                 shown.put(
                                         pos,
@@ -199,12 +199,6 @@ final class Mirages {
                 .toList();
     }
 
-    /** Glass blocks and panes, plain, stained or tinted. */
-    private static boolean isGlass(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE)
-                || BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().endsWith("glass_pane");
-    }
-
     // 282
     private static boolean lowerDoor(BlockState state) {
         return state.getBlock() instanceof DoorBlock
@@ -223,7 +217,7 @@ final class Mirages {
         for (BlockPos part : List.of(low, low.above())) {
             for (Direction d : Direction.Plane.HORIZONTAL) {
                 BlockState next = level.getBlockState(part.relative(d));
-                if (next.isSolidRender() && !next.hasBlockEntity() && !(next.getBlock() instanceof DoorBlock)) {
+                if (next.isSolidRender() && !next.hasBlockEntity() && !next.is(BlockTags.DOORS)) {
                     counts.merge(next, 1, Integer::sum);
                 }
             }

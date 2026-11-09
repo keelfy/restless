@@ -18,6 +18,11 @@ import org.jspecify.annotations.Nullable;
 final class Place {
     private Place() {}
 
+    /** Glass blocks and panes, plain, stained or tinted. */
+    static boolean glass(BlockState state) {
+        return state.is(RestlessTags.GLASS);
+    }
+
     /** A one-block-thick wall two blocks high, with the player in front of it and free standing room behind. */
     record Wall(BlockPos low, BlockPos high, BlockPos behind) {}
 

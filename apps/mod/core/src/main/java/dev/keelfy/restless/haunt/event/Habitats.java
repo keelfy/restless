@@ -223,16 +223,11 @@ final class Habitats {
 
     // 482
 
-    private static boolean isGlass(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE)
-                || BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().endsWith("glass_pane");
-    }
-
     /** Air beside a window, with the way to the glass: where a vine would hang. */
     private static Map<BlockPos, Direction> vineSpots(ServerPlayer player) {
         ServerLevel level = player.level();
         Map<BlockPos, Direction> spots = new LinkedHashMap<>();
-        for (BlockPos glass : Nearby.all(player, "window_vines", Habitats::isGlass)) {
+        for (BlockPos glass : Nearby.all(player, "window_vines", Place::glass)) {
             for (Direction d : Direction.Plane.HORIZONTAL) {
                 BlockPos cell = glass.relative(d);
                 if (level.isEmptyBlock(cell)) {

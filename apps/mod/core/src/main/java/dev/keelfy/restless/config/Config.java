@@ -117,6 +117,11 @@ public final class Config {
         return section("events." + eventKey(id));
     }
 
+    /** The key of every event in the files, in file order (a bundled file's events keep their place). */
+    public static Set<String> eventKeys() {
+        return section("events").keys();
+    }
+
     /** The key an event has in the files: its id with the namespace spelled out. */
     static String eventKey(String id) {
         return id.indexOf(':') < 0 ? DEFAULT_NAMESPACE + ":" + id : id;

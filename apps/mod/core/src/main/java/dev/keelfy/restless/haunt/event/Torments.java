@@ -8,7 +8,6 @@ import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.VignettePayload;
 import dev.keelfy.restless.platform.Platform;
 import java.util.List;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -32,7 +31,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,15 +61,6 @@ final class Torments {
     private static final String DOOR = "restless:door_bite";
     private static final String TERROR = "restless:night_terror";
     private static final String FISTS = "restless:stone_fists";
-
-    /** Lights that can burst. */
-    private static final Set<Block> LIGHTS = Set.of(
-            Blocks.TORCH,
-            Blocks.WALL_TORCH,
-            Blocks.SOUL_TORCH,
-            Blocks.SOUL_WALL_TORCH,
-            Blocks.LANTERN,
-            Blocks.SOUL_LANTERN);
 
     private Torments() {}
 
@@ -120,7 +109,7 @@ final class Torments {
                         LANTERN,
                         EventTag.ASSAULT,
                         player -> Assaults.healthy(player, LANTERN)
-                                && Nearby.any(player, LANTERN, state -> LIGHTS.contains(state.getBlock())),
+                                && Nearby.any(player, LANTERN, state -> state.is(RestlessTags.BURSTABLE_LIGHTS)),
                         Torments::lantern),
                 SimpleEvent.harmful(
                         COUGH,
@@ -369,7 +358,7 @@ final class Torments {
     // lantern_burst: a torch or lantern sputters, then bursts; only someone still close to it is burned
     private static void lantern(ServerPlayer player) {
         Config.Section config = Config.event(LANTERN);
-        BlockPos pos = Nearby.random(player, LANTERN, state -> LIGHTS.contains(state.getBlock()));
+        BlockPos pos = Nearby.random(player, LANTERN, state -> state.is(RestlessTags.BURSTABLE_LIGHTS));
         if (pos == null) {
             return;
         }

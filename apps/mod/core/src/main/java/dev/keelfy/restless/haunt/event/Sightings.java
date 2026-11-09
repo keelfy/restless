@@ -247,11 +247,6 @@ final class Sightings {
 
     // 407
 
-    private static boolean isGlass(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE)
-                || BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().endsWith("glass_pane");
-    }
-
     /**
      * Where a witch stands behind a window, as seen from the player's side: a pane or glass block, or a one-block gap
      * over a sill of planks with a wall around it, with standing room inside, one below the gap, and the player nearer
@@ -262,8 +257,9 @@ final class Sightings {
         ServerLevel level = player.level();
         double min = config.num("min_distance");
         List<Vec3> found = new ArrayList<>();
-        for (BlockPos base : Nearby.all(player, "swamp_witch", state -> isGlass(state) || state.is(BlockTags.PLANKS))) {
-            boolean glass = isGlass(level.getBlockState(base));
+        for (BlockPos base :
+                Nearby.all(player, "swamp_witch", state -> Place.glass(state) || state.is(BlockTags.PLANKS))) {
+            boolean glass = Place.glass(level.getBlockState(base));
             BlockPos cell = glass ? base : base.above();
             if (player.position().distanceToSqr(Vec3.atCenterOf(cell)) < min * min
                     || (!glass && !(level.getBlockState(cell).isAir() && Place.solid(level, cell.above())))) {

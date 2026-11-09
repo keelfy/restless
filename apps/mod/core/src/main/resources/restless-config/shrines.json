@@ -6,6 +6,22 @@
       "min_distance": 6,
       "max_distance": 14,
       "restore_ticks": 12000,
+      "template": {
+        "slots": "C",
+        "legend": {
+          "h": "minecraft:red_bed[facing=north,part=head]",
+          "f": "minecraft:red_bed[facing=north,part=foot]",
+          "C": "minecraft:chest",
+          "F": "minecraft:campfire"
+        },
+        "layers": [
+          [
+            "h..C",
+            "f...",
+            "..F."
+          ]
+        ]
+      },
       "author": "someone",
       "titles": [
         "left behind",
@@ -22,13 +38,56 @@
       "weight": 0.3,
       "min_distance": 5,
       "max_distance": 12,
-      "restore_ticks": 9000
+      "restore_ticks": 9000,
+      "template": {
+        "legend": {
+          "#": "minecraft:dirt"
+        },
+        "layers": [
+          [
+            "###",
+            "#.#",
+            "#.#"
+          ],
+          [
+            "###",
+            "#.#",
+            "#.#"
+          ],
+          [
+            "###",
+            "###",
+            "###"
+          ]
+        ]
+      }
     },
     "minecraft:overnight_shrine": {
       "weight": 0.3,
       "min_distance": 6,
       "max_distance": 14,
       "restore_ticks": 12000,
+      "template": {
+        "slots": "s",
+        "legend": {
+          "b": "minecraft:bone_block",
+          "s": "minecraft:oak_sign",
+          "k": "minecraft:skeleton_skull",
+          "c": "minecraft:candle[candles=4,lit=true]"
+        },
+        "layers": [
+          [
+            "bbb",
+            "...",
+            ".s."
+          ],
+          [
+            "kck",
+            "...",
+            "..."
+          ]
+        ]
+      },
       "signs": [
         [
           "for the one",

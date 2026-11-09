@@ -25,14 +25,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -114,22 +111,10 @@ final class Shrines {
 
     // 375
 
-    private static Templates.Template campTemplate() {
-        BlockState bed =
-                Blocks.BED.red().defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH);
-        return Templates.parse(
-                Map.of(
-                        'h', bed.setValue(BlockStateProperties.BED_PART, BedPart.HEAD),
-                        'f', bed.setValue(BlockStateProperties.BED_PART, BedPart.FOOT),
-                        'C', Blocks.CHEST.defaultBlockState(),
-                        'F', Blocks.CAMPFIRE.defaultBlockState()),
-                "C",
-                new String[] {"h..C", "f...", "..F."});
-    }
-
     private static @Nullable List<Templates.Cell> camp(ServerPlayer player) {
         Config.Section config = Config.event(CAMP);
-        return Templates.find(player, campTemplate(), config.integer("min_distance"), config.integer("max_distance"));
+        return Templates.find(
+                player, Templates.load(CAMP), config.integer("min_distance"), config.integer("max_distance"));
     }
 
     private static void buildCamp(ServerPlayer player) {
@@ -165,13 +150,7 @@ final class Shrines {
 
     private static @Nullable List<Templates.Cell> hut(ServerPlayer player) {
         Config.Section config = Config.event(HUT);
-        BlockState dirt = Blocks.DIRT.defaultBlockState();
-        Templates.Template template = Templates.parse(
-                Map.of('#', dirt),
-                "",
-                new String[] {"###", "#.#", "#.#"},
-                new String[] {"###", "#.#", "#.#"},
-                new String[] {"###", "###", "###"});
+        Templates.Template template = Templates.load(HUT);
         return Templates.find(player, template, config.integer("min_distance"), config.integer("max_distance"));
     }
 
@@ -194,19 +173,7 @@ final class Shrines {
 
     private static @Nullable List<Templates.Cell> shrine(ServerPlayer player) {
         Config.Section config = Config.event(SHRINE);
-        BlockState candles = Blocks.CANDLE
-                .defaultBlockState()
-                .setValue(CandleBlock.CANDLES, 4)
-                .setValue(CandleBlock.LIT, true);
-        Templates.Template template = Templates.parse(
-                Map.of(
-                        'b', Blocks.BONE_BLOCK.defaultBlockState(),
-                        's', Blocks.OAK_SIGN.defaultBlockState(),
-                        'k', Blocks.SKELETON_SKULL.defaultBlockState(),
-                        'c', candles),
-                "s",
-                new String[] {"bbb", "...", ".s."},
-                new String[] {"kck", "...", "..."});
+        Templates.Template template = Templates.load(SHRINE);
         return Templates.find(player, template, config.integer("min_distance"), config.integer("max_distance"));
     }
 

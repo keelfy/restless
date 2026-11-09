@@ -26,8 +26,8 @@ code, only a sequencer on top of `Scheduler`.
 `haunt/Scenario.java` is a `HauntEvent`, so the director, `/haunt fire`, the debug menu, wards and `Recent` treat it
 as one event. Tier is harmful if any beat is; tags are every beat's. Beats keep the spirit's point and voice.
 
-To add one: a line in `haunt/Scenarios.java` (script in the notation below), an entry in `scenarios.json`
-(`weight`, `min_power`, `evolved`, and for an evolved type's own scenario its `spirit`) and a name in `lang/en.json` and `lang/ru.json`. An unknown id, a harmful or
+To add one: an entry in `scenarios.json` (`script` in the notation below, then `weight`, `min_power`,
+`evolved`, and for an evolved type's own scenario its `spirit`; `haunt/Scenarios.java` reads them in file order) and a name in `lang/en.json` and `lang/ru.json`. An unknown id, a harmful or
 delayed opening, or an id taken by an event fails at startup. Done: all. `→` is written `>gone`, `>waking` or `>water` before the event. Scenario 12 has the id `unlocked_house` (`open_house` is an event).
 
 The script knows `+N` and the waits; write `∥` as `+0` and `×N` as the beat N times. Not built yet, add when a scenario needs

@@ -812,10 +812,7 @@ final class ItemEvents {
     }
 
     private static boolean stew(ItemStack stack) {
-        return stack.is(Items.MUSHROOM_STEW)
-                || stack.is(Items.BEETROOT_SOUP)
-                || stack.is(Items.RABBIT_STEW)
-                || stack.is(Items.SUSPICIOUS_STEW);
+        return stack.is(RestlessTags.STEWS);
     }
 
     private static boolean torches(ItemStack stack) {
@@ -891,7 +888,7 @@ final class ItemEvents {
     /** A potion with a plain base potion (no custom effects to lose) that is not mid-change. */
     private static boolean swappable(ItemStack stack) {
         PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
-        return (stack.is(Items.POTION) || stack.is(Items.SPLASH_POTION) || stack.is(Items.LINGERING_POTION))
+        return stack.is(RestlessTags.POTIONS)
                 && contents != null
                 && contents.potion().isPresent()
                 && contents.customEffects().isEmpty()

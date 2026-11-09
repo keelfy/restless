@@ -1,13 +1,18 @@
 package dev.keelfy.restless.haunt.event;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Restore;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -19,9 +24,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Small structures built from layers of text in code, put down in the world by an event and taken down again block by
- * block: a block goes back only if it is still what the template put there, so whatever the player has changed, built
- * on or taken away is left alone. A chest that the player has put something into stays.
+ * Small structures built from layers of text in the event's config, put down in the world by an event and taken down
+ * again block by block: a block goes back only if it is still what the template put there, so whatever the player has
+ * changed, built on or taken away is left alone. A chest that the player has put something into stays.
  */
 final class Templates {
     private static final int SPOT_TRIES = 6;
@@ -40,10 +45,42 @@ final class Templates {
     private record Laid(BlockPos pos, BlockState placed, BlockState before) {}
 
     /**
-     * A template from layers, bottom first, each a list of rows. A space or dot is nothing; any other character is
-     * looked up in {@code key}. Characters listed in {@code slots} name their block for {@link #put}.
+     * The {@code template} of an event's config: {@code layers}, bottom first, each a list of rows, where a space or
+     * dot is nothing and any other character is looked up in {@code legend} (character to block state, as in a command,
+     * e.g. {@code minecraft:chest[facing=north]}); the characters in {@code slots} name their block for {@link #put}.
+     * Read afresh on each call, so a reloaded config shows at once; a bad template fails naming its event.
      */
-    static Template parse(Map<Character, BlockState> key, String slots, String[]... layers) {
+    static Template load(String event) {
+        try {
+            Config.Section section = Config.event(event).section("template");
+            Config.Section legend = section.section("legend");
+            Map<Character, BlockState> key = new HashMap<>();
+            for (String name : legend.keys()) {
+                if (name.length() != 1) {
+                    throw new IllegalStateException("a legend key is one character, not '" + name + "'");
+                }
+                key.put(name.charAt(0), state(legend.text(name)));
+            }
+            List<List<String>> layers = section.lines("layers");
+            return parse(
+                    key,
+                    section.has("slots") ? section.text("slots") : "",
+                    layers.stream().map(rows -> rows.toArray(String[]::new)).toArray(String[][]::new));
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("Bad template for event " + event + ": " + e.getMessage(), e);
+        }
+    }
+
+    private static BlockState state(String text) {
+        try {
+            return BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, text, false)
+                    .blockState();
+        } catch (CommandSyntaxException e) {
+            throw new IllegalStateException("'" + text + "' is no block state: " + e.getMessage(), e);
+        }
+    }
+
+    private static Template parse(Map<Character, BlockState> key, String slots, String[]... layers) {
         List<Piece> pieces = new ArrayList<>();
         int width = 0;
         int depth = 0;
@@ -55,8 +92,12 @@ final class Templates {
                 for (int x = 0; x < row.length(); x++) {
                     char c = row.charAt(x);
                     if (c != ' ' && c != '.') {
+                        BlockState state = key.get(c);
+                        if (state == null) {
+                            throw new IllegalStateException("'" + c + "' is not in the legend");
+                        }
                         String slot = slots.indexOf(c) >= 0 ? String.valueOf(c) : "";
-                        pieces.add(new Piece(x, y, z, key.get(c), slot));
+                        pieces.add(new Piece(x, y, z, state, slot));
                     }
                 }
             }

@@ -772,16 +772,7 @@ final class MobEvents {
     /** Exposed blocks that look placed by hand, not part of the land. */
     private static List<BlockPos> builds(ServerPlayer player) {
         ServerLevel level = player.level();
-        return Nearby.all(
-                        player,
-                        "enderman_takes",
-                        s -> !s.hasBlockEntity()
-                                && (s.is(BlockTags.PLANKS)
-                                        || s.is(BlockTags.WOOL)
-                                        || s.is(BlockTags.STONE_BRICKS)
-                                        || s.is(Blocks.BRICKS)
-                                        || s.is(Blocks.BOOKSHELF)))
-                .stream()
+        return Nearby.all(player, "enderman_takes", s -> !s.hasBlockEntity() && s.is(RestlessTags.HAND_BUILT)).stream()
                 .filter(pos -> java.util.Arrays.stream(Direction.values())
                         .anyMatch(d -> level.getBlockState(pos.relative(d)).isAir()))
                 .toList();
@@ -958,7 +949,7 @@ final class MobEvents {
         for (int k = 1; k <= max; k++) {
             BlockPos pos = from.relative(d, k);
             BlockState state = level.getBlockState(pos);
-            if (state.is(BlockTags.FENCES) || state.is(BlockTags.WALLS) || state.getBlock() instanceof FenceGateBlock) {
+            if (state.is(BlockTags.FENCES) || state.is(BlockTags.WALLS) || state.is(BlockTags.FENCE_GATES)) {
                 return k;
             }
             if (!Place.open(level, pos)) {

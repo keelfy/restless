@@ -351,12 +351,7 @@ final class Signatures {
     // ---- domovoi
 
     private static boolean food(ItemStack stack) {
-        return stack.is(Items.BREAD)
-                || stack.is(Items.COOKIE)
-                || stack.is(Items.MILK_BUCKET)
-                || stack.is(Items.MUSHROOM_STEW)
-                || stack.is(Items.RABBIT_STEW)
-                || stack.is(Items.BEETROOT_SOUP);
+        return stack.is(RestlessTags.HOUSEHOLD_FOOD);
     }
 
     /** What is left once it is eaten: nothing for bread and cookies, the empty vessel for the rest. */
@@ -419,7 +414,7 @@ final class Signatures {
     }
 
     private static boolean furnace(BlockState state) {
-        return state.is(Blocks.FURNACE) || state.is(Blocks.SMOKER) || state.is(Blocks.BLAST_FURNACE);
+        return state.is(RestlessTags.FURNACES);
     }
 
     private static boolean unfuelled(ServerLevel level, BlockPos pos) {

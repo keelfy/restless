@@ -567,7 +567,7 @@ final class Relics {
     }
 
     private static boolean knockable(BlockState state) {
-        return state.is(Blocks.CHEST) || state.is(Blocks.TRAPPED_CHEST) || state.is(Blocks.BARREL);
+        return state.is(RestlessTags.KNOCKABLE);
     }
 
     private static void knockChest(ServerPlayer player) {

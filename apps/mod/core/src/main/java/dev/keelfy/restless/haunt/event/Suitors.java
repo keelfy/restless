@@ -16,7 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.parrot.Parrot;
@@ -29,7 +28,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.phys.Vec3;
@@ -135,9 +133,7 @@ final class Suitors {
     // ---- the window
 
     private static boolean glass(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE)
-                || state.is(Blocks.GLASS_PANE)
-                || state.getBlock() instanceof net.minecraft.world.level.block.StainedGlassPaneBlock;
+        return Place.glass(state);
     }
 
     private static @Nullable BlockPos window(ServerPlayer player) {

@@ -35,7 +35,6 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -381,18 +380,13 @@ final class Hallucinations {
 
     // 402
 
-    private static boolean isGlass(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE)
-                || BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().endsWith("glass_pane");
-    }
-
     /** Standing room just outside a pane, below its top, with the player on the other side of it. */
     private static List<Vec3> windows(ServerPlayer player) {
         Config.Section config = Config.event("window_zombie");
         ServerLevel level = player.level();
         double min = config.num("min_distance");
         List<Vec3> found = new ArrayList<>();
-        for (BlockPos pane : Nearby.all(player, "window_zombie", Hallucinations::isGlass)) {
+        for (BlockPos pane : Nearby.all(player, "window_zombie", Place::glass)) {
             if (player.position().distanceToSqr(Vec3.atCenterOf(pane)) < min * min) {
                 continue;
             }

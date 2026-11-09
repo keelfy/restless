@@ -314,9 +314,7 @@ final class Pranks {
 
     private static @Nullable BlockPos diggable(ServerPlayer player) {
         ServerLevel level = player.level();
-        List<BlockPos> blocks = Nearby.all(
-                        player, "trickster_dig", s -> s.is(Blocks.SAND) || s.is(Blocks.RED_SAND) || s.is(Blocks.GRAVEL))
-                .stream()
+        List<BlockPos> blocks = Nearby.all(player, "trickster_dig", s -> s.is(RestlessTags.DIGGABLE)).stream()
                 .filter(pos -> level.isEmptyBlock(pos.above()))
                 .toList();
         return blocks.isEmpty() ? null : blocks.get(player.getRandom().nextInt(blocks.size()));

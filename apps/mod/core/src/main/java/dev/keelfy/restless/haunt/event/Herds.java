@@ -26,7 +26,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
@@ -176,12 +175,7 @@ final class Herds {
     private record Window(BlockPos glass, BlockPos inside, BlockPos outside) {}
 
     private static boolean isGlass(BlockState state) {
-        return !state.isAir()
-                && (state.is(BlockTags.IMPERMEABLE)
-                        || BuiltInRegistries.BLOCK
-                                .getKey(state.getBlock())
-                                .getPath()
-                                .endsWith("glass_pane"));
+        return !state.isAir() && Place.glass(state);
     }
 
     private static List<Window> windows(ServerPlayer player, String event) {
