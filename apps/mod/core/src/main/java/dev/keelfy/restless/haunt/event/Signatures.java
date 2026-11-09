@@ -63,7 +63,22 @@ import org.jspecify.annotations.Nullable;
 final class Signatures {
     private Signatures() {}
 
+    /** Every signature event: the ones here, and each group's own class. */
     static List<HauntEvent> all() {
+        return java.util.stream.Stream.of(
+                        own(),
+                        Suitors.all(),
+                        Pranks.all(),
+                        Dusk.all(),
+                        Doubles.all(),
+                        Copies.all(),
+                        Nights.all(),
+                        Territories.all())
+                .flatMap(List::stream)
+                .toList();
+    }
+
+    private static List<HauntEvent> own() {
         return List.of(
                 // phantom: the player's own name joins the game
                 new SimpleEvent(
@@ -357,9 +372,9 @@ final class Signatures {
         return new ItemStack(Items.BOWL);
     }
 
-    private record Slot(Container chest, BlockPos pos, int slot) {}
+    record Slot(Container chest, BlockPos pos, int slot) {}
 
-    private static List<Slot> chests(ServerPlayer player, String event, Predicate<ItemStack> match) {
+    static List<Slot> chests(ServerPlayer player, String event, Predicate<ItemStack> match) {
         ServerLevel level = player.level();
         List<Slot> slots = new ArrayList<>();
         for (BlockPos pos : Nearby.all(player, event, s -> s.is(Blocks.CHEST))) {
@@ -461,6 +476,7 @@ final class Signatures {
         List<String> junk = Config.event("hoarder_payment").texts("junk");
         Item item = BuiltInRegistries.ITEM.getValue(
                 Identifier.parse(junk.get(player.getRandom().nextInt(junk.size()))));
+        Territories.hoard(player, found.chest().getItem(found.slot()).copy());
         int count = Math.min(found.chest().getItem(found.slot()).getCount(), new ItemStack(item).getMaxStackSize());
         found.chest().setItem(found.slot(), new ItemStack(item, count));
         found.chest().setChanged();

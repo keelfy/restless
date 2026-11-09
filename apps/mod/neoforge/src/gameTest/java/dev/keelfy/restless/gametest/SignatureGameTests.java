@@ -87,12 +87,7 @@ final class SignatureGameTests {
                                 "mimic_voice must not hurt the animal")));
         HauntEventGameTests.TIMEOUT.put("signature_wraith_taken", 120);
         tests.put("signature_wraith_taken", helper -> {
-            // A sealed room: nothing but the animal and the dark. The light engine needs a few ticks to see it.
-            for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 4, 9)) {
-                if (pos.getY() == 0 || pos.getX() % 9 == 0 || pos.getZ() % 9 == 0 || pos.getY() == 4) {
-                    helper.setBlock(pos, Blocks.STONE);
-                }
-            }
+            darkRoom(helper);
             helper.runAfterDelay(
                     40,
                     () -> signature(
@@ -177,6 +172,16 @@ final class SignatureGameTests {
                 helper ->
                         signature(helper, "lost_one_sign", Spirits.LOST_ONE, player -> {}, () -> sign(helper, false)));
         tests.put("signature_filter", SignatureGameTests::filter);
+        SignatureBatchTests.register(tests);
+    }
+
+    /** A sealed room: nothing in it but the dark. The light engine needs a few ticks to see it. */
+    static void darkRoom(GameTestHelper helper) {
+        for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 4, 9)) {
+            if (pos.getY() == 0 || pos.getX() % 9 == 0 || pos.getZ() % 9 == 0 || pos.getY() == 4) {
+                helper.setBlock(pos, Blocks.STONE);
+            }
+        }
     }
 
     /** A sign of the right wood stands somewhere near the player; the spot may be off the test floor, even below it. */
@@ -192,8 +197,18 @@ final class SignatureGameTests {
     }
 
     /** Runs the event in its scene, and checks that only its own type may roll it. */
-    private static void signature(
+    static void signature(
             GameTestHelper helper, String id, SpiritType own, Consumer<ServerPlayer> scene, Runnable after) {
+        signature(helper, id, own, scene, 30, after);
+    }
+
+    static void signature(
+            GameTestHelper helper,
+            String id,
+            SpiritType own,
+            Consumer<ServerPlayer> scene,
+            int settle,
+            Runnable after) {
         runs(
                 helper,
                 id,
@@ -208,6 +223,7 @@ final class SignatureGameTests {
                                 id + " must be rolled by " + own.id() + " only, not " + spirit.id());
                     }
                 },
+                settle,
                 after);
     }
 

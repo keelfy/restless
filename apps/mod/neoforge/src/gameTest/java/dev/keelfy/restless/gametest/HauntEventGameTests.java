@@ -1750,7 +1750,7 @@ final class HauntEventGameTests {
                         }));
     }
 
-    private static void forceChunks(GameTestHelper helper, BlockPos centre, int reach, boolean forced) {
+    static void forceChunks(GameTestHelper helper, BlockPos centre, int reach, boolean forced) {
         for (int x = (centre.getX() - reach) >> 4; x <= (centre.getX() + reach) >> 4; x++) {
             for (int z = (centre.getZ() - reach) >> 4; z <= (centre.getZ() + reach) >> 4; z++) {
                 helper.getLevel().setChunkForced(x, z, forced);

@@ -124,6 +124,387 @@
           "seen my bed?"
         ]
       ]
+    },
+    "minecraft:banshee_letter": {
+      "weight": 2.0,
+      "spirit": "banshee",
+      "radius": 16,
+      "title": "To %s",
+      "pages": [
+        "I saw you from the window.\nI will wait.\n\nYours",
+        "Do not be afraid of me.\nI only want to be near you.",
+        "You were gone so long.\nDo not leave me again.",
+        "I keep your name.\nI say it when it is quiet.",
+        "Who is the other one?\nYou do not need anyone else.",
+        "Sleep well.\nI will sit by the bed.",
+        "I waited for you all night.\nAll of them.",
+        "Close the window.\nI like to hear you breathe."
+      ]
+    },
+    "minecraft:banshee_gift": {
+      "weight": 2.0,
+      "spirit": "banshee",
+      "radius": 16,
+      "gifts": [
+        [
+          "minecraft:wither_rose",
+          "For you",
+          "Left on the pillow"
+        ],
+        [
+          "minecraft:gold_nugget",
+          "Ring",
+          "Too small for any finger"
+        ],
+        [
+          "minecraft:phantom_membrane",
+          "Veil",
+          "Thin as breath"
+        ],
+        [
+          "minecraft:skeleton_skull",
+          "Mine",
+          "Do not give it back"
+        ],
+        [
+          "minecraft:poppy",
+          "Remember me",
+          "Still damp"
+        ]
+      ]
+    },
+    "minecraft:banshee_serenade": {
+      "weight": 2.0,
+      "spirit": "banshee",
+      "radius": 12,
+      "outside": 2.0,
+      "sound": {
+        "volume": 0.5,
+        "pitch": 0.7
+      }
+    },
+    "minecraft:banshee_jealous": {
+      "weight": 2.0,
+      "spirit": "banshee",
+      "radius": 8,
+      "seconds": 3,
+      "interval_ticks": 5,
+      "head_shake_ticks": 40
+    },
+    "minecraft:poltergeist_toss": {
+      "weight": 2.0,
+      "spirit": "poltergeist",
+      "radius": 10,
+      "stacks": 3,
+      "interval_ticks": 20,
+      "speed": 0.25,
+      "lift": 0.25
+    },
+    "minecraft:poltergeist_play": {
+      "weight": 2.0,
+      "spirit": "poltergeist",
+      "radius": 12,
+      "min_count": 2,
+      "max_hits": 12,
+      "interval_ticks": 3
+    },
+    "minecraft:poltergeist_tantrum": {
+      "weight": 2.0,
+      "spirit": "poltergeist",
+      "radius": 12,
+      "min_count": 3,
+      "slam_ticks": 6,
+      "max_pots": 8
+    },
+    "minecraft:shade_gathered": {
+      "weight": 2.0,
+      "spirit": "shade",
+      "radius": 12,
+      "min_count": 3,
+      "spot_min": 3,
+      "spot_max": 16,
+      "dark_level": 4,
+      "max_torches": 6,
+      "interval_ticks": 8
+    },
+    "minecraft:shade_glance": {
+      "weight": 2.0,
+      "spirit": "shade",
+      "radius": 16,
+      "min_count": 3,
+      "max_lights": 5,
+      "sight": 24,
+      "look_cos": 0.96,
+      "interval_ticks": 5,
+      "seconds": 20,
+      "restore_ticks": 2400
+    },
+    "minecraft:shade_room": {
+      "weight": 2.0,
+      "spirit": "shade",
+      "radius": 12,
+      "max_cells": 150,
+      "height": 4,
+      "max_ticks": 3600,
+      "interval_ticks": 20,
+      "darkness_ticks": 60
+    },
+    "minecraft:phantom_rerun": {
+      "weight": 2.0,
+      "spirit": "phantom",
+      "min_samples": 10,
+      "min_distance": 20,
+      "max_distance": 64,
+      "steps_per_sample": 10,
+      "look_cos": 0.95,
+      "interval_ticks": 2,
+      "max_ticks": 700,
+      "cleanup_ticks": 100,
+      "vanish_distance": 3
+    },
+    "minecraft:phantom_home": {
+      "weight": 2.0,
+      "spirit": "phantom",
+      "min_distance": 12,
+      "max_distance": 32,
+      "interval_ticks": 10,
+      "max_ticks": 600,
+      "cleanup_ticks": 100,
+      "vanish_distance": 8
+    },
+    "minecraft:nix_returns": {
+      "weight": 2.0,
+      "spirit": "nix",
+      "radius": 16,
+      "interval_ticks": 2,
+      "speed": 0.12,
+      "lift": 0.03,
+      "max_steps": 150
+    },
+    "minecraft:mimic_parrot": {
+      "weight": 2.0,
+      "spirit": "mimic",
+      "max_age_ticks": 12000,
+      "delay_ticks": 100,
+      "words": [
+        "behind",
+        "again",
+        "help",
+        "coming",
+        "here",
+        "them"
+      ]
+    },
+    "minecraft:mimic_chest": {
+      "weight": 2.0,
+      "spirit": "mimic",
+      "radius": 10,
+      "restore_ticks": 2400,
+      "damage": 2.0
+    },
+    "minecraft:wraith_steps": {
+      "weight": 2.0,
+      "spirit": "wraith",
+      "dark_level": 4,
+      "interval_ticks": 2,
+      "min_move": 0.1,
+      "cadence_ticks": 8,
+      "behind": 3.0,
+      "seconds": 30,
+      "sound": {
+        "volume": 0.5,
+        "pitch": 0.9
+      }
+    },
+    "minecraft:wraith_edge": {
+      "weight": 2.0,
+      "spirit": "wraith",
+      "light_level": 8,
+      "min_distance": 4,
+      "max_distance": 6,
+      "dark_level": 4,
+      "look_cos": 0.97,
+      "interval_ticks": 5,
+      "max_ticks": 600,
+      "cleanup_ticks": 100,
+      "vanish_distance": 3
+    },
+    "minecraft:mara_dream": {
+      "weight": 2.0,
+      "spirit": "mara",
+      "window_ticks": 2400,
+      "title": "A dream",
+      "dreams": [
+        "I walked through the {biome} and it never ended.",
+        "In the {biome} something kept my name.",
+        "The {mob} came back. It did not make a sound.",
+        "I could not wake up in the {biome}.",
+        "The {mob} looked at me and I knew it.",
+        "The {biome} was full of beds, and every one was still warm."
+      ]
+    },
+    "minecraft:mara_stolen_rest": {
+      "weight": 2.0,
+      "spirit": "mara",
+      "window_ticks": 2400,
+      "rest_ticks": 80000
+    },
+    "minecraft:mara_weight": {
+      "weight": 2.0,
+      "spirit": "mara",
+      "window_ticks": 2400,
+      "seconds": 60,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 0.6
+      }
+    },
+    "minecraft:revenant_ledger": {
+      "weight": 2.0,
+      "spirit": "revenant",
+      "radius": 12,
+      "min_kills": 5,
+      "lines_per_page": 10,
+      "title": "Ledger",
+      "restore_ticks": 2400
+    },
+    "minecraft:revenant_tally": {
+      "weight": 2.0,
+      "spirit": "revenant",
+      "min_distance": 8,
+      "radius": 16
+    },
+    "minecraft:revenant_rises": {
+      "weight": 2.0,
+      "spirit": "revenant",
+      "radius": 32,
+      "max_age_ticks": 12000
+    },
+    "minecraft:lost_one_wanderer": {
+      "weight": 2.0,
+      "spirit": "lost_one",
+      "min_distance": 20,
+      "max_distance": 30,
+      "speak_distance": 8,
+      "vanish_distance": 3,
+      "circle": 3.0,
+      "turn": 0.1,
+      "interval_ticks": 2,
+      "max_ticks": 1200,
+      "cleanup_ticks": 100,
+      "lines": [
+        "which way to spawn?",
+        "is this the way home?",
+        "has anyone seen my bed?",
+        "hello? is anyone there?"
+      ]
+    },
+    "minecraft:lost_one_death_path": {
+      "weight": 2.0,
+      "spirit": "lost_one",
+      "min_distance": 16,
+      "max_distance": 64,
+      "count": 6,
+      "start": 4,
+      "spacing": 2,
+      "step_ticks": 10,
+      "min_prints": 3,
+      "restore_ticks": 3600,
+      "sound": {
+        "volume": 0.6,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:domovoi_tidy": {
+      "weight": 2.0,
+      "spirit": "domovoi",
+      "radius": 12
+    },
+    "minecraft:hoarder_shiny": {
+      "weight": 2.0,
+      "spirit": "hoarder",
+      "radius": 10,
+      "items": [
+        "minecraft:gold_ingot",
+        "minecraft:gold_nugget",
+        "minecraft:gold_block",
+        "minecraft:raw_gold",
+        "minecraft:diamond",
+        "minecraft:diamond_block",
+        "minecraft:emerald",
+        "minecraft:emerald_block",
+        "minecraft:netherite_ingot"
+      ]
+    },
+    "minecraft:hoarder_nest": {
+      "weight": 2.0,
+      "spirit": "hoarder",
+      "min_stacks": 5,
+      "tries": 20,
+      "min_distance": 14,
+      "radius": 30
+    },
+    "minecraft:demon_trail": {
+      "weight": 2.0,
+      "spirit": "demon",
+      "interval_ticks": 5,
+      "seconds": 15,
+      "stage_ticks": 40
+    },
+    "minecraft:demon_contract": {
+      "weight": 2.0,
+      "spirit": "demon",
+      "price": 4.0,
+      "min_health": 6.0,
+      "title": "Contract",
+      "author": "Below",
+      "page": "I give: my sleep.\nI get: what I asked for.\nUntil dawn, with my heart.\n\n%s"
+    },
+    "minecraft:trickster_gift": {
+      "weight": 2.0,
+      "spirit": "trickster",
+      "min_distance": 3,
+      "radius": 8,
+      "restore_ticks": 3600,
+      "loot": [
+        [
+          "minecraft:diamond",
+          "5"
+        ],
+        [
+          "minecraft:gold_ingot",
+          "9"
+        ],
+        [
+          "minecraft:emerald",
+          "4"
+        ]
+      ]
+    },
+    "minecraft:trickster_dig": {
+      "weight": 2.0,
+      "spirit": "trickster",
+      "radius": 12,
+      "restore_ticks": 12000,
+      "jokes": [
+        [
+          "minecraft:pufferfish"
+        ],
+        [
+          "minecraft:poisonous_potato"
+        ],
+        [
+          "minecraft:stick",
+          "Treasure"
+        ]
+      ]
+    },
+    "minecraft:trickster_dud": {
+      "weight": 2.0,
+      "spirit": "trickster",
+      "min_distance": 3,
+      "radius": 6,
+      "fuse_ticks": 60
     }
   }
 }

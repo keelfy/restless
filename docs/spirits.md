@@ -344,27 +344,27 @@ for evolved spirits.
 
 | Id | Description | Activity | Affinity (missing = ×1) |
 |---|---|---|---|
-| `poltergeist` | Noisy and physical. Mostly messes with doors and belongings; rarely hurts at first. | 1.3 | doors ×4, items ×3, blocks ×1.5, afflictions ×0.5, assaults ×0.5, sounds ×0.5, presence ×0.5 |
-| `shade` | Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as its power grows. | 0.8 | lights ×3, sounds ×2.5, afflictions ×2, presence ×2, assaults ×1, doors ×0.3, items ×0.5 |
-| `phantom` | Likes to be seen, as other players: far-off strangers, a name in the player list, someone pillaring or taking the crops. Seldom hurts. | 1.0 | player ×6, presence ×2, doors ×0.5, lights ×0.5, afflictions ×0.5, items ×0.5, assaults ×0.3 |
-| `nix` | Territorial, bound to water. Keeps swimmers under, calls players to the water, kills fish and breaks boats. Place it by a lake or the sea with `/haunt spirit add nix` while standing there. | 1.0 | water ×8, afflictions ×1, assaults ×0.5, sounds ×0.5, blocks ×0.3, presence ×0.3 |
-| `mimic` | Fakes things: blocks that are not there, strangers, mobs that vanish. | 1.0 | blocks ×3, player ×2, presence ×1.5, mobs ×1.5, lights ×0.5, doors ×0.5, assaults ×0.5 |
-| `wraith` | Hunts in the dark: snuffs lights and hurts. | 2.0 in the dark (`when: dark`), 1 elsewhere | assaults ×2.5, lights ×2, afflictions ×1.5, presence ×1.5, doors ×0.5, blocks ×0.5, items ×0.3 |
-| `mara` | Rides the sleeper: afflictions and presence at night, may act when the player uses a bed (`reacts: bed`). | 1.8 at night (`when: night`), 1 by day | afflictions ×3, presence ×2, sounds ×1.5, doors ×0.5, items ×0.3, blocks ×0.3 |
-| `banshee` | A voice: mostly sounds, rarely touches anything. | 0.9 | sounds ×5, presence ×1.5, doors ×0.5, items ×0.3, blocks ×0.3, assaults ×0.3 |
-| `revenant` | Vengeful: hurts and sends mobs, may act after the player kills a mob (`reacts: kill`). | 1.0 | assaults ×3, mobs ×2.5, afflictions ×1, lights ×0.5, doors ×0.3, items ×0.3 |
-| `lost_one` | Wanders: figures, strangers and steps, may act when the player goes below y 0 (`reacts: deep`). | 0.9 | presence ×3, player ×2, sounds ×1.5, blocks ×0.5, items ×0.5, assaults ×0.2 |
-| `domovoi` | Territorial house spirit: doors, belongings and household noises, hardly harmful. | 0.7 | doors ×2, items ×2, sounds ×1.5, mobs ×0.5, afflictions ×0.3, assaults ×0.2 |
-| `hoarder` | Territorial: takes and moves items. | 1.2 | items ×5, blocks ×1.5, doors ×1.5, lights ×0.5, presence ×0.5, assaults ×0.3 |
-| `demon` | Territorial and dangerous: assaults, afflictions and mobs. | 1.1 | assaults ×3, afflictions ×2, mobs ×2, lights ×1.5, doors ×0.5, items ×0.5 |
-| `trickster` | Territorial prankster: changes blocks and items, shows things. | 1.2 | blocks ×2.5, items ×2, mobs ×1.5, presence ×1.5, assaults ×0.2 |
+| `poltergeist` | Noisy and physical. Mostly messes with doors and belongings; rarely hurts at first. Signatures: `poltergeist_toss`, `poltergeist_play`, `poltergeist_tantrum`. | 1.3 | doors ×4, items ×3, blocks ×1.5, afflictions ×0.5, assaults ×0.5, sounds ×0.5, presence ×0.5 |
+| `shade` | Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as its power grows. Signatures: `shade_gathered`, `shade_glance`, `shade_room`. | 0.8 | lights ×3, sounds ×2.5, afflictions ×2, presence ×2, assaults ×1, doors ×0.3, items ×0.5 |
+| `phantom` | Likes to be seen, as other players: far-off strangers, a name in the player list, someone pillaring or taking the crops. Seldom hurts. Signatures: `phantom_self_join`, `phantom_rerun`, `phantom_home`. | 1.0 | player ×6, presence ×2, doors ×0.5, lights ×0.5, afflictions ×0.5, items ×0.5, assaults ×0.3 |
+| `nix` | Territorial, bound to water. Keeps swimmers under, calls players to the water, kills fish and breaks boats. Place it by a lake or the sea with `/haunt spirit add nix` while standing there. Signatures: `nix_catch`, `nix_call`, `nix_returns`. | 1.0 | water ×8, afflictions ×1, assaults ×0.5, sounds ×0.5, blocks ×0.3, presence ×0.3 |
+| `mimic` | Fakes things: blocks that are not there, strangers, mobs that vanish. Signatures: `mimic_voice`, `mimic_parrot`, `mimic_chest`. | 1.0 | blocks ×3, player ×2, presence ×1.5, mobs ×1.5, lights ×0.5, doors ×0.5, assaults ×0.5 |
+| `wraith` | Hunts in the dark: snuffs lights and hurts. Signatures: `wraith_taken`, `wraith_steps`, `wraith_edge`. | 2.0 in the dark (`when: dark`), 1 elsewhere | assaults ×2.5, lights ×2, afflictions ×1.5, presence ×1.5, doors ×0.5, blocks ×0.5, items ×0.3 |
+| `mara` | Rides the sleeper: afflictions and presence at night, may act when the player uses a bed (`reacts: bed`). Signatures: `mara_dream`, `mara_stolen_rest`, `mara_weight`. | 1.8 at night (`when: night`), 1 by day | afflictions ×3, presence ×2, sounds ×1.5, doors ×0.5, items ×0.3, blocks ×0.3 |
+| `banshee` | A voice: mostly sounds, rarely touches anything. Signatures: `banshee_letter`, `banshee_gift`, `banshee_serenade`, `banshee_jealous`. | 0.9 | sounds ×5, presence ×1.5, doors ×0.5, items ×0.3, blocks ×0.3, assaults ×0.3 |
+| `revenant` | Vengeful: hurts and sends mobs, may act after the player kills a mob (`reacts: kill`). Signatures: `revenant_ledger`, `revenant_tally`, `revenant_rises`. | 1.0 | assaults ×3, mobs ×2.5, afflictions ×1, lights ×0.5, doors ×0.3, items ×0.3 |
+| `lost_one` | Wanders: figures, strangers and steps, may act when the player goes below y 0 (`reacts: deep`). Signatures: `lost_one_sign`, `lost_one_wanderer`, `lost_one_death_path`. | 0.9 | presence ×3, player ×2, sounds ×1.5, blocks ×0.5, items ×0.5, assaults ×0.2 |
+| `domovoi` | Territorial house spirit: doors, belongings and household noises, hardly harmful. Signatures: `domovoi_supper`, `domovoi_hearth`, `domovoi_tidy`. | 0.7 | doors ×2, items ×2, sounds ×1.5, mobs ×0.5, afflictions ×0.3, assaults ×0.2 |
+| `hoarder` | Territorial: takes and moves items. Signatures: `hoarder_payment`, `hoarder_shiny`, `hoarder_nest`. | 1.2 | items ×5, blocks ×1.5, doors ×1.5, lights ×0.5, presence ×0.5, assaults ×0.3 |
+| `demon` | Territorial and dangerous: assaults, afflictions and mobs. Signatures: `demon_offer`, `demon_trail`, `demon_contract`. | 1.1 | assaults ×3, afflictions ×2, mobs ×2, lights ×1.5, doors ×0.5, items ×0.5 |
+| `trickster` | Territorial prankster: changes blocks and items, shows things. Signatures: `trickster_gift`, `trickster_dig`, `trickster_dud`. | 1.2 | blocks ×2.5, items ×2, mobs ×1.5, presence ×1.5, assaults ×0.2 |
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
-Besides a few signature events (below), the ten types after `nix` only pick from the existing events. Their own gimmicks from [design.md](design.md) are not built:
-fake chat (mimic), the nightmare room (mara), honest warnings (banshee), birth from killing (revenant), replaying a death
-path (lost one), winning a domovoi with offerings, the nest (hoarder), pacts (demon) and fake gifts (trickster). None has
-an essence or artifact.
+Besides their signature events (below), the ten types after `nix` only pick from the existing events. Their own gimmicks from [design.md](design.md) are not built:
+a fake chat with a name of its own (mimic), the nightmare room (mara), honest warnings (banshee), birth from killing
+(revenant), winning a domovoi with offerings, a hoarder's nest that banishing empties, pacts with a real term (demon)
+and fake gifts beyond the one chest (trickster). None has an essence or artifact.
 
 ## Events
 
@@ -372,7 +372,7 @@ an essence or artifact.
 
 Signature events: an event with `spirit` in its config is rolled by that type only (`HauntEvent.only`, checked with the
 other free checks in `Director.open`; `/haunt force` ignores it). Its `weight` is raised (2.0, against 0.3 for the
-average event) so that a player sees it. Ten are built, the other 33 are planned in
+average event) so that a player sees it. All 43 are built; the plan is in
 [signature-events.md](signature-events.md). A scenario's `spirit` is not a filter: it only boosts an evolved spirit's
 own scenario.
 
@@ -979,9 +979,42 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `wraith_taken` | — | HARMFUL | MOBS | 2.0 | Light level under 4 at the player, a wild animal within 16 (not named, tamed, leashed or ridden) | The animal is gone in a puff of smoke, no sound and no drops. Lost for good. Only `wraith`. |
 | `domovoi_supper` | — | LIGHT | ITEMS | 2.0 | A chest within 12 holding bread, a cookie, a milk bucket or a stew (mushroom, rabbit, beetroot) | One is eaten, with an eating sound: one bread or cookie is gone, the milk bucket becomes a bucket, the stew a bowl. Only `domovoi`. |
 | `domovoi_hearth` | — | LIGHT | LIGHTS | 2.0 | A cold campfire within 12, or a furnace, smoker or blast furnace with input and no fuel | The campfire lights, or one coal goes into the furnace. Only `domovoi`. |
-| `hoarder_payment` | — | HARMFUL | ITEMS | 2.0 | A chest within 10 holding something that is not junk | One stack becomes junk (dirt, sticks, rotten flesh or string) of the same size, up to its stack limit. Lost for good. Only `hoarder`. |
+| `hoarder_payment` | — | HARMFUL | ITEMS | 2.0 | A chest within 10 holding something that is not junk | One stack becomes junk (dirt, sticks, rotten flesh or string) of the same size, up to its stack limit. The hoarder keeps the stack for its nest. Only `hoarder`. |
 | `demon_offer` | — | LIGHT | BLOCKS | 2.0 | Standing room 3 to 8 away, an offer left unsaid | A crimson sign with an offer ("a diamond for your bed") stands there for `restore_ticks` (5 min), turned to the player. Nothing more. Never repeats a variant. Only `demon`. |
 | `lost_one_sign` | — | LIGHT | BLOCKS | 2.0 | Standing room 3 to 8 away, a question left unasked | An oak sign that asks the way ("which way is home?") stands there for `restore_ticks` (5 min). Never repeats a variant. Only `lost_one`. |
+| `banshee_letter` | — | LIGHT | ITEMS | 2.0 | Night, a free bed within 16, a page left unsaid | A written book "To <player>", author the spirit's nickname, with one of 8 pages (shy, devoted, possessive), lies on the bed. Real item. Never repeats a variant. Only `banshee`. |
+| `banshee_gift` | — | LIGHT | ITEMS | 2.0 | A free bed within 16, a gift left unsaid | One named item with a lore line lies on the bed: wither rose "For you", gold nugget "Ring", phantom membrane "Veil", skeleton skull "Mine" or poppy "Remember me". Real item. Only `banshee`. |
+| `banshee_serenade` | — | LIGHT | SOUND | 2.0 | Night, glass or a glass pane within 12 | A quiet, low `haunt.moan` from 2 blocks outside the glass, on the far side from the player. Only `banshee`. |
+| `banshee_jealous` | — | LIGHT | MOBS | 2.0 | An adult villager, wolf, cat or parrot within 8 | It shakes with frost as in powder snow for 3 s, and its health is put back after. A villager shakes its head, a cat hisses, a wolf growls, a parrot imitates a ghast. Only `banshee`. |
+| `poltergeist_toss` | — | LIGHT | ITEMS | 2.0 | A chest with something in it within 10 | The lid opens and 3 stacks hop out toward the player, one a second, then the lid shuts with a giggle. The items stay on the floor. Only `poltergeist`. |
+| `poltergeist_play` | — | LIGHT | DOORS | 2.0 | 2 or more note blocks or bells within 12 | Each is struck in turn, nearest first, 3 ticks apart, up to 12. Buttons and levers are left alone. Only `poltergeist`. |
+| `poltergeist_tantrum` | — | HARMFUL | DOORS | 2.0 | 3 or more wooden doors, trapdoors or fence gates within 12 | All of them fly open in one tick, 6 ticks later slam shut, and up to 8 flower pots pop off: pot and plant drop as items. Only `poltergeist`. |
+| `shade_gathered` | — | LIGHT | LIGHTS | 2.0 | 3 or more torches within 12, a dark spot (light under 4) 3 to 16 away | The torches (up to 6) go out one by one, 8 ticks apart, and their items lie in one pile on the dark spot. Nothing is lost. Only `shade`. |
+| `shade_glance` | — | LIGHT | LIGHTS | 2.0 | 3 or more torches or lanterns within 16 | For 20 s every torch or lantern the player looks at (within 16° and in sight) goes out, up to 5. They are lit again after 2 min; under hardcore they stay out. Only `shade`. |
+| `shade_room` | — | HARMFUL | LIGHTS | 2.0 | The player is in a room shut off from the sky of at most 150 floor cells, with a torch or lantern in it | Every torch and lantern in the room goes out and Darkness is renewed each second while the player stays. They are lit again when the player leaves, at most after 3 min. Only `shade`. |
+| `wraith_steps` | — | LIGHT | PRESENCE | 2.0 | Light level under 4 at the player, not in water | For 30 s a footstep sounds 3 blocks behind the player every 8 ticks they move, with the sound of the ground they stand on, and none while they stand still. Only `wraith`. |
+| `wraith_edge` | — | LIGHT | PRESENCE | 2.0 | The player stands in light (8+), a dark floor cell (under 4) 4 to 6 away | A figure stands on the dark cell facing the player, gone when looked at straight or approached within 3. Only `wraith`. |
+| `phantom_rerun` | — | LIGHT | PLAYER, PRESENCE | 2.0 | The last 30 s of the player's path (one sample a second) spans 20 or more blocks | A figure in the player's own skin walks that path, smoothed, from where it began, gone when looked at or approached. Only `phantom`. |
+| `phantom_home` | — | LIGHT | PLAYER, PRESENCE | 2.0 | The player's respawn bed stands 12 to 32 away in the same dimension | A figure in the player's own skin stands by the bed, gone when the player comes within 8. Only `phantom`. |
+| `nix_returns` | — | LIGHT | WATER | 2.0 | An item entity lying in water within 16 | It is carried through the water toward the player, dripping, until it leaves the water. Only `nix`. |
+| `mimic_parrot` | — | LIGHT | PLAYER | 2.0 | The player said something in chat in the last 10 min | 5 s later the last line comes back as a chat message under the player's own name, with one word swapped for one from another recent line or a fixed word. Chat only. Only `mimic`. |
+| `mimic_chest` | — | HARMFUL | BLOCKS | 2.0 | A chest within 10 with a free cell beside it (not touching another chest) | A second chest appears there. Opened, it shuts with evoker-fang sound and 2 damage (capped by the threat floor) and is gone; left alone it is removed after 2 min. Only `mimic`. |
+| `mara_dream` | — | LIGHT | AFFLICTION | 2.0 | The player woke in the last 2 min, a free inventory slot, a dream left unsaid | A written book "A dream" with one of 6 lines about the biome the player was in and, if they have killed any, the last mob. Real item. Only `mara`. |
+| `mara_stolen_rest` | — | HARMFUL | AFFLICTION | 2.0 | Woke in the last 2 min, not peaceful, time since rest under 80000 | Time since rest is set to 80000 ticks, past the 72000 phantoms go by. Only `mara`. |
+| `mara_weight` | — | HARMFUL | AFFLICTION | 2.0 | Woke in the last 2 min | Slowness and mining fatigue for 60 s, with a heavy step and a wool step. Only `mara`. |
+| `revenant_ledger` | — | LIGHT | ITEMS | 2.0 | A lectern within 12, 5 or more passive animals killed today | A written book "Ledger" on the lectern lists each kind killed today and its count. The lectern's own book (or none) is put back after 2 min. Only `revenant`. |
+| `revenant_tally` | — | HARMFUL | MOBS | 2.0 | Night, not peaceful, a passive animal killed today, standing room 8 to 16 away | A zombie (threat band) named with the most-killed kind and its count, "Cow 14", goes for the player. Only `revenant`. |
+| `revenant_rises` | — | HARMFUL | MOBS | 2.0 | Not peaceful, the player killed a mob within 32 in the last 10 min | A skeleton (a skeleton horse for a horse, donkey or mule) climbs out of the ground there, with dirt flying, and goes for the player. Only `revenant`. |
+| `lost_one_wanderer` | — | LIGHT | PRESENCE, PLAYER | 2.0 | Standing room 20 to 30 away, a line left unsaid | A figure in a default skin walks a slow circle there. When the player comes within 8 it says a line in chat under a made-up nickname and is gone. Only `lost_one`. |
+| `lost_one_death_path` | — | LIGHT | PRESENCE | 2.0 | The last death is in this dimension 16 to 64 away, 3 or more spots for prints on the way | Footprints appear one by one, 10 ticks apart, on the line from 4 to 14 blocks out toward the death, each pointing at the player, from the farthest in. Wiped after 3 min. Only `lost_one`. |
+| `domovoi_tidy` | — | LIGHT | DOORS | 2.0 | A chest within 12 that is not tidy, or an open wooden door, trapdoor or gate within 12 | The chest is merged and sorted by item id with no gaps, and the open doors, trapdoors and gates shut. Only `domovoi`. |
+| `hoarder_shiny` | — | HARMFUL | ITEMS | 2.0 | Gold, diamond, emerald or netherite in a chest within 10, another chest (not touching) with a free slot | Only those stacks move to the other chest. Only `hoarder`. |
+| `hoarder_nest` | — | LIGHT | ITEMS | 2.0 | The hoarder has taken 5 or more stacks (by `hoarder_payment`) since the server started, a spot 14 to 30 away out of the player's sight | A barrel there holds all of them (up to 27 slots; the rest drop beside it). Real items, stays. Not remembered across a restart. Only `hoarder`. |
+| `demon_trail` | — | LIGHT | BLOCKS | 2.0 | The player stands on the ground | For 15 s the block under each new step shows as netherrack for 2 s, then soul soil for 2 s, then the real block. Shown to the player only, unless swaps are set to real. Only `demon`. |
+| `demon_contract` | — | HARMFUL | AFFLICTION | 2.0 | A free inventory slot, no contract signed, max health at least 6 above the price | A written book "Contract" with the player's name at the bottom, and max health down by 4 (two hearts) until the next dawn. Only `demon`. |
+| `trickster_gift` | — | LIGHT | ITEMS | 2.0 | Standing room 3 to 8 away | A chest there holds dirt that looks like 5 diamonds, 9 gold ingots and 4 emeralds. Taken out, it is shown as dirt again within half a second, with a laugh. The chest is gone after 3 min. Only `trickster`. |
+| `trickster_dig` | — | LIGHT | BLOCKS | 2.0 | Sand, red sand or gravel with air above within 12, a joke left unsaid | It becomes suspicious sand or gravel holding a joke: a pufferfish, a poisonous potato or a stick named "Treasure". Put back after 10 min. Only `trickster`. |
+| `trickster_dud` | — | LIGHT | MOBS | 2.0 | Standing room 3 to 6 away | A primed TNT (packets only) hisses there for 3 s, then pops into firework sparks with a laugh. Only `trickster`. |
 
 ## Chances
 

@@ -23,12 +23,16 @@ import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Evolution;
 import dev.keelfy.restless.haunt.Graves;
+import dev.keelfy.restless.haunt.Kills;
+import dev.keelfy.restless.haunt.Overheard;
 import dev.keelfy.restless.haunt.Reactions;
 import dev.keelfy.restless.haunt.Requiem;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Session;
+import dev.keelfy.restless.haunt.Trail;
+import dev.keelfy.restless.haunt.Wakes;
 import dev.keelfy.restless.haunt.Wards;
 import dev.keelfy.restless.haunt.event.Breaks;
 import dev.keelfy.restless.haunt.event.DoubleEvent;
@@ -98,6 +102,7 @@ public final class Restless {
         Evolution.tick(server);
         Charms.tick(server);
         Deeds.tick(server);
+        Trail.tick(server);
         Consumables.tick(server);
     }
 
@@ -141,6 +146,7 @@ public final class Restless {
             Charms.died(victim);
         }
         if (killer instanceof ServerPlayer player) {
+            Kills.killed(player, dead);
             if (dead instanceof Mob) {
                 Reactions.trigger(player, Trait.Trigger.KILL);
             }
@@ -206,6 +212,7 @@ public final class Restless {
     /** Call when a player wakes. */
     public static void onWake(ServerPlayer player) {
         Relics.woke(player);
+        Wakes.woke(player);
     }
 
     /** Call when the sleepers would skip the night; true means it must not pass. */
@@ -222,6 +229,7 @@ public final class Restless {
     public static void onChat(ServerPlayer player, String line) {
         Divination.ask(player);
         Machines.said(player, line);
+        Overheard.heard(player, line);
     }
 
     /** Call when a player finishes a phrase on voice chat: a spirit box answers it as it does a chat line. */

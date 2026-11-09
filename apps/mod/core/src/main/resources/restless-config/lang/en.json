@@ -2811,7 +2811,7 @@
     },
     "minecraft:hoarder_payment": {
       "name": "Payment in Junk",
-      "description": "A stack in a nearby chest is swapped for junk of the same size: dirt, sticks, rotten flesh or string. Lost for good. Only a hoarder."
+      "description": "A stack in a nearby chest is swapped for junk of the same size: dirt, sticks, rotten flesh or string. The stack is not destroyed: the hoarder keeps it for its nest. Only a hoarder."
     },
     "minecraft:demon_offer": {
       "name": "Offer on a Sign",
@@ -2820,6 +2820,138 @@
     "minecraft:lost_one_sign": {
       "name": "Sign That Asks",
       "description": "A sign on the ground nearby asks the way (\"which way is home?\") and is gone after five minutes. Only a lost one."
+    },
+    "minecraft:banshee_letter": {
+      "name": "Letter on the Bed",
+      "description": "At night a written book \"To <player>\" lies on a bed nearby, from the banshee, with a page of shy, devoted or possessive words. A real item. Only a banshee."
+    },
+    "minecraft:banshee_gift": {
+      "name": "Gift on the Bed",
+      "description": "A named item with a short line of lore lies on a bed nearby: a wither rose \"For you\", a gold nugget \"Ring\", a phantom membrane \"Veil\", a skeleton skull \"Mine\" or a poppy. A real item. Only a banshee."
+    },
+    "minecraft:banshee_serenade": {
+      "name": "Song at the Window",
+      "description": "At night a soft moan comes from just outside a glass window nearby. Only a banshee."
+    },
+    "minecraft:banshee_jealous": {
+      "name": "Jealous Shiver",
+      "description": "A villager, wolf, cat or parrot near the player shakes with frost for a few seconds: a villager shakes its head, a cat hisses, a wolf growls. Its health is put back. Only a banshee."
+    },
+    "minecraft:poltergeist_toss": {
+      "name": "Toss from the Chest",
+      "description": "A chest nearby opens and tosses up to three stacks toward the player, one a second, and ends with a giggle. The items stay on the floor. Only a poltergeist."
+    },
+    "minecraft:poltergeist_play": {
+      "name": "Playing with the Bells",
+      "description": "Every note block and bell nearby is struck in turn, fast, from the nearest on. No redstone is touched. Only a poltergeist."
+    },
+    "minecraft:poltergeist_tantrum": {
+      "name": "Tantrum",
+      "description": "Every wooden door, trapdoor and gate nearby flies open and then slams in the same moment, and up to eight flower pots pop off, pot and plant as items. Only a poltergeist."
+    },
+    "minecraft:shade_gathered": {
+      "name": "Lights Gathered",
+      "description": "The torches nearby go out one by one and all of them lie in one pile of items in a dark spot. Nothing is lost. Only a shade."
+    },
+    "minecraft:shade_glance": {
+      "name": "Put Out by a Glance",
+      "description": "For 20 seconds each torch or lantern the player looks at goes out, up to five, and is lit again after two minutes. Only a shade."
+    },
+    "minecraft:shade_room": {
+      "name": "The Room Goes Dark",
+      "description": "Every torch and lantern in the closed room the player is in goes out, and while the player stays the edges of the view darken. They are lit again when the player leaves, or after three minutes at most. Only a shade."
+    },
+    "minecraft:phantom_rerun": {
+      "name": "Walked Again",
+      "description": "A copy of the player, in their skin, walks the path the player took in the last half minute. It fades when looked at or approached. Only a phantom."
+    },
+    "minecraft:phantom_home": {
+      "name": "Waiting at Home",
+      "description": "A copy of the player in their skin stands by their bed when they are 12 to 32 blocks from it, and fades when they come close. Only a phantom."
+    },
+    "minecraft:nix_returns": {
+      "name": "Carried Back",
+      "description": "An item lying in the water nearby is carried through it toward the player, dripping, as far as the shore. Only a nix."
+    },
+    "minecraft:mimic_parrot": {
+      "name": "Own Words Back",
+      "description": "A line the player said in chat in the last ten minutes comes back a moment later under their own name, with one word changed. Chat only. Only a mimic."
+    },
+    "minecraft:mimic_chest": {
+      "name": "The Second Chest",
+      "description": "A second chest appears beside a chest the player has. Opening it shuts the lid with a snap and 2 damage, and the chest is gone. If left, it is taken away after two minutes. Only a mimic."
+    },
+    "minecraft:wraith_steps": {
+      "name": "Steps Behind",
+      "description": "In the dark, steps follow the player for 30 seconds and stop the moment the player stops. Only a wraith."
+    },
+    "minecraft:wraith_edge": {
+      "name": "At the Edge of the Light",
+      "description": "A figure stands where the dark begins, facing the player, and is gone when looked at straight or approached. Only a wraith."
+    },
+    "minecraft:mara_dream": {
+      "name": "The Night's Dream",
+      "description": "On waking, a written book \"A dream\" lands in the inventory, with the biome the player was in and the last mob they killed. A real item. Only a mara."
+    },
+    "minecraft:mara_stolen_rest": {
+      "name": "Stolen Rest",
+      "description": "On waking, the time since rest is put back past three days, so phantoms come as if the player never slept. Not on peaceful. Only a mara."
+    },
+    "minecraft:mara_weight": {
+      "name": "Weight on Waking",
+      "description": "On waking, slowness and mining fatigue for a minute, with the sound of something heavy getting off the bed. Only a mara."
+    },
+    "minecraft:revenant_ledger": {
+      "name": "The Ledger",
+      "description": "A written book on a lectern nearby lists every kind of passive animal the player killed today and how many, \"Cow: 14\". The lectern's own book comes back after two minutes. Needs five kills. Only a revenant."
+    },
+    "minecraft:revenant_tally": {
+      "name": "Named for the Killed",
+      "description": "At night a zombie spawns near the player named after the animal they killed most today and the count, \"Cow 14\", and goes for them. Not on peaceful. Only a revenant."
+    },
+    "minecraft:revenant_rises": {
+      "name": "Risen",
+      "description": "A skeleton climbs out of the ground, dirt flying, where the player killed a mob in the last ten minutes; a skeleton horse for a horse. Not on peaceful. Only a revenant."
+    },
+    "minecraft:lost_one_wanderer": {
+      "name": "The Other Wanderer",
+      "description": "A figure in a default skin walks in a slow circle 20 to 30 blocks off. When the player comes near it asks the way in chat and fades. Only a lost one."
+    },
+    "minecraft:lost_one_death_path": {
+      "name": "Prints from the Grave",
+      "description": "Footprints lead from the direction of the player's last death toward the player, one by one, and are wiped after three minutes. Only a lost one."
+    },
+    "minecraft:domovoi_tidy": {
+      "name": "Tidied Up",
+      "description": "One chest nearby is sorted by item with like stacks merged, and the open doors, trapdoors and gates nearby shut. Only a domovoi."
+    },
+    "minecraft:hoarder_shiny": {
+      "name": "Only the Shiny",
+      "description": "Gold, diamonds and emeralds in a chest nearby move to another chest. Only a hoarder."
+    },
+    "minecraft:hoarder_nest": {
+      "name": "The Nest",
+      "description": "Once the hoarder has taken five stacks, a barrel with all of them appears out of sight, 14 to 30 blocks away. Real items, there to be found. Only a hoarder."
+    },
+    "minecraft:demon_trail": {
+      "name": "Hell Underfoot",
+      "description": "For 15 seconds the block under each of the player's steps shows as netherrack, then soul soil, then goes back. Seen by the player only, unless swaps are set to real. Only a demon."
+    },
+    "minecraft:demon_contract": {
+      "name": "Contract",
+      "description": "A written book \"Contract\" with the player's name at the bottom lands in the inventory, and maximum health drops by two hearts until dawn. Only a demon."
+    },
+    "minecraft:trickster_gift": {
+      "name": "Gift Chest",
+      "description": "A chest of diamonds, gold and emeralds stands on the ground nearby. Whatever is taken out turns into dirt in the inventory, with a laugh. The chest is gone after three minutes. Only a trickster."
+    },
+    "minecraft:trickster_dig": {
+      "name": "Suspicious Sand",
+      "description": "Sand or gravel nearby turns suspicious; brushing it gives a joke: a pufferfish, a poisonous potato, a stick named \"Treasure\". Put back after ten minutes. Only a trickster."
+    },
+    "minecraft:trickster_dud": {
+      "name": "Dud",
+      "description": "A lit TNT, seen by the player only, hisses a few blocks away and pops into a firework with a laugh. Only a trickster."
     }
   }
 }

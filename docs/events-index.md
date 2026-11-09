@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 601 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 634 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -345,11 +345,55 @@ A whole tree moved. [blocks]
 
 `moving_tree`
 
-### `event/Signatures.java` (10)
+### `event/Signatures.java` (10), and the groups it gathers (33)
 
-Events only one spirit type rolls (`spirit` in the config); see [signature-events.md](signature-events.md). [various]
+Events only one spirit type rolls (`spirit` in the config); see [signature-events.md](signature-events.md). `Signatures.all()`
+returns its own ten and each group's. [various]
 
 `phantom_self_join`, `nix_catch`, `nix_call`, `mimic_voice`, `wraith_taken`, `domovoi_supper`, `domovoi_hearth`, `hoarder_payment`, `demon_offer`, `lost_one_sign`
+
+### `event/Suitors.java` (4)
+
+The banshee: letters and gifts on the bed, a song at the window, jealousy. [ITEMS, SOUND, MOBS]
+
+`banshee_letter`, `banshee_gift`, `banshee_serenade`, `banshee_jealous`
+
+### `event/Pranks.java` (6)
+
+The poltergeist's games and tantrums, and the trickster's jokes. [ITEMS, DOORS, BLOCKS, MOBS]
+
+`poltergeist_toss`, `poltergeist_play`, `poltergeist_tantrum`, `trickster_gift`, `trickster_dig`, `trickster_dud`
+
+### `event/Dusk.java` (4)
+
+The shade eats light, the wraith walks in the dark. [LIGHTS, PRESENCE]
+
+`shade_gathered`, `shade_glance`, `shade_room`, `wraith_steps`
+
+### `event/Doubles.java` (5)
+
+Figures and prints: the phantom's copy, the wraith at the edge of the light, the lost one's wanderer and death path. Needs
+`Trail` (the last 30 s of positions). [PLAYER, PRESENCE]
+
+`phantom_rerun`, `phantom_home`, `wraith_edge`, `lost_one_wanderer`, `lost_one_death_path`
+
+### `event/Copies.java` (2)
+
+The mimic gives back what it took. Needs `Overheard` (the last chat lines). [PLAYER, BLOCKS]
+
+`mimic_parrot`, `mimic_chest`
+
+### `event/Nights.java` (6)
+
+The mara on waking (needs `Wakes`) and the revenant's tally of kills (needs `Kills`). [AFFLICTION, ITEMS, MOBS]
+
+`mara_dream`, `mara_stolen_rest`, `mara_weight`, `revenant_ledger`, `revenant_tally`, `revenant_rises`
+
+### `event/Territories.java` (6)
+
+What the territorial spirits do to a place. The hoarder's nest remembers what it took. [WATER, DOORS, ITEMS, BLOCKS, AFFLICTION]
+
+`nix_returns`, `domovoi_tidy`, `hoarder_shiny`, `hoarder_nest`, `demon_trail`, `demon_contract`
 
 ## Scenarios (`Scenarios.java`, 104)
 

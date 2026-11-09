@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.decoration.Mannequin;
+import net.minecraft.world.item.component.ResolvableProfile;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -34,6 +35,14 @@ abstract class StrangerAct implements HauntEvent {
 
     /** Dresses the figure before its first step. */
     void prepare(Mannequin figure) {}
+
+    /** Called once with the figure just spawned, before {@link #prepare}; for an act that plans from the player. */
+    void begin(ServerPlayer player, Mannequin figure) {}
+
+    /** The skin and name the figure wears: nobody's, by default. */
+    ResolvableProfile profile(ServerPlayer player) {
+        return Figure.stranger(player);
+    }
 
     /** One step of the act. @return false when it is done */
     abstract boolean step(ServerPlayer player, Mannequin figure, Config.Section config, int n);
@@ -65,10 +74,11 @@ abstract class StrangerAct implements HauntEvent {
             return;
         }
         Config.Section config = Config.event(id);
-        Mannequin figure = Figure.spawn(player, spot, Figure.stranger(player));
+        Mannequin figure = Figure.spawn(player, spot, profile(player));
         if (figure == null) {
             return;
         }
+        begin(player, figure);
         prepare(figure);
         UUID owner = player.getUUID();
         active.put(owner, figure);

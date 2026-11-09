@@ -1,7 +1,12 @@
 # Signature events
 
-Plan. Every spirit type gets three or four events that only that type can roll, so a player who knows the mod can name
-the type from one of them. No saved relationship, no stages: each is an ordinary event with a type filter.
+Every spirit type has three or four events that only that type can roll, so a player who knows the mod can name the type
+from one of them. No saved relationship, no stages: each is an ordinary event with a type filter.
+
+**Status: all 43 are built** (`event/Signatures.java` and the group classes it gathers, listed in
+[events-index.md](events-index.md); rows in [spirits.md](spirits.md#events); a GameTest each in
+`SignatureGameTests` and `SignatureBatchTests`). The tables below are the plan; [What changed](#what-changed-while-building)
+lists where the build differs from it.
 
 Today the fourteen types differ only in affinities over shared events (see [spirits.md](spirits.md#spirits)). The
 evolved scenarios in [scenarios.md](scenarios.md) are per type, but they come late and are mixes of shared events.
@@ -187,34 +192,48 @@ Tier: **L** light, **H** harmful. Difficulty on the 1–10 [scale](event-ideas-2
 
 ## Engine work
 
-1. **Filter.** `"spirit": "<id>"` on any event in `restless-config`. A default on `HauntEvent`, read by the director
-   where it builds the runnable list; an event with a `spirit` that does not match is skipped. `/haunt force` ignores it.
-2. **How often.** A type has about 250 runnable events; three of them at the usual weight would be seen once in a
-   hundred. Reuse `signature()` for plain events: an event whose `spirit` matches gets `director.signature_boost`.
-   Target: about one event in eight is a signature. Check with the debug screen, which shows each spirit's chance.
-3. **Helpers.**
-   - `Gifts.place(player, stack, at)`: a named item with lore as an item entity on a bed or a spot.
-   - `Letters.book(spirit, key, args)`: a written book, author the `Story` nickname, pages from lang pools.
-   - A per-player ring buffer of the last 30 s of positions (`phantom_rerun`).
-   - Today's kills by kind, kept in the session (`revenant_*`, `mara_dream`).
-   - The last death location from the player (`lost_one_death_path`).
-4. **Hooks.** "On waking" for the mara events. The bed hook for the `bed` reaction exists; it needs to fire on wake.
-   Picking up the trickster's items: an item component checked on inventory change.
-5. **Text.** Names, subtitles, letters, signs and pools in `en_us` and `ru_ru`; journal names for every event.
-6. **Tests and docs.** A GameTest per event for its condition and its undo. Each event goes in the table in
-   [spirits.md](spirits.md#events); signatures are listed there under each type.
+1. **Filter.** `"spirit": "<id>"` on any event in `restless-config` makes it that type's only: `HauntEvent.only()`, checked
+   in `Director.open`. `/haunt force` ignores it. A scenario's `spirit` stays a boost.
+2. **How often.** No separate boost. A signature event has `weight` 2.0 in its config, where the average event has 0.3.
+   Not yet measured on a test world: the goal of about one event in eight is unchecked.
+3. **State the events needed**, all in memory and reset with the server (`Session.SERVER`):
+   - `Trail`: the last 30 s of each player's positions, one sample a second (`phantom_rerun`).
+   - `Kills`: the day's passive kills by kind, and the last mob killed with where and when (`revenant_*`, `mara_dream`).
+   - `Wakes`: when each player last woke; a wake also counts as using a bed for spirits that react to one (`mara_*`).
+   - `Overheard`: the last five chat lines (`mimic_parrot`).
+   - The last death location comes from the player (`lost_one_death_path`).
+4. **Text.** Names and descriptions in the config lang files (en, ru). Sign text, letters, dreams and gifts are English
+   lines in `signatures.json`.
+
+## What changed while building
+
+- **No `Gifts` or `Letters` helper.** A written book and a named item were each a few lines inside the event.
+- **`banshee_serenade`** plays the existing `haunt.moan`, quiet and low. A sound of its own needs a recording.
+- **`poltergeist_play`** strikes note blocks and bells only. Pressing buttons would fire redstone.
+- **`demon_trail`** shows netherrack and then soul soil, not magma: with swaps set to real, magma would burn the player.
+- **`mara_dream`** is a written book "A dream". The mod's diary page is a recipe page, not a text.
+- **`mara_*`** run for 2 minutes after a waking (`window_ticks`), and a waking makes a mara roll soon.
+- **`mara_stolen_rest`** sets the time since rest to 80000 ticks. The game resets it on lying down, so the value before
+  sleep is not available to keep.
+- **`wraith_edge`** is a figure that stands on the dark cell and is gone when looked at or approached. It does not step
+  into the dark when the light is taken.
+- **`phantom_home`** works from the respawn bed and the distance (12 to 32), not from time away.
+- **`phantom_rerun`** walks the whole 30 s path from its start, not 15 s behind.
+- **`nix_*`, `domovoi_*` and `hoarder_*`** look at the player's surroundings, not at the spirit's own territory.
+- **`hoarder_payment`** no longer loses the stack: the hoarder keeps it for `hoarder_nest`. The nest is a barrel that
+  stays; banishing the hoarder does not remove it, and what the hoarder took is forgotten on a restart.
+- **`trickster_gift`** needs no inventory hook: the chest holds dirt with the model and name of treasure, and a check
+  every half second turns it back into plain dirt once it is in the player's inventory.
+- **`shade_glance`** and **`shade_room`** put out torches and lanterns only.
+- **`revenant_tally`** spawns a zombie, **`revenant_rises`** a skeleton or skeleton horse; both in the threat band.
 
 ## Order
 
-1. Filter, boost, `Gifts`, `Letters`.
-2. Difficulty 1, one per type at least: `banshee_serenade`, `phantom_self_join`, `nix_catch`, `nix_call`,
-   `mimic_parrot`, `mimic_voice`, `wraith_taken`, `mara_stolen_rest`, `mara_weight`, `revenant_tally`,
-   `lost_one_sign`, `domovoi_supper`, `domovoi_hearth`, `hoarder_payment`, `demon_offer`. Shade, poltergeist and
-   trickster have none at 1, so take `shade_gathered`, `poltergeist_toss` and `trickster_dud`.
-3. Difficulty 2, then 3, then `hoarder_nest`.
+Built in two slices: the filter and ten difficulty-1 events first, then the other 33 with `Trail`, `Kills`, `Wakes` and
+`Overheard`.
 
 ## Done when
 
-- All 43 events run, each only for its type, with a GameTest.
-- On a test world, about one event in eight a spirit runs is its own signature.
-- Each type's description in [spirits.md](spirits.md#spirits) names its signatures.
+- All 43 events run, each only for its type, with a GameTest. Done.
+- On a test world, about one event in eight a spirit runs is its own signature. Not measured.
+- Each type's description in [spirits.md](spirits.md#spirits) names its signatures. Done.
