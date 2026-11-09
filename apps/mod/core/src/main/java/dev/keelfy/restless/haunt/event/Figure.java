@@ -32,13 +32,31 @@ import org.jspecify.annotations.Nullable;
 public final class Figure {
     private Figure() {}
 
-    /** A silent, unhurtable mannequin wearing {@code profile}, standing on {@code spot} and facing the player. */
+    /**
+     * A mannequin only one player is sent. The server tracks it like any entity, but every other player never gets it,
+     * so nobody else sees it or can push it. It is still a plain mannequin to the client.
+     */
+    private static final class Private extends Mannequin {
+        private final UUID owner;
+
+        Private(ServerLevel level, UUID owner) {
+            super(EntityTypes.MANNEQUIN, level);
+            this.owner = owner;
+        }
+
+        @Override
+        public boolean broadcastToPlayer(ServerPlayer viewer) {
+            return viewer.getUUID().equals(owner) && super.broadcastToPlayer(viewer);
+        }
+    }
+
+    /**
+     * A silent, unhurtable mannequin wearing {@code profile}, standing on {@code spot} and facing the player. Only that
+     * player sees it.
+     */
     public static @Nullable Mannequin spawn(ServerPlayer player, BlockPos spot, ResolvableProfile profile) {
         ServerLevel level = player.level();
-        Mannequin figure = EntityTypes.MANNEQUIN.create(level, EntitySpawnReason.EVENT);
-        if (figure == null) {
-            return null;
-        }
+        Mannequin figure = new Private(level, player.getUUID());
         figure.setPos(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5);
         dress(figure, profile, level);
         figure.setNoGravity(true);

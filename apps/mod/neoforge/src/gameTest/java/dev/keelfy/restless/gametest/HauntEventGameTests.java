@@ -6,6 +6,7 @@ import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
+import dev.keelfy.restless.haunt.event.Figure;
 import dev.keelfy.restless.spirit.Spirits;
 import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.HashMap;
@@ -200,6 +201,18 @@ final class HauntEventGameTests {
             tests.put("event_" + id, helper -> runs(helper, id, player -> {}, () -> {}));
         }
         // The mark is spent by the next break, so the event may run again right after it and not before.
+        tests.put("event_figure_private", helper -> {
+            ServerPlayer owner = connected(helper);
+            ServerPlayer other = connected(helper);
+            Mannequin figure = Figure.spawn(owner, helper.absolutePos(new BlockPos(2, 2, 2)), Figure.stranger(owner));
+            check(helper, figure != null, "a figure must spawn");
+            check(helper, figure.broadcastToPlayer(owner), "the figure must be sent to its player");
+            check(helper, !figure.broadcastToPlayer(other), "the figure must not be sent to any other player");
+            figure.discard();
+            owner.discard();
+            other.discard();
+            helper.succeed();
+        });
         tests.put("event_phantom_break_spent_on_break", helper -> {
             ServerPlayer player = connected(helper);
             HauntEvent event =
