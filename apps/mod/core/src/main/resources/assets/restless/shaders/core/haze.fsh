@@ -48,8 +48,9 @@ float fbm(vec2 p) {
 
 // Cloud density at a point of the quad, 0..~1.3: round soft body times warped noise.
 float density(vec2 p, vec2 warp) {
-    float r2 = dot(p, p);
-    float soft = 1.0 - smoothstep(0.0, 0.8, sqrt(r2));
+    // The radius is bent by the noise, so the cloud's outline is ragged and never a circle.
+    float reach = 0.55 + 0.45 * fbm(p * 1.1 + warp * 2.2 + 9.3);
+    float soft = 1.0 - smoothstep(0.0, reach, length(p));
     float body = soft * soft;
     float cloud = fbm(p * 1.7 + warp * 1.6);
     return body * mix(0.55, 1.15, cloud);

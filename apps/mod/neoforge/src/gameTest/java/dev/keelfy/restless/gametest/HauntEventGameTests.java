@@ -30,6 +30,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -1239,6 +1240,59 @@ final class HauntEventGameTests {
                                 !helper.getBlockState(FEET.west(2)).is(Blocks.WOOL.red())
                                         && !helper.getBlockState(FEET.west(3)).is(Blocks.WOOL.red()),
                                 "repaint must change every block of the kind")));
+        tests.put("event_hand_drop", helper -> {
+            ServerPlayer[] held = new ServerPlayer[1];
+            runs(
+                    helper,
+                    "hand_drop",
+                    player -> {
+                        held[0] = player;
+                        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND, 3));
+                    },
+                    () -> {
+                        check(helper, held[0].getMainHandItem().isEmpty(), "hand_drop must empty the main hand");
+                        check(
+                                helper,
+                                !held[0].level()
+                                        .getEntitiesOfClass(
+                                                net.minecraft.world.entity.item.ItemEntity.class,
+                                                held[0].getBoundingBox().inflate(6),
+                                                e -> e.getItem().is(Items.DIAMOND)
+                                                        && e.getItem().getCount() == 3)
+                                        .isEmpty(),
+                                "hand_drop must leave the stack on the floor");
+                    });
+        });
+        tests.put("event_inventory_drop", helper -> {
+            ServerPlayer[] owner = new ServerPlayer[1];
+            runs(
+                    helper,
+                    "inventory_drop",
+                    player -> {
+                        owner[0] = player;
+                        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STICK));
+                        player.getInventory().setItem(20, new ItemStack(Items.DIAMOND, 2));
+                    },
+                    () -> {
+                        check(
+                                helper,
+                                owner[0].getMainHandItem().is(Items.STICK),
+                                "inventory_drop must leave the held item");
+                        check(
+                                helper,
+                                owner[0].getInventory().getItem(20).isEmpty(),
+                                "inventory_drop must take the stack out of its slot");
+                        check(
+                                helper,
+                                !owner[0].level()
+                                        .getEntitiesOfClass(
+                                                net.minecraft.world.entity.item.ItemEntity.class,
+                                                owner[0].getBoundingBox().inflate(6),
+                                                e -> e.getItem().is(Items.DIAMOND))
+                                        .isEmpty(),
+                                "inventory_drop must leave the stack on the floor");
+                    });
+        });
         tests.put("event_armor_off", helper -> {
             ServerPlayer[] worn = new ServerPlayer[1];
             runs(

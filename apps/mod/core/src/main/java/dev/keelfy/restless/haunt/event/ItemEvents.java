@@ -34,6 +34,7 @@ import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -740,7 +741,41 @@ final class ItemEvents {
                             for (ExperienceOrb orb : around(player, ExperienceOrb.class, "orb_scatter")) {
                                 shove(player, orb, config.num("speed"), config.num("lift"));
                             }
+                        }),
+                // the item in the main hand drops, as if the player pressed the drop key
+                SimpleEvent.light(
+                        "hand_drop",
+                        EventTag.ITEMS,
+                        player -> !player.getMainHandItem().isEmpty(),
+                        player -> dropFrom(player, player.getInventory().getSelectedSlot())),
+                // a stack from the inventory, not the one in hand, falls out of it
+                SimpleEvent.light(
+                        "inventory_drop",
+                        EventTag.ITEMS,
+                        player -> !droppable(player).isEmpty(),
+                        player -> {
+                            List<Integer> slots = droppable(player);
+                            dropFrom(player, slots.get(player.getRandom().nextInt(slots.size())));
                         }));
+    }
+
+    /** Storage slots with an item in them, except the selected one, which is what {@code hand_drop} takes. */
+    private static List<Integer> droppable(ServerPlayer player) {
+        List<Integer> slots = new ArrayList<>();
+        for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
+            if (i != player.getInventory().getSelectedSlot()
+                    && !player.getInventory().getItem(i).isEmpty()) {
+                slots.add(i);
+            }
+        }
+        return slots;
+    }
+
+    /** Throws the whole stack in a slot out in front of the player, with the usual delay before it can be picked up. */
+    private static void dropFrom(ServerPlayer player, int slot) {
+        ItemStack stack = player.getInventory().getItem(slot);
+        player.getInventory().setItem(slot, ItemStack.EMPTY);
+        player.drop(stack, true, Prediction.SERVER_ONLY);
     }
 
     private static final String DYE = MARK + "_dye";

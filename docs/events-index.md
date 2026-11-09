@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 634 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 636 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -57,11 +57,11 @@ Small block changes, restored or hand-undoable. [blocks]
 
 `wilted_flowers`, `withering_crops`, `lost_growth`, `turning_frame`, `new_sign`, `new_painting`, `glass_wall`, `dry_cauldron`, `dead_ground`, `shifting_floor`, `broken_bed`, `wall_hole`, `cross`, `infested_stone`, `ceiling_crack`, `ice_over`, `portal_out`, `block_blink`, `leak`, `lava_leak`, `mock_grave`, `cave_sign`, `item_trail`, `repaint`, `lava_cauldron`, `cauldron_fills`, `turning_terracotta`, `end_rod_gaze`, `composter_swing`, `banner_skull`, `stairs_flip`, `lectern_swap`
 
-### `event/ItemEvents.java` (31)
+### `event/ItemEvents.java` (33)
 
 Inventory and nearby chests. [items]
 
-`swap_slots`, `hotbar_shift`, `book_page`, `shuffle_chest`, `wear`, `rot`, `tool_look`, `armor_off`, `vanishing_item`, `false_compass`, `map_marker`, `elytra_flicker`, `stew_bowl`, `bucket_pufferfish`, `torch_burn`, `bundle_bone`, `shield_ghost`, `item_throwback`, `phantom_horn`, `armor_dye`, `item_glint`, `item_lore`, `tool_mirage`, `lodestone_lure`, `ghost_author`, `potion_swap`, `vanishing_arrows`, `crossbow_misfire`, `map_elsewhere`, `shy_item`, `orb_scatter`
+`swap_slots`, `hotbar_shift`, `book_page`, `shuffle_chest`, `wear`, `rot`, `tool_look`, `armor_off`, `vanishing_item`, `false_compass`, `map_marker`, `elytra_flicker`, `stew_bowl`, `bucket_pufferfish`, `torch_burn`, `bundle_bone`, `shield_ghost`, `item_throwback`, `phantom_horn`, `armor_dye`, `item_glint`, `item_lore`, `tool_mirage`, `lodestone_lure`, `ghost_author`, `potion_swap`, `vanishing_arrows`, `crossbow_misfire`, `map_elsewhere`, `shy_item`, `orb_scatter`, `hand_drop`, `inventory_drop`
 
 ### `event/Mechanisms.java` (23)
 

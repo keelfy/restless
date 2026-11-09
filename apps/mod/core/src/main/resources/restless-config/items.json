@@ -225,6 +225,12 @@
       "min_distance": 0,
       "speed": 0.5,
       "lift": 0.2
+    },
+    "minecraft:hand_drop": {
+      "weight": 0.4
+    },
+    "minecraft:inventory_drop": {
+      "weight": 0.4
     }
   }
 }

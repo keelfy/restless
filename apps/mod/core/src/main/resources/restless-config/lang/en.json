@@ -1889,6 +1889,14 @@
       "name": "Scattering Orbs",
       "description": "Experience orbs nearby fly away from the player."
     },
+    "minecraft:hand_drop": {
+      "name": "Hand Drop",
+      "description": "The item in the main hand falls out of it, as if the drop key was pressed."
+    },
+    "minecraft:inventory_drop": {
+      "name": "Inventory Drop",
+      "description": "A stack from the inventory, not the one in hand, falls out of it."
+    },
     "minecraft:piglins_stare": {
       "name": "Piglins Stare",
       "description": "Every piglin nearby stops what it is doing and stares at the player for a while."

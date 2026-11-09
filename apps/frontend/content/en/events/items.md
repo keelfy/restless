@@ -4,7 +4,7 @@ title: Items
 
 # Items
 
-40 events.
+42 events.
 
 ## `swap_slots`
 
@@ -201,6 +201,18 @@ Runs when: A dropped item within 5
 Experience orbs fly away from the player
 
 Runs when: An experience orb within 8
+
+## `hand_drop`
+
+The item in the main hand falls out of it, as if the drop key was pressed
+
+Runs when: Something in the main hand
+
+## `inventory_drop`
+
+A stack from the inventory, not the one in hand, falls out of it
+
+Runs when: Something in the inventory besides the held item
 
 ## `line_pulls`
 

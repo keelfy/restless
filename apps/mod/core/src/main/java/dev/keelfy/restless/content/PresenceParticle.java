@@ -9,7 +9,9 @@ import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -23,6 +25,9 @@ public final class PresenceParticle extends SingleQuadParticle {
     private static final int FADE = 20;
 
     private final float spin;
+    /** The age fade alone; {@link #alpha} is this times how squarely the plane faces the camera. */
+    private float life;
+
     private final Quaternionf facing;
     private final Layer layer;
 
@@ -53,13 +58,25 @@ public final class PresenceParticle extends SingleQuadParticle {
         this.oRoll = this.roll;
         super.tick();
         this.roll += spin;
-        this.alpha = PEAK * Math.max(0, Math.min(1.0f, Math.min(age, lifetime - age) / (float) FADE));
+        this.life = PEAK * Math.max(0, Math.min(1.0f, Math.min(age, lifetime - age) / (float) FADE));
     }
 
-    /** Fixed plane instead of facing the camera, so the layers stay in the world as the player moves around. */
+    /**
+     * Fixed plane instead of facing the camera, so the layers stay in the world as the player moves around. A plane
+     * seen edge-on would show as a thin slab and one seen at a slant as a flat disc, so it fades out the more the
+     * camera looks along it; with the planes at all angles, the ones that face the camera carry the cloud.
+     */
     @Override
     public void extract(QuadParticleRenderState state, Camera camera, float partialTickTime) {
         Quaternionf rotation = new Quaternionf(facing).rotateZ(Mth.lerp(partialTickTime, oRoll, roll));
+        Vector3f normal = rotation.transform(new Vector3f(0, 0, 1));
+        Vec3 from = camera.position();
+        Vector3f view = new Vector3f(
+                (float) (Mth.lerp(partialTickTime, xo, x) - from.x()),
+                (float) (Mth.lerp(partialTickTime, yo, y) - from.y()),
+                (float) (Mth.lerp(partialTickTime, zo, z) - from.z()));
+        float squareness = view.lengthSquared() < 1e-6f ? 0 : Math.abs(normal.dot(view.normalize()));
+        this.alpha = life * Mth.smoothstep(Mth.clamp((squareness - 0.15f) / 0.55f, 0, 1));
         extractRotatedQuad(state, camera, rotation, partialTickTime);
     }
 
