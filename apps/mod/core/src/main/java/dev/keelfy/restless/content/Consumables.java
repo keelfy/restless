@@ -17,6 +17,10 @@ public final class Consumables {
     public static void tick(MinecraftServer server) {
         Draughts.tick(server);
         int tick = server.getTickCount();
+        if (tick % RagEntity.EVERY == 0) {
+            RagEntity.tick(server);
+        }
+        DomovoiPorridge.tick(server);
         if (tick % 5 == 0) {
             RestlessKnot.tick(server);
         }

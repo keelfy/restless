@@ -2,155 +2,112 @@ package dev.keelfy.restless.content;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Scan;
-import dev.keelfy.restless.haunt.Wards;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gamerules.GameRules;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import net.minecraft.world.phys.AABB;
 
 /**
- * The domovoi's porridge: a bowl set down in a shut, roofed room. The house spirit eats it over a day, and while it
- * does, the crops and saplings around grow faster and the young animals grow up sooner and breed again sooner. Only one
- * bowl serves a room. The bowl is eaten in {@link #PORTIONS} bites, each a slice of the day the config sets.
+ * The domovoi's porridge: eaten, it gives {@link Content#GROWTH}, which has no end of its own (death or milk takes it
+ * away). While it lasts, the crops and saplings around the eater grow faster and the young animals grow up sooner and
+ * breed again sooner. It also mends a House Key in an anvil, see {@link #mend}.
  */
-public final class DomovoiPorridge extends Block {
-    public static final int PORTIONS = 8;
-    /** How many bites are left, from {@link #PORTIONS} down to one. */
-    public static final IntegerProperty LEFT = IntegerProperty.create("left", 1, PORTIONS);
-
-    private static final VoxelShape SHAPE = Block.box(3, 0, 3, 13, 5, 13);
-    /** How often the bowl works on its surroundings. */
+public final class DomovoiPorridge extends Item {
+    private static final int EAT_TICKS = 32;
+    /** How often the glow of the effect works on its surroundings. */
     private static final int INTERVAL = 40;
 
-    public DomovoiPorridge(BlockBehaviour.Properties properties) {
+    public DomovoiPorridge(Item.Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(LEFT, PORTIONS));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LEFT);
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        return ItemUtils.startUsingInstantly(level, player, hand);
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
+        if (!(entity instanceof ServerPlayer player) || !(level instanceof ServerLevel world)) {
+            return stack;
+        }
+        if (player.hasEffect(Charms.holder(Content.GROWTH))) {
+            player.sendSystemMessage(Component.translatable("message.restless.porridge_eaten"), true);
+            return stack;
+        }
+        player.addEffect(new MobEffectInstance(
+                Charms.holder(Content.GROWTH), MobEffectInstance.INFINITE_DURATION, 0, true, true));
+        world.playSound(null, player.blockPosition(), SoundEvents.GENERIC_EAT.value(), SoundSource.PLAYERS, 1.0f, 0.6f);
+        return ItemUtils.createFilledResult(stack, player, new ItemStack(Items.BOWL));
     }
 
     @Override
-    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState old, boolean moved) {
-        if (level instanceof ServerLevel server && !old.is(this)) {
-            server.scheduleTick(pos, this, INTERVAL);
-        }
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.EAT;
     }
 
-    /** The bowl in hand: set down in a shut, roofed room that has no other bowl, else it stays in hand. */
-    public static final class Bowl extends net.minecraft.world.item.BlockItem {
-        public Bowl(Block block, Item.Properties properties) {
-            super(block, properties);
-        }
-
-        @Override
-        public InteractionResult place(BlockPlaceContext context) {
-            if (!(context.getLevel() instanceof ServerLevel level)) {
-                return super.place(context);
-            }
-            BlockPos at = context.getClickedPos();
-            if (!context.canPlace()) {
-                return InteractionResult.FAIL;
-            }
-            Player player = context.getPlayer();
-            if (!Wards.housed(level, at)) {
-                refuse(player, "message.restless.porridge_open");
-                return InteractionResult.FAIL;
-            }
-            if (served(level, at)) {
-                refuse(player, "message.restless.porridge_served");
-                return InteractionResult.FAIL;
-            }
-            return super.place(context);
-        }
-
-        private static void refuse(@Nullable Player player, String key) {
-            if (player instanceof ServerPlayer server) {
-                server.sendSystemMessage(Component.translatable(key), true);
-            }
-        }
-    }
-
-    /** Whether another bowl already serves the room around {@code at}. */
-    private static boolean served(ServerLevel level, BlockPos at) {
-        int radius = Config.section("consumables").integer("porridge_radius");
-        boolean[] found = {false};
-        Scan.each(level, at, radius, (pos, state) -> found[0] |= state.is(Content.DOMOVOIS_PORRIDGE.get()));
-        return found[0];
-    }
-
-    /** A pass of the bowl: the surroundings grow, a bite is eaten when its slice of the day has gone by. */
     @Override
-    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public int getUseDuration(ItemStack stack, LivingEntity user) {
+        return EAT_TICKS;
+    }
+
+    /** Call every server tick: whoever carries the growth is a source of it. */
+    public static void tick(MinecraftServer server) {
+        if (server.getTickCount() % INTERVAL == 0) {
+            pass(server);
+        }
+    }
+
+    /** One pass over every carrier of the growth. */
+    public static void pass(MinecraftServer server) {
         Config.Section config = Config.section("consumables");
         int radius = config.integer("porridge_radius");
         double extra = config.num("porridge_boost") - 1.0;
-        double speed = level.getGameRules().get(GameRules.RANDOM_TICK_SPEED);
-        double chance = extra * INTERVAL * speed / 4096.0;
-        Scan.each(level, pos, radius, (at, plant) -> {
-            if (grows(plant) && random.nextDouble() < chance) {
-                plant.randomTick(level, at, random);
+        for (ServerLevel level : server.getAllLevels()) {
+            double speed = level.getGameRules().get(GameRules.RANDOM_TICK_SPEED);
+            double chance = extra * INTERVAL * speed / 4096.0;
+            for (ServerPlayer player : level.players()) {
+                if (player.hasEffect(Charms.holder(Content.GROWTH))) {
+                    feed(level, player, radius, chance, (int) (extra * INTERVAL));
+                }
+            }
+        }
+    }
+
+    /** A pass around one carrier: plants may take a random tick more, the young age faster. */
+    private static void feed(ServerLevel level, ServerPlayer player, int radius, double chance, int boost) {
+        Scan.each(level, player.blockPosition(), radius, (at, plant) -> {
+            if (grows(plant) && level.getRandom().nextDouble() < chance) {
+                plant.randomTick(level, at, level.getRandom());
             }
         });
-        int boost = (int) (extra * INTERVAL);
         for (AgeableMob young : level.getEntitiesOfClass(
-                AgeableMob.class, new net.minecraft.world.phys.AABB(pos).inflate(radius), m -> m.getAge() != 0)) {
+                AgeableMob.class, new AABB(player.blockPosition()).inflate(radius), m -> m.getAge() != 0)) {
             young.setAge(
                     young.getAge() < 0 ? Math.min(0, young.getAge() + boost) : Math.max(0, young.getAge() - INTERVAL));
         }
         level.sendParticles(
-                ParticleTypes.HAPPY_VILLAGER,
-                pos.getX() + 0.5,
-                pos.getY() + 0.5,
-                pos.getZ() + 0.5,
-                2,
-                0.2,
-                0.1,
-                0.2,
-                0.0);
-        long slice = Math.max(1, config.integer("porridge_ticks") / PORTIONS);
-        BlockState next = state;
-        if (level.getGameTime() % slice < INTERVAL) {
-            if (state.getValue(LEFT) <= 1) {
-                level.removeBlock(pos, false);
-                level.playSound(null, pos, SoundEvents.GENERIC_EAT.value(), SoundSource.BLOCKS, 0.6f, 0.6f);
-                return;
-            }
-            next = state.setValue(LEFT, state.getValue(LEFT) - 1);
-            level.setBlock(pos, next, 3);
-            level.playSound(null, pos, SoundEvents.GENERIC_EAT.value(), SoundSource.BLOCKS, 0.3f, 0.5f);
-        }
-        level.scheduleTick(pos, this, INTERVAL);
+                ParticleTypes.HAPPY_VILLAGER, player.getX(), player.getY() + 0.5, player.getZ(), 2, 0.4, 0.3, 0.4, 0.0);
     }
 
     /** What gets the extra growth: crops, saplings and a few plants besides. */

@@ -12,7 +12,7 @@ Poltergeist essence + gold ingot + string. In the off hand it pulls every droppe
 
 ## Shade: Dark Eye
 
-Shade essence + ender eye. In the off hand you see in the dark, living things glow through walls for a while, and the spirits around you are marked by columns of soul fire.
+Shade essence + ender eye. In the off hand you see in the dark, living things glow through walls for a while, and the spirits around you show where they stand as a faint dark-grey haze with a few motes of ash: easy to miss, plain once you look.
 
 ## Nix: Drowned Stone
 

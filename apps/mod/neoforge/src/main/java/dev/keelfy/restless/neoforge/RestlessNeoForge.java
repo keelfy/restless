@@ -4,6 +4,7 @@ import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Darkroom;
 import dev.keelfy.restless.content.EyesType;
+import dev.keelfy.restless.content.Presence;
 import dev.keelfy.restless.debug.DebugMenu;
 import dev.keelfy.restless.debug.DebugPayload;
 import dev.keelfy.restless.debug.DebugScreen;
@@ -70,6 +71,7 @@ public final class RestlessNeoForge {
         RestlessSettings.register(modBus, container);
         Restless.init();
         EyesType.init();
+        Presence.init();
         if (ModList.get().isLoaded("plasmovoice")) {
             VoiceAddon.register();
         }

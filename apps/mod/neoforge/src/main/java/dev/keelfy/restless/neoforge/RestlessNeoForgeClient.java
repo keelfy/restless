@@ -16,8 +16,11 @@ import dev.keelfy.restless.content.MimicRenderer;
 import dev.keelfy.restless.content.MistParticle;
 import dev.keelfy.restless.content.PhotoTooltip;
 import dev.keelfy.restless.content.Picture;
+import dev.keelfy.restless.content.Presence;
+import dev.keelfy.restless.content.PresenceParticle;
 import dev.keelfy.restless.content.RagEntity;
 import dev.keelfy.restless.content.SightingMark;
+import dev.keelfy.restless.content.SightingMarkHud;
 import dev.keelfy.restless.haunt.Dimming;
 import dev.keelfy.restless.haunt.HeadTurn;
 import dev.keelfy.restless.haunt.RedVignette;
@@ -25,6 +28,7 @@ import dev.keelfy.restless.haunt.SanityOverlay;
 import dev.keelfy.restless.haunt.ScreenOverlay;
 import java.util.List;
 import net.minecraft.client.color.block.BlockTintSources;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -41,6 +45,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
@@ -74,6 +79,11 @@ public final class RestlessNeoForgeClient {
                 VanillaGuiLayers.CAMERA_OVERLAYS,
                 Identifier.fromNamespaceAndPath(Restless.MOD_ID, "screen"),
                 ScreenOverlay::render);
+        // Last of ours, so a mark stays readable in the dark.
+        event.registerAbove(
+                VanillaGuiLayers.CAMERA_OVERLAYS,
+                Identifier.fromNamespaceAndPath(Restless.MOD_ID, "sighting_marks"),
+                SightingMarkHud::render);
     }
 
     @SubscribeEvent
@@ -104,9 +114,7 @@ public final class RestlessNeoForgeClient {
         event.registerBlockEntityRenderer(
                 (BlockEntityType<MimicBlockEntity>) Content.MIMIC_ENTITY.get(), MimicRenderer::new);
         event.registerEntityRenderer((EntityType<RagEntity>) Content.RAG_ENTITY.get(), ThrownItemRenderer::new);
-        event.registerEntityRenderer(
-                (EntityType<SightingMark>) Content.MARK_ENTITY.get(),
-                context -> new ThrownItemRenderer<>(context, 1.5f, true));
+        event.registerEntityRenderer((EntityType<SightingMark>) Content.MARK_ENTITY.get(), NoopRenderer::new);
     }
 
     /** Ghost leaves are tinted as the leaves they copy; pale oak's are not tinted at all. */
@@ -139,9 +147,17 @@ public final class RestlessNeoForgeClient {
         HeadTurn.frame(event.getPartialTick());
     }
 
+    /** The haze shader's pipelines, so the renderer compiles them with the vanilla ones. */
+    @SubscribeEvent
+    public static void registerPipelines(RegisterRenderPipelinesEvent event) {
+        event.registerPipeline(HazeLayer.PIPELINE);
+        event.registerOitPipelineSet(HazeLayer.OIT);
+    }
+
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet((SimpleParticleType) Content.MIST.get(), MistParticle.Provider::new);
         event.registerSpriteSet(EyesType.type(), EyesParticle.Provider::new);
+        event.registerSpriteSet(Presence.type(), sprites -> new PresenceParticle.Provider(sprites, HazeLayer.LAYER));
     }
 }

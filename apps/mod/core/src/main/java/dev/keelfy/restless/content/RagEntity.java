@@ -1,11 +1,14 @@
 package dev.keelfy.restless.content;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Session;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -27,8 +30,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
 /**
- * A thrown rag. What it strikes, if a mob that is no boss, is smeared for a while and every mob of its kind near it
- * goes for it; the rag is spent either way.
+ * A thrown rag. What it strikes, if a mob that is no boss, is smeared until it dies and every mob of its kind near it
+ * goes for it; the rag is spent either way. The smear is kept for the running world only.
  */
 public final class RagEntity extends ThrowableItemProjectile {
     private static final TagKey<EntityType<?>> BOSSES =
@@ -58,8 +61,8 @@ public final class RagEntity extends ThrowableItemProjectile {
         if (level() instanceof ServerLevel level
                 && hit.getEntity() instanceof Mob mob
                 && !boss(mob)
-                && getOwner() instanceof ServerPlayer thrower) {
-            smear(thrower, level, mob);
+                && getOwner() instanceof ServerPlayer) {
+            smear(level, mob);
         }
     }
 
@@ -87,24 +90,34 @@ public final class RagEntity extends ThrowableItemProjectile {
                 || BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(mob.getType()).is(BOSSES);
     }
 
-    /** Marks {@code victim}: for a while every mob of its type within reach targets it, until it dies. */
-    private static void smear(ServerPlayer thrower, ServerLevel level, Mob victim) {
-        Config.Section config = Config.section("consumables");
-        int ticks = config.integer("rag_ticks");
-        victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, ticks, 0, true, false));
+    /** The mobs a rag has smeared: their kin go for them until they die. */
+    private static final List<Mob> SMEARED = Session.SERVER.keep(new ArrayList<>());
+    /** How often {@link #tick} wants calling; the glow outlasts a pass. */
+    static final int EVERY = 10;
+
+    /** Marks {@code victim}: every mob of its type within reach targets it, until it dies. */
+    private static void smear(ServerLevel level, Mob victim) {
+        if (!SMEARED.contains(victim)) {
+            SMEARED.add(victim);
+        }
         level.playSound(null, victim.blockPosition(), SoundEvents.WARDEN_AGITATED, SoundSource.HOSTILE, 0.8f, 1.6f);
-        int every = 10;
-        Scheduler.repeat(thrower, 0, every, (p, n) -> {
-            if (!victim.isAlive() || victim.level() != level) {
-                return false;
+    }
+
+    /** Call every {@link #EVERY} ticks: the smeared glow, and their kin go for them. Dead ones are forgotten. */
+    public static void tick(MinecraftServer server) {
+        double radius = Config.section("consumables").num("rag_radius");
+        SMEARED.removeIf(victim -> {
+            if (!victim.isAlive() || !(victim.level() instanceof ServerLevel level)) {
+                return true;
             }
+            victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, EVERY * 3, 0, true, false));
             for (Mob kin : level.getEntitiesOfClass(
                     Mob.class,
-                    victim.getBoundingBox().inflate(config.num("rag_radius")),
+                    victim.getBoundingBox().inflate(radius),
                     m -> m != victim && m.getType() == victim.getType() && m.isAlive())) {
                 kin.setTarget(victim);
             }
-            return (n + 1) * every < ticks;
+            return false;
         });
     }
 }

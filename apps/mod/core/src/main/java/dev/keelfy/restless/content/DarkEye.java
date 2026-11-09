@@ -8,7 +8,6 @@ import dev.keelfy.restless.haunt.Sense;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -73,9 +72,8 @@ public class DarkEye extends Item {
         return spots;
     }
 
-    /** A column of soul fire rises where each spirit in reach is, for as long as the eye sees. */
+    /** Each spirit in reach shows as its faint haze where it stands, for as long as the eye sees. */
     private static void mark(ServerPlayer player, ServerLevel level, Config.Section config, int ticks) {
-        double height = config.num("eye_column_height");
         List<Vec3> spots = spots(player, HauntData.get(level.getServer()), config.num("eye_radius"));
         if (spots.isEmpty()) {
             return;
@@ -83,9 +81,7 @@ public class DarkEye extends Item {
         int every = 10;
         Scheduler.repeat(player, 0, every, (p, n) -> {
             for (Vec3 at : spots) {
-                for (double y = 0; y <= height; y += 0.5) {
-                    level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, at.x, at.y + y, at.z, 1, 0.1, 0.0, 0.1, 0.0);
-                }
+                Presence.emit(level, at);
             }
             return (n + 1) * every < ticks;
         });

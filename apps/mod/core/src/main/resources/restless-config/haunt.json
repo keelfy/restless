@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "director": {
     "check_interval_ticks": 20,
     "default_spirits": 1,
@@ -281,8 +281,7 @@
     "amulet_cooldown_ticks": 40,
     "eye_radius": 32,
     "eye_ticks": 200,
-    "eye_cooldown_ticks": 1200,
-    "eye_column_height": 3.0
+    "eye_cooldown_ticks": 1200
   },
   "grave": {
     "check_ticks": 20,
@@ -447,33 +446,26 @@
     "trickster_decoys": 3
   },
   "consumables": {
-    "still_clear_ticks": 24000,
     "still_storm_ticks": 12000,
-    "ash_ticks": 3600,
+    "ash_ticks": 6000,
     "ash_reach": 24,
     "ash_step": 1.4,
     "ash_print_ticks": 300,
     "ash_arrive": 4,
-    "feather_ticks": 2400,
+    "feather_ticks": 6000,
     "feather_radius": 128,
-    "feather_rescan_ticks": 40,
-    "dust_trade_xp": 0,
-    "rag_ticks": 300,
     "rag_radius": 24,
     "oil_charges": 30,
     "oil_light": 7,
     "oil_bonus": 0.5,
-    "omen_ticks": 24000,
     "omen_radius": 16,
     "omen_warn_ticks": 100,
-    "knot_ticks": 12000,
     "knot_radius": 8,
-    "porridge_ticks": 24000,
     "porridge_radius": 16,
     "porridge_boost": 3,
     "porridge_repair": 8,
-    "dusk_ticks": 24000,
     "dusk_radius": 12,
+    "dust_blocks": 64,
     "mark_ticks": 72000,
     "mark_max": 8,
     "mark_range": 10,

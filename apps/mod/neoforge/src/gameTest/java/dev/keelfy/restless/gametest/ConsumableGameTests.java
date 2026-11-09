@@ -4,7 +4,9 @@ import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.AshFootprint;
 import dev.keelfy.restless.content.Charges;
+import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.DomovoiPorridge;
 import dev.keelfy.restless.content.Draughts;
 import dev.keelfy.restless.content.DuskSalt;
 import dev.keelfy.restless.content.MagpieFeather;
@@ -111,9 +113,8 @@ final class ConsumableGameTests {
                     "the water must clear rain and thunder");
             check(
                     helper,
-                    server.getWeatherData().getClearWeatherTime()
-                            == Config.section("consumables").integer("still_clear_ticks"),
-                    "the clear sky must last the day");
+                    server.getWeatherData().getClearWeatherTime() == 0,
+                    "the sky must not be held clear, only cleared");
             player.setShiftKeyDown(true);
             check(helper, Draughts.still(player, helper.getLevel()), "sneaking, the water must take effect");
             check(
@@ -207,11 +208,14 @@ final class ConsumableGameTests {
             level.setBlock(chest, Blocks.CHEST.defaultBlockState(), 3);
             RandomizableContainer container = (RandomizableContainer) level.getBlockEntity(chest);
             container.setLootTable(BuiltInLootTables.SIMPLE_DUNGEON);
+            BlockPos barrel = chest.offset(4, 0, 0);
+            level.setBlock(barrel, Blocks.BARREL.defaultBlockState(), 3);
+            ((RandomizableContainer) level.getBlockEntity(barrel)).setLootTable(BuiltInLootTables.SIMPLE_DUNGEON);
             player.setPos(Vec3.atBottomCenterOf(chest.offset(5, 0, 0)));
             check(
                     helper,
                     chest.equals(MagpieFeather.nearest(level, player.blockPosition(), 128)),
-                    "the feather must find the unopened chest");
+                    "the feather must find the unopened chest, and pass over a barrel nearer");
             ItemStack feather = new ItemStack(Content.MAGPIE_FEATHER.get(), 2);
             player.setItemInHand(InteractionHand.MAIN_HAND, feather);
             check(
@@ -224,14 +228,17 @@ final class ConsumableGameTests {
                     !chest.equals(MagpieFeather.nearest(level, player.blockPosition(), 128)),
                     "a chest whose loot is rolled must not be pointed at");
             level.setBlock(chest, Blocks.AIR.defaultBlockState(), 3);
+            level.setBlock(barrel, Blocks.AIR.defaultBlockState(), 3);
             discard(player);
             helper.succeed();
         });
-        tests.put("changeling_dust_changes_a_block_within_its_family_and_a_new_villager", helper -> {
+        tests.put("changeling_dust_changes_a_joined_body_within_its_family_and_a_novice_villager", helper -> {
             ServerPlayer player = fresh(helper);
             ServerLevel level = helper.getLevel();
             BlockPos at = helper.absolutePos(new BlockPos(2, 1, 2));
+            BlockPos joined = at.east();
             level.setBlock(at, Blocks.WOOL.red().defaultBlockState(), 3);
+            level.setBlock(joined, Blocks.WOOL.red().defaultBlockState(), 3);
             ItemStack dust = new ItemStack(Content.CHANGELING_DUST.get(), 3);
             check(helper, useOn(level, player, dust, at).consumesAction(), "the dust must turn wool into wool");
             check(
@@ -239,13 +246,19 @@ final class ConsumableGameTests {
                     level.getBlockState(at).is(net.minecraft.tags.BlockTags.WOOL)
                             && !level.getBlockState(at).is(Blocks.WOOL.red()),
                     "wool must become another wool");
+            check(
+                    helper,
+                    level.getBlockState(joined).getBlock()
+                            == level.getBlockState(at).getBlock(),
+                    "the joined wool must turn to the same wool");
             level.setBlock(at, Blocks.DIAMOND_ORE.defaultBlockState(), 3);
             check(helper, !useOn(level, player, dust, at).consumesAction(), "an ore must be left alone");
             check(helper, level.getBlockState(at).is(Blocks.DIAMOND_ORE), "an ore must stay what it is");
             level.setBlock(at, Blocks.CHEST.defaultBlockState(), 3);
             check(helper, !useOn(level, player, dust, at).consumesAction(), "a block entity must be left alone");
             level.setBlock(at, Blocks.AIR.defaultBlockState(), 3);
-            check(helper, dust.getCount() == 2, "only the turned block may spend dust");
+            level.setBlock(joined, Blocks.AIR.defaultBlockState(), 3);
+            check(helper, dust.getCount() == 2, "only the turned body may spend dust");
             Villager villager = helper.spawnWithNoFreeWill(EntityTypes.VILLAGER, 4, 1, 4);
             villager.setVillagerData(villager.getVillagerData()
                     .withProfession(level.registryAccess()
@@ -256,16 +269,24 @@ final class ConsumableGameTests {
                     helper,
                     dust.interactLivingEntity(player, villager, InteractionHand.MAIN_HAND)
                             .consumesAction(),
-                    "a villager who never traded must be dealt new trades");
+                    "a novice must be dealt new trades");
             check(helper, villager.getOffers() != offers, "the trades must be new");
             villager.setVillagerXp(5);
             var traded = villager.getOffers();
             check(
                     helper,
+                    dust.interactLivingEntity(player, villager, InteractionHand.MAIN_HAND)
+                            .consumesAction(),
+                    "a novice who traded must be dealt new trades too");
+            check(helper, villager.getOffers() != traded, "the trades must be new");
+            villager.setVillagerData(villager.getVillagerData().withLevel(2));
+            var risen = villager.getOffers();
+            check(
+                    helper,
                     !dust.interactLivingEntity(player, villager, InteractionHand.MAIN_HAND)
                             .consumesAction(),
-                    "a villager who traded must be left as they are");
-            check(helper, villager.getOffers() == traded, "their trades must stand");
+                    "a villager past novice must be left as they are");
+            check(helper, villager.getOffers() == risen, "their trades must stand");
             discard(player);
             helper.succeed();
         });
@@ -372,23 +393,16 @@ final class ConsumableGameTests {
             discard(player);
             helper.succeed();
         });
-        HauntEventGameTests.TIMEOUT.put("omen_candle_burns_a_day_and_announces_harm", 200);
-        tests.put("omen_candle_burns_a_day_and_announces_harm", helper -> {
+        HauntEventGameTests.TIMEOUT.put("omen_candle_announces_harm_then_goes_out_and_lights_again", 200);
+        tests.put("omen_candle_announces_harm_then_goes_out_and_lights_again", helper -> {
             ServerPlayer player = fresh(helper);
             ServerLevel level = helper.getLevel();
             BlockPos at = helper.absolutePos(new BlockPos(3, 1, 3));
             level.setBlock(at, Content.OMEN_CANDLE.get().defaultBlockState(), 3);
             player.setPos(Vec3.atBottomCenterOf(at.offset(2, 0, 0)));
             check(helper, !OmenCandle.warn(player), "an unlit candle must not warn");
-            level.getBlockState(at)
-                    .useItemOn(
-                            new ItemStack(Items.FLINT_AND_STEEL),
-                            level,
-                            player,
-                            InteractionHand.MAIN_HAND,
-                            new BlockHitResult(Vec3.atCenterOf(at), Direction.UP, at, false));
+            light(level, player, at);
             check(helper, AbstractCandleBlock.isLit(level.getBlockState(at)), "fire must light it, as a candle");
-            check(helper, OmenCandle.warn(player), "a lit candle near must warn");
             player.setPos(Vec3.atBottomCenterOf(at.offset(40, 0, 0)));
             check(helper, !OmenCandle.warn(player), "a candle far away must not");
             player.setPos(Vec3.atBottomCenterOf(at.offset(2, 0, 0)));
@@ -424,10 +438,18 @@ final class ConsumableGameTests {
                     Director.fireUnlessWarded(player, harm, player.position()) == Director.Outcome.FIRED,
                     "the event must go ahead");
             check(helper, ran.get() == 0, "the candle's wail must come before the harm");
+            check(helper, !OmenCandle.warn(player), "a candle already wailing is not used twice");
+            check(helper, AbstractCandleBlock.isLit(level.getBlockState(at)), "it burns until the harm lands");
             helper.runAfterDelay(Config.section("consumables").integer("omen_warn_ticks") + 10, () -> {
                 check(helper, ran.get() == 1, "the harm must follow the warning");
-                level.getBlockState(at).tick(level, at, level.getRandom());
-                check(helper, level.getBlockState(at).isAir(), "a day on, the candle must be gone");
+                check(
+                        helper,
+                        level.getBlockState(at).getBlock() instanceof OmenCandle
+                                && !AbstractCandleBlock.isLit(level.getBlockState(at)),
+                        "once the harm has landed the candle must go out, and stay");
+                light(level, player, at);
+                check(helper, AbstractCandleBlock.isLit(level.getBlockState(at)), "fire must light it again");
+                level.setBlock(at, Blocks.AIR.defaultBlockState(), 3);
                 discard(player);
                 helper.succeed();
             });
@@ -442,6 +464,14 @@ final class ConsumableGameTests {
             check(helper, knot.getCount() == 2, "tying must spend a knot");
             check(helper, !useOn(level, player, knot, chest).consumesAction(), "one knot to a container");
             check(helper, knot.getCount() == 2, "a second knot must stay in hand");
+            player.setShiftKeyDown(true);
+            check(helper, useOn(level, player, knot, chest).consumesAction(), "sneaking, the knot must come off");
+            check(
+                    helper,
+                    player.getInventory().countItem(Content.RESTLESS_KNOT.get()) == 3,
+                    "the knot taken back must be given back");
+            player.setShiftKeyDown(false);
+            check(helper, useOn(level, player, knot, chest).consumesAction(), "the container may be tied again");
             ItemEntity dropped = new ItemEntity(
                     level, chest.getX() + 4.5, chest.getY() + 1, chest.getZ() + 0.5, new ItemStack(Items.DIAMOND, 3));
             dropped.setPickUpDelay(0);
@@ -461,8 +491,15 @@ final class ConsumableGameTests {
             check(helper, !lost.isRemoved(), "a full container must let items lie");
             lost.discard();
             level.setBlock(chest, Blocks.AIR.defaultBlockState(), 3);
-            Spells spells = Spells.get(level.getServer());
-            spells.all(Spells.Kind.KNOT).forEach(spells::remove);
+            RestlessKnot.tick(level.getServer());
+            check(
+                    helper,
+                    level.getEntitiesOfClass(ItemEntity.class, new AABB(chest).inflate(2)).stream()
+                            .anyMatch(d -> d.getItem().is(Content.RESTLESS_KNOT.get())),
+                    "a container that is gone must give up the knot");
+            level.getEntitiesOfClass(ItemEntity.class, new AABB(chest).inflate(2))
+                    .forEach(ItemEntity::discard);
+            check(helper, Spells.get(level.getServer()).all(Spells.Kind.KNOT).isEmpty(), "no knot may be left");
             discard(player);
             helper.succeed();
         });
@@ -479,6 +516,16 @@ final class ConsumableGameTests {
             ItemStack salt = new ItemStack(Content.DUSK_SALT.get(), 2);
             check(helper, useOn(level, player, salt, at).consumesAction() && salt.getCount() == 1, "salt is scattered");
             check(helper, DuskSalt.keeps(level, zombie, EntitySpawnReason.NATURAL), "salt must keep a hostile out");
+            player.setShiftKeyDown(true);
+            check(
+                    helper,
+                    useOn(level, player, salt, at).consumesAction()
+                            && player.getInventory().countItem(Content.DUSK_SALT.get()) == 2,
+                    "sneaking, the salt must be swept up and given back");
+            check(helper, !DuskSalt.keeps(level, zombie, EntitySpawnReason.NATURAL), "swept salt keeps nothing out");
+            player.setShiftKeyDown(false);
+            check(helper, useOn(level, player, salt, at).consumesAction(), "the salt may be scattered again");
+            check(helper, DuskSalt.keeps(level, zombie, EntitySpawnReason.NATURAL), "scattered again, it must keep");
             check(helper, !DuskSalt.keeps(level, zombie, EntitySpawnReason.SPAWNER), "a spawner must not be stopped");
             check(helper, !DuskSalt.keeps(level, cow, EntitySpawnReason.NATURAL), "a cow is no hostile");
             zombie.setPos(Vec3.atBottomCenterOf(at.offset(30, 1, 0)));
@@ -491,7 +538,7 @@ final class ConsumableGameTests {
             discard(player);
             helper.succeed();
         });
-        tests.put("sighting_mark_stands_glows_fades_and_is_limited", helper -> {
+        tests.put("sighting_mark_stands_is_named_fades_and_is_limited", helper -> {
             ServerPlayer player = fresh(helper);
             ServerLevel level = helper.getLevel();
             BlockPos at = helper.absolutePos(new BlockPos(2, 0, 2));
@@ -509,8 +556,8 @@ final class ConsumableGameTests {
             check(helper, stands.size() == max, "the limit must stand; saw " + stands.size());
             check(
                     helper,
-                    stands.get(0).isCurrentlyGlowing() && stands.get(0).hasCustomName(),
-                    "a mark must glow and carry its name");
+                    !stands.get(0).isCurrentlyGlowing() && stands.get(0).hasCustomName(),
+                    "a mark is drawn on the screen, not outlined, and carries its name");
             check(helper, Spells.get(level.getServer()).marks(player.getUUID()) == max, "the marks must be counted");
             SightingMark old = stands.get(0);
             old.setUp(
@@ -569,50 +616,45 @@ final class ConsumableGameTests {
                     "a broken mimic must give the pressed clay back");
             drops.forEach(ItemEntity::discard);
             level.setBlock(mimic, Blocks.AIR.defaultBlockState(), 3);
+            ItemStack log = new ItemStack(Content.MIMIC_CLAY.get(), 2);
+            log.set(
+                    Content.LOOK.get(),
+                    new dev.keelfy.restless.content.Look(Blocks.OAK_LOG
+                            .defaultBlockState()
+                            .setValue(net.minecraft.world.level.block.RotatedPillarBlock.AXIS, Direction.Axis.X)));
+            check(helper, useOn(level, player, log, stone).consumesAction(), "the log look must be set down");
+            check(
+                    helper,
+                    ((MimicBlockEntity) level.getBlockEntity(mimic))
+                                    .look()
+                                    .getValue(net.minecraft.world.level.block.RotatedPillarBlock.AXIS)
+                            == Direction.Axis.Y,
+                    "set on a top face, the log look must stand upright");
+            level.setBlock(mimic, Blocks.AIR.defaultBlockState(), 3);
             discard(player);
             helper.succeed();
         });
-        tests.put("domovois_porridge_drops_only_whole", helper -> {
-            ServerLevel level = helper.getLevel();
-            BlockPos at = helper.absolutePos(new BlockPos(4, 2, 4));
-            var block = Content.DOMOVOIS_PORRIDGE.get();
-            for (int left = 1; left <= 8; left++) {
-                var state = block.defaultBlockState().setValue(dev.keelfy.restless.content.DomovoiPorridge.LEFT, left);
-                var drops = state.getDrops(new net.minecraft.world.level.storage.loot.LootParams.Builder(level)
-                        .withParameter(
-                                net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN,
-                                Vec3.atCenterOf(at))
-                        .withParameter(
-                                net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_STATE, state)
-                        .withParameter(
-                                net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL,
-                                ItemStack.EMPTY));
-                check(helper, drops.size() == (left == 8 ? 1 : 0), "only a whole bowl drops, left=" + left);
-            }
-            helper.succeed();
-        });
-        tests.put("domovois_porridge_feeds_growth_in_one_shut_room", helper -> {
+        tests.put("domovois_porridge_gives_growth_until_death_and_mends_a_key", helper -> {
             ServerPlayer player = fresh(helper);
             ServerLevel level = helper.getLevel();
             BlockPos at = helper.absolutePos(new BlockPos(4, 2, 4));
-            room(helper, at);
-            BlockPos floor = at.below();
+            player.setPos(Vec3.atBottomCenterOf(at));
+            var growth = Charms.holder(Content.GROWTH);
             ItemStack bowl = new ItemStack(Content.DOMOVOIS_PORRIDGE_ITEM.get(), 3);
-            BlockPos open = helper.absolutePos(new BlockPos(30, 0, 30));
-            level.setBlock(open, Blocks.STONE.defaultBlockState(), 3);
-            check(helper, !useOn(level, player, bowl, open).consumesAction(), "an open place must refuse the bowl");
-            check(helper, bowl.getCount() == 3, "a refused bowl stays in hand");
-            check(helper, useOn(level, player, bowl, floor).consumesAction(), "a shut, roofed room takes the bowl");
+            ItemStack left = bowl.getItem().finishUsingItem(bowl, level, player);
+            check(helper, player.hasEffect(growth), "the porridge must give growth");
+            check(helper, player.getEffect(growth).isInfiniteDuration(), "the growth must have no end of its own");
             check(
                     helper,
-                    level.getBlockState(at).is(Content.DOMOVOIS_PORRIDGE.get()),
-                    "the bowl must stand in the room");
+                    left.is(Items.BOWL) || player.getInventory().countItem(Items.BOWL) == 1,
+                    "the bowl comes back");
+            ItemStack second = new ItemStack(Content.DOMOVOIS_PORRIDGE_ITEM.get(), 2);
             check(
                     helper,
-                    !useOn(level, player, bowl, floor.offset(1, 0, 1)).consumesAction(),
-                    "one bowl serves a room");
-            // Soul sand with a nether wart on it needs no light to grow; sixty give the bowl a fair chance.
-            BlockPos patch = at.offset(6, 0, 0);
+                    second.getItem().finishUsingItem(second, level, player) == second && second.getCount() == 2,
+                    "while the growth lasts a second bowl stays whole");
+            // Soul sand with a nether wart on it needs no light to grow; sixty give the eater a fair chance.
+            BlockPos patch = at.offset(3, 0, 0);
             for (int x = 0; x < 6; x++) {
                 for (int z = 0; z < 10; z++) {
                     level.setBlock(patch.offset(x, -1, z), Blocks.SOUL_SAND.defaultBlockState(), 3);
@@ -624,9 +666,8 @@ final class ConsumableGameTests {
             calf.setPos(Vec3.atBottomCenterOf(at));
             level.addFreshEntity(calf);
             int young = calf.getAge();
-            var state = level.getBlockState(at);
             for (int i = 0; i < 300; i++) {
-                state.tick(level, at, level.getRandom());
+                DomovoiPorridge.pass(level.getServer());
             }
             boolean grown = false;
             for (int x = 0; x < 6 && !grown; x++) {
@@ -636,8 +677,9 @@ final class ConsumableGameTests {
                             > 0;
                 }
             }
-            check(helper, grown, "the crops around must grow faster");
+            check(helper, grown, "the crops around the eater must grow faster");
             check(helper, calf.getAge() > young, "the calf must grow up sooner");
+            player.removeEffect(growth);
             ItemStack key = new ItemStack(Content.HOUSE_KEY.get());
             key.setDamageValue(10);
             ItemStack mended = Restless.onAnvil(key, new ItemStack(Content.DOMOVOIS_PORRIDGE_ITEM.get()));
@@ -671,6 +713,17 @@ final class ConsumableGameTests {
             helper.getLevel()
                     .setBlock(pos, shell ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 3);
         }
+    }
+
+    /** Lights an omen candle with flint and steel, as a player would. */
+    private static void light(ServerLevel level, ServerPlayer player, BlockPos at) {
+        level.getBlockState(at)
+                .useItemOn(
+                        new ItemStack(Items.FLINT_AND_STEEL),
+                        level,
+                        player,
+                        InteractionHand.MAIN_HAND,
+                        new BlockHitResult(Vec3.atCenterOf(at), Direction.UP, at, false));
     }
 
     private static ServerPlayer fresh(GameTestHelper helper) {

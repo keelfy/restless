@@ -2,8 +2,11 @@ package dev.keelfy.restless.content;
 
 import dev.keelfy.restless.config.Config;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,9 +31,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * The trickster's dust: on a block it turns it into another of its family (wool to wool, log to log, stone to stone),
- * on a villager who has never traded it deals their trades anew. Ores, spawners and anything with a block entity are
- * outside every family.
+ * The trickster's dust: on a block it turns the whole joined body of that block, up to {@code consumables.dust_blocks},
+ * into another of its family (wool to wool, log to log, stone to stone); on a novice villager, traded with or not, it
+ * deals their trades anew. Ores, spawners and anything with a block entity are outside every family.
  */
 public final class ChangelingDust extends Item {
     private static final List<TagKey<Block>> FAMILIES = List.of(
@@ -63,14 +66,35 @@ public final class ChangelingDust extends Item {
         if (other == null) {
             return InteractionResult.PASS;
         }
-        level.setBlock(pos, other.withPropertiesOf(state), 3);
-        level.sendParticles(
-                ParticleTypes.WITCH, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 16, 0.4, 0.4, 0.4, 0.05);
+        for (BlockPos at :
+                body(level, pos, state.getBlock(), Config.section("consumables").integer("dust_blocks"))) {
+            level.setBlock(at, other.withPropertiesOf(level.getBlockState(at)), 3);
+            level.sendParticles(
+                    ParticleTypes.WITCH, at.getX() + 0.5, at.getY() + 0.5, at.getZ() + 0.5, 3, 0.4, 0.4, 0.4, 0.05);
+        }
         level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.BLOCKS, 1.0f, 1.4f);
         if (context.getPlayer() != null) {
             context.getItemInHand().consume(1, context.getPlayer());
         }
         return InteractionResult.SUCCESS_SERVER;
+    }
+
+    /** The blocks of {@code block} joined to {@code start} face to face, nearest first, at most {@code limit}. */
+    private static List<BlockPos> body(ServerLevel level, BlockPos start, Block block, int limit) {
+        List<BlockPos> found = new ArrayList<>();
+        Set<BlockPos> seen = new HashSet<>(Set.of(start));
+        found.add(start);
+        for (int i = 0; i < found.size() && found.size() < limit; i++) {
+            for (Direction side : Direction.values()) {
+                BlockPos next = found.get(i).relative(side);
+                if (found.size() < limit
+                        && seen.add(next)
+                        && level.getBlockState(next).is(block)) {
+                    found.add(next);
+                }
+            }
+        }
+        return found;
     }
 
     /**
@@ -108,7 +132,7 @@ public final class ChangelingDust extends Item {
                         .is(net.minecraft.world.entity.npc.villager.VillagerProfession.NONE)) {
             return InteractionResult.PASS;
         }
-        if (villager.getVillagerXp() > Config.section("consumables").integer("dust_trade_xp")) {
+        if (villager.getVillagerData().level() > 1) {
             if (player instanceof ServerPlayer server) {
                 server.sendSystemMessage(Component.translatable("message.restless.dust_traded"), true);
             }

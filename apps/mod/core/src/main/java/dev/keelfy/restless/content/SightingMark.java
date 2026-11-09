@@ -16,8 +16,9 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A pale figure that marks a spot. It glows, so it shows through walls as far as the game sends it, it takes no blows
- * and nothing targets it, and it fades after {@code consumables.mark_ticks}. A player may have only so many.
+ * A mark on a spot, drawn on every screen that has it as a waypoint, see {@link SightingMarkHud}: it shows through
+ * walls as far as the game sends it. It takes no blows and nothing targets it, and it fades after
+ * {@code consumables.mark_ticks}. A player may have only so many.
  */
 public final class SightingMark extends Entity implements ItemSupplier {
     private @Nullable UUID owner;
@@ -27,7 +28,6 @@ public final class SightingMark extends Entity implements ItemSupplier {
         super(type, level);
         noPhysics = true;
         setNoGravity(true);
-        setGlowingTag(true);
     }
 
     /** Sets a mark down for {@code owner} at the entity's place; it lasts the config's time from now. */

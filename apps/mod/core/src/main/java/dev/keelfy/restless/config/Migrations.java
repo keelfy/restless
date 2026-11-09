@@ -23,10 +23,11 @@ public final class Migrations {
      * Version 2 of haunt: the world-wide {@code danger} section became per-spirit {@code power}; its progression keys
      * are gone. Version 3: {@code hardcore}, {@code swaps} and {@code journal} are player settings now (see
      * {@link Settings}), no longer part of the data files. Version 4: the charms were rebalanced, see
-     * {@link #charmsRebalance}.
+     * {@link #charmsRebalance}. Version 5: the Dark Eye shows spirits as their haze, its soul fire column and
+     * {@code artifacts.eye_column_height} are gone.
      */
-    private static final List<UnaryOperator<JsonObject>> POWER =
-            List.of(Migrations::dangerToPower, Migrations::settingsLeave, Migrations::charmsRebalance);
+    private static final List<UnaryOperator<JsonObject>> POWER = List.of(
+            Migrations::dangerToPower, Migrations::settingsLeave, Migrations::charmsRebalance, Migrations::eyeHaze);
 
     /**
      * Version 2 of lies: strangers' names are made up, not listed; {@code false_slot} has more items; the head turn is
@@ -178,6 +179,11 @@ public final class Migrations {
                 }
             });
         }
+        return root;
+    }
+
+    private static JsonObject eyeHaze(JsonObject root) {
+        remove(root, "artifacts.eye_column_height");
         return root;
     }
 

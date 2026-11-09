@@ -2,7 +2,6 @@ package dev.keelfy.restless.content;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Scheduler;
-import java.util.concurrent.atomic.AtomicReference;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -12,19 +11,20 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The hoarder's feather: used, a stream of light leads from the player to the nearest container whose loot has not been
- * rolled, a chest, barrel or decorated pot nobody has opened, among the chunks that are loaded.
+ * The hoarder's feather: used, a stream of light leads from the player to the nearest chest whose loot has not been
+ * rolled, one nobody has opened, among the chunks that are loaded. It leads for {@code consumables.feather_ticks} or
+ * until that chest is opened.
  */
 public final class MagpieFeather extends Item {
     public MagpieFeather(Item.Properties properties) {
@@ -48,32 +48,18 @@ public final class MagpieFeather extends Item {
         return InteractionResult.SUCCESS_SERVER;
     }
 
-    /** Streams light toward the container until the feather's time is out or nothing unopened is left in reach. */
-    private static void point(ServerPlayer player, ServerLevel level, BlockPos first, Config.Section config) {
-        AtomicReference<@Nullable BlockPos> target = new AtomicReference<>(first);
+    /** Streams light toward the chest until its time is out or somebody opens it. */
+    private static void point(ServerPlayer player, ServerLevel level, BlockPos target, Config.Section config) {
         int every = 4;
-        int rescan = Math.max(1, config.integer("feather_rescan_ticks") / every);
         int steps = config.integer("feather_ticks") / every;
         Scheduler.repeat(player, 0, every, (p, n) -> {
-            BlockPos at = target.get();
-            if (at == null || !unopened(level, at) || n % rescan == 0) {
-                at = unopened(level, at) && at != null
-                        ? nearer(level, p.blockPosition(), at, config.num("feather_radius"))
-                        : nearest(level, p.blockPosition(), config.num("feather_radius"));
-                target.set(at);
-            }
-            if (at == null) {
+            if (!unopened(level, target)) {
                 p.sendSystemMessage(Component.translatable("message.restless.feather_done"), true);
                 return false;
             }
-            stream(level, p, at);
+            stream(level, p, target);
             return n + 1 < steps;
         });
-    }
-
-    private static BlockPos nearer(ServerLevel level, BlockPos from, BlockPos current, double radius) {
-        BlockPos best = nearest(level, from, radius);
-        return best != null && best.distSqr(from) < current.distSqr(from) ? best : current;
     }
 
     /** A line of light ahead of the player toward the container, and a column on it. */
@@ -97,11 +83,11 @@ public final class MagpieFeather extends Item {
     private static boolean unopened(ServerLevel level, @Nullable BlockPos at) {
         return at != null
                 && level.isLoaded(at)
-                && level.getBlockEntity(at) instanceof RandomizableContainer container
-                && container.getLootTable() != null;
+                && level.getBlockEntity(at) instanceof ChestBlockEntity chest
+                && chest.getLootTable() != null;
     }
 
-    /** The nearest container with a loot table not yet rolled, among the loaded chunks within {@code radius}. */
+    /** The nearest chest with a loot table not yet rolled, among the loaded chunks within {@code radius}. */
     public static @Nullable BlockPos nearest(ServerLevel level, BlockPos from, double radius) {
         int chunks = (int) Math.ceil(radius / 16.0);
         ChunkPos centre = ChunkPos.containing(from);
@@ -114,8 +100,8 @@ public final class MagpieFeather extends Item {
                     continue;
                 }
                 for (BlockEntity entity : chunk.getBlockEntities().values()) {
-                    if (entity instanceof RandomizableContainer container
-                            && container.getLootTable() != null
+                    if (entity instanceof ChestBlockEntity chest
+                            && chest.getLootTable() != null
                             && entity.getBlockPos().distSqr(from) < bestDistance) {
                         bestDistance = entity.getBlockPos().distSqr(from);
                         best = entity.getBlockPos();

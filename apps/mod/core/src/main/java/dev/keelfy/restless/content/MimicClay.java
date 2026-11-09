@@ -17,7 +17,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 
 /**
  * The trickster's clay. Pressed against a block it takes that block's look; with a look, it sets down a
- * {@link MimicBlock} that wears it. Sneaking presses it again, over the old look.
+ * {@link MimicBlock} that wears it, turned the way the player sets it down. Sneaking presses it again, over the old
+ * look.
  */
 public final class MimicClay extends Item {
     public MimicClay(Item.Properties properties) {
@@ -89,7 +90,9 @@ public final class MimicClay extends Item {
         }
         level.setBlock(at.getClickedPos(), mimic, 3);
         if (level.getBlockEntity(at.getClickedPos()) instanceof MimicBlockEntity entity) {
-            entity.setLook(look.state());
+            // Turned as the block it copies would turn if set down just so: logs along the face, stairs to the player.
+            BlockState turned = look.state().getBlock().getStateForPlacement(at);
+            entity.setLook(turned != null ? turned : look.state());
         }
         level.playSound(null, at.getClickedPos(), SoundEvents.MUD_PLACE, SoundSource.BLOCKS, 1.0f, 0.8f);
         if (player != null) {

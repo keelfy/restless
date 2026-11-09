@@ -20,7 +20,8 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 
 /**
  * What the consumables leave in the world and must outlast a restart: a knot on a container, a patch of dusk salt, the
- * sighting marks a player has set. Each spell has an end, a game time; {@link #prune} drops the ended ones.
+ * sighting marks a player has set. Each spell has an end, a game time (or {@link #FOREVER}); {@link #prune} drops the
+ * ended ones.
  */
 public final class Spells extends SavedData {
     /** What kind of spell a record is. */
@@ -35,6 +36,9 @@ public final class Spells extends SavedData {
             return name().toLowerCase(java.util.Locale.ROOT);
         }
     }
+
+    /** The end of a spell that lasts until it is taken back. */
+    public static final long FOREVER = Long.MAX_VALUE;
 
     public record Spell(Kind kind, ResourceKey<Level> dimension, BlockPos pos, long until) {
         static final Codec<Spell> CODEC = RecordCodecBuilder.create(i -> i.group(

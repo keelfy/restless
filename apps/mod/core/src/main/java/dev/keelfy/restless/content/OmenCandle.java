@@ -28,9 +28,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
- * The banshee's candle. Lit with fire, it burns for {@code consumables.omen_ticks} and is gone; while it burns, a
- * harmful event aimed at a player near it is announced by its wail first, see {@link #warn}. It counts as a candle, so
- * the lights events snuff it and fire relights it.
+ * The banshee's candle. Lit with fire, it burns until a harmful event aimed at a player near it comes: it wails to
+ * announce it first, see {@link #warn}, and goes out when the event lands. Fire lights it again. It counts as a candle,
+ * so the lights events snuff it too.
  */
 public final class OmenCandle extends AbstractCandleBlock {
     private static final VoxelShape SHAPE = Block.box(6, 0, 6, 10, 7, 10);
@@ -55,7 +55,7 @@ public final class OmenCandle extends AbstractCandleBlock {
         return List.of(new Vec3(0.5, 0.55, 0.5));
     }
 
-    /** Only fire in a hand lights it; a burning arrow does not, for the day it burns is counted from its lighting. */
+    /** Only fire in a hand lights it; a burning arrow does not. */
     @Override
     protected boolean canBeLit(BlockState state) {
         return false;
@@ -76,7 +76,6 @@ public final class OmenCandle extends AbstractCandleBlock {
         }
         if (level instanceof ServerLevel server) {
             server.setBlock(pos, state.setValue(LIT, true), 3);
-            server.scheduleTick(pos, this, Config.section("consumables").integer("omen_ticks"));
             server.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0f, 1.0f);
             if (flint) {
                 stack.hurtAndBreak(1, player, hand);
@@ -87,11 +86,11 @@ public final class OmenCandle extends AbstractCandleBlock {
         return InteractionResult.SUCCESS;
     }
 
-    /** A day has burned down: it goes out for good. */
+    /** The event it announced has landed: it goes out, to be lit again. */
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (state.getValue(LIT)) {
-            level.removeBlock(pos, false);
+            level.setBlock(pos, state.setValue(LIT, false), 3);
             level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 0.6f);
             level.sendParticles(
                     ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 8, 0.1, 0.2, 0.1, 0.02);
@@ -100,7 +99,7 @@ public final class OmenCandle extends AbstractCandleBlock {
 
     /**
      * Call before a harmful event runs on a player: whether a lit omen candle is near them. It wails, from where it
-     * stands, for the warning that follows.
+     * stands, for the warning that follows, and goes out once that is over. A candle already wailing is not used twice.
      */
     public static boolean warn(ServerPlayer player) {
         ServerLevel level = player.level();
@@ -112,6 +111,7 @@ public final class OmenCandle extends AbstractCandleBlock {
             if (found[0] == null
                     && state.getBlock() instanceof OmenCandle
                     && state.getValue(LIT)
+                    && !level.getBlockTicks().hasScheduledTick(pos, state.getBlock())
                     && pos.distSqr(at) <= (double) radius * radius) {
                 found[0] = pos.immutable();
             }
@@ -119,6 +119,7 @@ public final class OmenCandle extends AbstractCandleBlock {
         if (found[0] == null) {
             return false;
         }
+        level.scheduleTick(found[0], level.getBlockState(found[0]).getBlock(), config.integer("omen_warn_ticks"));
         level.playSound(null, found[0], SoundEvents.GHAST_SCREAM, SoundSource.BLOCKS, 1.5f, 0.7f);
         level.sendParticles(
                 ParticleTypes.SOUL_FIRE_FLAME,

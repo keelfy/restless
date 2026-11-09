@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
 public final class Draughts {
     private Draughts() {}
 
-    /** Clears rain and thunder for a day; drunk sneaking it calls a storm instead. The overworld has the weather. */
+    /** Clears rain and thunder, and the weather runs its course again; drunk sneaking it calls a storm. */
     public static boolean still(ServerPlayer player, ServerLevel level) {
         if (level.dimension() != Level.OVERWORLD) {
             player.sendSystemMessage(Component.translatable("message.restless.still_elsewhere"), true);
@@ -39,7 +39,7 @@ public final class Draughts {
             server.setWeatherParameters(0, ticks, true, true);
             player.sendSystemMessage(Component.translatable("message.restless.still_storm"), true);
         } else {
-            server.setWeatherParameters(config.integer("still_clear_ticks"), 0, false, false);
+            server.setWeatherParameters(0, 0, false, false);
             player.sendSystemMessage(Component.translatable("message.restless.still_clear"), true);
         }
         level.playSound(

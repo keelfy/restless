@@ -294,18 +294,12 @@ public final class Content {
             "omen_candle",
             p -> new OmenCandle(p.instabreak().sound(SoundType.CANDLE).noOcclusion()));
     public static final Supplier<Item> OMEN_CANDLE_ITEM = blockItem("omen_candle", OMEN_CANDLE);
-    public static final Supplier<Block> DOMOVOIS_PORRIDGE = block(
-            "domovois_porridge",
-            p -> new DomovoiPorridge(p.strength(0.2f).sound(SoundType.WOOD).noOcclusion()));
-    public static final Supplier<Item> DOMOVOIS_PORRIDGE_ITEM = Platform.get()
-            .register(
-                    BuiltInRegistries.ITEM,
-                    "domovois_porridge",
-                    key -> new DomovoiPorridge.Bowl(
-                            DOMOVOIS_PORRIDGE.get(),
-                            tipped(new Item.Properties().setId(key), "domovois_porridge")
-                                    .useBlockDescriptionPrefix()
-                                    .stacksTo(16)));
+    /** What an eater of the Domovoi's Porridge is until death or milk takes it, see {@link DomovoiPorridge}. */
+    public static final Supplier<MobEffect> GROWTH = Platform.get()
+            .register(BuiltInRegistries.MOB_EFFECT, "growth", key -> new Pact(MobEffectCategory.BENEFICIAL, 0x7CB342));
+
+    public static final Supplier<Item> DOMOVOIS_PORRIDGE_ITEM =
+            item("domovois_porridge", p -> new DomovoiPorridge(p.stacksTo(16)));
     public static final Supplier<Block> MIMIC_BLOCK =
             block("mimic_block", p -> new MimicBlock(p.strength(1.0f).noOcclusion()));
     public static final Supplier<Block> HOARDERS_HOLLOW = block(

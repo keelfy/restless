@@ -15,7 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 
-/** The phantom's mark, set on a block: a {@link SightingMark} stands there. A renamed mark names its figure. */
+/** The phantom's mark, set on a block: a {@link SightingMark} waypoint stands there. A renamed mark names it. */
 public final class SightingMarkItem extends Item {
     public SightingMarkItem(Item.Properties properties) {
         super(properties);
@@ -40,7 +40,6 @@ public final class SightingMarkItem extends Item {
         ItemStack stack = context.getItemInHand();
         if (stack.has(DataComponents.CUSTOM_NAME)) {
             mark.setCustomName(stack.getHoverName());
-            mark.setCustomNameVisible(true);
         }
         if (!level.addFreshEntity(mark)) {
             return InteractionResult.FAIL;
