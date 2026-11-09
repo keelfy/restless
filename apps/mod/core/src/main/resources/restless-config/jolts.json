@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:jolt_behind": {
+      "weight": 0.12,
+      "mob": "minecraft:enderman",
+      "distance": 4.0,
+      "min_angle": 140.0,
+      "max_angle": 180.0,
+      "look_angle": 40.0,
+      "hold_ticks": 12,
+      "max_ticks": 120,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:jolt_side": {
+      "weight": 0.1,
+      "mob": "minecraft:enderman",
+      "distance": 6.0,
+      "min_angle": 70.0,
+      "max_angle": 110.0,
+      "look_angle": 40.0,
+      "hold_ticks": 10,
+      "max_ticks": 100,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:jolt_dark": {
+      "weight": 0.08,
+      "mob": "minecraft:enderman",
+      "distance": 5.0,
+      "min_angle": 0.0,
+      "max_angle": 25.0,
+      "dark_max": 4,
+      "look_angle": 40.0,
+      "hold_ticks": 8,
+      "max_ticks": 40,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    }
+  }
+}

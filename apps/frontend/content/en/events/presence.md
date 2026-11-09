@@ -4,7 +4,7 @@ title: Presence
 
 # Presence
 
-86 events.
+89 events.
 
 ## `dragon_flyover`
 
@@ -463,6 +463,24 @@ Runs when: The player carries a spyglass
 Four visual-only lightning bolts, 2 to 4.5 s apart; at each, only this player's client is told of a wither skeleton standing on one bearing for 4 ticks, 34 blocks away at the first flash and 7 blocks closer each time, with the bolt striking beyond it. Nothing on the server
 
 Runs when: Overworld, raining, sky visible
+
+## `jolt_behind`
+
+A loud bang 4 blocks behind the player, at 140–180° from where they look, and only this player's client is told of an enderman standing there. It is not shown until the player looks at it; 12 ticks after they first do it is gone (or after 6 s if they never turn). Nothing on the server
+
+Runs when: Standing room 4 blocks behind
+
+## `jolt_side`
+
+A loud bang 6 blocks away at 70–110° to one side, with an enderman there for this player's client only, unseen until the player looks at it, and gone 10 ticks after (or after 5 s unseen). Nothing on the server
+
+Runs when: Standing room 6 blocks to the side
+
+## `jolt_dark`
+
+An enderman 5 blocks ahead, within 25° of the player's view, in a spot no brighter than light level 4, shown only to this player's client at the same instant as a loud bang. Gone 8 ticks later. Nothing on the server
+
+Runs when: A dark standing spot 5 blocks ahead
 
 ## `overnight_shrine`
 

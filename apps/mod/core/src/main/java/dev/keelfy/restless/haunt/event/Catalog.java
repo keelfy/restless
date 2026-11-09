@@ -48,6 +48,7 @@ public final class Catalog {
                         Shrines.all(),
                         Herds.all(),
                         Sightings.all(),
+                        Jolts.all(),
                         Followers.all(),
                         Machines.all(),
                         Relics.all(),

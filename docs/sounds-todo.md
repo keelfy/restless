@@ -1,6 +1,6 @@
 # Sounds to source
 
-Eight new sound events in `HauntSounds`, declared in `apps/mod/core/src/main/resources/assets/restless/sounds.json`.
+Nine new sound events in `HauntSounds`, declared in `apps/mod/core/src/main/resources/assets/restless/sounds.json`.
 Until a recording exists each event plays the vanilla stand-in listed below (a `"type": "event"` entry in `sounds.json`),
 so nothing is silent.
 
@@ -20,8 +20,9 @@ Put files in `apps/mod/core/src/main/resources/assets/restless/sounds/haunt/`.
 | `haunt.chair_creak` | `chair_creak_1..4` | 0.4–0.8 s | `restless:rocking_chair` (played 24 times, every 0.7 s) | A rocker creaking on a floorboard, dry and short. Ideally forward and back pairs. | trapdoor open |
 | `haunt.mirror_ring` | `mirror_ring_1..2` | 1–2 s | `mirror_names`: mirror is marked | A thin glass or crystal ring with a faint shimmer. Quiet, it plays at the player. | amethyst chime |
 | `haunt.mirror_crack` | `mirror_crack_1..3` | 0.5–1.5 s | `restless:cracked_mirror` | A hairline crack slowly running across glass. No shatter. | glass hit |
+| `haunt.jolt` | `jolt_1..3` | 0.3–1 s | `jolt_behind`, `jolt_side`, `jolt_dark` | A sudden loud bang or sting, sharp attack, no tail. Plays at volume 2.0 right behind or beside the player. | anvil land |
 
-**Total:** 8 events, about 20 files.
+**Total:** 9 events, about 21 files.
 
 ## Notes
 

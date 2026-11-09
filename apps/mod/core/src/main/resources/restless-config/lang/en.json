@@ -2345,6 +2345,18 @@
       "name": "Figure in the Flash",
       "description": "In a storm, lightning flashes four times, and each flash shows a dark figure standing closer than the last."
     },
+    "minecraft:jolt_behind": {
+      "name": "Bang Behind You",
+      "description": "A loud bang right behind the player. If they turn round, a dark figure stands there for a moment, then is gone."
+    },
+    "minecraft:jolt_side": {
+      "name": "Bang at the Edge",
+      "description": "A loud bang off to one side. Looking that way shows a dark figure for a moment, then nothing."
+    },
+    "minecraft:jolt_dark": {
+      "name": "Face in the Dark",
+      "description": "In a dark spot ahead, a loud bang and a dark figure at once. It is gone almost before it is seen."
+    },
     "minecraft:netherrack_behind": {
       "name": "Netherrack Behind",
       "description": "Stone and earth behind the player turn to netherrack until they look round. Only the player sees it."

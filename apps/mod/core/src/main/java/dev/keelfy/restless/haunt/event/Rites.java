@@ -184,8 +184,8 @@ final class Rites {
 
     private static void spiritBoxWord(ServerPlayer player) {
         Optional<Divination.Reading> reading = Divination.read(player, Clue.VOICE);
-        Optional<String> word = reading.map(
-                r -> r.trait().words().get(r.random().nextInt(r.trait().words().size())));
+        Optional<Component> word = reading.map(
+                r -> Divination.word(r.trait().words().get(r.random().nextInt(r.trait().words().size()))));
         Component answer = word.<Component>map(w -> Component.translatable("message.restless.spirit_box", w))
                 .orElse(Component.translatable("message.restless.spirit_box_static"));
         Scheduler.later(player, Config.section("spirit_box").integer("delay_ticks"), p -> {

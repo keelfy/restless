@@ -61,13 +61,43 @@ Iron ingot + glass pane + black dye. Use it: a flash, and a **Photograph** of on
 
 Iron ingot + redstone + note block. Place it: it faces you. It listens for a chat line, or a phrase said over Plasmo Voice if that mod is present (it hears that you spoke, not the words), from a player within **6 blocks** of it.
 
-- **2 seconds** later it answers in chat with one word of a trait of a spirit you sense, e.g. `<Spirit Box> dark`. With no spirit to sense it answers `...static...`.
+- **2 seconds** later it answers in chat, in your language, with one word of a trait of a spirit you sense, e.g. `<Spirit Box> dark`. With no spirit to sense it answers `...static...`.
 - **Shaken:** below 0.35 sanity (0 to 1) it says more, 2 seconds after the word: where the spirit's bones lie, rounded to 10 blocks. The grave still has to be looked for.
-- **It may lie.** A spirit with the Liar trait gives a word of a trait it does not have half of the time. The journal marks such notes "may lie".
+- **It may lie.** A spirit with the Liar trait gives a word of a trait it does not have half of the time. The journal marks every spirit box note "may lie", because you cannot know ahead of time whether the spirit is a liar. For what a word means, see [Reading the Clues](#reading-the-clues).
 
 ## Ouija Board
 
-Any planks + black dye + salt. Place it flat on the floor. Use it: after 1 second the planchette spells out, one letter every 0.3 seconds on the action bar, what one trait of a spirit you sense is like ("it slams doors", "it feeds on noise"). It can be used again at once. It may lie: a spirit with the Liar trait names a trait it does not have half of the time, and the note is marked "may lie". With no spirit to sense: "The planchette does not move."
+Any planks + black dye + salt. Place it flat on the floor. Use it: after 1 second the planchette spells out, one letter every 0.3 seconds on the action bar, what one trait of a spirit you sense is like ("it slams doors", "it feeds on noise"). It can be used again at once. It may lie: a spirit with the Liar trait names a trait it does not have half of the time, and the note is marked "may lie", as is every board note. For what a line means, see [Reading the Clues](#reading-the-clues). With no spirit to sense: "The planchette does not move."
+
+## Reading the Clues
+
+Every ouija and spirit box clue belongs to one trait, and every trait has a nature. The nature can be told from what the clue means. Iron touches things. Glowstone reaches for darkness, cold and night. Holy water takes revenge, comes with the rain and calls from the deep. Mirror plays with your head: it whispers, makes noise, steals sleep, lies. The full list:
+
+| Nature | Ouija line | Spirit box words |
+| --- | --- | --- |
+| Iron | "it reaches for things left lying around" | `fingers`, `mine`, `take` |
+| Iron | "it slams doors" | `leave`, `shut`, `slam` |
+| Iron | "it meddles with the world around you" | `move`, `change`, `mine` |
+| Iron | "it guards what is in chests" | `open`, `mine`, `lid` |
+| Glowstone | "it feeds on light" | `dark`, `hungry`, `out` |
+| Glowstone | "it chills the air around you" | `cold`, `chill`, `frost` |
+| Glowstone | "it stalks at night" | `behind`, `night`, `follow` |
+| Glowstone | "it lives in the dark" | `below`, `black`, `deep` |
+| Holy water | "it wants revenge" | `pay`, `blood`, `you` |
+| Holy water | "it walks in the rain" | `wet`, `drip`, `storm` |
+| Holy water | "it calls from below" | `down`, `come`, `under` |
+| Holy water | "it holds a grudge" | `remember`, `kill`, `why` |
+| Mirror | "it whispers" | `listen`, `closer`, `hush` |
+| Mirror | "it feeds on noise" | `loud`, `louder`, `noise` |
+| Mirror | "it steals your sleep" | `wake`, `dream`, `bed` |
+| Mirror | "it lies" | `yes`, `no`, `maybe` |
+
+What to do with it:
+
+- A spirit has 3 to 5 traits, and exactly one is foreign to its nature. Its nature is the one most of its traits point to.
+- One note decides nothing. Gather several: true traits repeat, false ones are scattered over the rest.
+- Ash never lies. Confirm the nature with prints before putting an offering on the [altar](#altar): the wrong nature is costly.
+- If the nature will not add up, there is another way: the [gravestone](#gravestone) names the thing the spirit wants back, and no guessing is needed.
 
 ## Spirit Candle
 

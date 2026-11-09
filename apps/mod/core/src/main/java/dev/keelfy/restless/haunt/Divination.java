@@ -155,8 +155,8 @@ public final class Divination {
             return;
         }
         Optional<Reading> reading = read(player, Clue.VOICE);
-        Optional<String> word = reading.map(
-                r -> r.trait().words().get(r.random().nextInt(r.trait().words().size())));
+        Optional<Component> word = reading.map(
+                r -> word(r.trait().words().get(r.random().nextInt(r.trait().words().size()))));
         Component answer = word.<Component>map(w -> Component.translatable("message.restless.spirit_box", w))
                 .orElse(Component.translatable("message.restless.spirit_box_static"));
         Scheduler.later(player, config.integer("delay_ticks"), p -> {
@@ -175,6 +175,11 @@ public final class Divination {
             p.sendSystemMessage(Component.translatable("message.restless.spirit_box_grave", x, z));
             Journal.note(p, Notebook.Kind.GRAVE_WHISPER, reading.get().spirit().haunting(), x, z);
         }));
+    }
+
+    /** A spirit box word in the listener's language; a word added in config without a translation stays as written. */
+    public static Component word(String word) {
+        return Component.translatableWithFallback("word.restless." + word, word);
     }
 
     /** What the trait is, in a few words, for the ouija board and dreams. */
