@@ -131,6 +131,8 @@ public final class RestlessNeoForgeClient {
                 (BlockEntityType<MimicBlockEntity>) Content.MIMIC_ENTITY.get(), MimicRenderer::new);
         event.registerEntityRenderer((EntityType<RagEntity>) Content.RAG_ENTITY.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer((EntityType<SightingMark>) Content.MARK_ENTITY.get(), NoopRenderer::new);
+        event.registerEntityRenderer(EntityTypes.ITEM_FRAME, PhotoFrameRenderer::new);
+        event.registerEntityRenderer(EntityTypes.GLOW_ITEM_FRAME, PhotoFrameRenderer::new);
     }
 
     /** Ghost leaves are tinted as the leaves they copy; pale oak's are not tinted at all. */

@@ -53,7 +53,7 @@ Each print is noted in the [journal](#journal). Nature decides the [altar](#alta
 Iron ingot + glass pane + black dye. Use it: a flash, and a **Photograph** of one spirit you can sense, chosen at random if there are several. The photo names its **type** and nothing more ("A silhouette of a Shade"); an evolved spirit shows under its grown name. With nothing to sense, the photo shows nothing. Rest: 30 seconds, spent either way.
 
 - The picture itself is painted on your client and shows in the photo's tooltip. It is also pasted into the spirit's page in the [journal](#journal). Without the mod on the client the note is still written, only the picture is missing.
-- A developed photo can go in an item frame, where it shows the picture itself, flat on the wall like a map. Without the mod on the client the frame shows the plain card.
+- A developed photo can go in an item frame, where it shows the picture itself, flat on the wall like a map, with the frame itself hidden. Without the mod on the client the frame shows the plain card.
 - A photo never lies.
 - The first photo of a type adds its card to the journal's bestiary.
 

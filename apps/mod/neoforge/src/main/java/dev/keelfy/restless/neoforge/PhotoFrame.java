@@ -19,8 +19,8 @@ import org.jspecify.annotations.Nullable;
  */
 final class PhotoFrame implements SpecialModelRenderer<Picture> {
     static final MapCodec<Unbaked> CODEC = MapCodec.unit(new Unbaked());
-    /** Half a block across, as the frame's own scale makes a model one unit wide; the card fills most of the frame. */
-    private static final float WIDTH = 1.15f;
+    /** Of the picture, in units that are half a block as the frame scales its item: it hangs bare on the wall. */
+    private static final float WIDTH = 1.3f;
 
     @Override
     public void submit(
