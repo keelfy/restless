@@ -154,7 +154,7 @@ Runs when: Not peaceful, health above 5 hearts, a solid roof overhead
 ## `possessed_mob`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A hostile mob nearby is lit by spirit fire, then turns fast and strong and comes for you. Kill it.
+A hostile mob nearby is lit by spirit fire, then turns fast and strong and comes for you. Kill it. A faint dark haze gathers around the mob, thicker as the turn nears.
 
 Runs when: Not peaceful, health above 5 hearts, a hostile mob nearby
 
@@ -189,7 +189,7 @@ Runs when: Not peaceful, health above 5 hearts
 ## `stalker`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A figure appears far off and stands watching, then runs at you, hits once and is gone. Outrun it.
+A figure appears far off and stands watching, then runs at you, hits once and is gone. Outrun it. A faint dark haze trails it as it runs and stays where it falls for 2 s.
 
 Runs when: Not peaceful, health above 5 hearts, standing room for the figure in line of sight
 
@@ -210,7 +210,7 @@ Runs when: Health above 5 hearts
 ## `teeth_in_dark`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A growl where the light is gone, then a bite every few seconds. Find light.
+A growl where the light is gone, then a bite every few seconds. Find light. A faint dark haze hangs just off to one side, where the jaws are.
 
 Runs when: Health above 5 hearts, light level 0
 
@@ -280,7 +280,7 @@ Runs when: Health above 5 hearts, in the Nether
 ## `hand_below`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A circle of souls under your feet. Stay on it and a hand takes hold. Step off.
+A circle of souls under your feet. Stay on it and a hand takes hold. Step off. A faint dark haze rises from the ring, thicker the longer you stay.
 
 Runs when: Health above 5 hearts, on the ground
 
@@ -301,7 +301,7 @@ Runs when: Health above 5 hearts, a door in the player's path
 ## `night_terror`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A heartbeat in your sleep, then you are thrown awake screaming. Wards hold it off.
+A heartbeat in your sleep, then you are thrown awake screaming. Wards hold it off. A faint dark haze gathers at the bedside while you sleep and is still there when you wake.
 
 Runs when: Health above 5 hearts, the player is asleep with at least a second of the night left
 

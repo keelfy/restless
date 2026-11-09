@@ -115,6 +115,7 @@ final class Sounds {
                             below.getSoundType().getStepSound(),
                             at.with(Direction.Axis.Y, player.getY()),
                             config.tone("sound"));
+                    Haze.at(player.level(), at.with(Direction.Axis.Y, player.getY()));
                 }),
                 // 199: the shrieker's own call, which a vibration would normally cause; no player is given, so nothing
                 // is warned
@@ -399,6 +400,10 @@ final class Sounds {
                             BlockPos door = Nearby.random(player, "zombie_at_door", WOODEN_DOOR);
                             SoundEvent hit = SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR;
                             if (door != null) {
+                                Haze.linger(
+                                        player,
+                                        Vec3.atBottomCenterOf(door),
+                                        Config.event("zombie_at_door").integer("interval_ticks") * 5);
                                 chain(
                                         player,
                                         "zombie_at_door",
@@ -531,11 +536,14 @@ final class Sounds {
         double yaw = player.getRandom().nextDouble() * Nearby.FULL_TURN;
         Config.Tone start = config.tone("sound");
         Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+            Vec3 at = Nearby.around(p, config.num("distance"), yaw);
             Nearby.sound(
                     p,
                     SoundEvents.PLAYER_BREATH,
-                    Nearby.around(p, config.num("distance"), yaw),
+                    at,
                     new Config.Tone(start.volume() + (float) config.num("volume_step") * n, start.pitch()));
+            // a little thicker each time, like the breath
+            Haze.at(p.level(), at.with(Direction.Axis.Y, p.getY()), 1 + n);
             return n + 1 < config.integer("breaths");
         });
     }
@@ -557,14 +565,36 @@ final class Sounds {
         Config.Section config = Config.event("circling_moan");
         double start = player.getRandom().nextDouble() * Nearby.FULL_TURN;
         double turn = player.getRandom().nextBoolean() ? config.num("step_degrees") : -config.num("step_degrees");
-        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
+        int interval = config.integer("interval_ticks");
+        Scheduler.repeat(player, 0, interval, (p, n) -> {
             Nearby.sound(
                     p,
                     HauntSounds.MOAN,
                     Nearby.around(p, config.num("distance"), start + turn * n),
                     config.tone("sound"));
-            return n + 1 < config.integer("moans");
+            boolean more = n + 1 < config.integer("moans");
+            if (more) {
+                // on to where the next moan comes from, round the player rather than across
+                int step = n;
+                Haze.glide(
+                        p,
+                        interval,
+                        at -> Nearby.around(p, config.num("distance"), start + turn * (step + at))
+                                .with(Direction.Axis.Y, p.getY()));
+            } else {
+                Haze.at(
+                        p.level(),
+                        Nearby.around(p, config.num("distance"), start + turn * n)
+                                .with(Direction.Axis.Y, p.getY()));
+            }
+            return more;
         });
+    }
+
+    /** How far off step {@code n} is; a fraction in between is a point on the way from one step to the next. */
+    private static double stepDistance(Config.Section config, double n, int steps) {
+        return config.num("start_distance")
+                + (config.num("end_distance") - config.num("start_distance")) * n / Math.max(1, steps - 1);
     }
 
     private static void approach(ServerPlayer player) {
@@ -572,14 +602,19 @@ final class Sounds {
         double yaw = player.getRandom().nextDouble() * Nearby.FULL_TURN;
         var below = player.level().getBlockState(player.blockPosition().below());
         int steps = config.integer("steps");
-        Scheduler.repeat(player, 0, config.integer("interval_ticks"), (p, n) -> {
-            double distance = config.num("start_distance")
-                    + (config.num("end_distance") - config.num("start_distance")) * n / Math.max(1, steps - 1);
+        int interval = config.integer("interval_ticks");
+        Scheduler.repeat(player, 0, interval, (p, n) -> {
             Nearby.sound(
                     p,
                     below.getSoundType().getStepSound(),
-                    Nearby.around(p, distance, yaw).with(Direction.Axis.Y, p.getY()),
+                    Nearby.around(p, stepDistance(config, n, steps), yaw).with(Direction.Axis.Y, p.getY()),
                     config.tone("sound"));
+            // the haze walks on to the next step while the sound waits for it
+            Haze.glide(
+                    p,
+                    interval,
+                    at -> Nearby.around(p, stepDistance(config, Math.min(n + at, steps - 1), steps), yaw)
+                            .with(Direction.Axis.Y, p.getY()));
             return n + 1 < steps;
         });
     }

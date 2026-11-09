@@ -599,6 +599,11 @@ final class Household {
                 Restore.quiet(level, half, state.setValue(BedBlock.OCCUPIED, true));
             }
         }
+        // whoever lies there shows as a haze over the bed for as long as it reads as taken
+        Haze.linger(
+                player,
+                Vec3.atBottomCenterOf(head).add(Vec3.atBottomCenterOf(foot)).scale(0.5),
+                Config.event("occupied_bed").integer("restore_ticks"));
         Restore.after(level, Config.event("occupied_bed").integer("restore_ticks"), force -> {
             if (!force && !level.isLoaded(head)) {
                 return false;

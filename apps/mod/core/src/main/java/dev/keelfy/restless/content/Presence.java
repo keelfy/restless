@@ -32,7 +32,12 @@ public final class Presence {
      * keep the spirit showing.
      */
     public static void emit(ServerLevel level, Vec3 feet) {
-        level.sendParticles(type(), feet.x, feet.y + 1.0, feet.z, 2, 0.3, 0.45, 0.3, 0.0);
+        emit(level, feet, 2);
+    }
+
+    /** A puff of {@code count} motes; thicker for a spirit gathering, thinner for one on the move. */
+    public static void emit(ServerLevel level, Vec3 feet, int count) {
+        level.sendParticles(type(), feet.x, feet.y + 1.0, feet.z, count, 0.3, 0.45, 0.3, 0.0);
         if (level.getRandom().nextInt(3) == 0) {
             level.sendParticles(ParticleTypes.ASH, feet.x, feet.y + 1.0, feet.z, 1, 0.4, 0.6, 0.4, 0.0);
         }

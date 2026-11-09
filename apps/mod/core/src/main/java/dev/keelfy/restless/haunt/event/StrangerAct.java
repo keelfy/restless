@@ -44,6 +44,9 @@ abstract class StrangerAct implements HauntEvent {
         return Figure.stranger(player);
     }
 
+    /** Called as the figure goes, before it is removed; for an act that leaves something behind. */
+    void vanished(ServerPlayer player, Mannequin figure) {}
+
     /** One step of the act. @return false when it is done */
     abstract boolean step(ServerPlayer player, Mannequin figure, Config.Section config, int n);
 
@@ -85,7 +88,7 @@ abstract class StrangerAct implements HauntEvent {
         int interval = config.integer("interval_ticks");
         // The act ends itself; this catches the cases where the scheduler drops it (the player died or left).
         Restore.after(player.level(), config.integer("max_ticks") + config.integer("cleanup_ticks"), force -> {
-            leave(figure, owner);
+            leave(player, figure, owner);
             return true;
         });
         Scheduler.repeat(player, interval, interval, (p, n) -> {
@@ -96,14 +99,16 @@ abstract class StrangerAct implements HauntEvent {
                     || p.distanceToSqr(figure) <= near * near
                     || !step(p, figure, config, n);
             if (over) {
-                leave(figure, owner);
+                leave(p, figure, owner);
             }
             return !over;
         });
     }
 
-    private void leave(Mannequin figure, UUID owner) {
+    private void leave(ServerPlayer player, Mannequin figure, UUID owner) {
+        if (active.remove(owner, figure)) {
+            vanished(player, figure);
+        }
         figure.discard();
-        active.remove(owner, figure);
     }
 }

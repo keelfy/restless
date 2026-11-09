@@ -10,7 +10,7 @@ title: Sound
 
 ## `footsteps`
 
-A step sound 2 blocks behind the player
+A step sound 2 blocks behind the player. A faint dark haze hangs where the step falls.
 
 Runs when: Always
 
@@ -58,7 +58,7 @@ Runs when: Always
 
 ## `breathing`
 
-Five breaths 1 block from the player, each louder
+Five breaths 1 block from the player, each louder. A faint dark haze hangs there, thicker with each breath.
 
 Runs when: Always
 
@@ -118,7 +118,7 @@ Runs when: An animal within 16
 
 ## `approaching_steps`
 
-Twelve step sounds of the block underfoot, closing from 14 to 3 blocks on a random bearing
+Twelve step sounds of the block underfoot, closing from 14 to 3 blocks on a random bearing. A faint dark haze walks in with the steps, smoothly, one step ahead of each sound.
 
 Runs when: Always
 
@@ -203,7 +203,7 @@ Runs when: Always
 
 ## `circling_moan`
 
-Four moans (custom sound) 6 blocks away, each 90° further round the player than the last, one every 2.25 s
+Four moans (custom sound) 6 blocks away, each 90° further round the player than the last, one every 2.25 s. A faint dark haze circles with the moans, smoothly, round the player rather than across.
 
 Runs when: Always
 
@@ -311,7 +311,7 @@ Runs when: Always
 
 ## `zombie_at_door`
 
-Four door-battering sounds and a break sound at a wooden door within 12
+Four door-battering sounds and a break sound at a wooden door within 12. A faint dark haze hangs at the door while it is battered.
 
 Runs when: A wooden door within 12
 

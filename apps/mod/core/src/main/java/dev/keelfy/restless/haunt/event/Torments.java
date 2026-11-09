@@ -232,10 +232,17 @@ final class Torments {
     private static void teeth(ServerPlayer player) {
         Config.Section config = Config.event(TEETH);
         sound(player, SoundEvents.WARDEN_ANGRY, config.tone("sound"));
+        // the jaws hang just off to one side, wherever the player goes
+        double side = player.getRandom().nextDouble() * Nearby.FULL_TURN;
+        Haze.linger(
+                player,
+                Nearby.around(player, 2.0, side).with(Direction.Axis.Y, player.getY()),
+                config.integer("delay_ticks"));
         Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("interval_ticks"), (p, n) -> {
             if (!dark(p) || n >= config.integer("max_bites")) {
                 return false;
             }
+            Haze.at(p.level(), Nearby.around(p, 2.0, side).with(Direction.Axis.Y, p.getY()));
             sound(p, SoundEvents.PHANTOM_BITE, config.tone("bite_sound"));
             hurt(p, config.num("damage"));
             return true;
@@ -509,6 +516,12 @@ final class Torments {
                 push(p, 0.0, 0.0, 0.0);
                 return false;
             }
+            // the haze rises from the ring, thicker the longer they stay
+            double rise = p.getRandom().nextDouble() * Math.PI * 2;
+            Haze.at(
+                    p.level(),
+                    new Vec3(origin.x + Math.cos(rise) * radius, origin.y, origin.z + Math.sin(rise) * radius),
+                    1 + n * interval / 10);
             int points = config.integer("ring_points");
             for (int i = 0; i < points; i++) {
                 double around = i * Math.PI * 2 / points;
@@ -598,6 +611,11 @@ final class Torments {
         Config.Section config = Config.event(TERROR);
         sound(player, SoundEvents.WARDEN_HEARTBEAT, config.tone("sound"));
         int wait = Math.min(config.integer("warn_ticks"), sleepLeft(player) - config.integer("scream_lead_ticks"));
+        // it gathers at the bedside while they sleep, and is still there when they wake
+        Haze.linger(
+                player,
+                Nearby.around(player, 1.5, 90.0).with(Direction.Axis.Y, player.getY()),
+                wait + config.integer("vignette_ticks"));
         Scheduler.later(player, wait, p -> {
             if (!p.isSleeping()) {
                 return;

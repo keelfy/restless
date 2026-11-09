@@ -441,6 +441,7 @@ final class Mechanisms {
         for (BlockPos pos : Nearby.all(player, "open_house", Mechanisms::closedWoodenDoor)) {
             BlockState state = player.level().getBlockState(pos);
             ((DoorBlock) state.getBlock()).setOpen(null, player.level(), state, pos, true);
+            Haze.at(player.level(), Vec3.atBottomCenterOf(pos));
         }
     }
 
@@ -510,6 +511,7 @@ final class Mechanisms {
             }
             DoorBlock door = (DoorBlock) state.getBlock();
             door.setOpen(null, level, state, pos, !door.isOpen(state));
+            Haze.at(level, Vec3.atBottomCenterOf(pos));
             return n + 1 < config.integer("toggles");
         });
     }
@@ -585,6 +587,7 @@ final class Mechanisms {
         level.playSound(
                 null, pos, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.BLOCKS, tone.volume(), tone.pitch());
         DoorLocks.lock(level, pos, config.integer("lock_ticks"));
+        Haze.linger(player, Vec3.atBottomCenterOf(pos), config.integer("lock_ticks"));
     }
 
     private static void clickHook(ServerPlayer player) {

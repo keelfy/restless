@@ -80,6 +80,7 @@ final class Lights {
                             ServerLevel level = player.level();
                             for (BlockPos pos : Nearby.all(player, "candles_out", AbstractCandleBlock::isLit)) {
                                 AbstractCandleBlock.extinguish(null, level.getBlockState(pos), level, pos);
+                                Haze.linger(player, Vec3.atBottomCenterOf(pos), 40);
                             }
                         }),
                 // 2: the torches go out one by one, the nearest last
@@ -483,6 +484,7 @@ final class Lights {
             } else if (litLamp(state)) {
                 level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, false));
             }
+            Haze.at(level, Vec3.atBottomCenterOf(pos));
         }
         Config.Tone tone = Config.event("blackout").tone("sound");
         level.playSound(

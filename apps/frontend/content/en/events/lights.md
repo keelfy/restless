@@ -20,7 +20,7 @@ Runs when: A torch or lantern in either hand that can be snuffed
 
 ## `candles_out`
 
-Every lit candle within 10 blocks goes out
+Every lit candle within 10 blocks goes out. A faint dark haze hangs for 2 s where each candle was.
 
 Runs when: A lit candle within 10 blocks
 
@@ -87,7 +87,7 @@ Runs when: A jack o'lantern within 10
 ## `blackout`
 
 **Harmful.**
-Torches break, candles, campfires and lit lamps within 16 go out; 0.75 s later a zombie or skeleton appears 5–9 blocks away and targets the player
+Torches break, candles, campfires and lit lamps within 16 go out; 0.75 s later a zombie or skeleton appears 5–9 blocks away and targets the player. A faint dark haze puffs where each light was.
 
 Runs when: Not peaceful, not daylight under open sky, a light within 16, standing room 5–9 blocks away
 

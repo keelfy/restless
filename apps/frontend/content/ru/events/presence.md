@@ -270,13 +270,13 @@ Runs when: In the cherry grove
 
 ## `roof_figure`
 
-A silent, unhurtable mannequin in a random default skin crouches on top of a roof block, facing the player. Gone, silently, when the player comes within 10 blocks or after 30 s
+A silent, unhurtable mannequin in a random default skin crouches on top of a roof block, facing the player. Gone, silently, when the player comes within 10 blocks or after 30 s. Where it stood a faint dark haze stays for 3 s.
 
 Runs when: A stair, slab or planks block open to the sky within 20 blocks, at least 12 blocks from the player
 
 ## `hill_waver`
 
-A silent, unhurtable mannequin in a random default skin stands on a hilltop facing the player and swings its arm every 0.4 s. Gone, silently, when the player comes within 20 blocks or after 20 s
+A silent, unhurtable mannequin in a random default skin stands on a hilltop facing the player and swings its arm every 0.4 s. Gone, silently, when the player comes within 20 blocks or after 20 s. Where it stood a faint dark haze stays for 3 s.
 
 Runs when: Standing room open to the sky 45 blocks away within 40° of where the player looks, at least 6 blocks above the player
 
@@ -342,13 +342,13 @@ Runs when: A title is left that the spirit has not said
 
 ## `grave_figure`
 
-A silent, unhurtable mannequin in a random default skin stands where the player last died, facing them. Gone, silently, when the player comes within 12 blocks or after 20 s
+A silent, unhurtable mannequin in a random default skin stands where the player last died, facing them. Gone, silently, when the player comes within 12 blocks or after 20 s. Where it stood a faint dark haze stays for 3 s.
 
 Runs when: The last death was in this dimension, 20 to 60 blocks away, in a loaded chunk with standing room
 
 ## `bedside_figure`
 
-Waits up to 20 min for the player to sleep and wake. Then a silent, unhurtable mannequin in a random default skin stands next to the bed for 1.25 s, facing the player
+Waits up to 20 min for the player to sleep and wake. Then a silent, unhurtable mannequin in a random default skin stands next to the bed for 1.25 s, facing the player. Where it stood a faint dark haze stays for 3 s.
 
 Runs when: No such wait already
 

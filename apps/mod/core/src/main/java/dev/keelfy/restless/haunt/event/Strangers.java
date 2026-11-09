@@ -56,15 +56,18 @@ import org.jspecify.annotations.Nullable;
 final class Strangers {
     private Strangers() {}
 
+    /** How long the haze of a figure that is gone stays where it stood. */
+    private static final int LINGER_TICKS = 60;
+
     private static final Predicate<BlockState> TABLE = state -> state.is(Blocks.CRAFTING_TABLE);
     private static final Predicate<BlockState> SHRIEKER = state -> state.is(Blocks.SCULK_SHRIEKER);
 
     static List<HauntEvent> all() {
         return List.of(
                 // 369: crouched on a roof, watching
-                new Act("roof_figure", Strangers::roofSpot, Strangers::onRoof, Strangers::watch, player -> true),
+                new Act("roof_figure", Strangers::roofSpot, Strangers::onRoof, Strangers::watch, player -> true).hazy(),
                 // 371: waves from the top of a hill
-                new Act("hill_waver", Strangers::hillSpot, figure -> {}, Strangers::wave, player -> true),
+                new Act("hill_waver", Strangers::hillSpot, figure -> {}, Strangers::wave, player -> true).hazy(),
                 // 372: mines toward the player from the far side of a wall
                 new Act("wall_miner", Strangers::wallSpot, figure -> {}, Strangers::mine, player -> true),
                 // 373: stands over a crafting table, looking down at it
@@ -142,7 +145,7 @@ final class Strangers {
                                 ComponentUtils.wrapInSquareBrackets(Component.literal(title))
                                         .withStyle(ChatFormatting.GREEN))),
                 // 389: where the player last died
-                new Act("grave_figure", Strangers::graveSpot, figure -> {}, Strangers::watch, player -> true),
+                new Act("grave_figure", Strangers::graveSpot, figure -> {}, Strangers::watch, player -> true).hazy(),
                 // 390: next to the bed for a second after waking
                 new SimpleEvent(
                         Identifier.parse("bedside_figure"),
@@ -168,6 +171,7 @@ final class Strangers {
         private final Consumer<Mannequin> dress;
         private final Move move;
         private final Predicate<ServerPlayer> where;
+        private boolean hazy;
 
         Act(String id, Spot spot, Consumer<Mannequin> dress, Move move, Predicate<ServerPlayer> where) {
             super(id);
@@ -175,6 +179,19 @@ final class Strangers {
             this.dress = dress;
             this.move = move;
             this.where = where;
+        }
+
+        /** Leaves a haze where the figure stood. */
+        Act hazy() {
+            hazy = true;
+            return this;
+        }
+
+        @Override
+        void vanished(ServerPlayer player, Mannequin figure) {
+            if (hazy) {
+                Haze.linger(player, figure.position(), LINGER_TICKS);
+            }
         }
 
         @Override
@@ -446,6 +463,9 @@ final class Strangers {
         Mannequin figure = Figure.spawn(player, spot, Figure.stranger(player));
         if (figure != null) {
             Restore.after(level, config.integer("stay_ticks"), force -> {
+                if (!force && figure.isAlive()) {
+                    Haze.linger(player, figure.position(), LINGER_TICKS);
+                }
                 figure.discard();
                 return true;
             });

@@ -16,7 +16,7 @@ Runs when: A wooden door is within 12 blocks
 
 ## `breathing_door`
 
-Toggles once a second, six times, ending as it began
+Toggles once a second, six times, ending as it began. A faint dark haze puffs at the door each time it moves.
 
 Runs when: A wooden door within 12
 
@@ -59,7 +59,7 @@ Runs when: An iron door within 12
 ## `open_house`
 
 **Harmful.**
-Opens every such door
+Opens every such door. A faint dark haze puffs at every door it opens.
 
 Runs when: Night, and a closed wooden door within 20
 
@@ -108,7 +108,7 @@ Runs when: A repeater or comparator within 12
 
 ## `occupied_bed`
 
-Both halves read as occupied for 1 min, so the vanilla "This bed is occupied" shows. Always put back, hardcore or not
+Both halves read as occupied for 1 min, so the vanilla "This bed is occupied" shows. Always put back, hardcore or not. A faint dark haze hangs over the bed for as long as it reads as occupied.
 
 Runs when: An unoccupied bed within 12
 
@@ -160,7 +160,7 @@ Runs when: Indoors, a bed or chest within 10 on the player's level, reachable ov
 ## `locked_door`
 
 **Harmful.**
-Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back
+Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back. A faint dark haze hangs at the door while it is locked.
 
 Runs when: A wooden door within 12
 

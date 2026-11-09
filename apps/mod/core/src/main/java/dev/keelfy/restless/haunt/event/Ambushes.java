@@ -557,6 +557,8 @@ final class Ambushes {
                 }
                 if (elapsed < warn) {
                     puff(level, flicker, mob.position(), config.burst("particles"));
+                    // the spirit gathers in the mob, thicker as the turn nears
+                    Haze.at(level, mob.position(), 1 + 3 * elapsed / warn);
                 } else {
                     if (elapsed == warn) {
                         mob.addEffect(new MobEffectInstance(
@@ -753,10 +755,15 @@ final class Ambushes {
             }
             if (caught || over) {
                 puff(level, ParticleTypes.LARGE_SMOKE, figure.position(), config.burst("particles"));
+                Haze.linger(p, figure.position(), 40);
                 figure.discard();
                 return false;
             }
             Figure.face(figure, p);
+            if (n % 2 == 0) {
+                // the haze follows the figure wherever it walks, so it trails behind without gaps
+                Haze.at(level, figure.position(), 1);
+            }
             if (elapsed >= config.integer("delay_ticks")) {
                 stuck[0] = Walk.toward(p, figure, config.num("speed"), config.integer("climb"), config.integer("drop"))
                         ? 0
