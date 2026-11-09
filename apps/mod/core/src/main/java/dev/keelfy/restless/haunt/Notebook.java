@@ -223,6 +223,17 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
                         && n.tag().filter(tag -> base(tag).equals(type)).isPresent());
     }
 
+    /**
+     * Whether the journal knows a spirit of this type, from a photograph of one or from banishing one: what the player
+     * can then read about the essence it leaves.
+     */
+    public boolean knows(String type) {
+        return identified(type)
+                || notes.stream()
+                        .anyMatch(n -> n.kind() == Kind.BANISHED
+                                && n.tag().filter(tag -> base(tag).equals(type)).isPresent());
+    }
+
     static String base(String tag) {
         return tag.endsWith(EVOLVED) ? tag.substring(0, tag.length() - EVOLVED.length()) : tag;
     }

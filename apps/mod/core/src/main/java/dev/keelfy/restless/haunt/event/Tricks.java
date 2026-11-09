@@ -8,11 +8,8 @@ import dev.keelfy.restless.haunt.Scheduler;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket;
 import net.minecraft.network.protocol.game.ClientboundRecipeBookAddPacket;
 import net.minecraft.network.protocol.game.ClientboundRecipeBookRemovePacket;
@@ -35,17 +32,14 @@ import net.minecraft.world.item.crafting.display.RecipeDisplayEntry;
 import net.minecraft.world.item.crafting.display.RecipeDisplayId;
 import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.NetherPortalBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Small tricks on the player's own client (a border, a recipe toast, a narrowed view, a portal swirl) and two with the
- * fishing rod. The client lies leave nothing on the server; a lie cut short (the player leaves, dies, changes
- * dimension) is corrected by the resync vanilla does then.
+ * Small tricks on the player's own client (a border, a recipe toast, a narrowed view) and two with the fishing rod. The
+ * client lies leave nothing on the server; a lie cut short (the player leaves, dies, changes dimension) is corrected by
+ * the resync vanilla does then.
  */
 final class Tricks {
     /** A recipe book id no real recipe has. */
@@ -66,14 +60,6 @@ final class Tricks {
                 SimpleEvent.light("false_recipe", EventTag.PRESENCE, SimpleEvent.ALWAYS, Tricks::falseRecipe),
                 // 358: the view narrows as if the player were slowed
                 SimpleEvent.light("view_narrows", EventTag.PRESENCE, SimpleEvent.ALWAYS, Tricks::viewNarrows),
-                // 364: a portal swirl on screen where there is no portal
-                SimpleEvent.light(
-                        "portal_swirl",
-                        EventTag.PRESENCE,
-                        player -> player.level()
-                                .getBlockState(player.blockPosition())
-                                .isAir(),
-                        Tricks::portalSwirl),
                 // 418: the line drags the player toward the water
                 SimpleEvent.harmful("line_pulls", EventTag.ITEMS, player -> hook(player) != null, Tricks::linePulls),
                 // 419: the catch is the player's own head or a bone
@@ -146,22 +132,6 @@ final class Tricks {
             AttributeInstance real = p.getAttributes().getInstance(Attributes.MOVEMENT_SPEED);
             if (real != null) {
                 p.connection.send(new ClientboundUpdateAttributesPacket(p.getId(), List.of(real)));
-            }
-        });
-    }
-
-    private static void portalSwirl(ServerPlayer player) {
-        ServerLevel level = player.level();
-        BlockPos feet = player.blockPosition();
-        // Only this client is told; the server keeps air, so nothing sends the player anywhere.
-        BlockState portal = Blocks.NETHER_PORTAL
-                .defaultBlockState()
-                .setValue(
-                        NetherPortalBlock.AXIS, player.getRandom().nextBoolean() ? Direction.Axis.X : Direction.Axis.Z);
-        player.connection.send(new ClientboundBlockUpdatePacket(feet, portal));
-        Scheduler.later(player, Config.event("portal_swirl").integer("ticks"), p -> {
-            if (p.level() == level) {
-                p.connection.send(new ClientboundBlockUpdatePacket(level, feet));
             }
         });
     }

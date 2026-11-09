@@ -157,8 +157,9 @@ public final class Journal {
 
     private static void show(ServerPlayer player, boolean open) {
         HauntData data = HauntData.get(player.level().getServer());
+        Notebook notebook = data.notebook(player.getUUID());
         player.connection.send(new ClientboundCustomPayloadPacket(
-                new JournalPayload(JournalPages.sections(data.notebook(player.getUUID())), open)));
+                new JournalPayload(JournalPages.sections(notebook, Codex.of(player, notebook)), open)));
     }
 
     private static List<Chapter> chapters(Kind kind) {

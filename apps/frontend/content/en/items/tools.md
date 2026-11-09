@@ -53,6 +53,7 @@ Each print is noted in the [journal](#journal). Nature decides the [altar](#alta
 Iron ingot + glass pane + black dye. Use it: a flash, and a **Photograph** of one spirit you can sense, chosen at random if there are several. The photo names its **type** and nothing more ("A silhouette of a Shade"); an evolved spirit shows under its grown name. With nothing to sense, the photo shows nothing. Rest: 30 seconds, spent either way.
 
 - The picture itself is painted on your client and shows in the photo's tooltip. It is also pasted into the spirit's page in the [journal](#journal). Without the mod on the client the note is still written, only the picture is missing.
+- A developed photo can go in an item frame, where it shows the picture itself, flat on the wall like a map. Without the mod on the client the frame shows the plain card.
 - A photo never lies.
 - The first photo of a type adds its card to the journal's bestiary.
 
@@ -91,6 +92,9 @@ Sections show once they have something to say:
 | Archive | spirits you banished and filed |
 | Loose notes | what was seen of a spirit you have not met yet |
 | Bestiary | a card per type you have photographed: what it does, the **form** it takes at the altar, where it is met |
+| Charms | a page per [charm](/en/items/charms) and [advanced charm](/en/items/advanced) you can read about: what it does and its recipe. It opens once the journal knows the spirit of every essence in the recipe (photographed or banished); an advanced charm also needs its base charm's page |
+| Relics | a page per [relic](/en/items/relics), opened the same way: when all three spirits it is made of are known |
+| Recipes | the recipes in your recipe book that make an item of the mod: the ones diary pages taught you |
 | Chronicle | what happened: rests, banishings, changes of type |
 
 **Filing.** A dossier offers the banishments it could be: click one to file it, and the spirit moves to the Archive under the name that note gave it. Types must agree where both are known. The journal cannot tell whether they are the same spirit; that is your call.

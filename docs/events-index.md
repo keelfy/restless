@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 636 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 635 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -231,11 +231,11 @@ Surroundings rebuilt out of view (Swaps). [blocks, water]
 
 `netherrack_behind`, `roof_gone`, `path_rearranged`, `landmark_tree_gone`, `tunnel_filled`, `ceiling_furniture`, `sea_lights`
 
-### `event/Tricks.java` (6)
+### `event/Tricks.java` (5)
 
-Client tricks: border, toast, FOV, portal swirl, fishing rod. [items, presence]
+Client tricks: border, toast, FOV, fishing rod. [items, presence]
 
-`line_pulls`, `odd_catch`, `border_closes`, `false_recipe`, `view_narrows`, `portal_swirl`
+`line_pulls`, `odd_catch`, `border_closes`, `false_recipe`, `view_narrows`
 
 ### `event/Apparitions.java` (5)
 

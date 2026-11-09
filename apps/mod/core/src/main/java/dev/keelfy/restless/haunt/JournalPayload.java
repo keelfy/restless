@@ -10,6 +10,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Only discovered, displayable text and pictures are sent; hidden spirit state stays on the server. {@code open} asks
@@ -31,6 +32,8 @@ public record JournalPayload(List<JournalPages.Section> sections, boolean open) 
             JournalPages.Entry::text,
             ByteBufCodecs.optional(FILING_CODEC),
             JournalPages.Entry::filing,
+            ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            JournalPages.Entry::items,
             JournalPages.Entry::new);
     private static final StreamCodec<RegistryFriendlyByteBuf, JournalPages.Card> CARD_CODEC = StreamCodec.composite(
             ComponentSerialization.STREAM_CODEC,

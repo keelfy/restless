@@ -1,6 +1,31 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "restless:item/photo"
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": "fixed",
+        "model": {
+          "type": "minecraft:condition",
+          "property": "minecraft:has_component",
+          "component": "restless:picture",
+          "on_true": {
+            "type": "minecraft:special",
+            "base": "restless:item/photo_framed",
+            "model": {
+              "type": "restless:photo"
+            }
+          },
+          "on_false": {
+            "type": "minecraft:model",
+            "model": "restless:item/photo"
+          }
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "restless:item/photo"
+    }
   }
 }

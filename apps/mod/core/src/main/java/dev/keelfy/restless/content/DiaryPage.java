@@ -1,5 +1,6 @@
 package dev.keelfy.restless.content;
 
+import dev.keelfy.restless.haunt.Journal;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -53,6 +54,7 @@ public final class DiaryPage extends Item {
             reader.awardRecipesByKey(java.util.List.of(key));
             reader.sendSystemMessage(Component.translatable("message.restless.page_read", makes(recipe)), true);
             stack.consume(1, reader);
+            Journal.sync(reader);
             return InteractionResult.SUCCESS_SERVER;
         }
         return InteractionResult.SUCCESS;

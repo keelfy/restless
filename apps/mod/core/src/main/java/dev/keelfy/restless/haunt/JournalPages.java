@@ -17,6 +17,7 @@ import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Lays a {@link Notebook} out as cards under sections: the guide, a dossier per met spirit, the archive of those the
@@ -30,12 +31,20 @@ public final class JournalPages {
     public record Filing(int record, int dossier) {}
 
     /**
-     * One thing written on a card; {@code kind} tells what showed it, when a note did, and {@code filing} makes it
-     * something to click.
+     * One thing written on a card; {@code kind} tells what showed it, when a note did, {@code filing} makes it
+     * something to click, and {@code items} are drawn in a row above the text: a recipe's ingredients, then its result.
      */
-    public record Entry(Optional<Kind> kind, Component text, Optional<Filing> filing) {
+    public record Entry(Optional<Kind> kind, Component text, Optional<Filing> filing, List<ItemStack> items) {
+        public Entry(Optional<Kind> kind, Component text, Optional<Filing> filing) {
+            this(kind, text, filing, List.of());
+        }
+
         static Entry plain(Component text) {
             return new Entry(Optional.empty(), text, Optional.empty());
+        }
+
+        public static Entry recipe(Component text, List<ItemStack> items) {
+            return new Entry(Optional.empty(), text, Optional.empty(), List.copyOf(items));
         }
     }
 
@@ -52,12 +61,20 @@ public final class JournalPages {
     }
 
     public static List<Section> sections(Notebook notebook) {
+        return sections(notebook, Codex.NONE);
+    }
+
+    /** The sections of the notebook, with the pages of charms, relics and known recipes the server worked out. */
+    public static List<Section> sections(Notebook notebook, Codex codex) {
         List<Section> sections = new ArrayList<>();
         sections.add(new Section("guide", guide(notebook)));
         sections.add(new Section("spirits", dossiers(notebook, false)));
         sections.add(new Section("archive", dossiers(notebook, true)));
         sections.add(new Section("loose", loose(notebook)));
         sections.add(new Section("bestiary", bestiary(notebook)));
+        sections.add(new Section("charms", codex.charms()));
+        sections.add(new Section("relics", codex.relics()));
+        sections.add(new Section("recipes", codex.recipes()));
         sections.add(new Section("chronicle", chronicle(notebook)));
         sections.removeIf(s -> s.cards().isEmpty());
 

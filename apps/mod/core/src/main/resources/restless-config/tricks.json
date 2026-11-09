@@ -24,10 +24,6 @@
       "speed": 0.02,
       "ticks": 20
     },
-    "minecraft:portal_swirl": {
-      "weight": 0.2,
-      "ticks": 40
-    },
     "minecraft:line_pulls": {
       "weight": 0.25,
       "pull": 0.6,

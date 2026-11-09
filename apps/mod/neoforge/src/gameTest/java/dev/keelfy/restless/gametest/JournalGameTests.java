@@ -2,6 +2,7 @@ package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.Picture;
+import dev.keelfy.restless.haunt.Codex;
 import dev.keelfy.restless.haunt.DevelopPayload;
 import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.HauntData;
@@ -310,6 +311,81 @@ final class JournalGameTests {
             check(helper, pages.getCount() == 1, "a page of a recipe already known must be kept");
             helper.succeed();
         });
+        tests.put("journal_lists_charms_and_recipes", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            HauntData data = HauntData.get(helper.getLevel().getServer());
+            data.putNotebook(player.getUUID(), Notebook.EMPTY);
+            check(
+                    helper,
+                    Codex.of(player, data.notebook(player.getUUID())).charms().isEmpty(),
+                    "a journal that knows no spirit must list no charm");
+
+            Journal.tagged(player, Notebook.Kind.PHOTO, null, "shade", Component.literal("Shade"));
+            Codex codex = Codex.of(player, data.notebook(player.getUUID()));
+            check(helper, made(codex.charms(), Content.DARK_EYE.get()), "a shade photo must open the Dark Lens page");
+            check(
+                    helper,
+                    !made(codex.charms(), Content.TRUTHSEERS_EYE.get()),
+                    "an advanced charm must wait for the other essence's spirit");
+            check(
+                    helper,
+                    codex.charms().getFirst().entries().getLast().items().size() == 3,
+                    "a recipe row holds each ingredient and the result");
+
+            Journal.tagged(player, Notebook.Kind.BANISHED, null, "banshee", Component.literal("Banshee"), "Ann");
+            check(
+                    helper,
+                    made(Codex.of(player, data.notebook(player.getUUID())).charms(), Content.TRUTHSEERS_EYE.get()),
+                    "a banished banshee must open the page of the charm made with her essence");
+            check(helper, codex.recipes().isEmpty(), "no recipe is in the book before a diary page is read");
+
+            Identifier recipe = Identifier.parse("restless:spirit_box");
+            ItemStack page = new ItemStack(Content.DIARY_PAGE.get());
+            page.set(Content.RECIPE.get(), recipe);
+            player.setItemInHand(InteractionHand.MAIN_HAND, page);
+            page.getItem().use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
+            Codex learned = Codex.of(player, data.notebook(player.getUUID()));
+            check(helper, made(learned.recipes(), Content.SPIRIT_BOX_ITEM.get()), "a read page must list its recipe");
+
+            JournalPayload sent =
+                    new JournalPayload(JournalPages.sections(data.notebook(player.getUUID()), learned), true);
+            RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(
+                    Unpooled.buffer(), helper.getLevel().registryAccess());
+            try {
+                JournalPayload.CODEC.encode(buffer, sent);
+                JournalPayload received = JournalPayload.CODEC.decode(buffer);
+                check(
+                        helper,
+                        received.sections().stream()
+                                .map(JournalPages.Section::key)
+                                .toList()
+                                .containsAll(List.of("charms", "recipes")),
+                        "charm and recipe tabs must reach the screen");
+            } finally {
+                buffer.release();
+            }
+            data.putNotebook(player.getUUID(), Notebook.EMPTY);
+            helper.succeed();
+        });
+        tests.put("journal_lists_relics_once_all_spirits_are_known", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            HauntData data = HauntData.get(helper.getLevel().getServer());
+            data.putNotebook(player.getUUID(), Notebook.EMPTY);
+            for (String type : List.of("lost_one", "nix")) {
+                Journal.tagged(player, Notebook.Kind.PHOTO, null, type, Component.literal(type));
+            }
+            check(
+                    helper,
+                    Codex.of(player, data.notebook(player.getUUID())).relics().isEmpty(),
+                    "a relic must wait until every spirit it is made of is known");
+            Journal.tagged(player, Notebook.Kind.PHOTO, null, "trickster", Component.literal("trickster"));
+            check(
+                    helper,
+                    made(Codex.of(player, data.notebook(player.getUUID())).relics(), Content.FERRYMANS_COIN.get()),
+                    "knowing all three spirits must open the relic's page");
+            data.putNotebook(player.getUUID(), Notebook.EMPTY);
+            helper.succeed();
+        });
         tests.put("diary_pages_turn_up_in_structure_chests", helper -> {
             ServerLevel level = helper.getLevel();
             LootTable chest = level.getServer().reloadableRegistries().getLootTable(BuiltInLootTables.SIMPLE_DUNGEON);
@@ -328,6 +404,14 @@ final class JournalGameTests {
             check(helper, !taught.contains(null), "a page found in a chest must name its recipe");
             helper.succeed();
         });
+    }
+
+    /** Whether one of the cards has a recipe that makes this item. */
+    private static boolean made(List<JournalPages.Card> cards, net.minecraft.world.item.Item item) {
+        return cards.stream()
+                .flatMap(card -> card.entries().stream())
+                .anyMatch(entry ->
+                        !entry.items().isEmpty() && entry.items().getLast().is(item));
     }
 
     private static void check(GameTestHelper helper, boolean condition, String message) {

@@ -6,7 +6,7 @@ title: Presence
 
 > Эта страница пока на английском: ивенты ещё не переведены.
 
-87 events.
+86 events.
 
 ## `dragon_flyover`
 
@@ -375,12 +375,6 @@ Runs when: Always
 The client is told the movement speed attribute is 0.02 for 1 s, so the field of view pinches; then the real attribute
 
 Runs when: Always
-
-## `portal_swirl`
-
-Only this player's client is told a nether portal block stands at their feet, so the swirl fills the screen. 2 s later the real block comes back. Nothing on the server, nobody is sent anywhere
-
-Runs when: Air at the player's feet
 
 ## `mob_eyes`
 

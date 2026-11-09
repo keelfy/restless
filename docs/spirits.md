@@ -273,6 +273,12 @@ note is never written twice. `JournalPages` lays the notebook out as:
   not archived.
 - **Loose notes**: clues of spirits not met yet, without saying whose. They move to the dossier on meeting.
 - **Bestiary**: a page per type the player has photographed, with its grown name once a grown one was photographed.
+- **Charms / Relics**: a page per charm (basic then advanced) and relic, built on the server by `haunt/Codex.java`
+  (not stored): the item's `.tip` line and a recipe row (ingredient icons, result, names). A page opens when
+  `Notebook.knows(type)` holds (photographed or banished) for every `<type>_essence` in the item's recipe; an advanced
+  charm also needs its base charm's page. The ids are the lists in `Codex`: add a new charm or relic there.
+- **Recipes**: the player's recipe book entries (`restless:` recipes whose id is an item id), which diary pages fill.
+  Reading a page re-syncs the journal.
 - **Chronicle**: rested, banished, evolved, and entries from saves before typed notes (read once from the old `journal`
   field).
 
@@ -839,7 +845,6 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `border_closes` | 351 | LIGHT | PRESENCE | 0.2 | No real border within 80 blocks | Only this player's client is shown a world border centered on them, shrinking from 80 to 40 blocks wide over 4 s and held 2 s; then the real border. Nothing on the server |
 | `false_recipe` | 355 | LIGHT | PRESENCE | 0.25 | Always | Only this player's client gets a "recipe unlocked" toast for a made-up bone and skull recipe (the result is a skull, bone block, soul lantern or wither rose); 10 s later it is removed from the recipe book. No recipe exists |
 | `view_narrows` | 358 | LIGHT | PRESENCE | 0.25 | Always | The client is told the movement speed attribute is 0.02 for 1 s, so the field of view pinches; then the real attribute |
-| `portal_swirl` | 364 | LIGHT | PRESENCE | 0.2 | Air at the player's feet | Only this player's client is told a nether portal block stands at their feet, so the swirl fills the screen. 2 s later the real block comes back. Nothing on the server, nobody is sent anywhere |
 | `line_pulls` | 418 | HARMFUL | ITEMS | 0.25 | The player's bobber floats in water | A shove of 0.6 toward the bobber, with a splash there |
 | `odd_catch` | 419 | LIGHT | ITEMS | 0.3 | The player's bobber floats in water | A player head in their own likeness, a bone, a skeleton skull or rotten flesh is thrown out of the water at the player, as a real catch is. It vanishes after 1 min if not picked up |
 | `mob_eyes` | 347 | LIGHT | PRESENCE | 0.3 | Player on the ground, not in a fluid, and a spider, cave spider, creeper or enderman within 24 blocks | Only this player's client is sent to see through that mob (`ClientboundSetCameraPacket`) for 2.5 s, with the vanilla shader of that mob; then back. The view also ends early if the mob dies or vanishes, the player is hurt or changes dimension; death, logout and server stop reset it too. Nothing changes on the server |

@@ -2241,10 +2241,6 @@
       "name": "Narrowing View",
       "description": "The field of view pinches for a second, as if the player were slowed."
     },
-    "minecraft:portal_swirl": {
-      "name": "Portal Swirl",
-      "description": "The nether portal swirl fills the screen for a moment, though no portal is there."
-    },
     "minecraft:line_pulls": {
       "name": "The Line Pulls",
       "description": "While fishing, the line drags the player a step toward the water."

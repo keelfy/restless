@@ -160,6 +160,11 @@ public final class PhotoHands {
         pose.scale(0.38f, 0.38f, 0.38f);
         pose.translate(-0.5f, -0.5f * Picture.HEIGHT / Picture.WIDTH, 0);
         pose.scale(UNIT, UNIT, UNIT);
+        card(pose, collector, light, picture);
+    }
+
+    /** The picture on its card, in picture pixels: x right and y down from the picture's corner, facing the viewer. */
+    static void card(PoseStack pose, SubmitNodeCollector collector, int light, Picture picture) {
         // The 32x32 item sprite has a card at [2, 5]–[30, 27], with a 22x16 image inset by three pixels.
         float borderX = Picture.WIDTH * 3f / 22;
         float borderY = Picture.HEIGHT * 3f / 16;
@@ -192,6 +197,11 @@ public final class PhotoHands {
                 0,
                 1,
                 1);
+    }
+
+    /** Pixels, as units of the card, for a card of {@code width} units across. */
+    static float unit(float width) {
+        return width * UNIT;
     }
 
     private static void quad(

@@ -65,6 +65,7 @@ public final class JournalView {
             @Nullable Picture picture,
             @Nullable Set<Kind> clues,
             JournalPages.@Nullable Filing filing,
+            List<ItemStack> items,
             int height) {}
 
     /** Where a filing entry was drawn this frame, for clicks. */
@@ -262,11 +263,14 @@ public final class JournalView {
     private void place(Block block) {
         if (block.height() > room - used) {
             List<FormattedCharSequence> lines = block.lines();
-            int fit = block.picture() == null && block.clues() == null && block.filing() == null
+            int fit = block.picture() == null
+                            && block.clues() == null
+                            && block.filing() == null
+                            && block.items().isEmpty()
                     ? (room - used) / LINE
                     : 0;
             if (fit >= 1 && fit < lines.size()) {
-                laid.add(new Block(lines.subList(0, fit), block.icon(), null, null, null, fit * LINE));
+                laid.add(new Block(lines.subList(0, fit), block.icon(), null, null, null, List.of(), fit * LINE));
                 flush();
                 place(new Block(
                         lines.subList(fit, lines.size()),
@@ -274,6 +278,7 @@ public final class JournalView {
                         null,
                         null,
                         null,
+                        List.of(),
                         (lines.size() - fit) * LINE + ENTRY_GAP));
                 return;
             }
@@ -291,7 +296,7 @@ public final class JournalView {
         if (!card.heading().getString().isEmpty()) {
             List<FormattedCharSequence> lines =
                     font.split(card.heading().copy().withStyle(ChatFormatting.BOLD), Math.max(1, textWidth));
-            blocks.add(new Block(lines, null, null, null, null, lines.size() * LINE + 4));
+            blocks.add(new Block(lines, null, null, null, null, List.of(), lines.size() * LINE + 4));
         }
         if (key.equals("spirits") || key.equals("archive")) {
             Set<Kind> found =
@@ -299,7 +304,7 @@ public final class JournalView {
             int height = card.picture().isPresent()
                     ? Math.max(Picture.HEIGHT + PhotoTooltip.BORDER * 2, CLUES.size() * (ICON + 4))
                     : ICON;
-            blocks.add(new Block(List.of(), null, card.picture().orElse(null), found, null, height + 8));
+            blocks.add(new Block(List.of(), null, card.picture().orElse(null), found, null, List.of(), height + 8));
         }
         for (JournalPages.Entry entry : card.entries()) {
             Kind icon = entry.kind().filter(k -> icon(k) != null).orElse(null);
@@ -311,7 +316,10 @@ public final class JournalView {
                     null,
                     null,
                     entry.filing().orElse(null),
-                    Math.max(lines.size() * LINE, icon == null ? 0 : ICON) + ENTRY_GAP));
+                    entry.items(),
+                    Math.max(lines.size() * LINE, icon == null ? 0 : ICON)
+                            + (entry.items().isEmpty() ? 0 : ICON + 4)
+                            + ENTRY_GAP));
         }
         return blocks;
     }
@@ -447,6 +455,10 @@ public final class JournalView {
             return;
         }
         int x = left;
+        if (!block.items().isEmpty()) {
+            drawRecipe(canvas, block.items(), left, y);
+            y += ICON + 4;
+        }
         if (block.icon() != null) {
             canvas.item(icon(block.icon()), left, y - 1);
             x += ICON + 6;
@@ -457,6 +469,23 @@ public final class JournalView {
         for (FormattedCharSequence line : block.lines()) {
             canvas.text(line, x, y, block.filing() != null ? LINK : INK);
             y += LINE;
+        }
+    }
+
+    /** A recipe's ingredients with a plus between them, then an equals sign and what they make. */
+    private void drawRecipe(PageCanvas canvas, List<ItemStack> items, int left, int y) {
+        int step = Math.min(ICON + 12, textWidth / items.size());
+        for (int i = 0; i < items.size(); i++) {
+            int x = left + i * step;
+            canvas.item(items.get(i), x, y);
+            if (i < items.size() - 1 && step >= ICON + 6) {
+                String sign = i == items.size() - 2 ? "=" : "+";
+                canvas.text(
+                        Component.literal(sign).getVisualOrderText(),
+                        x + ICON + (step - ICON - font.width(sign)) / 2,
+                        y + 4,
+                        MUTED);
+            }
         }
     }
 

@@ -46,6 +46,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderHandEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
@@ -95,6 +96,12 @@ public final class RestlessNeoForgeClient {
     @SubscribeEvent
     public static void registerTooltips(RegisterClientTooltipComponentFactoriesEvent event) {
         event.register(Picture.class, PhotoTooltip::new);
+    }
+
+    /** The photo shown in an item frame, picked by the photo's item model. */
+    @SubscribeEvent
+    public static void registerSpecialModels(RegisterSpecialModelRendererEvent event) {
+        event.register(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "photo"), PhotoFrame.CODEC);
     }
 
     /** The camera obscura grabs its frame here: the world is drawn, the hand and the HUD are not yet. */
