@@ -47,8 +47,8 @@ public final class AshFootprintRenderer extends EntityRenderer<AshFootprint, Ash
         }
         float u = ((state.shape - 1) % 2) * .5f;
         float v = ((state.shape - 1) / 2) * .5f;
-        float left = state.left ? u : u + .5f;
-        float right = state.left ? u + .5f : u;
+        float left = state.left ? u + .5f : u;
+        float right = state.left ? u : u + .5f;
         int light = state.lightCoords;
         pose.pushPose();
         pose.rotateDegrees(Axis.YP, -state.yaw);

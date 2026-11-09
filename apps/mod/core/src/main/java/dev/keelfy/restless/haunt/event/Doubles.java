@@ -306,7 +306,7 @@ final class Doubles {
                 return true;
             }
             figure.setPos(x, ground, z);
-            Figure.turn(figure, (float) (angle * Mth.RAD_TO_DEG) + 180.0F);
+            Figure.turn(figure, (float) (angle * Mth.RAD_TO_DEG));
             return true;
         }
 
