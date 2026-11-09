@@ -116,7 +116,10 @@ final class JournalGameTests {
                     helper,
                     before.contains("journal.restless.may_lie"),
                     "a spirit box word must be marked as possibly a lie");
-            check(helper, !before.contains("journal.restless.unnamed"), "an unphotographed spirit must not have a kind");
+            check(
+                    helper,
+                    !before.contains("journal.restless.unnamed"),
+                    "an unphotographed spirit must not have a kind");
             check(
                     helper,
                     data.notebook(player.getUUID()).has(Notebook.Chapter.CLUES),
@@ -183,10 +186,7 @@ final class JournalGameTests {
             } finally {
                 buffer.release();
             }
-            check(
-                    helper,
-                    !after.contains("journal.restless.section.loose"),
-                    "a spirit's clues must stay on its pages");
+            check(helper, !after.contains("journal.restless.section.loose"), "a spirit's clues must stay on its pages");
             check(
                     helper,
                     after.contains("journal.restless.unnamed")

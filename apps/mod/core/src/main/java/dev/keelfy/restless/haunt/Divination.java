@@ -155,8 +155,8 @@ public final class Divination {
             return;
         }
         Optional<Reading> reading = read(player, Clue.VOICE);
-        Optional<Component> word = reading.map(
-                r -> word(r.trait().words().get(r.random().nextInt(r.trait().words().size()))));
+        Optional<Component> word = reading.map(r ->
+                word(r.trait().words().get(r.random().nextInt(r.trait().words().size()))));
         Component answer = word.<Component>map(w -> Component.translatable("message.restless.spirit_box", w))
                 .orElse(Component.translatable("message.restless.spirit_box_static"));
         Scheduler.later(player, config.integer("delay_ticks"), p -> {

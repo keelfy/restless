@@ -2,7 +2,7 @@
 title: Restless
 ---
 
-import Link from 'next/link'
+import { WikiHome } from '@/components/wiki-home'
 
 export const personal = [
   ['Shade', 'shade', 'puts out lights and whispers'],
@@ -31,48 +31,4 @@ export const events = [
   ['Scenarios', 'scenarios'], ['Signatures', 'signatures'],
 ]
 
-export const Roster = ({ title, note, spirits }) => (
-  <section className="roster">
-    <h2>{title}</h2>
-    <p className="roster-note">{note}</p>
-    <ul>
-      {spirits.map(([name, id, line]) => (
-        <li key={id}>
-          <Link href={`/en/spirits#${id}`}>{name}</Link>
-          <span>{line}</span>
-        </li>
-      ))}
-    </ul>
-  </section>
-)
-
-export const EventLinks = () => (
-  <p>
-    <Link href="/en/events">740 events</Link>, sorted by what they touch:{' '}
-    {events.map(([name, id], i) => (
-      <span key={id}>{i > 0 && ', '}<Link href={`/en/events/${id}`}>{name.toLowerCase()}</Link></span>
-    ))}.
-  </p>
-)
-
-<div className="home">
-  <header className="home-hero">
-    <h1>Restless</h1>
-    <div className="home-lede">{'A horror mod for Minecraft. Spirits settle near you and act on their own: a torch goes out, a door opens behind you, footsteps follow you home. The older and angrier a spirit gets, the more it can hurt.'}</div>
-  </header>
-
-  <div className="home-rosters">
-    <Roster title="Spirits that follow you" note="Each player has their own." spirits={personal} />
-    <Roster title="Spirits bound to a place" note="They act on anyone who comes near." spirits={territorial} />
-  </div>
-
-  <footer className="home-events">
-    <p>
-      What they leave behind: <Link href="/en/items/essences">essences</Link>, made into{' '}
-      <Link href="/en/items/charms">charms</Link>, <Link href="/en/items/advanced">advanced charms</Link>,{' '}
-      <Link href="/en/items/consumables">consumables</Link> and{' '}
-      <Link href="/en/items/relics">relics</Link>.
-    </p>
-    <EventLinks />
-  </footer>
-</div>
+<WikiHome lang="en" personal={personal} territorial={territorial} events={events} />

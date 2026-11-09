@@ -51,6 +51,7 @@ import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
@@ -150,15 +151,23 @@ public final class RestlessNeoForge {
         });
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> Restless.registerCommands(e.getDispatcher()));
         NeoForge.EVENT_BUS.addListener((ServerStoppingEvent e) -> Restless.onServerStopping(e.getServer()));
-        NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtPosition e) -> Restless.onPlaySound(
-                e.getLevel(), e.getPosition(), e.getSound(), e.getSource(), e.getNewVolume(), e.getNewPitch()));
-        NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtEntity e) -> Restless.onPlaySound(
-                e.getLevel(),
-                e.getEntity().position(),
-                e.getSound(),
-                e.getSource(),
-                e.getNewVolume(),
-                e.getNewPitch()));
+        NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtPosition e) -> {
+            if (Restless.onPlaySound(
+                    e.getLevel(), e.getPosition(), e.getSound(), e.getSource(), e.getNewVolume(), e.getNewPitch())) {
+                e.setCanceled(true);
+            }
+        });
+        NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtEntity e) -> {
+            if (Restless.onPlaySound(
+                    e.getLevel(),
+                    e.getEntity().position(),
+                    e.getSound(),
+                    e.getSource(),
+                    e.getNewVolume(),
+                    e.getNewPitch())) {
+                e.setCanceled(true);
+            }
+        });
         NeoForge.EVENT_BUS.addListener((LivingIncomingDamageEvent e) -> {
             if (Restless.onStrike(e.getEntity(), e.getSource())) {
                 e.setCanceled(true);
@@ -219,6 +228,8 @@ public final class RestlessNeoForge {
                 Restless.onBreakBlock(player, e.getState(), e.getPos());
             }
         });
+        NeoForge.EVENT_BUS.addListener(
+                (LivingEntityUseItemEvent.Finish e) -> Restless.onEat(e.getEntity(), e.getItem()));
         NeoForge.EVENT_BUS.addListener((ServerChatEvent e) -> Restless.onChat(e.getPlayer(), e.getRawText()));
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.LeftClickBlock e) -> {
             if (e.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START

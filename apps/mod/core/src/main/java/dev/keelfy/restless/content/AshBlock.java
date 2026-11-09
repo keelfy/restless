@@ -87,7 +87,8 @@ public final class AshBlock extends CarpetBlock {
                 // A personal spirit's prints go only to whoever it haunts; a territorial one's to all who stand near.
                 List<ServerPlayer> owners = near.stream()
                         .filter(p -> Optional.ofNullable(data.get(p.getUUID()))
-                                .filter(own -> own.stream().anyMatch(h -> h.uuid().equals(haunting.uuid())))
+                                .filter(own ->
+                                        own.stream().anyMatch(h -> h.uuid().equals(haunting.uuid())))
                                 .isPresent())
                         .toList();
                 (owners.isEmpty() ? near : owners)

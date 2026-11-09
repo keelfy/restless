@@ -26,6 +26,10 @@ A spirit born from a deed starts at anger 0.5, so its power starts at 0.2.
 
 **When it is quiet.** Spirits hold back in the open. Each of these stretches the wait by 1.2: it is day, you can see the sky, no thunderstorm is running. All three together stretch it by 1.7.
 
+## Who hears it
+
+The sounds of your personal spirit's events reach only you: a player standing beside you hears nothing. A territorial spirit's sounds are heard by everyone near, like any other sound. What an event does to the world, such as a block it breaks, everyone still sees.
+
 ## Anger
 
 A spirit's anger rises when you do something spirits hate:

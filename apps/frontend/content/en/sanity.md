@@ -32,6 +32,7 @@ Light levels 4 to 9 move nothing. Rows add up: standing in the dark inside a spi
 
 - Sleep: asleep in a bed, the bar fills in under a minute.
 - Light a room, and eat.
+- Eat sweets, and the gain is instant: sweet berries +0.01, a cookie +0.02, a slice of cake +0.03, a honey bottle +0.04, a pumpkin pie +0.05. You must be hungry enough to eat them.
 - Close a salt ring around where you stand: it also stops spirits' events on you.
 - [Borrowed Dream](/en/items/charms#mara-borrowed-dream) and [Hearth Dream](/en/items/advanced#hearth-dream) refill it at once (the first angers your spirits). The [Dreamless Draught](/en/items/consumables#mara-dreamless-draught) gives 0.3. [Mara's Cradle](/en/items/relics) wakes you with all of it.
 - The [Requiem](/en/items/requiem) holds it at full, for good.

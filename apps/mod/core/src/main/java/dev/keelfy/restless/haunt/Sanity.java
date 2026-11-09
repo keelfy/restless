@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt;
 import dev.keelfy.restless.config.Config;
 import java.util.Map;
 import java.util.WeakHashMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,7 +13,7 @@ import net.minecraft.world.item.Items;
 
 /**
  * Each player's grip, 0..1. It slips in the dark, inside a territorial spirit's reach and with every event; light,
- * sleep, a full stomach and a salt-warded home bring it back. Low sanity shows what is otherwise hidden; the client
+ * sleep, a full stomach, sweets and a salt-warded home bring it back. Low sanity shows what is otherwise hidden; the client
  * sees it as darkness closing in from the edges ({@link SanityOverlay}).
  */
 public final class Sanity {
@@ -85,6 +86,19 @@ public final class Sanity {
         if (!player.isSpectator() && !player.isCreative()) {
             set(player, of(player) - Config.section("sanity").num("event_loss"));
         }
+    }
+
+    /** A player ate something or a slice of it: a sweet (config {@code sanity.sweets}, by item or block id) soothes. */
+    public static void sweet(ServerPlayer player, String id) {
+        Config.Section sweets = Config.section("sanity").section("sweets");
+        if (sweets.has(id) && !player.isSpectator() && !player.isCreative()) {
+            set(player, of(player) + sweets.num(id));
+        }
+    }
+
+    /** A player finished eating an item. */
+    public static void ate(ServerPlayer player, ItemStack stack) {
+        sweet(player, BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
     }
 
     public static void set(ServerPlayer player, double value) {

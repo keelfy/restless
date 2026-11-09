@@ -3,6 +3,7 @@ package dev.keelfy.restless.gametest;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.Earshot;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntEvents;
@@ -17,16 +18,22 @@ import java.util.function.Consumer;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -72,6 +79,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Each packet-lie and sound event runs on a connected player and leaves the world as it was (or, for 110, as it says).
@@ -210,6 +218,38 @@ final class HauntEventGameTests {
             check(helper, figure.broadcastToPlayer(owner), "the figure must be sent to its player");
             check(helper, !figure.broadcastToPlayer(other), "the figure must not be sent to any other player");
             figure.discard();
+            owner.discard();
+            other.discard();
+            helper.succeed();
+        });
+        tests.put("event_sound_private", helper -> {
+            ServerPlayer owner = connected(helper);
+            ServerPlayer other = connected(helper);
+            HauntData data = HauntData.get(helper.getLevel().getServer());
+            data.put(owner.getUUID(), List.of());
+            HauntData.Haunting spirit = Director.add(
+                    owner,
+                    data,
+                    Spirits.byId("revenant").orElseThrow(),
+                    helper.getLevel().getGameTime());
+            EmbeddedChannel ownerHears = channel(owner);
+            EmbeddedChannel otherHears = channel(other);
+            Vec3 at = owner.position();
+            Holder<SoundEvent> knock = BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.WOODEN_DOOR_CLOSE);
+            // A mock player is not in the level's list as a joined one is.
+            helper.getLevel().players().add(owner);
+            check(
+                    helper,
+                    Earshot.keep(spirit.uuid(), helper.getLevel(), at, knock, SoundSource.HOSTILE, 1, 1),
+                    "a personal spirit's sound must not be broadcast");
+            check(helper, heard(ownerHears), "the haunted player must hear their spirit");
+            check(helper, !heard(otherHears), "no other player may hear someone else's spirit");
+            check(
+                    helper,
+                    !Earshot.keep(null, helper.getLevel(), at, knock, SoundSource.HOSTILE, 1, 1),
+                    "a sound with no spirit behind it must be broadcast as usual");
+            helper.getLevel().players().remove(owner);
+            data.put(owner.getUUID(), List.of());
             owner.discard();
             other.discard();
             helper.succeed();
@@ -1888,6 +1928,16 @@ final class HauntEventGameTests {
      * A survival player with a connection that swallows packets. Kept out of the player list, which would send it the
      * mod's payloads, and a mock connection has no channels for them.
      */
+    private static EmbeddedChannel channel(ServerPlayer player) {
+        EmbeddedChannel channel = (EmbeddedChannel) player.connection.getConnection().channel();
+        channel.outboundMessages().clear();
+        return channel;
+    }
+
+    private static boolean heard(EmbeddedChannel channel) {
+        return channel.outboundMessages().stream().anyMatch(m -> m instanceof ClientboundSoundPacket);
+    }
+
     static ServerPlayer connected(GameTestHelper helper) {
         ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
         Connection connection = new Connection(PacketFlow.SERVERBOUND);

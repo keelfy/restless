@@ -1,5 +1,6 @@
 package dev.keelfy.restless.gametest;
 
+import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.UnlitLights;
@@ -110,6 +111,37 @@ final class SanityGameTests {
                 helper.succeed();
             });
         }
+        tests.put("sanity_sweets", helper -> {
+            var player = HauntEventGameTests.connected(helper);
+            ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
+                    .add(SanityPayload.TYPE.id());
+            var sweets = Config.section("sanity").section("sweets");
+            Sanity.set(player, 0.5);
+            Restless.onEat(player, new ItemStack(Items.BREAD));
+            HauntEventGameTests.check(helper, Sanity.of(player) == 0.5, "Plain food must not touch sanity");
+            Restless.onEat(player, new ItemStack(Items.COOKIE));
+            HauntEventGameTests.check(
+                    helper,
+                    Math.abs(Sanity.of(player) - 0.5 - sweets.num("minecraft:cookie")) < 1e-9,
+                    "A cookie must restore its configured sanity");
+            Sanity.set(player, 0.99);
+            Restless.onEat(player, new ItemStack(Items.PUMPKIN_PIE));
+            HauntEventGameTests.check(helper, Sanity.of(player) == 1.0, "Sweets must clamp at full sanity");
+            var cake = new BlockPos(2, 2, 2);
+            helper.setBlock(cake, Blocks.CAKE);
+            Sanity.set(player, 0.5);
+            player.getFoodData().setFoodLevel(20);
+            Restless.onUseBlock(player, InteractionHand.MAIN_HAND, helper.absolutePos(cake));
+            HauntEventGameTests.check(helper, Sanity.of(player) == 0.5, "A full player must not eat cake");
+            player.getFoodData().setFoodLevel(10);
+            Restless.onUseBlock(player, InteractionHand.MAIN_HAND, helper.absolutePos(cake));
+            HauntEventGameTests.check(
+                    helper,
+                    Math.abs(Sanity.of(player) - 0.5 - sweets.num("minecraft:cake")) < 1e-9,
+                    "A slice of cake must restore its configured sanity");
+            player.discard();
+            helper.succeed();
+        });
         tests.put("sanity_held_light", helper -> {
             var player = HauntEventGameTests.connected(helper);
             var feet = new BlockPos(4, 2, 4);

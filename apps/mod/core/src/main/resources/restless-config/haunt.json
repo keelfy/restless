@@ -317,6 +317,13 @@
     "sleep_gain": 0.02,
     "fed_gain": 0.0005,
     "ward_gain": 0.003,
+    "sweets": {
+      "minecraft:sweet_berries": 0.01,
+      "minecraft:cookie": 0.02,
+      "minecraft:cake": 0.03,
+      "minecraft:honey_bottle": 0.04,
+      "minecraft:pumpkin_pie": 0.05
+    },
     "reveal_below": 0.35,
     "overlay_below": 0.6,
     "overlay_peak": 0.9

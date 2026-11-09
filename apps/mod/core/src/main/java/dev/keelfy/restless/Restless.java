@@ -19,6 +19,7 @@ import dev.keelfy.restless.haunt.Corruption;
 import dev.keelfy.restless.haunt.Deeds;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Divination;
+import dev.keelfy.restless.haunt.Earshot;
 import dev.keelfy.restless.haunt.DoorLocks;
 import dev.keelfy.restless.haunt.Echoes;
 import dev.keelfy.restless.haunt.Evolution;
@@ -237,6 +238,13 @@ public final class Restless {
         Divination.ask(player);
     }
 
+    /** Call after a living thing finishes eating or drinking; {@code eaten} is the stack as it was before. */
+    public static void onEat(LivingEntity eater, ItemStack eaten) {
+        if (eater instanceof ServerPlayer player) {
+            Sanity.ate(player, eaten);
+        }
+    }
+
     /** Call when a player starts to break a block. */
     public static void onStartBreak(ServerPlayer player, BlockPos pos) {
         Swaps.reveal(player, pos);
@@ -251,6 +259,12 @@ public final class Restless {
         if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
             Reactions.used(server, level.getBlockState(pos));
             Charms.used(server, pos);
+            // Cake is eaten at the block, only by a hungry player whose hand does not take the click first.
+            if (level.getBlockState(pos).is(Blocks.CAKE)
+                    && server.canEat(false)
+                    && !(server.isSecondaryUseActive() && !server.getMainHandItem().isEmpty())) {
+                Sanity.sweet(server, "minecraft:cake");
+            }
         }
         if (level instanceof ServerLevel server
                 && hand == InteractionHand.MAIN_HAND
@@ -285,9 +299,11 @@ public final class Restless {
     }
 
     /** Call whenever a level is about to play a sound at a point; the sound itself is left alone. */
-    public static void onPlaySound(
-            Level level, Vec3 at, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) {
+    /** @return whether the sound must not be broadcast: a personal spirit's sound goes to its player alone */
+    public static boolean onPlaySound(
+            Level level, Vec3 at, @Nullable Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) {
         Echoes.hear(level, at, sound, source, volume, pitch);
+        return Earshot.keep(level, at, sound, source, volume, pitch);
     }
 
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
