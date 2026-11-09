@@ -26,10 +26,11 @@ import net.minecraft.world.item.crafting.RecipeHolder;
  * @param charms pages of charms, advanced ones after the basic
  * @param relics pages of relics
  * @param recipes the recipes of the player's recipe book that make one of the mod's items
+ * @param altar the altar's recipe, which the guide's chapter on the altar shows: nothing else teaches it
  */
-public record Codex(List<Card> charms, List<Card> relics, List<Card> recipes) {
+public record Codex(List<Card> charms, List<Card> relics, List<Card> recipes, Optional<Entry> altar) {
     /** No pages: a notebook seen without a player. */
-    public static final Codex NONE = new Codex(List.of(), List.of(), List.of());
+    public static final Codex NONE = new Codex(List.of(), List.of(), List.of(), Optional.empty());
 
     private static final List<String> CHARMS = List.of(
             "telekinesis_amulet",
@@ -68,7 +69,11 @@ public record Codex(List<Card> charms, List<Card> relics, List<Card> recipes) {
 
     /** What the player may read about, as of now. */
     public static Codex of(ServerPlayer player, Notebook notebook) {
-        return new Codex(pages(player, notebook, CHARMS), pages(player, notebook, RELICS), recipes(player));
+        return new Codex(
+                pages(player, notebook, CHARMS),
+                pages(player, notebook, RELICS),
+                recipes(player),
+                recipe(player, "altar"));
     }
 
     private static List<Card> pages(ServerPlayer player, Notebook notebook, List<String> items) {

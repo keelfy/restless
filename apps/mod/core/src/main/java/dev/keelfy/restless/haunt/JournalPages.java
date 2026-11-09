@@ -67,7 +67,7 @@ public final class JournalPages {
     /** The sections of the notebook, with the pages of charms, relics and known recipes the server worked out. */
     public static List<Section> sections(Notebook notebook, Codex codex) {
         List<Section> sections = new ArrayList<>();
-        sections.add(new Section("guide", guide(notebook)));
+        sections.add(new Section("guide", guide(notebook, codex)));
         sections.add(new Section("spirits", dossiers(notebook, false)));
         sections.add(new Section("archive", dossiers(notebook, true)));
         sections.add(new Section("loose", loose(notebook)));
@@ -81,7 +81,7 @@ public final class JournalPages {
         return List.copyOf(sections);
     }
 
-    private static List<Card> guide(Notebook notebook) {
+    private static List<Card> guide(Notebook notebook, Codex codex) {
         List<Card> cards = new ArrayList<>();
         for (Chapter chapter : Chapter.values()) {
             if (!notebook.has(chapter)) {
@@ -90,6 +90,9 @@ public final class JournalPages {
             List<Entry> paragraphs = new ArrayList<>();
             for (int i = 1; i <= chapter.pages; i++) {
                 paragraphs.add(Entry.plain(Component.translatable("journal.restless.guide." + chapter.id() + "." + i)));
+            }
+            if (chapter == Chapter.WEAKNESS) {
+                codex.altar().ifPresent(paragraphs::add);
             }
             cards.add(new Card(title(chapter), Optional.empty(), paragraphs));
         }

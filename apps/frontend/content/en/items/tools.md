@@ -87,7 +87,7 @@ Sections show once they have something to say:
 
 | Section | Holds |
 | --- | --- |
-| Guide | chapters that open as you run into what they are about: *Read this first* (given), *Signs* (the first event), *Telling them apart* (the first clue), *The altar* (the first photo), *Graves*, *Your head* (the first darkening of the edges), *Left alone* (the first evolution), *Essence* (the first banishing or rest) |
+| Guide | chapters that open as you run into what they are about: *Read this first* (given), *Signs* (the first event), *Telling them apart* (the first clue), *The altar* (the first photo; it also shows the altar's recipe), *Graves*, *Your head* (the first darkening of the edges), *Left alone* (the first evolution), *Essence* (the first banishing or rest) |
 | Spirits | a dossier per spirit you have met, in order: met means photographed or its grave read. Notes under it, and the latest photo |
 | Archive | spirits you banished and filed |
 | Loose notes | what was seen of a spirit you have not met yet |

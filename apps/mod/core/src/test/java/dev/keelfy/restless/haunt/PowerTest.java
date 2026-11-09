@@ -24,7 +24,7 @@ class PowerTest {
         assertEquals(0.7, Power.of(0, 0, true), 1e-9);
         assertEquals(1.0, Power.of(1000 * Ticks.DAY, 1, true), 1e-9);
         assertEquals(0.0, Power.of(0, 0, false));
-        assertTrue(Power.grown(5 * Ticks.DAY) && !Power.grown(5 * Ticks.DAY - 1));
+        assertTrue(Power.grown(10 * Ticks.DAY) && !Power.grown(10 * Ticks.DAY - 1));
         assertEquals(6.0, Power.blightReach(0, 48), 1e-9);
         assertEquals(48.0, Power.blightReach(100 * Ticks.DAY, 48), 1e-9);
         assertEquals(4.0, Power.blightReach(100 * Ticks.DAY, 4), 1e-9);

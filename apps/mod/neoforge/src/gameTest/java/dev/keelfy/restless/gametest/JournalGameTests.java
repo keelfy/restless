@@ -332,6 +332,16 @@ final class JournalGameTests {
                     codex.charms().getFirst().entries().getLast().items().size() == 3,
                     "a recipe row holds each ingredient and the result");
 
+            check(
+                    helper,
+                    JournalPages.sections(data.notebook(player.getUUID()), codex).stream()
+                            .filter(section -> section.key().equals("guide"))
+                            .flatMap(section -> section.cards().stream())
+                            .flatMap(card -> card.entries().stream())
+                            .anyMatch(entry -> !entry.items().isEmpty()
+                                    && entry.items().getLast().is(Content.ALTAR_ITEM.get())),
+                    "the chapter on the altar must show the altar's recipe");
+
             Journal.tagged(player, Notebook.Kind.BANISHED, null, "banshee", Component.literal("Banshee"), "Ann");
             check(
                     helper,
