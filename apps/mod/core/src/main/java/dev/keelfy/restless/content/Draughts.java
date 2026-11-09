@@ -26,17 +26,18 @@ import org.jspecify.annotations.Nullable;
 public final class Draughts {
     private Draughts() {}
 
-    /** Clears rain and thunder, and the weather runs its course again; drunk sneaking it calls a storm. */
+    /**
+     * Clears rain and thunder, and the weather runs its course again; drunk sneaking it calls a storm that runs its own
+     * course too.
+     */
     public static boolean still(ServerPlayer player, ServerLevel level) {
         if (level.dimension() != Level.OVERWORLD) {
             player.sendSystemMessage(Component.translatable("message.restless.still_elsewhere"), true);
             return false;
         }
-        Config.Section config = Config.section("consumables");
         MinecraftServer server = level.getServer();
         if (player.isShiftKeyDown()) {
-            int ticks = config.integer("still_storm_ticks");
-            server.setWeatherParameters(0, ticks, true, true);
+            server.setWeatherParameters(0, ServerLevel.THUNDER_DURATION.sample(level.getRandom()), true, true);
             player.sendSystemMessage(Component.translatable("message.restless.still_storm"), true);
         } else {
             server.setWeatherParameters(0, 0, false, false);

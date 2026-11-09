@@ -31,7 +31,7 @@ The altar refuses if you are already released, if a ritual is already running, o
 | Type | Movement (about 25 s) | Passed by |
 | --- | --- | --- |
 | Shade | The light dies around the altar | at least 4 light sources still lit at the end (Hallowed Lanterns count) |
-| Poltergeist | Items fly from your inventory | picking all of them back up (the Telekinesis Amulet helps) |
+| Poltergeist | Items fly from your inventory | picking all of them back up (the Telekinesis Rod helps) |
 | Nix | Water rises in the circle | not drowning, and keeping the altar dry (the Drowned Stone helps) |
 | Phantom | Six strangers stand outside the ring | not looking at any of them for the whole movement |
 | Mimic | Two false altars appear | putting holy water on the real one |

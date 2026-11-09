@@ -446,7 +446,6 @@
     "trickster_decoys": 3
   },
   "consumables": {
-    "still_storm_ticks": 12000,
     "ash_ticks": 6000,
     "ash_reach": 24,
     "ash_step": 1.4,
@@ -461,12 +460,11 @@
     "omen_radius": 16,
     "omen_warn_ticks": 100,
     "knot_radius": 8,
-    "porridge_radius": 16,
+    "porridge_radius": 32,
     "porridge_boost": 3,
     "porridge_repair": 8,
     "dusk_radius": 12,
     "dust_blocks": 64,
-    "mark_ticks": 72000,
     "mark_max": 8,
     "mark_range": 10,
     "draught_sanity": 0.3,

@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-/** Draws the block a mimic wears as that block's own model, or its true face while the Dark Eye shows it. */
+/** Draws the block a mimic wears as that block's own model, or its true face while the Dark Lens shows it. */
 public final class MimicRenderer implements BlockEntityRenderer<MimicBlockEntity, MimicRenderer.State> {
     private static final BlockDisplayContext CONTEXT = BlockDisplayContext.create();
 

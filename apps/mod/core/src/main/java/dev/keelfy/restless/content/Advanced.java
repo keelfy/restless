@@ -4,6 +4,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Anger;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.Session;
+import dev.keelfy.restless.platform.Platform;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,9 +35,8 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * What the advanced charms do beyond their base charm, where it is more than a few lines in the item itself: the
- * changeling mask's frame, the nightwalk shroud's toggle, the requital wail's mark, blood debt's payout and the
- * magpie's hook. {@link Charms} calls in where a blow, a death or a tick is the trigger. All of it lives in memory
- * only.
+ * changeling mask's frame, the nightwalk shroud's walk, the requital wail's mark, blood debt's payout and the magpie's
+ * hook. {@link Charms} calls in where a blow, a death or a tick is the trigger. All of it lives in memory only.
  */
 public final class Advanced {
     private Advanced() {}
@@ -56,7 +56,7 @@ public final class Advanced {
         return Config.section("advanced");
     }
 
-    // --- Changeling Mask -------------------------------------------------------------------------------------------
+    // --- Changeling Guise -------------------------------------------------------------------------------------------
 
     /**
      * Call when a player whose face is on strikes {@code victim}. A changeling's mask keeps its face through the first
@@ -160,6 +160,16 @@ public final class Advanced {
 
     /** Every half second for a player walking in the night: the light ends it, it costs sanity, hostiles lose track. */
     static void walk(ServerPlayer player) {
+        if (Platform.get().hasAccessories()) {
+            // Worn is on: the shroud in its slot walks as soon as the dark allows, no toggle.
+            boolean dark =
+                    player.level().getMaxLocalRawBrightness(player.blockPosition()) <= config().integer("walk_light");
+            if (dark
+                    && !Worn.carried(player, Content.NIGHTWALK_SHROUD).isEmpty()
+                    && NIGHTWALKERS.add(player.getUUID())) {
+                ghost(player);
+            }
+        }
         if (!NIGHTWALKERS.contains(player.getUUID())) {
             // A crash can leave a walker in the walking team; a walk that is not on lets them out.
             if (player.getTeam() != null && WALK_TEAM.equals(player.getTeam().getName())) {
@@ -168,7 +178,7 @@ public final class Advanced {
             return;
         }
         boolean lit = player.level().getMaxLocalRawBrightness(player.blockPosition()) > config().integer("walk_light");
-        if (carried(player, Content.NIGHTWALK_SHROUD).isEmpty() || lit) {
+        if (Worn.carried(player, Content.NIGHTWALK_SHROUD).isEmpty() || lit) {
             NIGHTWALKERS.remove(player.getUUID());
             unghost(player);
             player.sendSystemMessage(Component.translatable("message.restless.walk_ended"), true);
@@ -237,15 +247,13 @@ public final class Advanced {
      * rested.
      */
     public static boolean truthful(ServerPlayer player, dev.keelfy.restless.spirit.Clue clue) {
-        ItemStack eye = player.getOffhandItem();
-        return dev.keelfy.restless.haunt.Clues.speaks(clue)
-                && eye.is(Content.TRUTHSEERS_EYE.get())
-                && Rest.ready(eye, player.level());
+        ItemStack eye = Worn.held(player, Content.TRUTHSEERS_EYE);
+        return dev.keelfy.restless.haunt.Clues.speaks(clue) && !eye.isEmpty() && Rest.ready(eye, player.level());
     }
 
     /** The eye has kept one reading honest: it rests for the day. */
     public static void truthSpent(ServerPlayer player) {
-        Rest.start(player, player.getOffhandItem(), config().integer("truth_rest_ticks"));
+        Rest.start(player, Worn.held(player, Content.TRUTHSEERS_EYE), config().integer("truth_rest_ticks"));
         player.sendSystemMessage(Component.translatable("message.restless.truth_spent"), true);
     }
 
@@ -255,8 +263,8 @@ public final class Advanced {
      * Every half second for a holder of the hook in the off hand: nearby items come, and what will not fit is sent on.
      */
     static void hook(ServerPlayer player) {
-        ItemStack hook = player.getOffhandItem();
-        if (!hook.is(Content.MAGPIES_HOOK.get())) {
+        ItemStack hook = Worn.held(player, Content.MAGPIES_HOOK);
+        if (hook.isEmpty()) {
             return;
         }
         GlobalPos link = hook.get(Content.HOOK_LINK.get());

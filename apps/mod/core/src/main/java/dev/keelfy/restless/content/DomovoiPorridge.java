@@ -96,7 +96,7 @@ public final class DomovoiPorridge extends Item {
 
     /** A pass around one carrier: plants may take a random tick more, the young age faster. */
     private static void feed(ServerLevel level, ServerPlayer player, int radius, double chance, int boost) {
-        Scan.each(level, player.blockPosition(), radius, (at, plant) -> {
+        Scan.eachRandomTicking(level, player.blockPosition(), radius, (at, plant) -> {
             if (grows(plant) && level.getRandom().nextDouble() < chance) {
                 plant.randomTick(level, at, level.getRandom());
             }

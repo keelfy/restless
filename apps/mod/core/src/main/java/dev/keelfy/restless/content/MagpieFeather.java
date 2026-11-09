@@ -15,16 +15,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The hoarder's feather: used, a stream of light leads from the player to the nearest chest whose loot has not been
- * rolled, one nobody has opened, among the chunks that are loaded. It leads for {@code consumables.feather_ticks} or
- * until that chest is opened.
+ * The hoarder's feather: used, a stream of light leads from the player to the nearest chest or barrel whose loot has
+ * not been rolled, one nobody has opened, among the chunks that are loaded. It leads for
+ * {@code consumables.feather_ticks} or until that chest is opened.
  */
 public final class MagpieFeather extends Item {
     public MagpieFeather(Item.Properties properties) {
@@ -81,13 +83,16 @@ public final class MagpieFeather extends Item {
     }
 
     private static boolean unopened(ServerLevel level, @Nullable BlockPos at) {
-        return at != null
-                && level.isLoaded(at)
-                && level.getBlockEntity(at) instanceof ChestBlockEntity chest
-                && chest.getLootTable() != null;
+        return at != null && level.isLoaded(at) && loot(level.getBlockEntity(at));
     }
 
-    /** The nearest chest with a loot table not yet rolled, among the loaded chunks within {@code radius}. */
+    /** A chest or a barrel whose loot table is not yet rolled. */
+    private static boolean loot(@Nullable BlockEntity entity) {
+        return (entity instanceof ChestBlockEntity || entity instanceof BarrelBlockEntity)
+                && ((RandomizableContainerBlockEntity) entity).getLootTable() != null;
+    }
+
+    /** The nearest chest or barrel with a loot table not yet rolled, among the loaded chunks within {@code radius}. */
     public static @Nullable BlockPos nearest(ServerLevel level, BlockPos from, double radius) {
         int chunks = (int) Math.ceil(radius / 16.0);
         ChunkPos centre = ChunkPos.containing(from);
@@ -100,9 +105,7 @@ public final class MagpieFeather extends Item {
                     continue;
                 }
                 for (BlockEntity entity : chunk.getBlockEntities().values()) {
-                    if (entity instanceof ChestBlockEntity chest
-                            && chest.getLootTable() != null
-                            && entity.getBlockPos().distSqr(from) < bestDistance) {
+                    if (loot(entity) && entity.getBlockPos().distSqr(from) < bestDistance) {
                         bestDistance = entity.getBlockPos().distSqr(from);
                         best = entity.getBlockPos();
                     }

@@ -428,12 +428,52 @@ public final class Content {
                         key -> factory.apply(tipped(new Item.Properties().setId(key), tip)));
     }
 
-    /** Gives an item its one-line reminder of what it does, shown under its name. */
+    /** Charms worn in an accessory slot (or the off hand without Curios): their reminder is aqua. */
+    private static final java.util.Set<String> WORN = java.util.Set.of(
+            "death_wail",
+            "requital_wail",
+            "drowned_stone",
+            "tidecaller",
+            "grudge",
+            "blood_debt",
+            "house_key",
+            "keepers_key",
+            "grave_satchel",
+            "magpies_hook",
+            "truthseers_eye",
+            "nightwalk_shroud",
+            "ferrymans_coin");
+    /** Tools of the craft, used from the hand: their reminder is gold. */
+    private static final java.util.Set<String> TOOLS = java.util.Set.of(
+            "dark_eye",
+            "telekinesis_amulet",
+            "borrowed_face",
+            "changeling_mask",
+            "wraith_shroud",
+            "lost_step",
+            "fetch_path",
+            "phantom_double",
+            "twins_mirror",
+            "bargain",
+            "black_bargain",
+            "borrowed_dream",
+            "hearth_dream",
+            "trickster_coin",
+            "devils_coin",
+            "exorcists_censer");
+
+    /**
+     * Gives an item its one-line reminder of what it does, shown under its name. Worn charms and tools of the craft
+     * read in different colours, so a glance tells what goes in a slot from what is used.
+     */
     private static Item.Properties tipped(Item.Properties properties, String tip) {
+        ChatFormatting colour = WORN.contains(tip)
+                ? ChatFormatting.AQUA
+                : TOOLS.contains(tip) ? ChatFormatting.GOLD : ChatFormatting.GRAY;
         return properties.component(
                 DataComponents.LORE,
                 new ItemLore(List.of(
-                        Component.translatable("item.restless." + tip + ".tip").withStyle(ChatFormatting.GRAY))));
+                        Component.translatable("item.restless." + tip + ".tip").withStyle(colour))));
     }
 
     @SuppressWarnings("unchecked") // the registry is typed DataComponentType<?>; this entry is built for T

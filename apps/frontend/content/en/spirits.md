@@ -154,12 +154,12 @@ Banishing a spirit at an altar leaves one of its essence, and one more if it had
 
 | Spirit | Charm | Consumable |
 | --- | --- | --- |
-| Poltergeist | [Telekinesis Amulet](/en/items/charms#poltergeist-telekinesis-amulet) | [Restless Knot](/en/items/consumables#poltergeist-restless-knot) |
-| Shade | [Dark Eye](/en/items/charms#shade-dark-eye) | [Dusk Salt](/en/items/consumables#shade-dusk-salt) |
+| Poltergeist | [Telekinesis Rod](/en/items/charms#poltergeist-telekinesis-rod) | [Restless Knot](/en/items/consumables#poltergeist-restless-knot) |
+| Shade | [Dark Lens](/en/items/charms#shade-dark-lens) | [Dusk Salt](/en/items/consumables#shade-dusk-salt) |
 | Nix | [Drowned Stone](/en/items/charms#nix-drowned-stone) | [Still Water](/en/items/consumables#nix-still-water) |
 | Phantom | [Phantom Double](/en/items/charms#phantom-phantom-double) | [Sighting Mark](/en/items/consumables#phantom-sighting-mark) |
 | Mimic | [Borrowed Face](/en/items/charms#mimic-borrowed-face) | [Mimic Clay](/en/items/consumables#mimic-mimic-clay) |
-| Wraith | [Wraith Shroud](/en/items/charms#wraith-wraith-shroud) | [Wraith Oil](/en/items/consumables#wraith-wraith-oil) |
+| Wraith | [Wraith's Breath](/en/items/charms#wraith-wraiths-breath) | [Wraith Oil](/en/items/consumables#wraith-wraith-oil) |
 | Mara | [Borrowed Dream](/en/items/charms#mara-borrowed-dream) | [Dreamless Draught](/en/items/consumables#mara-dreamless-draught) |
 | Banshee | [Death Wail](/en/items/charms#banshee-death-wail) | [Omen Candle](/en/items/consumables#banshee-omen-candle) |
 | Revenant | [Grudge](/en/items/charms#revenant-grudge) | [Bloodied Rag](/en/items/consumables#revenant-bloodied-rag) |

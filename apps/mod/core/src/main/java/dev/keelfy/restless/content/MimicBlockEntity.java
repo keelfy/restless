@@ -14,7 +14,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
 /**
- * What a {@link MimicBlock} wears, and until when the Dark Eye has shown it bare. Both reach the client, which draws
+ * What a {@link MimicBlock} wears, and until when the Dark Lens has shown it bare. Both reach the client, which draws
  * the block from them.
  */
 public final class MimicBlockEntity extends BlockEntity {

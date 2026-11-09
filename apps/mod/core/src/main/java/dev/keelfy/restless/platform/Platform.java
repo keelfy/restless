@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -37,6 +38,19 @@ public interface Platform {
 
     /** The player's client takes payloads of this type: it has this mod (a test's mock player does not). */
     boolean canReceive(ServerPlayer player, CustomPacketPayload.Type<?> type);
+
+    /** Whether an accessory-slot mod is present: worn charms then work from its slots instead of the off hand. */
+    default boolean hasAccessories() {
+        return false;
+    }
+
+    /** The first stack of {@code item} the entity wears in an accessory slot, the stack itself; empty if none. */
+    default ItemStack accessory(LivingEntity entity, Item item) {
+        return ItemStack.EMPTY;
+    }
+
+    /** Empties the accessory slot that holds {@code stack}, the very stack {@link #accessory} returned. */
+    default void clearAccessory(LivingEntity entity, ItemStack stack) {}
 
     static Platform get() {
         return Holder.INSTANCE;

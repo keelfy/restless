@@ -214,8 +214,13 @@ final class ConsumableGameTests {
             player.setPos(Vec3.atBottomCenterOf(chest.offset(5, 0, 0)));
             check(
                     helper,
-                    chest.equals(MagpieFeather.nearest(level, player.blockPosition(), 128)),
-                    "the feather must find the unopened chest, and pass over a barrel nearer");
+                    barrel.equals(MagpieFeather.nearest(level, player.blockPosition(), 128)),
+                    "the feather must find an unopened barrel as well as a chest");
+            check(
+                    helper,
+                    chest.equals(
+                            MagpieFeather.nearest(level, player.blockPosition().offset(-5, 0, 0), 128)),
+                    "the feather must find the nearest unopened container");
             ItemStack feather = new ItemStack(Content.MAGPIE_FEATHER.get(), 2);
             player.setItemInHand(InteractionHand.MAIN_HAND, feather);
             check(
@@ -538,7 +543,7 @@ final class ConsumableGameTests {
             discard(player);
             helper.succeed();
         });
-        tests.put("sighting_mark_stands_is_named_fades_and_is_limited", helper -> {
+        tests.put("sighting_mark_stands_is_named_is_limited_and_is_taken_up", helper -> {
             ServerPlayer player = fresh(helper);
             ServerLevel level = helper.getLevel();
             BlockPos at = helper.absolutePos(new BlockPos(2, 0, 2));
@@ -560,11 +565,22 @@ final class ConsumableGameTests {
                     "a mark is drawn on the screen, not outlined, and carries its name");
             check(helper, Spells.get(level.getServer()).marks(player.getUUID()) == max, "the marks must be counted");
             SightingMark old = stands.get(0);
-            old.setUp(
-                    player.getUUID(),
-                    level.getGameTime() - Config.section("consumables").integer("mark_ticks") - 1);
-            old.tick();
-            check(helper, old.isRemoved(), "a mark must fade when its days are over");
+            check(helper, old.isPickable(), "a mark must be reachable by the hand");
+            int before = player.getInventory().countItem(Content.SIGHTING_MARK.get());
+            check(
+                    helper,
+                    old.interact(player, InteractionHand.MAIN_HAND, old.position())
+                                    .consumesAction()
+                            && old.isRemoved(),
+                    "a used mark must be taken up");
+            check(
+                    helper,
+                    player.getInventory().countItem(Content.SIGHTING_MARK.get()) == before + 1,
+                    "the taken mark must come back as an item");
+            check(
+                    helper,
+                    Spells.get(level.getServer()).marks(player.getUUID()) == max - 1,
+                    "a taken mark must stop counting");
             stands.stream().filter(m -> !m.isRemoved()).forEach(SightingMark::discard);
             check(helper, Spells.get(level.getServer()).marks(player.getUUID()) == 0, "gone marks must not count");
             discard(player);
@@ -605,7 +621,7 @@ final class ConsumableGameTests {
             player.setPos(Vec3.atBottomCenterOf(mimic.offset(3, 0, 0)));
             player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Content.DARK_EYE.get()));
             player.getMainHandItem().use(level, player, InteractionHand.MAIN_HAND);
-            check(helper, entity.revealed(level.getGameTime()), "the Dark Eye must show its true face");
+            check(helper, entity.revealed(level.getGameTime()), "the Dark Lens must show its true face");
             level.getBlockState(mimic).getBlock().playerWillDestroy(level, mimic, level.getBlockState(mimic), player);
             List<ItemEntity> drops = level.getEntitiesOfClass(ItemEntity.class, new AABB(mimic).inflate(2));
             check(

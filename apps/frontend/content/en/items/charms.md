@@ -4,19 +4,19 @@ title: Charms
 
 # Charms
 
-One essence and one common item, crafted together, shapeless. Each charm answers to one spirit type. Read the [rules every charm shares](/en/items#rules-every-charm-shares) first: most work from the off hand, one at a time.
+One essence and one common item, crafted together, shapeless. Each charm answers to one spirit type. Read the [rules every charm shares](/en/items#rules-every-charm-shares) first: some are worn in an accessory slot with Curios (the off hand without), the rest are used from the hand.
 
-## Poltergeist: Telekinesis Amulet
+## Poltergeist: Telekinesis Rod
 
-Poltergeist essence + gold ingot + string. In the off hand it pulls every dropped item and every orb of experience around to you. What lies in lava stays.
+Poltergeist essence + gold ingot + string. Use it: it pulls every dropped item and every orb of experience around to you. What lies in lava stays.
 
-## Shade: Dark Eye
+## Shade: Dark Lens
 
-Shade essence + ender eye. In the off hand you see in the dark, living things glow through walls for a while, and the spirits around you show where they stand as a faint dark-grey haze with a few motes of ash: easy to miss, plain once you look.
+Shade essence + ender eye. Use it: you see in the dark, living things glow through walls for a while, and the spirits around you show where they stand as a faint dark-grey haze with a few motes of ash: easy to miss, plain once you look.
 
 ## Nix: Drowned Stone
 
-Nix essence + nautilus shell. In the off hand: endless breath, Dolphin's Grace and full mining speed in water, and the events of water spirits do not run on you. The price is a weight, slowness, on dry ground.
+Nix essence + nautilus shell. Worn on the bracelet (off hand without Curios): endless breath, Dolphin's Grace and full mining speed in water, and the events of water spirits do not run on you. The price is a weight, slowness, on dry ground.
 
 ## Phantom: Phantom Double
 
@@ -26,7 +26,7 @@ Phantom essence + phantom membrane. Use it: a faint, see-through ghost of you st
 
 Mimic essence + leather. Use it: for 25 seconds hostile mobs take you for one of their own. It ends early if you strike, or open a chest or break a block under a hostile's eyes. Rest: 2 minutes.
 
-## Wraith: Wraith Shroud
+## Wraith: Wraith's Breath
 
 Wraith essence + iron ingot. Use it: for 5 seconds you are a shade. Blows pass through you and yours pass through what you strike, with no hit, knockback or hurt flash (arrows fly through too), but a fall or fire still hurts. Costs 0.2 sanity. Rest: 90 seconds.
 
@@ -36,11 +36,11 @@ Mara essence + honey bottle. Use it: sanity back to full at once. Your spirits g
 
 ## Banshee: Death Wail
 
-Banshee essence + bell. Carried anywhere in the inventory. Below 3 hearts it screams once a day: hostile mobs within 8 blocks are thrown back, slowed and blinded for 3 seconds. It also keens 3 seconds before a spirit's assault lands.
+Banshee essence + bell. Worn on the necklace (anywhere in the inventory without Curios). Below 3 hearts it screams once a day: hostile mobs within 8 blocks are thrown back, slowed and blinded for 3 seconds. It also keens 3 seconds before a spirit's assault lands.
 
 ## Revenant: Grudge
 
-Revenant essence + iron sword. In the off hand it stores the damage you take for 10 seconds. Your next blow adds half of it, up to 10.
+Revenant essence + iron sword. Worn on the ring (off hand without Curios), it stores the damage you take for 10 seconds. Your next blow adds half of it, up to 10.
 
 ## Lost one: Lost Step
 
@@ -48,7 +48,7 @@ Lost one essence + lantern. Use it: slip up to 8 blocks ahead, through a wall of
 
 ## Domovoi: House Key
 
-Domovoi essence + campfire. In the off hand, inside a shut, roofed room: the events of spirits do not run. Each one stopped wears the key. It has 16 uses. Domovoi's Porridge mends it by 8 in an anvil.
+Domovoi essence + campfire. Worn on the belt (off hand without Curios), inside a shut, roofed room: the events of spirits do not run. Each one stopped wears the key. It has 16 uses. Domovoi's Porridge mends it by 8 in an anvil.
 
 ## Hoarder: Stash
 

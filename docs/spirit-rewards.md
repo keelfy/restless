@@ -16,7 +16,7 @@ common item into that spirit's charm.
 | Nix | Drowned Stone | no air used in water, Dolphin's Grace and full mining speed under water; water events do not run on the holder | a weight (slowness) on dry ground |
 | Phantom | Phantom Double | a false copy of you draws mobs for 8 s | other players see it too; 1 min rest |
 | Mimic | Borrowed Face | hostile mobs take you for their own | 25 s; ends on your first hit, or on a chest opened or a block broken under a hostile's eyes; 2 min rest |
-| Wraith | Wraith Shroud | 5 s as a shade: blows pass through you, and yours through them; the world (fall, fire, lava) still hurts | costs 0.2 sanity; 90 s rest |
+| Wraith | Wraith's Breath | 5 s as a shade: blows pass through you, and yours through them; the world (fall, fire, lava) still hurts | costs 0.2 sanity; 90 s rest |
 | Mara | Borrowed Dream | restores sanity to full | your spirits grow angrier; once a day (a rest the item keeps, a relog does not clear it) |
 | Banshee | Death Wail | anywhere in the inventory: at < 3 hearts, a scream throws mobs back, slowed and blinded for 3 s; keens 3 s before a spirit's assault lands | one charge, back after a day (24000 ticks), saved with the item |
 | Revenant | Grudge | stores damage taken in 10 s; next hit adds half (cap 10) | must be hurt first |

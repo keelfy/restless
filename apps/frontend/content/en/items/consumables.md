@@ -16,15 +16,15 @@ Shade essence + salt + coal makes **4**. Scatter it on a block: no hostile mob s
 
 ## Nix: Still Water
 
-Nix essence + water bottle + prismarine shard makes **2**. Drink it: the rain and thunder clear, and the weather then runs its own course. Drink it sneaking: a storm for 10 minutes. Overworld only.
+Nix essence + water bottle + prismarine shard makes **2**. Drink it: the rain and thunder clear, and the weather then runs its own course. Drink it sneaking: a storm, of the length a natural one has. Overworld only.
 
 ## Phantom: Sighting Mark
 
-Phantom essence + paper + glowstone dust makes **4**. Set it on a block: a waypoint marks the spot for three days. Its icon shows through walls on the screen of every player who has it in view, from afar, and keeps one size however far it is, with the distance beneath. Rename the mark to name it. Eight at most at a time.
+Phantom essence + paper + glowstone dust makes **4**. Set it on a block: a waypoint marks the spot until you take it up again. Its icon shows through walls on the screen of every player who has it in view, from afar, and keeps one size however far it is, with the distance beneath. Use your hand on the mark to take it back. Rename the mark to name it. Eight at most at a time.
 
 ## Mimic: Mimic Clay
 
-Mimic essence + 4 clay balls makes **8**. Press it on a block and it takes that block's look. Set down, it is a solid block that looks like the original and breaks as slowly. It turns the way the block it copies would turn if you set it down just so: a log lies along the face you click, stairs face you. The Dark Eye shows it bare. Breaking it gives the clay back, with its look.
+Mimic essence + 4 clay balls makes **8**. Press it on a block and it takes that block's look. Set down, it is a solid block that looks like the original and breaks as slowly. It turns the way the block it copies would turn if you set it down just so: a log lies along the face you click, stairs face you. The Dark Lens shows it bare. Breaking it gives the clay back, with its look.
 
 ## Wraith: Wraith Oil
 
@@ -48,11 +48,11 @@ Lost one essence + ash powder + bone makes **4**. Use it: footprints lead to whe
 
 ## Domovoi: Domovoi's Porridge
 
-Domovoi essence + bowl + wheat + milk bucket makes **4**. Eat it: you gain Growth, which has no end of its own, only your death or a bucket of milk. While it lasts, crops and saplings within 16 blocks of you grow three times as fast, and young animals grow up sooner and breed again sooner. You leave the bowl. In an anvil the porridge mends a House Key by 8 uses.
+Domovoi essence + bowl + wheat + milk bucket makes **4**. Eat it: you gain Growth, which has no end of its own, only your death or a bucket of milk. While it lasts, crops and saplings within 32 blocks of you grow three times as fast, and young animals grow up sooner and breed again sooner. You leave the bowl. In an anvil the porridge mends a House Key by 8 uses.
 
 ## Hoarder: Magpie Feather
 
-Hoarder essence + feather + gold nugget makes **4**. Use it: for 5 minutes, or until somebody opens it, a stream of light leads to the nearest chest with loot nobody has opened. Only chests with a loot table count: not barrels or pots.
+Hoarder essence + feather + gold nugget makes **4**. Use it: for 5 minutes, or until somebody opens it, a stream of light leads to the nearest chest or barrel with loot nobody has opened. Only chests and barrels with a loot table count: not pots.
 
 ## Demon: Infernal Contract
 

@@ -25,7 +25,7 @@ A lantern that wards a wide place and teaches while it does.
 
 ## Ferryman's Coin
 
-Carry it in the **off hand**. When a blow would kill you, you **fade** instead:
+Wear it in the **charm slot** with Curios, or carry it in the **off hand** without. When a blow would kill you, you **fade** instead:
 
 - You come back at half your health, with all the effects on you gone and the fire put out, and your sanity falls to 0 at once.
 - For 10 seconds you are faded: invisible, nothing can hurt you, you can hurt nothing, you cannot use blocks, and hostile mobs lose track of you. You are not moved: you fade where you fell, with all your things.
@@ -48,7 +48,7 @@ A block that is a chest, and looks like a plain one until you give it a face.
 
 - **Store:** use it to open a store of 27 slots. It is **one store for you**, the same in every hollow you have, like an ender chest. It is kept in the saved data and not dropped when the block is broken, so you lose nothing by moving it.
 - **Disguise:** sneak and use [Mimic Clay](/en/items/consumables#mimic-mimic-clay) that has taken a look on it: it draws as that block from then on. Breaking it gives the clay back, still pressed.
-- The [Dark Eye](/en/items/charms#shade-dark-eye) shows it as it is.
+- The [Dark Lens](/en/items/charms#shade-dark-lens) shows it as it is.
 - **Theft:** when a hoarder's event on your belongings runs, there is a 1 in 5 chance that it also takes one stack from your hollows.
 
 ## Mara's Cradle

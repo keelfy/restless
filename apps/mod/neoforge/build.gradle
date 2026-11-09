@@ -8,6 +8,10 @@ sourceSets {
 	gameTest
 }
 
+configurations {
+	curiosClient
+}
+
 neoForge {
 	version = project.neo_version
 	addModdingDependenciesTo(sourceSets.gameTest)
@@ -24,6 +28,7 @@ neoForge {
 	runs {
 		client {
 			client()
+			additionalRuntimeClasspathConfiguration.extendsFrom configurations.curiosClient
 			loadedMods = [mods[mod_id]]
 		}
 		server {
@@ -97,4 +102,7 @@ dependencies {
 	compileOnly 'me.shedaniel.cloth:basic-math:0.6.0'
 	compileOnly('maven.modrinth:architectury-api:22.0.5+neoforge') { transitive = false }
 	compileOnly 'su.plo.voice.api:server:2.2.0-beta.2'
+	compileOnly('maven.modrinth:curios:17.0.1+26.3') { transitive = false }
+	// Curios is only on the dev client; game tests run without it, which is the plain off-hand path.
+	curiosClient('maven.modrinth:curios:17.0.1+26.3') { transitive = false }
 }

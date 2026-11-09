@@ -79,8 +79,8 @@ public final class Relics {
         if (!(dying instanceof ServerPlayer player) || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             return false;
         }
-        ItemStack coin = player.getOffhandItem();
-        if (!coin.is(Content.FERRYMANS_COIN.get()) || !Rest.ready(coin, player.level())) {
+        ItemStack coin = Worn.held(player, Content.FERRYMANS_COIN);
+        if (coin.isEmpty() || !Rest.ready(coin, player.level())) {
             return false;
         }
         Config.Section config = Config.section("relics");

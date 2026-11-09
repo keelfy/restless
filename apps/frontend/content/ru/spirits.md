@@ -154,12 +154,12 @@ title: Духи
 
 | Дух | Оберег | Расходник |
 | --- | --- | --- |
-| Полтергейст | [Амулет телекинеза](/ru/items/charms#poltergeist-telekinesis-amulet) | [Беспокойный узел](/ru/items/consumables#poltergeist-restless-knot) |
-| Тень | [Тёмный глаз](/ru/items/charms#shade-dark-eye) | [Сумеречная соль](/ru/items/consumables#shade-dusk-salt) |
+| Полтергейст | [Жезл телекинеза](/ru/items/charms#poltergeist-telekinesis-rod) | [Беспокойный узел](/ru/items/consumables#poltergeist-restless-knot) |
+| Тень | [Тёмная линза](/ru/items/charms#shade-dark-lens) | [Сумеречная соль](/ru/items/consumables#shade-dusk-salt) |
 | Никс | [Утопленный камень](/ru/items/charms#nix-drowned-stone) | [Тихая вода](/ru/items/consumables#nix-still-water) |
 | Фантом | [Призрачный двойник](/ru/items/charms#phantom-phantom-double) | [Метка видения](/ru/items/consumables#phantom-sighting-mark) |
 | Мимик | [Чужое лицо](/ru/items/charms#mimic-borrowed-face) | [Глина-подражатель](/ru/items/consumables#mimic-mimic-clay) |
-| Призрак | [Саван призрака](/ru/items/charms#wraith-wraith-shroud) | [Масло призрака](/ru/items/consumables#wraith-wraith-oil) |
+| Призрак | [Дыхание призрака](/ru/items/charms#wraith-wraiths-breath) | [Масло призрака](/ru/items/consumables#wraith-wraith-oil) |
 | Мара | [Чужой сон](/ru/items/charms#mara-borrowed-dream) | [Отвар без снов](/ru/items/consumables#mara-dreamless-draught) |
 | Банши | [Предсмертный вопль](/ru/items/charms#banshee-death-wail) | [Свеча предвестия](/ru/items/consumables#banshee-omen-candle) |
 | Ревенант | [Злопамятство](/ru/items/charms#revenant-grudge) | [Окровавленная тряпка](/ru/items/consumables#revenant-bloodied-rag) |

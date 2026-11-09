@@ -1,6 +1,7 @@
 package dev.keelfy.restless.neoforge;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.neoforge.compat.CuriosCompat;
 import dev.keelfy.restless.platform.Platform;
 import java.nio.file.Path;
 import java.util.AbstractList;
@@ -15,9 +16,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
@@ -74,6 +77,23 @@ public final class NeoForgePlatform implements Platform {
                         .icon(icon)
                         .displayItems(holders)
                         .build());
+    }
+
+    @Override
+    public boolean hasAccessories() {
+        return ModList.get().isLoaded("curios");
+    }
+
+    @Override
+    public ItemStack accessory(LivingEntity entity, Item item) {
+        return hasAccessories() ? CuriosCompat.find(entity, item) : ItemStack.EMPTY;
+    }
+
+    @Override
+    public void clearAccessory(LivingEntity entity, ItemStack stack) {
+        if (hasAccessories()) {
+            CuriosCompat.clear(entity, stack);
+        }
     }
 
     @Override

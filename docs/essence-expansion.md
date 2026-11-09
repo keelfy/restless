@@ -27,13 +27,13 @@ starting values, all in config.
 
 ## Part A. Rebalance of the twelve charms
 
-Twelve charms plus Telekinesis and Dark Eye: fourteen items. Changes, by priority.
+Twelve charms plus Telekinesis and Dark Lens: fourteen items. Changes, by priority.
 
 ### Too strong
 
 | Charm | Today | Change | Why |
 |---|---|---|---|
-| Wraith Shroud | 6 s: every damage without `bypasses_invulnerability` is cancelled (fall, lava, fire, drowning, suffocation too); 60 s rest; 0.15 sanity | Only blows pass through: damage with a causing or direct entity. The world still hurts. 5 s; 90 s rest; 0.2 sanity | A free totem every minute. A shade passes through bodies, not through lava |
+| Wraith's Breath | 6 s: every damage without `bypasses_invulnerability` is cancelled (fall, lava, fire, drowning, suffocation too); 60 s rest; 0.15 sanity | Only blows pass through: damage with a causing or direct entity. The world still hurts. 5 s; 90 s rest; 0.2 sanity | A free totem every minute. A shade passes through bodies, not through lava |
 | Borrowed Face | 60 s unseen, 120 s rest | 25 s unseen, 120 s rest; also ends when the holder opens a container or breaks a block within 6 blocks of a hostile that would see them | Half of all time spent unseen trivializes nights and caves |
 | Lost Step | Passes any wall of 1–2 blocks | Stops at blocks in the tag `restless:step_proof` (obsidian, crying obsidian, reinforced deepslate, iron door, iron bars, iron trapdoor, bedrock, barrier by default) | On a server it opens any base; a builder must be able to answer it |
 
@@ -49,8 +49,8 @@ Twelve charms plus Telekinesis and Dark Eye: fourteen items. Changes, by priorit
 
 | Charm | Change |
 |---|---|
-| Telekinesis Amulet | Also pulls experience orbs; skips items a hopper would not see, such as items in lava |
-| Dark Eye | Also marks the **roaming position** of each spirit within its radius (`Location.roaming`) with a short particle column, so the eye is a detection tool and not just night vision |
+| Telekinesis Rod | Also pulls experience orbs; skips items a hopper would not see, such as items in lava |
+| Dark Lens | Also marks the **roaming position** of each spirit within its radius (`Location.roaming`) with a short particle column, so the eye is a detection tool and not just night vision |
 | Stash | What it saved on death goes into `HauntData` (saved), not `Session` memory, so a server stop no longer loses it. Not spent when `keepInventory` is on |
 | House Key | 10 → 16 uses; repaired in an anvil with Domovoi's Porridge (Part C) |
 | Borrowed Dream | Rest saved with the item (rule 3) |
@@ -114,16 +114,16 @@ same way, and most of them touch the haunt.
 |---|---|---|---|---|
 | Poltergeist | **Restless Knot** | essence + string + 2 chain → 4 | Used on a container: items dropped within 8 blocks fly into it until the knot is taken back (used sneaking on the container; a broken container drops it). The poltergeist's wireless hopper | One knot per container; a full container lets items fall |
 | Shade | **Dusk Salt** | essence + salt + coal → 4 | Scattered on a block: no hostile mob spawns naturally within 12 blocks until swept up (used sneaking within 2 blocks of the spot). A dark room stays safe to build in | Spawners and events still spawn; shown by faint dark motes |
-| Nix | **Still Water** | essence + water bottle + prismarine shard → 2 | Drunk: clears rain and thunder now; the weather then runs its own course. Sneak-drunk: calls a storm for 10 min (for channeling and fishing) | Overworld only |
-| Phantom | **Sighting Mark** | essence + paper + glowstone dust → 4 | Placed: a waypoint (icon at constant size, name and distance, drawn over the world so it shows through walls) marks the spot for 3 in-game days. Named by an anvil-renamed mark | Max 8 per player; the entity is never targeted |
-| Mimic | **Mimic Clay** | essence + 4 clay balls → 8 | Used on a block: copies its look. Placed: a block that looks like the copy, turned as `getStateForPlacement` of the copied block gives for that placement, with the copy's collision shape kept full. Hides chests, doors and redstone | Not a container itself; breaks like the copied block; shows its true face to the Dark Eye |
+| Nix | **Still Water** | essence + water bottle + prismarine shard → 2 | Drunk: clears rain and thunder now; the weather then runs its own course. Sneak-drunk: calls a storm of natural length (for channeling and fishing) | Overworld only |
+| Phantom | **Sighting Mark** | essence + paper + glowstone dust → 4 | Placed: a waypoint (icon at constant size, name and distance, drawn over the world so it shows through walls) marks the spot until taken up (a hand-use on the mark gives the item back). Named by an anvil-renamed mark | Max 8 per player; the entity is never targeted |
+| Mimic | **Mimic Clay** | essence + 4 clay balls → 8 | Used on a block: copies its look. Placed: a block that looks like the copy, turned as `getStateForPlacement` of the copied block gives for that placement, with the copy's collision shape kept full. Hides chests, doors and redstone | Not a container itself; breaks like the copied block; shows its true face to the Dark Lens |
 | Wraith | **Wraith Oil** | essence + glass bottle + ink sac → 2 | Applied to a weapon: 30 hits that, in light 7 or less, deal +50% and ignore armor (as `bypasses_armor`) | Charges shown on the item; no effect in light |
 | Mara | **Dreamless Draught** | essence + honey bottle + poppy → 3 | Drunk before bed: sleep is allowed with monsters nearby, and the drinker counts as all players for `playersSleepingPercentage`, so the night is skipped. They wake with +0.3 sanity, and no Mara event runs that night | Server config `draught_skips_alone` (true by default) |
 | Banshee | **Omen Candle** | essence + candle + bone meal → 4 | Placed and lit: the next `HARMFUL` tier event aimed at a player within 16 blocks is announced by the candle's wail 5 s before it runs, and the candle goes out as the event lands (to be lit again) | Does not stop the event; snuffed by `LIGHTS` events like any candle |
 | Revenant | **Bloodied Rag** | essence + 2 rotten flesh + red dye → 4 | Thrown at a mob: until it dies, every mob of its type within 24 blocks targets it | Does nothing on bosses; the smear is not kept over a world restart |
 | Lost one | **Wayfinder's Ash** | essence + ash + bone → 4 | Used: a trail of footprints (the ash footprint entity) leads to the last death spot for 5 min. Sneak-used: to the respawn point | One trail at a time |
-| Domovoi | **Domovoi's Porridge** | essence + bowl + wheat + milk bucket (bucket returned) → 4 | Eaten: the Growth effect, with no end of its own (death or milk removes it): crops, saplings and young animals within 16 blocks of the eater get 3× random ticks and growth, and breeding rests half as long. Also repairs a House Key in an anvil (+8 uses) | One Growth at a time; the bowl is returned |
-| Hoarder | **Magpie Feather** | essence + feather + gold nugget → 4 | Used: for 5 min or until that chest is opened, points (a particle stream) to the nearest unopened loot chest within 128 blocks | Only chests (and trapped chests) with a loot table never rolled |
+| Domovoi | **Domovoi's Porridge** | essence + bowl + wheat + milk bucket (bucket returned) → 4 | Eaten: the Growth effect, with no end of its own (death or milk removes it): crops, saplings and young animals within 32 blocks of the eater get 3× random ticks and growth, and breeding rests half as long. Also repairs a House Key in an anvil (+8 uses) | One Growth at a time; the bowl is returned |
+| Hoarder | **Magpie Feather** | essence + feather + gold nugget → 4 | Used: for 5 min or until that chest is opened, points (a particle stream) to the nearest unopened loot chest or barrel within 128 blocks | Only chests (and trapped chests) and barrels with a loot table never rolled |
 | Demon | **Infernal Contract** | essence + paper + blaze powder → 1 | Crafted with an enchanted item: one enchantment goes **one level past its maximum** (Sharpness VI). The item gains Curse of Vanishing, and the crafter's spirits gain 0.3 anger | Once per item; a book cannot take it |
 | Trickster | **Changeling Dust** | essence + gold nugget + redstone → 4 | Used on a novice villager, traded with or not: rerolls their trades. Used on a block: turns it and the joined blocks of the same kind (up to 64) into one other block of the family (wool colors, log kinds, stone variants, terracotta) | Ores, spawners and block entities are excluded; villagers past novice are left alone |
 
@@ -137,13 +137,13 @@ recipe class (`UpgradeRecipe`, the same seam as `RelightingRecipe`) that copies 
 | Advanced charm | Recipe | Effect | Cost / limit |
 |---|---|---|---|
 | **Fetch's Path** | Lost Step + phantom essence | The step leaves a Phantom Double at the start for 4 s; hostiles within 16 go for it | Lost Step cost + 0.05 sanity; 25 s rest |
-| **Changeling Mask** | Borrowed Face + trickster essence | While unseen, the first blow does not break the face: the struck mob is **framed**, and the nearest hostile turns on it. A second blow breaks it | Same rest as Borrowed Face |
-| **Nightwalk Shroud** | Wraith Shroud + shade essence | A toggle: while on and in light 4 or less, the holder passes through hostiles and they lose track of them. Light above 4 ends it | 0.01 sanity per second while on; no blows pass |
+| **Changeling Guise** | Borrowed Face + trickster essence | While unseen, the first blow does not break the face: the struck mob is **framed**, and the nearest hostile turns on it. A second blow breaks it | Same rest as Borrowed Face |
+| **Nightwalk Shroud** | Wraith's Breath + shade essence | A toggle: while on and in light 4 or less, the holder passes through hostiles and they lose track of them. Light above 4 ends it | 0.01 sanity per second while on; no blows pass |
 | **Blood Debt** | Grudge + demon essence | No cap on the stored damage. If the released blow kills, the holder heals the stored amount | Each release costs 0.05 sanity; window stays 10 s |
 | **Requital Wail** | Death Wail + revenant essence | Those thrown back take +50% damage for 10 s and glow | Keeps the daily rest |
 | **Tidecaller** | Drowned Stone + lost one essence | Use in water or rain: a riptide-like dash without a trident. Off hand: the nix's call no longer pulls the holder | 3 s rest; no dash on dry ground |
-| **Magpie's Hook** | Telekinesis Amulet + hoarder essence | Off hand: items within 6 blocks come to the holder on their own. Sneak-use on a container links it, and items that do not fit go there, within 64 blocks and in the same dimension | The link breaks if the container is broken |
-| **Truthseer's Eye** | Dark Eye + banshee essence | Once per in-game day, the next clue the holder reads cannot lie (`lie_chance` 0 for that reveal) | Rest saved with the item |
+| **Magpie's Hook** | Telekinesis Rod + hoarder essence | Off hand: items within 6 blocks come to the holder on their own. Sneak-use on a container links it, and items that do not fit go there, within 64 blocks and in the same dimension | The link breaks if the container is broken |
+| **Truthseer's Eye** | Dark Lens + banshee essence | Once per in-game day, the next clue the holder reads cannot lie (`lie_chance` 0 for that reveal) | Rest saved with the item |
 | **Hearth Dream** | Borrowed Dream + domovoi essence | Sanity to full **without** anger, but only inside a shut, roofed room | Once a day, saved |
 | **Keeper's Key** | House Key + hoarder essence | Bound to the first room it shelters; there it never wears. Elsewhere it does nothing | Rebind by crafting it with a campfire |
 | **Grave Satchel** | Stash + lost one essence | Holds 3 stacks; they stay with the player on death. Not spent: rests 3 in-game days after it triggers | Saved in `HauntData` like the Stash |
@@ -165,7 +165,7 @@ belong to the late game.
 | **Hollow Lantern** (block) | shade + banshee + domovoi essence + Hallowed Lantern + echo shard | A ward of radius 24 (the lantern's ×4 area). An event it blocks **leaves a clue**: the blocked spirit's trait is written to the journal, as from the spirit box. Protection that teaches | One per chunk; does not stack with Hallowed Lanterns |
 | **Ferryman's Coin** | lost one + nix + trickster essence + nautilus shell + gold block | On a lethal blow (not the void), the holder fades instead of dying. 10 s later they come back where they fell with half health and their items, sanity set to 0 | Off hand; rests 3 in-game days, saved. A totem outranks it, so the totem is used first |
 | **Exorcist's Censer** | revenant + demon + wraith essence + soul lantern + blaze rod | Held during a ritual: 8 waves instead of 12, and candles within the circle cannot be snuffed. The spirit's fury events in the ritual are of `HARMFUL` tier only | The banished spirit drops +1 essence only if no candle went out; anger 0.1 per use |
-| **Hoarder's Hollow** (block) | hoarder + poltergeist + mimic essence + ender chest + shulker shell | A chest that looks like any block (Mimic Clay) and shares one inventory per player across all hollows, like an ender chest that hides | The Dark Eye shows it; one hoarder event in 5 that targets items may steal one stack from it |
+| **Hoarder's Hollow** (block) | hoarder + poltergeist + mimic essence + ender chest + shulker shell | A chest that looks like any block (Mimic Clay) and shares one inventory per player across all hollows, like an ender chest that hides | The Dark Lens shows it; one hoarder event in 5 that targets items may steal one stack from it |
 | **Mara's Cradle** (block) | mara + phantom + lost one essence + bed + amethyst block | A bed: sleeping in it skips the night for its owner alone (owner's time-of-day sanity, no world skip), and the owner wakes with full sanity. The spawn point it sets survives a broken bed once | A Mara event runs on the sleeper 1 night in 4, always light tier |
 
 ---
@@ -274,13 +274,13 @@ re-create the player, check it), and the stash's stack survives a server stop be
 
 | Item | Files |
 |---|---|
-| Wraith Shroud | `Charms.hurt`: the shade check only when `source.getEntity()` or `getDirectEntity()` is not null; config numbers |
+| Wraith's Breath | `Charms.hurt`: the shade check only when `source.getEntity()` or `getDirectEntity()` is not null; config numbers |
 | Borrowed Face | config; `Restless.onUseBlock` / break hook ends the face near a hostile |
 | Lost Step | `LostStep.landing`: stop at a block in `restless:step_proof`; tag json in `data/restless/tags/block` |
 | Death Wail | `Charms.hurt`: inventory search instead of off hand; `Rest`; warning hook in `Director.fire` for `ASSAULT` |
 | Drowned Stone | `Charms.held`: Dolphin's Grace, attribute modifier; `Wards.stops`: `WATER` events skip the holder |
 | Trickster's Coin | `TricksterCoin` + `Charms.drops`: streak component, multiplier, daily decay; pure odds and decay math in a unit-tested helper |
-| Telekinesis, Dark Eye, Stash, House Key, Dream | as in the table; Dark Eye reads `Location.roaming` |
+| Telekinesis, Dark Lens, Stash, House Key, Dream | as in the table; Dark Lens reads `Location.roaming` |
 
 Tests: `CharmGameTests` grows one test per change (the Shroud takes fall damage but not a zombie's blow, the Wail
 works from the inventory, the step stops at obsidian, a coin streak pays ×3, a WATER event skips the stone's holder).
@@ -304,9 +304,9 @@ Tests: `BirthGameTests` (a witnessed death births a banshee, an effigy respects 
 **Built:** all fourteen, in `content/` (one class each, `Consumables` for the server clock and loader hooks), config section `consumables`, recipes, lang (en, ru), textures. State that must outlast a restart is in `haunt/Spells.java` (a second `SavedData`: knots, dusk salt, the marks each player set); the rest is block state, block scheduled ticks, or entities. **New hooks** (loader side, `RestlessNeoForge`): `FinalizeSpawnEvent` (Dusk Salt), `AnvilUpdateEvent` (Porridge mends the House Key), `CanPlayerSleepEvent` (Dreamless Draught). **Differences from the plan:**
 
 - **Wraith Oil** and **Infernal Contract** are used with the weapon or item in the other hand, not crafted with it (no custom recipe class). The oil's charges are a `charges` component with a tooltip; armor is ignored by asking for as much more damage as the armor is about to take off. The contract raises one enchantment that is at its peak, refuses an item with any enchantment already past its peak (once per item), and a book holds no enchantment of its own.
-- **Mimic Clay** drops the clay (with its look) when its block breaks, not the copied block's drops: that would copy any block for the price of one clay. A mimic is drawn by a block entity renderer from the look it holds, is full-collision, breaks as slowly as what it shows, and shows a bare clay face to the Dark Eye (reveal while the eye sees). It can take the look of any block drawn from a model.
-- **Sighting Mark** is an invisible entity that `SightingMarkHud` (a HUD layer) draws as a waypoint: the mark item's icon projected to the screen, one size at any distance, with its name and distance. It is seen as far as the game sends entities: its tracking range is `consumables.mark_range` (10 chunks). It is counted per player in `Spells`, takes no blows, and fades after three days.
-- **Magpie Feather** scans the loaded chunks only, for a chest with a loot table; it locks on the first one and stops when that chest is opened.
+- **Mimic Clay** drops the clay (with its look) when its block breaks, not the copied block's drops: that would copy any block for the price of one clay. A mimic is drawn by a block entity renderer from the look it holds, is full-collision, breaks as slowly as what it shows, and shows a bare clay face to the Dark Lens (reveal while the eye sees). It can take the look of any block drawn from a model.
+- **Sighting Mark** is an invisible entity that `SightingMarkHud` (a HUD layer) draws as a waypoint: the mark item's icon projected to the screen, one size at any distance, with its name and distance. It is seen as far as the game sends entities: its tracking range is `consumables.mark_range` (10 chunks). It is counted per player in `Spells`, takes no blows, and does not fade; a hand-use on it gives the item back.
+- **Magpie Feather** scans the loaded chunks only, for a chest or barrel with a loot table; it locks on the first one and stops when it is opened.
 - **Wayfinder's Ash** lays free `AshFootprint`s (a `free` flag on the entity, no ash needed) ahead of the player toward the last death or, sneaking, the respawn point, one second at a time; the trail ends on arrival or after five minutes, and only one at a time.
 - **Dreamless Draught** is an effect that lasts until its drinker has slept deep and woken. The night is skipped by lowering `playersSleepingPercentage` for one tick while the drinker is deep asleep (`draught_skips_alone`), and the drinker's mara does not act meanwhile.
 - **Domovoi's Porridge** is an item that gives the `growth` effect (infinite duration); a pass every two seconds over each carrier does the growing, so it works as long as the carrier is there.
@@ -342,7 +342,7 @@ a tick budget).
 - Grave Satchel: at death the whole satchel, resting for `advanced.satchel_rest_ticks`, goes into the same saved `kept` slot the Stash uses, so there is one slot per player and a server stop keeps it.
 - Tidecaller: in the off hand it is a Drowned Stone in every way (the weight on dry ground too) and also dashes in water or rain.
 - Truthseer's Eye: only the speaking tools (voice, planchette) can lie, so only they use the eye, and a reading spends it only when the spirit read has a lying trait.
-- Requital Wail's mark, the Changeling Mask's frame state and Blood Debt's pending payout are in memory (seconds long).
+- Requital Wail's mark, the Changeling Guise's frame state and Blood Debt's pending payout are in memory (seconds long).
 - Devil's Coin and Hearth Dream: a new anger source `devil` (0.1) for the coin; the dream is Borrowed Dream with the anger and the open air taken out.
 
 Tests: `AdvancedCharmGameTests`, one per charm, plus one that every upgrade matches and a filled Stash becomes a Satchel with its stack.

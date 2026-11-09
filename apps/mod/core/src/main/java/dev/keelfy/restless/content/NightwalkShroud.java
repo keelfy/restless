@@ -1,5 +1,6 @@
 package dev.keelfy.restless.content;
 
+import dev.keelfy.restless.platform.Platform;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -11,8 +12,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
 /**
- * The wraith's shroud with the shade's dark: a toggle. While it is on and the light is low, hostile things lose track
- * of the holder, at a little sanity a second; light ends it, see {@link Advanced#walk}.
+ * The wraith's shroud with the shade's dark: a toggle, or simply worn in an accessory slot. While it is on and the
+ * light is low, hostile things lose track of the holder, at a little sanity a second; light ends it, see
+ * {@link Advanced#walk}.
  */
 public final class NightwalkShroud extends Item {
     public NightwalkShroud(Item.Properties properties) {
@@ -21,6 +23,9 @@ public final class NightwalkShroud extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (Platform.get().hasAccessories()) {
+            return InteractionResult.PASS; // worn in its slot it is on, nothing to toggle
+        }
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }

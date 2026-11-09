@@ -36,7 +36,7 @@ public final class SightingMarkItem extends Item {
         @SuppressWarnings("unchecked") // registered as this class
         SightingMark mark = new SightingMark((EntityType<? extends SightingMark>) Content.MARK_ENTITY.get(), level);
         mark.setPos(at.getX() + 0.5, at.getY() + 0.3, at.getZ() + 0.5);
-        mark.setUp(player.getUUID(), level.getGameTime());
+        mark.setUp(player.getUUID());
         ItemStack stack = context.getItemInHand();
         if (stack.has(DataComponents.CUSTOM_NAME)) {
             mark.setCustomName(stack.getHoverName());

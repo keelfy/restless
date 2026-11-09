@@ -27,14 +27,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -53,8 +51,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * What the charms do beyond being used: the ones that act on a blow, a death or a hostile's eye. Charms that work while
- * held work from the off hand only, so no more than one answers at a time.
+ * What the charms do beyond being used: the ones that act on a blow, a death or a hostile's eye. Worn charms work from
+ * their accessory slot, or from the off hand without an accessory mod, see {@link Worn}.
  */
 public final class Charms {
     private static final Identifier STONE_MINING = Identifier.fromNamespaceAndPath(Restless.MOD_ID, "drowned_stone");
@@ -80,11 +78,6 @@ public final class Charms {
         return blow && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) && passes(victim, source.getEntity());
     }
 
-    private static boolean offhand(Entity entity, Supplier<Item> item) {
-        return entity instanceof LivingEntity living
-                && living.getItemInHand(InteractionHand.OFF_HAND).is(item.get());
-    }
-
     /** The first stack of {@code item} the player carries anywhere, off hand included; empty if none. */
     static ItemStack carried(Entity entity, Supplier<Item> item) {
         if (!(entity instanceof ServerPlayer player)) {
@@ -104,8 +97,8 @@ public final class Charms {
 
     /** The wail a player carries, the requital wail too. */
     private static ItemStack wail(ServerPlayer player) {
-        ItemStack wail = carried(player, Content.DEATH_WAIL);
-        return wail.isEmpty() ? carried(player, Content.REQUITAL_WAIL) : wail;
+        ItemStack wail = Worn.carried(player, Content.DEATH_WAIL);
+        return wail.isEmpty() ? Worn.carried(player, Content.REQUITAL_WAIL) : wail;
     }
 
     /** What the grudge has stored and until when. */
@@ -184,10 +177,10 @@ public final class Charms {
         Config.Section config = Config.section("charms");
         if (source.getEntity() instanceof ServerPlayer attacker
                 && attacker != victim
-                && (offhand(attacker, Content.GRUDGE) || offhand(attacker, Content.BLOOD_DEBT))) {
+                && (Worn.has(attacker, Content.GRUDGE) || Worn.has(attacker, Content.BLOOD_DEBT))) {
             Stored stored = GRUDGES.remove(attacker.getUUID());
             if (stored != null && stored.until() > now) {
-                boolean debt = offhand(attacker, Content.BLOOD_DEBT);
+                boolean debt = Worn.has(attacker, Content.BLOOD_DEBT);
                 float share = (float) (stored.amount() * config.num("grudge_share"));
                 dealt += debt ? share : (float) Math.min(config.num("grudge_cap"), share);
                 if (debt) {
@@ -204,7 +197,7 @@ public final class Charms {
             }
         }
         if (victim instanceof ServerPlayer holder
-                && (offhand(holder, Content.GRUDGE) || offhand(holder, Content.BLOOD_DEBT))) {
+                && (Worn.has(holder, Content.GRUDGE) || Worn.has(holder, Content.BLOOD_DEBT))) {
             Stored old = GRUDGES.get(holder.getUUID());
             float kept = old != null && old.until() > now ? old.amount() : 0.0f;
             GRUDGES.put(holder.getUUID(), new Stored(kept + amount, now + config.integer("grudge_window_ticks")));
@@ -225,7 +218,7 @@ public final class Charms {
         Config.Section config = Config.section("charms");
         Advanced.walk(player);
         Advanced.hook(player);
-        boolean stone = offhand(player, Content.DROWNED_STONE) || offhand(player, Content.TIDECALLER);
+        boolean stone = Worn.has(player, Content.DROWNED_STONE) || Worn.has(player, Content.TIDECALLER);
         if (stone) {
             // Water is its own: breath without end there, and on dry ground the stone is a weight.
             if (player.isInWater()) {
@@ -250,7 +243,7 @@ public final class Charms {
     /** Whether a held stone keeps a nix off its holder: a spirit of water does not drown its own. */
     public static boolean spared(ServerPlayer player, HauntEvent event) {
         return event.tags().contains(EventTag.WATER)
-                && (offhand(player, Content.DROWNED_STONE) || offhand(player, Content.TIDECALLER));
+                && (Worn.has(player, Content.DROWNED_STONE) || Worn.has(player, Content.TIDECALLER));
     }
 
     /**
@@ -360,17 +353,18 @@ public final class Charms {
 
     /** Whether a held house key shelters the player from a spirit's event, and wears from it. */
     public static boolean keeps(ServerPlayer player) {
-        ItemStack key = player.getOffhandItem();
         if (!Wards.housed(player.level(), player.blockPosition())) {
             return false;
         }
-        if (key.is(Content.KEEPERS_KEY.get())) {
-            return keeper(player, key);
+        ItemStack keeper = Worn.held(player, Content.KEEPERS_KEY);
+        if (!keeper.isEmpty()) {
+            return keeper(player, keeper);
         }
-        if (!key.is(Content.HOUSE_KEY.get())) {
+        ItemStack key = Worn.held(player, Content.HOUSE_KEY);
+        if (key.isEmpty()) {
             return false;
         }
-        key.hurtAndBreak(1, player, EquipmentSlot.OFFHAND);
+        key.hurtAndBreak(1, player.level(), player, item -> {});
         if (key.isEmpty()) {
             player.sendSystemMessage(Component.translatable("message.restless.key_broke"), true);
         }
@@ -397,7 +391,7 @@ public final class Charms {
 
     private static void scream(ServerPlayer player, Config.Section config) {
         double strength = config.num("wail_knockback");
-        boolean requital = !carried(player, Content.REQUITAL_WAIL).isEmpty();
+        boolean requital = !Worn.carried(player, Content.REQUITAL_WAIL).isEmpty();
         for (LivingEntity mob : player.level()
                 .getEntitiesOfClass(
                         LivingEntity.class,
@@ -436,8 +430,8 @@ public final class Charms {
      * player.
      */
     public static void died(ServerPlayer player) {
-        ItemStack satchel = player.getOffhandItem();
-        if (satchel.is(Content.GRAVE_SATCHEL.get())
+        ItemStack satchel = Worn.held(player, Content.GRAVE_SATCHEL);
+        if (!satchel.isEmpty()
                 && !keepsInventory(player)
                 && Rest.ready(satchel, player.level())
                 && !GraveSatchel.held(satchel).isEmpty()) {
@@ -446,7 +440,7 @@ public final class Charms {
                     Content.REST_UNTIL.get(),
                     player.level().getGameTime() + Config.section("advanced").integer("satchel_rest_ticks"));
             HauntData.get(player.level().getServer()).keep(player.getUUID(), kept);
-            player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+            Worn.clear(player, satchel);
             return;
         }
         if (keepsInventory(player)) {
