@@ -11,20 +11,7 @@
   },
   "haunt.scream": {
     "subtitle": "subtitles.restless.scream",
-    "sounds": [
-      {
-        "name": "restless:haunt/scream_1"
-      },
-      {
-        "name": "restless:haunt/scream_2"
-      },
-      {
-        "name": "restless:haunt/scream_3"
-      },
-      {
-        "name": "restless:haunt/scream_4"
-      }
-    ]
+    "sounds": []
   },
   "haunt.cut_off_scream": {
     "subtitle": "subtitles.restless.scream",
