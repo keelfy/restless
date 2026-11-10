@@ -1,6 +1,6 @@
 package dev.keelfy.restless.content.block;
 
-import dev.keelfy.restless.haunt.Divination;
+import dev.keelfy.restless.divine.Divination;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;

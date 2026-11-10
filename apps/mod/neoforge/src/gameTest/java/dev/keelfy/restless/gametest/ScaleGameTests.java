@@ -1,10 +1,10 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.Restless;
-import dev.keelfy.restless.haunt.Births;
-import dev.keelfy.restless.haunt.HauntData;
-import dev.keelfy.restless.haunt.Sense;
-import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.divine.Sense;
+import dev.keelfy.restless.spirit.life.Births;
+import dev.keelfy.restless.state.HauntData;
+import dev.keelfy.restless.ward.Wards;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

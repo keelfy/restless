@@ -1,10 +1,10 @@
 package dev.keelfy.restless.content.block;
 
+import dev.keelfy.restless.banish.Requiem;
+import dev.keelfy.restless.banish.Ritual;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.item.Reliquary;
-import dev.keelfy.restless.haunt.Requiem;
-import dev.keelfy.restless.haunt.Ritual;
 import dev.keelfy.restless.haunt.event.Machines;
 import dev.keelfy.restless.spirit.Focus;
 import dev.keelfy.restless.spirit.Form;

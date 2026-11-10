@@ -2,8 +2,8 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
-import dev.keelfy.restless.haunt.Session;
 import dev.keelfy.restless.haunt.Ticks;
+import dev.keelfy.restless.state.Session;
 import io.netty.buffer.Unpooled;
 import java.util.HashMap;
 import java.util.Map;

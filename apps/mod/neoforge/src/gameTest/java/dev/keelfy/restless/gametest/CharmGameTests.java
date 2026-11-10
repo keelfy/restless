@@ -7,15 +7,15 @@ import dev.keelfy.restless.content.item.charm.DarkEye;
 import dev.keelfy.restless.content.item.charm.Luck;
 import dev.keelfy.restless.content.item.charm.Rest;
 import dev.keelfy.restless.haunt.Director;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntData;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.History;
-import dev.keelfy.restless.haunt.Sanity;
-import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.haunt.event.EventTag;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.haunt.event.HauntEvents;
+import dev.keelfy.restless.sanity.Sanity;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.state.HauntData;
+import dev.keelfy.restless.ward.Wards;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -531,7 +531,7 @@ final class CharmGameTests {
     static void sanityChannel(ServerPlayer player) {
         net.neoforged.neoforge.network.registration.ChannelAttributes.getOrCreateCommonChannels(
                         player.connection.getConnection(), net.minecraft.network.ConnectionProtocol.PLAY)
-                .add(dev.keelfy.restless.haunt.SanityPayload.TYPE.id());
+                .add(dev.keelfy.restless.sanity.SanityPayload.TYPE.id());
     }
 
     /** A relog drops the vanilla cooldowns, which are not saved; what the stack itself keeps stays. */

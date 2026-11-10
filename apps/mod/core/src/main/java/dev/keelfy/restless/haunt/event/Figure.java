@@ -1,7 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import com.mojang.authlib.GameProfile;
-import dev.keelfy.restless.haunt.ScenarioContext;
+import dev.keelfy.restless.haunt.scenario.ScenarioContext;
 import dev.keelfy.restless.spirit.Story;
 import java.util.List;
 import java.util.Random;

@@ -17,11 +17,11 @@ import dev.keelfy.restless.content.item.consumable.DuskSalt;
 import dev.keelfy.restless.content.item.consumable.MagpieFeather;
 import dev.keelfy.restless.content.item.consumable.RestlessKnot;
 import dev.keelfy.restless.haunt.Director;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntTier;
-import dev.keelfy.restless.haunt.Sanity;
-import dev.keelfy.restless.haunt.Spells;
+import dev.keelfy.restless.haunt.event.EventTag;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.haunt.event.HauntTier;
+import dev.keelfy.restless.sanity.Sanity;
+import dev.keelfy.restless.ward.Spells;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -756,7 +756,7 @@ final class ConsumableGameTests {
     private static void sanityChannel(ServerPlayer player) {
         net.neoforged.neoforge.network.registration.ChannelAttributes.getOrCreateCommonChannels(
                         player.connection.getConnection(), net.minecraft.network.ConnectionProtocol.PLAY)
-                .add(dev.keelfy.restless.haunt.SanityPayload.TYPE.id());
+                .add(dev.keelfy.restless.sanity.SanityPayload.TYPE.id());
     }
 
     /** The bed timer is private; a drinker is "deep asleep" once it has run its hundred ticks. */

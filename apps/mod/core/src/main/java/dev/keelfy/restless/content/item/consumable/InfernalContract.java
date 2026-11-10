@@ -1,6 +1,6 @@
 package dev.keelfy.restless.content.item.consumable;
 
-import dev.keelfy.restless.haunt.Anger;
+import dev.keelfy.restless.spirit.life.Anger;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.Holder;

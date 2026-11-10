@@ -1,5 +1,7 @@
 package dev.keelfy.restless.haunt;
 
+import dev.keelfy.restless.haunt.recall.Said;
+import dev.keelfy.restless.haunt.scenario.ScenarioContext;
 import java.util.UUID;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;

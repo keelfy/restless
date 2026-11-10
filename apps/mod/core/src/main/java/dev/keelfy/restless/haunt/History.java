@@ -1,5 +1,6 @@
 package dev.keelfy.restless.haunt;
 
+import dev.keelfy.restless.state.Session;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;

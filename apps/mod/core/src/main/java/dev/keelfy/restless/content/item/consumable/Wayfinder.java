@@ -3,7 +3,7 @@ package dev.keelfy.restless.content.item.consumable;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.entity.AshFootprint;
 import dev.keelfy.restless.haunt.Scheduler;
-import dev.keelfy.restless.haunt.Session;
+import dev.keelfy.restless.state.Session;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

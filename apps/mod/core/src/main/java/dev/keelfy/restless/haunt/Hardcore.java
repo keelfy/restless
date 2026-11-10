@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Settings;
+import dev.keelfy.restless.state.HauntData;
 import net.minecraft.server.level.ServerLevel;
 
 /**

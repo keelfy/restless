@@ -1,6 +1,5 @@
 package dev.keelfy.restless.haunt.event;
 
-import dev.keelfy.restless.haunt.HauntEvent;
 import java.util.List;
 import java.util.stream.Stream;
 

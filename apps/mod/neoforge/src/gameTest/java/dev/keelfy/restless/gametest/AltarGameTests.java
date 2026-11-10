@@ -3,7 +3,7 @@ package dev.keelfy.restless.gametest;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Altar;
 import dev.keelfy.restless.haunt.Scan;
-import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.ward.Wards;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;

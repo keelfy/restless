@@ -2,12 +2,12 @@ package dev.keelfy.restless.debug;
 
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Faults;
-import dev.keelfy.restless.haunt.HauntData;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntEvents;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.haunt.event.HauntEvents;
 import dev.keelfy.restless.spirit.Traits;
+import dev.keelfy.restless.state.HauntData;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;

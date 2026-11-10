@@ -1,8 +1,8 @@
 package dev.keelfy.restless.debug;
 
 import dev.keelfy.restless.Restless;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntTier;
+import dev.keelfy.restless.haunt.event.EventTag;
+import dev.keelfy.restless.haunt.event.HauntTier;
 import io.netty.buffer.ByteBuf;
 import java.util.List;
 import net.minecraft.network.codec.ByteBufCodecs;

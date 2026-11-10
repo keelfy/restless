@@ -2,8 +2,8 @@ package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntEvents;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.haunt.event.HauntEvents;
 import dev.keelfy.restless.haunt.event.Scares;
 import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package dev.keelfy.restless.content.item;
 
-import dev.keelfy.restless.haunt.Journal;
+import dev.keelfy.restless.journal.Journal;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

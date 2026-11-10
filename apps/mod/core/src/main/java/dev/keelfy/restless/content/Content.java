@@ -84,6 +84,7 @@ import dev.keelfy.restless.content.item.consumable.Wayfinder;
 import dev.keelfy.restless.content.item.consumable.WraithOil;
 import dev.keelfy.restless.content.recipe.RelightingRecipe;
 import dev.keelfy.restless.content.recipe.UpgradeRecipe;
+import dev.keelfy.restless.photo.Picture;
 import dev.keelfy.restless.platform.Platform;
 import java.util.List;
 import java.util.Map;
@@ -376,7 +377,7 @@ public final class Content {
     public static final Supplier<Item> MIMIC_CLAY = item("mimic_clay", MimicClay::new);
     /**
      * Holds one essence of each type; full and sung over, it becomes the bell. See
-     * {@link dev.keelfy.restless.haunt.Requiem}.
+     * {@link dev.keelfy.restless.banish.Requiem}.
      */
     public static final Supplier<Item> RELIQUARY = item("reliquary", p -> new Reliquary(p.stacksTo(1)));
 

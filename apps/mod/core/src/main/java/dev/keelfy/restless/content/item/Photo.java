@@ -1,7 +1,7 @@
 package dev.keelfy.restless.content.item;
 
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.Picture;
+import dev.keelfy.restless.photo.Picture;
 import java.util.Optional;
 import java.util.Random;
 import net.minecraft.util.Mth;

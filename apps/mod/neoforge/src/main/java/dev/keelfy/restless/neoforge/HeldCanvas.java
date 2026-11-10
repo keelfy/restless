@@ -2,9 +2,9 @@ package dev.keelfy.restless.neoforge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.keelfy.restless.Restless;
-import dev.keelfy.restless.content.PhotoTooltip;
-import dev.keelfy.restless.content.Picture;
-import dev.keelfy.restless.haunt.PageCanvas;
+import dev.keelfy.restless.journal.client.PageCanvas;
+import dev.keelfy.restless.photo.Picture;
+import dev.keelfy.restless.photo.client.PhotoTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.SubmitNodeCollector;

@@ -6,10 +6,10 @@ import static dev.keelfy.restless.gametest.HauntEventGameTests.connected;
 import static dev.keelfy.restless.gametest.SignatureGameTests.signature;
 
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.Kills;
-import dev.keelfy.restless.haunt.Overheard;
-import dev.keelfy.restless.haunt.Trail;
-import dev.keelfy.restless.haunt.Wakes;
+import dev.keelfy.restless.haunt.recall.Kills;
+import dev.keelfy.restless.haunt.recall.Overheard;
+import dev.keelfy.restless.haunt.recall.Trail;
+import dev.keelfy.restless.haunt.recall.Wakes;
 import dev.keelfy.restless.spirit.Spirits;
 import java.util.List;
 import java.util.Map;
@@ -521,7 +521,7 @@ final class SignatureBatchTests {
             for (String id : List.of("mara_dream", "mara_stolen_rest", "mara_weight")) {
                 check(
                         helper,
-                        !dev.keelfy.restless.haunt.HauntEvents.byId(net.minecraft.resources.Identifier.parse(id))
+                        !dev.keelfy.restless.haunt.event.HauntEvents.byId(net.minecraft.resources.Identifier.parse(id))
                                 .orElseThrow()
                                 .canRun(player),
                         id + " must wait for a waking");
@@ -610,7 +610,7 @@ final class SignatureBatchTests {
                     helper.absolutePos(FEET).getX() + 0.5,
                     helper.absolutePos(FEET).getY(),
                     helper.absolutePos(FEET).getZ() + 0.5);
-            var event = dev.keelfy.restless.haunt.HauntEvents.byId(
+            var event = dev.keelfy.restless.haunt.event.HauntEvents.byId(
                             net.minecraft.resources.Identifier.parse("mimic_chest"))
                     .orElseThrow();
             check(helper, event.canRun(player), "mimic_chest must be able to run beside a chest");
@@ -691,14 +691,14 @@ final class SignatureBatchTests {
                 chest.setItem(i, new ItemStack(Items.DIAMOND, 1 + i));
             }
             player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
-            var payment = dev.keelfy.restless.haunt.HauntEvents.byId(
+            var payment = dev.keelfy.restless.haunt.event.HauntEvents.byId(
                             net.minecraft.resources.Identifier.parse("hoarder_payment"))
                     .orElseThrow();
             for (int i = 0; i < 5; i++) {
                 check(helper, payment.canRun(player), "hoarder_payment must run for the nest to fill");
                 payment.run(player);
             }
-            var nest = dev.keelfy.restless.haunt.HauntEvents.byId(
+            var nest = dev.keelfy.restless.haunt.event.HauntEvents.byId(
                             net.minecraft.resources.Identifier.parse("hoarder_nest"))
                     .orElseThrow();
             check(helper, nest.canRun(player), "hoarder_nest must run once five stacks are taken");
@@ -748,7 +748,7 @@ final class SignatureBatchTests {
                     helper.absolutePos(FEET).getX() + 0.5,
                     helper.absolutePos(FEET).getY(),
                     helper.absolutePos(FEET).getZ() + 0.5);
-            var event = dev.keelfy.restless.haunt.HauntEvents.byId(
+            var event = dev.keelfy.restless.haunt.event.HauntEvents.byId(
                             net.minecraft.resources.Identifier.parse("trickster_gift"))
                     .orElseThrow();
             check(helper, event.canRun(player), "trickster_gift must be able to run on open floor");

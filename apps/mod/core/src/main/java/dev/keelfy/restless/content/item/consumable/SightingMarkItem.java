@@ -3,7 +3,7 @@ package dev.keelfy.restless.content.item.consumable;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.entity.SightingMark;
-import dev.keelfy.restless.haunt.Spells;
+import dev.keelfy.restless.ward.Spells;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;

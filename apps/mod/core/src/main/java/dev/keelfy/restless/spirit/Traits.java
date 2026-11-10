@@ -1,7 +1,7 @@
 package dev.keelfy.restless.spirit;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.event.EventTag;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;

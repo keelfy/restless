@@ -2,7 +2,7 @@ package dev.keelfy.restless.content.entity;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.Session;
+import dev.keelfy.restless.state.Session;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.particles.ParticleTypes;

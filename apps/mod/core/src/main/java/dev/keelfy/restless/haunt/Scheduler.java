@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.state.Session;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;

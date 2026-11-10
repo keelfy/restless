@@ -2,7 +2,7 @@ package dev.keelfy.restless.content.entity;
 
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.client.SightingMarkHud;
-import dev.keelfy.restless.haunt.Spells;
+import dev.keelfy.restless.ward.Spells;
 import java.util.UUID;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;

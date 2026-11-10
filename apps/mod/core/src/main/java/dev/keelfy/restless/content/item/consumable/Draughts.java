@@ -3,7 +3,7 @@ package dev.keelfy.restless.content.item.consumable;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.item.charm.Charms;
-import dev.keelfy.restless.haunt.Sanity;
+import dev.keelfy.restless.sanity.Sanity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +67,7 @@ public final class Draughts {
     private static final int DREAM_TICKS = 48000;
 
     /** Who slept deep under the draught and has not yet woken. */
-    private static final Map<UUID, Boolean> SLEPT = dev.keelfy.restless.haunt.Session.SERVER.keep(new HashMap<>());
+    private static final Map<UUID, Boolean> SLEPT = dev.keelfy.restless.state.Session.SERVER.keep(new HashMap<>());
 
     /** The sleeping-percentage the rule had before a drinker's deep sleep lowered it for a tick. */
     private static @Nullable Integer rule;

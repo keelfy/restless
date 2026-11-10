@@ -2,7 +2,7 @@ package dev.keelfy.restless.content.item.charm;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.Sanity;
+import dev.keelfy.restless.sanity.Sanity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

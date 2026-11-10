@@ -2,10 +2,10 @@ package dev.keelfy.restless.content.item.charm;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.Anger;
-import dev.keelfy.restless.haunt.Sanity;
-import dev.keelfy.restless.haunt.Session;
 import dev.keelfy.restless.platform.Platform;
+import dev.keelfy.restless.sanity.Sanity;
+import dev.keelfy.restless.spirit.life.Anger;
+import dev.keelfy.restless.state.Session;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -249,7 +249,7 @@ public final class Advanced {
      */
     public static boolean truthful(ServerPlayer player, dev.keelfy.restless.spirit.Clue clue) {
         ItemStack eye = Worn.held(player, Content.TRUTHSEERS_EYE);
-        return dev.keelfy.restless.haunt.Clues.speaks(clue) && !eye.isEmpty() && Rest.ready(eye, player.level());
+        return dev.keelfy.restless.divine.Clues.speaks(clue) && !eye.isEmpty() && Rest.ready(eye, player.level());
     }
 
     /** The eye has kept one reading honest: it rests for the day. */

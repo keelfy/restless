@@ -1,7 +1,7 @@
 package dev.keelfy.restless.content.item;
 
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.Journal;
+import dev.keelfy.restless.journal.Journal;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;

@@ -1,13 +1,13 @@
 package dev.keelfy.restless.gametest;
 
+import dev.keelfy.restless.banish.Ritual;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Effigy;
-import dev.keelfy.restless.haunt.Deeds;
 import dev.keelfy.restless.haunt.Director;
-import dev.keelfy.restless.haunt.HauntData;
-import dev.keelfy.restless.haunt.Ritual;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.life.Deeds;
+import dev.keelfy.restless.state.HauntData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

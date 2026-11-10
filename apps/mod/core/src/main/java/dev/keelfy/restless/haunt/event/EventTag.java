@@ -1,0 +1,18 @@
+package dev.keelfy.restless.haunt.event;
+
+/** Event category a spirit can prefer or avoid. */
+public enum EventTag {
+    LIGHTS,
+    DOORS,
+    AFFLICTION,
+    ASSAULT,
+    SOUND,
+    ITEMS,
+    BLOCKS,
+    MOBS,
+    PRESENCE,
+    /** Something that looks like another player. */
+    PLAYER,
+    /** The water, and whoever is in or beside it. */
+    WATER
+}

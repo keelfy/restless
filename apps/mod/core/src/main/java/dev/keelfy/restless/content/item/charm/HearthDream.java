@@ -1,6 +1,6 @@
 package dev.keelfy.restless.content.item.charm;
 
-import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.ward.Wards;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 

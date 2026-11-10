@@ -1,8 +1,6 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
 import java.util.Comparator;
 import java.util.List;

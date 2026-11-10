@@ -1,8 +1,8 @@
 package dev.keelfy.restless.content.item;
 
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.HauntData;
-import dev.keelfy.restless.haunt.Notebook;
+import dev.keelfy.restless.journal.Notebook;
+import dev.keelfy.restless.state.HauntData;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

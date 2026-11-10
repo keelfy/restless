@@ -1,6 +1,6 @@
 package dev.keelfy.restless.content.block;
 
-import dev.keelfy.restless.haunt.Graves;
+import dev.keelfy.restless.spirit.land.Graves;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;

@@ -1,7 +1,7 @@
 package dev.keelfy.restless.content.item;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.Divination;
+import dev.keelfy.restless.divine.Divination;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

@@ -2,10 +2,10 @@ package dev.keelfy.restless.content.block;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.BirthRules;
-import dev.keelfy.restless.haunt.Births;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.life.BirthRules;
+import dev.keelfy.restless.spirit.life.Births;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;

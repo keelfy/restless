@@ -1,11 +1,9 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.Band;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
-import dev.keelfy.restless.haunt.VignettePayload;
+import dev.keelfy.restless.haunt.effect.VignettePayload;
+import dev.keelfy.restless.haunt.harm.Band;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

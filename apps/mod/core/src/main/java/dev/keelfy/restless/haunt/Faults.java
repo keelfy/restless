@@ -1,6 +1,8 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.state.Session;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.resources.Identifier;

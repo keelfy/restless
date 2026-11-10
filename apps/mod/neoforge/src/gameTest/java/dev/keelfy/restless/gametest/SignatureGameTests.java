@@ -5,8 +5,8 @@ import static dev.keelfy.restless.gametest.HauntEventGameTests.check;
 import static dev.keelfy.restless.gametest.HauntEventGameTests.runs;
 
 import dev.keelfy.restless.haunt.Director;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntEvents;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.haunt.event.HauntEvents;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import java.util.List;

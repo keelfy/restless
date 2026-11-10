@@ -4,8 +4,6 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Decal;
 import dev.keelfy.restless.content.block.Prop;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;

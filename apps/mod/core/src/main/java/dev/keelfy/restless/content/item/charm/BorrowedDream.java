@@ -1,8 +1,8 @@
 package dev.keelfy.restless.content.item.charm;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.Anger;
-import dev.keelfy.restless.haunt.Sanity;
+import dev.keelfy.restless.sanity.Sanity;
+import dev.keelfy.restless.spirit.life.Anger;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;

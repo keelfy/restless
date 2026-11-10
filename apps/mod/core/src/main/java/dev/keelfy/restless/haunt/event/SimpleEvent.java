@@ -1,8 +1,5 @@
 package dev.keelfy.restless.haunt.event;
 
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntTier;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;

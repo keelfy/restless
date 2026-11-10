@@ -2,7 +2,7 @@ package dev.keelfy.restless.content.item.charm;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.Sanity;
+import dev.keelfy.restless.sanity.Sanity;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

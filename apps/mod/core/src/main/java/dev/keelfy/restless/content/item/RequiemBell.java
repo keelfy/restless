@@ -1,9 +1,9 @@
 package dev.keelfy.restless.content.item;
 
+import dev.keelfy.restless.banish.Requiem;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.item.charm.Charms;
-import dev.keelfy.restless.haunt.Requiem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
