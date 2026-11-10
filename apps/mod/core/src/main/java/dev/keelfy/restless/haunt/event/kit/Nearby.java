@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Location;
@@ -17,43 +17,43 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /** Search and effect helpers shared by the events. */
-final class Nearby {
-    static final double FULL_TURN = 360.0;
+public final class Nearby {
+    public static final double FULL_TURN = 360.0;
     private static final int SECTION_SHIFT = 4;
     private static final int SECTION_MASK = 15;
 
     private Nearby() {}
 
     /** Search radius of an event, from {@code events.<id>.radius}. */
-    static int radius(String event) {
+    public static int radius(String event) {
         return Config.event(event).integer("radius");
     }
 
-    static @Nullable BlockPos random(ServerPlayer player, String event, Predicate<BlockState> match) {
+    public static @Nullable BlockPos random(ServerPlayer player, String event, Predicate<BlockState> match) {
         return random(player, radius(event), match);
     }
 
-    static List<BlockPos> all(ServerPlayer player, String event, Predicate<BlockState> match) {
+    public static List<BlockPos> all(ServerPlayer player, String event, Predicate<BlockState> match) {
         return all(player, radius(event), match);
     }
 
-    static boolean any(ServerPlayer player, String event, Predicate<BlockState> match) {
+    public static boolean any(ServerPlayer player, String event, Predicate<BlockState> match) {
         return any(player, radius(event), match);
     }
 
     /** Random loaded block within a cube of the given radius around the player that matches. */
-    static @Nullable BlockPos random(ServerPlayer player, int radius, Predicate<BlockState> match) {
+    public static @Nullable BlockPos random(ServerPlayer player, int radius, Predicate<BlockState> match) {
         List<BlockPos> hits = all(player, radius, match);
         return hits.isEmpty() ? null : hits.get(player.getRandom().nextInt(hits.size()));
     }
 
     /** Every loaded block within a cube of the given radius around the player that matches. */
-    static List<BlockPos> all(ServerPlayer player, int radius, Predicate<BlockState> match) {
+    public static List<BlockPos> all(ServerPlayer player, int radius, Predicate<BlockState> match) {
         return all(player.level(), player.blockPosition(), radius, match);
     }
 
     /** Every loaded block within a cube of the given radius around {@code center} that matches. */
-    static List<BlockPos> all(ServerLevel level, BlockPos center, int radius, Predicate<BlockState> match) {
+    public static List<BlockPos> all(ServerLevel level, BlockPos center, int radius, Predicate<BlockState> match) {
         List<BlockPos> hits = new ArrayList<>();
         scan(level, center, radius, match, pos -> {
             hits.add(pos.immutable());
@@ -63,7 +63,7 @@ final class Nearby {
     }
 
     /** Whether any loaded block within the cube matches; stops at the first. */
-    static boolean any(ServerPlayer player, int radius, Predicate<BlockState> match) {
+    public static boolean any(ServerPlayer player, int radius, Predicate<BlockState> match) {
         return scan(player.level(), player.blockPosition(), radius, match, pos -> true);
     }
 
@@ -121,7 +121,7 @@ final class Nearby {
         return false;
     }
 
-    static void sound(ServerPlayer player, SoundEvent sound, Vec3 at, Config.Tone tone) {
+    public static void sound(ServerPlayer player, SoundEvent sound, Vec3 at, Config.Tone tone) {
         player.level().playSound(null, at.x, at.y, at.z, sound, SoundSource.HOSTILE, tone.volume(), tone.pitch());
     }
 
@@ -129,13 +129,13 @@ final class Nearby {
      * Sound at a point {@code distance} blocks from the player; {@code yawOffset} is relative to where they look (180 =
      * behind).
      */
-    static Vec3 around(ServerPlayer player, double distance, double yawOffset) {
+    public static Vec3 around(ServerPlayer player, double distance, double yawOffset) {
         double yaw = Math.toRadians(player.getYRot() + yawOffset);
         return player.position()
                 .add(-Math.sin(yaw) * distance, Config.section("place").num("sound_height"), Math.cos(yaw) * distance);
     }
 
-    static Vec3 randomAround(ServerPlayer player, double distance) {
+    public static Vec3 randomAround(ServerPlayer player, double distance) {
         return around(player, distance, player.getRandom().nextDouble() * FULL_TURN);
     }
 
@@ -143,7 +143,7 @@ final class Nearby {
      * Where a source-free sound comes from: the spirit that sent it, or {@code distance} blocks away at a random
      * bearing when none did.
      */
-    static Vec3 source(ServerPlayer player, double distance) {
+    public static Vec3 source(ServerPlayer player, double distance) {
         return Location.source(randomAround(player, distance));
     }
 }

@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -19,11 +19,11 @@ public final class Breaks {
 
     private Breaks() {}
 
-    static boolean canMark(ServerPlayer player) {
+    public static boolean canMark(ServerPlayer player) {
         return !MARKED.containsKey(player.getUUID());
     }
 
-    static void mark(ServerPlayer player) {
+    public static void mark(ServerPlayer player) {
         long lapse =
                 player.level().getGameTime() + Config.event("phantom_break").integer("max_age_ticks");
         MARKED.put(player.getUUID(), lapse);

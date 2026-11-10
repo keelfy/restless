@@ -2,6 +2,11 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.event.kit.Nearby;
+import dev.keelfy.restless.haunt.event.kit.PacketEntity;
+import dev.keelfy.restless.haunt.event.kit.Place;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
+import dev.keelfy.restless.haunt.event.kit.Walk;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;

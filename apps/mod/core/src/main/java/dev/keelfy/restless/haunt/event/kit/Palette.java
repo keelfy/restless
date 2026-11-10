@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import org.jspecify.annotations.Nullable;
  * stone bricks into plain stone, cobblestone and stone bricks into their mossy or cracked kind, deepslate into another
  * deepslate. The facing, half and shape of the old block carry over to the new one.
  */
-final class Palette {
+public final class Palette {
     /**
      * Dyes in a ring from light to dark and round the hues, so a step either way stays close to the original colour.
      */
@@ -106,12 +106,12 @@ final class Palette {
         NEXT.computeIfAbsent(from, k -> new ArrayList<>()).add(to);
     }
 
-    static boolean has(BlockState state) {
+    public static boolean has(BlockState state) {
         return NEXT.containsKey(state.getBlock());
     }
 
     /** A random neighbouring colour, or null when the block has none. */
-    static @Nullable Block of(Block block, RandomSource random) {
+    public static @Nullable Block of(Block block, RandomSource random) {
         List<Block> kinds = NEXT.get(block);
         return kinds == null ? null : kinds.get(random.nextInt(kinds.size()));
     }

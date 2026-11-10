@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import dev.keelfy.restless.config.Settings;
 import dev.keelfy.restless.haunt.Hardcore;
@@ -25,11 +25,11 @@ public final class Swaps {
     private Swaps() {}
 
     /** Whether swaps are made in the world rather than shown: the config says so, or the world is hardcore. */
-    static boolean real(ServerLevel level) {
+    public static boolean real(ServerLevel level) {
         return real(Hardcore.on(level), Settings.get().swaps());
     }
 
-    static boolean real(boolean hardcore, Settings.SwapMode mode) {
+    public static boolean real(boolean hardcore, Settings.SwapMode mode) {
         return hardcore || mode == Settings.SwapMode.REAL;
     }
 
@@ -42,19 +42,19 @@ public final class Swaps {
     }
 
     /** One block shown as {@code to} for {@code ticks}. */
-    static void show(ServerPlayer player, BlockPos pos, BlockState to, int ticks) {
+    public static void show(ServerPlayer player, BlockPos pos, BlockState to, int ticks) {
         show(player, Map.of(pos, to), ticks);
     }
 
     /** Each of {@code at} shown as {@code to} for {@code ticks}. */
-    static void show(ServerPlayer player, Iterable<BlockPos> at, BlockState to, int ticks) {
+    public static void show(ServerPlayer player, Iterable<BlockPos> at, BlockState to, int ticks) {
         Map<BlockPos, BlockState> shown = new LinkedHashMap<>();
         at.forEach(pos -> shown.put(pos, to));
         show(player, shown, ticks);
     }
 
     /** Each block shown as its state for {@code ticks}, then the real ones again. */
-    static void show(ServerPlayer player, Map<BlockPos, BlockState> shown, int ticks) {
+    public static void show(ServerPlayer player, Map<BlockPos, BlockState> shown, int ticks) {
         ServerLevel level = player.level();
         if (!real(level)) {
             illusion(player, shown, ticks);

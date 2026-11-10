@@ -5,6 +5,8 @@ import dev.keelfy.restless.divine.Divination;
 import dev.keelfy.restless.divine.Sense;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
+import dev.keelfy.restless.haunt.event.kit.Place;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.sanity.Sanity;

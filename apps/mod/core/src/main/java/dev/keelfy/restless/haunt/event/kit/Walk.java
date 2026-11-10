@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -8,14 +8,14 @@ import net.minecraft.world.entity.Entity;
 import org.jspecify.annotations.Nullable;
 
 /** Moves a figure over the ground by hand: no AI and no pathfinding, only a stride onto standing room. */
-final class Walk {
+public final class Walk {
     private Walk() {}
 
     /**
      * Steps {@code figure} up to {@code stride} blocks toward the player, onto the first spot from {@code climb} above
      * to {@code drop} below that has a floor and two free blocks. Returns false, and does not move, if there is none.
      */
-    static boolean toward(ServerPlayer player, Entity figure, double stride, int climb, int drop) {
+    public static boolean toward(ServerPlayer player, Entity figure, double stride, int climb, int drop) {
         double dx = player.getX() - figure.getX();
         double dz = player.getZ() - figure.getZ();
         double length = Math.max(Math.hypot(dx, dz), 1.0E-4);
@@ -42,7 +42,7 @@ final class Walk {
      * The height of the first spot in the column at {@code x}, {@code z}, from {@code top} down through {@code depth}
      * more blocks, with a floor and two free blocks; null if there is none.
      */
-    static @Nullable Integer ground(ServerLevel level, double x, double z, int top, int depth) {
+    public static @Nullable Integer ground(ServerLevel level, double x, double z, int top, int depth) {
         BlockPos column = BlockPos.containing(x, top, z);
         for (int dy = 0; dy >= -depth; dy--) {
             BlockPos pos = column.above(dy);

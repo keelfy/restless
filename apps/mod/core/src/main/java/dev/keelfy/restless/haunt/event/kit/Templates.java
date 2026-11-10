@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.keelfy.restless.config.Config;
@@ -28,7 +28,7 @@ import org.jspecify.annotations.Nullable;
  * again block by block: a block goes back only if it is still what the template put there, so whatever the player has
  * changed, built on or taken away is left alone. A chest that the player has put something into stays.
  */
-final class Templates {
+public final class Templates {
     private static final int SPOT_TRIES = 6;
     private static final Rotation[] TURNS = Rotation.values();
 
@@ -37,10 +37,10 @@ final class Templates {
     /** One block of a template, relative to its middle; {@code slot} names where an event fills a block entity. */
     record Piece(int x, int y, int z, BlockState state, String slot) {}
 
-    record Template(int width, int depth, List<Piece> pieces) {}
+    public record Template(int width, int depth, List<Piece> pieces) {}
 
     /** A block of a template laid on the ground; {@code grounded} ones need solid ground under them. */
-    record Cell(BlockPos pos, BlockState state, String slot, boolean grounded) {}
+    public record Cell(BlockPos pos, BlockState state, String slot, boolean grounded) {}
 
     private record Laid(BlockPos pos, BlockState placed, BlockState before) {}
 
@@ -50,7 +50,7 @@ final class Templates {
      * e.g. {@code minecraft:chest[facing=north]}); the characters in {@code slots} name their block for {@link #put}.
      * Read afresh on each call, so a reloaded config shows at once; a bad template fails naming its event.
      */
-    static Template load(String event) {
+    public static Template load(String event) {
         try {
             Config.Section section = Config.event(event).section("template");
             Config.Section legend = section.section("legend");
@@ -159,7 +159,7 @@ final class Templates {
      * Somewhere {@code min} to {@code max} blocks from the player where the template fits, turned any way; null when a
      * few tries find nothing.
      */
-    static @Nullable List<Cell> find(ServerPlayer player, Template template, int min, int max) {
+    public static @Nullable List<Cell> find(ServerPlayer player, Template template, int min, int max) {
         for (int i = 0; i < SPOT_TRIES; i++) {
             BlockPos spot = Place.spawnSpot(player, min, max);
             if (spot == null) {
@@ -177,7 +177,7 @@ final class Templates {
      * Builds the cells, hands each block entity to the filler of its slot, and takes every block down again after
      * {@code delay} ticks (never under hardcore). The blocks are set without neighbour updates, so nothing pops off.
      */
-    static void put(ServerLevel level, List<Cell> cells, Map<String, Consumer<BlockEntity>> fills, int delay) {
+    public static void put(ServerLevel level, List<Cell> cells, Map<String, Consumer<BlockEntity>> fills, int delay) {
         List<Laid> laid = new ArrayList<>();
         for (Cell cell : cells) {
             BlockPos pos = cell.pos().immutable();

@@ -2,6 +2,10 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.event.kit.Nearby;
+import dev.keelfy.restless.haunt.event.kit.Place;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
+import dev.keelfy.restless.haunt.event.kit.Taken;
 import dev.keelfy.restless.haunt.harm.Band;
 import java.util.Comparator;
 import java.util.List;

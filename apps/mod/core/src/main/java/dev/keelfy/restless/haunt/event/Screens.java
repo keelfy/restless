@@ -5,6 +5,8 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.EyesType;
 import dev.keelfy.restless.content.item.Photo;
 import dev.keelfy.restless.haunt.effect.ScreenPayload;
+import dev.keelfy.restless.haunt.event.kit.Place;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.core.BlockPos;

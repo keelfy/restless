@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
  * stop. A client that respawns or reconnects resets its camera by itself. The view is reset before a ghost target is
  * removed, so the camera never rests on an entity that is gone.
  */
-final class Eyes {
+public final class Eyes {
     /** Grace after the planned end before the safety net resets a view the scheduler dropped (death, logout). */
     private static final int NET_TICKS = Ticks.SECOND;
 
@@ -55,7 +55,7 @@ final class Eyes {
     }
 
     /** The player stands still enough to be left looking elsewhere: idle camera, on the ground, not in a fluid. */
-    static boolean steady(ServerPlayer player) {
+    public static boolean steady(ServerPlayer player) {
         return idle(player)
                 && player.isAlive()
                 && player.onGround()
@@ -66,7 +66,7 @@ final class Eyes {
     }
 
     /** Through the eyes of a real entity near the player. */
-    static void through(ServerPlayer player, Entity target, int ticks) {
+    public static void through(ServerPlayer player, Entity target, int ticks) {
         new Eyes(player, target, null).begin(target.getId(), ticks);
     }
 
@@ -74,7 +74,7 @@ final class Eyes {
      * Through an entity only this player's client knows, of the given type, with its eyes at {@code eye}, turned by
      * {@code yaw} and {@code pitch}.
      */
-    static void ghost(ServerPlayer player, EntityType<?> type, Vec3 eye, float yaw, float pitch, int ticks) {
+    public static void ghost(ServerPlayer player, EntityType<?> type, Vec3 eye, float yaw, float pitch, int ticks) {
         Vec3 feet = eye.subtract(0.0, type.getDimensions().eyeHeight(), 0.0);
         PacketEntity ghost = new PacketEntity(player.level().getNextEntityId());
         player.connection.send(new ClientboundAddEntityPacket(
@@ -93,7 +93,7 @@ final class Eyes {
     }
 
     /** The pitch, as entities look, of looking from {@code from} toward {@code to}. */
-    static float pitchToward(Vec3 from, Vec3 to) {
+    public static float pitchToward(Vec3 from, Vec3 to) {
         return (float) -(Mth.atan2(to.y - from.y, Math.hypot(to.x - from.x, to.z - from.z)) * Mth.RAD_TO_DEG);
     }
 

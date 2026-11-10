@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.event.kit.Taken;
 import java.util.Set;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;

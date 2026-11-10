@@ -8,6 +8,8 @@ import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
+import dev.keelfy.restless.haunt.event.kit.Nearby;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
 import dev.keelfy.restless.haunt.scenario.ScenarioContext;
 import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.state.HauntData;

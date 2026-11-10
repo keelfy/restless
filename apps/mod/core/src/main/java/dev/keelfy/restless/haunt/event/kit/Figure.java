@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import com.mojang.authlib.GameProfile;
 import dev.keelfy.restless.haunt.scenario.ScenarioContext;
@@ -98,7 +98,7 @@ public final class Figure {
     private static final int NAME_MAX = 16;
 
     /** A made-up player nickname, as spirits have, short enough to be a real player's. */
-    static String nickname(ServerPlayer player) {
+    public static String nickname(ServerPlayer player) {
         return ScenarioContext.nickname(() -> freshNickname(player));
     }
 
@@ -112,17 +112,17 @@ public final class Figure {
     }
 
     /** A profile of no one, under {@code name}, with a fresh id and no textures. */
-    static GameProfile nobody(ServerPlayer player, String name) {
+    public static GameProfile nobody(ServerPlayer player, String name) {
         return new GameProfile(
                 new UUID(player.getRandom().nextLong(), player.getRandom().nextLong()), name);
     }
 
-    static void face(Mannequin figure, ServerPlayer player) {
+    public static void face(Mannequin figure, ServerPlayer player) {
         figure.lookAt(EntityAnchorArgument.Anchor.EYES, player.getEyePosition());
     }
 
     /** Head and body toward {@code yaw}, level, as a walker looks where it goes. */
-    static void turn(Mannequin figure, float yaw) {
+    public static void turn(Mannequin figure, float yaw) {
         figure.setYRot(yaw);
         figure.setYHeadRot(yaw);
         figure.setYBodyRot(yaw);
@@ -132,7 +132,7 @@ public final class Figure {
     /**
      * A name with nobody under it: a text display that looks like a player's nameplate, seen through walls as one is.
      */
-    static Display.@Nullable TextDisplay nameplate(ServerLevel level, Vec3 at, String name) {
+    public static Display.@Nullable TextDisplay nameplate(ServerLevel level, Vec3 at, String name) {
         Display.TextDisplay plate = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.EVENT);
         if (plate == null) {
             return null;

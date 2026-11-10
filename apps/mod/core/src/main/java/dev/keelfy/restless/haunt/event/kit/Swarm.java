@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -35,7 +35,7 @@ public final class Swarm {
     private Swarm() {}
 
     /** What one swarm is made of; the numbers come from {@code events.<id>}. */
-    record Spec(
+    public record Spec(
             EntityType<?> type,
             boolean climb,
             int count,
@@ -49,7 +49,7 @@ public final class Swarm {
             int fleeTicks,
             SoundEvent step,
             Config.Tone tone) {
-        static Spec of(String id, EntityType<?> type, boolean climb, SoundEvent step) {
+        public static Spec of(String id, EntityType<?> type, boolean climb, SoundEvent step) {
             Config.Section config = Config.event(id);
             return new Spec(
                     type,
@@ -83,7 +83,7 @@ public final class Swarm {
     }
 
     /** Whether a swarm has room to start: the player is not in water. */
-    static boolean canRun(ServerPlayer player) {
+    public static boolean canRun(ServerPlayer player) {
         return !player.isInWater() && !player.isSpectator();
     }
 
@@ -104,7 +104,7 @@ public final class Swarm {
         }
     }
 
-    static void run(ServerPlayer player, Spec spec) {
+    public static void run(ServerPlayer player, Spec spec) {
         ServerLevel level = player.level();
         RandomSource random = player.getRandom();
         List<Critter> critters = new ArrayList<>();

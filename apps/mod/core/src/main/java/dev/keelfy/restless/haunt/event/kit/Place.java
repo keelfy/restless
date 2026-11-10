@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import dev.keelfy.restless.config.Config;
 import java.util.ArrayList;
@@ -15,18 +15,18 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /** Finds somewhere valid for an event to act: a wall, a ledge, open floor, room to stand. */
-final class Place {
+public final class Place {
     private Place() {}
 
     /** Glass blocks and panes, plain, stained or tinted. */
-    static boolean glass(BlockState state) {
+    public static boolean glass(BlockState state) {
         return state.is(RestlessTags.GLASS);
     }
 
     /** A one-block-thick wall two blocks high, with the player in front of it and free standing room behind. */
-    record Wall(BlockPos low, BlockPos high, BlockPos behind) {}
+    public record Wall(BlockPos low, BlockPos high, BlockPos behind) {}
 
-    static @Nullable Wall wall(ServerPlayer player) {
+    public static @Nullable Wall wall(ServerPlayer player) {
         ServerLevel level = player.level();
         int min = config().integer("wall_min");
         for (Direction d : horizontals(player)) {
@@ -51,7 +51,7 @@ final class Place {
     }
 
     /** Standing room (floor and two free blocks) at a random bearing {@code min} to {@code max} blocks away. */
-    static @Nullable BlockPos spawnSpot(ServerPlayer player, int min, int max) {
+    public static @Nullable BlockPos spawnSpot(ServerPlayer player, int min, int max) {
         for (int i = 0; i < config().integer("tries"); i++) {
             BlockPos found = standing(player.level(), scatter(player, min, max));
             if (found != null) {
@@ -66,7 +66,7 @@ final class Place {
      * the player looks, that also passes {@code ok}. A single column often has none (a tree, a hill, water), so several
      * bearings are tried.
      */
-    static @Nullable BlockPos standingAhead(
+    public static @Nullable BlockPos standingAhead(
             ServerPlayer player, double distance, double minAngle, double maxAngle, Predicate<BlockPos> ok) {
         for (int i = 0; i < config().integer("tries"); i++) {
             double angle = minAngle + player.getRandom().nextDouble() * (maxAngle - minAngle);
@@ -79,12 +79,13 @@ final class Place {
         return null;
     }
 
-    static @Nullable BlockPos standingAhead(ServerPlayer player, double distance, double minAngle, double maxAngle) {
+    public static @Nullable BlockPos standingAhead(
+            ServerPlayer player, double distance, double minAngle, double maxAngle) {
         return standingAhead(player, distance, minAngle, maxAngle, pos -> true);
     }
 
     /** Standing room {@code distance} blocks away, {@code yawOffset} degrees to the side of where the player looks. */
-    static @Nullable BlockPos standingAt(ServerPlayer player, double distance, double yawOffset) {
+    public static @Nullable BlockPos standingAt(ServerPlayer player, double distance, double yawOffset) {
         Vec3 at = Nearby.around(player, distance, yawOffset);
         return standing(player.level(), BlockPos.containing(at.x, player.getY(), at.z));
     }
@@ -92,7 +93,7 @@ final class Place {
     /**
      * The first spot in the column of {@code base}, a few blocks up to a few down, with a floor and two free blocks.
      */
-    static @Nullable BlockPos standing(ServerLevel level, BlockPos base) {
+    public static @Nullable BlockPos standing(ServerLevel level, BlockPos base) {
         for (int dy = config().integer("spawn_climb"); dy >= -config().integer("spawn_drop"); dy--) {
             BlockPos pos = base.above(dy);
             if (level.isLoaded(pos)
@@ -107,7 +108,8 @@ final class Place {
     /**
      * An empty block {@code min} to {@code max} blocks from {@code centre}, a layer up or down, that passes {@code ok}.
      */
-    static @Nullable BlockPos near(ServerPlayer player, BlockPos centre, int min, int max, Predicate<BlockPos> ok) {
+    public static @Nullable BlockPos near(
+            ServerPlayer player, BlockPos centre, int min, int max, Predicate<BlockPos> ok) {
         for (int i = 0; i < config().integer("tries"); i++) {
             BlockPos base = scatter(player, Vec3.atBottomCenterOf(centre), min, max);
             for (int dy = 1; dy >= -1; dy--) {
@@ -120,14 +122,14 @@ final class Place {
     }
 
     /** Loaded air on a solid floor. */
-    static boolean floored(ServerLevel level, BlockPos pos) {
+    public static boolean floored(ServerLevel level, BlockPos pos) {
         return level.isLoaded(pos)
                 && level.isEmptyBlock(pos)
                 && level.getBlockState(pos.below()).isSolidRender();
     }
 
     /** The centre of a plus of five free blocks lying on solid ground, {@code min} to {@code max} blocks away. */
-    static @Nullable BlockPos cross(ServerPlayer player, int min, int max) {
+    public static @Nullable BlockPos cross(ServerPlayer player, int min, int max) {
         ServerLevel level = player.level();
         for (int i = 0; i < config().integer("tries"); i++) {
             BlockPos base = scatter(player, min, max);
@@ -144,7 +146,7 @@ final class Place {
         return null;
     }
 
-    static List<BlockPos> crossCells(BlockPos centre) {
+    public static List<BlockPos> crossCells(BlockPos centre) {
         List<BlockPos> cells = new ArrayList<>(List.of(centre));
         for (Direction d : Direction.Plane.HORIZONTAL) {
             cells.add(centre.relative(d));
@@ -153,7 +155,7 @@ final class Place {
     }
 
     /** A direction in which the player stands at the edge of a drop of the configured depth onto solid, dry ground. */
-    static @Nullable Direction ledge(ServerPlayer player) {
+    public static @Nullable Direction ledge(ServerPlayer player) {
         ServerLevel level = player.level();
         if (!player.onGround() || player.isInWater()) {
             return null;
@@ -186,7 +188,7 @@ final class Place {
      * {@code ok} is kept with a chance that falls off towards the edge, so the shape is a scatter, never a disc. The
      * centre is always kept.
      */
-    static List<BlockPos> patch(
+    public static List<BlockPos> patch(
             ServerPlayer player, BlockPos centre, int radius, double density, Predicate<BlockPos> ok) {
         List<BlockPos> kept = new ArrayList<>();
         int layers = config().integer("patch_layers");
@@ -202,7 +204,7 @@ final class Place {
         return kept;
     }
 
-    static boolean solid(ServerLevel level, BlockPos pos) {
+    public static boolean solid(ServerLevel level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
         return state.isSolidRender() && !state.hasBlockEntity() && state.getDestroySpeed(level, pos) >= 0.0F;
     }
@@ -215,7 +217,7 @@ final class Place {
      * Nothing to bump into: air, or grass, flowers, a torch; not water. Fields are full of plants, so air alone is
      * rare.
      */
-    static boolean open(ServerLevel level, BlockPos pos) {
+    public static boolean open(ServerLevel level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
         return state.getCollisionShape(level, pos).isEmpty()
                 && state.getFluidState().isEmpty()

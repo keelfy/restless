@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -8,28 +8,28 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 
 /** Where the player is: the dimension and the biome at their feet, for events that only make sense in one place. */
-final class Where {
+public final class Where {
     private Where() {}
 
-    static boolean overworld(ServerPlayer player) {
+    public static boolean overworld(ServerPlayer player) {
         return player.level().dimension() == Level.OVERWORLD;
     }
 
-    static boolean nether(ServerPlayer player) {
+    public static boolean nether(ServerPlayer player) {
         return player.level().dimension() == Level.NETHER;
     }
 
-    static boolean end(ServerPlayer player) {
+    public static boolean end(ServerPlayer player) {
         return player.level().dimension() == Level.END;
     }
 
-    static boolean biome(ServerPlayer player, TagKey<Biome> tag) {
+    public static boolean biome(ServerPlayer player, TagKey<Biome> tag) {
         return biome(player).is(tag);
     }
 
     /** True if the biome at the player's feet is one of these. */
     @SafeVarargs
-    static boolean biome(ServerPlayer player, ResourceKey<Biome>... keys) {
+    public static boolean biome(ServerPlayer player, ResourceKey<Biome>... keys) {
         Holder<Biome> here = biome(player);
         for (ResourceKey<Biome> key : keys) {
             if (here.is(key)) {

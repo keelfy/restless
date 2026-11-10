@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -11,7 +11,7 @@ import org.jspecify.annotations.Nullable;
  * falls off a ledge as a player would instead of snapping, and goes round what is in its way. One per figure, since it
  * remembers whether the figure is in the air.
  */
-final class Gait {
+public final class Gait {
     /** A player's jump and fall, per tick, as vanilla moves them. */
     private static final double JUMP = 0.42;
 
@@ -31,18 +31,18 @@ final class Gait {
     private boolean air;
     private int airborne;
 
-    Gait(int climb, int drop) {
+    public Gait(int climb, int drop) {
         this.climb = climb;
         this.drop = drop;
     }
 
     /** The heading the figure last moved along, in degrees as entities face. */
-    float heading() {
+    public float heading() {
         return heading;
     }
 
     /** One stride toward {@code target}; see {@link #along}. */
-    boolean toward(ServerLevel level, Entity figure, Vec3 target, double stride) {
+    public boolean toward(ServerLevel level, Entity figure, Vec3 target, double stride) {
         float yaw = (float) (Mth.atan2(target.z - figure.getZ(), target.x - figure.getX()) * Mth.RAD_TO_DEG) - 90.0F;
         return along(level, figure, yaw, stride);
     }
@@ -52,7 +52,7 @@ final class Gait {
      * the air the jump or fall goes on along the heading it started on. Returns false, and does not move, when no
      * heading has standing room within {@code climb} blocks up or {@code drop} down.
      */
-    boolean along(ServerLevel level, Entity figure, float yaw, double stride) {
+    public boolean along(ServerLevel level, Entity figure, float yaw, double stride) {
         if (!air) {
             Integer ahead = null;
             for (float detour : DETOURS) {
@@ -75,12 +75,12 @@ final class Gait {
         return fly(level, figure, stride);
     }
 
-    boolean airborne() {
+    public boolean airborne() {
         return air;
     }
 
     /** A jump on the spot, if the figure is on the ground; it goes on with the next strides. */
-    void hop() {
+    public void hop() {
         if (!air) {
             air = true;
             rise = JUMP;

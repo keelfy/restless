@@ -1,4 +1,4 @@
-package dev.keelfy.restless.haunt.event;
+package dev.keelfy.restless.haunt.event.kit;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.jspecify.annotations.Nullable;
  * For a block, another kind of the same material: dirt for dirt, stone for stone, so a change never reads as damage to
  * a build.
  */
-final class Variants {
+public final class Variants {
     private static final Map<Block, List<Block>> OF = new HashMap<>();
 
     static {
@@ -38,12 +38,12 @@ final class Variants {
         OF.computeIfAbsent(b, k -> new java.util.ArrayList<>()).add(a);
     }
 
-    static boolean has(BlockState state) {
+    public static boolean has(BlockState state) {
         return OF.containsKey(state.getBlock());
     }
 
     /** A random other kind, or null when the block has none. */
-    static @Nullable BlockState of(BlockState state, RandomSource random) {
+    public static @Nullable BlockState of(BlockState state, RandomSource random) {
         List<Block> kinds = OF.get(state.getBlock());
         return kinds == null ? null : kinds.get(random.nextInt(kinds.size())).defaultBlockState();
     }
