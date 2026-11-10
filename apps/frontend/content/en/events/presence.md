@@ -574,7 +574,7 @@ Runs when: A shield in either hand
 
 ## `tree_line`
 
-A black figure stands 20 blocks ahead of the player in a dark spot (light level 7 or less). Each time the player looks at one and then away, another stands somewhere ahead of them, up to five. The look away after that removes them all and puts one 1.6 blocks behind the player, with a loud bang, unseen until they turn round, and gone 12 ticks after they see it. Watches for 2 min. Only this player's client is told. A jump scare
+A black figure stands 20 blocks ahead of the player in a spot no torch or lamp lights (block light level 7 or less). Each time the player looks at one and then away, another stands somewhere ahead of them, up to five. The look away after that removes them all and puts one 1.6 blocks behind the player, with a loud bang, unseen until they turn round, and gone 12 ticks after they see it. Watches for 2 min. Only this player's client is told. A jump scare
 
 Runs when: Overworld, at night, with a log within 16 blocks
 

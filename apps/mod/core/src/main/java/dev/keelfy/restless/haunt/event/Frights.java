@@ -23,6 +23,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
@@ -309,7 +310,7 @@ final class Frights {
                 config.num("distance"),
                 config.num("min_angle"),
                 config.num("max_angle"),
-                pos -> player.level().getMaxLocalRawBrightness(pos) <= config.integer("dark_max"));
+                pos -> player.level().getBrightness(LightLayer.BLOCK, pos) <= config.integer("dark_max"));
     }
 
     /**

@@ -34,6 +34,8 @@ import net.minecraft.world.phys.Vec3;
 final class ScareGameTests {
     private static final BlockPos FEET = HauntEventGameTests.FEET;
     private static final int LIGHT_TICKS = 5;
+    /** Looks at every {@code LIGHT_TICKS} for the light to be worked out: 6 more times is 35 ticks, inside 40. */
+    private static final int LIGHT_WAIT = 6;
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         HauntEventGameTests.PADDING.put("scare_slow_turn", 40);
@@ -41,6 +43,7 @@ final class ScareGameTests {
         HauntEventGameTests.TIMEOUT.put("scare_container_close", 300);
         HauntEventGameTests.TIMEOUT.put("scare_third_person", 300);
         HauntEventGameTests.PADDING.put("scare_stairs_sitter", 20);
+        // The figures stand 20 blocks off, so keep the neighbours out of the way.
         HauntEventGameTests.PADDING.put("scare_tree_line", 40);
         HauntEventGameTests.TIMEOUT.put("scare_tree_line", 400);
         tests.put(
@@ -191,7 +194,9 @@ final class ScareGameTests {
                 helper.runAfterDelay(view + 5, () -> {
                     check(helper, scene.figures() == 2, "third_person must show the figure again when the view ends");
                     check(helper, ran(scene.player, "third_person") == 0, "unseen, it has not run yet");
-                    turn(scene.player, 180.0F);
+                    // The figure is on a random block behind them, so face it rather than turning a set angle.
+                    scene.player.lookAt(
+                            EntityAnchorArgument.Anchor.EYES, scene.lastFigure().add(0, 1.0, 0));
                     helper.runAfterDelay(3, () -> {
                         check(helper, ran(scene.player, "third_person") == 1, "turning round must count the run");
                         scene.end(helper);
@@ -253,39 +258,34 @@ final class ScareGameTests {
                         });
                     });
         });
-        tests.put("scare_tree_line", helper -> {
-            BlockPos feet = helper.absolutePos(FEET);
-            // A roof wide enough that the light engine finds it dark under it.
-            Runnable roof = () -> {
-                for (BlockPos pos : BlockPos.betweenClosed(feet.offset(-20, 3, -10), feet.offset(20, 3, 45))) {
-                    set(helper, pos, Blocks.STONE.defaultBlockState());
-                }
-            };
-            scene(
-                    helper,
-                    "tree_line",
-                    roof,
-                    false,
-                    // The light engine takes a while to see the roof, and until it has the ground is too bright.
-                    scene -> until(
-                            helper, () -> scene.figures() == 1, "tree_line must stand the first figure far off", () -> {
-                                Vec3 figure = scene.lastFigure();
-                                clearBarriers(helper, scene.player.getEyePosition(), figure);
-                                scene.player.lookAt(EntityAnchorArgument.Anchor.EYES, figure);
-                                helper.runAfterDelay(4, () -> {
-                                    check(helper, scene.figures() == 1, "looking at a figure must not add another");
-                                    // Straight up is away from it, and the ground ahead stays the same.
-                                    scene.player.setXRot(-85.0F);
+        tests.put(
+                "scare_tree_line",
+                helper -> scene(
+                        helper,
+                        "tree_line",
+                        () -> {},
+                        // It is day in the test, and the event itself only starts at night.
+                        false,
+                        scene -> until(
+                                helper,
+                                () -> scene.figures() == 1,
+                                "tree_line must stand the first figure far off, figures=" + scene.figures(),
+                                () -> {
+                                    // The event looks at the head, so the barriers on that line are the ones to clear.
+                                    Vec3 figure = scene.lastFigure().add(0, 1.5, 0);
+                                    clearBarriers(helper, scene.player.getEyePosition(), figure);
+                                    scene.player.lookAt(EntityAnchorArgument.Anchor.EYES, figure);
                                     helper.runAfterDelay(4, () -> {
-                                        check(
+                                        check(helper, scene.figures() == 1, "looking at a figure must not add another");
+                                        // Straight up is away from it, and the ground ahead stays the same.
+                                        scene.player.setXRot(-85.0F);
+                                        until(
                                                 helper,
-                                                scene.figures() == 2,
-                                                "a look away from a figure must add another");
-                                        scene.end(helper);
+                                                () -> scene.figures() == 2,
+                                                "a look away from a figure must add another",
+                                                () -> scene.end(helper));
                                     });
-                                });
-                            }));
-        });
+                                })));
         tests.put(
                 "scare_hide",
                 helper -> scene(helper, "hide", scene -> {
@@ -345,16 +345,24 @@ final class ScareGameTests {
         Scares.clear(player);
         player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5, 0.0F, 0.0F);
         player.setOnGround(true);
-        // Whether the sky is seen is a light level, and light is worked out after the blocks are set.
-        helper.runAfterDelay(LIGHT_TICKS, () -> {
-            HauntEvent event = HauntEvents.byId(Identifier.parse(id)).orElseThrow();
-            check(helper, !gated || event.canRun(player), id + " must be able to run in its scene");
-            EmbeddedChannel channel =
-                    (EmbeddedChannel) player.connection.getConnection().channel();
-            channel.outboundMessages().clear();
-            event.run(player);
-            then.accept(new Scene(player, channel));
-        });
+        // Whether the sky is seen is a light level, and light is worked out after the blocks are set, later when the
+        // server is busy: look until the event can run, as far as the default time of a test allows.
+        HauntEvent event = HauntEvents.byId(Identifier.parse(id)).orElseThrow();
+        helper.runAfterDelay(
+                LIGHT_TICKS,
+                () -> until(
+                        helper,
+                        () -> !gated || event.canRun(player),
+                        id + " must be able to run in its scene",
+                        () -> {
+                            EmbeddedChannel channel = (EmbeddedChannel)
+                                    player.connection.getConnection().channel();
+                            channel.outboundMessages().clear();
+                            event.run(player);
+                            then.accept(new Scene(player, channel));
+                        },
+                        LIGHT_TICKS,
+                        LIGHT_WAIT));
     }
 
     /** How often the event is in the history of the player, which it enters when its scare comes. */
@@ -380,23 +388,25 @@ final class ScareGameTests {
 
     /** Runs {@code then} once {@code ok} holds, looking every 5 ticks; fails with {@code message} if it never does. */
     private static void until(GameTestHelper helper, BooleanSupplier ok, String message, Runnable then) {
-        until(helper, ok, message, then, 60);
+        until(helper, ok, message, then, 5, 60);
     }
 
-    private static void until(GameTestHelper helper, BooleanSupplier ok, String message, Runnable then, int left) {
+    private static void until(
+            GameTestHelper helper, BooleanSupplier ok, String message, Runnable then, int interval, int left) {
         if (ok.getAsBoolean()) {
             then.run();
         } else {
             check(helper, left > 0, message);
-            helper.runAfterDelay(5, () -> until(helper, ok, message, then, left - 1));
+            helper.runAfterDelay(interval, () -> until(helper, ok, message, then, interval, left - 1));
         }
     }
 
     /** The barriers that fence the test in are where a look this far goes through: take them out of the way. */
     private static void clearBarriers(GameTestHelper helper, Vec3 from, Vec3 to) {
-        Vec3 step = to.subtract(from).normalize().scale(0.5);
+        // A fine step, so that no block the line only clips at a corner is missed.
+        Vec3 step = to.subtract(from).normalize().scale(0.1);
         Vec3 at = from;
-        for (int i = 0; i < from.distanceTo(to) * 2; i++) {
+        for (int i = 0; i < from.distanceTo(to) * 10; i++) {
             BlockPos pos = BlockPos.containing(at);
             if (helper.getLevel().getBlockState(pos).is(Blocks.BARRIER)) {
                 set(helper, pos, Blocks.AIR.defaultBlockState());

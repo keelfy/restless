@@ -147,6 +147,10 @@ final class BirthGameTests {
                     server.overworld().getGameTime());
             var event = Director.act(player, spirit, null, null);
             HauntEventGameTests.check(helper, event.isPresent(), "A revenant must have an event it can act with");
+            // A waiting event is listed when its scare comes, not when it starts.
+            if (event.get().waits()) {
+                Director.landed(player, event.get().id().toString(), spirit.uuid());
+            }
             var entry = History.last(player.getName().getString(), 1).get(0);
             HauntEventGameTests.check(
                     helper,
@@ -154,6 +158,9 @@ final class BirthGameTests {
                             && entry.spirit().startsWith("revenant "),
                     "The history must name the event and the spirit that acted");
             Director.fire(player, event.get());
+            if (event.get().waits()) {
+                Director.landed(player, event.get().id().toString(), null);
+            }
             HauntEventGameTests.check(
                     helper,
                     History.last(player.getName().getString(), 1).get(0).spirit() == null,
