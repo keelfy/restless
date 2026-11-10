@@ -160,11 +160,15 @@ public final class PhotoHands {
         pose.scale(0.38f, 0.38f, 0.38f);
         pose.translate(-0.5f, -0.5f * Picture.HEIGHT / Picture.WIDTH, 0);
         pose.scale(UNIT, UNIT, UNIT);
-        card(pose, collector, light, picture);
+        card(pose, collector, light, picture, 0);
     }
 
-    /** The picture on its card, in picture pixels: x right and y down from the picture's corner, facing the viewer. */
-    static void card(PoseStack pose, SubmitNodeCollector collector, int light, Picture picture) {
+    /**
+     * The picture on its card, in picture pixels: x right and y down from the picture's corner, facing the viewer.
+     *
+     * @param depth how far the card's sides reach back from its face, 0 for a flat card
+     */
+    static void card(PoseStack pose, SubmitNodeCollector collector, int light, Picture picture, float depth) {
         // The 32x32 item sprite has a card at [2, 5]–[30, 27], with a 22x16 image inset by three pixels.
         float borderX = Picture.WIDTH * 3f / 22;
         float borderY = Picture.HEIGHT * 3f / 16;
@@ -182,6 +186,8 @@ public final class PhotoHands {
                 5 / 32f,
                 30 / 32f,
                 27 / 32f);
+        if (depth > 0)
+            sides(pose, collector, light, -borderX, -borderY, Picture.WIDTH + borderX, Picture.HEIGHT + borderY, depth);
         // The picture sits in front of its card by half a picture pixel: a pixel is only ~0.005 blocks on a wall, so a
         // smaller gap z-fights with the card and the photo flickers.
         quad(
@@ -198,6 +204,30 @@ public final class PhotoHands {
                 0,
                 1,
                 1);
+    }
+
+    /** The four sides of a slab, as the card's dark edge; each quad is wound to face outward. */
+    private static void sides(
+            PoseStack pose, SubmitNodeCollector collector, int light, float x0, float y0, float x1, float y1, float z) {
+        // A pixel of the card's dark outer edge.
+        float u = 10.5f / 32;
+        float v = 5.5f / 32;
+        collector.submitCustomGeometry(pose, RenderTypes.text(CARD), (last, buffer) -> {
+            float[][] corners = {
+                {x0, y0, 0, x1, y0, 0, x1, y0, z, x0, y0, z},
+                {x0, y1, 0, x0, y1, z, x1, y1, z, x1, y1, 0},
+                {x0, y0, 0, x0, y0, z, x0, y1, z, x0, y1, 0},
+                {x1, y0, 0, x1, y1, 0, x1, y1, z, x1, y0, z},
+            };
+            for (float[] c : corners) {
+                for (int i = 0; i < 12; i += 3) {
+                    buffer.addVertex(last, c[i], c[i + 1], c[i + 2])
+                            .setColor(-1)
+                            .setUv(u, v)
+                            .setLight(light);
+                }
+            }
+        });
     }
 
     /** Pixels, as units of the card, for a card of {@code width} units across. */

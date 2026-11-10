@@ -21,6 +21,8 @@ final class PhotoFrame implements SpecialModelRenderer<Picture> {
     static final MapCodec<Unbaked> CODEC = MapCodec.unit(new Unbaked());
     /** Of the picture, in units that are half a block as the frame scales its item: it hangs bare on the wall. */
     private static final float WIDTH = 1.3f;
+    /** A pixel of a block, in the same units: the photo is a slab this thick, its back against the wall. */
+    private static final float THICKNESS = 1f / 16 * 2;
 
     @Override
     public void submit(
@@ -34,18 +36,20 @@ final class PhotoFrame implements SpecialModelRenderer<Picture> {
         if (picture == null) return;
         pose.pushPose();
         // The model's own origin is a corner of its unit cube; its middle is where the frame holds the item.
-        pose.translate(0.5f, 0.5f, 0.5f);
+        // Without its frame the item hangs exactly on the wall block's face; the front of the slab is a pixel out of
+        // it.
+        pose.translate(0.5f, 0.5f, 0.5f - THICKNESS);
         pose.rotateDegrees(Axis.ZP, 180);
         float unit = PhotoHands.unit(WIDTH);
         pose.scale(unit, unit, unit);
         pose.translate(-Picture.WIDTH / 2f, -Picture.HEIGHT / 2f, 0);
-        PhotoHands.card(pose, collector, light, picture);
+        PhotoHands.card(pose, collector, light, picture, THICKNESS / unit);
         pose.popPose();
     }
 
     @Override
     public void getExtents(Consumer<Vector3fc> output) {
-        output.accept(new Vector3f(0, 0, 0.5f));
+        output.accept(new Vector3f(0, 0, 0.5f - THICKNESS));
         output.accept(new Vector3f(1, 1, 0.5f));
     }
 

@@ -79,8 +79,24 @@ public final class Divination {
      */
     public static Optional<ItemStack> photograph(ServerPlayer player) {
         ServerLevel level = player.level();
-        level.sendParticles(
-                ParticleTypes.END_ROD, player.getX(), player.getEyeY(), player.getZ(), 6, 0.3, 0.3, 0.3, 0.02);
+        // Not to the photographer: the sparks hang at the lens and would be in the frame.
+        for (ServerPlayer viewer : level.players()) {
+            if (viewer != player) {
+                level.sendParticles(
+                        viewer,
+                        ParticleTypes.END_ROD,
+                        false,
+                        true,
+                        player.getX(),
+                        player.getEyeY(),
+                        player.getZ(),
+                        6,
+                        0.3,
+                        0.3,
+                        0.3,
+                        0.02);
+            }
+        }
         level.playSound(
                 null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 0.8f, 1.2f);
         Optional<Reading> reading = read(player, Clue.SILHOUETTE);
