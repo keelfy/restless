@@ -2,20 +2,20 @@ package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.AshFootprint;
-import dev.keelfy.restless.content.Charges;
-import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.DomovoiPorridge;
-import dev.keelfy.restless.content.Draughts;
-import dev.keelfy.restless.content.DuskSalt;
-import dev.keelfy.restless.content.MagpieFeather;
-import dev.keelfy.restless.content.MimicBlock;
-import dev.keelfy.restless.content.MimicBlockEntity;
-import dev.keelfy.restless.content.OmenCandle;
-import dev.keelfy.restless.content.RagEntity;
-import dev.keelfy.restless.content.RestlessKnot;
-import dev.keelfy.restless.content.SightingMark;
+import dev.keelfy.restless.content.block.MimicBlock;
+import dev.keelfy.restless.content.block.MimicBlockEntity;
+import dev.keelfy.restless.content.block.OmenCandle;
+import dev.keelfy.restless.content.entity.AshFootprint;
+import dev.keelfy.restless.content.entity.RagEntity;
+import dev.keelfy.restless.content.entity.SightingMark;
+import dev.keelfy.restless.content.item.charm.Charges;
+import dev.keelfy.restless.content.item.charm.Charms;
+import dev.keelfy.restless.content.item.consumable.DomovoiPorridge;
+import dev.keelfy.restless.content.item.consumable.Draughts;
+import dev.keelfy.restless.content.item.consumable.DuskSalt;
+import dev.keelfy.restless.content.item.consumable.MagpieFeather;
+import dev.keelfy.restless.content.item.consumable.RestlessKnot;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntEvent;
@@ -636,7 +636,7 @@ final class ConsumableGameTests {
             ItemStack log = new ItemStack(Content.MIMIC_CLAY.get(), 2);
             log.set(
                     Content.LOOK.get(),
-                    new dev.keelfy.restless.content.Look(Blocks.OAK_LOG
+                    new dev.keelfy.restless.content.item.consumable.Look(Blocks.OAK_LOG
                             .defaultBlockState()
                             .setValue(net.minecraft.world.level.block.RotatedPillarBlock.AXIS, Direction.Axis.X)));
             check(helper, useOn(level, player, log, stone).consumesAction(), "the log look must be set down");

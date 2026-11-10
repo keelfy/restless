@@ -1,8 +1,8 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.Advanced;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.item.charm.Advanced;
 import dev.keelfy.restless.spirit.Clue;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;

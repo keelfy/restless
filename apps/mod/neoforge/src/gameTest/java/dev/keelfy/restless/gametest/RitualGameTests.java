@@ -1,7 +1,7 @@
 package dev.keelfy.restless.gametest;
 
-import dev.keelfy.restless.content.Altar;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.block.Altar;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.Ritual;
 import dev.keelfy.restless.haunt.SanityPayload;

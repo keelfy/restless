@@ -2,10 +2,10 @@ package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.Charms;
-import dev.keelfy.restless.content.Draughts;
-import dev.keelfy.restless.content.OmenCandle;
-import dev.keelfy.restless.content.Relics;
+import dev.keelfy.restless.content.block.OmenCandle;
+import dev.keelfy.restless.content.item.Relics;
+import dev.keelfy.restless.content.item.charm.Charms;
+import dev.keelfy.restless.content.item.consumable.Draughts;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;

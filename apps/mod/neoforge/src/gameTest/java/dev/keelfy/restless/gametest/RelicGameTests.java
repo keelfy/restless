@@ -4,11 +4,11 @@ import static dev.keelfy.restless.gametest.CharmGameTests.stack;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.HoardersHollow;
-import dev.keelfy.restless.content.MarasCradle;
-import dev.keelfy.restless.content.MimicBlockEntity;
-import dev.keelfy.restless.content.Relics;
-import dev.keelfy.restless.content.Rest;
+import dev.keelfy.restless.content.block.HoardersHollow;
+import dev.keelfy.restless.content.block.MarasCradle;
+import dev.keelfy.restless.content.block.MimicBlockEntity;
+import dev.keelfy.restless.content.item.Relics;
+import dev.keelfy.restless.content.item.charm.Rest;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvent;
@@ -83,14 +83,17 @@ final class RelicGameTests {
                     false,
                     0,
                     0L);
-            check(helper, Ritual.waves(spirit, dev.keelfy.restless.content.Altar.Held.IRON) == 12, "a plain ritual");
             check(
                     helper,
-                    Ritual.waves(spirit, dev.keelfy.restless.content.Altar.Held.IRON, true) == 8,
+                    Ritual.waves(spirit, dev.keelfy.restless.content.block.Altar.Held.IRON) == 12,
+                    "a plain ritual");
+            check(
+                    helper,
+                    Ritual.waves(spirit, dev.keelfy.restless.content.block.Altar.Held.IRON, true) == 8,
                     "the censer must cut the ritual to eight waves");
             check(
                     helper,
-                    Ritual.waves(spirit.evolve(), dev.keelfy.restless.content.Altar.Held.IRON, true) == 12,
+                    Ritual.waves(spirit.evolve(), dev.keelfy.restless.content.block.Altar.Held.IRON, true) == 12,
                     "a grown spirit must still add its waves");
             helper.succeed();
         });
@@ -133,7 +136,9 @@ final class RelicGameTests {
             BlockPos at = helper.absolutePos(new BlockPos(3, 2, 3));
             level.setBlock(at, Content.HOARDERS_HOLLOW.get().defaultBlockState(), 3);
             ItemStack clay = new ItemStack(Content.MIMIC_CLAY.get());
-            clay.set(Content.LOOK.get(), new dev.keelfy.restless.content.Look(Blocks.STONE.defaultBlockState()));
+            clay.set(
+                    Content.LOOK.get(),
+                    new dev.keelfy.restless.content.item.consumable.Look(Blocks.STONE.defaultBlockState()));
             player.setItemInHand(InteractionHand.MAIN_HAND, clay);
             clay.useOn(new UseOnContext(
                     level,

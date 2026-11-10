@@ -3,10 +3,10 @@ package dev.keelfy.restless.gametest;
 import static dev.keelfy.restless.gametest.CharmGameTests.sanityChannel;
 import static dev.keelfy.restless.gametest.CharmGameTests.stack;
 
-import dev.keelfy.restless.content.Altar;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.Essences;
-import dev.keelfy.restless.content.Reliquary;
+import dev.keelfy.restless.content.block.Altar;
+import dev.keelfy.restless.content.item.Essences;
+import dev.keelfy.restless.content.item.Reliquary;
 import dev.keelfy.restless.haunt.BirthRules;
 import dev.keelfy.restless.haunt.Births;
 import dev.keelfy.restless.haunt.Director;

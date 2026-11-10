@@ -2,11 +2,11 @@ package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.Altar;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.Essences;
-import dev.keelfy.restless.content.Reliquary;
-import dev.keelfy.restless.content.RequiemBell;
+import dev.keelfy.restless.content.block.Altar;
+import dev.keelfy.restless.content.item.Essences;
+import dev.keelfy.restless.content.item.Reliquary;
+import dev.keelfy.restless.content.item.RequiemBell;
 import dev.keelfy.restless.haunt.requiem.Movement;
 import dev.keelfy.restless.haunt.requiem.Movements;
 import dev.keelfy.restless.haunt.requiem.Rite;

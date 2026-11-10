@@ -2,7 +2,7 @@ package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.Effigy;
+import dev.keelfy.restless.content.block.Effigy;
 import dev.keelfy.restless.haunt.Deeds;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;

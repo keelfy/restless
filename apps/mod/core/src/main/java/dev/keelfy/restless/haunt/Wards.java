@@ -1,10 +1,10 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.WardBlock;
-import dev.keelfy.restless.content.WornWard;
+import dev.keelfy.restless.content.block.WardBlock;
+import dev.keelfy.restless.content.block.WornWard;
+import dev.keelfy.restless.content.item.charm.Charms;
 import dev.keelfy.restless.spirit.Clue;
 import java.util.EnumMap;
 import java.util.List;

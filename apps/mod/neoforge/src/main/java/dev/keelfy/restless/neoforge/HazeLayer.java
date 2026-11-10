@@ -10,10 +10,10 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.Identifier;
 
 /**
- * The particle layer that draws {@link dev.keelfy.restless.content.PresenceParticle} with the {@code haze} fragment
- * shader instead of the plain sprite one. It is the vanilla translucent particle pipeline with only the fragment shader
- * swapped, in both the ordinary and the order-independent-transparency variants. The loader registers {@link #PIPELINE}
- * and {@link #OIT}.
+ * The particle layer that draws {@link dev.keelfy.restless.content.client.PresenceParticle} with the {@code haze}
+ * fragment shader instead of the plain sprite one. It is the vanilla translucent particle pipeline with only the
+ * fragment shader swapped, in both the ordinary and the order-independent-transparency variants. The loader registers
+ * {@link #PIPELINE} and {@link #OIT}.
  */
 public final class HazeLayer {
     private static final Identifier SHADER = Identifier.fromNamespaceAndPath("restless", "core/haze");

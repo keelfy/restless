@@ -1,8 +1,8 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.Altar;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.block.Altar;
 import dev.keelfy.restless.haunt.Divination;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.Faults;

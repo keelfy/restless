@@ -1,10 +1,10 @@
 package dev.keelfy.restless.haunt.requiem;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.Altar;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.UnlitLights;
-import dev.keelfy.restless.content.WardBlock;
+import dev.keelfy.restless.content.block.Altar;
+import dev.keelfy.restless.content.block.UnlitLights;
+import dev.keelfy.restless.content.block.WardBlock;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.event.Figure;
 import dev.keelfy.restless.haunt.event.Swarm;

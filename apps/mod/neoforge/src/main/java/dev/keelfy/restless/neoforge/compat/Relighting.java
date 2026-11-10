@@ -1,6 +1,6 @@
 package dev.keelfy.restless.neoforge.compat;
 
-import dev.keelfy.restless.content.UnlitLights;
+import dev.keelfy.restless.content.block.UnlitLights;
 import java.util.List;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;

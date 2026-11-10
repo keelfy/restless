@@ -3,7 +3,7 @@ package dev.keelfy.restless.gametest;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.UnlitLights;
+import dev.keelfy.restless.content.block.UnlitLights;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.HauntEvents;

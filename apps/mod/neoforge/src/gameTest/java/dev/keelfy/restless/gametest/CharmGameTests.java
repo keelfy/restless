@@ -1,11 +1,11 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.Restless;
-import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.DarkEye;
-import dev.keelfy.restless.content.Luck;
-import dev.keelfy.restless.content.Rest;
+import dev.keelfy.restless.content.item.charm.Charms;
+import dev.keelfy.restless.content.item.charm.DarkEye;
+import dev.keelfy.restless.content.item.charm.Luck;
+import dev.keelfy.restless.content.item.charm.Rest;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.EventTag;
 import dev.keelfy.restless.haunt.HauntData;
