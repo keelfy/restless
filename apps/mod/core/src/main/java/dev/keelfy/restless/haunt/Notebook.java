@@ -70,7 +70,7 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         RESTED(true),
         /** Args: type, name; tag: the type id as a photo has it. */
         BANISHED(true),
-        /** Args: name, old type, new type. */
+        /** In the spirit's dossier. Args: name, old type, new type. */
         EVOLVED(true),
         /** A spirit laid to rest at the Requiem: the last line of its dossier. Args: name, type. */
         LAID(true),
@@ -89,7 +89,7 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
 
         /** Things that happened, rather than things learned about a spirit. */
         public boolean chronicle() {
-            return this == RESTED || this == BANISHED || this == EVOLVED || this == OLD;
+            return this == RESTED || this == BANISHED || this == OLD;
         }
     }
 
@@ -227,6 +227,12 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
                 || notes.stream()
                         .anyMatch(n -> n.kind() == Kind.BANISHED
                                 && n.tag().filter(tag -> base(tag).equals(type)).isPresent());
+    }
+
+    /** Whether the player photographed this spirit, so that they know its type. */
+    public boolean photographed(UUID spirit) {
+        return notes.stream()
+                .anyMatch(n -> n.kind() == Kind.PHOTO && n.spirit().filter(spirit::equals).isPresent());
     }
 
     static String base(String tag) {

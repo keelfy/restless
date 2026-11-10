@@ -118,14 +118,14 @@ Sections show once they have something to say:
 | Section | Holds |
 | --- | --- |
 | Guide | chapters that open as you run into what they are about: *Read this first* (given), *Signs* (the first event), *Telling them apart* (the first clue), *The altar* (the first photo; it also shows the altar's recipe), *Graves*, *Your head* (the first darkening of the edges), *Left alone* (the first evolution), *Essence* (the first banishing or rest) |
-| Spirits | a dossier per spirit you have met, in order: met means any clue came from it. Until photographed it is an *Unknown spirit*; the photo names its type, its grave its name. Notes under it, and the latest photo |
+| Spirits | a dossier per spirit you have met, in order: met means any clue came from it. Until photographed it is an *Unknown spirit*; the photo names its type, its grave its name. Notes under it, and the latest photo. When a spirit evolves, its dossier says so: it names the grown type if you have photographed the spirit, otherwise only that it most likely evolved |
 | Archive | spirits you banished and filed |
 | Loose notes | what was seen of nobody in particular, such as an omen dream |
 | Bestiary | a card per type you have photographed: what it does, the **form** it takes at the altar, where it is met |
 | Charms | a page per [charm](/en/items/charms) and [advanced charm](/en/items/advanced) you can read about: what it does and its recipe. It opens once the journal knows the spirit of every essence in the recipe (photographed or banished); an advanced charm also needs its base charm's page |
 | Relics | a page per [relic](/en/items/relics), opened the same way: when all three spirits it is made of are known |
 | Recipes | the recipes in your recipe book that make an item of the mod: the ones diary pages taught you |
-| Chronicle | what happened: rests, banishings, changes of type |
+| Chronicle | what happened: rests and banishings |
 
 **Filing.** A dossier offers the banishments it could be: click one to file it, and the spirit moves to the Archive under the name that note gave it. Types must agree where both are known. The journal cannot tell whether they are the same spirit; that is your call.
 

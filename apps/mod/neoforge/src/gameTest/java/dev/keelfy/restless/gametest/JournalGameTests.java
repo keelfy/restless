@@ -125,9 +125,30 @@ final class JournalGameTests {
                     data.notebook(player.getUUID()).has(Notebook.Chapter.CLUES),
                     "the first clue must open the clues chapter");
 
+            Journal.note(
+                    player,
+                    Notebook.Kind.EVOLVED,
+                    shade,
+                    "Name",
+                    Component.translatable("spirit.restless.shade"),
+                    Component.translatable("spirit.restless.shade_evolved"));
+            List<String> grown = keys(player, data);
+            check(
+                    helper,
+                    grown.contains("journal.restless.note.evolved_unknown")
+                            && !grown.contains("journal.restless.note.evolved")
+                            && !grown.contains("spirit.restless.shade_evolved")
+                            && !grown.contains("journal.restless.section.chronicle"),
+                    "an unphotographed spirit's evolution must be in its dossier without naming a type");
+
             Journal.tagged(
                     player, Notebook.Kind.PHOTO, shade, "shade", Component.translatable("spirit.restless.shade"));
             List<String> after = keys(player, data);
+            check(
+                    helper,
+                    after.contains("journal.restless.note.evolved")
+                            && !after.contains("journal.restless.note.evolved_unknown"),
+                    "a photographed spirit's evolution must name the type");
             byte[] grey = new byte[Picture.SIZE];
             grey[5] = 77;
             Picture shot = new Picture(grey);

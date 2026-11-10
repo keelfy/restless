@@ -129,7 +129,8 @@ public final class JournalPages {
                         gone.args().getFirst());
                 entries.add(entry(gone));
             }
-            notes.stream().map(JournalPages::entry).forEach(entries::add);
+            boolean typeKnown = last(notes, Kind.PHOTO).isPresent();
+            notes.stream().map(n -> entry(n, typeKnown)).forEach(entries::add);
             if (gone == null) {
                 for (int record = 0; record < notebook.notes().size(); record++) {
                     if (notebook.fits(record, i)) {
@@ -232,12 +233,20 @@ public final class JournalPages {
     }
 
     private static Entry entry(Note note) {
-        return new Entry(Optional.of(note.kind()), line(note), Optional.empty());
+        return entry(note, true);
     }
 
-    private static Component line(Note note) {
+    /** {@code typeKnown}: the player knows what type of spirit the note is about, so a note may name one. */
+    private static Entry entry(Note note, boolean typeKnown) {
+        return new Entry(Optional.of(note.kind()), line(note, typeKnown), Optional.empty());
+    }
+
+    private static Component line(Note note, boolean typeKnown) {
         if (note.kind() == Kind.OLD) {
             return note.args().getFirst();
+        }
+        if (note.kind() == Kind.EVOLVED && !typeKnown) {
+            return Component.translatable("journal.restless.note.evolved_unknown");
         }
         MutableComponent line = Component.translatable(
                 "journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT),
