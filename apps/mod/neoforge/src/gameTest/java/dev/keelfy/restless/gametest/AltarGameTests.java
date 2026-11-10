@@ -68,6 +68,7 @@ public final class AltarGameTests {
         SettingsGameTests.register(TESTS);
         TagGameTests.register(TESTS);
         ScareGameTests.register(TESTS);
+        SpiritBoxGameTests.register(TESTS);
         TESTS.put("placement", helper -> {
             place(helper);
             check(

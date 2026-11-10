@@ -231,14 +231,17 @@ public final class Restless {
 
     /** Call when a player says something in chat. */
     public static void onChat(ServerPlayer player, String line) {
-        Divination.ask(player);
+        Divination.ask(player, line);
         Machines.said(player, line);
         Overheard.heard(player, line);
     }
 
-    /** Call when a player finishes a phrase on voice chat: a spirit box answers it as it does a chat line. */
-    public static void onVoice(ServerPlayer player) {
-        Divination.ask(player);
+    /**
+     * Call when a player finishes a phrase on voice chat: a spirit box answers it as it does a chat line. {@code heard}
+     * is the phrase as speech recognition made it out, empty when it could not.
+     */
+    public static void onVoice(ServerPlayer player, String heard) {
+        Divination.ask(player, heard);
     }
 
     /** Call after a living thing finishes eating or drinking; {@code eaten} is the stack as it was before. */

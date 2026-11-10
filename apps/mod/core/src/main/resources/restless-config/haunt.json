@@ -217,7 +217,150 @@
   },
   "spirit_box": {
     "radius": 6,
-    "delay_ticks": 40
+    "delay_ticks": 40,
+    "answer_chance": 0.6,
+    "echo_chance": 0.3,
+    "glitch_chance": 0.35,
+    "questions": {
+      "count": {
+        "heard": [
+          "many",
+          "much",
+          "скольк*"
+        ],
+        "answers": [
+          "many",
+          "all_of_us",
+          "more",
+          "legion"
+        ]
+      },
+      "where": {
+        "heard": [
+          "where",
+          "где",
+          "куда",
+          "откуда",
+          "bones",
+          "bone",
+          "кост*",
+          "grave*",
+          "могил*",
+          "body",
+          "тело",
+          "тела"
+        ],
+        "answers": [
+          "here",
+          "near",
+          "inside",
+          "everywhere",
+          "in_the_walls"
+        ]
+      },
+      "who": {
+        "heard": [
+          "who",
+          "whom",
+          "кто",
+          "name",
+          "named",
+          "имя",
+          "имени",
+          "зовут"
+        ],
+        "answers": [
+          "me",
+          "nobody",
+          "forgotten",
+          "us",
+          "nameless"
+        ]
+      },
+      "want": {
+        "heard": [
+          "want*",
+          "need*",
+          "хоч*",
+          "нуж*",
+          "надо",
+          "зачем",
+          "why",
+          "почему"
+        ],
+        "answers": [
+          "rest",
+          "home",
+          "warmth",
+          "return",
+          "company"
+        ]
+      },
+      "death": {
+        "heard": [
+          "die",
+          "died",
+          "dead",
+          "death",
+          "kill*",
+          "murder*",
+          "умер*",
+          "умир*",
+          "смерт*",
+          "мёрт*",
+          "мерт*",
+          "убил*",
+          "убит*"
+        ],
+        "answers": [
+          "fell",
+          "alone",
+          "pain",
+          "too_soon",
+          "no_air"
+        ]
+      },
+      "leave": {
+        "heard": [
+          "leave",
+          "away",
+          "begone",
+          "уход*",
+          "уйди",
+          "прочь",
+          "оставь*",
+          "отстань"
+        ],
+        "answers": [
+          "never",
+          "stay",
+          "not_yet",
+          "ours"
+        ]
+      },
+      "presence": {
+        "heard": [
+          "anyone",
+          "anybody",
+          "someone",
+          "hello",
+          "hi",
+          "hey",
+          "there",
+          "есть",
+          "здесь",
+          "тут",
+          "привет",
+          "эй"
+        ],
+        "answers": [
+          "always",
+          "watching",
+          "with_you",
+          "here"
+        ]
+      }
+    }
   },
   "ouija": {
     "delay_ticks": 20,

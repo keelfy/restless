@@ -167,24 +167,33 @@ public final class Divination {
         return true;
     }
 
-    /**
-     * Called when a player speaks: a spirit box close by answers a moment later, or hisses when no spirit has a voice.
-     */
-    public static void ask(ServerPlayer player) {
-        Config.Section config = Config.section("spirit_box");
+    /** Whether a spirit box is close enough to the player to hear them. */
+    public static boolean listening(ServerPlayer player) {
         boolean[] near = {false};
         Scan.each(
                 player.level(),
                 player.blockPosition(),
-                config.integer("radius"),
+                Config.section("spirit_box").integer("radius"),
                 (pos, state) -> near[0] |= state.is(Content.SPIRIT_BOX.get()));
-        if (!near[0]) {
+        return near[0];
+    }
+
+    /**
+     * Called when a player says {@code line}: a spirit box close by answers a moment later, or hisses when no spirit
+     * has a voice. The answer bears one word of a trait; what was asked only changes the words around it, see
+     * {@link Reply}. A line that could not be made out is empty.
+     */
+    public static void ask(ServerPlayer player, String line) {
+        Config.Section config = Config.section("spirit_box");
+        if (!listening(player)) {
             return;
         }
         Optional<Reading> reading = read(player, Clue.VOICE);
         Optional<Component> word = reading.map(r ->
                 word(r.trait().words().get(r.random().nextInt(r.trait().words().size()))));
-        Component answer = word.<Component>map(w -> Component.translatable("message.restless.spirit_box", w))
+        Component answer = word.<Component>map(w -> Component.translatable(
+                        "message.restless.spirit_box",
+                        Reply.of(line, w, reading.get().random())))
                 .orElse(Component.translatable("message.restless.spirit_box_static"));
         Scheduler.later(player, config.integer("delay_ticks"), p -> {
             p.sendSystemMessage(answer);
