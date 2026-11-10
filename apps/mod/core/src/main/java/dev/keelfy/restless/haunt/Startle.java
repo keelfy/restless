@@ -1,6 +1,8 @@
 package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.state.Session;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,5 +1,6 @@
 package dev.keelfy.restless.content;
 
+import dev.keelfy.restless.content.client.EyesParticle;
 import dev.keelfy.restless.platform.Platform;
 import java.util.function.Supplier;
 import net.minecraft.core.particles.ParticleType;

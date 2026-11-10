@@ -2,7 +2,7 @@ package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.config.Settings;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.Journal;
+import dev.keelfy.restless.journal.Journal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;

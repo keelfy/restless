@@ -2,6 +2,7 @@ package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.state.Session;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;

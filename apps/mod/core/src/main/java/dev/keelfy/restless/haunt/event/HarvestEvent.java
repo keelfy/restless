@@ -2,6 +2,7 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Restore;
+import dev.keelfy.restless.haunt.event.kit.Nearby;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.commands.arguments.EntityAnchorArgument;

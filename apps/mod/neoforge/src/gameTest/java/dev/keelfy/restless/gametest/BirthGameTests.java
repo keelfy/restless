@@ -1,14 +1,14 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.BirthRules.Verdict;
-import dev.keelfy.restless.haunt.Births;
 import dev.keelfy.restless.haunt.Director;
-import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.History;
-import dev.keelfy.restless.haunt.Notebook;
-import dev.keelfy.restless.haunt.SanityPayload;
+import dev.keelfy.restless.journal.Notebook;
+import dev.keelfy.restless.sanity.SanityPayload;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.life.BirthRules.Verdict;
+import dev.keelfy.restless.spirit.life.Births;
+import dev.keelfy.restless.state.HauntData;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;

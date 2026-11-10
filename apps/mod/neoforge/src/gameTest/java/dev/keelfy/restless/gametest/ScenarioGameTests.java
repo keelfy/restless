@@ -4,11 +4,11 @@ import static dev.keelfy.restless.gametest.HauntEventGameTests.check;
 import static dev.keelfy.restless.gametest.HauntEventGameTests.connected;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntEvents;
-import dev.keelfy.restless.haunt.HauntTier;
-import dev.keelfy.restless.haunt.Scenario;
+import dev.keelfy.restless.haunt.event.EventTag;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.haunt.event.HauntEvents;
+import dev.keelfy.restless.haunt.event.HauntTier;
+import dev.keelfy.restless.haunt.scenario.Scenario;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import java.util.ArrayList;

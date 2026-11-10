@@ -1,0 +1,30 @@
+package dev.keelfy.restless.haunt.effect;
+
+import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.haunt.effect.client.HeadTurn;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
+
+/**
+ * Tells a client to turn its view by {@code degrees} of yaw and {@code pitch} of pitch over {@code ticks}; see
+ * {@link HeadTurn}.
+ */
+public record TurnPayload(float degrees, float pitch, int ticks) implements CustomPacketPayload {
+    public static final Type<TurnPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "turn"));
+    public static final StreamCodec<ByteBuf, TurnPayload> CODEC = StreamCodec.composite(
+            ByteBufCodecs.FLOAT,
+            TurnPayload::degrees,
+            ByteBufCodecs.FLOAT,
+            TurnPayload::pitch,
+            ByteBufCodecs.VAR_INT,
+            TurnPayload::ticks,
+            TurnPayload::new);
+
+    @Override
+    public Type<TurnPayload> type() {
+        return TYPE;
+    }
+}

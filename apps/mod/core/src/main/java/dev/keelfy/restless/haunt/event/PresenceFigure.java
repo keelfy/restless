@@ -1,11 +1,11 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntTier;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.event.kit.Figure;
+import dev.keelfy.restless.haunt.event.kit.Gait;
+import dev.keelfy.restless.haunt.event.kit.Place;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

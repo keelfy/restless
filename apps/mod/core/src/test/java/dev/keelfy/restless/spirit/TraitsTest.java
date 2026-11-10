@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntTier;
-import dev.keelfy.restless.haunt.Power;
+import dev.keelfy.restless.haunt.event.EventTag;
+import dev.keelfy.restless.haunt.event.HauntTier;
+import dev.keelfy.restless.spirit.life.Power;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;

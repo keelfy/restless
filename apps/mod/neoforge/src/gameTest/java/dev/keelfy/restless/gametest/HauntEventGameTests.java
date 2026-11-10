@@ -4,11 +4,11 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Earshot;
-import dev.keelfy.restless.haunt.HauntData;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntEvents;
-import dev.keelfy.restless.haunt.event.Figure;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.haunt.event.HauntEvents;
+import dev.keelfy.restless.haunt.event.kit.Figure;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.state.HauntData;
 import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.HashMap;
 import java.util.List;
@@ -1952,16 +1952,16 @@ final class HauntEventGameTests {
         var channels = net.neoforged.neoforge.network.registration.ChannelAttributes.getOrCreateCommonChannels(
                 connection, net.minecraft.network.ConnectionProtocol.PLAY);
         for (var type : List.of(
-                dev.keelfy.restless.haunt.DoorLockPayload.TYPE,
-                dev.keelfy.restless.haunt.DimPayload.TYPE,
-                dev.keelfy.restless.haunt.ScreenPayload.TYPE,
-                dev.keelfy.restless.haunt.TurnPayload.TYPE,
-                dev.keelfy.restless.haunt.VignettePayload.TYPE,
-                dev.keelfy.restless.haunt.SanityPayload.TYPE,
-                dev.keelfy.restless.haunt.JournalPayload.TYPE,
-                dev.keelfy.restless.haunt.RequiemPayload.TYPE,
+                dev.keelfy.restless.haunt.effect.DoorLockPayload.TYPE,
+                dev.keelfy.restless.haunt.effect.DimPayload.TYPE,
+                dev.keelfy.restless.haunt.effect.ScreenPayload.TYPE,
+                dev.keelfy.restless.haunt.effect.TurnPayload.TYPE,
+                dev.keelfy.restless.haunt.effect.VignettePayload.TYPE,
+                dev.keelfy.restless.sanity.SanityPayload.TYPE,
+                dev.keelfy.restless.journal.JournalPayload.TYPE,
+                dev.keelfy.restless.banish.RequiemPayload.TYPE,
                 dev.keelfy.restless.debug.DebugPayload.TYPE,
-                dev.keelfy.restless.haunt.ShutterPayload.TYPE)) {
+                dev.keelfy.restless.photo.ShutterPayload.TYPE)) {
             channels.add(type.id());
         }
         return player;

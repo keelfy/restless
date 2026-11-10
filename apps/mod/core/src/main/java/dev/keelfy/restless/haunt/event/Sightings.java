@@ -2,10 +2,14 @@ package dev.keelfy.restless.haunt.event;
 
 import com.mojang.datafixers.util.Pair;
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.haunt.DimPayload;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.effect.DimPayload;
+import dev.keelfy.restless.haunt.event.kit.Nearby;
+import dev.keelfy.restless.haunt.event.kit.PacketEntity;
+import dev.keelfy.restless.haunt.event.kit.Place;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
+import dev.keelfy.restless.haunt.event.kit.Walk;
+import dev.keelfy.restless.haunt.event.kit.Where;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

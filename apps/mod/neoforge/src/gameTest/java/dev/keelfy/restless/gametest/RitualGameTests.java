@@ -1,10 +1,10 @@
 package dev.keelfy.restless.gametest;
 
-import dev.keelfy.restless.content.Altar;
+import dev.keelfy.restless.banish.Ritual;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.haunt.HauntData;
-import dev.keelfy.restless.haunt.Ritual;
-import dev.keelfy.restless.haunt.SanityPayload;
+import dev.keelfy.restless.content.block.Altar;
+import dev.keelfy.restless.sanity.SanityPayload;
+import dev.keelfy.restless.state.HauntData;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

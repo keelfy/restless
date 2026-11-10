@@ -1,6 +1,6 @@
 package dev.keelfy.restless.spirit;
 
-import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.haunt.event.EventTag;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

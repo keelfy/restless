@@ -1,8 +1,8 @@
 package dev.keelfy.restless.debug;
 
 import dev.keelfy.restless.config.Lang;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntTier;
+import dev.keelfy.restless.haunt.event.EventTag;
+import dev.keelfy.restless.haunt.event.HauntTier;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;

@@ -2,12 +2,14 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.Silhouette;
-import dev.keelfy.restless.content.SilhouetteRenderer;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.content.client.SilhouetteRenderer;
+import dev.keelfy.restless.content.entity.Silhouette;
 import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.event.kit.Nearby;
+import dev.keelfy.restless.haunt.event.kit.PacketEntity;
+import dev.keelfy.restless.haunt.event.kit.Place;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;

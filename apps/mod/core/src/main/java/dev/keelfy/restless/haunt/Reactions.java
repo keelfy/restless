@@ -3,6 +3,8 @@ package dev.keelfy.restless.haunt;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
+import dev.keelfy.restless.state.HauntData;
+import dev.keelfy.restless.state.Session;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

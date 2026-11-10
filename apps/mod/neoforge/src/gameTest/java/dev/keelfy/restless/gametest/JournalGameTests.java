@@ -1,15 +1,15 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.Picture;
-import dev.keelfy.restless.haunt.Codex;
-import dev.keelfy.restless.haunt.DevelopPayload;
-import dev.keelfy.restless.haunt.Divination;
-import dev.keelfy.restless.haunt.HauntData;
-import dev.keelfy.restless.haunt.Journal;
-import dev.keelfy.restless.haunt.JournalPages;
-import dev.keelfy.restless.haunt.JournalPayload;
-import dev.keelfy.restless.haunt.Notebook;
+import dev.keelfy.restless.divine.Divination;
+import dev.keelfy.restless.journal.Codex;
+import dev.keelfy.restless.journal.Journal;
+import dev.keelfy.restless.journal.JournalPages;
+import dev.keelfy.restless.journal.JournalPayload;
+import dev.keelfy.restless.journal.Notebook;
+import dev.keelfy.restless.photo.DevelopPayload;
+import dev.keelfy.restless.photo.Picture;
+import dev.keelfy.restless.state.HauntData;
 import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.HashSet;

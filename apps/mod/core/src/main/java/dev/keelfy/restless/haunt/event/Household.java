@@ -2,12 +2,15 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.Footprints;
-import dev.keelfy.restless.haunt.EventTag;
+import dev.keelfy.restless.content.block.Footprints;
 import dev.keelfy.restless.haunt.Hardcore;
-import dev.keelfy.restless.haunt.HauntEvent;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.event.kit.Haze;
+import dev.keelfy.restless.haunt.event.kit.Nearby;
+import dev.keelfy.restless.haunt.event.kit.Place;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
+import dev.keelfy.restless.haunt.event.kit.Swaps;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

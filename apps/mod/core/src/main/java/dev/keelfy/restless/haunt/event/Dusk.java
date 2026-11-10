@@ -1,11 +1,12 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.UnlitLights;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.content.block.UnlitLights;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.event.kit.Nearby;
+import dev.keelfy.restless.haunt.event.kit.Place;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;

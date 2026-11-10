@@ -4,8 +4,8 @@ import static dev.keelfy.restless.gametest.HauntEventGameTests.FEET;
 import static dev.keelfy.restless.gametest.HauntEventGameTests.check;
 import static dev.keelfy.restless.gametest.HauntEventGameTests.runs;
 
-import dev.keelfy.restless.haunt.HauntData;
 import dev.keelfy.restless.haunt.Restore;
+import dev.keelfy.restless.state.HauntData;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;

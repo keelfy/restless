@@ -1,8 +1,8 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.Dreamcatcher;
-import dev.keelfy.restless.content.DreamcatcherEntity;
+import dev.keelfy.restless.content.block.Dreamcatcher;
+import dev.keelfy.restless.content.block.DreamcatcherEntity;
 import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;

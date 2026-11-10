@@ -1,7 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
+import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
+import dev.keelfy.restless.haunt.event.kit.Swarm;
 import java.util.List;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityTypes;

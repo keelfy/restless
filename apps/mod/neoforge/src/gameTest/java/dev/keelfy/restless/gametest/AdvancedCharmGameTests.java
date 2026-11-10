@@ -5,18 +5,18 @@ import static dev.keelfy.restless.gametest.CharmGameTests.stack;
 import static dev.keelfy.restless.gametest.CharmGameTests.use;
 
 import dev.keelfy.restless.Restless;
-import dev.keelfy.restless.content.Charms;
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.Rest;
-import dev.keelfy.restless.haunt.Clues;
-import dev.keelfy.restless.haunt.EventTag;
-import dev.keelfy.restless.haunt.HauntEvent;
-import dev.keelfy.restless.haunt.HauntEvents;
-import dev.keelfy.restless.haunt.Sanity;
-import dev.keelfy.restless.haunt.Wards;
+import dev.keelfy.restless.content.item.charm.Charms;
+import dev.keelfy.restless.content.item.charm.Rest;
+import dev.keelfy.restless.divine.Clues;
+import dev.keelfy.restless.haunt.event.EventTag;
+import dev.keelfy.restless.haunt.event.HauntEvent;
+import dev.keelfy.restless.haunt.event.HauntEvents;
+import dev.keelfy.restless.sanity.Sanity;
 import dev.keelfy.restless.spirit.Clue;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
+import dev.keelfy.restless.ward.Wards;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -285,12 +285,18 @@ final class AdvancedCharmGameTests {
         });
         tests.put("truthseers_eye_keeps_one_reading_honest_a_day", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
-            check(helper, !dev.keelfy.restless.content.Advanced.truthful(player, Clue.VOICE), "no eye, no truth");
-            player.setItemInHand(InteractionHand.OFF_HAND, stack("truthseers_eye"));
-            check(helper, dev.keelfy.restless.content.Advanced.truthful(player, Clue.VOICE), "the eye must hold");
             check(
                     helper,
-                    !dev.keelfy.restless.content.Advanced.truthful(player, Clue.FOOTPRINTS),
+                    !dev.keelfy.restless.content.item.charm.Advanced.truthful(player, Clue.VOICE),
+                    "no eye, no truth");
+            player.setItemInHand(InteractionHand.OFF_HAND, stack("truthseers_eye"));
+            check(
+                    helper,
+                    dev.keelfy.restless.content.item.charm.Advanced.truthful(player, Clue.VOICE),
+                    "the eye must hold");
+            check(
+                    helper,
+                    !dev.keelfy.restless.content.item.charm.Advanced.truthful(player, Clue.FOOTPRINTS),
                     "a tool that cannot lie needs no eye");
             List<Trait> liar = Traits.all().stream().filter(Trait::lies).toList();
             check(helper, !liar.isEmpty(), "the test needs a lying trait");
@@ -302,8 +308,11 @@ final class AdvancedCharmGameTests {
                                 .orElse(false),
                         "an honest reading must name the spirit's own trait");
             }
-            dev.keelfy.restless.content.Advanced.truthSpent(player);
-            check(helper, !dev.keelfy.restless.content.Advanced.truthful(player, Clue.VOICE), "the eye must rest");
+            dev.keelfy.restless.content.item.charm.Advanced.truthSpent(player);
+            check(
+                    helper,
+                    !dev.keelfy.restless.content.item.charm.Advanced.truthful(player, Clue.VOICE),
+                    "the eye must rest");
             helper.succeed();
         });
         tests.put("hearth_dream_asks_for_a_shut_roofed_room", helper -> {

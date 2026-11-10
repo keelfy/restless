@@ -5,7 +5,7 @@ Today a player gets personal spirits two ways: one random one on first join, and
 line of [design.md](design.md) (Spirit kinds, stage 5). Territorial spirits generated with structures are planned in
 [places.md](places.md).
 
-Step 1 (the seam) and batch 1 are built, in `haunt/Deeds.java`: slaughter, far death, pet slain, pet lost, witnessed
+Step 1 (the seam) and batch 1 are built, in `spirit/life/Deeds.java`: slaughter, far death, pet slain, pet lost, witnessed
 death and a long wake. Five personal types still have no deed; batch 2 below gives each one. The Effigy (see essence-expansion.md) is the first opt-in birth. Numbers are starting values, all of them in
 config (`haunt.json`, section `births`).
 
@@ -18,7 +18,7 @@ config (`haunt.json`, section `births`).
 - A born spirit is a normal spirit (traits, anger, clues, grave, ritual, evolution); nothing new to learn or fight.
 - Not here: territorial births, binding or merging spirits, a new journal chapter, new spirit types, new events.
 
-## The seam: `haunt/Births.java`
+## The seam: `spirit/life/Births.java`
 
 One entry point, `Births.deed(player, Deed, roll)`, to be called from the hooks that already exist (`Restless.onKill`,
 `Anger.broke`, `Reactions.used`, the director check). A `Deed` is a config key; `births.deeds.<key>` in `haunt.json`

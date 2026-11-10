@@ -1,0 +1,436 @@
+package dev.keelfy.restless.content.block;
+
+import dev.keelfy.restless.banish.Requiem;
+import dev.keelfy.restless.banish.Ritual;
+import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.item.Reliquary;
+import dev.keelfy.restless.haunt.event.Machines;
+import dev.keelfy.restless.spirit.Focus;
+import dev.keelfy.restless.spirit.Form;
+import java.util.Locale;
+import java.util.function.Supplier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CandleBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * The center of a ritual. It holds one thing: a focus, which starts a ritual on the spirit weak to it (see
+ * {@link Ritual}), or a bottle of water, which turns holy after a night on it. Using it with an empty hand takes the
+ * thing back. A full {@link Reliquary} is not laid on it: it starts the Requiem (see {@link Requiem}) and stays with
+ * the player.
+ */
+public final class Altar extends Block implements EntityBlock {
+    /** Offsets from the bowl; only the center owns an offering or a block entity. */
+    public enum Part implements StringRepresentable {
+        CENTER(0, 0),
+        NORTH(0, -1),
+        EAST(1, 0),
+        SOUTH(0, 1),
+        WEST(-1, 0),
+        NORTH_WEST(-1, -1),
+        NORTH_EAST(1, -1),
+        SOUTH_EAST(1, 1),
+        SOUTH_WEST(-1, 1);
+
+        final int x;
+        final int z;
+
+        Part(int x, int z) {
+            this.x = x;
+            this.z = z;
+        }
+
+        BlockPos position(BlockPos center) {
+            return center.offset(x, 0, z);
+        }
+
+        BlockPos center(BlockPos pos) {
+            return pos.offset(-x, 0, -z);
+        }
+
+        boolean corner() {
+            return x != 0 && z != 0;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name().toLowerCase(Locale.ROOT);
+        }
+    }
+
+    /**
+     * What lies on the altar: nothing, a bottle of water that turns holy, or an offering. An offering is of one
+     * {@link Focus} category, which decides the spirit it calls, in one {@link Form}, which decides whether that spirit
+     * takes it gladly.
+     */
+    public enum Held implements StringRepresentable {
+        EMPTY(null, null, () -> Items.AIR),
+        WATER(null, null, () -> Items.POTION),
+        IRON(Focus.IRON, Form.WHOLE, () -> Items.IRON_INGOT),
+        IRON_NUGGET(Focus.IRON, Form.BIT, () -> Items.IRON_NUGGET),
+        IRON_CHAIN(Focus.IRON, Form.CRAFTED, () -> Items.IRON_CHAIN),
+        GLOWSTONE(Focus.GLOWSTONE, Form.WHOLE, () -> Items.GLOWSTONE),
+        GLOWSTONE_DUST(Focus.GLOWSTONE, Form.BIT, () -> Items.GLOWSTONE_DUST),
+        LANTERN(Focus.GLOWSTONE, Form.CRAFTED, () -> Items.LANTERN),
+        HOLY_WATER(Focus.HOLY_WATER, Form.WHOLE, Content.HOLY_WATER),
+        SALT(Focus.HOLY_WATER, Form.BIT, Content.SALT),
+        BELL(Focus.HOLY_WATER, Form.CRAFTED, () -> Items.BELL),
+        MIRROR(Focus.MIRROR, Form.WHOLE, Content.MIRROR),
+        GLASS_PANE(Focus.MIRROR, Form.BIT, () -> Items.GLASS_PANE),
+        SPYGLASS(Focus.MIRROR, Form.CRAFTED, () -> Items.SPYGLASS);
+
+        /** Null for what is not an offering. */
+        public final @Nullable Focus focus;
+
+        public final @Nullable Form form;
+        private final Supplier<? extends Item> item;
+
+        Held(@Nullable Focus focus, @Nullable Form form, Supplier<? extends Item> item) {
+            this.focus = focus;
+            this.form = form;
+            this.item = item;
+        }
+
+        /** What the player gets back when taking it off. */
+        public ItemStack stack() {
+            return switch (this) {
+                case EMPTY -> ItemStack.EMPTY;
+                case WATER -> PotionContents.createItemStack(Items.POTION, Potions.WATER);
+                default -> new ItemStack(item.get());
+            };
+        }
+
+        static @Nullable Held from(ItemStack stack) {
+            PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
+            if (stack.is(Items.POTION) && potion != null && potion.is(Potions.WATER)) {
+                return WATER;
+            }
+            for (Held held : values()) {
+                if (held.focus != null && stack.is(held.item.get())) {
+                    return held;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name().toLowerCase(Locale.ROOT);
+        }
+    }
+
+    public static final EnumProperty<Held> HELD = EnumProperty.create("held", Held.class);
+    public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
+    private static final VoxelShape BASE = Shapes.or(
+            Block.box(0, 0, 0, 16, 2, 16),
+            Block.box(0.5, 2, 0.5, 7.75, 3.5, 7.75),
+            Block.box(8.25, 2, 0.5, 15.5, 3.5, 7.75),
+            Block.box(0.5, 2, 8.25, 7.75, 3.5, 15.5),
+            Block.box(8.25, 2, 8.25, 15.5, 3.5, 15.5));
+    private static final VoxelShape BOWL = Shapes.or(
+            BASE,
+            Block.box(3, 3, 3, 13, 9, 13),
+            Block.box(1, 9, 1, 15, 12, 15),
+            Block.box(1, 12, 1, 15, 13, 3),
+            Block.box(1, 12, 13, 15, 13, 15),
+            Block.box(1, 12, 3, 3, 13, 13),
+            Block.box(13, 12, 3, 15, 13, 13),
+            Block.box(2.75, 4, 2.75, 13.25, 5, 13.25),
+            Block.box(6, 6, 2.75, 10, 8, 3),
+            Block.box(6, 6, 13, 10, 8, 13.25),
+            Block.box(2.75, 6, 6, 3, 8, 10),
+            Block.box(13, 6, 6, 13.25, 8, 10));
+    private static final VoxelShape PILLAR = Shapes.or(
+            BASE,
+            Block.box(4, 3, 4, 12, 5, 12),
+            Block.box(5, 5, 5, 11, 6, 11),
+            Block.box(6.5, 6, 6.5, 9.5, 12, 9.5),
+            Block.box(5.5, 11, 5.5, 10.5, 13, 10.5),
+            Block.box(4, 13, 4, 12, 14, 12),
+            Block.box(3, 14, 3, 13, 16, 13));
+
+    public Altar(BlockBehaviour.Properties properties) {
+        super(properties.pushReaction(PushReaction.IMMOVEABLE));
+        registerDefaultState(stateDefinition.any().setValue(HELD, Held.EMPTY).setValue(PART, Part.CENTER));
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return state.getValue(PART) == Part.CENTER ? new AltarEntity(pos, state) : null;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(HELD, PART);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        Part part = state.getValue(PART);
+        return part == Part.CENTER ? BOWL : part.corner() ? PILLAR : BASE;
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level level = context.getLevel();
+        for (Part part : Part.values()) {
+            BlockPos at = part.position(context.getClickedPos());
+            BlockState state = defaultBlockState().setValue(PART, part);
+            if (!level.getWorldBorder().isWithinBounds(at)
+                    || !level.hasChunkAt(at)
+                    || !level.getBlockState(at).canBeReplaced(context)
+                    || !level.getFluidState(at).isEmpty()
+                    || !state.canSurvive(level, at)
+                    || !level.isUnobstructed(state, at, CollisionContext.placementContext(context.getPlayer()))
+                    || (context.getPlayer() != null
+                            && !context.getPlayer().mayUseItemAt(at, Direction.UP, context.getItemInHand()))) {
+                if (context.getPlayer() instanceof ServerPlayer player) {
+                    player.sendSystemMessage(Component.translatable("message.restless.altar_space"), true);
+                }
+                return null;
+            }
+        }
+        return defaultBlockState();
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack stack) {
+        for (Part part : Part.values()) {
+            if (part != Part.CENTER) {
+                level.setBlock(part.position(pos), defaultBlockState().setValue(PART, part), Block.UPDATE_ALL);
+            }
+        }
+    }
+
+    @Override
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        return level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP);
+    }
+
+    @Override
+    protected BlockState updateShape(
+            BlockState state,
+            LevelReader level,
+            ScheduledTickAccess ticks,
+            BlockPos pos,
+            Direction direction,
+            BlockPos neighbourPos,
+            BlockState neighbourState,
+            RandomSource random) {
+        return direction == Direction.DOWN && !state.canSurvive(level, pos) ? Blocks.AIR.defaultBlockState() : state;
+    }
+
+    /** Removal starts at the center, so recursive neighbour callbacks cannot drop or dismantle it twice. */
+    @Override
+    protected void affectNeighborsAfterRemoval(
+            BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+        Part removed = state.getValue(PART);
+        if (removed.corner() && level.getBlockState(pos.above()).getBlock() instanceof CandleBlock) {
+            level.destroyBlock(pos.above(), true);
+        }
+        BlockPos center = removed.center(pos);
+        if (removed != Part.CENTER) {
+            if (isPart(level.getBlockState(center), Part.CENTER)) {
+                level.destroyBlock(center, true);
+            }
+            return;
+        }
+        popResource(level, pos, state.getValue(HELD).stack());
+        for (Part part : Part.values()) {
+            BlockPos at = part.position(center);
+            if (part != Part.CENTER && isPart(level.getBlockState(at), part)) {
+                level.removeBlock(at, false);
+            }
+        }
+    }
+
+    /** A false altar set up by the Requiem cannot be mined, so it cannot be kept. */
+    @Override
+    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        return Requiem.decoy(state.getValue(PART).center(pos))
+                ? 0.0f
+                : super.getDestroyProgress(state, player, level, pos);
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide() && player.preventsBlockDrops() && state.getValue(PART) != Part.CENTER) {
+            BlockPos center = state.getValue(PART).center(pos);
+            if (isPart(level.getBlockState(center), Part.CENTER)) {
+                level.destroyBlock(center, false);
+            }
+        }
+        return super.playerWillDestroy(level, pos, state, player);
+    }
+
+    private boolean isPart(BlockState state, Part part) {
+        return state.is(this) && state.getValue(PART) == part;
+    }
+
+    public static boolean isComplete(BlockGetter level, BlockPos center) {
+        for (Part part : Part.values()) {
+            BlockState state = level.getBlockState(part.position(center));
+            if (!(state.getBlock() instanceof Altar) || state.getValue(PART) != part) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    protected InteractionResult useItemOn(
+            ItemStack stack,
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hit) {
+        if (state.getValue(PART).corner()
+                && hit.getDirection() == Direction.UP
+                && stack.getItem() instanceof BlockItem item
+                && item.getBlock() instanceof CandleBlock) {
+            return InteractionResult.PASS;
+        }
+        pos = state.getValue(PART).center(pos);
+        state = level.getBlockState(pos);
+        if (!isPart(state, Part.CENTER)) {
+            return InteractionResult.FAIL;
+        }
+        Held held = Held.from(stack);
+        boolean vessel = stack.getItem() instanceof Reliquary;
+        if ((held == null && !vessel) || state.getValue(HELD) != Held.EMPTY) {
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
+        }
+        if (!(level instanceof ServerLevel server) || !(player instanceof ServerPlayer caster)) {
+            return InteractionResult.SUCCESS;
+        }
+        if (Requiem.running(pos)) {
+            return Requiem.used(caster, pos, stack);
+        }
+        if (!isComplete(level, pos)) {
+            caster.sendSystemMessage(Component.translatable("message.restless.altar_rebuild"), true);
+            return InteractionResult.FAIL;
+        }
+        if (vessel) {
+            // The reliquary is not given up: the player keeps it, and the rite takes essences from it only on failure.
+            return Requiem.begin(caster, server, pos, stack)
+                    ? InteractionResult.SUCCESS_SERVER
+                    : InteractionResult.FAIL;
+        }
+        if (held == Held.HOLY_WATER && Machines.cloudy(stack, server)) {
+            caster.sendSystemMessage(Component.translatable("message.restless.holy_water_cloudy"), true);
+            return InteractionResult.FAIL;
+        }
+        if (held == Held.WATER) {
+            server.setBlock(pos, state.setValue(HELD, Held.WATER), 3);
+            server.scheduleTick(pos, this, Config.section("ritual").integer("bless_ticks"));
+        } else if (!Ritual.begin(caster, server, pos, held)) {
+            return InteractionResult.FAIL;
+        }
+        stack.consume(1, player);
+        if (held == Held.MIRROR) {
+            Machines.mirrorUsed(caster);
+        }
+        return InteractionResult.SUCCESS_SERVER;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(
+            BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        pos = state.getValue(PART).center(pos);
+        state = level.getBlockState(pos);
+        if (!isPart(state, Part.CENTER)) {
+            return InteractionResult.PASS;
+        }
+        Held held = state.getValue(HELD);
+        if (held == Held.EMPTY) {
+            return InteractionResult.PASS;
+        }
+        if (!level.isClientSide()) {
+            level.setBlock(pos, state.setValue(HELD, Held.EMPTY), 3);
+            ItemStack back = held.stack();
+            if (!player.addItem(back)) {
+                level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), back));
+            }
+        }
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        Part part = state.getValue(PART);
+        if (part != Part.CENTER) {
+            return;
+        }
+        BlockState center = level.getBlockState(part.center(pos));
+        if (!isPart(center, Part.CENTER) || center.getValue(HELD) == Held.EMPTY || random.nextInt(5) != 0) {
+            return;
+        }
+        double angle = random.nextDouble() * Math.PI * 2;
+        double radius = 0.3;
+        double x = pos.getX() + 0.5 + Math.cos(angle) * radius;
+        double z = pos.getZ() + 0.5 + Math.sin(angle) * radius;
+        boolean blessing = center.getValue(HELD) == Held.WATER || center.getValue(HELD) == Held.HOLY_WATER;
+        level.addParticle(
+                blessing ? ParticleTypes.END_ROD : ParticleTypes.SOUL_FIRE_FLAME, x, pos.getY() + 0.9, z, 0, 0.015, 0);
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (state.getValue(PART) == Part.CENTER && state.getValue(HELD) == Held.WATER) {
+            level.setBlock(pos, state.setValue(HELD, Held.HOLY_WATER), 3);
+            level.sendParticles(
+                    ParticleTypes.END_ROD,
+                    pos.getX() + 0.5,
+                    pos.getY() + 1.0,
+                    pos.getZ() + 0.5,
+                    12,
+                    0.2,
+                    0.3,
+                    0.2,
+                    0.02);
+            level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.BLOCKS, 1.0f, 0.8f);
+        }
+    }
+}

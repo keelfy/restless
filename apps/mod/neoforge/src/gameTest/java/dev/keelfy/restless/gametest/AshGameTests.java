@@ -1,7 +1,7 @@
 package dev.keelfy.restless.gametest;
 
-import dev.keelfy.restless.content.AshFootprint;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.entity.AshFootprint;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;

@@ -1,8 +1,8 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.content.Content;
-import dev.keelfy.restless.content.UnlitLights;
-import dev.keelfy.restless.haunt.HauntEvents;
+import dev.keelfy.restless.content.block.UnlitLights;
+import dev.keelfy.restless.haunt.event.HauntEvents;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;

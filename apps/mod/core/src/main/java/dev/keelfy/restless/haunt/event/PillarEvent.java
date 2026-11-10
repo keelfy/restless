@@ -2,6 +2,9 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.event.kit.Figure;
+import dev.keelfy.restless.haunt.event.kit.Place;
+import dev.keelfy.restless.haunt.event.kit.Swaps;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
