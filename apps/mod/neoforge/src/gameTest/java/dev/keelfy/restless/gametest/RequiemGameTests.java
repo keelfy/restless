@@ -460,7 +460,7 @@ final class RequiemGameTests {
                                 Reliquary.of(player.getInventory().getItem(8)).held();
                         check(
                                 helper,
-                                held.size() == 13 && order().containsAll(held),
+                                held.size() == Content.ESSENCE.size() - 1 && order().containsAll(held),
                                 "exactly one essence must be lost, found " + held);
                         check(
                                 helper,
@@ -493,7 +493,10 @@ final class RequiemGameTests {
                 }
                 helper.succeedWhen(() -> {
                     check(helper, Requiem.rite(player) == null && rite.current == null, "the rite must end");
-                    check(helper, Reliquary.of(hall.reliquary()).held().size() == 14, "no essence may be lost");
+                    check(
+                            helper,
+                            Reliquary.of(hall.reliquary()).held().size() == Content.ESSENCE.size(),
+                            "no essence may be lost");
                     check(helper, data.requiemWary(player.getUUID()) == 0, "no cooldown");
                     check(helper, data.get(player.getUUID()).stream().allMatch(s -> s.anger() == 0.0), "no anger");
                     player.discard();

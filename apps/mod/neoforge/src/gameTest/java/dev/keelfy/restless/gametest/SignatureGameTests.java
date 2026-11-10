@@ -171,6 +171,13 @@ final class SignatureGameTests {
                 "signature_lost_one_sign",
                 helper ->
                         signature(helper, "lost_one_sign", Spirits.LOST_ONE, player -> {}, () -> sign(helper, false)));
+        for (String swarm : List.of("boggart_spiders", "boggart_crawl", "boggart_silverfish")) {
+            // The swarm runs its whole length, and its removal packets go out, without an error or a death.
+            HauntEventGameTests.TIMEOUT.put("signature_" + swarm, 200);
+            tests.put(
+                    "signature_" + swarm,
+                    helper -> signature(helper, swarm, Spirits.BOGGART, player -> {}, 140, () -> {}));
+        }
         tests.put("signature_filter", SignatureGameTests::filter);
         SignatureBatchTests.register(tests);
     }

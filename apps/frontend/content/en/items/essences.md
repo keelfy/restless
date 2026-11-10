@@ -4,7 +4,7 @@ title: Essences
 
 # Essences
 
-Each of the fourteen spirit types leaves one kind of essence, named for it: poltergeist, shade, nix, phantom, mimic, wraith, mara, banshee, revenant, lost one, domovoi, hoarder, demon and trickster.
+Each of the fifteen spirit types leaves one kind of essence, named for it: poltergeist, shade, nix, phantom, mimic, wraith, mara, banshee, revenant, lost one, domovoi, hoarder, demon, trickster and boggart.
 
 ## Where they come from
 

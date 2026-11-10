@@ -82,7 +82,8 @@ final class CharmGameTests {
                 Identifier essence = Identifier.fromNamespaceAndPath(Restless.MOD_ID, type.id() + "_essence");
                 check(helper, BuiltInRegistries.ITEM.containsKey(essence), type.id() + " leaves no essence");
             }
-            check(helper, CHARMS.size() + 2 == Spirits.all().size(), "a spirit has no charm, or one has two");
+            // The poltergeist and the shade have artifacts instead, the boggart has no reward yet.
+            check(helper, CHARMS.size() + 3 == Spirits.all().size(), "a spirit has no charm, or one has two");
             for (String id : CHARMS) {
                 ResourceKey<Recipe<?>> recipe =
                         ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(Restless.MOD_ID, id));

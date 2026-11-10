@@ -4,7 +4,7 @@ title: Signatures
 
 # Signatures
 
-43 events that only one type of spirit can roll, so that one of them tells you what you are dealing with. They are likelier than most events. Each type has three or four: the banshee, poltergeist, shade, phantom, nix, mimic, wraith, mara, revenant, lost one, domovoi, hoarder, demon and trickster.
+46 events that only one type of spirit can roll, so that one of them tells you what you are dealing with. They are likelier than most events. Each type has three or four: the banshee, poltergeist, shade, phantom, nix, mimic, wraith, mara, revenant, lost one, domovoi, hoarder, demon, trickster and boggart.
 
 ## `banshee_letter`
 
@@ -274,3 +274,21 @@ Runs when: Sand, red sand or gravel with air above, within 12
 A lit TNT that only you see hisses a few blocks away, then pops into firework sparks with a laugh. Only a trickster rolls it.
 
 Runs when: Standing room 3 to 6 blocks away
+
+## `boggart_spiders`
+
+Forty tiny spiders that only you see run out of the dark from every side, swarm to your feet and circle you for a few seconds, then scatter. Nothing is really there. Only a boggart rolls it.
+
+Runs when: Not in water
+
+## `boggart_crawl`
+
+Two dozen tinier spiders that only you see run up close and climb in circles up your body to your face, then drop and scatter. Nothing is really there. Only a boggart rolls it.
+
+Runs when: Not in water
+
+## `boggart_silverfish`
+
+Forty silverfish that only you see pour across the floor, circle round your feet and scatter. Nothing is really there. Only a boggart rolls it.
+
+Runs when: Not in water

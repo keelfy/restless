@@ -303,6 +303,28 @@ record Apparition(
                         0.1,
                         0,
                         List.of(new Limb(0.06, 0.28, 0.3, 0.1, 0.025)));
+            // Shaggy and ragged, a wide grin and many thin limbs splayed like a spider's.
+            case "boggart" ->
+                new Apparition(
+                        0.12,
+                        0.14,
+                        0.24,
+                        0.11,
+                        0.1,
+                        0.05,
+                        24,
+                        0.45,
+                        0.2,
+                        0.04,
+                        0.024,
+                        0.07,
+                        0.014,
+                        0.03,
+                        0,
+                        List.of(
+                                new Limb(0.08, 0.3, 0.3, 0.42, 0.016),
+                                new Limb(0.08, 0.36, 0.34, 0.62, 0.016),
+                                new Limb(0.08, 0.42, 0.28, 0.8, 0.016)));
             default -> SHADE;
         };
     }

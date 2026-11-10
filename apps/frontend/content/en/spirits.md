@@ -86,6 +86,15 @@ Wanders: figures, strangers and steps, may act when the player goes below y 0 (`
 - Activity: 0.9
 - Signature events: `lost_one_sign`, `lost_one_wanderer`, `lost_one_death_path`, see [Signatures](/en/events/signatures).
 
+### Boggart
+
+Illusions that disgust: swarms of tiny spiders and silverfish that only you see, running at you.
+
+- Favors: mobs ×3, presence ×3, sounds ×2, blocks ×1.5, lights ×1
+- Avoids: afflictions ×0.5, assaults ×0.3, doors ×0.3, items ×0.3
+- Activity: 1.1
+- Signature events: `boggart_spiders`, `boggart_crawl`, `boggart_silverfish`, see [Signatures](/en/events/signatures).
+
 ## Territorial
 
 Territorial spirits stay at one place and act on players nearby. Some are born with the world: a newly generated woodland mansion, shipwreck, ancient city, swamp hut, desert temple, village or ruined portal may hold one, and two such places never lie within 96 blocks of each other.

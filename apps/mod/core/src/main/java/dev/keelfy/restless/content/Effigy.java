@@ -56,7 +56,8 @@ public final class Effigy extends ShapedBlock {
         DOMOVOI,
         HOARDER,
         DEMON,
-        TRICKSTER;
+        TRICKSTER,
+        BOGGART;
 
         /** The spirit type's id; empty for {@link #EMPTY}. */
         public String spirit() {

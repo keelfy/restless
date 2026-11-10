@@ -198,6 +198,22 @@
         "PRESENCE": 1.5,
         "ASSAULT": 0.2
       }
+    },
+    "boggart": {
+      "kind": "personal",
+      "form": "crafted",
+      "activity": 1.1,
+      "affinity": {
+        "MOBS": 3.0,
+        "PRESENCE": 3.0,
+        "SOUND": 2.0,
+        "BLOCKS": 1.5,
+        "LIGHTS": 1.0,
+        "AFFLICTION": 0.5,
+        "ASSAULT": 0.3,
+        "DOORS": 0.3,
+        "ITEMS": 0.3
+      }
     }
   },
   "traits": {

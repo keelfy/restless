@@ -27,7 +27,8 @@ class ApparitionTest {
             "domovoi",
             "hoarder",
             "demon",
-            "trickster");
+            "trickster",
+            "boggart");
 
     private static double[] paint(String spirit, long seed) {
         double[] grey = new double[Picture.SIZE];

@@ -7,6 +7,7 @@ import dev.keelfy.restless.content.UnlitLights;
 import dev.keelfy.restless.content.WardBlock;
 import dev.keelfy.restless.haunt.Sanity;
 import dev.keelfy.restless.haunt.event.Figure;
+import dev.keelfy.restless.haunt.event.Swarm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -57,7 +58,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The fourteen movements of the Requiem, one per spirit type, each a small class behind {@link Movement}. A movement
+ * The fifteen movements of the Requiem, one per spirit type, each a small class behind {@link Movement}. A movement
  * tests the counter the player learned against its type; the rite reads {@link Movement#passed} when its time is out
  * and snuffs a candle for each one failed. What a movement spawns or changes is put back in {@link Movement#end}.
  */
@@ -76,7 +77,8 @@ public final class Movements {
             Map.entry("domovoi", Domovoi::new),
             Map.entry("hoarder", Hoarder::new),
             Map.entry("demon", Demon::new),
-            Map.entry("trickster", Trickster::new));
+            Map.entry("trickster", Trickster::new),
+            Map.entry("boggart", Boggart::new));
 
     /** A loot table that holds nothing: a container with it counts as unopened without any loot in it. */
     private static final ResourceKey<LootTable> NOTHING =
@@ -759,6 +761,29 @@ public final class Movements {
         @Override
         public boolean passed(Rite rite) {
             return true;
+        }
+    }
+
+    /** A swarm of tiny spiders, seen only by the player, runs at them; they must hold their ground by the altar. */
+    static final class Boggart implements Movement {
+        private boolean fled;
+
+        @Override
+        public void start(Rite rite) {
+            Swarm.spiders(rite.player, rite.length);
+        }
+
+        @Override
+        public void tick(Rite rite, int n) {
+            if (rite.player.position().distanceToSqr(Vec3.atCenterOf(rite.altar))
+                    > Math.pow(config().num("boggart_stay"), 2)) {
+                fled = true;
+            }
+        }
+
+        @Override
+        public boolean passed(Rite rite) {
+            return !fled;
         }
     }
 

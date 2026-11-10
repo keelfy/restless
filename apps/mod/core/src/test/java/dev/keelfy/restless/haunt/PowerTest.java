@@ -82,6 +82,7 @@ class PowerTest {
         assertTrue(lean(Spirits.HOARDER, EventTag.ITEMS, EventTag.LIGHTS) > 5);
         assertTrue(lean(Spirits.DEMON, EventTag.ASSAULT, EventTag.ITEMS) > 5);
         assertTrue(lean(Spirits.TRICKSTER, EventTag.BLOCKS, EventTag.ASSAULT) > 5);
+        assertTrue(lean(Spirits.BOGGART, EventTag.MOBS, EventTag.ASSAULT) > 5);
     }
 
     @Test
@@ -104,7 +105,8 @@ class PowerTest {
                         Spirits.MARA,
                         Spirits.BANSHEE,
                         Spirits.REVENANT,
-                        Spirits.LOST_ONE)));
+                        Spirits.LOST_ONE,
+                        Spirits.BOGGART)));
         assertTrue(Spirits.personal().stream()
                 .noneMatch(List.of(Spirits.DOMOVOI, Spirits.HOARDER, Spirits.DEMON, Spirits.TRICKSTER)::contains));
     }

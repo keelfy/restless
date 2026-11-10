@@ -3,12 +3,12 @@
 Every spirit type has three or four events that only that type can roll, so a player who knows the mod can name the type
 from one of them. No saved relationship, no stages: each is an ordinary event with a type filter.
 
-**Status: all 43 are built** (`event/Signatures.java` and the group classes it gathers, listed in
+**Status: all 46 are built** (`event/Signatures.java` and the group classes it gathers, listed in
 [events-index.md](events-index.md); rows in [spirits.md](spirits.md#events); a GameTest each in
 `SignatureGameTests` and `SignatureBatchTests`). The tables below are the plan; [What changed](#what-changed-while-building)
 lists where the build differs from it.
 
-Today the fourteen types differ only in affinities over shared events (see [spirits.md](spirits.md#spirits)). The
+Today the fifteen types differ only in affinities over shared events (see [spirits.md](spirits.md#spirits)). The
 evolved scenarios in [scenarios.md](scenarios.md) are per type, but they come late and are mixes of shared events.
 
 ## What makes a good signature
@@ -189,6 +189,17 @@ Tier: **L** light, **H** harmful. Difficulty on the 1–10 [scale](event-ideas-2
 | `trickster_gift` | L, ITEMS | Free floor within 8 | A chest with diamonds and gold; anything taken out turns to dirt in the inventory, with a laugh. | chest removed after 3 min | 3 |
 | `trickster_dig` | L, BLOCKS | Sand or gravel within 12 | It becomes suspicious sand or gravel; brushing gives a joke: a pufferfish, a poisonous potato, a stick named "Treasure". | — | 2 |
 | `trickster_dud` | L, MOBS | Standing room 3–6 away | A lit TNT (packets only) hisses at the player's feet, then pops into a firework with a laugh. | packets only | 2 |
+
+### Boggart: the illusionist (personal)
+
+| Id | Tier, tag | Condition | What happens | Undone | Diff. |
+|---|---|---|---|---|---|
+| `boggart_spiders` | L, MOBS | Not in water | 40 tiny spiders (scale 0.2, packets only) run at the player from every side, circle them, then scatter. | packets only | 3 |
+| `boggart_crawl` | L, PRESENCE | Not in water | 24 tinier spiders run up close and climb in circles up the body to the face, then scatter. | packets only | 3 |
+| `boggart_silverfish` | L, MOBS | Not in water | 40 silverfish pour over the floor, circle the feet, then scatter. | packets only | 2 |
+
+The three share `event/Swarm.java`: a `PacketEntity` per critter, shrunk by the `scale` attribute, moved every tick
+(rush to the player, orbit, flee). The Requiem's boggart movement sends the same spiders (`Swarm.spiders`).
 
 ## Engine work
 

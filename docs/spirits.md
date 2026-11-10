@@ -7,7 +7,7 @@ Update this file when any of them changes. The numbers below are the shipped def
 ## How it works
 
 - A spirit is **personal** (follows one player) or **territorial** (stays at an anchor); the kind is `kind` in `spirits.json`.
-  `shade`, `phantom`, `mimic`, `wraith`, `mara`, `banshee`, `revenant` and `lost_one` are personal; `poltergeist`, `nix`,
+  `shade`, `phantom`, `mimic`, `wraith`, `mara`, `banshee`, `revenant`, `lost_one` and `boggart` are personal; `poltergeist`, `nix`,
   `domovoi`, `hoarder`, `demon` and `trickster` are territorial.
 - Each player gets 1 personal spirit (`director.default_spirits`) on first check, chosen uniformly at random, and keeps it.
   A player never has two spirits of one type, whether they come from the first check, a deed or `/haunt spirit add`. The list can grow or shrink, down to 0, via `/haunt spirit add|remove`. A poltergeist
@@ -181,7 +181,7 @@ opens, names it. The offering is the nature's category in a form:
 | mirror | **mirror** | glass pane | spyglass |
 
 whole: poltergeist, wraith, demon, revenant, hoarder. bit: shade, mara, banshee, phantom, lost_one. crafted: nix, mimic,
-domovoi, trickster.
+domovoi, trickster, boggart.
 
 One **altar** item (chiseled stone bricks, salt, candle) places a 3×3 platform centered on the clicked space:
 a worn charcoal-stone offering slab, raised tuff paving with recessed joints, a broken chalk circle and four iron
@@ -364,6 +364,7 @@ for evolved spirits.
 | `hoarder` | Territorial: takes and moves items. Signatures: `hoarder_payment`, `hoarder_shiny`, `hoarder_nest`. | 1.2 | items ×5, blocks ×1.5, doors ×1.5, lights ×0.5, presence ×0.5, assaults ×0.3 |
 | `demon` | Territorial and dangerous: assaults, afflictions and mobs. Signatures: `demon_offer`, `demon_trail`, `demon_contract`. | 1.1 | assaults ×3, afflictions ×2, mobs ×2, lights ×1.5, doors ×0.5, items ×0.5 |
 | `trickster` | Territorial prankster: changes blocks and items, shows things. Signatures: `trickster_gift`, `trickster_dig`, `trickster_dud`. | 1.2 | blocks ×2.5, items ×2, mobs ×1.5, presence ×1.5, assaults ×0.2 |
+| `boggart` | Illusions that disgust: swarms of tiny spiders and silverfish that only the player sees. Signatures: `boggart_spiders`, `boggart_crawl`, `boggart_silverfish`. | 1.1 | mobs ×3, presence ×3, sounds ×2, blocks ×1.5, lights ×1, afflictions ×0.5, assaults ×0.3, doors ×0.3, items ×0.3 |
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
@@ -1020,6 +1021,9 @@ over. A text event with no spirit behind it (command, debug menu) counts against
 | `trickster_gift` | — | LIGHT | ITEMS | 2.0 | Standing room 3 to 8 away | A chest there holds dirt that looks like 5 diamonds, 9 gold ingots and 4 emeralds. Taken out, it is shown as dirt again within half a second, with a laugh. The chest is gone after 3 min. Only `trickster`. |
 | `trickster_dig` | — | LIGHT | BLOCKS | 2.0 | Sand, red sand or gravel with air above within 12, a joke left unsaid | It becomes suspicious sand or gravel holding a joke: a pufferfish, a poisonous potato or a stick named "Treasure". Put back after 10 min. Only `trickster`. |
 | `trickster_dud` | — | LIGHT | MOBS | 2.0 | Standing room 3 to 6 away | A primed TNT (packets only) hisses there for 3 s, then pops into firework sparks with a laugh. Only `trickster`. |
+| `boggart_spiders` | — | LIGHT | MOBS | 2.0 | The player is not in water | 40 spiders at a fifth of their size, client-only, appear 4 to 10 blocks out in the open, run at the player from every side, circle them at 0.6 to 1.8 blocks for six seconds, then scatter. Only `boggart`. |
+| `boggart_crawl` | — | LIGHT | PRESENCE | 1.5 | The player is not in water | 24 spiders at 0.15 scale, client-only, appear 1.5 to 4 blocks out, run up close and climb in circles up the body from the feet to the head, then scatter. Only `boggart`. |
+| `boggart_silverfish` | — | LIGHT | MOBS | 1.5 | The player is not in water | 40 silverfish at 0.8 scale, client-only, pour across the floor round the player, circle at their feet, then scatter. Only `boggart`. |
 
 ## Chances
 

@@ -168,7 +168,8 @@ public final class Content {
             "domovoi",
             "hoarder",
             "demon",
-            "trickster");
+            "trickster",
+            "boggart");
 
     /** Marks the player; hostile things look past them, see {@link Charms#unseen}. */
     public static final Supplier<MobEffect> BORROWED_FACE = Platform.get()

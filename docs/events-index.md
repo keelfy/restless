@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 639 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 642 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -351,7 +351,7 @@ A whole tree moved. [blocks]
 
 `moving_tree`
 
-### `event/Signatures.java` (10), and the groups it gathers (33)
+### `event/Signatures.java` (10), and the groups it gathers (36)
 
 Events only one spirit type rolls (`spirit` in the config); see [signature-events.md](signature-events.md). `Signatures.all()`
 returns its own ten and each group's. [various]
@@ -363,6 +363,12 @@ returns its own ten and each group's. [various]
 The banshee: letters and gifts on the bed, a song at the window, jealousy. [ITEMS, SOUND, MOBS]
 
 `banshee_letter`, `banshee_gift`, `banshee_serenade`, `banshee_jealous`
+
+### `event/Boggarts.java` (3)
+
+The boggart's swarms of tiny critters that only the player sees (`event/Swarm.java`). [MOBS, PRESENCE]
+
+`boggart_spiders`, `boggart_crawl`, `boggart_silverfish`
 
 ### `event/Pranks.java` (6)
 

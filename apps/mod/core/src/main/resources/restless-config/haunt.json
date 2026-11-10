@@ -451,7 +451,8 @@
     "door_radius": 8,
     "hoarder_chests": 3,
     "trickster_snuffed": 3,
-    "trickster_decoys": 3
+    "trickster_decoys": 3,
+    "boggart_stay": 3.5
   },
   "consumables": {
     "ash_ticks": 6000,

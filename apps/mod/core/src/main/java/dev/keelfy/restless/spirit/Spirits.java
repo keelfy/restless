@@ -23,6 +23,7 @@ public final class Spirits {
     public static final SpiritType HOARDER = of("hoarder");
     public static final SpiritType DEMON = of("demon");
     public static final SpiritType TRICKSTER = of("trickster");
+    public static final SpiritType BOGGART = of("boggart");
 
     private static final List<SpiritType> ALL = List.of(
             POLTERGEIST,
@@ -38,7 +39,8 @@ public final class Spirits {
             DOMOVOI,
             HOARDER,
             DEMON,
-            TRICKSTER);
+            TRICKSTER,
+            BOGGART);
 
     private Spirits() {}
 

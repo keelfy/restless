@@ -2972,6 +2972,18 @@
     "minecraft:trickster_dud": {
       "name": "Dud",
       "description": "A lit TNT, seen by the player only, hisses a few blocks away and pops into a firework with a laugh. Only a trickster."
+    },
+    "minecraft:boggart_spiders": {
+      "name": "Spider Swarm",
+      "description": "Forty tiny spiders, seen only by the player, run in from all round, swarm to the player's feet and circle there, then scatter. Nothing is really there. Only a boggart."
+    },
+    "minecraft:boggart_crawl": {
+      "name": "Crawling Up",
+      "description": "Two dozen tiny spiders, seen only by the player, run up close and climb in circles up the body to the face, then drop and scatter. Nothing is really there. Only a boggart."
+    },
+    "minecraft:boggart_silverfish": {
+      "name": "Vermin",
+      "description": "Forty silverfish, seen only by the player, pour across the floor, circle round the player's feet and scatter. Nothing is really there. Only a boggart."
     }
   }
 }

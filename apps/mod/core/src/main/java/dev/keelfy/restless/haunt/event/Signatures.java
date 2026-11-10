@@ -69,6 +69,7 @@ final class Signatures {
                         own(),
                         Suitors.all(),
                         Pranks.all(),
+                        Boggarts.all(),
                         Dusk.all(),
                         Doubles.all(),
                         Copies.all(),

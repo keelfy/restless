@@ -89,7 +89,8 @@ final class ConsumableGameTests {
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         tests.put("consumables_every_spirit_has_one_and_a_recipe", helper -> {
-            check(helper, IDS.size() == Content.ESSENCE.size(), "a spirit has no consumable, or one has two");
+            // The boggart has no consumable yet.
+            check(helper, IDS.size() + 1 == Content.ESSENCE.size(), "a spirit has no consumable, or one has two");
             for (String id : IDS) {
                 Identifier item = Identifier.fromNamespaceAndPath(Restless.MOD_ID, id);
                 check(helper, BuiltInRegistries.ITEM.containsKey(item), id + " is not an item");
