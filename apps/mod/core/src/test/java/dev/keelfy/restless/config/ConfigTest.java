@@ -213,6 +213,11 @@ class ConfigTest {
         for (String key : read) {
             assertTrue(defined.contains(key), "code reads a key the defaults lack: " + key);
         }
+        // Spirit box questions are walked in config order, never named in code.
+        literals.addAll(Config.defaults()
+                .getAsJsonObject("spirit_box")
+                .getAsJsonObject("questions")
+                .keySet());
         for (String key : defined) {
             assertTrue(literals.contains(key), "default never read by code: " + key);
         }
