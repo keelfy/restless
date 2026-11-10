@@ -64,6 +64,7 @@ public final class Config {
             "herds",
             "sightings",
             "jolts",
+            "scares",
             "followers",
             "machines",
             "relics",

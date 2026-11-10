@@ -38,6 +38,7 @@ import dev.keelfy.restless.haunt.Wards;
 import dev.keelfy.restless.haunt.event.Breaks;
 import dev.keelfy.restless.haunt.event.DoubleEvent;
 import dev.keelfy.restless.haunt.event.Machines;
+import dev.keelfy.restless.haunt.event.Scares;
 import dev.keelfy.restless.haunt.event.Swaps;
 import dev.keelfy.restless.platform.Platform;
 import dev.keelfy.restless.spirit.Trait;
@@ -161,6 +162,7 @@ public final class Restless {
     public static void onBreakBlock(ServerPlayer player, BlockState state, BlockPos pos) {
         Anger.broke(player, state, pos);
         Breaks.broke(player, state);
+        Scares.broke(player, state, pos);
         Charms.noise(player);
     }
 
@@ -193,6 +195,7 @@ public final class Restless {
     /** Call when a player is back after dying. */
     public static void onRespawn(ServerPlayer player) {
         Charms.respawned(player);
+        Scares.clear(player);
     }
 
     /** Call before a mob is let into the world; true means it must not be. */
@@ -242,6 +245,7 @@ public final class Restless {
     public static void onEat(LivingEntity eater, ItemStack eaten) {
         if (eater instanceof ServerPlayer player) {
             Sanity.ate(player, eaten);
+            Scares.ate(player, eaten);
         }
     }
 
@@ -259,6 +263,7 @@ public final class Restless {
         if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
             Reactions.used(server, level.getBlockState(pos));
             Charms.used(server, pos);
+            Scares.used(server);
             // Cake is eaten at the block, only by a hungry player whose hand does not take the click first.
             if (level.getBlockState(pos).is(Blocks.CAKE)
                     && server.canEat(false)

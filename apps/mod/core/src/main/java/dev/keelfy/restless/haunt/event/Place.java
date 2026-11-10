@@ -84,7 +84,7 @@ final class Place {
     }
 
     /** Standing room {@code distance} blocks away, {@code yawOffset} degrees to the side of where the player looks. */
-    private static @Nullable BlockPos standingAt(ServerPlayer player, double distance, double yawOffset) {
+    static @Nullable BlockPos standingAt(ServerPlayer player, double distance, double yawOffset) {
         Vec3 at = Nearby.around(player, distance, yawOffset);
         return standing(player.level(), BlockPos.containing(at.x, player.getY(), at.z));
     }

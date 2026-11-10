@@ -1,8 +1,13 @@
 # Scary events
 
-Backlog of hard scares built on the `Silhouette` figure: slow suspense, jump scares, and both. Only the plan is here;
-nothing below is built yet. Built events move to `event/Jolts.java` (or a new class once a group grows) and are listed
-in [events-index.md](events-index.md).
+Backlog of hard scares built on the `Silhouette` figure: slow suspense, jump scares, and both. Only what is not built
+yet is listed. Built events live in `event/Jolts.java` and `event/Scares.java` and are in
+[events-index.md](events-index.md); a built event is deleted from the tables here.
+
+Built so far (first batch): `mined_face`, `dig_down`, `eating`, `container_close`, `slow_turn`, `echo_answer`,
+`name_left_right`, `door_slam_face`, `first_light`, `hide`. Two deviations from the plan: a door that has just shut
+flies open on the figure (vanilla doors have no window to see through), and `dig_down` fires for a floor block beside
+the player, not the one under their feet (the player would fall into rock the client shows as air).
 
 Most ideas sit on what exists: `PacketEntity` (a figure only this player sees), `Swaps` (client-only block swaps),
 sounds sent to this player only, look tests from `Jolts.watched`, and polling inside `Scheduler.repeat`.
@@ -18,8 +23,9 @@ What every idea here must respect:
   under water, the open container, door state, dimension. Hooks exist for block break, left/right click on a block,
   wake, can-sleep, death, respawn, damage and chat.
 - **The server does not see:** F1, F2, F5, the pause menu, the player's own inventory screen. No idea may hang on them.
-- **The silhouette** has 10 fixed shapes. It cannot sit, climb, crawl on walls, hold items, tilt or scale. A "face"
-  means the whole figure at about 1.2 blocks.
+- **The silhouette** has 12 fixed shapes: ten any scare may pick, a bare head (`SilhouetteRenderer.FACE`, for a hole
+  in a wall) and one lying on its back (`LYING`). A new shape is a new entry in `SHAPE_PARTS`; to keep it out of the
+  random pick put it after the first `ANY`. It cannot sit, climb, crawl on walls, hold items, tilt or scale.
 - **No** hijacking mob AI, scaled models, faked lag or input freezes, fake Tab list rows.
 
 ## Rules
@@ -32,7 +38,7 @@ What every idea here must respect:
 4. **If ignored, the event ends quietly** after `max_ticks`, or when the player walks farther than `leave_distance`.
 5. **Some lures end with nothing (duds).** `dud_chance` about 0.3, so a rustle is not always a scare.
 6. **The jump-scare pause counts from the scare, not from the roll.** An ignored or dud lure does not use up
-   `startle_gap_ticks` (today `Director.fire` starts the pause on the roll).
+   `startle_gap_ticks` (not built: `Director.fire` still starts the pause on the roll).
 7. **Only this player sees or hears it.** The server keeps nothing.
 8. **Escalation.** A young spirit's silhouette only shows far off (`tree_line`, `path_blocker`); as it ages it comes
    closer (`slow_turn`, `stairs_sitter`); at its peak, jump scares and harm (`dragged`, `hold_still`, `hide`).
@@ -51,7 +57,6 @@ What every idea here must respect:
 | Id | Setup → scare | Type | Diff |
 |---|---|---|---|
 | `third_person` | Reuse the `out_of_body` camera: the view pulls behind the player, a silhouette stands 1 block behind them; the view snaps back, then the `jolt_behind` turn test | S→J | 1 |
-| `slow_turn` | Silhouette 30 blocks off, back to the player; each look-away turns it 45° more; once it faces them, it lunges | S→J | 1 |
 | `peripheral` | Extends `edge_figure`: looked at, it vanishes and shows 50–65° to the other side; the third time it is at 1.2 blocks in the centre, bang | S→J | 1 |
 | `feet` | Pitch >70 on solid ground: the block underfoot shows as glass and the 2 below as air, silhouette below looking up, 8 ticks, swapped back | J | 1 |
 | `upside_down` | Indoors, pitch < -45: the hanging shape under the ceiling 3 blocks ahead drops to face height in 3 ticks, bang | J | 1 |
@@ -61,7 +66,6 @@ What every idea here must respect:
 
 | Id | Setup → scare | Type | Diff |
 |---|---|---|---|
-| `container_close` | A chest, barrel, furnace or crafting table open ≥60 ticks; on close, silhouette 1.2 blocks ahead, bang, gone in 10 ticks. In a dark room: a light flash with it | J | 1 |
 | `sign_prefilled` | Placing a sign: the editor already reads "I'm behind you"; on the sign update, silhouette on the far side of the sign | S→J | 2 |
 | `death_screen` | On death, silhouette 1.5 blocks from the body facing the camera until respawn | S | 1 |
 | `respawn_watcher` | Respawning at a bed: silhouette at the foot of the bed for 20 ticks, gone when looked at | S | 1 |
@@ -75,7 +79,6 @@ What every idea here must respect:
 | `woke_door` | On waking: the closed bedroom door shows open (client swap), steps walk away past it | S | 1 |
 | `stairs_sitter` | Low silhouette at the top of a run of ≥3 stairs in view; within 6 blocks it is gone and 3 steps sound 2 blocks behind | S | 2 |
 | `basement_lamp` | A torch, lantern or campfire in view goes out (client swap) for 5 ticks, 3 times; each dark moment the silhouette is 3 blocks closer; the 3rd is at the face, bang | S→J | 1 |
-| `door_slam_face` | The player closes a door that has a window: silhouette 1 block outside it, bang | J | 1 |
 | `door_knock_answer` | Twist on `three_knocks`: 3 knocks on a door near the player; opening it shows nothing; on closing, the same 3 knocks 2 blocks behind | S→J | 1 |
 | `dark_doorway` | The player opens a door into a room with light ≤3: silhouette 3 blocks inside steps back into the dark and is gone | S | 1 |
 | `window_slam` | ≤2 blocks from glass, looking out at night ≥60 ticks: 2 `phantom_glass` taps, then the silhouette slams onto the outer face of the glass, bang | S→J | 1 |
@@ -85,16 +88,12 @@ What every idea here must respect:
 
 | Id | Setup → scare | Type | Diff |
 |---|---|---|---|
-| `mined_face` | Breaking an eye-level wall block: the 2 blocks behind show as air, silhouette in the hole facing the player, bang, swapped back | J | 1 |
-| `dig_down` | Breaking the block under the player's feet: the next 2 below show as air, silhouette lying in the hole face up, bang, swapped back | J | 1 |
-| `first_light` | Right-click a torch onto a block in a dark cave (light ≤3): silhouette 6 blocks off in the new light for 4 ticks | J | 1 |
 | `pit_face` | Pitch >60 at the edge of any drop ≥8 (shaft, ravine, cliff, bridge): silhouette at the bottom rises to 2 blocks below the eyes in 5 ticks, bang | J | 1 |
 | `ladder_follower` | On a ladder, `ladder_steps` below; pitch >50 shows a silhouette 4 blocks below rising 1 block every 2 ticks; gone at 1 block | S→J | 1 |
 | `ladder_top` | Climbing a ladder ≥6: at the top hole, silhouette leans in 1 block above the head, bang | J | 1 |
 | `pillar_base` | After pillaring up ≥5 blocks, pitch >60: silhouette at the pillar's base looking up; gone in 20 ticks | S | 1 |
 | `dropped_torch` | A torch the player placed ≥30 s ago, out of view: the block is removed, the item pops at their feet, a silhouette stands in the new dark there until looked at | S | 2 |
 | `ore_glint` | End of `fake_ore`: within 3 blocks the fake ore swaps back to stone, eyes particle at that face, bang | J | 1 |
-| `echo_answer` | In a cave, each block break is answered by a break sound 20 → 12 → 6 blocks off; the 4th from the block right behind the player | S | 1 |
 | `cave_mouth` | Walking out of a cave toward a daylit opening: silhouette backlit in the opening; gone at 8 blocks | S | 1 |
 | `behind_trunk` | Breaking the last reachable log of a trunk: silhouette stood right behind it, faces the player, bang | J | 1 |
 
@@ -124,7 +123,6 @@ What every idea here must respect:
 |---|---|---|---|
 | `shield_knocks` | Blocking ≥40 ticks with no hostile within 16: 3 shield-block sounds from the front, 10 ticks apart; on lowering, silhouette at 1.2 blocks, bang | S→J | 1 |
 | `bow_scope` | Bow drawn ≥30 ticks with nothing living on the aim line: silhouette 16 blocks out on that line charges to the face in 6 ticks | J | 1 |
-| `eating` | On finishing eating, silhouette 1.2 blocks ahead, bang | J | 1 |
 | `pearl_landing` | Ender pearl in flight: silhouette at the landing spot facing it; the player arrives face to face, bang | J | 1 |
 | `portal_follow` | 60 ticks after a portal arrival, silhouette steps out of the portal, walks 8 blocks into the dark, gone | S | 1 |
 
@@ -132,11 +130,9 @@ What every idea here must respect:
 
 | Id | Setup → scare | Type | Diff |
 |---|---|---|---|
-| `hide` | Action bar "hide" + heartbeat, 200 ticks. Then: sky visible or moved >1 block in the last 40 ticks → lunge and a threat-band hit; else heavy steps pass outside | S→J | 2 |
 | `hold_still` | Silhouette at 4 blocks + action bar "don't move", 100 ticks; moving >0.5 block → lunge and a threat-band hit; still → it walks off | S | 1 |
 | `blindfold` | Scenario: `blindness` + `circling_moan`; when blindness ends, silhouette at 1.2 blocks ahead, bang | S→J | 1 |
 | `dragged` | In the dark, velocity nudges pull the player 3 blocks back (as `the_call`), silhouette behind for 4 ticks. Harmful tier | J (harm) | 1 |
-| `name_left_right` | Whisper 2 blocks to the left; once yaw turns ≥45° toward it, silhouette 1.5 blocks on the new right, bang | J | 1 |
 | `quiet_mobs` | Scenario: `animals_stare`, then the player turns ≥150° and back → silhouette ahead at 1.2 blocks, bang | S→J | 1 |
 
 ## Dimensions
@@ -166,5 +162,5 @@ Do not bring back without a new mechanic.
 
 ## Order
 
-Start with `mined_face`, `eating`, `container_close`, `slow_turn`, `echo_answer`, `name_left_right`, `door_slam_face`,
-`first_light`, `dig_down`, `hide`: diff 1–2, each plays on a habit every player has.
+Next: `third_person`, `pit_face`, `surface_break`, `shield_knocks`, `behind_trunk`, `tree_line`, `stairs_sitter`: diff 1,
+each plays on a habit every player has.

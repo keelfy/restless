@@ -65,9 +65,16 @@ final class Jolts {
     private static void scare(ServerPlayer player, String id, boolean waits) {
         Config.Section config = Config.event(id);
         BlockPos spot = spot(player, id);
-        if (spot == null) {
-            return;
+        if (spot != null) {
+            show(player, config, spot, waits, config.integer("max_ticks"));
         }
+    }
+
+    /**
+     * {@link #scare} at a spot already found, unseen for at most {@code maxTicks}; reads {@code sound},
+     * {@code look_angle} and {@code hold_ticks}.
+     */
+    static void show(ServerPlayer player, Config.Section config, BlockPos spot, boolean waits, int maxTicks) {
         ServerLevel level = player.level();
         Vec3 at = Vec3.atBottomCenterOf(spot);
         Nearby.sound(
@@ -83,9 +90,8 @@ final class Jolts {
             if (seen[0] < 0 && (!waits || watched(p, at.add(0, 1.0, 0), config.num("look_angle")))) {
                 seen[0] = n;
             }
-            boolean over = p.level() != level
-                    || seen[0] >= 0 && n - seen[0] >= config.integer("hold_ticks")
-                    || n >= config.integer("max_ticks");
+            boolean over =
+                    p.level() != level || seen[0] >= 0 && n - seen[0] >= config.integer("hold_ticks") || n >= maxTicks;
             if (over) {
                 figure.remove(p);
             }
@@ -160,11 +166,18 @@ final class Jolts {
         });
     }
 
-    /** A random one of the silhouette shapes: the client is sent the entity data of a model that is never added. */
-    @SuppressWarnings("unchecked") // the registry is typed EntityType<?>; this one is built for Silhouette
-    private static void shape(ServerPlayer player, PacketEntity figure) {
+    /**
+     * A random one of the first silhouette shapes, or the given one: the client is sent the entity data of a model that
+     * is never added. The registry is typed {@code EntityType<?>}; this one is built for Silhouette.
+     */
+    static void shape(ServerPlayer player, PacketEntity figure) {
+        shape(player, figure, player.getRandom().nextInt(SilhouetteRenderer.ANY));
+    }
+
+    @SuppressWarnings("unchecked")
+    static void shape(ServerPlayer player, PacketEntity figure, int shape) {
         Silhouette model = new Silhouette((EntityType<Silhouette>) Content.SILHOUETTE.get(), player.level());
-        model.setShape(player.getRandom().nextInt(SilhouetteRenderer.SHAPES));
+        model.setShape(shape);
         List<SynchedEntityData.DataValue<?>> values = model.getEntityData().getNonDefaultValues();
         if (values != null && !values.isEmpty()) {
             player.connection.send(new ClientboundSetEntityDataPacket(figure.id(), values));
@@ -172,7 +185,7 @@ final class Jolts {
     }
 
     /** Whether {@code at} is within {@code degrees} of where the player looks, with nothing solid between. */
-    private static boolean watched(ServerPlayer player, Vec3 at, double degrees) {
+    static boolean watched(ServerPlayer player, Vec3 at, double degrees) {
         Vec3 eye = player.getEyePosition();
         return player.getLookAngle().dot(at.subtract(eye).normalize()) >= Math.cos(Math.toRadians(degrees))
                 && clear(player, at);

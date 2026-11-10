@@ -6,7 +6,7 @@ title: Presence
 
 > Эта страница пока на английском: ивенты ещё не переведены.
 
-90 events.
+100 events.
 
 ## `dragon_flyover`
 
@@ -489,6 +489,66 @@ Runs when: A dark standing spot 2 blocks ahead
 Out of sight, 8–12 blocks away, in a spot no brighter than light level 6 behind a wall or a corner, a faint rustle sounds every 2 s for up to 30 s. If the player comes within 4.5 blocks of the spot, a black figure of one of the ten shapes stands there for this player's client only and is at their face (0.7 blocks ahead) 3 ticks later, with a loud bang as it arrives. Gone 6 ticks after that. If nobody comes near, it just stops. Nothing on the server. A jump scare, so it shares the 10 min pause with the other jump scares
 
 Runs when: A dark standing spot 8–12 blocks away that the player cannot see
+
+## `mined_face`
+
+The next time the player breaks a block at eye level in a wall (underground, within 6 blocks, with rock two blocks deep behind it), the rock behind the hole shows as open space for 8 ticks, and a bare black face with pale eyes looks out of it, with a loud bang. Only this player's client is told. A jump scare, so it shares the 10 min pause with the other jump scares. If they break no such block within 5 min, it lapses
+
+Runs when: Underground, and no other waiting scare marked for the player
+
+## `dig_down`
+
+The next time the player breaks a floor block beside them (1–4.5 blocks off, not the one under their feet, with rock two blocks deep under it), the rock below shows as open for 8 ticks, and a black figure lies in the hole on its back, face up, with a loud bang. Only this player's client is told. A jump scare. Lapses after 5 min
+
+Runs when: Underground, and no other waiting scare marked for the player
+
+## `eating`
+
+The next meal the player finishes ends with a loud bang and a black figure 1.3 blocks ahead of them for 10 ticks. Only this player's client is told. A jump scare. Lapses after 5 min
+
+Runs when: No other waiting scare marked for the player
+
+## `container_close`
+
+The player has a chest, barrel, furnace or crafting table within 6 blocks. Whatever container they open and keep open for 3 s, when they close it a black figure stands 1.3 blocks ahead for 10 ticks, with a loud bang. Only this player's client is told. A jump scare. Watches for 5 min
+
+Runs when: A chest, barrel, furnace or crafting table within 6 blocks
+
+## `slow_turn`
+
+A black figure stands 24 blocks ahead with its back turned. Each time the player looks at it and then away, it has turned 45° more. After four turns it faces them; the next time they look away it is gone from there and stands 1.6 blocks behind them, with a loud bang, unseen until they turn. Gone if they walk within 8 blocks of it or after 60 s. Only this player's client is told. A jump scare
+
+Runs when: Standing room 24 blocks ahead
+
+## `echo_answer`
+
+In a cave (no sky overhead), each block the player breaks is answered 1.5 s later by the same break sound, from 20 blocks away, then 12, then 6; the fourth comes from 1.5 blocks right behind them. Lapses after 5 min
+
+Runs when: Underground, and no other waiting scare marked for the player
+
+## `name_left_right`
+
+A whisper 2 blocks to one side, every 1.5 s. Once the player has turned 45° toward it, a black figure stands 1.5 blocks away on the other side for 8 ticks, with a loud bang. Only this player's client is told. A jump scare. Gives up after 20 s
+
+Runs when: Always
+
+## `door_slam_face`
+
+The player has a door within 4 blocks. When a door that was open shuts while they are within 3.5 blocks of it, it shows open again for 10 ticks with a black figure standing in it, and a loud bang. Only this player's client is told. A jump scare. Watches for 5 min
+
+Runs when: A door within 4 blocks
+
+## `first_light`
+
+The next torch the player puts up in a dark cave (light level 3 or less at their feet, no sky) lights a black figure standing within 6 blocks ahead of them for 4 ticks, with no sound. Only this player's client is told. A jump scare. Lapses after 5 min
+
+Runs when: Underground, and no other waiting scare marked for the player
+
+## `hide`
+
+The action bar says "Hide" and a heartbeat sounds every second for 10 s. If the player moves more than 1 block, a black figure that was out of sight is at their face in 4 ticks with a loud bang and hits for 4 (it never takes them below the safe floor of the threat band). If they keep still, four heavy steps pass outside. A harmful event, so a lit omen candle warns of it
+
+Runs when: Underground, health above the safe floor and a margin, and standing room 5 blocks away
 
 ## `overnight_shrine`
 

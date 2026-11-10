@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 642 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 652 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -182,6 +182,12 @@ The mod's own wards, tools, gravestone, journal, altar misbehaving. [blocks]
 Jump scares: a loud bang, then a black figure of a wrong shape, close, for a second; or a rustle out of sight and a figure that lunges at the face. Weights are the lowest of any group. [presence]
 
 `jolt_behind`, `jolt_side`, `jolt_dark`, `jolt_lunge`
+
+### `event/Scares.java` (10)
+
+Jump scares and slow scares the player sets off with a habit (breaking, eating, closing, turning away, mining, hiding); the ones that wait for a break, a meal or a torch only mark the player. See [scary-events.md](scary-events.md). [presence]
+
+`mined_face`, `dig_down`, `eating`, `container_close`, `slow_turn`, `echo_answer`, `name_left_right`, `door_slam_face`, `first_light`, `hide`
 
 ### `event/Sightings.java` (10)
 

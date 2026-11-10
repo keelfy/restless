@@ -706,5 +706,6 @@
   "item.restless.maras_cradle.tip": "A bed: all sanity back, and the night does not pass.",
   "item.restless.gravestone.tip": "Use to read. Give it what the spirit wants to lay it to rest.",
   "item.restless.journal.tip": "Records everything you learn about spirits.",
-  "item.restless.diary_page.tip": "Use: teaches one recipe."
+  "item.restless.diary_page.tip": "Use: teaches one recipe.",
+  "message.restless.hide": "Hide"
 }

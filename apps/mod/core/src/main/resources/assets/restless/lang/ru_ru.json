@@ -706,5 +706,6 @@
   "item.restless.maras_cradle.tip": "Кровать: весь рассудок возвращается, а ночь не проходит.",
   "item.restless.gravestone.tip": "Используй, чтобы прочесть. Отдай то, чего хочет дух, и он упокоится.",
   "item.restless.journal.tip": "Записывает всё, что ты узнаёшь о духах.",
-  "item.restless.diary_page.tip": "Используй: учит одному рецепту."
+  "item.restless.diary_page.tip": "Используй: учит одному рецепту.",
+  "message.restless.hide": "Замри"
 }

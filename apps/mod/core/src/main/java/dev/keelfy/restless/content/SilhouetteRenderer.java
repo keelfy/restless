@@ -41,7 +41,9 @@ public final class SilhouetteRenderer extends EntityRenderer<Silhouette, Silhoue
 
     /**
      * Tall and thin, arms to the knees; low and wide on all fours; a head hung on one shoulder; a child with arms up;
-     * many arms; a stooped giant; bent double; a tall one and a small one; a long neck; hung off the ground.
+     * many arms; a stooped giant; bent double; a tall one and a small one; a long neck; hung off the ground. After
+     * those ten, which any scare may pick, come the shapes made for one spot: a bare head to look out of a hole in a
+     * wall, and a figure lying on its back.
      */
     private static final List<List<Part>> SHAPE_PARTS = List.of(
             List.of(
@@ -120,12 +122,31 @@ public final class SilhouetteRenderer extends EntityRenderer<Silhouette, Silhoue
                     new Part(0, 1.2f, 0, .3f, 1.0f, .2f, -8, 0),
                     new Part(0, 2.2f, 0, .26f, .32f, .26f, 0, 55),
                     new Part(-.22f, .7f, 0, .06f, 1.4f, .06f, 0, 6),
-                    new Part(.22f, .7f, 0, .06f, 1.4f, .06f, 0, -6)));
+                    new Part(.22f, .7f, 0, .06f, 1.4f, .06f, 0, -6)),
+            // a bare head, wider than it is tall, for a hole in a wall
+            List.of(new Part(0, 0, 0, .7f, .9f, .5f, 0, 0)),
+            // on its back, head toward +z, face up
+            List.of(
+                    new Part(-.1f, .1f, -.9f, .08f, .9f, .08f, 90, 0),
+                    new Part(.1f, .1f, -.9f, .08f, .9f, .08f, 90, 0),
+                    new Part(0, .1f, 0, .3f, .9f, .2f, 90, 0),
+                    new Part(0, .13f, 1.24f, .26f, .34f, .26f, -90, 0),
+                    new Part(-.2f, .06f, .1f, .05f, .8f, .05f, 90, 0),
+                    new Part(.2f, .06f, .1f, .05f, .8f, .05f, 90, 0)));
 
     /** Which part of each shape is the head, as an index into its parts. */
-    private static final int[] HEAD = {3, 1, 3, 3, 3, 3, 3, 1, 2, 3};
+    private static final int[] HEAD = {3, 1, 3, 3, 3, 3, 3, 1, 2, 3, 0, 3};
 
-    /** How many shapes there are, for picking one. */
+    /** The first ten shapes: those a scare picks from at random. */
+    public static final int ANY = 10;
+
+    /** The bare head, for looking out of a hole. */
+    public static final int FACE = 10;
+
+    /** The figure lying on its back. */
+    public static final int LYING = 11;
+
+    /** How many shapes there are. */
     public static final int SHAPES = SHAPE_PARTS.size();
 
     public static final class State extends EntityRenderState {

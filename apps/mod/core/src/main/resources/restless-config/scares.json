@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "events": {
+    "minecraft:mined_face": {
+      "weight": 0.1,
+      "startle": true,
+      "max_ticks": 6000,
+      "reach": 6.0,
+      "hold_ticks": 8,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:dig_down": {
+      "weight": 0.1,
+      "startle": true,
+      "max_ticks": 6000,
+      "min_distance": 1.0,
+      "reach": 4.5,
+      "hold_ticks": 8,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:eating": {
+      "weight": 0.1,
+      "startle": true,
+      "max_ticks": 6000,
+      "distance": 1.3,
+      "min_angle": 0.0,
+      "max_angle": 12.0,
+      "hold_ticks": 10,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:container_close": {
+      "weight": 0.1,
+      "startle": true,
+      "radius": 6,
+      "max_ticks": 6000,
+      "open_ticks": 60,
+      "distance": 1.3,
+      "min_angle": 0.0,
+      "max_angle": 12.0,
+      "hold_ticks": 10,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:slow_turn": {
+      "weight": 0.1,
+      "startle": true,
+      "distance": 24.0,
+      "min_angle": 0.0,
+      "max_angle": 25.0,
+      "look_angle": 30.0,
+      "turns": 4,
+      "turn_degrees": 45.0,
+      "leave_distance": 8.0,
+      "max_ticks": 1200,
+      "behind_distance": 1.6,
+      "wait_ticks": 120,
+      "hold_ticks": 12,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:echo_answer": {
+      "weight": 0.15,
+      "max_ticks": 6000,
+      "delay_ticks": 30,
+      "far_distance": 20.0,
+      "mid_distance": 12.0,
+      "near_distance": 6.0,
+      "behind_distance": 1.5,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.9
+      }
+    },
+    "minecraft:name_left_right": {
+      "weight": 0.1,
+      "startle": true,
+      "side_distance": 2.0,
+      "cue_gap_ticks": 30,
+      "turn_degrees": 45.0,
+      "distance": 1.5,
+      "angle": 70.0,
+      "hold_ticks": 8,
+      "max_ticks": 400,
+      "sound": {
+        "volume": 0.6,
+        "pitch": 1.0
+      },
+      "bang": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:door_slam_face": {
+      "weight": 0.1,
+      "startle": true,
+      "radius": 4,
+      "reach": 3.5,
+      "max_ticks": 6000,
+      "hold_ticks": 10,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:first_light": {
+      "weight": 0.1,
+      "startle": true,
+      "max_ticks": 6000,
+      "dark_max": 3,
+      "delay_ticks": 2,
+      "distance": 6.0,
+      "min_angle": 0.0,
+      "max_angle": 60.0,
+      "hold_ticks": 4
+    },
+    "minecraft:hide": {
+      "weight": 0.1,
+      "startle": true,
+      "margin": 4.0,
+      "hide_ticks": 200,
+      "beat_gap_ticks": 20,
+      "still_radius": 1.0,
+      "distance": 5.0,
+      "lunge_ticks": 4,
+      "face_distance": 0.7,
+      "hold_ticks": 6,
+      "damage": 4,
+      "step_gap_ticks": 15,
+      "step_distance": 4.0,
+      "step_growth": 2.0,
+      "steps": 4,
+      "beat_sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      "step_sound": {
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    }
+  }
+}

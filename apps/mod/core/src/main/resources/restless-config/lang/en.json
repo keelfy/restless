@@ -2361,6 +2361,46 @@
       "name": "Rustle Beyond the Wall",
       "description": "Out of sight in the dark, something rustles. If the player comes near, a dark figure is in their face in a moment, with a loud bang."
     },
+    "minecraft:mined_face": {
+      "name": "Face in the Wall",
+      "description": "After the player breaks a block at eye level in a wall, a bare face looks out of the hole behind it with a loud bang. Only the player sees it."
+    },
+    "minecraft:dig_down": {
+      "name": "Something in the Hole",
+      "description": "After the player breaks a floor block beside them, a dark figure lies in the hole below it, face up, with a loud bang. Only the player sees it."
+    },
+    "minecraft:eating": {
+      "name": "Mouthful",
+      "description": "The next meal the player finishes ends with a loud bang and a dark figure right in front of them for a moment."
+    },
+    "minecraft:container_close": {
+      "name": "Lid Closed",
+      "description": "A chest, furnace or table left open for a few seconds: when the player closes it, a dark figure stands right in front of them, with a loud bang."
+    },
+    "minecraft:slow_turn": {
+      "name": "Slow Turn",
+      "description": "A dark figure stands far off with its back turned. Each time the player looks at it and away, it has turned a little more. When it faces them, the next look away puts it right behind them."
+    },
+    "minecraft:echo_answer": {
+      "name": "Echo Answer",
+      "description": "In a cave, each block the player breaks is answered by the same sound, closer each time. The fourth comes from right behind them."
+    },
+    "minecraft:name_left_right": {
+      "name": "Name to the Left",
+      "description": "A whisper close by on one side. Turn to it, and a dark figure with a loud bang is on the other."
+    },
+    "minecraft:door_slam_face": {
+      "name": "Door Slam",
+      "description": "A door the player has just closed flies open on a dark figure standing in it, with a loud bang. Only the player sees it."
+    },
+    "minecraft:first_light": {
+      "name": "First Light",
+      "description": "The next torch the player sets up in a dark cave shows a dark figure standing in its light for a moment."
+    },
+    "minecraft:hide": {
+      "name": "Hide",
+      "description": "The action bar says \"Hide\" and a heartbeat sounds for ten seconds. Move, and something is at the player's face and hurts them, though it never leaves them at the safe floor. Keep still, and heavy steps pass outside."
+    },
     "minecraft:netherrack_behind": {
       "name": "Netherrack Behind",
       "description": "Stone and earth behind the player turn to netherrack until they look round. Only the player sees it."

@@ -49,6 +49,7 @@ public final class Catalog {
                         Herds.all(),
                         Sightings.all(),
                         Jolts.all(),
+                        Scares.all(),
                         Followers.all(),
                         Machines.all(),
                         Relics.all(),
