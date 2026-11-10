@@ -317,8 +317,12 @@ public final class Scares {
                 open[0] = 0;
                 return true;
             }
-            BlockPos spot =
-                    Place.standingAhead(p, config.num("distance"), config.num("min_angle"), config.num("max_angle"));
+            // The container itself is usually right ahead and blocks the nearest spot, so look a block or two further.
+            BlockPos spot = null;
+            for (int extra = 0; extra <= 2 && spot == null; extra++) {
+                spot = Place.standingAhead(
+                        p, config.num("distance") + extra, config.num("min_angle"), config.num("max_angle"));
+            }
             if (spot != null) {
                 flash(p, Vec3.atBottomCenterOf(spot), -1, config.tone("sound"), config.integer("hold_ticks"));
             }

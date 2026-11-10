@@ -15,6 +15,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -30,6 +31,7 @@ final class ScareGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         HauntEventGameTests.PADDING.put("scare_slow_turn", 40);
         HauntEventGameTests.TIMEOUT.put("scare_hide_still", 300);
+        HauntEventGameTests.TIMEOUT.put("scare_container_close", 300);
         tests.put(
                 "scare_mined_face",
                 helper -> scene(helper, "mined_face", scene -> {
@@ -78,6 +80,21 @@ final class ScareGameTests {
                     check(helper, scene.figures() == 1, "eating must show a figure when the meal ends");
                     scene.end(helper);
                 }));
+        tests.put("scare_container_close", helper -> {
+            BlockPos chest = helper.absolutePos(FEET).south();
+            scene(helper, "container_close", () -> set(helper, chest, Blocks.CHEST.defaultBlockState()), scene -> {
+                // The chest is right ahead, so the nearest spot for the figure is taken by it.
+                scene.player.containerMenu = new CraftingMenu(1, scene.player.getInventory());
+                helper.runAfterDelay(90, () -> {
+                    check(helper, scene.figures() == 0, "container_close must wait for the container to close");
+                    scene.player.containerMenu = scene.player.inventoryMenu;
+                    helper.runAfterDelay(4, () -> {
+                        check(helper, scene.figures() == 1, "container_close must show a figure when it is closed");
+                        scene.end(helper);
+                    });
+                });
+            });
+        });
         tests.put(
                 "scare_echo_answer",
                 helper -> scene(helper, "echo_answer", scene -> {
