@@ -9,17 +9,17 @@ Paths below are under `apps/mod/core/src/main/java/dev/keelfy/restless/haunt/` u
 
 | What | Where |
 |---|---|
-| Contract (`id`, `tier`, `tags`, `canRun`, `run`, weight from config) | `HauntEvent.java` |
-| Registry: 6 class events + `Catalog`, then scenarios | `HauntEvents.java` |
+| Contract (`id`, `tier`, `tags`, `canRun`, `run`, weight from config) | `event/HauntEvent.java` |
+| Registry: 6 class events + `Catalog`, then scenarios | `event/HauntEvents.java` |
 | Theme groups (each has `static List<HauntEvent> all()`) | `event/Catalog.java` → `event/<Group>.java` |
-| Lambda event helper (`SimpleEvent.light` / `.harmful`) | `event/SimpleEvent.java` |
-| Tier: `LIGHT` scare / `HARMFUL` hurts | `HauntTier.java` |
-| Tags (spirit affinity, wiki category) | `EventTag.java` |
+| Lambda event helper (`SimpleEvent.light` / `.harmful`) | `event/kit/SimpleEvent.java` |
+| Tier: `LIGHT` scare / `HARMFUL` hurts | `event/HauntTier.java` |
+| Tags (spirit affinity, wiki category) | `event/EventTag.java` |
 | Picks which event runs | `Director.java` |
-| Damage bands: safe / threat / brink / lethal | `Band.java`, `Bands.java`, `docs/assaults.md` |
-| World changes undone later | `Restore.java`, `event/Swaps.java` (client-only blocks), `event/PacketEntity.java` (client-only mobs) |
+| Damage bands: safe / threat / brink / lethal | `harm/Band.java`, `harm/Bands.java`, `docs/assaults.md` |
+| World changes undone later | `Restore.java`, `event/kit/Swaps.java` (client-only blocks), `event/kit/PacketEntity.java` (client-only mobs) |
 | Tunables, `events.<namespace:id>` (`weight` + event keys) | `apps/mod/core/src/main/resources/restless-config/<group>.json`, read via `Config.event(id)` |
-| Scenarios: scripts of beats | `restless-config/scenarios.json` (`script`), loaded by `Scenarios.java`; `docs/scenarios.md` |
+| Scenarios: scripts of beats | `restless-config/scenarios.json` (`script`), loaded by `scenario/Scenarios.java`; `docs/scenarios.md` |
 | Wiki page per tag | `apps/frontend/content/{en,ru}/events/<tag>.md` |
 | Debug run | `/haunt force <id>` |
 
@@ -372,7 +372,7 @@ The banshee: letters and gifts on the bed, a song at the window, jealousy. [ITEM
 
 ### `event/Boggarts.java` (3)
 
-The boggart's swarms of tiny critters that only the player sees (`event/Swarm.java`). [MOBS, PRESENCE]
+The boggart's swarms of tiny critters that only the player sees (`event/kit/Swarm.java`). [MOBS, PRESENCE]
 
 `boggart_spiders`, `boggart_crawl`, `boggart_silverfish`
 

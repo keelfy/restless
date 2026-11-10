@@ -30,7 +30,7 @@ Done: `Nearby` skips every chunk section whose palette has no matching state and
 left is the shared neighbourhood snapshot (last bullet) and the weights-first option. Real terrain is not measured.
 
 **Problem.** `pick` calls `canRun` on every event (`Director.java:349`). ~190 `canRun`s use `Nearby.any`, which scans
-the whole cube and collects every hit before picking one (`haunt/event/Nearby.java:48-60`). Radii in config: 16 for
+the whole cube and collects every hit before picking one (`haunt/event/kit/Nearby.java:48-60`). Radii in config: 16 for
 63 events (35k blocks), 24 for 25 (117k), up to 48 (940k). Tens of millions of `getBlockState` per due spirit.
 
 **Do.**
@@ -58,7 +58,7 @@ sets are still plain `HashSet`s; a collection added later has to be wrapped by h
 - In single player, after leaving a world the statics hold `ServerPlayer`s and entities, and through them the old
   `ServerLevel`: a leak until the next world.
 - Bug: `DoorLocks.LOCKED` keeps absolute game time. Lock a door in a world at tick 1 000 000, quit, open a world at
-  tick 1 000: the door at the same position stays locked for ~14 hours of play (`haunt/DoorLocks.java:33-47`).
+  tick 1 000: the door at the same position stays locked for ~14 hours of play (`haunt/effect/DoorLocks.java:33-47`).
 - `DoorLocks` is one map for client and server in single player.
 - `Afflictions.DREAMERS` / `SLEEPWALKERS` are plain `HashSet`, neighbours use `ConcurrentHashMap`.
 
@@ -77,7 +77,7 @@ every delayed step and undo keeps its spirit and point; `Scenario` no longer car
 passed to `run` explicitly (the "Later" item); `Wards` and other callers that read `Said.current` are unchanged.
 
 **Problem.** `Said.during` and `Location.during` reset to `null` instead of restoring the previous value
-(`haunt/Said.java:22`, `haunt/Location.java:57`); `ScenarioContext.during` restores correctly. A nested
+(`haunt/recall/Said.java:22`, `haunt/Location.java:57`); `ScenarioContext.during` restores correctly. A nested
 `Director.act` inside an event clears the outer speaker and point. `Scheduler.repeat` carries only `ScenarioContext`
 into later steps; `Said` and `Location` are carried by hand, only `Scenario` does it (`Scenario.java:169`). Delayed
 steps of other events lose the spirit's voice and source point.

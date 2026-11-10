@@ -198,7 +198,7 @@ Tier: **L** light, **H** harmful. Difficulty on the 1–10 [scale](event-ideas-2
 | `boggart_crawl` | L, PRESENCE | Not in water | 24 tinier spiders run up close and climb in circles up the body to the face, then scatter. | packets only | 3 |
 | `boggart_silverfish` | L, MOBS | Not in water | 40 silverfish pour over the floor, circle the feet, then scatter. | packets only | 2 |
 
-The three share `event/Swarm.java`: a `PacketEntity` per critter, shrunk by the `scale` attribute, moved every tick
+The three share `event/kit/Swarm.java`: a `PacketEntity` per critter, shrunk by the `scale` attribute, moved every tick
 (rush to the player, orbit, flee). The Requiem's boggart movement sends the same spiders (`Swarm.spiders`).
 
 ## Engine work

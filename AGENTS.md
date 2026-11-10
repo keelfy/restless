@@ -36,12 +36,38 @@ adding or searching for an event. Keep it in sync when events are added, moved o
 | Path | What |
 |---|---|
 | `apps/mod/core` | Mod logic, vanilla Minecraft only. Loader calls go through `dev.keelfy.restless.platform.Platform` |
-| `apps/mod/core/.../haunt` | Spirits' haunting: director, events, scenarios, requiem, journal, wards |
-| `apps/mod/core/.../spirit` | Spirit types, traits, story |
 | `apps/mod/core/src/main/resources/restless-config` | Bundled tunables (one JSON per group) + lang |
 | `apps/mod/neoforge` | NeoForge adapter and jar assembly |
 | `apps/frontend` | Player wiki (Nextra), `content/en` and `content/ru` — update both |
 | `docs/` | Developer design notes and idea backlogs |
+
+### Packages (`dev.keelfy.restless`)
+
+Packages follow game features; the registered game objects in `content` are split by kind. Client-only code
+(screens, overlays, renderers, particles) sits in a `client` subpackage of its feature. A network payload lives next
+to the feature that sends it.
+
+| Package | What |
+|---|---|
+| `haunt` | Haunt engine: `Director` (rolls events), pacing (`Rarity`, `Recent`, `Startle`, `Reactions`), `Scheduler`, `Restore`, `Faults`, `History`, `Location`, `Hardcore` |
+| `haunt.event` | Event contract (`HauntEvent`, `HauntEvents`, `HauntTier`, `EventTag`), `Catalog` and the theme groups |
+| `haunt.event.kit` | Helpers shared by events: `SimpleEvent`, `Nearby`, `Place`, `Where`, `Walk`, `Swaps`, `PacketEntity`, `Haze`… |
+| `haunt.scenario` | Scenarios: scripts of beats |
+| `haunt.harm` | Damage bands and lethal pacing (`Band`, `Bands`, `Menace`) |
+| `haunt.recall` | What the world remembers of each player for events: sounds, kills, chat, trail, wakes, used lines |
+| `haunt.effect` | Screen and view effects sent to a client (dim, vignette, overlays, head turn), door locks |
+| `spirit` | Spirit types, traits, story, clues, focus, form |
+| `spirit.life` | Birth, deeds, power, anger, evolution |
+| `spirit.land` | What spirits leave on the land: corruption, graves |
+| `state` | Saved per-world state (`HauntData`) and server/client scopes (`Session`) |
+| `divine` | Investigation tools: candle, compass, divination, sensing, clues |
+| `journal` | Journal notes, pages, codex, its payloads; `client` draws the book |
+| `photo` | Camera pictures of spirits; `client` grabs and shows them |
+| `sanity` | Sanity and its overlay |
+| `ward` | Wards, salt enclosures, lasting spells |
+| `banish` | Altar ritual and the Requiem (`requiem` holds its movements and candles) |
+| `content` | Registration (`Content`); `block`, `entity`, `item` (`charm`, `consumable`), `recipe`, `client` |
+| `config`, `command`, `debug`, `platform` | Tunables and lang, `/haunt`, debug menu, loader bridge |
 
 ## Commands
 

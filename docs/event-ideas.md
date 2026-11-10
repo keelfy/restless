@@ -183,8 +183,8 @@ Infrastructure tags:
 
 - `sched`: `haunt/Scheduler.java`.
 - `restore`: `haunt/Restore.java`, undo entries run when due and when the server stops.
-- `place`: `haunt/event/Place.java`: a wall, standing room, a ledge, a flat spot for a plus.
-- `hook`: `Restless.onUseBlock` plus `haunt/DoorLocks.java`; the NeoForge module forwards `PlayerInteractEvent.RightClickBlock`.
+- `place`: `haunt/event/kit/Place.java`: a wall, standing room, a ledge, a flat spot for a plus.
+- `hook`: `Restless.onUseBlock` plus `haunt/effect/DoorLocks.java`; the NeoForge module forwards `PlayerInteractEvent.RightClickBlock`.
 - `access`: not needed. The furnace's private burn time is zeroed through its own save format (`saveCustomOnly` / `loadCustomOnly`).
 - `map`: not needed. `MapItemSavedData.addTargetDecoration` writes the marker into the item.
 
@@ -192,7 +192,7 @@ Infrastructure tags:
 
 7 is a client overlay: the `Dimming` HUD layer under the HUD, started by `DimPayload` (lighting is client-side, so no light level is touched).
 
-36 records the player's own sounds through `PlayLevelSoundEvent` (`Restless.onPlaySound`, `haunt/Echoes.java`) and replays the last one in another sound category so it is not recorded again.
+36 records the player's own sounds through `PlayLevelSoundEvent` (`Restless.onPlaySound`, `haunt/recall/Echoes.java`) and replays the last one in another sound category so it is not recorded again.
 
 61 is a vanilla wither skeleton with its AI off, moved by hand each step by `event/ShadowEvent.java`: no entity type, renderer or client code, so it needs nothing the client lacks. 93 is the vanilla `mannequin` entity given the player's game profile, moved by the same `Walk` helper (`event/DoubleEvent.java`), so it too needs no renderer. 94 and 95 (`event/PresenceFigure.java`) turned out server-only too: the view-cone check is a dot product against the look vector, and "fog" is rain or darkness under open sky. 100 is a velocity nudge every few ticks with `ClientboundSetEntityMotionPacket`; resisting is simply walking away, because the client's own input competes with the pull.
 

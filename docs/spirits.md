@@ -1,7 +1,7 @@
 # Spirits and haunt events
 
 Reference for the current content. Source of truth is the code:
-`spirit/Spirits.java`, `haunt/HauntEvents.java`, `haunt/event/*`, `haunt/Power.java`, `haunt/Reactions.java`, `haunt/Anger.java`, `spirit/Traits.java`, `spirit/Story.java`, `haunt/Director.java`, `haunt/Scheduler.java`.
+`spirit/Spirits.java`, `haunt/event/HauntEvents.java`, `haunt/event/*`, `spirit/life/Power.java`, `haunt/Reactions.java`, `spirit/life/Anger.java`, `spirit/Traits.java`, `spirit/Story.java`, `haunt/Director.java`, `haunt/Scheduler.java`.
 Update this file when any of them changes. The numbers below are the shipped defaults; see [Config](#config).
 
 ## How it works
@@ -123,7 +123,7 @@ tools read the player's own spirits and the territorial ones whose radius holds 
 | Clue | Tool | What it shows |
 |---|---|---|
 | footprints | **Ash powder** (charcoal, makes 4) | Placed flat like salt. After `ash.reveal_ticks` (30 s), if a spirit that leaves footprints is within `ash.reach` of it, it takes one of four prints (bare foot, paw, hoof, drag). Each trail shows one random trait of the spirit, as the print of that trait's nature: mirror a bare foot, iron a paw, holy water a hoof, glowstone a drag. |
-| silhouette | **Camera obscura** (iron, glass pane, black dye) | Use it: a **photograph** with the spirit's type only (no trait, no weakness), `camera.cooldown_ticks` apart. The figure on the picture is drawn from the spirit's type (build: hooded, hunched, horned...) and its seed (small differences), so the same spirit always looks the same (`content/Apparition.java`). |
+| silhouette | **Camera obscura** (iron, glass pane, black dye) | Use it: a **photograph** with the spirit's type only (no trait, no weakness), `camera.cooldown_ticks` apart. The figure on the picture is drawn from the spirit's type (build: hooded, hunched, horned...) and its seed (small differences), so the same spirit always looks the same (`photo/Apparition.java`). |
 | voice | **Spirit box** (block: iron, redstone, note block) | Say something in chat within `spirit_box.radius` of it: `spirit_box.delay_ticks` later (40) it answers with a word of one trait. With [Plasmo Voice](https://github.com/plasmoapp/plasmo-voice) (2.2.0-beta.2+) on the server, finishing a phrase on voice chat does the same; it hears that you spoke, not the words. |
 | planchette | **Ouija board** (block: planks, black dye, salt) | Use it: the planchette spells one trait's hint letter by letter on the action bar. |
 
@@ -273,7 +273,7 @@ note is never written twice. `JournalPages` lays the notebook out as:
   not archived.
 - **Loose notes**: clues of spirits not met yet, without saying whose. They move to the dossier on meeting.
 - **Bestiary**: a page per type the player has photographed, with its grown name once a grown one was photographed.
-- **Charms / Relics**: a page per charm (basic then advanced) and relic, built on the server by `haunt/Codex.java`
+- **Charms / Relics**: a page per charm (basic then advanced) and relic, built on the server by `journal/Codex.java`
   (not stored): the item's `.tip` line and a recipe row (ingredient icons, result, names). A page opens when
   `Notebook.knows(type)` holds (photographed or banished) for every `<type>_essence` in the item's recipe; an advanced
   charm also needs its base charm's page. The ids are the lists in `Codex`: add a new charm or relic there.
@@ -1054,11 +1054,11 @@ the player dies, leaves or the world closes, so no step may leave something brok
 ## Restoring and locks
 
 Block changes that must not damage a build (`dead_ground`, `shifting_floor`) only swap a block for another kind of
-the same material (`haunt/event/Variants.java`): grass to dirt or coarse dirt, dirt to coarse dirt or podzol, stone to
+the same material (`haunt/event/kit/Variants.java`): grass to dirt or coarse dirt, dirt to coarse dirt or podzol, stone to
 andesite, granite or diorite, cobblestone to mossy, stone and deepslate bricks to cracked or mossy, deepslate to
 cobbled. Anything else is left alone. The patch is a scatter (`Place.patch`), not a disc.
 
-- `haunt/event/Swaps.java`: the one way events show other blocks in place of the real ones. By default an illusion
+- `haunt/event/kit/Swaps.java`: the one way events show other blocks in place of the real ones. By default an illusion
   for the haunted player alone (a `ClientboundBlockUpdatePacket`, then the real blocks again after the event's ticks);
   with the `swaps` setting set to `REAL` in `config/restless/settings.toml`, or under hardcore, a change in the world for everyone through
   `Restore.swap`. Blocks with a block entity are only ever shown. See [hardcore.md](hardcore.md#block-swaps).
@@ -1075,7 +1075,7 @@ cobbled. Anything else is left alone. The patch is a scatter (`Place.patch`), no
   Tricks with a real counterpart come true instead of being shown: a lie's wound, hearts, hunger, night or slot,
   real lightning, a floor that breaks, fake blocks placed for real (not over a chest or furnace), a hallucinated mob
   spawned. The list is in [hardcore.md](hardcore.md#events-with-a-real-branch), with the plan and the rules.
-- `haunt/DoorLocks.java`: doors locked by `locked_door`, in memory. `Restless.onUseBlock` cancels the right click on
+- `haunt/effect/DoorLocks.java`: doors locked by `locked_door`, in memory. `Restless.onUseBlock` cancels the right click on
   both sides; the loader forwards its block-interaction event to it. The server sends `DoorLockPayload` to clients
   within 64 blocks, which the loader registers and hands to `DoorLocks.put`. A client that joins or walks up later
   than the lock does not know it and sees the server undo its open attempt.
