@@ -182,13 +182,14 @@ public final class PhotoHands {
                 5 / 32f,
                 30 / 32f,
                 27 / 32f);
-        // The picture sits a hair in front of its card, as a map does of its frame.
+        // The picture sits in front of its card by half a picture pixel: a pixel is only ~0.005 blocks on a wall, so a
+        // smaller gap z-fights with the card and the photo flickers.
         quad(
                 pose,
                 collector,
                 PhotoTooltip.texture(picture),
                 light,
-                -0.01f,
+                -0.5f,
                 0,
                 0,
                 Picture.WIDTH,

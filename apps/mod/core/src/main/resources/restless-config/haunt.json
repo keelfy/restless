@@ -221,7 +221,9 @@
   },
   "ouija": {
     "delay_ticks": 20,
-    "letter_ticks": 6
+    "letter_ticks": 6,
+    "cooldown_ticks": 600,
+    "silence_chance": 0.3
   },
   "clues": {
     "lie_chance": 0.5,

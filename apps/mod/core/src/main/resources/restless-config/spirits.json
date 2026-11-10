@@ -231,6 +231,13 @@
         "mine",
         "take"
       ],
+      "planchette": [
+        "hands_drop",
+        "hands_hands",
+        "hands_pick",
+        "hands_idle",
+        "hands_mine"
+      ],
       "weakness": "iron"
     },
     "light_eater": {
@@ -246,6 +253,13 @@
         "hungry",
         "out"
       ],
+      "planchette": [
+        "light_out",
+        "light_hungry",
+        "light_dim",
+        "light_eat",
+        "light_flame"
+      ],
       "weakness": "glowstone"
     },
     "door_slammer": {
@@ -260,6 +274,13 @@
         "leave",
         "shut",
         "slam"
+      ],
+      "planchette": [
+        "door_shut",
+        "door_slam",
+        "door_leave",
+        "door_creak",
+        "door_closed"
       ],
       "weakness": "iron"
     },
@@ -277,6 +298,13 @@
         "closer",
         "hush"
       ],
+      "planchette": [
+        "whisper_listen",
+        "whisper_closer",
+        "whisper_hush",
+        "whisper_ear",
+        "whisper_secret"
+      ],
       "weakness": "mirror"
     },
     "cold_touch": {
@@ -290,6 +318,13 @@
         "cold",
         "chill",
         "frost"
+      ],
+      "planchette": [
+        "cold_cold",
+        "cold_breath",
+        "cold_frost",
+        "cold_freeze",
+        "cold_air"
       ],
       "weakness": "glowstone"
     },
@@ -305,6 +340,13 @@
         "pay",
         "blood",
         "you"
+      ],
+      "planchette": [
+        "venge_pay",
+        "venge_blood",
+        "venge_you",
+        "venge_revenge",
+        "venge_debt"
       ],
       "weakness": "holy_water"
     },
@@ -322,6 +364,13 @@
         "change",
         "mine"
       ],
+      "planchette": [
+        "meddle_move",
+        "meddle_change",
+        "meddle_place",
+        "meddle_order",
+        "meddle_touch"
+      ],
       "weakness": "iron"
     },
     "rain_walker": {
@@ -335,6 +384,13 @@
         "wet",
         "drip",
         "storm"
+      ],
+      "planchette": [
+        "rain_wet",
+        "rain_drip",
+        "rain_storm",
+        "rain_steps",
+        "rain_sky"
       ],
       "weakness": "holy_water"
     },
@@ -350,6 +406,13 @@
         "night",
         "follow"
       ],
+      "planchette": [
+        "night_behind",
+        "night_night",
+        "night_follow",
+        "night_turn",
+        "night_watch"
+      ],
       "weakness": "glowstone"
     },
     "dark_dweller": {
@@ -364,6 +427,13 @@
         "black",
         "deep"
       ],
+      "planchette": [
+        "dweller_below",
+        "dweller_black",
+        "dweller_deep",
+        "dweller_home",
+        "dweller_hide"
+      ],
       "weakness": "glowstone"
     },
     "noise_feeder": {
@@ -376,6 +446,13 @@
         "loud",
         "louder",
         "noise"
+      ],
+      "planchette": [
+        "noise_loud",
+        "noise_louder",
+        "noise_noise",
+        "noise_feed",
+        "noise_quiet"
       ],
       "weakness": "mirror"
     },
@@ -395,6 +472,13 @@
         "mine",
         "lid"
       ],
+      "planchette": [
+        "chest_open",
+        "chest_lid",
+        "chest_yours",
+        "chest_guard",
+        "chest_inside"
+      ],
       "weakness": "iron"
     },
     "sleep_thief": {
@@ -411,6 +495,13 @@
         "wake",
         "dream",
         "bed"
+      ],
+      "planchette": [
+        "sleep_wake",
+        "sleep_dream",
+        "sleep_bed",
+        "sleep_not",
+        "sleep_mine"
       ],
       "weakness": "mirror"
     },
@@ -430,6 +521,13 @@
         "come",
         "under"
       ],
+      "planchette": [
+        "call_down",
+        "call_come",
+        "call_under",
+        "call_calling",
+        "call_dig"
+      ],
       "weakness": "holy_water"
     },
     "grudge": {
@@ -447,6 +545,13 @@
         "kill",
         "why"
       ],
+      "planchette": [
+        "grudge_remember",
+        "grudge_why",
+        "grudge_killed",
+        "grudge_never",
+        "grudge_old"
+      ],
       "weakness": "holy_water"
     },
     "liar": {
@@ -459,6 +564,13 @@
         "yes",
         "no",
         "maybe"
+      ],
+      "planchette": [
+        "liar_yes",
+        "liar_no",
+        "liar_maybe",
+        "liar_true",
+        "liar_lie"
       ],
       "lies": 1,
       "weakness": "mirror"

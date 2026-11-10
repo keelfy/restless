@@ -43,6 +43,9 @@ public final class Divination {
         }
     });
 
+    /** When each player's ouija board answers again, in game time. */
+    private static final Map<UUID, Long> ASKED = Session.SERVER.keep(new java.util.HashMap<>());
+
     /**
      * What a clue showed: the spirit it came from and the trait it named, which for a liar may not be the spirit's own.
      */
@@ -184,17 +187,39 @@ public final class Divination {
         return Component.translatable("trait.restless." + trait.id() + ".hint");
     }
 
-    /** The planchette spells out a trait, one letter at a time on the action bar. */
+    /** What the planchette spells for a trait: one of its phrases, a word or a sentence, never the trait named. */
+    public static Component phrase(Reading reading) {
+        return Component.translatable(phraseKey(reading));
+    }
+
+    private static String phraseKey(Reading reading) {
+        List<String> phrases = reading.trait().planchette();
+        return "planchette.restless." + phrases.get(reading.random().nextInt(phrases.size()));
+    }
+
+    /**
+     * The planchette spells a phrase of a trait, one letter at a time on the action bar. A spirit is not always
+     * listening: the board is still some of the time and for a while after every try, so asking again and again gets
+     * nowhere, and a trait takes several answers to tell.
+     */
     public static void spell(ServerPlayer player) {
         Config.Section config = Config.section("ouija");
-        Optional<Reading> reading = read(player, Clue.PLANCHETTE);
+        long now = player.level().getGameTime();
+        Long free = ASKED.get(player.getUUID());
+        if (free != null && now < free) {
+            player.sendSystemMessage(Component.translatable("message.restless.ouija_wait"), true);
+            return;
+        }
+        ASKED.put(player.getUUID(), now + config.integer("cooldown_ticks"));
+        Optional<Reading> reading = player.getRandom().nextDouble() < config.num("silence_chance")
+                ? Optional.empty()
+                : read(player, Clue.PLANCHETTE);
         if (reading.isEmpty()) {
             player.sendSystemMessage(Component.translatable("message.restless.ouija_still"), true);
             return;
         }
-        String text = Language.getInstance()
-                .getOrDefault(hint(reading.get().trait()).getString())
-                .toUpperCase(java.util.Locale.ROOT);
+        String key = phraseKey(reading.get());
+        String text = Language.getInstance().getOrDefault(key).toUpperCase(java.util.Locale.ROOT);
         Scheduler.repeat(player, config.integer("delay_ticks"), config.integer("letter_ticks"), (p, n) -> {
             p.sendSystemMessage(Component.literal(text.substring(0, n + 1)), true);
             p.level()
@@ -202,10 +227,7 @@ public final class Divination {
                             null, p.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.BLOCKS, 0.4f, 1.5f);
             if (n + 1 >= text.length()) {
                 Journal.note(
-                        p,
-                        Notebook.Kind.PLANCHETTE,
-                        reading.get().spirit().haunting(),
-                        hint(reading.get().trait()));
+                        p, Notebook.Kind.PLANCHETTE, reading.get().spirit().haunting(), Component.translatable(key));
                 return false;
             }
             return true;

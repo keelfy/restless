@@ -67,30 +67,30 @@ Iron ingot + redstone + note block. Place it: it faces you. It listens for a cha
 
 ## Ouija Board
 
-Any planks + black dye + salt. Place it flat on the floor. Use it: after 1 second the planchette spells out, one letter every 0.3 seconds on the action bar, what one trait of a spirit you sense is like ("it slams doors", "it feeds on noise"). It can be used again at once. It may lie: a spirit with the Liar trait names a trait it does not have half of the time, and the note is marked "may lie", as is every board note. For what a line means, see [Reading the Clues](#reading-the-clues). With no spirit to sense: "The planchette does not move."
+Any planks + black dye + salt. Place it flat on the floor. Use it: after 1 second the planchette spells a phrase, one letter every 0.3 seconds on the action bar. Each trait has five phrases: a single word ("SHUT IT"), a half-sentence ("YOUR SLEEP IS MINE") or a hint ("DO NOT TURN AROUND"), and none of them says the trait outright. The spirit is not always listening: 30% of tries the board stays still, and after every try it trembles for 30 seconds and does not answer, so spamming gets nothing. One phrase rarely settles a trait; use the board several times. It may lie: a spirit with the Liar trait names a trait it does not have half of the time, and the note is marked "may lie", as is every board note. For what a line means, see [Reading the Clues](#reading-the-clues). With no spirit to sense, or when the spirit stays silent: "The planchette does not move." During the pause: "The planchette is still trembling."
 
 ## Reading the Clues
 
-Every ouija and spirit box clue belongs to one trait, and every trait has a nature. The nature can be told from what the clue means. Iron touches things. Glowstone reaches for darkness, cold and night. Holy water takes revenge, comes with the rain and calls from the deep. Mirror plays with your head: it whispers, makes noise, steals sleep, lies. The full list:
+Every ouija and spirit box clue belongs to one trait, and every trait has a nature. The nature can be told from what the clue means. A board phrase is a riddle; the table gives what each can mean. Iron touches things. Glowstone reaches for darkness, cold and night. Holy water takes revenge, comes with the rain and calls from the deep. Mirror plays with your head: it whispers, makes noise, steals sleep, lies. The full list:
 
-| Nature | Ouija line | Spirit box words |
-| --- | --- | --- |
-| Iron | "it reaches for things left lying around" | `fingers`, `mine`, `take` |
-| Iron | "it slams doors" | `leave`, `shut`, `slam` |
-| Iron | "it meddles with the world around you" | `move`, `change`, `mine` |
-| Iron | "it guards what is in chests" | `open`, `mine`, `lid` |
-| Glowstone | "it feeds on light" | `dark`, `hungry`, `out` |
-| Glowstone | "it chills the air around you" | `cold`, `chill`, `frost` |
-| Glowstone | "it stalks at night" | `behind`, `night`, `follow` |
-| Glowstone | "it lives in the dark" | `below`, `black`, `deep` |
-| Holy water | "it wants revenge" | `pay`, `blood`, `you` |
-| Holy water | "it walks in the rain" | `wet`, `drip`, `storm` |
-| Holy water | "it calls from below" | `down`, `come`, `under` |
-| Holy water | "it holds a grudge" | `remember`, `kill`, `why` |
-| Mirror | "it whispers" | `listen`, `closer`, `hush` |
-| Mirror | "it feeds on noise" | `loud`, `louder`, `noise` |
-| Mirror | "it steals your sleep" | `wake`, `dream`, `bed` |
-| Mirror | "it lies" | `yes`, `no`, `maybe` |
+| Nature | Meaning | Ouija phrases | Spirit box words |
+| --- | --- | --- | --- |
+| Iron | It reaches for things left lying around | `do not drop it`, `hands`, `i will take it`, `lying unwatched`, `what is left is mine` | `fingers`, `mine`, `take` |
+| Iron | It slams doors | `shut it`, `slam`, `get out`, `creak and crash`, `the door is closed` | `leave`, `shut`, `slam` |
+| Iron | It meddles with the world around you | `i will move it`, `rearrange`, `not there`, `nothing is in its place`, `i will touch` | `move`, `change`, `mine` |
+| Iron | It guards what is in chests | `open it`, `lid`, `not yours`, `i guard`, `what lies inside` | `open`, `mine`, `lid` |
+| Glowstone | It feeds on light | `put it out`, `hungry... light`, `darker`, `light tastes good`, `snuff the flame` | `dark`, `hungry`, `out` |
+| Glowstone | It chills the air around you | `cold`, `your breath shows`, `frost`, `you will freeze`, `the air grows cold` | `cold`, `chill`, `frost` |
+| Glowstone | It stalks at night | `behind you`, `at night`, `i follow`, `do not turn around`, `watching` | `behind`, `night`, `follow` |
+| Glowstone | It lives in the dark | `below`, `black`, `deep`, `darkness is home`, `hiding` | `below`, `black`, `deep` |
+| Holy water | It wants revenge | `you will pay`, `blood for blood`, `you`, `revenge`, `debt` | `pay`, `blood`, `you` |
+| Holy water | It walks in the rain | `wet`, `drip drip`, `the storm comes`, `steps in puddles`, `the sky weeps` | `wet`, `drip`, `storm` |
+| Holy water | It calls from below | `down`, `come here`, `under the earth`, `calling`, `dig` | `down`, `come`, `under` |
+| Holy water | It holds a grudge | `i remember`, `why`, `you killed`, `never forgiven`, `old grudge` | `remember`, `kill`, `why` |
+| Mirror | It whispers | `listen`, `come closer`, `hush`, `in your ear`, `a secret` | `listen`, `closer`, `hush` |
+| Mirror | It feeds on noise | `loud`, `louder`, `noise`, `make more noise`, `silence starves` | `loud`, `louder`, `noise` |
+| Mirror | It steals your sleep | `wake up`, `dream`, `bed`, `do not sleep`, `your sleep is mine` | `wake`, `dream`, `bed` |
+| Mirror | It lies | `yes`, `no`, `maybe`, `it is true`, `do not believe` | `yes`, `no`, `maybe` |
 
 What to do with it:
 

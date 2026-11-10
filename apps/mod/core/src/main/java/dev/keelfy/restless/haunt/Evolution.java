@@ -51,7 +51,9 @@ public final class Evolution {
         Component now = Component.translatable("spirit.restless." + spirit.spirit() + "_evolved");
         player.level()
                 .playSound(null, player.blockPosition(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.HOSTILE, 1.0f, 0.6f);
-        boolean known = HauntData.get(player.level().getServer()).notebook(player.getUUID()).photographed(spirit.uuid());
+        boolean known = HauntData.get(player.level().getServer())
+                .notebook(player.getUUID())
+                .photographed(spirit.uuid());
         player.sendSystemMessage(
                 known
                         ? Component.translatable("message.restless.evolved", was, now)

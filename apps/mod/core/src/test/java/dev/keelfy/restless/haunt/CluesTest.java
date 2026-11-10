@@ -25,6 +25,7 @@ class CluesTest {
                 List.of(),
                 Set.of(clues),
                 List.of("word"),
+                List.of("phrase"),
                 lies,
                 Focus.IRON);
     }

@@ -19,6 +19,10 @@ class LangTest {
             String file = read("/assets/restless/lang/" + lang + ".json");
             for (Trait trait : Traits.all()) {
                 has(file, lang, "trait.restless." + trait.id() + ".hint");
+                assertTrue(trait.planchette().size() >= 3, trait.id() + " has too few planchette phrases");
+                for (String phrase : trait.planchette()) {
+                    has(file, lang, "planchette.restless." + phrase);
+                }
             }
             for (String cause : Config.section("story").texts("causes")) {
                 has(file, lang, "story.restless.cause." + cause);

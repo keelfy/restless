@@ -69,10 +69,7 @@ public final class Wards {
     private static void hollowClue(ServerPlayer player) {
         Divination.read(player, Clue.PLANCHETTE)
                 .ifPresent(reading -> Journal.note(
-                        player,
-                        Notebook.Kind.PLANCHETTE,
-                        reading.spirit().haunting(),
-                        Divination.hint(reading.trait())));
+                        player, Notebook.Kind.PLANCHETTE, reading.spirit().haunting(), Divination.phrase(reading)));
     }
 
     private static double square(int radius) {

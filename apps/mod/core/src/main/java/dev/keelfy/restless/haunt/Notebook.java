@@ -232,7 +232,8 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
     /** Whether the player photographed this spirit, so that they know its type. */
     public boolean photographed(UUID spirit) {
         return notes.stream()
-                .anyMatch(n -> n.kind() == Kind.PHOTO && n.spirit().filter(spirit::equals).isPresent());
+                .anyMatch(n -> n.kind() == Kind.PHOTO
+                        && n.spirit().filter(spirit::equals).isPresent());
     }
 
     static String base(String tag) {
