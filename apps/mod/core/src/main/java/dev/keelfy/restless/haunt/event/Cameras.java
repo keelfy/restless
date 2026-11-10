@@ -46,31 +46,7 @@ final class Cameras {
                             }
                         }),
                 // 348: out of body, from behind and a little above, looking at the back of one's own head
-                SimpleEvent.light("out_of_body", EventTag.PRESENCE, Eyes::steady, player -> {
-                    Config.Section config = Config.event("out_of_body");
-                    Vec3 head = player.getEyePosition();
-                    float yaw = player.getYRot();
-                    double radians = Math.toRadians(yaw);
-                    // Backs off from the full distance until the spot is free.
-                    for (double distance = config.num("distance"); distance >= 1.0; distance -= 0.5) {
-                        Vec3 eye = head.add(
-                                Math.sin(radians) * distance, config.num("height"), -Math.cos(radians) * distance);
-                        BlockPos spot = BlockPos.containing(eye);
-                        if (player.level()
-                                .getBlockState(spot)
-                                .getCollisionShape(player.level(), spot)
-                                .isEmpty()) {
-                            Eyes.ghost(
-                                    player,
-                                    entity(config.text("entity")),
-                                    eye,
-                                    yaw,
-                                    Eyes.pitchToward(eye, head),
-                                    config.integer("ticks"));
-                            return;
-                        }
-                    }
-                }),
+                SimpleEvent.light("out_of_body", EventTag.PRESENCE, Eyes::steady, Cameras::outOfBody),
                 // 349: one second at the spirit's spot, looking back at the player; a clue to where it is
                 SimpleEvent.light("spirit_sight", EventTag.PRESENCE, Eyes::steady, player -> {
                     Config.Section config = Config.event("spirit_sight");
@@ -111,6 +87,33 @@ final class Cameras {
                                     Eyes.pitchToward(eye, head),
                                     config.integer("ticks"));
                         }));
+    }
+
+    /** The view from behind and a little above, for the configured ticks; false when there is no room for it. */
+    static boolean outOfBody(ServerPlayer player) {
+        Config.Section config = Config.event("out_of_body");
+        Vec3 head = player.getEyePosition();
+        float yaw = player.getYRot();
+        double radians = Math.toRadians(yaw);
+        // Backs off from the full distance until the spot is free.
+        for (double distance = config.num("distance"); distance >= 1.0; distance -= 0.5) {
+            Vec3 eye = head.add(Math.sin(radians) * distance, config.num("height"), -Math.cos(radians) * distance);
+            BlockPos spot = BlockPos.containing(eye);
+            if (player.level()
+                    .getBlockState(spot)
+                    .getCollisionShape(player.level(), spot)
+                    .isEmpty()) {
+                Eyes.ghost(
+                        player,
+                        entity(config.text("entity")),
+                        eye,
+                        yaw,
+                        Eyes.pitchToward(eye, head),
+                        config.integer("ticks"));
+                return true;
+            }
+        }
+        return false;
     }
 
     private static EntityType<?> entity(String id) {

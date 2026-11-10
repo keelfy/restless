@@ -29,6 +29,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -43,9 +44,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Scares the player sets off with a habit: breaking a wall, digging down, eating, closing a chest or a door, turning
- * away, mining in a cave, hiding. Each is a black figure of the {@link Jolts} kind that only this player sees; see
- * docs/scary-events.md for the rules they follow. An event that waits for a break, a meal or a torch only marks the
+ * Scares the player sets off with a habit: breaking a wall or a trunk, digging down, eating, closing a chest or a door,
+ * turning away, mining in a cave, hiding. Each is a black figure of the {@link Jolts} kind that only this player sees;
+ * see docs/scary-events.md for the rules they follow. An event that waits for a break, a meal or a torch only marks the
  * player (one mark at a time, in memory, lapsing on its own); the hooks below spend the mark. The others watch the
  * player themselves for a while.
  */
@@ -106,6 +107,12 @@ public final class Scares {
                         EventTag.PRESENCE,
                         player -> canArm(player) && underground(player),
                         player -> arm(player, "first_light")),
+                // The base log of a trunk is broken: the figure is standing right behind it.
+                SimpleEvent.waiting(
+                        "behind_trunk",
+                        EventTag.PRESENCE,
+                        player -> canArm(player) && Nearby.any(player, "behind_trunk", Scares::log),
+                        player -> arm(player, "behind_trunk")),
                 // Keep still in the dark, or be caught.
                 SimpleEvent.harmful(
                         "hide",
@@ -157,6 +164,7 @@ public final class Scares {
             case "mined_face" -> minedFace(player, state, pos, mark.spirit);
             case "dig_down" -> digDown(player, pos, mark.spirit);
             case "echo_answer" -> echo(player, state, mark);
+            case "behind_trunk" -> behindTrunk(player, state, pos, mark.spirit);
             default -> false;
         };
         if (spent) {
@@ -208,7 +216,7 @@ public final class Scares {
     // ---- scares ----
 
     /** The figure at {@code at} facing the player, with a bang if given, for {@code hold} ticks; -1 picks any shape. */
-    private static void flash(ServerPlayer player, Vec3 at, int shape, Config.@Nullable Tone bang, int hold) {
+    static void flash(ServerPlayer player, Vec3 at, int shape, Config.@Nullable Tone bang, int hold) {
         if (bang != null) {
             Nearby.sound(
                     player, HauntSounds.JOLT, at.add(0, Config.section("place").num("sound_height"), 0), bang);
@@ -274,6 +282,37 @@ public final class Scares {
             Swaps.show(p, hollow, Blocks.AIR.defaultBlockState(), hold + 2);
             Director.landed(p, "dig_down", spirit);
             flash(p, Vec3.atBottomCenterOf(pit), SilhouetteRenderer.LYING, config.tone("sound"), hold);
+        });
+        return true;
+    }
+
+    private static boolean log(BlockState state) {
+        return state.is(BlockTags.LOGS);
+    }
+
+    /**
+     * The base log of a trunk (a log above it, none below) is broken: the block behind it, away from the player, holds
+     * the figure, and the log above shows as open air so that all of it can be seen.
+     */
+    private static boolean behindTrunk(ServerPlayer player, BlockState state, BlockPos pos, @Nullable UUID spirit) {
+        Config.Section config = Config.event("behind_trunk");
+        ServerLevel level = player.level();
+        Direction away =
+                Direction.getApproximateNearest(pos.getX() + 0.5 - player.getX(), 0, pos.getZ() + 0.5 - player.getZ());
+        BlockPos spot = pos.relative(away);
+        if (!log(state)
+                || !log(level.getBlockState(pos.above()))
+                || log(level.getBlockState(pos.below()))
+                || player.position().distanceTo(Vec3.atCenterOf(pos)) > config.num("reach")
+                || !Place.floored(level, spot)
+                || !level.isEmptyBlock(spot.above())) {
+            return false;
+        }
+        int hold = config.integer("hold_ticks");
+        Scheduler.later(player, 1, p -> {
+            Swaps.show(p, List.of(pos.above()), Blocks.AIR.defaultBlockState(), hold + 2);
+            Director.landed(p, "behind_trunk", spirit);
+            flash(p, Vec3.atBottomCenterOf(spot), -1, config.tone("sound"), hold);
         });
         return true;
     }

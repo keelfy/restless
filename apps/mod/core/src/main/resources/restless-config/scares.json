@@ -126,6 +126,120 @@
       "max_angle": 60.0,
       "hold_ticks": 4
     },
+    "minecraft:behind_trunk": {
+      "weight": 0.1,
+      "startle": true,
+      "radius": 10,
+      "reach": 5.0,
+      "max_ticks": 6000,
+      "hold_ticks": 8,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:third_person": {
+      "weight": 0.1,
+      "startle": true,
+      "distance": 1.6,
+      "look_angle": 45.0,
+      "wait_ticks": 120,
+      "hold_ticks": 10,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:pit_face": {
+      "weight": 0.1,
+      "startle": true,
+      "max_ticks": 6000,
+      "pitch": 60.0,
+      "reach": 3,
+      "depth": 8,
+      "max_depth": 48,
+      "gap": 1.5,
+      "rise_ticks": 5,
+      "hold_ticks": 8,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:surface_break": {
+      "weight": 0.1,
+      "startle": true,
+      "max_ticks": 6000,
+      "dive_ticks": 40,
+      "distance": 1.5,
+      "hold_ticks": 10,
+      "splash": {
+        "volume": 1.5,
+        "pitch": 1.0
+      },
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:shield_knocks": {
+      "weight": 0.1,
+      "startle": true,
+      "max_ticks": 6000,
+      "quiet_radius": 16.0,
+      "block_ticks": 40,
+      "knocks": 3,
+      "knock_gap_ticks": 10,
+      "knock_distance": 2.5,
+      "distance": 1.2,
+      "min_angle": 0.0,
+      "max_angle": 15.0,
+      "hold_ticks": 10,
+      "knock": {
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:tree_line": {
+      "weight": 0.1,
+      "startle": true,
+      "radius": 16,
+      "max_ticks": 2400,
+      "distance": 20.0,
+      "min_angle": 0.0,
+      "max_angle": 50.0,
+      "dark_max": 7,
+      "look_angle": 40.0,
+      "figures": 5,
+      "behind_distance": 1.6,
+      "wait_ticks": 120,
+      "hold_ticks": 12,
+      "sound": {
+        "volume": 2.0,
+        "pitch": 1.0
+      }
+    },
+    "minecraft:stairs_sitter": {
+      "weight": 0.15,
+      "radius": 12,
+      "steps": 3,
+      "min_distance": 8.0,
+      "max_distance": 16.0,
+      "look_angle": 40.0,
+      "trigger_distance": 6.0,
+      "max_ticks": 1200,
+      "step_distance": 2.0,
+      "step_gap_ticks": 8,
+      "steps_heard": 3,
+      "step_sound": {
+        "volume": 1.0,
+        "pitch": 0.7
+      }
+    },
     "minecraft:hide": {
       "weight": 0.1,
       "startle": true,
