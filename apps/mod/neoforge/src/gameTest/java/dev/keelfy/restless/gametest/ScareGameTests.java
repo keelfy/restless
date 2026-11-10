@@ -2,6 +2,7 @@ package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.haunt.History;
 import dev.keelfy.restless.haunt.event.HauntEvent;
 import dev.keelfy.restless.haunt.event.HauntEvents;
 import dev.keelfy.restless.haunt.event.Scares;
@@ -87,9 +88,11 @@ final class ScareGameTests {
                 scene.player.containerMenu = new CraftingMenu(1, scene.player.getInventory());
                 helper.runAfterDelay(90, () -> {
                     check(helper, scene.figures() == 0, "container_close must wait for the container to close");
+                    check(helper, ran(scene.player, "container_close") == 0, "a waiting event has not run yet");
                     scene.player.containerMenu = scene.player.inventoryMenu;
                     helper.runAfterDelay(4, () -> {
                         check(helper, scene.figures() == 1, "container_close must show a figure when it is closed");
+                        check(helper, ran(scene.player, "container_close") == 1, "the scare must count as the run");
                         scene.end(helper);
                     });
                 });
@@ -213,6 +216,13 @@ final class ScareGameTests {
             event.run(player);
             then.accept(new Scene(player, channel));
         });
+    }
+
+    /** How often the event is in the history of the player, which it enters when its scare comes. */
+    private static long ran(ServerPlayer player, String id) {
+        return History.last(player.getName().getString(), 100).stream()
+                .filter(e -> e.event().equals("minecraft:" + id))
+                .count();
     }
 
     private static void turn(ServerPlayer player, float yaw) {

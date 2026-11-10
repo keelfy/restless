@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.event.kit.Figure;
@@ -157,7 +158,8 @@ final class Strangers {
                         HauntTier.LIGHT,
                         Set.of(EventTag.PRESENCE, EventTag.PLAYER),
                         player -> !WAITING.contains(player.getUUID()),
-                        Strangers::bedside));
+                        Strangers::bedside,
+                        true));
     }
 
     // --- acts ------------------------------------------------------------------------------------------------------
@@ -438,6 +440,7 @@ final class Strangers {
         WAITING.add(owner);
         int interval = config.integer("interval_ticks");
         BlockPos[] bed = {null};
+        UUID spirit = Said.current();
         // The scheduler drops the wait if the player dies or leaves; this frees the player then.
         Restore.after(player.level(), config.integer("wait_ticks") + config.integer("cleanup_ticks"), force -> {
             WAITING.remove(owner);
@@ -447,7 +450,7 @@ final class Strangers {
             if (p.isSleeping()) {
                 p.getSleepingPos().ifPresent(pos -> bed[0] = pos);
             } else if (bed[0] != null) {
-                appear(p, bed[0], config);
+                appear(p, bed[0], config, spirit);
                 WAITING.remove(owner);
                 return false;
             }
@@ -459,7 +462,7 @@ final class Strangers {
         });
     }
 
-    private static void appear(ServerPlayer player, BlockPos bed, Config.Section config) {
+    private static void appear(ServerPlayer player, BlockPos bed, Config.Section config, @Nullable UUID spirit) {
         ServerLevel level = player.level();
         BlockPos spot = Place.near(player, bed, 1, config.integer("reach"), pos -> Place.floored(level, pos));
         if (spot == null) {
@@ -467,6 +470,7 @@ final class Strangers {
         }
         Mannequin figure = Figure.spawn(player, spot, Figure.stranger(player));
         if (figure != null) {
+            Director.landed(player, "bedside_figure", spirit);
             Restore.after(level, config.integer("stay_ticks"), force -> {
                 if (!force && figure.isAlive()) {
                     Haze.linger(player, figure.position(), LINGER_TICKS);

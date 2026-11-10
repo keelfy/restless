@@ -2,6 +2,7 @@ package dev.keelfy.restless.haunt.event;
 
 import com.mojang.datafixers.util.Pair;
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.effect.DimPayload;
 import dev.keelfy.restless.haunt.event.kit.Nearby;
@@ -10,11 +11,13 @@ import dev.keelfy.restless.haunt.event.kit.Place;
 import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
 import dev.keelfy.restless.haunt.event.kit.Walk;
 import dev.keelfy.restless.haunt.event.kit.Where;
+import dev.keelfy.restless.haunt.recall.Said;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import net.minecraft.core.BlockPos;
@@ -110,7 +113,7 @@ final class Sightings {
                         player -> herd(player).size() >= minCows(),
                         Sightings::cowHerd),
                 // 417: a figure stands far off, but only in the spyglass
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         "spyglass_figure", EventTag.PRESENCE, Sightings::hasSpyglass, Sightings::spyglassFigure),
                 // 491: in a storm, each flash of lightning finds a figure standing closer
                 SimpleEvent.light(
@@ -548,6 +551,7 @@ final class Sightings {
         int interval = config.integer("interval_ticks");
         PacketEntity[] figure = {null};
         int[] shown = {0};
+        UUID spirit = Said.current();
         Scheduler.repeat(player, interval, interval, (p, n) -> {
             if (p.level() != level) {
                 return false;
@@ -566,6 +570,7 @@ final class Sightings {
                     if (y != null) {
                         Vec3 at = new Vec3(x, y, z);
                         figure[0] = PacketEntity.show(p, type, at, yawToPlayer(p, at));
+                        Director.landed(p, "spyglass_figure", spirit);
                     }
                 }
                 return true;

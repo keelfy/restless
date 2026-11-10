@@ -13,6 +13,7 @@ Paths below are under `apps/mod/core/src/main/java/dev/keelfy/restless/haunt/` u
 | Registry: 6 class events + `Catalog`, then scenarios | `event/HauntEvents.java` |
 | Theme groups (each has `static List<HauntEvent> all()`) | `event/Catalog.java` → `event/<Group>.java` |
 | Lambda event helper (`SimpleEvent.light` / `.harmful`) | `event/kit/SimpleEvent.java` |
+| Events that wait for the player (`SimpleEvent.waiting`, `HauntEvent.waits`): counted by `Director.landed` when the scare comes, not when they start | `dream`, `sleepwalk`, `bedside_figure`, `cracked_mirror`, `spyglass_figure`, `mirror_names`, `jolt_behind`, `jolt_side`, `jolt_lunge`, and the ones in `Scares.java` except `hide` |
 | Tier: `LIGHT` scare / `HARMFUL` hurts | `event/HauntTier.java` |
 | Tags (spirit affinity, wiki category) | `event/EventTag.java` |
 | Picks which event runs | `Director.java` |

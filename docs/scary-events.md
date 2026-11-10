@@ -38,7 +38,8 @@ What every idea here must respect:
 4. **If ignored, the event ends quietly** after `max_ticks`, or when the player walks farther than `leave_distance`.
 5. **Some lures end with nothing (duds).** `dud_chance` about 0.3, so a rustle is not always a scare.
 6. **The jump-scare pause counts from the scare, not from the roll.** An ignored or dud lure does not use up
-   `startle_gap_ticks` (not built: `Director.fire` still starts the pause on the roll).
+   `startle_gap_ticks`. Built: an event that waits (`HauntEvent.waits`) calls `Director.landed` when its scare comes,
+   and only then do the history, the pause, the menace band and the sanity loss count it.
 7. **Only this player sees or hears it.** The server keeps nothing.
 8. **Escalation.** A young spirit's silhouette only shows far off (`tree_line`, `path_blocker`); as it ages it comes
    closer (`slow_turn`, `stairs_sitter`); at its peak, jump scares and harm (`dragged`, `hold_still`, `hide`).

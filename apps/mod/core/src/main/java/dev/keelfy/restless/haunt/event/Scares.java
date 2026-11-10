@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.client.SilhouetteRenderer;
+import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.event.kit.Nearby;
@@ -12,6 +13,7 @@ import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
 import dev.keelfy.restless.haunt.event.kit.Swaps;
 import dev.keelfy.restless.haunt.event.kit.Taken;
 import dev.keelfy.restless.haunt.harm.Band;
+import dev.keelfy.restless.haunt.recall.Said;
 import dev.keelfy.restless.state.Session;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -48,8 +50,12 @@ import org.jspecify.annotations.Nullable;
  * player themselves for a while.
  */
 public final class Scares {
-    /** What the player is waiting to do, until {@code lapse} (game time); {@code step} counts echoes already given. */
-    private record Mark(String id, long lapse, int step) {}
+    /**
+     * What the player is waiting to do, until {@code lapse} (game time); {@code step} counts echoes already given;
+     * {@code spirit} is the one that rolled it.
+     */
+    private record Mark(
+            String id, long lapse, int step, @Nullable UUID spirit) {}
 
     private static final Map<UUID, Mark> MARKS = Session.SERVER.keep(new ConcurrentHashMap<>());
 
@@ -58,43 +64,44 @@ public final class Scares {
     static List<HauntEvent> all() {
         return List.of(
                 // A wall block at eye level is broken: behind it, in the hole, a face.
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         "mined_face",
                         EventTag.PRESENCE,
                         player -> canArm(player) && underground(player),
                         player -> arm(player, "mined_face")),
                 // A floor block beside the player is broken: a figure lies in the hole, face up.
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         "dig_down",
                         EventTag.PRESENCE,
                         player -> canArm(player) && underground(player),
                         player -> arm(player, "dig_down")),
                 // The next meal ends with a figure right ahead.
-                SimpleEvent.light("eating", EventTag.PRESENCE, Scares::canArm, player -> arm(player, "eating")),
+                SimpleEvent.waiting("eating", EventTag.PRESENCE, Scares::canArm, player -> arm(player, "eating")),
                 // A chest, furnace or table left open a while, closed: a figure right ahead.
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         "container_close",
                         EventTag.PRESENCE,
                         player -> Nearby.any(player, "container_close", Scares::container),
                         Scares::watchContainer),
                 // A figure far off turns a little each time the player looks away; the last time it is behind them.
-                SimpleEvent.light("slow_turn", EventTag.PRESENCE, player -> farSpot(player) != null, Scares::slowTurn),
+                SimpleEvent.waiting(
+                        "slow_turn", EventTag.PRESENCE, player -> farSpot(player) != null, Scares::slowTurn),
                 // Every block broken in a cave is answered from nearer, the fourth from right behind.
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         "echo_answer",
                         EventTag.PRESENCE,
                         player -> canArm(player) && underground(player),
                         player -> arm(player, "echo_answer")),
                 // A whisper to one side; turn to it, and a figure is on the other.
-                SimpleEvent.light("name_left_right", EventTag.PRESENCE, SimpleEvent.ALWAYS, Scares::nameLeftRight),
+                SimpleEvent.waiting("name_left_right", EventTag.PRESENCE, SimpleEvent.ALWAYS, Scares::nameLeftRight),
                 // A door the player closes flies open on a figure.
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         "door_slam_face",
                         EventTag.PRESENCE,
                         player -> Nearby.any(player, "door_slam_face", s -> s.getBlock() instanceof DoorBlock),
                         Scares::watchDoors),
                 // The next torch put up in a dark cave lights a figure.
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         "first_light",
                         EventTag.PRESENCE,
                         player -> canArm(player) && underground(player),
@@ -123,7 +130,7 @@ public final class Scares {
 
     private static void arm(ServerPlayer player, String id) {
         long lapse = player.level().getGameTime() + Config.event(id).integer("max_ticks");
-        MARKS.put(player.getUUID(), new Mark(id, lapse, 0));
+        MARKS.put(player.getUUID(), new Mark(id, lapse, 0, Said.current()));
     }
 
     private static @Nullable Mark current(ServerPlayer player) {
@@ -147,8 +154,8 @@ public final class Scares {
             return;
         }
         boolean spent = switch (mark.id) {
-            case "mined_face" -> minedFace(player, state, pos);
-            case "dig_down" -> digDown(player, pos);
+            case "mined_face" -> minedFace(player, state, pos, mark.spirit);
+            case "dig_down" -> digDown(player, pos, mark.spirit);
             case "echo_answer" -> echo(player, state, mark);
             default -> false;
         };
@@ -168,6 +175,7 @@ public final class Scares {
                 Place.standingAhead(player, config.num("distance"), config.num("min_angle"), config.num("max_angle"));
         if (spot != null) {
             MARKS.remove(player.getUUID());
+            Director.landed(player, "eating", mark.spirit);
             flash(player, Vec3.atBottomCenterOf(spot), -1, config.tone("sound"), config.integer("hold_ticks"));
         }
     }
@@ -191,6 +199,7 @@ public final class Scares {
             BlockPos spot =
                     Place.standingAhead(p, config.num("distance"), config.num("min_angle"), config.num("max_angle"));
             if (spot != null) {
+                Director.landed(p, "first_light", mark.spirit);
                 flash(p, Vec3.atBottomCenterOf(spot), -1, null, config.integer("hold_ticks"));
             }
         });
@@ -214,7 +223,7 @@ public final class Scares {
         Scheduler.later(player, hold, figure::remove);
     }
 
-    private static boolean minedFace(ServerPlayer player, BlockState state, BlockPos pos) {
+    private static boolean minedFace(ServerPlayer player, BlockState state, BlockPos pos, @Nullable UUID spirit) {
         Config.Section config = Config.event("mined_face");
         ServerLevel level = player.level();
         Direction toward = Direction.fromYRot(player.getYRot());
@@ -233,12 +242,13 @@ public final class Scares {
         int hold = config.integer("hold_ticks");
         Scheduler.later(player, 1, p -> {
             Swaps.show(p, List.of(behind, deep), Blocks.AIR.defaultBlockState(), hold + 2);
+            Director.landed(p, "mined_face", spirit);
             flash(p, Vec3.atBottomCenterOf(behind), SilhouetteRenderer.FACE, config.tone("sound"), hold);
         });
         return true;
     }
 
-    private static boolean digDown(ServerPlayer player, BlockPos pos) {
+    private static boolean digDown(ServerPlayer player, BlockPos pos, @Nullable UUID spirit) {
         Config.Section config = Config.event("dig_down");
         ServerLevel level = player.level();
         double away = Math.hypot(pos.getX() + 0.5 - player.getX(), pos.getZ() + 0.5 - player.getZ());
@@ -262,6 +272,7 @@ public final class Scares {
         int hold = config.integer("hold_ticks");
         Scheduler.later(player, 1, p -> {
             Swaps.show(p, hollow, Blocks.AIR.defaultBlockState(), hold + 2);
+            Director.landed(p, "dig_down", spirit);
             flash(p, Vec3.atBottomCenterOf(pit), SilhouetteRenderer.LYING, config.tone("sound"), hold);
         });
         return true;
@@ -280,16 +291,18 @@ public final class Scares {
             config.num("behind_distance")
         };
         boolean last = mark.step == far.length - 1;
-        Scheduler.later(
-                player,
-                config.integer("delay_ticks"),
-                p -> Nearby.sound(
-                        p,
-                        state.getSoundType().getBreakSound(),
-                        last ? Nearby.around(p, far[mark.step], 180) : Nearby.randomAround(p, far[mark.step]),
-                        config.tone("sound")));
+        Scheduler.later(player, config.integer("delay_ticks"), p -> {
+            if (mark.step == 0) {
+                Director.landed(p, "echo_answer", mark.spirit);
+            }
+            Nearby.sound(
+                    p,
+                    state.getSoundType().getBreakSound(),
+                    last ? Nearby.around(p, far[mark.step], 180) : Nearby.randomAround(p, far[mark.step]),
+                    config.tone("sound"));
+        });
         if (!last) {
-            MARKS.put(player.getUUID(), new Mark(mark.id, mark.lapse, mark.step + 1));
+            MARKS.put(player.getUUID(), new Mark(mark.id, mark.lapse, mark.step + 1, mark.spirit));
         }
         return last;
     }
@@ -304,6 +317,7 @@ public final class Scares {
     private static void watchContainer(ServerPlayer player) {
         Config.Section config = Config.event("container_close");
         ServerLevel level = player.level();
+        UUID spirit = Said.current();
         int[] open = {0};
         Scheduler.repeat(player, 1, 1, (p, n) -> {
             if (p.level() != level || n >= config.integer("max_ticks")) {
@@ -324,6 +338,7 @@ public final class Scares {
                         p, config.num("distance") + extra, config.num("min_angle"), config.num("max_angle"));
             }
             if (spot != null) {
+                Director.landed(p, "container_close", spirit);
                 flash(p, Vec3.atBottomCenterOf(spot), -1, config.tone("sound"), config.integer("hold_ticks"));
             }
             return false;
@@ -347,6 +362,7 @@ public final class Scares {
             return;
         }
         ServerLevel level = player.level();
+        UUID spirit = Said.current();
         Vec3 at = Vec3.atBottomCenterOf(spot);
         float[] yaw = {PacketEntity.yawToward(at, player.position()) + 180.0F};
         PacketEntity figure = PacketEntity.show(player, Content.SILHOUETTE.get(), at, yaw[0]);
@@ -378,7 +394,8 @@ public final class Scares {
             if (struck) {
                 BlockPos behind = Place.standingAhead(p, config.num("behind_distance"), 150, 180);
                 if (behind != null) {
-                    Jolts.show(p, config, behind, true, config.integer("wait_ticks"));
+                    Director.landed(p, "slow_turn", spirit);
+                    Jolts.show(p, config, behind, true, config.integer("wait_ticks"), null);
                 }
             }
             return !over;
@@ -388,6 +405,7 @@ public final class Scares {
     private static void nameLeftRight(ServerPlayer player) {
         Config.Section config = Config.event("name_left_right");
         ServerLevel level = player.level();
+        UUID spirit = Said.current();
         int side = player.getRandom().nextBoolean() ? 1 : -1;
         float yaw = player.getYRot();
         Vec3 whisper = Nearby.around(player, config.num("side_distance"), side * 90.0);
@@ -398,6 +416,7 @@ public final class Scares {
             if (side * Mth.wrapDegrees(p.getYRot() - yaw) >= config.num("turn_degrees")) {
                 BlockPos spot = Place.standingAt(p, config.num("distance"), -side * config.num("angle"));
                 if (spot != null) {
+                    Director.landed(p, "name_left_right", spirit);
                     flash(p, Vec3.atBottomCenterOf(spot), -1, config.tone("bang"), config.integer("hold_ticks"));
                 }
                 return false;
@@ -421,6 +440,7 @@ public final class Scares {
     private static void watchDoors(ServerPlayer player) {
         Config.Section config = Config.event("door_slam_face");
         ServerLevel level = player.level();
+        UUID spirit = Said.current();
         Set<BlockPos> open = openDoors(player);
         Scheduler.repeat(player, 2, 2, (p, n) -> {
             if (p.level() != level || n * 2 >= config.integer("max_ticks")) {
@@ -428,7 +448,7 @@ public final class Scares {
             }
             Set<BlockPos> now = openDoors(p);
             for (BlockPos pos : open) {
-                if (!now.contains(pos) && slammed(p, pos, config)) {
+                if (!now.contains(pos) && slammed(p, pos, config, spirit)) {
                     return false;
                 }
             }
@@ -439,7 +459,7 @@ public final class Scares {
     }
 
     /** The door at {@code pos} has just shut near the player: it shows open, with a figure standing in it. */
-    private static boolean slammed(ServerPlayer player, BlockPos pos, Config.Section config) {
+    private static boolean slammed(ServerPlayer player, BlockPos pos, Config.Section config, @Nullable UUID spirit) {
         ServerLevel level = player.level();
         BlockState lower = level.getBlockState(pos);
         BlockState upper = level.getBlockState(pos.above());
@@ -460,6 +480,7 @@ public final class Scares {
                 .multiply(1, 0, 1)
                 .normalize();
         Vec3 at = Vec3.atBottomCenterOf(pos).add(away.scale(0.6));
+        Director.landed(player, "door_slam_face", spirit);
         flash(player, at, -1, config.tone("sound"), hold);
         return true;
     }

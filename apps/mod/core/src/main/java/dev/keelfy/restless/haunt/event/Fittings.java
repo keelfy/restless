@@ -4,12 +4,14 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Decal;
 import dev.keelfy.restless.content.block.Prop;
+import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.event.kit.Nearby;
 import dev.keelfy.restless.haunt.event.kit.Place;
 import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
+import dev.keelfy.restless.haunt.recall.Said;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -122,7 +125,7 @@ final class Fittings {
                                         || !floorSpots(player, BLACK_CANDLE).isEmpty()),
                         Fittings::lightBlackCandle),
                 // 510: a cracked mirror on a wall; when the player looks into it someone stands behind them
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         CRACKED_MIRROR,
                         EventTag.BLOCKS,
                         player -> Household.indoors(player) && !walls(player).isEmpty(),
@@ -639,11 +642,13 @@ final class Fittings {
         clear(level, wait + figure + config.integer("linger_ticks"), () -> pos, mirror.getBlock());
         int step = config.integer("look_interval");
         double near = config.num("look_distance");
+        UUID spirit = Said.current();
         Scheduler.repeat(player, step, step, (p, n) -> {
             if (!level.getBlockState(pos).is(mirror.getBlock())) {
                 return false;
             }
             if (watched(p, pos, config.num("look_degrees")) && p.distanceToSqr(Vec3.atCenterOf(pos)) <= near * near) {
+                Director.landed(p, CRACKED_MIRROR, spirit);
                 Restore.quiet(level, pos, mirror.setValue(Decal.Mirror.FIGURE, true));
                 blip(level, pos, HauntSounds.MIRROR_CRACK, tone);
                 Scheduler.later(p, figure, q -> {

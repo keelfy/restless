@@ -15,8 +15,18 @@ public record SimpleEvent(
         HauntTier tier,
         Set<EventTag> tags,
         Predicate<ServerPlayer> condition,
-        Consumer<ServerPlayer> action)
+        Consumer<ServerPlayer> action,
+        boolean waits)
         implements HauntEvent {
+    public SimpleEvent(
+            Identifier id,
+            HauntTier tier,
+            Set<EventTag> tags,
+            Predicate<ServerPlayer> condition,
+            Consumer<ServerPlayer> action) {
+        this(id, tier, tags, condition, action, false);
+    }
+
     /** The condition of an event that has something to act on wherever the player is. */
     public static final Predicate<ServerPlayer> ALWAYS = player -> true;
 
@@ -25,9 +35,26 @@ public record SimpleEvent(
         return new SimpleEvent(Identifier.parse(id), HauntTier.LIGHT, Set.of(tag), condition, action);
     }
 
+    /** A light event whose scare comes later; its action calls {@code Director.landed} when it does. */
+    public static SimpleEvent waiting(
+            String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
+        return new SimpleEvent(Identifier.parse(id), HauntTier.LIGHT, Set.of(tag), condition, action, true);
+    }
+
+    /** A harmful event whose scare comes later; its action calls {@code Director.landed} when it does. */
+    public static SimpleEvent waitingHarmful(
+            String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
+        return new SimpleEvent(Identifier.parse(id), HauntTier.HARMFUL, Set.of(tag), condition, action, true);
+    }
+
     public static SimpleEvent harmful(
             String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
         return new SimpleEvent(Identifier.parse(id), HauntTier.HARMFUL, Set.of(tag), condition, action);
+    }
+
+    @Override
+    public boolean waits() {
+        return waits;
     }
 
     @Override

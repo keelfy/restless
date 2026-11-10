@@ -4,6 +4,7 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Earshot;
+import dev.keelfy.restless.haunt.History;
 import dev.keelfy.restless.haunt.event.HauntEvent;
 import dev.keelfy.restless.haunt.event.HauntEvents;
 import dev.keelfy.restless.haunt.event.kit.Figure;
@@ -1431,6 +1432,13 @@ final class HauntEventGameTests {
                                 helper,
                                 !data.notebook(dreamer[0].getUUID()).notes().isEmpty(),
                                 "dream must write the dream in the journal on waking");
+                        check(
+                                helper,
+                                History.last(dreamer[0].getName().getString(), 100).stream()
+                                                .filter(e -> e.event().equals("minecraft:dream"))
+                                                .count()
+                                        == 1,
+                                "dream must count as run once the dreamer wakes");
                         data.put(dreamer[0].getUUID(), List.of());
                     });
         });

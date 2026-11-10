@@ -4,12 +4,14 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.divine.Candle;
 import dev.keelfy.restless.divine.Sense;
+import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.event.kit.Nearby;
 import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
+import dev.keelfy.restless.haunt.recall.Said;
 import dev.keelfy.restless.haunt.scenario.ScenarioContext;
 import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.state.HauntData;
@@ -77,7 +79,10 @@ public final class Machines {
 
     private static final Map<UUID, Line> SAID = Session.SERVER.keep(new ConcurrentHashMap<>());
     /** Who the mirror is to name on its next use, and until when (game time). */
-    private static final Map<UUID, Long> MIRROR = Session.SERVER.keep(new ConcurrentHashMap<>());
+    /** A mirror a spirit has marked: until when, and the spirit that did. */
+    private record Armed(long until, @Nullable UUID spirit) {}
+
+    private static final Map<UUID, Armed> MIRROR = Session.SERVER.keep(new ConcurrentHashMap<>());
 
     /** Where a golem's item goes. */
     private record Move(ChestBlockEntity from, int slot, ChestBlockEntity to) {}
@@ -124,7 +129,7 @@ public final class Machines {
                         player -> !holyWater(player, false).isEmpty(),
                         Machines::cloud),
                 // 535: the next time the mirror is used it shows the spirit's name
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         "mirror_names",
                         EventTag.ITEMS,
                         player -> !MIRROR.containsKey(player.getUUID())
@@ -542,14 +547,14 @@ public final class Machines {
 
     private static void armMirror(ServerPlayer player) {
         Config.Section config = Config.event("mirror_names");
-        MIRROR.put(player.getUUID(), player.level().getGameTime() + config.integer("ticks"));
+        MIRROR.put(player.getUUID(), new Armed(player.level().getGameTime() + config.integer("ticks"), Said.current()));
         Nearby.sound(player, HauntSounds.MIRROR_RING, player.position(), config.tone("sound"));
     }
 
     /** Altar hook: the mirror was just used. If a spirit has marked it, it shows that spirit's name, once. */
     public static void mirrorUsed(ServerPlayer player) {
-        Long until = MIRROR.remove(player.getUUID());
-        if (until == null || until < player.level().getGameTime()) {
+        Armed armed = MIRROR.remove(player.getUUID());
+        if (armed == null || armed.until() < player.level().getGameTime()) {
             return;
         }
         List<Sense.Spirit> spirits =
@@ -560,5 +565,6 @@ public final class Machines {
         String name = Story.of(spirits.get(0).haunting().seed()).name();
         player.sendSystemMessage(Component.translatable("message.restless.mirror_name", name)
                 .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+        Director.landed(player, "mirror_names", armed.spirit());
     }
 }

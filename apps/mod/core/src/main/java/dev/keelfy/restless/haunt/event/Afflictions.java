@@ -3,10 +3,12 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.divine.Divination;
 import dev.keelfy.restless.divine.Sense;
+import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.event.kit.Place;
 import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
+import dev.keelfy.restless.haunt.recall.Said;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.sanity.Sanity;
@@ -144,7 +146,7 @@ final class Afflictions {
                 SimpleEvent.light("drift", EventTag.AFFLICTION, player -> player.onGround(), Afflictions::drift),
                 // 173: no dream until the player sleeps; they wake to a line, in chat and in the journal, from a spirit
                 // near them
-                SimpleEvent.light(
+                SimpleEvent.waiting(
                         "dream",
                         EventTag.AFFLICTION,
                         player -> !DREAMERS.contains(player.getUUID())
@@ -163,7 +165,7 @@ final class Afflictions {
                                 player.getStats().setValue(player, Stats.CUSTOM.get(Stats.TIME_SINCE_REST), SLEEPLESS)),
                 // 172: no walk until the player sleeps through; they wake on safe ground some way off, outdoors if it
                 // can be found
-                SimpleEvent.harmful(
+                SimpleEvent.waitingHarmful(
                         "sleepwalk",
                         EventTag.AFFLICTION,
                         player -> !SLEEPWALKERS.contains(player.getUUID()),
@@ -189,12 +191,14 @@ final class Afflictions {
         DREAMERS.add(player.getUUID());
         int interval = config.integer("interval_ticks");
         boolean[] slept = {false};
+        UUID rolledBy = Said.current();
         Scheduler.repeat(player, 0, interval, (p, n) -> {
             if (p.isSleeping()) {
                 slept[0] = true;
             } else if (slept[0]) {
                 p.sendSystemMessage(line);
                 Journal.note(p, Notebook.Kind.DREAM, spirit.haunting(), line);
+                Director.landed(p, "dream", rolledBy);
                 DREAMERS.remove(p.getUUID());
                 return false;
             }
@@ -214,6 +218,7 @@ final class Afflictions {
         SLEEPWALKERS.add(player.getUUID());
         int interval = config.integer("interval_ticks");
         int[] slept = {0};
+        UUID spirit = Said.current();
         Scheduler.repeat(player, 0, interval, (p, n) -> {
             if (p.isSleeping()) {
                 slept[0] += interval;
@@ -229,6 +234,7 @@ final class Afflictions {
                             p.getRandom().nextFloat() * 360.0F,
                             p.getXRot(),
                             true);
+                    Director.landed(p, "sleepwalk", spirit);
                 }
                 SLEEPWALKERS.remove(p.getUUID());
                 return false;

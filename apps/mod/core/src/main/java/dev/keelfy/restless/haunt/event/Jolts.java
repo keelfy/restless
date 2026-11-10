@@ -4,13 +4,18 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.client.SilhouetteRenderer;
 import dev.keelfy.restless.content.entity.Silhouette;
+import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.event.kit.Nearby;
 import dev.keelfy.restless.haunt.event.kit.PacketEntity;
 import dev.keelfy.restless.haunt.event.kit.Place;
 import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
+import dev.keelfy.restless.haunt.recall.Said;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -40,12 +45,15 @@ final class Jolts {
                 // 538: in a dark spot ahead, the figure and the bang at the same instant
                 jolt("jolt_dark", false),
                 // 539: a faint rustle in the dark out of sight; come close and the figure is in your face at once
-                SimpleEvent.light("jolt_lunge", EventTag.PRESENCE, player -> lair(player) != null, Jolts::ambush));
+                SimpleEvent.waiting("jolt_lunge", EventTag.PRESENCE, player -> lair(player) != null, Jolts::ambush));
     }
 
     private static HauntEvent jolt(String id, boolean waits) {
-        return SimpleEvent.light(
-                id, EventTag.PRESENCE, player -> spot(player, id) != null, player -> scare(player, id, waits));
+        Predicate<ServerPlayer> condition = player -> spot(player, id) != null;
+        Consumer<ServerPlayer> action = player -> scare(player, id, waits);
+        return waits
+                ? SimpleEvent.waiting(id, EventTag.PRESENCE, condition, action)
+                : SimpleEvent.light(id, EventTag.PRESENCE, condition, action);
     }
 
     /** Standing room at the event's distance and angles; where it has a {@code dark_max}, no brighter than that. */
@@ -62,21 +70,35 @@ final class Jolts {
 
     /**
      * The bang and the figure at the same spot. With {@code waits} the figure is unseen until the player looks at it
-     * (and goes unseen after {@code max_ticks}); it is gone {@code hold_ticks} after the player first sees it.
+     * (and goes unseen after {@code max_ticks}); it is gone {@code hold_ticks} after the player first sees it, and that
+     * is when the event counts as having run.
      */
     private static void scare(ServerPlayer player, String id, boolean waits) {
         Config.Section config = Config.event(id);
         BlockPos spot = spot(player, id);
         if (spot != null) {
-            show(player, config, spot, waits, config.integer("max_ticks"));
+            UUID spirit = Said.current();
+            show(
+                    player,
+                    config,
+                    spot,
+                    waits,
+                    config.integer("max_ticks"),
+                    waits ? p -> Director.landed(p, id, spirit) : null);
         }
     }
 
     /**
      * {@link #scare} at a spot already found, unseen for at most {@code maxTicks}; reads {@code sound},
-     * {@code look_angle} and {@code hold_ticks}.
+     * {@code look_angle} and {@code hold_ticks}. {@code landed} runs when a waiting figure is first seen.
      */
-    static void show(ServerPlayer player, Config.Section config, BlockPos spot, boolean waits, int maxTicks) {
+    static void show(
+            ServerPlayer player,
+            Config.Section config,
+            BlockPos spot,
+            boolean waits,
+            int maxTicks,
+            @Nullable Consumer<ServerPlayer> landed) {
         ServerLevel level = player.level();
         Vec3 at = Vec3.atBottomCenterOf(spot);
         Nearby.sound(
@@ -91,6 +113,9 @@ final class Jolts {
         Scheduler.repeat(player, 1, 1, (p, n) -> {
             if (seen[0] < 0 && (!waits || watched(p, at.add(0, 1.0, 0), config.num("look_angle")))) {
                 seen[0] = n;
+                if (waits && landed != null) {
+                    landed.accept(p);
+                }
             }
             boolean over =
                     p.level() != level || seen[0] >= 0 && n - seen[0] >= config.integer("hold_ticks") || n >= maxTicks;
@@ -126,6 +151,7 @@ final class Jolts {
         if (lair == null) {
             return;
         }
+        UUID spirit = Said.current();
         ServerLevel level = player.level();
         Vec3 home = Vec3.atBottomCenterOf(lair);
         PacketEntity[] figure = {null};
@@ -147,6 +173,7 @@ final class Jolts {
                             p, Content.SILHOUETTE.get(), home, PacketEntity.yawToward(home, p.position()));
                     shape(p, figure[0]);
                     struck[0] = n;
+                    Director.landed(p, "jolt_lunge", spirit);
                 }
                 return true;
             }

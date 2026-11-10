@@ -48,6 +48,15 @@ public interface HauntEvent {
         return false;
     }
 
+    /**
+     * Whether {@link #run} only sets up a scare that comes later, when the player does something. Such an event counts
+     * as having run for the pacing ({@link dev.keelfy.restless.haunt.Director#landed}) only when its scare comes, not
+     * when it starts.
+     */
+    default boolean waits() {
+        return false;
+    }
+
     /** Whether {@link #canRun} is true wherever the player is. */
     default boolean always() {
         return false;

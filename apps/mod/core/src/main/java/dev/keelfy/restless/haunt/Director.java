@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -354,26 +355,51 @@ public final class Director {
     public static boolean fire(ServerPlayer player, HauntEvent event, @Nullable Vec3 at) {
         Restless.LOGGER.debug("Haunt {} -> {}", event.id(), player.getName().getString());
         Recent.record(player.getUUID(), event.id().toString(), repeatGap());
+        UUID speaker = Said.current();
+        if (!event.waits()) {
+            note(player, event, speaker);
+        }
+        boolean[] ran = {false};
+        Location.during(at, () -> ran[0] = Faults.run(event, player));
+        if (ran[0] && !event.waits()) {
+            felt(player, event);
+        }
+        return ran[0];
+    }
+
+    /**
+     * Call when the scare of a {@link HauntEvent#waits waiting} event comes: only now does it count as having run, for
+     * the history, the jump scare gap, the menace bands and sanity.
+     *
+     * @param spirit the spirit that rolled it, as {@code Said.current()} was when it started
+     */
+    public static void landed(ServerPlayer player, String id, @Nullable UUID spirit) {
+        HauntEvents.byId(Identifier.parse(id)).ifPresent(event -> {
+            note(player, event, spirit);
+            felt(player, event);
+        });
+    }
+
+    /** The event ran for the player: for the jump scare gap and /haunt history. */
+    private static void note(ServerPlayer player, HauntEvent event, @Nullable UUID spirit) {
         Startle.record(player, event);
         MinecraftServer server = player.level().getServer();
-        UUID speaker = Said.current();
         History.record(
                 server.overworld().getGameTime(),
                 player.getName().getString(),
                 event.id().toString(),
-                speaker == null
+                spirit == null
                         ? null
                         : HauntData.get(server)
-                                .find(speaker)
+                                .find(spirit)
                                 .map(Director::label)
                                 .orElse(null));
-        boolean[] ran = {false};
-        Location.during(at, () -> ran[0] = Faults.run(event, player));
-        if (ran[0]) {
-            Bands.fired(event, player);
-            Sanity.shock(player);
-        }
-        return ran[0];
+    }
+
+    /** The event ran for the player: what it costs them. */
+    private static void felt(ServerPlayer player, HauntEvent event) {
+        Bands.fired(event, player);
+        Sanity.shock(player);
     }
 
     /**
