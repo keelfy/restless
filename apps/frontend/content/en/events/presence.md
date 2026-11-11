@@ -4,7 +4,7 @@ title: Presence
 
 # Presence
 
-106 events.
+100 events.
 
 ## `dragon_flyover`
 
@@ -542,47 +542,11 @@ The next torch the player puts up in a dark cave (light level 3 or less at their
 
 Runs when: Underground, and no other waiting scare marked for the player
 
-## `behind_trunk`
-
-The next time the player breaks the bottom log of a tree trunk (a log above it, none below, within 5 blocks), a black figure stands on the ground right behind the gap, facing them, for 8 ticks, with a loud bang; the log above shows as open air meanwhile so that all of the figure can be seen. Only this player's client is told. A jump scare. Lapses after 5 min
-
-Runs when: A log within 10 blocks, and no other waiting scare marked for the player
-
 ## `hide`
 
 The action bar says "Hide" and a heartbeat sounds every second for 10 s. If the player moves more than 1 block, a black figure that was out of sight is at their face in 4 ticks with a loud bang and hits for 4 (it never takes them below the safe floor of the threat band). If they keep still, four heavy steps pass outside. A harmful event, so a lit omen candle warns of it
 
 Runs when: Underground, health above the safe floor and a margin, and standing room 5 blocks away
-
-## `third_person`
-
-The view pulls out behind the player's head for 3 s (as in `out_of_body`), and a black figure stands 1.6 blocks behind them in it. When the view snaps back, the figure is put there again with a loud bang, unseen until the player turns round, and gone 10 ticks after they see it. If they never turn it is gone after 6 s. Only this player's client is told. A jump scare
-
-Runs when: The player stands on the ground, and there is standing room 1.6 blocks behind them
-
-## `pit_face`
-
-While the player is on the ground within 3 blocks of a drop of 8 blocks or more and looks steeply down (60° below level or more), a black figure at the bottom rises to 1.5 blocks below their eyes in 5 ticks, with a loud bang as it arrives, and is gone 8 ticks later. Only this player's client is told. A jump scare. Watches for 5 min
-
-Runs when: On the ground, with a drop of at least 8 blocks within 3 blocks
-
-## `shield_knocks`
-
-A shield held up for 2 s with no hostile mob within 16 blocks is knocked on three times, 0.5 s apart, from 2.5 blocks ahead. When the player lowers it after that, a black figure stands 1.2 blocks ahead for 10 ticks, with a loud bang. Only this player's client is told. A jump scare. Watches for 5 min
-
-Runs when: A shield in either hand
-
-## `tree_line`
-
-A black figure stands 20 blocks ahead of the player in a spot no torch or lamp lights (block light level 7 or less). Each time the player looks at one and then away, another stands somewhere ahead of them, up to five. The look away after that removes them all and puts one 1.6 blocks behind the player, with a loud bang, unseen until they turn round, and gone 12 ticks after they see it. Watches for 2 min. Only this player's client is told. A jump scare
-
-Runs when: Overworld, at night, with a log within 16 blocks
-
-## `stairs_sitter`
-
-A flight of at least three stairs, 8 to 16 blocks away and in view, has a low black figure on its top step. When the player comes within 6 blocks of it, it is gone, and three heavy steps sound 2 blocks behind them, 0.4 s apart. Only this player's client is told. If they never come near it is gone after 1 min
-
-Runs when: A flight of three or more stairs in view 8–16 blocks away, with room on its top step
 
 ## `overnight_shrine`
 

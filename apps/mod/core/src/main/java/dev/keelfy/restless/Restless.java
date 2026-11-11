@@ -14,6 +14,7 @@ import dev.keelfy.restless.content.item.consumable.Consumables;
 import dev.keelfy.restless.divine.Candle;
 import dev.keelfy.restless.divine.Compass;
 import dev.keelfy.restless.divine.Divination;
+import dev.keelfy.restless.divine.Heard;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Earshot;
 import dev.keelfy.restless.haunt.Reactions;
@@ -231,16 +232,16 @@ public final class Restless {
 
     /** Call when a player says something in chat. */
     public static void onChat(ServerPlayer player, String line) {
-        Divination.ask(player, line);
+        Divination.ask(player, Heard.typed(line));
         Machines.said(player, line);
         Overheard.heard(player, line);
     }
 
     /**
      * Call when a player finishes a phrase on voice chat: a spirit box answers it as it does a chat line. {@code heard}
-     * is the phrase as speech recognition made it out, empty when it could not.
+     * is the phrase as speech recognition made it out, its line empty when it could not.
      */
-    public static void onVoice(ServerPlayer player, String heard) {
+    public static void onVoice(ServerPlayer player, Heard heard) {
         Divination.ask(player, heard);
     }
 

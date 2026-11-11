@@ -23,3 +23,7 @@ apps/frontend/next-env.d.ts
 
 # Logs
 logs/
+
+# Voice pipeline
+apps/voice/.venv/
+apps/voice/voices/

@@ -1969,7 +1969,8 @@ final class HauntEventGameTests {
                 dev.keelfy.restless.journal.JournalPayload.TYPE,
                 dev.keelfy.restless.banish.RequiemPayload.TYPE,
                 dev.keelfy.restless.debug.DebugPayload.TYPE,
-                dev.keelfy.restless.photo.ShutterPayload.TYPE)) {
+                dev.keelfy.restless.photo.ShutterPayload.TYPE,
+                dev.keelfy.restless.divine.SpiritBoxPayload.TYPE)) {
             channels.add(type.id());
         }
         return player;

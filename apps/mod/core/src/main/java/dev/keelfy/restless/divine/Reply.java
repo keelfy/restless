@@ -6,40 +6,59 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /**
  * What a spirit box says back to a line: the trait word, which is the clue, broken up by a few words that answer what
  * was asked, an echo of the asker's own word and static. Only the trait word tells anything about the spirit; the rest
- * never uses a trait word, so it cannot be read as one.
+ * never uses a trait word, so it cannot be read as one. Each part is shown and voiced: the clue and the answers by
+ * recorded clips, the echo in the asker's own voice when they spoke it.
  */
-public final class Reply {
+public record Reply(List<Part> parts) {
     private static final String SEPARATOR = "... ";
     /** Shorter words of a line are not worth echoing. */
     private static final int ECHO_LENGTH = 4;
 
     private static final int MOST_PARTS = 3;
+    private static final String HISS = "hiss";
 
-    private Reply() {}
+    /** One part: its text, and the clip that voices it or, for an echo, the asker's voice (empty when typed). */
+    public record Part(Component text, String voice, byte[] pcm) {
+        Part(Component text, String voice) {
+            this(text, voice, new byte[0]);
+        }
+    }
 
-    /** The answer to {@code line} around the clue {@code word}; an empty line gets the word with static at most. */
-    public static Component of(String line, Component word, Random random) {
+    /** No spirit has a voice: the box at {@code box} only hisses. */
+    public static SpiritBoxPayload hiss(BlockPos box) {
+        return new SpiritBoxPayload(box, List.of(new SpiritBoxPayload.Part(HISS, new byte[0])));
+    }
+
+    /**
+     * The answer to what was {@code heard} around the clue, the trait word {@code word}; an empty line gets the word
+     * with static at most.
+     */
+    public static Reply of(Heard heard, String word, Random random) {
         Config.Section config = Config.section("spirit_box");
-        List<String> said = words(line);
+        List<String> said = words(heard.line());
         Optional<Config.Section> question = question(config.section("questions"), said);
-        List<Component> parts = new ArrayList<>();
-        parts.add(word);
+        Part clue = new Part(Divination.word(word), "word." + word);
+        List<Part> parts = new ArrayList<>();
+        parts.add(clue);
         question.filter(q -> random.nextDouble() < config.num("answer_chance")).ifPresent(q -> {
             List<String> answers = q.texts("answers");
-            Component answer = answer(answers.get(random.nextInt(answers.size())));
-            parts.add(random.nextBoolean() ? 0 : 1, answer);
+            String id = answers.get(random.nextInt(answers.size()));
+            parts.add(random.nextBoolean() ? 0 : 1, new Part(answer(id), "answer." + id));
         });
         if (random.nextDouble() < config.num("glitch_chance")) {
             if (random.nextBoolean()) {
-                parts.add(parts.indexOf(word) + 1, word);
+                parts.add(parts.indexOf(clue) + 1, clue);
             } else {
-                parts.add(random.nextInt(parts.size() + 1), Component.translatable("spirit_box.restless.hiss"));
+                parts.add(
+                        random.nextInt(parts.size() + 1),
+                        new Part(Component.translatable("spirit_box.restless.hiss"), HISS));
             }
         }
         List<String> echoes = said.stream()
@@ -47,14 +66,34 @@ public final class Reply {
                         && question.map(q -> !heard(q, w)).orElse(true))
                 .toList();
         if (parts.size() < MOST_PARTS && !echoes.isEmpty() && random.nextDouble() < config.num("echo_chance")) {
-            parts.addFirst(Component.literal(echo(echoes.get(random.nextInt(echoes.size())), random)));
+            String echo = echoes.get(random.nextInt(echoes.size()));
+            int how = random.nextInt(Echo.WAYS);
+            short[] voice = heard.words().get(echo);
+            parts.addFirst(new Part(
+                    Component.literal(Echo.text(echo, how)),
+                    HISS,
+                    voice == null ? new byte[0] : Echo.voice(voice, heard.rate(), how, random)));
         }
+        return new Reply(List.copyOf(parts));
+    }
+
+    /** The parts, shown one after another. */
+    public Component text() {
         MutableComponent out = Component.empty();
         for (int i = 0; i < parts.size(); i++) {
             out.append(i == 0 ? Component.empty() : Component.literal(SEPARATOR))
-                    .append(parts.get(i));
+                    .append(parts.get(i).text());
         }
         return out;
+    }
+
+    /** The parts, voiced by the box at {@code box}. */
+    public SpiritBoxPayload voice(BlockPos box) {
+        return new SpiritBoxPayload(
+                box,
+                parts.stream()
+                        .map(p -> new SpiritBoxPayload.Part(p.voice(), p.pcm()))
+                        .toList());
     }
 
     /** The first question, in config order, one of whose words was said. */
@@ -89,15 +128,6 @@ public final class Reply {
             }
         }
         return out;
-    }
-
-    /** The asker's word as the box mangles it: cut short, stuttered or as it was. */
-    private static String echo(String word, Random random) {
-        return switch (random.nextInt(3)) {
-            case 0 -> word.substring(0, word.length() / 2 + 1) + "—";
-            case 1 -> word.charAt(0) + "-" + word;
-            default -> word;
-        };
     }
 
     /** An answer in the listener's language; one added in config without a translation stays as written. */

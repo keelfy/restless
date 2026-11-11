@@ -20,6 +20,7 @@ import dev.keelfy.restless.content.entity.AshFootprint;
 import dev.keelfy.restless.content.entity.RagEntity;
 import dev.keelfy.restless.content.entity.SightingMark;
 import dev.keelfy.restless.content.entity.Silhouette;
+import dev.keelfy.restless.divine.client.SpiritBoxVoice;
 import dev.keelfy.restless.haunt.effect.client.Dimming;
 import dev.keelfy.restless.haunt.effect.client.HeadTurn;
 import dev.keelfy.restless.haunt.effect.client.RedVignette;
@@ -41,6 +42,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
@@ -59,6 +61,11 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 @EventBusSubscriber(modid = Restless.MOD_ID, value = Dist.CLIENT)
 public final class RestlessNeoForgeClient {
     private RestlessNeoForgeClient() {}
+
+    @SubscribeEvent
+    public static void tick(ClientTickEvent.Post event) {
+        SpiritBoxVoice.tick();
+    }
 
     @SubscribeEvent
     public static void registerLayers(RegisterGuiLayersEvent event) {

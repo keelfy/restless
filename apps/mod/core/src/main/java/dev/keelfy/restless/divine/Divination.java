@@ -169,36 +169,50 @@ public final class Divination {
 
     /** Whether a spirit box is close enough to the player to hear them. */
     public static boolean listening(ServerPlayer player) {
-        boolean[] near = {false};
+        return box(player).isPresent();
+    }
+
+    /** The spirit box nearest the player that hears them. */
+    private static Optional<BlockPos> box(ServerPlayer player) {
+        BlockPos[] nearest = {null};
         Scan.each(
                 player.level(),
                 player.blockPosition(),
                 Config.section("spirit_box").integer("radius"),
-                (pos, state) -> near[0] |= state.is(Content.SPIRIT_BOX.get()));
-        return near[0];
+                (pos, state) -> {
+                    if (state.is(Content.SPIRIT_BOX.get())
+                            && (nearest[0] == null
+                                    || pos.distSqr(player.blockPosition())
+                                            < nearest[0].distSqr(player.blockPosition()))) {
+                        nearest[0] = pos.immutable();
+                    }
+                });
+        return Optional.ofNullable(nearest[0]);
     }
 
     /**
-     * Called when a player says {@code line}: a spirit box close by answers a moment later, or hisses when no spirit
-     * has a voice. The answer bears one word of a trait; what was asked only changes the words around it, see
+     * Called when a player says something: a spirit box close by answers a moment later, aloud, or hisses when no
+     * spirit has a voice. The answer bears one word of a trait; what was asked only changes the words around it, see
      * {@link Reply}. A line that could not be made out is empty.
      */
-    public static void ask(ServerPlayer player, String line) {
+    public static void ask(ServerPlayer player, Heard heard) {
         Config.Section config = Config.section("spirit_box");
-        if (!listening(player)) {
+        Optional<BlockPos> box = box(player);
+        if (box.isEmpty()) {
             return;
         }
         Optional<Reading> reading = read(player, Clue.VOICE);
-        Optional<Component> word = reading.map(r ->
-                word(r.trait().words().get(r.random().nextInt(r.trait().words().size()))));
-        Component answer = word.<Component>map(w -> Component.translatable(
-                        "message.restless.spirit_box",
-                        Reply.of(line, w, reading.get().random())))
+        Optional<String> word = reading.map(
+                r -> r.trait().words().get(r.random().nextInt(r.trait().words().size())));
+        Optional<Reply> reply = word.map(w -> Reply.of(heard, w, reading.get().random()));
+        Component answer = reply.<Component>map(r -> Component.translatable("message.restless.spirit_box", r.text()))
                 .orElse(Component.translatable("message.restless.spirit_box_static"));
+        SpiritBoxPayload voice = reply.map(r -> r.voice(box.get())).orElse(Reply.hiss(box.get()));
         Scheduler.later(player, config.integer("delay_ticks"), p -> {
             p.sendSystemMessage(answer);
+            p.connection.send(new ClientboundCustomPayloadPacket(voice));
             word.ifPresent(w ->
-                    Journal.note(p, Notebook.Kind.VOICE, reading.get().spirit().haunting(), w));
+                    Journal.note(p, Notebook.Kind.VOICE, reading.get().spirit().haunting(), word(w)));
         });
         // Only the shaken hear where the spirit lies; rounded, so the grave still has to be looked for.
         Optional<BlockPos> grave = reading.filter(r -> Sanity.shaken(player))

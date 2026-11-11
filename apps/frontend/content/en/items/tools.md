@@ -12,7 +12,7 @@ A spirit you **sense** is one of your own personal spirits, or a territorial spi
 | --- | --- |
 | [Ash](#ash) | shows one trait of a spirit as a print; never lies |
 | [Camera Obscura](#camera-obscura) | photographs a spirit: its type |
-| [Spirit Box](#spirit-box) | answers what you ask around a clue word; may lie |
+| [Spirit Box](#spirit-box) | answers aloud what you ask around a clue word; may lie |
 | [Ouija Board](#ouija-board) | spells out a trait; may lie |
 | [Spirit Candle](#spirit-candle) | its flame leans to the spirit that acts next |
 | [Spirit Compass](#spirit-compass) | its needle points at the nearest spirit |
@@ -62,6 +62,7 @@ Iron ingot + glass pane + black dye. Use it: a flash, and a **Photograph** of on
 Iron ingot + redstone + note block. Place it: it faces you. It listens for a chat line, or a phrase said over Plasmo Voice if that mod is present, from a player within **6 blocks** of it.
 
 - **2 seconds** later it answers in chat, in your language, with one word of a trait of a spirit you sense, e.g. `<Spirit Box> dark`. With no spirit to sense it answers `...static...`.
+- **It speaks.** Only you hear the answer, from the box, one word after another in a whisper through a broken radio (English, or Russian if your game is in Russian), with static between. The chat line is its subtitle.
 - **It hears what you ask.** Up to 3 broken words come back around the trait word, e.g. `<Spirit Box> near... frost... frost` to "where are you?". The questions it knows, in English and Russian:
 
   | Ask | E.g. | Answers |
@@ -74,7 +75,7 @@ Iron ingot + redstone + note block. Place it: it faces you. It listens for a cha
   | Go away | "leave us", "go away" | never, stay, not yet, ours |
   | Anyone there | "hello?", "anyone here?" | always, watching, with you, here |
 
-  An answer comes 6 times in 10. Sometimes it repeats the trait word, hisses `ksshh`, or echoes back a word of yours, cut or stuttered. **Only the trait word is a clue**, and only it goes into the journal; the answers never use a trait word.
+  An answer comes 6 times in 10. Sometimes it repeats the trait word, hisses `ksshh`, or echoes back a word of yours, cut or stuttered. A word you said over voice chat comes back in your own voice, slowed and distorted. **Only the trait word is a clue**, and only it goes into the journal; the answers never use a trait word.
 - **Voice:** over Plasmo Voice the server makes out your words with offline speech recognition (Vosk, English or Russian by your game language). The first phrase near a box makes the server download it once: about 25 MB plus 45 MB per language, into `restless/voice` in the game folder. Until then, and on machines Vosk does not run on (it runs on Linux x64, Windows x64 and macOS), the box hears that you spoke but not the words, and answers with the trait word alone.
 - **Shaken:** below 0.35 sanity (0 to 1) it says more, 2 seconds after the word: where the spirit's bones lie, rounded to 10 blocks. The grave still has to be looked for.
 - **It may lie.** A spirit with the Liar trait gives a word of a trait it does not have half of the time. The journal marks every spirit box note "may lie", because you cannot know ahead of time whether the spirit is a liar. For what a word means, see [Reading the Clues](#reading-the-clues).

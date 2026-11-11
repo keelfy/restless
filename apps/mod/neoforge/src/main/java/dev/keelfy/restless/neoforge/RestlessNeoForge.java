@@ -11,6 +11,8 @@ import dev.keelfy.restless.debug.DebugPayload;
 import dev.keelfy.restless.debug.DebugScreen;
 import dev.keelfy.restless.debug.FirePayload;
 import dev.keelfy.restless.divine.Divination;
+import dev.keelfy.restless.divine.SpiritBoxPayload;
+import dev.keelfy.restless.divine.client.SpiritBoxVoice;
 import dev.keelfy.restless.haunt.effect.DimPayload;
 import dev.keelfy.restless.haunt.effect.DoorLockPayload;
 import dev.keelfy.restless.haunt.effect.DoorLocks;
@@ -106,6 +108,10 @@ public final class RestlessNeoForge {
                 .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))
                 .playToClient(
                         ShutterPayload.TYPE, ShutterPayload.CODEC, (payload, context) -> Darkroom.shutter(payload))
+                .playToClient(
+                        SpiritBoxPayload.TYPE,
+                        SpiritBoxPayload.CODEC,
+                        (payload, context) -> SpiritBoxVoice.say(payload))
                 .playToServer(
                         DevelopPayload.TYPE,
                         DevelopPayload.CODEC,

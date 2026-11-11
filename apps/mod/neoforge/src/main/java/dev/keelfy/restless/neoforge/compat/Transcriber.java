@@ -1,7 +1,10 @@
 package dev.keelfy.restless.neoforge.compat;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
+import dev.keelfy.restless.divine.Heard;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -19,6 +22,8 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
@@ -76,35 +81,52 @@ final class Transcriber {
     /** Vosk's classes, loaded on {@link #LOADER} before the first model. */
     private static volatile Vosk vosk;
 
-    private record Vosk(Constructor<?> model, Constructor<?> recognizer, Method accept, Method result) {}
+    private record Vosk(Constructor<?> model, Constructor<?> recognizer, Method words, Method accept, Method result) {}
+
+    /** A word's sound is cut out with this much on each side, as recognition times words tight. */
+    private static final double MARGIN_SECONDS = 0.08;
 
     private Transcriber() {}
 
     /**
      * Makes out a phrase of mono samples spoken by a player whose game is in {@code language} (e.g. {@code ru_ru}) and
-     * hands the words, or an empty line, to {@code done}: on a voice thread, or right away while the language loads.
+     * hands the words with the sound of each, or an empty line, to {@code done}: on a voice thread, or right away while
+     * the language loads.
      */
-    static void transcribe(short[] samples, int rate, String language, Consumer<String> done) {
+    static void transcribe(short[] samples, int rate, String language, Consumer<Heard> done) {
         Model model = Model.of(language);
         Object loaded = READY.get(model);
         if (loaded == null) {
             if (STARTED.putIfAbsent(model, true) == null) {
                 LOADER.execute(() -> load(model));
             }
-            done.accept("");
+            done.accept(Heard.typed(""));
             return;
         }
         WORKER.execute(() -> done.accept(text(loaded, samples, rate)));
     }
 
-    private static String text(Object model, short[] samples, int rate) {
+    private static Heard text(Object model, short[] samples, int rate) {
         try (AutoCloseable recognizer = (AutoCloseable) vosk.recognizer().newInstance(model, (float) rate)) {
+            vosk.words().invoke(recognizer, true);
             vosk.accept().invoke(recognizer, samples, samples.length);
-            String json = (String) vosk.result().invoke(recognizer);
-            return JsonParser.parseString(json).getAsJsonObject().get("text").getAsString();
+            JsonObject json = JsonParser.parseString((String) vosk.result().invoke(recognizer))
+                    .getAsJsonObject();
+            Map<String, short[]> words = new HashMap<>();
+            if (json.has("result")) {
+                for (JsonElement element : json.getAsJsonArray("result")) {
+                    JsonObject word = element.getAsJsonObject();
+                    int from = (int) Math.max(0, (word.get("start").getAsDouble() - MARGIN_SECONDS) * rate);
+                    int to = (int) Math.min(samples.length, (word.get("end").getAsDouble() + MARGIN_SECONDS) * rate);
+                    if (from < to) {
+                        words.put(word.get("word").getAsString(), Arrays.copyOfRange(samples, from, to));
+                    }
+                }
+            }
+            return new Heard(json.get("text").getAsString(), words, rate);
         } catch (Exception e) {
             LOG.warn("Restless could not make out a voice phrase", e);
-            return "";
+            return Heard.typed("");
         }
     }
 
@@ -150,6 +172,7 @@ final class Transcriber {
         return new Vosk(
                 model.getConstructor(String.class),
                 recognizer.getConstructor(model, float.class),
+                recognizer.getMethod("setWords", boolean.class),
                 recognizer.getMethod("acceptWaveForm", short[].class, int.class),
                 recognizer.getMethod("getFinalResult"));
     }

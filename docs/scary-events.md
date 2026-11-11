@@ -1,19 +1,13 @@
 # Scary events
 
 Backlog of hard scares built on the `Silhouette` figure: slow suspense, jump scares, and both. Only what is not built
-yet is listed. Built events live in `event/Jolts.java`, `event/Scares.java` and `event/Frights.java` and are in
+yet is listed. Built events live in `event/Jolts.java` and `event/Scares.java` and are in
 [events-index.md](events-index.md); a built event is deleted from the tables here.
 
 Built so far (first batch): `mined_face`, `dig_down`, `eating`, `container_close`, `slow_turn`, `echo_answer`,
 `name_left_right`, `door_slam_face`, `first_light`, `hide`. Two deviations from the plan: a door that has just shut
 flies open on the figure (vanilla doors have no window to see through), and `dig_down` fires for a floor block beside
 the player, not the one under their feet (the player would fall into rock the client shows as air).
-
-Second batch: `third_person`, `pit_face`, `surface_break`, `shield_knocks`, `behind_trunk`, `tree_line`,
-`stairs_sitter`. Deviations: `behind_trunk` fires for the base log of a trunk (a log above, none below), and shows the
-log above as air so that all of the figure is seen; `third_person` stands the figure in the pulled-out view too, and
-repeats it with the bang when the view ends; `stairs_sitter` has no jump (no `startle`), so it does not use up the
-pause. `shield_knocks` and `surface_break` have no gametest yet (they need a player with a raised shield or a head in water).
 
 Most ideas sit on what exists: `PacketEntity` (a figure only this player sees), `Swaps` (client-only block swaps),
 sounds sent to this player only, look tests from `Jolts.watched`, and polling inside `Scheduler.repeat`.
@@ -47,8 +41,8 @@ What every idea here must respect:
    `startle_gap_ticks`. Built: an event that waits (`HauntEvent.waits`) calls `Director.landed` when its scare comes,
    and only then do the history, the pause, the menace band and the sanity loss count it.
 7. **Only this player sees or hears it.** The server keeps nothing.
-8. **Escalation.** A young spirit's silhouette only shows far off (`tree_line`, `path_blocker`); as it ages it comes
-   closer (`slow_turn`, `stairs_sitter`); at its peak, jump scares and harm (`dragged`, `hold_still`, `hide`).
+8. **Escalation.** A young spirit's silhouette only shows far off (`path_blocker`); as it ages it comes
+   closer (`slow_turn`); at its peak, jump scares and harm (`dragged`, `hold_still`, `hide`).
 
 ## Shared pieces
 

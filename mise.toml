@@ -2,6 +2,7 @@
 java = "corretto-25"
 node = "24"
 bun = "1"
+uv = "0.13"
 
 [tasks."mod:build"]
 description = "Build the mod jars"
@@ -34,3 +35,17 @@ description = "Build the static wiki (apps/frontend/out)"
 dir = "apps/frontend"
 depends = ["wiki:install"]
 run = "bun run build"
+
+[tasks."voice:setup"]
+description = "Create the voice pipeline venv (apps/voice/.venv)"
+dir = "apps/voice"
+run = [
+  "uv venv --allow-existing --python 3.12 .venv",
+  "uv pip install --python .venv/bin/python -r requirements.txt",
+]
+
+[tasks."voice:generate"]
+description = "Voice the spirit box words and answers into the mod's sounds"
+dir = "apps/voice"
+depends = ["voice:setup"]
+run = ".venv/bin/python generate.py"

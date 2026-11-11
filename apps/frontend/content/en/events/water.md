@@ -4,7 +4,7 @@ title: Water
 
 # Water
 
-9 events.
+8 events.
 
 ## `undertow`
 
@@ -55,9 +55,3 @@ Runs when: Source water at least 4 deep with air above it, within 20 blocks and 
 Only this player's client is told of a sea lantern that moves along the run, one block every 0.2 s, 2 lit at a time, each put back behind it. Nothing on the server
 
 Runs when: In an ocean biome, a straight run of at least 8 water blocks 3 under the surface, starting 6 to 18 away
-
-## `surface_break`
-
-When the player's head comes out of the water after at least 2 s under it, a black figure stands on the water 1.5 blocks ahead for 10 ticks, with a splash and a loud bang. It does nothing if there is no open water with free air above it there. Only this player's client is told. A jump scare. Watches for 5 min
-
-Runs when: The player is in water

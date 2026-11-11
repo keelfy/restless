@@ -39,6 +39,7 @@ adding or searching for an event. Keep it in sync when events are added, moved o
 | `apps/mod/core/src/main/resources/restless-config` | Bundled tunables (one JSON per group) + lang |
 | `apps/mod/neoforge` | NeoForge adapter and jar assembly |
 | `apps/frontend` | Player wiki (Nextra), `content/en` and `content/ru` — update both |
+| `apps/voice` | Spirit box voice pipeline (Piper TTS + effects → `assets/restless/sounds/spirit_box`); `mise run voice:generate` after spirit box words or answers change |
 | `docs/` | Developer design notes and idea backlogs |
 
 ### Packages (`dev.keelfy.restless`)

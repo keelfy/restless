@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 659 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 652 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -13,7 +13,7 @@ Paths below are under `apps/mod/core/src/main/java/dev/keelfy/restless/haunt/` u
 | Registry: 6 class events + `Catalog`, then scenarios | `event/HauntEvents.java` |
 | Theme groups (each has `static List<HauntEvent> all()`) | `event/Catalog.java` → `event/<Group>.java` |
 | Lambda event helper (`SimpleEvent.light` / `.harmful`) | `event/kit/SimpleEvent.java` |
-| Events that wait for the player (`SimpleEvent.waiting`, `HauntEvent.waits`): counted by `Director.landed` when the scare comes, not when they start | `dream`, `sleepwalk`, `bedside_figure`, `cracked_mirror`, `spyglass_figure`, `mirror_names`, `jolt_behind`, `jolt_side`, `jolt_lunge`, `third_person`, `pit_face`, `surface_break`, `shield_knocks`, `tree_line`, `stairs_sitter`, and the ones in `Scares.java` except `hide` |
+| Events that wait for the player (`SimpleEvent.waiting`, `HauntEvent.waits`): counted by `Director.landed` when the scare comes, not when they start | `dream`, `sleepwalk`, `bedside_figure`, `cracked_mirror`, `spyglass_figure`, `mirror_names`, `jolt_behind`, `jolt_side`, `jolt_lunge`, and the ones in `Scares.java` except `hide` |
 | Tier: `LIGHT` scare / `HARMFUL` hurts | `event/HauntTier.java` |
 | Tags (spirit affinity, wiki category) | `event/EventTag.java` |
 | Picks which event runs | `Director.java` |
@@ -184,17 +184,11 @@ Jump scares: a loud bang, then a black figure of a wrong shape, close, for a sec
 
 `jolt_behind`, `jolt_side`, `jolt_dark`, `jolt_lunge`
 
-### `event/Scares.java` (11)
+### `event/Scares.java` (10)
 
-Jump scares and slow scares the player sets off with a habit (breaking, eating, closing, turning away, mining, hiding); the ones that wait for a break, a meal, a log or a torch only mark the player. See [scary-events.md](scary-events.md). [presence]
+Jump scares and slow scares the player sets off with a habit (breaking, eating, closing, turning away, mining, hiding); the ones that wait for a break, a meal or a torch only mark the player. See [scary-events.md](scary-events.md). [presence]
 
-`mined_face`, `dig_down`, `eating`, `container_close`, `slow_turn`, `echo_answer`, `name_left_right`, `door_slam_face`, `first_light`, `behind_trunk`, `hide`
-
-### `event/Frights.java` (6)
-
-Scares set off by what the player does or where they stand: the camera pulled out behind them, a deep drop, a dive, a raised shield, far figures in the dark, a flight of stairs. Each polls the player and lapses quietly. See [scary-events.md](scary-events.md). [presence, water]
-
-`third_person`, `pit_face`, `surface_break`, `shield_knocks`, `tree_line`, `stairs_sitter`
+`mined_face`, `dig_down`, `eating`, `container_close`, `slow_turn`, `echo_answer`, `name_left_right`, `door_slam_face`, `first_light`, `hide`
 
 ### `event/Sightings.java` (10)
 

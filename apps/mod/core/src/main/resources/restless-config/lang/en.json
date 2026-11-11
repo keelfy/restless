@@ -3021,34 +3021,6 @@
       "name": "Vermin",
       "description": "Forty silverfish, seen only by the player, pour across the floor, circle round the player's feet and scatter. Nothing is really there. Only a boggart."
     },
-    "minecraft:behind_trunk": {
-      "name": "Behind the Trunk",
-      "description": "After the player breaks the bottom log of a tree trunk, a dark figure stands right behind the gap it leaves, facing them, with a loud bang. Only the player sees it."
-    },
-    "minecraft:third_person": {
-      "name": "Third Person",
-      "description": "The view pulls out behind the player's head, and a dark figure stands close behind them in it. When the view snaps back it is behind them still, with a loud bang, unseen until they turn."
-    },
-    "minecraft:pit_face": {
-      "name": "Face in the Pit",
-      "description": "Looking steeply down into a deep drop, the player sees a dark figure at the bottom rise up to just below their eyes, with a loud bang. Only the player sees it."
-    },
-    "minecraft:surface_break": {
-      "name": "Surface",
-      "description": "When the player comes up from a dive, a dark figure stands on the water just ahead, with a splash and a loud bang, for a moment. Only the player sees it."
-    },
-    "minecraft:shield_knocks": {
-      "name": "Knock on the Shield",
-      "description": "A shield held up for a couple of seconds with nothing hostile near is knocked on three times from the front. When the player lowers it, a dark figure is right in front of them, with a loud bang."
-    },
-    "minecraft:tree_line": {
-      "name": "Tree Line",
-      "description": "At night near trees, a dark figure stands far off in the dark. Each time the player looks at one and away, another stands somewhere ahead of them. After five, all are gone and one stands right behind them, unseen until they turn."
-    },
-    "minecraft:stairs_sitter": {
-      "name": "Sitting on the Stairs",
-      "description": "A low dark figure sits at the top of a flight of stairs in view. When the player comes near, it is gone, and three slow steps sound behind them."
-    },
     "minecraft:hide": {
       "name": "Hide",
       "description": "The action bar says \"Hide\" and a heartbeat sounds for ten seconds. Move, and something is at the player's face and hurts them, though it never leaves them at the safe floor. Keep still, and heavy steps pass outside."

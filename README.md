@@ -16,7 +16,7 @@ that grow more dangerous as they age and are angered.
 
 ## Usage
 
-Requires [mise](https://mise.jdx.dev): `mise install` sets up Java 25, Node 24, Bun 1.
+Requires [mise](https://mise.jdx.dev): `mise install` sets up Java 25, Node 24, Bun 1, uv.
 
 ```sh
 mise run mod:build    # build the jar → apps/mod/neoforge/build/libs
@@ -24,6 +24,7 @@ mise run mod:client   # dev client
 mise run mod:server   # dev server
 mise run wiki:dev     # wiki locally
 mise run wiki:build   # static wiki build
+mise run voice:generate  # re-voice the spirit box after its words or answers change (apps/voice)
 ```
 
 With Java 25, run `./gradlew :neoforge:runGameTestServer` from `apps/mod` to verify altar placement,
@@ -41,3 +42,5 @@ Haunt sounds in `assets/restless/sounds/haunt` are CC0 recordings from [OpenGame
 | `laugh` | [Ghostly cackle laugh 1](https://opengameart.org/content/ghostly-cackle-laugh-1) | nocturnalvanguard (AuraVoice) |
 | `screech` | [Scary high pitched ghost](https://opengameart.org/content/scary-high-pitched-ghost) | fupi |
 | `whisper_*` | [Voices of Madness](https://opengameart.org/content/voices-of-madness) | eugeneloza |
+
+Spirit box voices in `assets/restless/sounds/spirit_box` are made by `apps/voice` with [Piper](https://github.com/OHF-Voice/piper1-gpl) voices `en_US-joe-medium` and `ru_RU-dmitri-medium`, both trained on CC0 recordings ([OHF-Voice/voice-datasets](https://github.com/OHF-Voice/voice-datasets)). Piper is GPL and only runs at build time; it is not in the mod.
