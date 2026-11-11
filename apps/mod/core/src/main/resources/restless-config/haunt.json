@@ -205,9 +205,6 @@
     "radius": 24,
     "delay_ticks": 1200
   },
-  "compass": {
-    "step_ticks": 4
-  },
   "ash": {
     "reveal_ticks": 600,
     "reach": 16

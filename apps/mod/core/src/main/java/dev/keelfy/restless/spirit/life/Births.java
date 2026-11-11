@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 /**
@@ -136,7 +137,8 @@ public final class Births {
 
     /**
      * Call once for each structure start of a freshly generated chunk. A configured structure may get a territorial
-     * spirit at the centre of its bounding box, unless another one is within {@code births.structure_spacing}.
+     * spirit at the centre of its bounding box. The roll is fixed by the world seed, the structure and where it starts
+     * ({@link BirthRules#haunted}), so whether a structure is haunted does not depend on what was explored first.
      *
      * @param roll whether the structure's chance is rolled; false for the debug command
      */
@@ -152,18 +154,22 @@ public final class Births {
             return BirthRules.Verdict.NOTHING;
         }
         Config.Section of = structures.section(id);
-        if (roll && level.getRandom().nextDouble() >= of.num("chance")) {
+        ChunkPos chunk = start.getChunkPos();
+        if (roll && !BirthRules.haunted(level.getSeed(), id, chunk.x(), chunk.z(), of.num("chance"))) {
             return BirthRules.Verdict.NOTHING;
         }
-        return place(
-                level,
+        Director.anchor(
+                HauntData.get(level.getServer()),
                 Spirits.byId(of.text("spirit")).orElseThrow(),
-                start.getBoundingBox().getCenter());
+                level,
+                start.getBoundingBox().getCenter(),
+                level.getServer().overworld().getGameTime());
+        return BirthRules.Verdict.BORN;
     }
 
     /**
      * A territorial spirit of the type stands at {@code at}, unless another one is within
-     * {@code births.structure_spacing}. Used by structures and by effigies.
+     * {@code births.structure_spacing}. Used by effigies.
      *
      * @return {@link BirthRules.Verdict#BORN} or {@link BirthRules.Verdict#CROWDED}
      */

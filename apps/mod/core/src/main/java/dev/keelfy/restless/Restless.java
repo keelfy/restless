@@ -12,7 +12,6 @@ import dev.keelfy.restless.content.item.charm.Advanced;
 import dev.keelfy.restless.content.item.charm.Charms;
 import dev.keelfy.restless.content.item.consumable.Consumables;
 import dev.keelfy.restless.divine.Candle;
-import dev.keelfy.restless.divine.Compass;
 import dev.keelfy.restless.divine.Divination;
 import dev.keelfy.restless.divine.Heard;
 import dev.keelfy.restless.haunt.Director;
@@ -98,7 +97,6 @@ public final class Restless {
         Restore.tick(server);
         Director.tick(server);
         Candle.tick(server);
-        Compass.tick(server);
         Graves.tick(server);
         Sanity.tick(server);
         Corruption.tick(server);

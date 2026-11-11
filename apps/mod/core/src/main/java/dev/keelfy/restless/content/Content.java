@@ -178,7 +178,6 @@ public final class Content {
                             .build(key));
 
     public static final Supplier<Item> SPIRIT_CANDLE = item("spirit_candle", p -> new Item(p.stacksTo(1)));
-    public static final Supplier<Item> SPIRIT_COMPASS = item("spirit_compass", p -> new Item(p.stacksTo(1)));
     public static final Supplier<Item> CAMERA_OBSCURA = item("camera_obscura", p -> new CameraObscura(p.stacksTo(1)));
     public static final Supplier<Item> PHOTO = item("photo", p -> new Photo(p.stacksTo(1)));
     /** Marks a photo whose picture the photographer's client has yet to send; the value pairs the two. */
@@ -631,7 +630,6 @@ public final class Content {
                 SALT,
                 ASH,
                 SPIRIT_CANDLE,
-                SPIRIT_COMPASS,
                 CAMERA_OBSCURA,
                 SPIRIT_BOX_ITEM,
                 OUIJA_BOARD_ITEM,

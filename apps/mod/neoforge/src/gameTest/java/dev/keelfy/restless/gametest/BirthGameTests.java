@@ -114,16 +114,10 @@ final class BirthGameTests {
                     "The spirit must sit at the centre of the structure");
             HauntEventGameTests.check(
                     helper,
-                    Births.generated(level, start(helper, "shipwreck", new BlockPos(4040, 70, 4000)), false)
-                                    == Verdict.CROWDED
-                            && Director.territorial(data, level).size() == 1,
-                    "A structure near another haunted one must stay empty");
-            HauntEventGameTests.check(
-                    helper,
                     Births.generated(level, start(helper, "shipwreck", new BlockPos(4300, 70, 4000)), false)
                                     == Verdict.BORN
                             && Director.territorial(data, level).size() == 2,
-                    "A far structure must get its own spirit");
+                    "Another structure must get its own spirit");
             HauntEventGameTests.check(
                     helper,
                     Births.generated(level, start(helper, "buried_treasure", new BlockPos(-4000, 70, 4000)), false)

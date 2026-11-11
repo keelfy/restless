@@ -33,7 +33,7 @@ A scarecrow stuffed with one essence, lit with flint and steel or a fire charge.
 
 ### Deeds and places
 
-A spirit is born when a deed is done or a structure is found, by chance and after a cooldown (3 days between births for one player; no more than 3 personal spirits at a time). A new spirit starts at anger 0.5 and gives two minutes of grace. Territorial spirits keep 96 blocks apart.
+A spirit is born when a deed is done or a structure is found, by chance and after a cooldown (3 days between births for one player; no more than 3 personal spirits at a time). A new spirit starts at anger 0.5 and gives two minutes of grace. Which structures are haunted is fixed by the world seed.
 
 **Personal, by deed**
 

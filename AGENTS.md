@@ -61,7 +61,7 @@ to the feature that sends it.
 | `spirit.life` | Birth, deeds, power, anger, evolution |
 | `spirit.land` | What spirits leave on the land: corruption, graves |
 | `state` | Saved per-world state (`HauntData`) and server/client scopes (`Session`) |
-| `divine` | Investigation tools: candle, compass, divination, sensing, clues |
+| `divine` | Investigation tools: candle, divination, sensing, clues |
 | `journal` | Journal notes, pages, codex, its payloads; `client` draws the book |
 | `photo` | Camera pictures of spirits; `client` grabs and shows them |
 | `sanity` | Sanity and its overlay |

@@ -11,8 +11,11 @@ Built (rules, config, `Births.generated`, debug command, chunk hook). Numbers ar
 
 - A generated structure of a configured kind gets a territorial spirit with a chance below 1.
 - One roll per structure, ever, with nothing saved to remember it: a structure start lives in exactly one chunk, and
-  that chunk is new exactly once.
-- Two haunted structures never share an area.
+  that chunk is new exactly once. The roll is fixed by the world seed, the structure id and its start chunk
+  (`BirthRules.haunted`), so a seed always haunts the same structures, whatever was explored first. This is what a
+  future search item can rely on.
+- Structures keep their own spacing from vanilla; there is no spirit spacing between them (it would depend on the order
+  of exploring). Effigies still keep `structure_spacing`.
 - A born spirit is a normal territorial spirit (traits, anger, corruption, evolution, ritual); nothing new to learn.
 - Not here: births from events (deaths, homes, lit portals), the blood moon, spirits outside structures, new spirit
   types, the domovoi's offerings, pacts and fake gifts. Chunks generated before this ships stay empty; old worlds get
@@ -24,16 +27,14 @@ One loader hook, `Restless.onNewChunk(ServerLevel, LevelChunk)`, from NeoForge's
 `isNewChunk()`. It reads the chunk's structure starts (`getAllStarts()`): a cheap map lookup, no search, nothing per
 player. For each start of a configured structure it calls `Births.generated(level, start)`, which decides in order:
 
-1. The structure id is in `births.structures.<id>` and its chance roll passes.
-2. **Spacing**: any territorial anchor within `spacing` (96 blocks, twice the radius) in that dimension: nothing.
-   Two shipwrecks side by side get at most one nix. Pure, in `BirthRules.settle`, unit-tested.
-3. Otherwise `Director.anchor` at the centre of the structure's bounding box, so the radius covers the whole of it.
+1. The structure id is in `births.structures.<id>` and its seeded chance roll passes (`BirthRules.haunted`, unit-tested).
+2. Otherwise `Director.anchor` at the centre of the structure's bounding box, so the radius covers the whole of it.
 
 No cap per dimension: exploration is what makes more spirits, and a cap would leave every far structure empty. No
 start anger, no grace and no notice line: nobody is there to notice, and the spirit is met by walking in. Corruption
 starts at age 0, so a fresh structure's land is still clean; one found late, after its chunk sat loaded, is greyer.
 
-Debug: `/haunt birth structure` rolls for the structure the player stands in, skipping the chance but not spacing.
+Debug: `/haunt birth structure` rolls for the structure the player stands in, skipping the chance.
 
 ## Structures
 

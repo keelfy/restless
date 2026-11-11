@@ -1,5 +1,7 @@
 package dev.keelfy.restless.spirit.life;
 
+import java.util.SplittableRandom;
+
 /** What a deed does to a player's spirits, apart from the world: pure, so it can be tested without Minecraft. */
 public final class BirthRules {
     /** What a deed did. */
@@ -12,7 +14,7 @@ public final class BirthRules {
         COOLDOWN,
         /** The player has as many personal spirits as allowed. */
         FULL,
-        /** Another territorial spirit is too close to a generated structure. */
+        /** Another territorial spirit is too close to an effigy's place. */
         CROWDED,
         /** The chance roll failed or the player cannot be haunted. */
         NOTHING
@@ -37,7 +39,19 @@ public final class BirthRules {
     }
 
     /**
-     * Whether a territorial spirit may be born at a generated structure: not if one already stands within
+     * Whether the structure of {@code id} that starts in chunk ({@code chunkX}, {@code chunkZ}) is haunted. Only the
+     * world seed, the id and the chunk decide, so a seed always haunts the same structures.
+     */
+    static boolean haunted(long seed, String id, int chunkX, int chunkZ, double chance) {
+        long key = seed;
+        key = key * 31 + id.hashCode();
+        key = key * 31 + chunkX;
+        key = key * 31 + chunkZ;
+        return new SplittableRandom(key).nextDouble() < chance;
+    }
+
+    /**
+     * Whether a territorial spirit may be born at a place (an effigy): not if one already stands within
      * {@code spacing} blocks.
      *
      * @param nearestSqr squared distance to the nearest anchor in the dimension; {@link Long#MAX_VALUE} for none

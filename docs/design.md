@@ -134,7 +134,6 @@ First items. The player can learn what haunts them and defend a base.
 | Item / block | Shows |
 |---|---|
 | Spirit candle | Flame leans toward the spirit; turns blue 2–3 s before an event (a warning) |
-| Spirit compass | Points at the spirit's position |
 | Ash powder | Scattered on the floor, shows footprints after 30 s; the print shape depends on the spirit |
 | Camera obscura | Takes a photo item with the spirit's silhouette and type |
 | Spirit box (block) | The player asks in chat (or on Plasmo Voice) nearby, the spirit answers a word from its traits' vocabulary, broken up by a few words that answer the question; whispered aloud from the box (Piper clips from `apps/voice`, whispered by LPC), a voice-chat word echoed in the asker's own voice |

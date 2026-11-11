@@ -15,7 +15,6 @@ A spirit you **sense** is one of your own personal spirits, or a territorial spi
 | [Spirit Box](#spirit-box) | answers aloud what you ask around a clue word; may lie |
 | [Ouija Board](#ouija-board) | spells out a trait; may lie |
 | [Spirit Candle](#spirit-candle) | its flame leans to the spirit that acts next |
-| [Spirit Compass](#spirit-compass) | its needle points at the nearest spirit |
 | [Journal](#journal) | writes down everything above |
 | [Altar](#altar) | banishes a spirit |
 | [Salt](#salt), [Hallowed Lantern](#hallowed-lantern), [Dreamcatcher](#dreamcatcher), [Door Charm](#door-charm), [Scarecrow](#scarecrow) | stop a spirit's events |
@@ -117,10 +116,6 @@ What to do with it:
 ## Spirit Candle
 
 Candle + soul sand. Hold it in either hand. Its flame leans toward the spirit you sense that acts next, and burns blue for the last **3 seconds** before that event: the warning is exact, it reads the same timer the spirits run on. A spirit may snuff it for 30 seconds.
-
-## Spirit Compass
-
-Compass + amethyst shard + soul sand. Hold it in either hand. The needle is the lodestone needle: it points, every 4 ticks, at the nearest spirit you sense that has a place. With no spirit to point at, or one that has not yet started to roam, the needle spins.
 
 ## Journal
 
