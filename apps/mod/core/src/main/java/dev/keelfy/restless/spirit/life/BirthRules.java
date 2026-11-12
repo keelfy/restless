@@ -51,8 +51,8 @@ public final class BirthRules {
     }
 
     /**
-     * Whether a territorial spirit may be born at a place (an effigy): not if one already stands within
-     * {@code spacing} blocks.
+     * Whether a territorial spirit may be born at a place (an effigy): not if one already stands within {@code spacing}
+     * blocks.
      *
      * @param nearestSqr squared distance to the nearest anchor in the dimension; {@link Long#MAX_VALUE} for none
      * @return {@link Verdict#BORN} or {@link Verdict#CROWDED}
