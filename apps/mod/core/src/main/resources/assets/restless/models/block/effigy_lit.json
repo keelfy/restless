@@ -1,5 +1,5 @@
 {
-  "parent": "restless:block/scarecrow",
+  "parent": "restless:block/effigy_base",
   "textures": {
     "coat": "minecraft:block/black_wool",
     "patch": "minecraft:block/red_wool",

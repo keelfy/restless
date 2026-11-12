@@ -22,11 +22,11 @@ import dev.keelfy.restless.content.block.OmenCandle;
 import dev.keelfy.restless.content.block.OuijaBoard;
 import dev.keelfy.restless.content.block.Prop;
 import dev.keelfy.restless.content.block.SaltLineBlock;
+import dev.keelfy.restless.content.block.Scarecrow;
 import dev.keelfy.restless.content.block.SpiritBox;
 import dev.keelfy.restless.content.block.UnlitLights;
 import dev.keelfy.restless.content.block.WardBlock;
 import dev.keelfy.restless.content.block.WardLantern;
-import dev.keelfy.restless.content.block.WornWard;
 import dev.keelfy.restless.content.client.MistParticle;
 import dev.keelfy.restless.content.entity.AshFootprint;
 import dev.keelfy.restless.content.entity.RagEntity;
@@ -213,11 +213,7 @@ public final class Content {
     public static final Supplier<Item> HALLOWED_LANTERN_ITEM = blockItem("hallowed_lantern", HALLOWED_LANTERN);
     public static final Supplier<Block> SCARECROW = block(
             "scarecrow",
-            p -> new WornWard(
-                    p.strength(0.5f).sound(SoundType.GRASS).noOcclusion(),
-                    Block.box(1, 0, 6, 15, 16, 10),
-                    WardBlock.Kind.SCARECROW,
-                    10));
+            p -> new Scarecrow(p.strength(0.5f).sound(SoundType.GRASS).noOcclusion()));
     public static final Supplier<Item> SCARECROW_ITEM = blockItem("scarecrow", SCARECROW);
     public static final Supplier<Block> EFFIGY = block(
             "effigy", p -> new Effigy(p.strength(0.5f).sound(SoundType.GRASS).noOcclusion()));

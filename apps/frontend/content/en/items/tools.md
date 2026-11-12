@@ -259,7 +259,7 @@ S H S
 . K .
 ```
 
-Within **16 blocks** it stops any event. Every event it stops takes one use, and the **tenth** breaks it. The scarecrow is also the base of the [effigy](/en/items/essences#the-effigy).
+It stands **two blocks tall**, so it needs two free blocks above the floor. Within **16 blocks** it stops any event. Every event it stops takes one use, and the **tenth** breaks it. The scarecrow is also the base of the [effigy](/en/items/essences#the-effigy).
 
 ### How wards stack
 

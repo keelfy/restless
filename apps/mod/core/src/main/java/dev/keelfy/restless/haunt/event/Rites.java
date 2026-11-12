@@ -3,6 +3,7 @@ package dev.keelfy.restless.haunt.event;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Altar;
+import dev.keelfy.restless.content.block.Scarecrow;
 import dev.keelfy.restless.divine.Divination;
 import dev.keelfy.restless.divine.Sense;
 import dev.keelfy.restless.haunt.Faults;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -127,7 +129,10 @@ final class Rites {
     private static @Nullable Step closer(ServerPlayer player) {
         ServerLevel level = player.level();
         Config.Section config = Config.event("restless:scarecrow_closer");
-        List<BlockPos> stands = Nearby.all(player, "restless:scarecrow_closer", s -> s.is(Content.SCARECROW.get()));
+        List<BlockPos> stands = Nearby.all(
+                player,
+                "restless:scarecrow_closer",
+                s -> s.is(Content.SCARECROW.get()) && s.getValue(Scarecrow.HALF) == DoubleBlockHalf.LOWER);
         for (BlockPos from : stands) {
             Vec3 toPlayer = player.position().subtract(Vec3.atCenterOf(from)).multiply(1, 0, 1);
             if (toPlayer.length() < config.num("min_gap")) {
@@ -136,8 +141,9 @@ final class Rites {
             BlockPos to = from.relative(Direction.getApproximateNearest(toPlayer));
             BlockPos floor = to.below();
             if (level.isEmptyBlock(to)
+                    && level.isEmptyBlock(to.above())
                     && level.getBlockState(floor).isFaceSturdy(level, floor, Direction.UP)
-                    && level.getEntitiesOfClass(LivingEntity.class, new AABB(to))
+                    && level.getEntitiesOfClass(LivingEntity.class, new AABB(to).expandTowards(0, 1, 0))
                             .isEmpty()) {
                 return new Step(from, to);
             }
@@ -153,8 +159,11 @@ final class Rites {
         ServerLevel level = player.level();
         Config.Section config = Config.event("restless:scarecrow_closer");
         BlockState scarecrow = level.getBlockState(step.from());
-        Restore.swap(level, step.to(), scarecrow, config.integer("restore_ticks"));
-        Restore.swap(level, step.from(), Blocks.AIR.defaultBlockState(), config.integer("restore_ticks"));
+        int restore = config.integer("restore_ticks");
+        Restore.swap(level, step.to(), scarecrow, restore);
+        Restore.swap(level, step.to().above(), level.getBlockState(step.from().above()), restore);
+        Restore.swap(level, step.from(), Blocks.AIR.defaultBlockState(), restore);
+        Restore.swap(level, step.from().above(), Blocks.AIR.defaultBlockState(), restore);
         Config.Tone tone = config.tone("sound");
         level.playSound(
                 null,

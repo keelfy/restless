@@ -1,34 +1,64 @@
 {
   "variants": {
-    "wear=0": {
-      "model": "restless:block/scarecrow"
+    "half=lower,wear=0": {
+      "model": "restless:block/scarecrow_lower"
     },
-    "wear=1": {
-      "model": "restless:block/scarecrow"
+    "half=upper,wear=0": {
+      "model": "restless:block/scarecrow_upper"
     },
-    "wear=2": {
-      "model": "restless:block/scarecrow"
+    "half=lower,wear=1": {
+      "model": "restless:block/scarecrow_lower"
     },
-    "wear=3": {
-      "model": "restless:block/scarecrow"
+    "half=upper,wear=1": {
+      "model": "restless:block/scarecrow_upper"
     },
-    "wear=4": {
-      "model": "restless:block/scarecrow"
+    "half=lower,wear=2": {
+      "model": "restless:block/scarecrow_lower"
     },
-    "wear=5": {
-      "model": "restless:block/scarecrow"
+    "half=upper,wear=2": {
+      "model": "restless:block/scarecrow_upper"
     },
-    "wear=6": {
-      "model": "restless:block/scarecrow"
+    "half=lower,wear=3": {
+      "model": "restless:block/scarecrow_lower"
     },
-    "wear=7": {
-      "model": "restless:block/scarecrow"
+    "half=upper,wear=3": {
+      "model": "restless:block/scarecrow_upper"
     },
-    "wear=8": {
-      "model": "restless:block/scarecrow"
+    "half=lower,wear=4": {
+      "model": "restless:block/scarecrow_lower"
     },
-    "wear=9": {
-      "model": "restless:block/scarecrow"
+    "half=upper,wear=4": {
+      "model": "restless:block/scarecrow_upper"
+    },
+    "half=lower,wear=5": {
+      "model": "restless:block/scarecrow_lower"
+    },
+    "half=upper,wear=5": {
+      "model": "restless:block/scarecrow_upper"
+    },
+    "half=lower,wear=6": {
+      "model": "restless:block/scarecrow_lower"
+    },
+    "half=upper,wear=6": {
+      "model": "restless:block/scarecrow_upper"
+    },
+    "half=lower,wear=7": {
+      "model": "restless:block/scarecrow_lower"
+    },
+    "half=upper,wear=7": {
+      "model": "restless:block/scarecrow_upper"
+    },
+    "half=lower,wear=8": {
+      "model": "restless:block/scarecrow_lower"
+    },
+    "half=upper,wear=8": {
+      "model": "restless:block/scarecrow_upper"
+    },
+    "half=lower,wear=9": {
+      "model": "restless:block/scarecrow_lower"
+    },
+    "half=upper,wear=9": {
+      "model": "restless:block/scarecrow_upper"
     }
   }
 }

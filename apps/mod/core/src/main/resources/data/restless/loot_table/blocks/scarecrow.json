@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "restless:scarecrow",
+            "state": {
+              "half": "lower"
+            }
+          },
+          "name": "restless:scarecrow"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "restless:blocks/scarecrow"
+}
