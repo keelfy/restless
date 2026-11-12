@@ -1,10 +1,8 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "minecraft:block/polished_blackstone",
-    "iron": "minecraft:block/polished_blackstone",
-    "cloth": "restless:block/dreamcatcher",
-    "wax": "minecraft:block/bone_block_side",
+    "particle": "restless:block/hallowed_lantern",
+    "sheet": "restless:block/hallowed_lantern",
     "flame": "minecraft:block/soul_fire_0"
   },
   "display": {
@@ -64,59 +62,59 @@
         11
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            5,
-            5,
-            11,
-            11
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            5,
-            5,
-            11,
-            11
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            5,
-            15.25,
-            11,
-            16
-          ]
+            0.0,
+            1.5,
+            4.0,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            5,
-            15.25,
-            11,
-            16
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            5,
-            15.25,
-            11,
-            16
-          ]
+            0.0,
+            1.5,
+            4.0,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            5,
-            15.25,
-            11,
-            16
-          ]
+            0.0,
+            1.5,
+            4.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            0.0,
+            1.5,
+            4.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            4.0
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            4.0,
+            12.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -133,59 +131,59 @@
         10.5
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            5.5,
-            5.5,
-            10.5,
-            10.5
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            5.5,
-            5.5,
-            10.5,
-            10.5
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            5.5,
-            14.75,
-            10.5,
-            15.25
-          ]
+            4.0,
+            1.5,
+            8.0,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            5.5,
-            14.75,
-            10.5,
-            15.25
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            5.5,
-            14.75,
-            10.5,
-            15.25
-          ]
+            4.0,
+            1.5,
+            8.0,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            5.5,
-            14.75,
-            10.5,
-            15.25
-          ]
+            4.0,
+            1.5,
+            8.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            4.0,
+            1.5,
+            8.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            4.0,
+            8.0,
+            8.0,
+            12.0
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            4.0
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -202,197 +200,59 @@
         6.0
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            5.25,
-            10.0,
-            6.0,
-            10.75
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            5.25,
-            5.25,
-            6.0,
-            6.0
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            10.0,
-            9.25,
-            10.75,
-            15
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            5.25,
-            9.25,
-            6.0,
-            15
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            5.25,
-            9.25,
-            6.0,
-            15
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            10.0,
-            9.25,
-            10.75,
-            15
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen binding",
-      "from": [
-        5.17,
-        5.6,
-        5.17
-      ],
-      "to": [
-        6.08,
-        6.0,
-        6.08
-      ],
-      "faces": {
-        "down": {
-          "texture": "#cloth",
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "up": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen binding",
-      "from": [
-        5.17,
-        9.5,
-        5.17
-      ],
-      "to": [
-        6.08,
-        9.9,
-        6.08
-      ],
-      "faces": {
         "down": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -409,197 +269,59 @@
         10.75
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            5.25,
-            5.25,
-            6.0,
-            6
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            5.25,
-            10,
-            6.0,
-            10.75
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            10.0,
-            9.25,
-            10.75,
-            15
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            5.25,
-            9.25,
-            6.0,
-            15
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            10,
-            9.25,
-            10.75,
-            15
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            5.25,
-            9.25,
-            6,
-            15
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen binding",
-      "from": [
-        5.17,
-        5.6,
-        9.92
-      ],
-      "to": [
-        6.08,
-        6.0,
-        10.83
-      ],
-      "faces": {
-        "down": {
-          "texture": "#cloth",
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "up": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen binding",
-      "from": [
-        5.17,
-        9.5,
-        9.92
-      ],
-      "to": [
-        6.08,
-        9.9,
-        10.83
-      ],
-      "faces": {
         "down": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -616,197 +338,59 @@
         6.0
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            10,
-            10.0,
-            10.75,
-            10.75
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            10,
-            5.25,
-            10.75,
-            6.0
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            5.25,
-            9.25,
-            6,
-            15
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            10,
-            9.25,
-            10.75,
-            15
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            5.25,
-            9.25,
-            6.0,
-            15
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            10.0,
-            9.25,
-            10.75,
-            15
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen binding",
-      "from": [
-        9.92,
-        5.6,
-        5.17
-      ],
-      "to": [
-        10.83,
-        6.0,
-        6.08
-      ],
-      "faces": {
-        "down": {
-          "texture": "#cloth",
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "up": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen binding",
-      "from": [
-        9.92,
-        9.5,
-        5.17
-      ],
-      "to": [
-        10.83,
-        9.9,
-        6.08
-      ],
-      "faces": {
         "down": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -823,197 +407,59 @@
         10.75
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            10,
-            5.25,
-            10.75,
-            6
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            10,
-            10,
-            10.75,
-            10.75
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            5.25,
-            9.25,
-            6,
-            15
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            10,
-            9.25,
-            10.75,
-            15
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            10,
-            9.25,
-            10.75,
-            15
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            5.25,
-            9.25,
-            6,
-            15
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen binding",
-      "from": [
-        9.92,
-        5.6,
-        9.92
-      ],
-      "to": [
-        10.83,
-        6.0,
-        10.83
-      ],
-      "faces": {
-        "down": {
-          "texture": "#cloth",
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            0.0,
+            2.5,
+            4.0
+          ],
+          "texture": "#sheet"
         },
         "up": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen binding",
-      "from": [
-        9.92,
-        9.5,
-        9.92
-      ],
-      "to": [
-        10.83,
-        9.9,
-        10.83
-      ],
-      "faces": {
         "down": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1030,59 +476,59 @@
         11
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            5,
-            5,
-            11,
-            11
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            5,
-            5,
-            11,
-            11
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            5,
-            8.75,
-            11,
-            9.25
-          ]
+            0.0,
+            13.5,
+            4.0,
+            14.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            5,
-            8.75,
-            11,
-            9.25
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            5,
-            8.75,
-            11,
-            9.25
-          ]
+            0.0,
+            13.5,
+            4.0,
+            14.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            5,
-            8.75,
-            11,
-            9.25
-          ]
+            0.0,
+            13.5,
+            4.0,
+            14.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            0.0,
+            13.5,
+            4.0,
+            14.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            4.0,
+            12.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            4.0,
+            12.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1099,59 +545,59 @@
         10.25
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            5.75,
-            5.75,
-            10.25,
-            10.25
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            5.75,
-            5.75,
-            10.25,
-            10.25
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            5.75,
-            8.25,
-            10.25,
-            8.75
-          ]
+            0.0,
+            1.5,
+            4.0,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            5.75,
-            8.25,
-            10.25,
-            8.75
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            5.75,
-            8.25,
-            10.25,
-            8.75
-          ]
+            0.0,
+            1.5,
+            4.0,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            5.75,
-            8.25,
-            10.25,
-            8.75
-          ]
+            0.0,
+            1.5,
+            4.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            0.0,
+            1.5,
+            4.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            4.0,
+            12.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            4.0
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1168,59 +614,59 @@
         9.5
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            6.5,
-            6.5,
-            9.5,
-            9.5
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            6.5,
-            6.5,
-            9.5,
-            9.5
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            6.5,
-            7.75,
-            9.5,
-            8.25
-          ]
+            4.5,
+            1.5,
+            7.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            6.5,
-            7.75,
-            9.5,
-            8.25
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            6.5,
-            7.75,
-            9.5,
-            8.25
-          ]
+            4.5,
+            1.5,
+            7.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            6.5,
-            7.75,
-            9.5,
-            8.25
-          ]
+            4.5,
+            1.5,
+            7.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            4.5,
+            1.5,
+            7.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            4.5,
+            12.5,
+            7.5,
+            15.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            4.5,
+            0.5,
+            7.5,
+            3.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1237,59 +683,59 @@
         8.25
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            6.75,
-            7.75,
-            7.25,
-            8.25
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            6.75,
-            7.75,
-            7.25,
-            8.25
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            8.75,
-            6.5,
-            9.25,
-            7.75
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            6.75,
-            6.5,
-            7.25,
-            7.75
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.75,
-            6.5,
-            8.25,
-            7.75
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.75,
-            6.5,
-            8.25,
-            7.75
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1306,59 +752,59 @@
         8.25
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            8.75,
-            7.75,
-            9.25,
-            8.25
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            8.75,
-            7.75,
-            9.25,
-            8.25
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            6.75,
-            6.5,
-            7.25,
-            7.75
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            8.75,
-            6.5,
-            9.25,
-            7.75
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.75,
-            6.5,
-            8.25,
-            7.75
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.75,
-            6.5,
-            8.25,
-            7.75
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1375,59 +821,59 @@
         8.25
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            7.25,
-            7.75,
-            8.75,
-            8.25
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            7.25,
-            7.75,
-            8.75,
-            8.25
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            7.25,
-            6,
-            8.75,
-            6.5
-          ]
+            1.0,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            7.25,
-            6,
-            8.75,
-            6.5
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.75,
-            6,
-            8.25,
-            6.5
-          ]
+            1.0,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.75,
-            6,
-            8.25,
-            6.5
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.0,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.0,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1444,59 +890,59 @@
         8.32
       ],
       "faces": {
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
         "north": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            9.5,
+            5.5,
+            10.5,
+            6.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            9.5,
+            5.5,
+            10.5,
+            6.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#cloth",
           "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
+            9.5,
+            5.5,
+            10.5,
+            6.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            9.5,
+            5.5,
+            10.5,
+            6.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            9.5,
+            5.5,
+            10.5,
+            6.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            9.5,
+            5.5,
+            10.5,
+            6.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1513,59 +959,59 @@
         9.5
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            6.5,
-            6.5,
-            9.5,
-            9.5
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            6.5,
-            6.5,
-            9.5,
-            9.5
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            6.5,
-            14.5,
-            9.5,
-            14.75
-          ]
+            4.5,
+            1.5,
+            7.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            6.5,
-            14.5,
-            9.5,
-            14.75
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            6.5,
-            14.5,
-            9.5,
-            14.75
-          ]
+            4.5,
+            1.5,
+            7.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            6.5,
-            14.5,
-            9.5,
-            14.75
-          ]
+            4.5,
+            1.5,
+            7.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            4.5,
+            1.5,
+            7.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            4.5,
+            12.5,
+            7.5,
+            15.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            4.5,
+            0.5,
+            7.5,
+            3.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1582,59 +1028,59 @@
         9
       ],
       "faces": {
-        "down": {
-          "texture": "#wax",
-          "uv": [
-            2,
-            2,
-            6,
-            8
-          ]
-        },
-        "up": {
-          "texture": "#wax",
-          "uv": [
-            2,
-            2,
-            6,
-            8
-          ]
-        },
         "north": {
-          "texture": "#wax",
           "uv": [
-            2,
-            2,
-            6,
-            8
-          ]
+            1.0,
+            4.5,
+            3.0,
+            7.0
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#wax",
           "uv": [
-            2,
-            2,
-            6,
-            8
-          ]
-        },
-        "west": {
-          "texture": "#wax",
-          "uv": [
-            2,
-            2,
-            6,
-            8
-          ]
+            1.0,
+            4.5,
+            3.0,
+            7.0
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#wax",
           "uv": [
-            2,
-            2,
-            6,
-            8
-          ]
+            1.0,
+            4.5,
+            3.0,
+            7.0
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.0,
+            4.5,
+            3.0,
+            7.0
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            5.0,
+            5.0,
+            7.0,
+            7.0
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            5.0,
+            5.0,
+            7.0,
+            7.0
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1651,59 +1097,59 @@
         7.8
       ],
       "faces": {
-        "down": {
-          "texture": "#wax",
-          "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
-        },
-        "up": {
-          "texture": "#wax",
-          "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
-        },
         "north": {
-          "texture": "#wax",
           "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
+            13.5,
+            9.0,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#wax",
           "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
-        },
-        "west": {
-          "texture": "#wax",
-          "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
+            13.5,
+            9.0,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#wax",
           "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
+            13.5,
+            9.0,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            13.5,
+            9.0,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            13.5,
+            9.5,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            13.5,
+            9.5,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1720,59 +1166,59 @@
         9.15
       ],
       "faces": {
-        "down": {
-          "texture": "#wax",
-          "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
-        },
-        "up": {
-          "texture": "#wax",
-          "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
-        },
         "north": {
-          "texture": "#wax",
           "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
+            13.5,
+            9.5,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#wax",
           "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
-        },
-        "west": {
-          "texture": "#wax",
-          "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
+            13.5,
+            9.5,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#wax",
           "uv": [
-            2,
-            2,
-            4,
-            5
-          ]
+            13.5,
+            9.5,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            13.5,
+            9.5,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            13.5,
+            9.5,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            13.5,
+            9.5,
+            14.5,
+            10.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1789,59 +1235,59 @@
         8.15
       ],
       "faces": {
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            7.85,
-            7.85,
-            8.15,
-            8.15
-          ]
-        },
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            7.85,
-            7.85,
-            8.15,
-            8.15
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            7.85,
-            11.7,
-            8.15,
-            12.1
-          ]
+            13.5,
+            5.5,
+            14.5,
+            6.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            7.85,
-            11.7,
-            8.15,
-            12.1
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.85,
-            11.7,
-            8.15,
-            12.1
-          ]
+            13.5,
+            5.5,
+            14.5,
+            6.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.85,
-            11.7,
-            8.15,
-            12.1
-          ]
+            13.5,
+            5.5,
+            14.5,
+            6.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            13.5,
+            5.5,
+            14.5,
+            6.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            13.5,
+            5.5,
+            14.5,
+            6.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            13.5,
+            5.5,
+            14.5,
+            6.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -1934,2214 +1380,6 @@
       }
     },
     {
-      "name": "Linen suspension ribbon",
-      "from": [
-        7.7,
-        8.45,
-        5.29
-      ],
-      "to": [
-        8.3,
-        10.78,
-        5.409999999999999
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Split linen tail",
-      "from": [
-        7.65,
-        7.65,
-        5.29
-      ],
-      "to": [
-        7.92,
-        8.55,
-        5.409999999999999
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Split linen tail",
-      "from": [
-        8.08,
-        7.85,
-        5.29
-      ],
-      "to": [
-        8.35,
-        8.55,
-        5.409999999999999
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal center",
-      "from": [
-        7.45,
-        8.5,
-        5.159999999999999
-      ],
-      "to": [
-        8.55,
-        9.15,
-        5.54
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal top",
-      "from": [
-        7.65,
-        9.15,
-        5.159999999999999
-      ],
-      "to": [
-        8.35,
-        9.35,
-        5.54
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal bottom",
-      "from": [
-        7.65,
-        8.3,
-        5.159999999999999
-      ],
-      "to": [
-        8.35,
-        8.5,
-        5.54
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Ivory seal sigil",
-      "from": [
-        7.92,
-        8.55,
-        5.14
-      ],
-      "to": [
-        8.08,
-        9.1,
-        5.56
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Ivory seal sigil crossbar",
-      "from": [
-        7.7,
-        8.8,
-        5.135
-      ],
-      "to": [
-        8.3,
-        8.95,
-        5.5649999999999995
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen suspension ribbon",
-      "from": [
-        7.7,
-        8.45,
-        10.59
-      ],
-      "to": [
-        8.3,
-        10.78,
-        10.71
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Split linen tail",
-      "from": [
-        7.65,
-        7.65,
-        10.59
-      ],
-      "to": [
-        7.92,
-        8.55,
-        10.71
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Split linen tail",
-      "from": [
-        8.08,
-        7.85,
-        10.59
-      ],
-      "to": [
-        8.35,
-        8.55,
-        10.71
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal center",
-      "from": [
-        7.45,
-        8.5,
-        10.46
-      ],
-      "to": [
-        8.55,
-        9.15,
-        10.84
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal top",
-      "from": [
-        7.65,
-        9.15,
-        10.46
-      ],
-      "to": [
-        8.35,
-        9.35,
-        10.84
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal bottom",
-      "from": [
-        7.65,
-        8.3,
-        10.46
-      ],
-      "to": [
-        8.35,
-        8.5,
-        10.84
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Ivory seal sigil",
-      "from": [
-        7.92,
-        8.55,
-        10.44
-      ],
-      "to": [
-        8.08,
-        9.1,
-        10.860000000000001
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Ivory seal sigil crossbar",
-      "from": [
-        7.7,
-        8.8,
-        10.435
-      ],
-      "to": [
-        8.3,
-        8.95,
-        10.865
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen suspension ribbon",
-      "from": [
-        5.29,
-        8.45,
-        7.7
-      ],
-      "to": [
-        5.409999999999999,
-        10.78,
-        8.3
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Split linen tail",
-      "from": [
-        5.29,
-        7.65,
-        7.65
-      ],
-      "to": [
-        5.409999999999999,
-        8.55,
-        7.92
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Split linen tail",
-      "from": [
-        5.29,
-        7.85,
-        8.08
-      ],
-      "to": [
-        5.409999999999999,
-        8.55,
-        8.35
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal center",
-      "from": [
-        5.159999999999999,
-        8.5,
-        7.45
-      ],
-      "to": [
-        5.54,
-        9.15,
-        8.55
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal top",
-      "from": [
-        5.159999999999999,
-        9.15,
-        7.65
-      ],
-      "to": [
-        5.54,
-        9.35,
-        8.35
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal bottom",
-      "from": [
-        5.159999999999999,
-        8.3,
-        7.65
-      ],
-      "to": [
-        5.54,
-        8.5,
-        8.35
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Ivory seal sigil",
-      "from": [
-        5.14,
-        8.55,
-        7.92
-      ],
-      "to": [
-        5.56,
-        9.1,
-        8.08
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Ivory seal sigil crossbar",
-      "from": [
-        5.135,
-        8.8,
-        7.7
-      ],
-      "to": [
-        5.5649999999999995,
-        8.95,
-        8.3
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Linen suspension ribbon",
-      "from": [
-        10.59,
-        8.45,
-        7.7
-      ],
-      "to": [
-        10.71,
-        10.78,
-        8.3
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Split linen tail",
-      "from": [
-        10.59,
-        7.65,
-        7.65
-      ],
-      "to": [
-        10.71,
-        8.55,
-        7.92
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            6,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Split linen tail",
-      "from": [
-        10.59,
-        7.85,
-        8.08
-      ],
-      "to": [
-        10.71,
-        8.55,
-        8.35
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            6,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal center",
-      "from": [
-        10.46,
-        8.5,
-        7.45
-      ],
-      "to": [
-        10.84,
-        9.15,
-        8.55
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal top",
-      "from": [
-        10.46,
-        9.15,
-        7.65
-      ],
-      "to": [
-        10.84,
-        9.35,
-        8.35
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Wax seal bottom",
-      "from": [
-        10.46,
-        8.3,
-        7.65
-      ],
-      "to": [
-        10.84,
-        8.5,
-        8.35
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            0,
-            8,
-            4,
-            12
-          ]
-        }
-      }
-    },
-    {
-      "name": "Ivory seal sigil",
-      "from": [
-        10.44,
-        8.55,
-        7.92
-      ],
-      "to": [
-        10.860000000000001,
-        9.1,
-        8.08
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
-      "name": "Ivory seal sigil crossbar",
-      "from": [
-        10.435,
-        8.8,
-        7.7
-      ],
-      "to": [
-        10.865,
-        8.95,
-        8.3
-      ],
-      "faces": {
-        "up": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "down": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "north": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "south": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "east": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        },
-        "west": {
-          "texture": "#cloth",
-          "uv": [
-            4,
-            0,
-            8,
-            4
-          ]
-        }
-      }
-    },
-    {
       "name": "Suspension chain",
       "from": [
         7.5,
@@ -4154,59 +1392,59 @@
         8.1
       ],
       "faces": {
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            7.5,
-            7.9,
-            7.7,
-            8.1
-          ]
-        },
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            7.5,
-            7.9,
-            7.7,
-            8.1
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            8.3,
-            1.049999999999999,
-            8.5,
-            2.1999999999999993
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            7.5,
-            1.049999999999999,
-            7.7,
-            2.1999999999999993
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            1.049999999999999,
-            8.1,
-            2.1999999999999993
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            1.049999999999999,
-            8.1,
-            2.1999999999999993
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -4223,59 +1461,59 @@
         8.1
       ],
       "faces": {
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            8.3,
-            7.9,
-            8.5,
-            8.1
-          ]
-        },
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            8.3,
-            7.9,
-            8.5,
-            8.1
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            7.5,
-            1.049999999999999,
-            7.699999999999999,
-            2.1999999999999993
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            8.3,
-            1.049999999999999,
-            8.5,
-            2.1999999999999993
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            1.049999999999999,
-            8.1,
-            2.1999999999999993
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            1.049999999999999,
-            8.1,
-            2.1999999999999993
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -4292,59 +1530,59 @@
         8.1
       ],
       "faces": {
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            7.7,
-            7.9,
-            8.3,
-            8.1
-          ]
-        },
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            7.7,
-            7.9,
-            8.3,
-            8.1
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            7.699999999999999,
-            2.0,
-            8.3,
-            2.1999999999999993
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            7.7,
-            2.0,
-            8.3,
-            2.1999999999999993
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            2.0,
-            8.1,
-            2.1999999999999993
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            2.0,
-            8.1,
-            2.1999999999999993
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -4361,59 +1599,59 @@
         8.1
       ],
       "faces": {
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            7.7,
-            7.9,
-            8.3,
-            8.1
-          ]
-        },
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            7.7,
-            7.9,
-            8.3,
-            8.1
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            7.699999999999999,
-            1.049999999999999,
-            8.3,
-            1.25
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            7.7,
-            1.049999999999999,
-            8.3,
-            1.25
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            1.049999999999999,
-            8.1,
-            1.25
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            1.049999999999999,
-            8.1,
-            1.25
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -4430,59 +1668,59 @@
         7.7
       ],
       "faces": {
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            7.5,
-            8.1,
-            7.7
-          ]
-        },
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            8.3,
-            8.1,
-            8.5
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            0.0,
-            8.1,
-            1.1500000000000004
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            0.0,
-            8.1,
-            1.1500000000000004
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.5,
-            0.0,
-            7.7,
-            1.1500000000000004
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            8.3,
-            0.0,
-            8.5,
-            1.1500000000000004
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -4499,59 +1737,59 @@
         8.5
       ],
       "faces": {
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            8.3,
-            8.1,
-            8.5
-          ]
-        },
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            7.5,
-            8.1,
-            7.699999999999999
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            0.0,
-            8.1,
-            1.1500000000000004
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            0.0,
-            8.1,
-            1.1500000000000004
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            8.3,
-            0.0,
-            8.5,
-            1.1500000000000004
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.5,
-            0.0,
-            7.699999999999999,
-            1.1500000000000004
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -4568,59 +1806,59 @@
         8.3
       ],
       "faces": {
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            7.7,
-            8.1,
-            8.3
-          ]
-        },
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            7.699999999999999,
-            8.1,
-            8.3
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            0.9500000000000011,
-            8.1,
-            1.1500000000000004
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            0.9500000000000011,
-            8.1,
-            1.1500000000000004
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.7,
-            0.9500000000000011,
-            8.3,
-            1.1500000000000004
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.699999999999999,
-            0.9500000000000011,
-            8.3,
-            1.1500000000000004
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
@@ -4637,59 +1875,335 @@
         8.3
       ],
       "faces": {
-        "up": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            7.7,
-            8.1,
-            8.3
-          ]
-        },
-        "down": {
-          "texture": "#iron",
-          "uv": [
-            7.9,
-            7.699999999999999,
-            8.1,
-            8.3
-          ]
-        },
         "north": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            0.0,
-            8.1,
-            0.20000000000000107
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "south": {
-          "texture": "#iron",
           "uv": [
-            7.9,
-            0.0,
-            8.1,
-            0.20000000000000107
-          ]
-        },
-        "west": {
-          "texture": "#iron",
-          "uv": [
-            7.7,
-            0.0,
-            8.3,
-            0.20000000000000107
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#iron",
           "uv": [
-            7.699999999999999,
-            0.0,
-            8.3,
-            0.20000000000000107
-          ]
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "Salt ring front",
+      "from": [
+        5.6,
+        5.25,
+        5.6
+      ],
+      "to": [
+        10.4,
+        5.4,
+        6.4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            12.0,
+            1.5,
+            16.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "south": {
+          "uv": [
+            12.0,
+            1.5,
+            16.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "east": {
+          "uv": [
+            13.5,
+            1.5,
+            14.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            13.5,
+            1.5,
+            14.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            12.0,
+            1.5,
+            16.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            12.0,
+            1.5,
+            16.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "Salt ring back",
+      "from": [
+        5.6,
+        5.25,
+        9.6
+      ],
+      "to": [
+        10.4,
+        5.4,
+        10.4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            12.0,
+            1.5,
+            16.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "south": {
+          "uv": [
+            12.0,
+            1.5,
+            16.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "east": {
+          "uv": [
+            13.5,
+            1.5,
+            14.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            13.5,
+            1.5,
+            14.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            12.0,
+            1.5,
+            16.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            12.0,
+            1.5,
+            16.0,
+            2.5
+          ],
+          "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "Salt ring left",
+      "from": [
+        5.6,
+        5.25,
+        6.4
+      ],
+      "to": [
+        6.4,
+        5.4,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            13.5,
+            1.5,
+            14.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "south": {
+          "uv": [
+            13.5,
+            1.5,
+            14.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "east": {
+          "uv": [
+            12.5,
+            1.5,
+            15.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            12.5,
+            1.5,
+            15.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            13.5,
+            0.5,
+            14.5,
+            3.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            13.5,
+            0.5,
+            14.5,
+            3.5
+          ],
+          "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "Salt ring right",
+      "from": [
+        9.6,
+        5.25,
+        6.4
+      ],
+      "to": [
+        10.4,
+        5.4,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            13.5,
+            1.5,
+            14.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "south": {
+          "uv": [
+            13.5,
+            1.5,
+            14.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "east": {
+          "uv": [
+            12.5,
+            1.5,
+            15.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            12.5,
+            1.5,
+            15.5,
+            2.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            13.5,
+            0.5,
+            14.5,
+            3.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            13.5,
+            0.5,
+            14.5,
+            3.5
+          ],
+          "texture": "#sheet"
         }
       }
     }
