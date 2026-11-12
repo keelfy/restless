@@ -1,13 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "minecraft:lantern",
-    "restless:salt",
-    "minecraft:glowstone_dust"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "WGW",
+    "SLS"
   ],
+  "key": {
+    "W": "restless:hallowed_wax",
+    "G": "minecraft:glowstone_dust",
+    "S": "restless:salt",
+    "L": "minecraft:lantern"
+  },
   "result": {
-    "id": "restless:hallowed_lantern",
-    "count": 1
+    "id": "restless:hallowed_lantern"
   }
 }

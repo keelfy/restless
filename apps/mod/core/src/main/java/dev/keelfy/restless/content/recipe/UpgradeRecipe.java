@@ -23,8 +23,8 @@ import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.level.Level;
 
 /**
- * An advanced charm: a base charm and one more essence, shapeless. The upgrade takes the base charm's components with
- * it, so what a stash holds or a key has worn is not lost.
+ * An advanced charm: a base charm, one more essence and a catalyst, shapeless. The upgrade takes the base charm's
+ * components with it, so what a stash holds or a key has worn is not lost.
  */
 public final class UpgradeRecipe extends NormalCraftingRecipe {
     public static final Supplier<RecipeSerializer<?>> SERIALIZER = Platform.get()
@@ -43,6 +43,10 @@ public final class UpgradeRecipe extends NormalCraftingRecipe {
                                                     .forGetter(r -> r.essence),
                                             BuiltInRegistries.ITEM
                                                     .byNameCodec()
+                                                    .fieldOf("catalyst")
+                                                    .forGetter(r -> r.catalyst),
+                                            BuiltInRegistries.ITEM
+                                                    .byNameCodec()
                                                     .fieldOf("result")
                                                     .forGetter(r -> r.result))
                                     .apply(i, UpgradeRecipe::new)),
@@ -52,24 +56,28 @@ public final class UpgradeRecipe extends NormalCraftingRecipe {
                                     ByteBufCodecs.registry(Registries.ITEM),
                                     r -> r.essence,
                                     ByteBufCodecs.registry(Registries.ITEM),
+                                    r -> r.catalyst,
+                                    ByteBufCodecs.registry(Registries.ITEM),
                                     r -> r.result,
                                     UpgradeRecipe::new)));
 
     private final Item base;
     private final Item essence;
+    private final Item catalyst;
     private final Item result;
     private final ShapelessRecipe delegate;
 
-    public UpgradeRecipe(Item base, Item essence, Item result) {
+    public UpgradeRecipe(Item base, Item essence, Item catalyst, Item result) {
         super(new CommonInfo(true), new CraftingBookInfo(CraftingBookCategory.MISC, "restless_upgrade"));
         this.base = base;
         this.essence = essence;
+        this.catalyst = catalyst;
         this.result = result;
         this.delegate = new ShapelessRecipe(
                 commonInfo,
                 bookInfo,
                 new ItemStackTemplate(result),
-                List.of(Ingredient.of(base), Ingredient.of(essence)));
+                List.of(Ingredient.of(base), Ingredient.of(essence), Ingredient.of(catalyst)));
     }
 
     public static void init() {}

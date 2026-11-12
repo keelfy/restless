@@ -1,15 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "restless:shade_essence",
-    "restless:banshee_essence",
-    "restless:domovoi_essence",
-    "restless:hallowed_lantern",
-    "minecraft:echo_shard"
+  "pattern": [
+    "SBD",
+    "ELE"
   ],
+  "key": {
+    "S": "restless:shade_essence",
+    "B": "restless:banshee_essence",
+    "D": "restless:domovoi_essence",
+    "E": "minecraft:echo_shard",
+    "L": "restless:hallowed_lantern"
+  },
   "result": {
-    "id": "restless:hollow_lantern",
-    "count": 1
+    "id": "restless:hollow_lantern"
   }
 }

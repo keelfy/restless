@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "restless:salt",
     "minecraft:paper",
-    "minecraft:string"
+    "restless:hallowed_wax",
+    "restless:salt"
   ],
   "result": {
     "id": "restless:door_charm",
-    "count": 1
+    "count": 2
   }
 }

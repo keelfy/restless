@@ -4,12 +4,13 @@ title: Tools
 
 # Tools
 
-The tools of the trade: how to tell what haunts you, how to keep it off, and how to be rid of it. None needs an essence. Most are crafted in a crafting grid, shapeless, from common items and [salt](#salt). Times are in game time; a day is 24000 ticks, twenty minutes.
+The tools of the trade: how to tell what haunts you, how to keep it off, and how to be rid of it. None needs an essence. They are crafted from common items, [salt](#salt) and, for the mid-tier ones, [hallowed wax](#hallowed-wax): the simple ones shapeless, the rest in a shape. A shape is shown as a grid, top row first, `.` an empty cell. Times are in game time; a day is 24000 ticks, twenty minutes.
 
 A spirit you **sense** is one of your own personal spirits, or a territorial spirit whose reach covers you. Every clue tool below reads from those.
 
 | Tool | Does |
 | --- | --- |
+| [Hallowed Wax](#hallowed-wax) | the seal in every charm and in the mid-tier tools |
 | [Ash](#ash) | shows one trait of a spirit as a print; never lies |
 | [Camera Obscura](#camera-obscura) | photographs a spirit: its type |
 | [Spirit Box](#spirit-box) | answers aloud what you ask around a clue word; may lie |
@@ -32,9 +33,13 @@ Sand + dried kelp makes **2**. Place it on the floor like redstone dust: flat, w
 
 The same ring is needed by the [altar](#altar).
 
+## Hallowed Wax
+
+Honeycomb + salt + ash makes **2**, shapeless. Honeycomb comes from bees, so wax is the first step from vanilla into the mod's craft. It is the **seal** of every base [charm](/en/items/charms) (1 each) and goes into the altar, hallowed lantern, door charm, spirit candle, effigy and reliquary. Advanced charms, consumables and relics take none directly.
+
 ## Ash
 
-1 charcoal makes **4**. Place it like salt. Every 30 seconds each ash block asks the spirits within 16 blocks for a clue (your own, and any territorial one whose reach covers the spot). A spirit that answers leaves a trail of prints across the ash, one every 8 ticks, and the print goes into the journal: a personal spirit's only into the journal of the player it haunts, a territorial one's into that of everyone within 16 blocks. A print fades after 2 minutes. Ash with a print within 1.5 blocks stays quiet.
+Cook 1 charcoal on a campfire: **4**. Place it like salt. Every 30 seconds each ash block asks the spirits within 16 blocks for a clue (your own, and any territorial one whose reach covers the spot). A spirit that answers leaves a trail of prints across the ash, one every 8 ticks, and the print goes into the journal: a personal spirit's only into the journal of the player it haunts, a territorial one's into that of everyone within 16 blocks. A print fades after 2 minutes. Ash with a print within 1.5 blocks stays quiet.
 
 The print is the **nature** of one of the spirit's traits. Ash never lies, but a spirit has exactly one trait foreign to its nature, so go by the print you see most:
 
@@ -49,7 +54,15 @@ Each print is noted in the [journal](#journal). Nature decides the [altar](#alta
 
 ## Camera Obscura
 
-Iron ingot + glass pane + black dye. Use it: a flash, and a **Photograph** of one spirit you can sense, chosen at random if there are several. The photo names its **type** and nothing more ("A silhouette of a Shade"); an evolved spirit shows under its grown name. With nothing to sense, the photo shows nothing. Rest: 30 seconds, spent either way.
+Black wool (B) + 5 copper ingots (C) + amethyst shard (A, the lens), shaped:
+
+```
+. B .
+C A C
+C C C
+```
+
+Use it: a flash, and a **Photograph** of one spirit you can sense, chosen at random if there are several. The photo names its **type** and nothing more ("A silhouette of a Shade"); an evolved spirit shows under its grown name. With nothing to sense, the photo shows nothing. Rest: 30 seconds, spent either way.
 
 - The picture itself is painted on your client and shows in the photo's tooltip. It is also pasted into the spirit's page in the [journal](#journal).
 - A developed photo can go in an item frame, where it shows the picture itself, flat on the wall like a map, with the frame itself hidden. Without the mod on the client the frame shows the plain card.
@@ -58,7 +71,15 @@ Iron ingot + glass pane + black dye. Use it: a flash, and a **Photograph** of on
 
 ## Spirit Box
 
-Iron ingot + redstone + note block. Place it: it faces you. It listens for a chat line, or a phrase said over Plasmo Voice if that mod is present, from a player within **6 blocks** of it.
+Lightning rod (R, the antenna) + 4 copper ingots (C) + note block (N) + amethyst shard (A), shaped:
+
+```
+. R .
+C N C
+C A C
+```
+
+Place it: it faces you. It listens for a chat line, or a phrase said over Plasmo Voice if that mod is present, from a player within **6 blocks** of it.
 
 - **2 seconds** later it answers in chat, in your language, with one word of a trait of a spirit you sense, e.g. `<Spirit Box> dark`. With no spirit to sense it answers `...static...`.
 - **It speaks.** Only you hear the answer, from the box, one word after another in a whisper through a broken radio (English, or Russian if your game is in Russian), with static between. The chat line is its subtitle.
@@ -81,7 +102,14 @@ Iron ingot + redstone + note block. Place it: it faces you. It listens for a cha
 
 ## Ouija Board
 
-Any planks + black dye + salt. Place it flat on the floor. Use it: after 1 second the planchette spells a phrase, one letter every 0.3 seconds on the action bar. Each trait has five phrases: a single word ("SHUT IT"), a half-sentence ("YOUR SLEEP IS MINE") or a hint ("DO NOT TURN AROUND"), and none of them says the trait outright. The spirit is not always listening: 30% of tries the board stays still, and after every try it trembles for 30 seconds and does not answer, so spamming gets nothing. One phrase rarely settles a trait; use the board several times. It may lie: a spirit with the Liar trait names a trait it does not have half of the time, and the note is marked "may lie", as is every board note. For what a line means, see [Reading the Clues](#reading-the-clues). With no spirit to sense, or when the spirit stays silent: "The planchette does not move." During the pause: "The planchette is still trembling."
+Any planks (P) + 2 black dye (D) + bone (B, the planchette), shaped:
+
+```
+D B D
+P P P
+```
+
+Place it flat on the floor. Use it: after 1 second the planchette spells a phrase, one letter every 0.3 seconds on the action bar. Each trait has five phrases: a single word ("SHUT IT"), a half-sentence ("YOUR SLEEP IS MINE") or a hint ("DO NOT TURN AROUND"), and none of them says the trait outright. The spirit is not always listening: 30% of tries the board stays still, and after every try it trembles for 30 seconds and does not answer, so spamming gets nothing. One phrase rarely settles a trait; use the board several times. It may lie: a spirit with the Liar trait names a trait it does not have half of the time, and the note is marked "may lie", as is every board note. For what a line means, see [Reading the Clues](#reading-the-clues). With no spirit to sense, or when the spirit stays silent: "The planchette does not move." During the pause: "The planchette is still trembling."
 
 ## Reading the Clues
 
@@ -115,7 +143,7 @@ What to do with it:
 
 ## Spirit Candle
 
-Candle + soul sand. Hold it in either hand. Its flame leans toward the spirit you sense that acts next, and burns blue for the last **3 seconds** before that event: the warning is exact, it reads the same timer the spirits run on. A spirit may snuff it for 30 seconds.
+Candle + hallowed wax + soul sand, shapeless. Hold it in either hand. Its flame leans toward the spirit you sense that acts next, and burns blue for the last **3 seconds** before that event: the warning is exact, it reads the same timer the spirits run on. A spirit may snuff it for 30 seconds.
 
 ## Journal
 
@@ -141,7 +169,15 @@ Sections show once they have something to say:
 
 ## Altar
 
-Chiseled stone bricks + salt + candle. Placing it builds a 3 by 3 platform and needs a clear 3 by 3 on solid ground. The four corner pillars take candles. Break it and the platform goes, and what lay in the bowl comes back.
+Hallowed wax (W) + gold ingot (G, the bowl) + 2 salt (S) + amethyst block (A) + 3 chiseled stone bricks (B), shaped:
+
+```
+W G W
+S A S
+B B B
+```
+
+Placing it builds a 3 by 3 platform and needs a clear 3 by 3 on solid ground. The four corner pillars take candles. Break it and the platform goes, and what lay in the bowl comes back.
 
 ### Holy water
 
@@ -158,7 +194,7 @@ Use an offering on the altar. It is of one **nature**, which decides which spiri
 | Holy water | holy water | salt | bell |
 | Mirror | mirror | glass pane | spyglass |
 
-Mirror: glass pane + 2 iron nuggets. A spirit may mark it so the next time you lay it down it shows a spirit's name.
+Mirror: a glass pane between 2 iron nuggets, in one row. A spirit may mark it so the next time you lay it down it shows a spirit's name.
 
 Each type takes one form, shown in its bestiary card:
 
@@ -188,19 +224,42 @@ Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offeri
 
 ## Hallowed Lantern
 
-Lantern + salt + glowstone dust. Gives light 12, stands or hangs. While you are within **6 blocks** of it no event of any spirit runs on you. It never wears out.
+Lantern (L) + 2 hallowed wax (W) + 2 glowstone dust (G) + 2 salt (S), shaped:
+
+```
+W G W
+S L S
+```
+
+Gives light 12, stands or hangs. While you are within **6 blocks** of it no event of any spirit runs on you. It never wears out.
 
 ## Dreamcatcher
 
-String + feather + stick + salt. Hangs from the underside of a block. While you **sleep** within **5 blocks** of it no event runs on you. It never wears out. It swings when you brush it.
+4 string (T) + 2 feather (F) + stick (K) + salt (S), shaped:
+
+```
+. K .
+T S T
+F T F
+```
+
+Hangs from the underside of a block. While you **sleep** within **5 blocks** of it no event runs on you. It never wears out. It swings when you brush it.
 
 ## Door Charm
 
-Salt + paper + string. Sticks to the side of a block. Within **8 blocks** it stops the events that act on doors (those tagged *doors*). It wears: every event it stops takes one use, and the **fifth** breaks it.
+Paper + hallowed wax + salt makes **2**, shapeless. Sticks to the side of a block. Within **8 blocks** it stops the events that act on doors (those tagged *doors*). It wears: every event it stops takes one use, and the **fifth** breaks it.
 
 ## Scarecrow
 
-Hay block + carved pumpkin + stick + salt. Within **16 blocks** it stops any event. Every event it stops takes one use, and the **tenth** breaks it. The scarecrow is also the base of the [effigy](/en/items/essences#the-effigy).
+Carved pumpkin (P) + hay block (H) + 2 salt (S) + stick (K), shaped:
+
+```
+. P .
+S H S
+. K .
+```
+
+Within **16 blocks** it stops any event. Every event it stops takes one use, and the **tenth** breaks it. The scarecrow is also the base of the [effigy](/en/items/essences#the-effigy).
 
 ### How wards stack
 

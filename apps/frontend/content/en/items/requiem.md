@@ -8,7 +8,15 @@ The finale. A spirit is a dead person with unfinished business; the Requiem is y
 
 ## The Reliquary
 
-A vessel for the essences, crafted early from an amethyst shard, a gold block, salt and a book, once the essence chapter of the journal is open. It is the visible progress.
+A vessel for the essences, crafted early from 5 gold ingots, an amethyst shard, 2 hallowed wax and a book, once the essence chapter of the journal is open:
+
+```
+G A G
+W B W
+G G G
+```
+
+G gold ingot, A amethyst shard, W hallowed wax, B book. It is the visible progress.
 
 - **Fill it:** use an essence with the reliquary in the other hand. It holds **one essence of each of the fifteen types**, one slot per type, and refuses a second of the same type.
 - **Named types only:** an essence of a type you have never photographed is refused. The type has to have been met and named in the journal.

@@ -3,6 +3,7 @@
   "category": "misc",
   "ingredients": [
     "minecraft:candle",
+    "restless:hallowed_wax",
     "minecraft:soul_sand"
   ],
   "result": {

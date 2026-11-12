@@ -1,12 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:mara_essence",
-    "minecraft:honey_bottle"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "FHF",
+    " W ",
+    " E "
   ],
+  "key": {
+    "F": "minecraft:feather",
+    "H": "minecraft:honey_bottle",
+    "E": "restless:mara_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:borrowed_dream",
-    "count": 1
+    "id": "restless:borrowed_dream"
   }
 }

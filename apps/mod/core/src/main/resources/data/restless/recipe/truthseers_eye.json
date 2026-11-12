@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:dark_eye",
   "essence": "restless:banshee_essence",
+  "catalyst": "minecraft:spyglass",
   "result": "restless:truthseers_eye"
 }

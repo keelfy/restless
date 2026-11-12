@@ -4,7 +4,8 @@
   "ingredients": [
     "restless:shade_essence",
     "restless:salt",
-    "minecraft:coal"
+    "restless:salt",
+    "restless:ash"
   ],
   "result": {
     "id": "restless:dusk_salt",

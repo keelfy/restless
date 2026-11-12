@@ -540,7 +540,8 @@ final class CharmGameTests {
     }
 
     static ItemStack stack(String id) {
-        Item item = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(Restless.MOD_ID, id));
+        Identifier key = id.contains(":") ? Identifier.parse(id) : Identifier.fromNamespaceAndPath(Restless.MOD_ID, id);
+        Item item = BuiltInRegistries.ITEM.getValue(key);
         return new ItemStack(item);
     }
 

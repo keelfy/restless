@@ -3,10 +3,11 @@
   "category": "misc",
   "ingredients": [
     "restless:hoarder_essence",
-    "minecraft:emerald"
+    "#minecraft:bundles",
+    "minecraft:emerald",
+    "restless:hallowed_wax"
   ],
   "result": {
-    "id": "restless:stash",
-    "count": 1
+    "id": "restless:stash"
   }
 }

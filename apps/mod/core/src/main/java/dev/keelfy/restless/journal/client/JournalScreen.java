@@ -175,6 +175,7 @@ public final class JournalScreen extends Screen {
         @Override
         public void item(ItemStack stack, int x, int y) {
             graphics.fakeItem(stack, dx + x, dy + y);
+            graphics.itemDecorations(font, stack, dx + x, dy + y);
         }
 
         @Override

@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:house_key",
   "essence": "restless:hoarder_essence",
+  "catalyst": "minecraft:iron_door",
   "result": "restless:keepers_key"
 }

@@ -1,13 +1,16 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "#minecraft:planks",
-    "minecraft:black_dye",
-    "restless:salt"
+  "pattern": [
+    "DBD",
+    "PPP"
   ],
+  "key": {
+    "D": "minecraft:black_dye",
+    "B": "minecraft:bone",
+    "P": "#minecraft:planks"
+  },
   "result": {
-    "id": "restless:ouija_board",
-    "count": 1
+    "id": "restless:ouija_board"
   }
 }

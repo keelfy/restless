@@ -1,14 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "minecraft:string",
-    "minecraft:feather",
-    "minecraft:stick",
-    "restless:salt"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " K ",
+    "TST",
+    "FTF"
   ],
+  "key": {
+    "K": "minecraft:stick",
+    "T": "minecraft:string",
+    "S": "restless:salt",
+    "F": "minecraft:feather"
+  },
   "result": {
-    "id": "restless:dreamcatcher",
-    "count": 1
+    "id": "restless:dreamcatcher"
   }
 }

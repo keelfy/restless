@@ -1,12 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:domovoi_essence",
-    "minecraft:campfire"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "WC",
+    " C",
+    " E"
   ],
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "E": "restless:domovoi_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:house_key",
-    "count": 1
+    "id": "restless:house_key"
   }
 }

@@ -231,6 +231,9 @@ public final class Content {
                     BuiltInRegistries.BLOCK_ENTITY_TYPE,
                     "altar",
                     key -> new BlockEntityType<>(AltarEntity::new, Set.of(ALTAR.get())));
+    /** The seal in mid-tier tools and every base charm, see docs/crafting-economy.md. */
+    public static final Supplier<Item> HALLOWED_WAX = item("hallowed_wax", p -> new Item(p));
+
     public static final Supplier<Item> HOLY_WATER = item("holy_water", p -> new Item(p.stacksTo(16)));
     public static final Supplier<Item> MIRROR = item("mirror", p -> new Item(p.stacksTo(16)));
     /** A banished spirit drops the essence named after its type: {@code <type>_essence}. Keyed by spirit id. */
@@ -629,6 +632,7 @@ public final class Content {
         tabItems.addAll(List.of(
                 SALT,
                 ASH,
+                HALLOWED_WAX,
                 SPIRIT_CANDLE,
                 CAMERA_OBSCURA,
                 SPIRIT_BOX_ITEM,

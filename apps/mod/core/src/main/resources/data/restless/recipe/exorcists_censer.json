@@ -1,15 +1,20 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "restless:revenant_essence",
-    "restless:demon_essence",
-    "restless:wraith_essence",
-    "minecraft:soul_lantern",
-    "minecraft:blaze_rod"
+  "pattern": [
+    "RDW",
+    "CLC",
+    " B "
   ],
+  "key": {
+    "R": "restless:revenant_essence",
+    "D": "restless:demon_essence",
+    "W": "restless:wraith_essence",
+    "C": "minecraft:iron_chain",
+    "L": "minecraft:soul_lantern",
+    "B": "minecraft:blaze_rod"
+  },
   "result": {
-    "id": "restless:exorcists_censer",
-    "count": 1
+    "id": "restless:exorcists_censer"
   }
 }

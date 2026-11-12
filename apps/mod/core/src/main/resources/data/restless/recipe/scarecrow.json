@@ -1,14 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "minecraft:hay_block",
-    "minecraft:carved_pumpkin",
-    "minecraft:stick",
-    "restless:salt"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " P ",
+    "SHS",
+    " K "
   ],
+  "key": {
+    "P": "minecraft:carved_pumpkin",
+    "S": "restless:salt",
+    "H": "minecraft:hay_block",
+    "K": "minecraft:stick"
+  },
   "result": {
-    "id": "restless:scarecrow",
-    "count": 1
+    "id": "restless:scarecrow"
   }
 }

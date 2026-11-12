@@ -1,13 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:poltergeist_essence",
-    "minecraft:gold_ingot",
-    "minecraft:string"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  G",
+    " W ",
+    "GE "
   ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "E": "restless:poltergeist_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:telekinesis_amulet",
-    "count": 1
+    "id": "restless:telekinesis_amulet"
   }
 }

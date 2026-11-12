@@ -145,6 +145,14 @@ public record Codex(List<Card> charms, List<Card> relics, List<Card> recipes, Op
             for (Ingredient ingredient : holder.value().placementInfo().ingredients()) {
                 ingredient.items().findFirst().ifPresent(h -> {
                     ItemStack stack = new ItemStack(h);
+                    ItemStack same = row.stream()
+                            .filter(other -> ItemStack.isSameItem(other, stack))
+                            .findFirst()
+                            .orElse(null);
+                    if (same != null) {
+                        same.grow(1);
+                        return;
+                    }
                     if (!row.isEmpty()) {
                         names.append(" + ");
                     }

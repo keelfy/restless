@@ -1,14 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "minecraft:amethyst_shard",
-    "minecraft:gold_block",
-    "restless:salt",
-    "minecraft:book"
+  "pattern": [
+    "GAG",
+    "WBW",
+    "GGG"
   ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "A": "minecraft:amethyst_shard",
+    "W": "restless:hallowed_wax",
+    "B": "minecraft:book"
+  },
   "result": {
-    "id": "restless:reliquary",
-    "count": 1
+    "id": "restless:reliquary"
   }
 }

@@ -25,7 +25,7 @@ Some types are hard to meet by chance. Two ways to meet them:
 
 A scarecrow stuffed with one essence, lit with flint and steel or a fire charge. It burns for half a night (12000 ticks) and then calls a spirit of that type.
 
-- **Craft:** scarecrow + candle + salt, shapeless. The scarecrow is hay block + carved pumpkin + stick + salt.
+- **Craft:** scarecrow + candle + hallowed wax, shapeless. The scarecrow is carved pumpkin + hay block + 2 salt + stick, see [Scarecrow](/en/items/tools#scarecrow).
 - **Stuff it:** use an essence on it. Breaking it before it is lit gives the essence back.
 - **Personal type:** born on the nearest player within 24 blocks of the effigy.
 - **Territorial type:** anchored where the effigy stood.
@@ -63,8 +63,8 @@ The journal's page for a type says where it is met once you have identified one.
 
 ## What to spend them on
 
-- One essence and a common item makes a [charm](/en/items/charms).
-- A charm and the essence of another type makes an [advanced charm](/en/items/advanced).
-- Three essences of different types and a rare find make a [relic](/en/items/relics).
+- One essence, a hallowed wax and common items make a [charm](/en/items/charms).
+- A charm, the essence of another type and a catalyst make an [advanced charm](/en/items/advanced). Boggart essence goes into the Changeling Guise.
+- Three essences of different types and rare finds make a [relic](/en/items/relics).
 - One essence and common items makes several [consumables](/en/items/consumables).
 - One essence lights an effigy.

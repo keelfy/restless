@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:death_wail",
   "essence": "restless:revenant_essence",
+  "catalyst": "minecraft:goat_horn",
   "result": "restless:requital_wail"
 }

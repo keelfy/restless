@@ -4,19 +4,26 @@ title: Relics
 
 # Relics
 
-The rarest things in the mod. A relic is made of the essences of **three different types** that share a theme, and of one rare find from the late game. They are crafted in a crafting grid, shapeless, and each is one of a kind: the world has no second recipe for it, and nothing here is spent.
+The rarest things in the mod. A relic is made of the essences of **three different types** that share a theme, and of one rare find from the late game. They are crafted in a crafting grid, in a shape, and each is one of a kind: the world has no second recipe for it, and nothing here is spent.
 
 | Relic | Essences | Rare finds |
 | --- | --- | --- |
-| [Hollow Lantern](#hollow-lantern) | shade, banshee, domovoi | Hallowed Lantern, echo shard |
-| [Ferryman's Coin](#ferrymans-coin) | lost one, nix, trickster | nautilus shell, gold block |
-| [Exorcist's Censer](#exorcists-censer) | revenant, demon, wraith | soul lantern, blaze rod |
+| [Hollow Lantern](#hollow-lantern) | shade, banshee, domovoi | Hallowed Lantern, 2 echo shards |
+| [Ferryman's Coin](#ferrymans-coin) | lost one, nix, trickster | totem of undying, gold block |
+| [Exorcist's Censer](#exorcists-censer) | revenant, demon, wraith | soul lantern, blaze rod, 2 iron chains |
 | [Hoarder's Hollow](#hoarders-hollow) | hoarder, poltergeist, mimic | ender chest, shulker shell |
-| [Mara's Cradle](#maras-cradle) | mara, phantom, lost one | white bed, amethyst block |
+| [Mara's Cradle](#maras-cradle) | mara, phantom, lost one | any bed, creaking heart |
 
 ## Hollow Lantern
 
 A lantern that wards a wide place and teaches while it does.
+
+- **Craft:** shade essence (S), banshee essence (B), domovoi essence (D), 2 echo shards (E), Hallowed Lantern (L). Grids are read top row first:
+
+```
+S B D
+E L E
+```
 
 - **Ward:** like the [Hallowed Lantern](/en/items/tools#hallowed-lantern), no spirit's event runs on a player within **24 blocks**, four times the reach of the old one. The event is lost, not put off.
 - **Clue:** each event it stops writes one trait of a spirit near you into the journal, in the words the ouija board uses. Protection that teaches.
@@ -24,6 +31,14 @@ A lantern that wards a wide place and teaches while it does.
 - It does not add to a Hallowed Lantern's ward: near both, you are warded once, and the hollow one still leaves its clue.
 
 ## Ferryman's Coin
+
+Craft: lost one essence (L), nix essence (N), trickster essence (T), totem of undying (U), gold block (G):
+
+```
+L N T
+. U .
+. G .
+```
 
 Wear it in the **charm slot** with Curios, or carry it in the **off hand** without. When a blow would kill you, you **fade** instead:
 
@@ -33,6 +48,14 @@ Wear it in the **charm slot** with Curios, or carry it in the **off hand** witho
 - A totem of undying is used first. The void and `/kill` are not turned.
 
 ## Exorcist's Censer
+
+Craft: revenant essence (R), demon essence (D), wraith essence (W), 2 iron chains (C), soul lantern (L), blaze rod (B):
+
+```
+R D W
+C L C
+. B .
+```
 
 Carry it in the **off hand** when you offer at an [altar](/en/items/tools#altar). The ritual changes:
 
@@ -46,12 +69,28 @@ Carry it in the **off hand** when you offer at an [altar](/en/items/tools#altar)
 
 A block that is a chest, and looks like a plain one until you give it a face.
 
+- **Craft:** hoarder essence (H), poltergeist essence (P), mimic essence (M), ender chest (C), shulker shell (S):
+
+```
+H P M
+. C .
+. S .
+```
+
 - **Store:** use it to open a store of 27 slots. It is **one store for you**, the same in every hollow you have, like an ender chest. It is kept in the saved data and not dropped when the block is broken, so you lose nothing by moving it.
 - **Disguise:** sneak and use [Mimic Clay](/en/items/consumables#mimic-mimic-clay) that has taken a look on it: it draws as that block from then on. Breaking it gives the clay back, still pressed.
 - The [Dark Lens](/en/items/charms#shade-dark-lens) shows it as it is.
 - **Theft:** when a hoarder's event on your belongings runs, there is a 1 in 5 chance that it also takes one stack from your hollows.
 
 ## Mara's Cradle
+
+Craft: mara essence (M), phantom essence (P), lost one essence (L), any bed (B), creaking heart (H):
+
+```
+M P L
+. B .
+. H .
+```
 
 A bed of two blocks, set like a bed and slept in like one (it asks for the same dark and the same quiet). It also sets your spawn point.
 

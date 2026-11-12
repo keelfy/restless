@@ -1,6 +1,7 @@
 {
   "type": "restless:upgrade",
   "base": "restless:borrowed_face",
-  "essence": "restless:trickster_essence",
+  "essence": "restless:boggart_essence",
+  "catalyst": "minecraft:fermented_spider_eye",
   "result": "restless:changeling_mask"
 }

@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:telekinesis_amulet",
   "essence": "restless:hoarder_essence",
+  "catalyst": "minecraft:fishing_rod",
   "result": "restless:magpies_hook"
 }

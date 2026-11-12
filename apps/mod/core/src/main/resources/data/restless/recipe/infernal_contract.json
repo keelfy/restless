@@ -7,7 +7,6 @@
     "minecraft:blaze_powder"
   ],
   "result": {
-    "id": "restless:infernal_contract",
-    "count": 1
+    "id": "restless:infernal_contract"
   }
 }

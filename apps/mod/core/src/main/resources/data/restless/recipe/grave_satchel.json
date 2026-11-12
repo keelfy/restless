@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:stash",
   "essence": "restless:lost_one_essence",
+  "catalyst": "minecraft:echo_shard",
   "result": "restless:grave_satchel"
 }

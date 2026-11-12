@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:borrowed_dream",
   "essence": "restless:domovoi_essence",
+  "catalyst": "minecraft:campfire",
   "result": "restless:hearth_dream"
 }

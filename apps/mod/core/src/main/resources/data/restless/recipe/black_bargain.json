@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:bargain",
   "essence": "restless:wraith_essence",
+  "catalyst": "minecraft:crying_obsidian",
   "result": "restless:black_bargain"
 }

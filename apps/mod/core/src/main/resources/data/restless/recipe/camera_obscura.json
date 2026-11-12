@@ -1,13 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "minecraft:iron_ingot",
-    "minecraft:glass_pane",
-    "minecraft:black_dye"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " B ",
+    "CAC",
+    "CCC"
   ],
+  "key": {
+    "B": "minecraft:black_wool",
+    "C": "minecraft:copper_ingot",
+    "A": "minecraft:amethyst_shard"
+  },
   "result": {
-    "id": "restless:camera_obscura",
-    "count": 1
+    "id": "restless:camera_obscura"
   }
 }

@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:campfire_cooking",
   "category": "misc",
-  "ingredients": [
-    "minecraft:charcoal"
-  ],
+  "cookingtime": 300,
+  "experience": 0.0,
+  "ingredient": "minecraft:charcoal",
   "result": {
     "id": "restless:ash",
     "count": 4

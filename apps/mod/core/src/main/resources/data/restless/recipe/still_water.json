@@ -3,15 +3,8 @@
   "category": "misc",
   "ingredients": [
     "restless:nix_essence",
-    {
-      "neoforge:ingredient_type": "neoforge:components",
-      "items": "minecraft:potion",
-      "components": {
-        "minecraft:potion_contents": {
-          "potion": "minecraft:water"
-        }
-      }
-    },
+    "restless:holy_water",
+    "restless:holy_water",
     "minecraft:prismarine_shard"
   ],
   "result": {

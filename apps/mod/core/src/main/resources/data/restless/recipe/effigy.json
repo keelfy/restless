@@ -4,10 +4,9 @@
   "ingredients": [
     "restless:scarecrow",
     "minecraft:candle",
-    "restless:salt"
+    "restless:hallowed_wax"
   ],
   "result": {
-    "id": "restless:effigy",
-    "count": 1
+    "id": "restless:effigy"
   }
 }

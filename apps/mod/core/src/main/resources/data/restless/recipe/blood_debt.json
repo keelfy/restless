@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:grudge",
   "essence": "restless:demon_essence",
+  "catalyst": "minecraft:ghast_tear",
   "result": "restless:blood_debt"
 }

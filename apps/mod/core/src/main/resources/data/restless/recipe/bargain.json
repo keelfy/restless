@@ -1,12 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:demon_essence",
-    "minecraft:blaze_powder"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "GRG",
+    " W ",
+    " E "
   ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "R": "minecraft:blaze_rod",
+    "E": "restless:demon_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:bargain",
-    "count": 1
+    "id": "restless:bargain"
   }
 }

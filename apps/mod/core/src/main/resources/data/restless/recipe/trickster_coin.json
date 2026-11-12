@@ -1,12 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:trickster_essence",
-    "minecraft:gold_nugget"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "NNN",
+    "NEN",
+    "NWN"
   ],
+  "key": {
+    "N": "minecraft:gold_nugget",
+    "E": "restless:trickster_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:trickster_coin",
-    "count": 1
+    "id": "restless:trickster_coin"
   }
 }

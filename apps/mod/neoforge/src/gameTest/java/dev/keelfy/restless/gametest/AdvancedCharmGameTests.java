@@ -53,28 +53,36 @@ import net.minecraft.world.phys.Vec3;
 /** The advanced charms: a base charm and one more essence each, and what each does that its base does not. */
 final class AdvancedCharmGameTests {
     private static final Map<String, String[]> UPGRADES = Map.ofEntries(
-            Map.entry("fetch_path", new String[] {"lost_step", "phantom_essence"}),
-            Map.entry("changeling_mask", new String[] {"borrowed_face", "trickster_essence"}),
-            Map.entry("nightwalk_shroud", new String[] {"wraith_shroud", "shade_essence"}),
-            Map.entry("blood_debt", new String[] {"grudge", "demon_essence"}),
-            Map.entry("requital_wail", new String[] {"death_wail", "revenant_essence"}),
-            Map.entry("tidecaller", new String[] {"drowned_stone", "lost_one_essence"}),
-            Map.entry("magpies_hook", new String[] {"telekinesis_amulet", "hoarder_essence"}),
-            Map.entry("truthseers_eye", new String[] {"dark_eye", "banshee_essence"}),
-            Map.entry("hearth_dream", new String[] {"borrowed_dream", "domovoi_essence"}),
-            Map.entry("keepers_key", new String[] {"house_key", "hoarder_essence"}),
-            Map.entry("grave_satchel", new String[] {"stash", "lost_one_essence"}),
-            Map.entry("devils_coin", new String[] {"trickster_coin", "demon_essence"}),
-            Map.entry("twins_mirror", new String[] {"phantom_double", "mimic_essence"}),
-            Map.entry("black_bargain", new String[] {"bargain", "wraith_essence"}));
+            Map.entry("fetch_path", new String[] {"lost_step", "phantom_essence", "minecraft:ender_pearl"}),
+            Map.entry(
+                    "changeling_mask",
+                    new String[] {"borrowed_face", "boggart_essence", "minecraft:fermented_spider_eye"}),
+            Map.entry(
+                    "nightwalk_shroud", new String[] {"wraith_shroud", "shade_essence", "minecraft:closed_eyeblossom"}),
+            Map.entry("blood_debt", new String[] {"grudge", "demon_essence", "minecraft:ghast_tear"}),
+            Map.entry("requital_wail", new String[] {"death_wail", "revenant_essence", "minecraft:goat_horn"}),
+            Map.entry("tidecaller", new String[] {"drowned_stone", "lost_one_essence", "minecraft:heart_of_the_sea"}),
+            Map.entry("magpies_hook", new String[] {"telekinesis_amulet", "hoarder_essence", "minecraft:fishing_rod"}),
+            Map.entry("truthseers_eye", new String[] {"dark_eye", "banshee_essence", "minecraft:spyglass"}),
+            Map.entry("hearth_dream", new String[] {"borrowed_dream", "domovoi_essence", "minecraft:campfire"}),
+            Map.entry("keepers_key", new String[] {"house_key", "hoarder_essence", "minecraft:iron_door"}),
+            Map.entry("grave_satchel", new String[] {"stash", "lost_one_essence", "minecraft:echo_shard"}),
+            Map.entry("devils_coin", new String[] {"trickster_coin", "demon_essence", "minecraft:gold_block"}),
+            Map.entry("twins_mirror", new String[] {"phantom_double", "mimic_essence", "restless:mirror"}),
+            Map.entry("black_bargain", new String[] {"bargain", "wraith_essence", "minecraft:crying_obsidian"}));
 
     private AdvancedCharmGameTests() {}
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         tests.put("every_base_charm_has_an_upgrade_that_keeps_what_it_holds", helper -> {
             for (var upgrade : UPGRADES.entrySet()) {
-                CraftingInput input =
-                        CraftingInput.of(2, 1, List.of(stack(upgrade.getValue()[0]), stack(upgrade.getValue()[1])));
+                CraftingInput input = CraftingInput.of(
+                        3,
+                        1,
+                        List.of(
+                                stack(upgrade.getValue()[0]),
+                                stack(upgrade.getValue()[1]),
+                                stack(upgrade.getValue()[2])));
                 ResourceKey<Recipe<?>> key = ResourceKey.create(
                         Registries.RECIPE, Identifier.fromNamespaceAndPath(Restless.MOD_ID, upgrade.getKey()));
                 var holder = helper.getLevel().recipeAccess().byKey(key);
@@ -89,7 +97,8 @@ final class AdvancedCharmGameTests {
             // A filled stash becomes a satchel with its stack, and a worn key leaves no wear on the keeper's key.
             ItemStack stash = stack("stash");
             stash.set(Content.STASHED.get(), ItemContainerContents.fromItems(List.of(new ItemStack(Items.DIAMOND, 5))));
-            ItemStack satchel = assemble(helper, "grave_satchel", stash, stack("lost_one_essence"));
+            ItemStack satchel = assemble(
+                    helper, "grave_satchel", stash, stack("lost_one_essence"), new ItemStack(Items.ECHO_SHARD));
             check(
                     helper,
                     satchel.getOrDefault(Content.STASHED.get(), ItemContainerContents.EMPTY)
@@ -99,7 +108,8 @@ final class AdvancedCharmGameTests {
                     "the satchel must keep the stash's stack");
             ItemStack worn = stack("house_key");
             worn.setDamageValue(3);
-            ItemStack keeper = assemble(helper, "keepers_key", worn, stack("hoarder_essence"));
+            ItemStack keeper =
+                    assemble(helper, "keepers_key", worn, stack("hoarder_essence"), new ItemStack(Items.IRON_DOOR));
             check(helper, keeper.getDamageValue() == 0, "the keeper's key must not wear");
             helper.succeed();
         });
@@ -459,12 +469,13 @@ final class AdvancedCharmGameTests {
         });
     }
 
-    private static ItemStack assemble(GameTestHelper helper, String id, ItemStack base, ItemStack essence) {
+    private static ItemStack assemble(
+            GameTestHelper helper, String id, ItemStack base, ItemStack essence, ItemStack catalyst) {
         ResourceKey<Recipe<?>> key =
                 ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(Restless.MOD_ID, id));
         var recipe = (CraftingRecipe)
                 helper.getLevel().recipeAccess().byKey(key).orElseThrow().value();
-        return recipe.assemble(CraftingInput.of(2, 1, List.of(base, essence)));
+        return recipe.assemble(CraftingInput.of(3, 1, List.of(base, essence, catalyst)));
     }
 
     /** A shut, roofed, unlit room around {@code at}. */

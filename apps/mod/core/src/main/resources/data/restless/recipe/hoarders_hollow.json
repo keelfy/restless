@@ -1,15 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "restless:hoarder_essence",
-    "restless:poltergeist_essence",
-    "restless:mimic_essence",
-    "minecraft:ender_chest",
-    "minecraft:shulker_shell"
+  "pattern": [
+    "HPM",
+    " C ",
+    " S "
   ],
+  "key": {
+    "H": "restless:hoarder_essence",
+    "P": "restless:poltergeist_essence",
+    "M": "restless:mimic_essence",
+    "C": "minecraft:ender_chest",
+    "S": "minecraft:shulker_shell"
+  },
   "result": {
-    "id": "restless:hoarders_hollow",
-    "count": 1
+    "id": "restless:hoarders_hollow"
   }
 }

@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:lost_step",
   "essence": "restless:phantom_essence",
+  "catalyst": "minecraft:ender_pearl",
   "result": "restless:fetch_path"
 }

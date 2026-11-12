@@ -1,12 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:phantom_essence",
-    "minecraft:phantom_membrane"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "MMM",
+    " W ",
+    " E "
   ],
+  "key": {
+    "M": "minecraft:phantom_membrane",
+    "E": "restless:phantom_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:phantom_double",
-    "count": 1
+    "id": "restless:phantom_double"
   }
 }

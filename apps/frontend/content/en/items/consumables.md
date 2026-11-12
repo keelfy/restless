@@ -4,7 +4,7 @@ title: Consumables
 
 # Consumables
 
-Each essence also makes something that is spent as it is used. They are crafted in a crafting grid, shapeless, from the essence and common items, and one craft makes several. Times are in game time; a day is twenty minutes.
+Each essence also makes something that is spent as it is used. They are crafted in a crafting grid, shapeless, from the essence and common items, and one craft makes several. The yield rule: **4** by default; a drink makes one per vessel in the recipe (bottles, honey bottles); the Infernal Contract makes 1; Mimic Clay makes 8. No wax is needed. Times are in game time; a day is twenty minutes.
 
 ## Poltergeist: Restless Knot
 
@@ -12,11 +12,11 @@ Poltergeist essence + string + 2 iron chains makes **4**. Tie it on a container:
 
 ## Shade: Dusk Salt
 
-Shade essence + salt + coal makes **4**. Scatter it on a block: no hostile mob spawns of itself within 12 blocks, until you sweep the salt up. Use salt sneaking within 2 blocks of the spot and you take it back. Spawners and spirits' events are not stopped.
+Shade essence + 2 salt + ash makes **4**. Scatter it on a block: no hostile mob spawns of itself within 12 blocks, until you sweep the salt up. Use salt sneaking within 2 blocks of the spot and you take it back. Spawners and spirits' events are not stopped.
 
 ## Nix: Still Water
 
-Nix essence + water bottle + prismarine shard makes **2**. Drink it: the rain and thunder clear, and the weather then runs its own course. Drink it sneaking: a storm, of the length a natural one has. Overworld only.
+Nix essence + 2 [holy water](/en/items/tools#holy-water) + prismarine shard makes **2**. Drink it: the rain and thunder clear, and the weather then runs its own course. Drink it sneaking: a storm, of the length a natural one has. Overworld only.
 
 ## Phantom: Sighting Mark
 
@@ -28,15 +28,15 @@ Mimic essence + 4 clay balls makes **8**. Press it on a block and it takes that 
 
 ## Wraith: Wraith Oil
 
-Wraith essence + glass bottle + ink sac makes **2**. Use it with a weapon in the other hand: 30 blows that, in light 7 or lower, hit half again as hard through armor.
+Wraith essence + 2 glass bottles + ink sac makes **2**. Use it with a weapon in the other hand: 30 blows that, in light 7 or lower, hit half again as hard through armor.
 
 ## Mara: Dreamless Draught
 
-Mara essence + honey bottle + poppy makes **3**. Drink it before bed: you may sleep with monsters near, and the night passes with only you in bed. You wake with 0.3 sanity more, and your mara does not act that night.
+Mara essence + 3 honey bottles + poppy makes **3**. Drink it before bed: you may sleep with monsters near, and the night passes with only you in bed. You wake with 0.3 sanity more, and your mara does not act that night.
 
 ## Banshee: Omen Candle
 
-Banshee essence + candle + bone meal makes **4**. Light it with fire; it burns until it has served. A harmful event on a player within 16 blocks is announced by its wail 5 seconds before it lands, and the candle goes out when the event does. Light it again for the next. The lights events snuff it, as they do any candle.
+Banshee essence + 4 candles + bone meal makes **4**. Light it with fire; it burns until it has served. A harmful event on a player within 16 blocks is announced by its wail 5 seconds before it lands, and the candle goes out when the event does. Light it again for the next. The lights events snuff it, as they do any candle.
 
 ## Revenant: Bloodied Rag
 
@@ -44,11 +44,11 @@ Revenant essence + 2 rotten flesh + red dye makes **4**. Throw it at a mob: unti
 
 ## Lost one: Wayfinder's Ash
 
-Lost one essence + ash powder + bone makes **4**. Use it: footprints lead to where you last died, for 5 minutes. Use it sneaking and they lead to your respawn point. One trail at a time.
+Lost one essence + ash + bone makes **4**. Use it: footprints lead to where you last died, for 5 minutes. Use it sneaking and they lead to your respawn point. One trail at a time.
 
 ## Domovoi: Domovoi's Porridge
 
-Domovoi essence + bowl + wheat + milk bucket makes **4**. Eat it: you gain Growth, which has no end of its own, only your death or a bucket of milk. While it lasts, crops and saplings within 32 blocks of you grow three times as fast, and young animals grow up sooner and breed again sooner. You leave the bowl. In an anvil the porridge mends a House Key by 8 uses.
+Domovoi essence + 4 bowls + wheat + milk bucket makes **4**. Eat it: you gain Growth, which has no end of its own, only your death or a bucket of milk. While it lasts, crops and saplings within 32 blocks of you grow three times as fast, and young animals grow up sooner and breed again sooner. You leave the bowl. In an anvil the porridge mends a House Key by 8 uses.
 
 ## Hoarder: Magpie Feather
 

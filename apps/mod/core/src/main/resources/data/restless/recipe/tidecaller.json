@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:drowned_stone",
   "essence": "restless:lost_one_essence",
+  "catalyst": "minecraft:heart_of_the_sea",
   "result": "restless:tidecaller"
 }

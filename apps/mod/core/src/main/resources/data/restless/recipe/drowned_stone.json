@@ -1,12 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:nix_essence",
-    "minecraft:nautilus_shell"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " N ",
+    "PWP",
+    " E "
   ],
+  "key": {
+    "N": "minecraft:nautilus_shell",
+    "P": "minecraft:prismarine_shard",
+    "E": "restless:nix_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:drowned_stone",
-    "count": 1
+    "id": "restless:drowned_stone"
   }
 }

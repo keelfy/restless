@@ -4,24 +4,24 @@ title: Advanced charms
 
 # Advanced charms
 
-Put a charm and one essence of **another** type in a crafting grid, shapeless. The result is an advanced charm that does what its base did, and more or differently. It keeps what the base held: a stash's stack, a rest not yet over. They are used the same way as the base: worn in the slot named on each, or used from the hand. See [where a worn charm goes](/en/items#rules-every-charm-shares).
+Put a charm, one essence of **another** type and a **catalyst** in a crafting grid, shapeless. The catalyst is a rare vanilla find, listed with each. The result is an advanced charm that does what its base did, and more or differently. It keeps what the base held: a stash's stack, a rest not yet over. They are used the same way as the base: worn in the slot named on each, or used from the hand. See [where a worn charm goes](/en/items#rules-every-charm-shares).
 
-| Advanced charm | Base + essence |
-| --- | --- |
-| [Fetch's Path](#fetchs-path) | Lost Step + phantom |
-| [Changeling Guise](#changeling-guise) | Borrowed Face + trickster |
-| [Nightwalk Shroud](#nightwalk-shroud) | Wraith's Breath + shade |
-| [Blood Debt](#blood-debt) | Grudge + demon |
-| [Requital Wail](#requital-wail) | Death Wail + revenant |
-| [Tidecaller](#tidecaller) | Drowned Stone + lost one |
-| [Magpie's Hook](#magpies-hook) | Telekinesis Rod + hoarder |
-| [Truthseer's Eye](#truthseers-eye) | Dark Lens + banshee |
-| [Hearth Dream](#hearth-dream) | Borrowed Dream + domovoi |
-| [Keeper's Key](#keepers-key) | House Key + hoarder |
-| [Grave Satchel](#grave-satchel) | Stash + lost one |
-| [Devil's Coin](#devils-coin) | Trickster's Coin + demon |
-| [Twin's Mirror](#twins-mirror) | Phantom Double + mimic |
-| [Black Bargain](#black-bargain) | Bargain + wraith |
+| Advanced charm | Base + essence | Catalyst |
+| --- | --- | --- |
+| [Fetch's Path](#fetchs-path) | Lost Step + phantom | ender pearl |
+| [Changeling Guise](#changeling-guise) | Borrowed Face + boggart | fermented spider eye |
+| [Nightwalk Shroud](#nightwalk-shroud) | Wraith's Breath + shade | closed eyeblossom |
+| [Blood Debt](#blood-debt) | Grudge + demon | ghast tear |
+| [Requital Wail](#requital-wail) | Death Wail + revenant | goat horn |
+| [Tidecaller](#tidecaller) | Drowned Stone + lost one | heart of the sea |
+| [Magpie's Hook](#magpies-hook) | Telekinesis Rod + hoarder | fishing rod |
+| [Truthseer's Eye](#truthseers-eye) | Dark Lens + banshee | spyglass |
+| [Hearth Dream](#hearth-dream) | Borrowed Dream + domovoi | campfire |
+| [Keeper's Key](#keepers-key) | House Key + hoarder | iron door |
+| [Grave Satchel](#grave-satchel) | Stash + lost one | echo shard |
+| [Devil's Coin](#devils-coin) | Trickster's Coin + demon | gold block |
+| [Twin's Mirror](#twins-mirror) | Phantom Double + mimic | [mirror](/en/items/tools#the-offering) |
+| [Black Bargain](#black-bargain) | Bargain + wraith | crying obsidian |
 
 ## Fetch's Path
 
@@ -29,7 +29,7 @@ The Lost Step, and a double of you stays where the step began for 4 seconds. Hos
 
 ## Changeling Guise
 
-The Borrowed Face, but the first blow does not break it. The mob you struck is **framed**, and the nearest hostile mob turns on it. The second blow breaks the face as before.
+The Borrowed Face, made with boggart essence, but the first blow does not break it. The mob you struck is **framed**, and the nearest hostile mob turns on it. The second blow breaks the face as before.
 
 ## Nightwalk Shroud
 

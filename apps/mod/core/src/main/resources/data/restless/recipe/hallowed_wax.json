@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:honeycomb",
+    "restless:salt",
+    "restless:ash"
+  ],
+  "result": {
+    "id": "restless:hallowed_wax",
+    "count": 2
+  }
+}

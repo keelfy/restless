@@ -353,8 +353,8 @@ final class JournalGameTests {
                     "an advanced charm must wait for the other essence's spirit");
             check(
                     helper,
-                    codex.charms().getFirst().entries().getLast().items().size() == 3,
-                    "a recipe row holds each ingredient and the result");
+                    codex.charms().getFirst().entries().getLast().items().size() == 5,
+                    "a recipe row holds each distinct ingredient and the result");
 
             check(
                     helper,

@@ -2,5 +2,6 @@
   "type": "restless:upgrade",
   "base": "restless:trickster_coin",
   "essence": "restless:demon_essence",
+  "catalyst": "minecraft:gold_block",
   "result": "restless:devils_coin"
 }

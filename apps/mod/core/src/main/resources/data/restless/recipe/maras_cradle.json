@@ -1,15 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "restless:mara_essence",
-    "restless:phantom_essence",
-    "restless:lost_one_essence",
-    "minecraft:white_bed",
-    "minecraft:amethyst_block"
+  "pattern": [
+    "MPL",
+    " B ",
+    " H "
   ],
+  "key": {
+    "M": "restless:mara_essence",
+    "P": "restless:phantom_essence",
+    "L": "restless:lost_one_essence",
+    "B": "#minecraft:beds",
+    "H": "minecraft:creaking_heart"
+  },
   "result": {
-    "id": "restless:maras_cradle",
-    "count": 1
+    "id": "restless:maras_cradle"
   }
 }

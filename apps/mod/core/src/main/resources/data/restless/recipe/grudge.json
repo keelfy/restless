@@ -1,12 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:revenant_essence",
-    "minecraft:iron_sword"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "III",
+    " W ",
+    " E "
   ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "E": "restless:revenant_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:grudge",
-    "count": 1
+    "id": "restless:grudge"
   }
 }

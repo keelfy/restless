@@ -1,12 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:wraith_essence",
-    "minecraft:iron_ingot"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "CCC",
+    " W ",
+    " E "
   ],
+  "key": {
+    "C": "minecraft:cobweb",
+    "E": "restless:wraith_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:wraith_shroud",
-    "count": 1
+    "id": "restless:wraith_shroud"
   }
 }

@@ -1,12 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "restless:banshee_essence",
-    "minecraft:bell"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SWS",
+    " B ",
+    " E "
   ],
+  "key": {
+    "S": "minecraft:string",
+    "B": "minecraft:bell",
+    "E": "restless:banshee_essence",
+    "W": "restless:hallowed_wax"
+  },
   "result": {
-    "id": "restless:death_wail",
-    "count": 1
+    "id": "restless:death_wail"
   }
 }
