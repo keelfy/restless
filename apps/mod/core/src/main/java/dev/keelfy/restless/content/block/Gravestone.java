@@ -16,7 +16,7 @@ import net.minecraft.world.phys.BlockHitResult;
 /** A spirit's grave (see {@link Graves}): using it reads the stone, and the thing the spirit wants lays it to rest. */
 public final class Gravestone extends ShapedBlock {
     public Gravestone(BlockBehaviour.Properties properties) {
-        super(properties, Block.box(2, 0, 6, 14, 15, 10));
+        super(properties, Block.box(2, 0, 4, 14, 15, 12));
     }
 
     @Override

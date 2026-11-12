@@ -1,70 +1,399 @@
 {
   "textures": {
     "particle": "restless:block/gravestone",
-    "all": "restless:block/gravestone"
+    "sheet": "restless:block/gravestone"
   },
   "elements": [
     {
+      "name": "Soil",
       "from": [
-        2,
+        1,
         0,
-        5
+        3
       ],
       "to": [
-        14,
-        2,
-        11
+        15,
+        1,
+        13
       ],
       "faces": {
-        "up": {
-          "texture": "#all"
-        },
-        "down": {
-          "texture": "#all"
+        "south": {
+          "uv": [
+            0.25,
+            15.5,
+            3.75,
+            16.0
+          ],
+          "texture": "#sheet"
         },
         "north": {
-          "texture": "#all"
-        },
-        "south": {
-          "texture": "#all"
+          "uv": [
+            0.25,
+            15.5,
+            3.75,
+            16.0
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#all"
+          "uv": [
+            0.75,
+            15.5,
+            3.25,
+            16.0
+          ],
+          "texture": "#sheet"
         },
         "west": {
-          "texture": "#all"
+          "uv": [
+            0.75,
+            15.5,
+            3.25,
+            16.0
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            0.25,
+            9.5,
+            3.75,
+            14.5
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            0.25,
+            9.5,
+            3.75,
+            14.5
+          ],
+          "texture": "#sheet"
         }
       }
     },
     {
+      "name": "Plinth",
+      "from": [
+        2,
+        1,
+        4
+      ],
+      "to": [
+        14,
+        3,
+        12
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            8.5,
+            6.5,
+            11.5,
+            7.5
+          ],
+          "texture": "#sheet"
+        },
+        "north": {
+          "uv": [
+            8.5,
+            6.5,
+            11.5,
+            7.5
+          ],
+          "texture": "#sheet"
+        },
+        "east": {
+          "uv": [
+            9.0,
+            6.5,
+            11.0,
+            7.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            9.0,
+            6.5,
+            11.0,
+            7.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            4.5,
+            10.0,
+            7.5,
+            14.0
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            8.5,
+            2.0,
+            11.5,
+            6.0
+          ],
+          "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "Slab",
       "from": [
         3,
-        2,
+        3,
         6
       ],
       "to": [
         13,
+        13,
+        10
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            4.5,
+            0.5,
+            7.5,
+            7.5
+          ],
+          "texture": "#sheet"
+        },
+        "north": {
+          "uv": [
+            8.75,
+            9.5,
+            11.25,
+            14.5
+          ],
+          "texture": "#sheet"
+        },
+        "east": {
+          "uv": [
+            13.5,
+            9.5,
+            14.5,
+            14.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.5,
+            2.5,
+            6.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            4.75,
+            11.0,
+            7.25,
+            13.0
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            0.75,
+            3.0,
+            3.25,
+            5.0
+          ],
+          "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "Shoulder",
+      "from": [
+        4,
+        13,
+        6
+      ],
+      "to": [
+        12,
+        14,
+        10
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            1.0,
+            1.0,
+            3.0,
+            1.5
+          ],
+          "texture": "#sheet"
+        },
+        "north": {
+          "uv": [
+            1.0,
+            1.0,
+            3.0,
+            1.5
+          ],
+          "texture": "#sheet"
+        },
+        "east": {
+          "uv": [
+            1.5,
+            1.0,
+            2.5,
+            1.5
+          ],
+          "texture": "#sheet"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            1.0,
+            2.5,
+            1.5
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            5.0,
+            11.0,
+            7.0,
+            13.0
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.0,
+            3.0,
+            3.0,
+            5.0
+          ],
+          "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "Crown",
+      "from": [
+        5,
+        14,
+        6
+      ],
+      "to": [
+        10,
         15,
         10
       ],
       "faces": {
-        "up": {
-          "texture": "#all"
-        },
-        "down": {
-          "texture": "#all"
+        "south": {
+          "uv": [
+            1.25,
+            0.5,
+            2.5,
+            1.0
+          ],
+          "texture": "#sheet"
         },
         "north": {
-          "texture": "#all"
-        },
-        "south": {
-          "texture": "#all"
+          "uv": [
+            1.25,
+            0.5,
+            2.5,
+            1.0
+          ],
+          "texture": "#sheet"
         },
         "east": {
-          "texture": "#all"
+          "uv": [
+            13.5,
+            8.5,
+            14.5,
+            9.0
+          ],
+          "texture": "#sheet"
         },
         "west": {
-          "texture": "#all"
+          "uv": [
+            1.5,
+            0.5,
+            2.5,
+            1.0
+          ],
+          "texture": "#sheet"
+        },
+        "up": {
+          "uv": [
+            5.25,
+            11.0,
+            6.5,
+            13.0
+          ],
+          "texture": "#sheet"
+        },
+        "down": {
+          "uv": [
+            1.25,
+            3.0,
+            2.5,
+            5.0
+          ],
+          "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "MossPlinth",
+      "from": [
+        2,
+        3,
+        9
+      ],
+      "to": [
+        8,
+        3.6,
+        12
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            12.5,
+            4.5,
+            14.0,
+            6.0
+          ],
+          "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "MossSlab",
+      "from": [
+        3,
+        3,
+        10
+      ],
+      "to": [
+        6,
+        6,
+        10.1
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            12.75,
+            5.0,
+            13.5,
+            6.5
+          ],
+          "texture": "#sheet"
         }
       }
     }
