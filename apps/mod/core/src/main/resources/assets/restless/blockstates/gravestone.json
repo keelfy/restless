@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
+      "model": "restless:block/gravestone",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "restless:block/gravestone",
+      "y": 270
+    },
+    "facing=south": {
       "model": "restless:block/gravestone"
+    },
+    "facing=west": {
+      "model": "restless:block/gravestone",
+      "y": 90
     }
   }
 }

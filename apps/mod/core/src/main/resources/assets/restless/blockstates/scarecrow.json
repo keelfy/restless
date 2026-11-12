@@ -1,64 +1,304 @@
 {
   "variants": {
-    "half=lower,wear=0": {
+    "facing=north,half=lower,wear=0": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=0": {
+    "facing=east,half=lower,wear=0": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=0": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=0": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=0": {
       "model": "restless:block/scarecrow_upper"
     },
-    "half=lower,wear=1": {
+    "facing=east,half=upper,wear=0": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=0": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=0": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
+    },
+    "facing=north,half=lower,wear=1": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=1": {
+    "facing=east,half=lower,wear=1": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=1": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=1": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=1": {
       "model": "restless:block/scarecrow_upper"
     },
-    "half=lower,wear=2": {
+    "facing=east,half=upper,wear=1": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=1": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=1": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
+    },
+    "facing=north,half=lower,wear=2": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=2": {
+    "facing=east,half=lower,wear=2": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=2": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=2": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=2": {
       "model": "restless:block/scarecrow_upper"
     },
-    "half=lower,wear=3": {
+    "facing=east,half=upper,wear=2": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=2": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=2": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
+    },
+    "facing=north,half=lower,wear=3": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=3": {
+    "facing=east,half=lower,wear=3": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=3": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=3": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=3": {
       "model": "restless:block/scarecrow_upper"
     },
-    "half=lower,wear=4": {
+    "facing=east,half=upper,wear=3": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=3": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=3": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
+    },
+    "facing=north,half=lower,wear=4": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=4": {
+    "facing=east,half=lower,wear=4": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=4": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=4": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=4": {
       "model": "restless:block/scarecrow_upper"
     },
-    "half=lower,wear=5": {
+    "facing=east,half=upper,wear=4": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=4": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=4": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
+    },
+    "facing=north,half=lower,wear=5": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=5": {
+    "facing=east,half=lower,wear=5": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=5": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=5": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=5": {
       "model": "restless:block/scarecrow_upper"
     },
-    "half=lower,wear=6": {
+    "facing=east,half=upper,wear=5": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=5": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=5": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
+    },
+    "facing=north,half=lower,wear=6": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=6": {
+    "facing=east,half=lower,wear=6": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=6": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=6": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=6": {
       "model": "restless:block/scarecrow_upper"
     },
-    "half=lower,wear=7": {
+    "facing=east,half=upper,wear=6": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=6": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=6": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
+    },
+    "facing=north,half=lower,wear=7": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=7": {
+    "facing=east,half=lower,wear=7": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=7": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=7": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=7": {
       "model": "restless:block/scarecrow_upper"
     },
-    "half=lower,wear=8": {
+    "facing=east,half=upper,wear=7": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=7": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=7": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
+    },
+    "facing=north,half=lower,wear=8": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=8": {
+    "facing=east,half=lower,wear=8": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=8": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=8": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=8": {
       "model": "restless:block/scarecrow_upper"
     },
-    "half=lower,wear=9": {
+    "facing=east,half=upper,wear=8": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=8": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=8": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
+    },
+    "facing=north,half=lower,wear=9": {
       "model": "restless:block/scarecrow_lower"
     },
-    "half=upper,wear=9": {
+    "facing=east,half=lower,wear=9": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 90
+    },
+    "facing=south,half=lower,wear=9": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 180
+    },
+    "facing=west,half=lower,wear=9": {
+      "model": "restless:block/scarecrow_lower",
+      "y": 270
+    },
+    "facing=north,half=upper,wear=9": {
       "model": "restless:block/scarecrow_upper"
+    },
+    "facing=east,half=upper,wear=9": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 90
+    },
+    "facing=south,half=upper,wear=9": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 180
+    },
+    "facing=west,half=upper,wear=9": {
+      "model": "restless:block/scarecrow_upper",
+      "y": 270
     }
   }
 }

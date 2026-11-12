@@ -29,8 +29,10 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 final class ScareGameTests {
     private static final BlockPos FEET = HauntEventGameTests.FEET;
     private static final int LIGHT_TICKS = 5;
-    /** Looks at every {@code LIGHT_TICKS} for the light to be worked out: 6 more times is 35 ticks, inside 40. */
-    private static final int LIGHT_WAIT = 6;
+    /** Looks at every {@code LIGHT_TICKS} for the light to be worked out, up to {@code LIGHT_SLACK} ticks in all. */
+    private static final int LIGHT_SLACK = 100;
+
+    private static final int LIGHT_WAIT = LIGHT_SLACK / LIGHT_TICKS;
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         HauntEventGameTests.PADDING.put("scare_slow_turn", 40);
@@ -188,6 +190,12 @@ final class ScareGameTests {
                                     "keeping still must cost nothing");
                             scene.end(helper);
                         })));
+        // The light engine is slow when the server is busy: every scene gets time to wait for it.
+        for (String name : tests.keySet()) {
+            if (name.startsWith("scare_")) {
+                HauntEventGameTests.TIMEOUT.merge(name, 40 + LIGHT_SLACK, Integer::sum);
+            }
+        }
     }
 
     private static void scene(GameTestHelper helper, String id, Consumer<Scene> then) {

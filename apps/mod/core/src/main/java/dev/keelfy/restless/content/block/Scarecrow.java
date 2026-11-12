@@ -1,5 +1,6 @@
 package dev.keelfy.restless.content.block;
 
+import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -13,6 +14,8 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -23,21 +26,26 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
-/** A worn ward two blocks tall: the post below, the body and head above. Both halves share the wear. */
+/**
+ * A worn ward two blocks tall: the post below, the body and head above. Both halves share the wear and the side the
+ * face looks to, which is toward the player who places it.
+ */
 public final class Scarecrow extends WornWard {
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape LOWER = Block.box(4, 0, 4, 12, 16, 12);
-    private static final VoxelShape UPPER = Block.box(0, 0, 5, 16, 16, 11);
+    private static final Map<Direction, VoxelShape> UPPER = turned(Block.box(0, 0, 5, 16, 16, 11));
 
     public Scarecrow(BlockBehaviour.Properties properties) {
         super(properties, LOWER, Kind.SCARECROW, 10);
-        registerDefaultState(defaultBlockState().setValue(HALF, DoubleBlockHalf.LOWER));
+        registerDefaultState(
+                defaultBlockState().setValue(HALF, DoubleBlockHalf.LOWER).setValue(FACING, Direction.NORTH));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(HALF);
+        builder.add(HALF, FACING);
     }
 
     @Override
@@ -46,6 +54,7 @@ public final class Scarecrow extends WornWard {
         Level level = context.getLevel();
         return pos.getY() < level.getMaxY() && level.getBlockState(pos.above()).canBeReplaced(context)
                 ? defaultBlockState()
+                        .setValue(FACING, context.getHorizontalDirection().getOpposite())
                 : null;
     }
 
@@ -75,7 +84,17 @@ public final class Scarecrow extends WornWard {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? LOWER : UPPER;
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? LOWER : UPPER.get(state.getValue(FACING));
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     /** Wears both halves together; the last use removes both. */
