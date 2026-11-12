@@ -1,6 +1,23 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "restless:item/door_charm"
+  "parent": "restless:block/door_charm",
+  "gui_light": "front",
+  "display": {
+    "gui": {
+      "rotation": [
+        8,
+        155,
+        0
+      ],
+      "translation": [
+        -3.896,
+        -1.1628,
+        8.2737
+      ],
+      "scale": [
+        1.25,
+        1.25,
+        1.25
+      ]
+    }
   }
 }
