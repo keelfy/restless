@@ -1,7 +1,7 @@
 # Curios rework: charms as worn accessories
 
 Status: built, named and drawn. Done: `Worn` seam, Curios adapter, slot tags and player entity file, Nightwalk Shroud
-worn-state, satchel death and key wear through `Worn`, tooltip lines in two colours, wiki en+ru. Renames are done. Icons are redrawn (16x16, via `chatgpt-6.1-sol`): active tools carry a 3x3 red wax seal in the bottom-right corner, worn charms carry none. Open: `ICurioRenderer`, a manual run of `runClient` with Curios.
+worn-state, satchel death and key wear through `Worn`, tooltip lines in two colours, wiki en+ru. Renames are done. Icons are redrawn (32x32, via `chatgpt-6.1-sol`): active tools carry a ~5x5 red wax seal in the bottom-right corner, worn charms carry none. Open: `ICurioRenderer`, a manual run of `runClient` with Curios.
 
 Findings while building:
 
