@@ -122,7 +122,7 @@ tools read the player's own spirits and the territorial ones whose radius holds 
 
 | Clue | Tool | What it shows |
 |---|---|---|
-| footprints | **Ash powder** (charcoal, makes 4) | Placed flat like salt. After `ash.reveal_ticks` (30 s), if a spirit that leaves footprints is within `ash.reach` of it, it takes one of four prints (bare foot, paw, hoof, drag). Each trail shows one random trait of the spirit, as the print of that trait's nature: mirror a bare foot, iron a paw, holy water a hoof, glowstone a drag. |
+| footprints | **Ash powder** (charcoal, makes 4) | Placed flat like salt. After `ash.reveal_ticks` (30 s), if a spirit that leaves footprints is within `ash.reach` of it, it takes one of four prints (bare foot, paw, hoof, drag). Each trail shows one random trait of the spirit, as the print of that trait's nature: deceit a bare foot, objects a paw, malice a hoof, darkness a drag. |
 | silhouette | **Camera obscura** (iron, glass pane, black dye) | Use it: a **photograph** with the spirit's type only (no trait, no weakness), `camera.cooldown_ticks` apart. The figure on the picture is drawn from the spirit's type (build: hooded, hunched, horned...) and its seed (small differences), so the same spirit always looks the same (`photo/Apparition.java`). |
 | voice | **Spirit box** (block: iron, redstone, note block) | Say something in chat within `spirit_box.radius` of it: `spirit_box.delay_ticks` later (40) it answers with a word of one trait. What was asked (`spirit_box.questions`: words whole, or stems ending in `*`) adds up to 2 broken words around it (`Reply`), never a trait word. With [Plasmo Voice](https://github.com/plasmoapp/plasmo-voice) (2.2.0-beta.2+) on the server, finishing a phrase on voice chat does the same; the server makes the phrase out with Vosk (`compat.Transcriber`), fetched with its small en/ru model into `<game>/restless/voice` on first use and pinned by SHA-256. The box speaks each part to the asker (`SpiritBoxPayload` → `SpiritBoxVoice`): clips `spirit_box.<en_us\|ru_ru>.<word\|answer>.<id>` made by `apps/voice` (`mise run voice:generate` after words or answers change), static `spirit_box.hiss`, and an echoed word that was said on voice chat as the asker's own sound cut out by Vosk's word times and mangled by `Echo`. |
 | planchette | **Ouija board** (block: planks, black dye, salt) | Use it: the planchette spells one trait's hint letter by letter on the action bar. |
@@ -161,7 +161,9 @@ traits, the bell of noise-hating ones). The salt, the charm and the scarecrow ha
 ## Banishing
 
 Every trait names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror, four traits
-each. A spirit has a **nature**, picked from its seed evenly among the four: all its traits but one come from that
+each. A spirit has a **nature**, named after what it does and not after its weakness: objects (iron), darkness
+(glowstone), malice (holy water) and deceit (mirror). Players see only these names; code and config keep the
+weakness (`Focus`). The nature is picked from its seed evenly among the four: all its traits but one come from that
 nature's group and one is foreign, so it is weak to the nature (`Traits.weakness` counts votes; a spirit from before
 natures keeps its old vote, ties to the first in that order). Nothing shows the nature directly: the player reads the
 traits (ouija board, spirit box, ash) and finds the group two of them share.
@@ -171,10 +173,10 @@ opens, names it. The offering is the nature's category in a form:
 
 | Nature | whole | bit | crafted |
 |---|---|---|---|
-| iron | iron ingot | iron nugget | iron chain |
-| glowstone | glowstone | glowstone dust | lantern |
-| holy water | **holy water** | salt | bell |
-| mirror | **mirror** | glass pane | spyglass |
+| objects (iron) | iron ingot | iron nugget | iron chain |
+| darkness (glowstone) | glowstone | glowstone dust | lantern |
+| malice (holy water) | **holy water** | salt | bell |
+| deceit (mirror) | **mirror** | glass pane | spyglass |
 
 whole: poltergeist, wraith, demon, revenant, hoarder. bit: shade, mara, banshee, phantom, lost_one. crafted: nix, mimic,
 domovoi, trickster, boggart.

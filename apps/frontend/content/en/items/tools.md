@@ -45,10 +45,10 @@ The print is the **nature** of one of the spirit's traits. Ash never lies, but a
 
 | Print | Nature |
 | --- | --- |
-| a paw | iron |
-| a drag mark | glowstone |
-| a hoof | holy water |
-| a bare foot | mirror |
+| a paw | Objects |
+| a drag mark | Darkness |
+| a hoof | Malice |
+| a bare foot | Deceit |
 
 Each print is noted in the [journal](#journal). Nature decides the [altar](#altar) offering.
 
@@ -113,26 +113,26 @@ Place it flat on the floor. Use it: after 1 second the planchette spells a phras
 
 ## Reading the Clues
 
-Every ouija and spirit box clue belongs to one trait, and every trait has a nature. The nature can be told from what the clue means. A board phrase is a riddle; the table gives what each can mean. Iron touches things. Glowstone reaches for darkness, cold and night. Holy water takes revenge, comes with the rain and calls from the deep. Mirror plays with your head: it whispers, makes noise, steals sleep, lies. The full list:
+Every ouija and spirit box clue belongs to one trait, and every trait has a nature. The nature can be told from what the clue means. A board phrase is a riddle; the table gives what each can mean. Objects: it touches things. Darkness: it reaches for the dark, cold and night. Malice: it takes revenge, comes with the rain and calls from the deep. Deceit: it plays with your head, whispers, makes noise, steals sleep, lies. The full list:
 
 | Nature | Meaning | Ouija phrases | Spirit box words |
 | --- | --- | --- | --- |
-| Iron | It reaches for things left lying around | `do not drop it`, `hands`, `i will take it`, `lying unwatched`, `what is left is mine` | `fingers`, `mine`, `take` |
-| Iron | It slams doors | `shut it`, `slam`, `get out`, `creak and crash`, `the door is closed` | `leave`, `shut`, `slam` |
-| Iron | It meddles with the world around you | `i will move it`, `rearrange`, `not there`, `nothing is in its place`, `i will touch` | `move`, `change`, `mine` |
-| Iron | It guards what is in chests | `open it`, `lid`, `not yours`, `i guard`, `what lies inside` | `open`, `mine`, `lid` |
-| Glowstone | It feeds on light | `put it out`, `hungry... light`, `darker`, `light tastes good`, `snuff the flame` | `dark`, `hungry`, `out` |
-| Glowstone | It chills the air around you | `cold`, `your breath shows`, `frost`, `you will freeze`, `the air grows cold` | `cold`, `chill`, `frost` |
-| Glowstone | It stalks at night | `behind you`, `at night`, `i follow`, `do not turn around`, `watching` | `behind`, `night`, `follow` |
-| Glowstone | It lives in the dark | `below`, `black`, `deep`, `darkness is home`, `hiding` | `below`, `black`, `deep` |
-| Holy water | It wants revenge | `you will pay`, `blood for blood`, `you`, `revenge`, `debt` | `pay`, `blood`, `you` |
-| Holy water | It walks in the rain | `wet`, `drip drip`, `the storm comes`, `steps in puddles`, `the sky weeps` | `wet`, `drip`, `storm` |
-| Holy water | It calls from below | `down`, `come here`, `under the earth`, `calling`, `dig` | `down`, `come`, `under` |
-| Holy water | It holds a grudge | `i remember`, `why`, `you killed`, `never forgiven`, `old grudge` | `remember`, `kill`, `why` |
-| Mirror | It whispers | `listen`, `come closer`, `hush`, `in your ear`, `a secret` | `listen`, `closer`, `hush` |
-| Mirror | It feeds on noise | `loud`, `louder`, `noise`, `make more noise`, `silence starves` | `loud`, `louder`, `noise` |
-| Mirror | It steals your sleep | `wake up`, `dream`, `bed`, `do not sleep`, `your sleep is mine` | `wake`, `dream`, `bed` |
-| Mirror | It lies | `yes`, `no`, `maybe`, `it is true`, `do not believe` | `yes`, `no`, `maybe` |
+| Objects | It reaches for things left lying around | `do not drop it`, `hands`, `i will take it`, `lying unwatched`, `what is left is mine` | `fingers`, `mine`, `take` |
+| Objects | It slams doors | `shut it`, `slam`, `get out`, `creak and crash`, `the door is closed` | `leave`, `shut`, `slam` |
+| Objects | It meddles with the world around you | `i will move it`, `rearrange`, `not there`, `nothing is in its place`, `i will touch` | `move`, `change`, `mine` |
+| Objects | It guards what is in chests | `open it`, `lid`, `not yours`, `i guard`, `what lies inside` | `open`, `mine`, `lid` |
+| Darkness | It feeds on light | `put it out`, `hungry... light`, `darker`, `light tastes good`, `snuff the flame` | `dark`, `hungry`, `out` |
+| Darkness | It chills the air around you | `cold`, `your breath shows`, `frost`, `you will freeze`, `the air grows cold` | `cold`, `chill`, `frost` |
+| Darkness | It stalks at night | `behind you`, `at night`, `i follow`, `do not turn around`, `watching` | `behind`, `night`, `follow` |
+| Darkness | It lives in the dark | `below`, `black`, `deep`, `darkness is home`, `hiding` | `below`, `black`, `deep` |
+| Malice | It wants revenge | `you will pay`, `blood for blood`, `you`, `revenge`, `debt` | `pay`, `blood`, `you` |
+| Malice | It walks in the rain | `wet`, `drip drip`, `the storm comes`, `steps in puddles`, `the sky weeps` | `wet`, `drip`, `storm` |
+| Malice | It calls from below | `down`, `come here`, `under the earth`, `calling`, `dig` | `down`, `come`, `under` |
+| Malice | It holds a grudge | `i remember`, `why`, `you killed`, `never forgiven`, `old grudge` | `remember`, `kill`, `why` |
+| Deceit | It whispers | `listen`, `come closer`, `hush`, `in your ear`, `a secret` | `listen`, `closer`, `hush` |
+| Deceit | It feeds on noise | `loud`, `louder`, `noise`, `make more noise`, `silence starves` | `loud`, `louder`, `noise` |
+| Deceit | It steals your sleep | `wake up`, `dream`, `bed`, `do not sleep`, `your sleep is mine` | `wake`, `dream`, `bed` |
+| Deceit | It lies | `yes`, `no`, `maybe`, `it is true`, `do not believe` | `yes`, `no`, `maybe` |
 
 What to do with it:
 
@@ -187,12 +187,12 @@ Lay a **water bottle** in the bowl. It needs only the finished platform, not the
 
 Use an offering on the altar. It is of one **nature**, which decides which spirit it calls (the one whose traits mostly belong to that nature), and in one **form**, which decides whether that spirit takes it gladly.
 
-| Nature | Whole | Bit | Crafted |
-| --- | --- | --- | --- |
-| Iron | iron ingot | iron nugget | iron chain |
-| Glowstone | glowstone block | glowstone dust | lantern |
-| Holy water | holy water | salt | bell |
-| Mirror | mirror | glass pane | spyglass |
+| Nature | Weak to | Whole | Bit | Crafted |
+| --- | --- | --- | --- | --- |
+| Objects | iron | iron ingot | iron nugget | iron chain |
+| Darkness | light | glowstone block | glowstone dust | lantern |
+| Malice | holy water | holy water | salt | bell |
+| Deceit | the mirror, which shows the truth | mirror | glass pane | spyglass |
 
 Mirror: a glass pane between 2 iron nuggets, in one row. A spirit may mark it so the next time you lay it down it shows a spirit's name.
 
