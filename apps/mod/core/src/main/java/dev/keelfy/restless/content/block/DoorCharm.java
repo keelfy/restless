@@ -25,11 +25,8 @@ import org.jspecify.annotations.Nullable;
 /** A paper ward attached to the side of the block selected during placement. */
 public final class DoorCharm extends WornWard {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final Map<Direction, VoxelShape> SHAPES = turned(Shapes.or(
-            Block.box(6, 0, 15.5, 7, 3, 16),
-            Block.box(9, 1, 15.5, 10, 3, 16),
-            Block.box(5, 3, 15, 11, 11, 16),
-            Block.box(6, 11, 15, 10, 15, 16)));
+    private static final Map<Direction, VoxelShape> SHAPES =
+            turned(Shapes.or(Block.box(2, 1, 15, 14, 13, 16), Block.box(6, 13, 15, 10, 16, 16)));
 
     public DoorCharm(BlockBehaviour.Properties properties) {
         super(properties.noCollision(), SHAPES.get(Direction.NORTH), Kind.CHARM, 5);
