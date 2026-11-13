@@ -31,9 +31,13 @@ public final class WardLantern extends LanternBlock implements WardBlock {
             Block.box(6, 11.5, 6.5, 10, 12, 9.5),
             Block.box(6, 12, 7.5, 10, 14, 8.5),
             Block.box(7.5, 14, 7.5, 8.5, 16, 8.5)));
-    private static final VoxelShape HOLLOW = Shapes.or(Block.box(5, 0, 5, 11, 10, 11));
-    private static final VoxelShape HOLLOW_HANGING =
-            Shapes.or(Block.box(5, 4, 5, 11, 14, 11), Block.box(7.5, 14, 7.5, 8.5, 16, 8.5));
+    private static final Map<Direction, VoxelShape> HOLLOW = ShapedBlock.turned(Shapes.or(
+            Block.box(5, 0, 5, 11, 7, 11), Block.box(5.5, 7, 5.5, 10.5, 8, 10.5), Block.box(6, 8, 7.5, 10, 10, 8.5)));
+    private static final Map<Direction, VoxelShape> HOLLOW_HANGING = ShapedBlock.turned(Shapes.or(
+            Block.box(5, 4, 5, 11, 11, 11),
+            Block.box(5.5, 11, 5.5, 10.5, 12, 10.5),
+            Block.box(6, 12, 7.5, 10, 14, 8.5),
+            Block.box(7.5, 14, 7.5, 8.5, 16, 8.5)));
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
@@ -80,10 +84,11 @@ public final class WardLantern extends LanternBlock implements WardBlock {
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         boolean hanging = state.getValue(HANGING);
+        Direction facing = state.getValue(FACING);
         if (kind == Kind.HOLLOW) {
-            return hanging ? HOLLOW_HANGING : HOLLOW;
+            return (hanging ? HOLLOW_HANGING : HOLLOW).get(facing);
         }
-        return (hanging ? HALLOWED_HANGING : HALLOWED).get(state.getValue(FACING));
+        return (hanging ? HALLOWED_HANGING : HALLOWED).get(facing);
     }
 
     @Override
