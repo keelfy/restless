@@ -465,6 +465,10 @@ public final class Content {
 
     public static final Supplier<Block> MUSIC_BOX =
             block("music_box", p -> new Prop.MusicBox(p.sound(SoundType.WOOD), Prop.MUSIC_BOX));
+    public static final Supplier<Item> DOLL_ITEM = debugItem("doll", DOLL);
+    public static final Supplier<Item> MUSIC_BOX_ITEM = debugItem("music_box", MUSIC_BOX);
+    public static final Supplier<Item> FOOTPRINTS_ITEM = debugItem("footprints", FOOTPRINTS);
+    public static final Supplier<Item> CLAW_MARKS_ITEM = debugItem("claw_marks", CLAW_MARKS);
     public static final Supplier<Block> ROCKING_CHAIR =
             block("rocking_chair", p -> new Prop.Chair(p.sound(SoundType.WOOD), Prop.CHAIR));
     /** Planks that went soft; the rot event spreads it over a house's planks, then puts them back. */
@@ -605,6 +609,16 @@ public final class Content {
                                         .noCollision())));
     }
 
+    /** An item for a block the world sets down, only for the operator tab: no tooltip, never crafted. */
+    private static Supplier<Item> debugItem(String name, Supplier<Block> block) {
+        return Platform.get()
+                .register(
+                        BuiltInRegistries.ITEM,
+                        name,
+                        key -> new BlockItem(
+                                block.get(), new Item.Properties().setId(key).useBlockDescriptionPrefix()));
+    }
+
     private static Supplier<Item> blockItem(String name, Supplier<Block> block) {
         return Platform.get()
                 .register(
@@ -629,6 +643,16 @@ public final class Content {
                             stack.set(DataComponents.PAINTING_VARIANT, variant);
                             stacks.add(stack);
                         }));
+        return stacks;
+    }
+
+    /** The operator tab: the things the world sets down on its own, and every painting. */
+    private static List<ItemStack> debugItems(HolderLookup.Provider holders) {
+        var stacks = new java.util.ArrayList<ItemStack>();
+        for (var item : List.of(DOLL_ITEM, MUSIC_BOX_ITEM, FOOTPRINTS_ITEM, CLAW_MARKS_ITEM)) {
+            stacks.add(new ItemStack(item.get()));
+        }
+        stacks.addAll(paintings(holders));
         return stacks;
     }
 
@@ -718,7 +742,7 @@ public final class Content {
                         "restless_debug",
                         Component.translatable("itemGroup.restless_debug"),
                         () -> new ItemStack(Items.PAINTING),
-                        Content::paintings);
+                        Content::debugItems);
         Restless.LOGGER.debug("Content declared");
     }
 }
