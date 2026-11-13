@@ -3,30 +3,36 @@
   "events": {
     "minecraft:false_wound": {
       "weight": 0.3,
+      "impact": 0.2,
       "min_health": 2.0,
       "loss": 8.0,
       "ticks": 30
     },
     "minecraft:false_hearts": {
       "weight": 0.3,
+      "impact": 0.15,
       "ticks": 100
     },
     "minecraft:false_hunger": {
       "weight": 0.3,
+      "impact": 0.12,
       "shown_food": 0,
       "ticks": 40,
       "hardcore_loss": 6
     },
     "minecraft:guardian_face": {
       "weight": 0.15,
+      "impact": 0.3,
       "hardcore_fatigue_ticks": 6000,
       "hardcore_fatigue_level": 2
     },
     "minecraft:false_totem": {
-      "weight": 0.15
+      "weight": 0.15,
+      "impact": 0.15
     },
     "minecraft:subliminal_title": {
       "weight": 0.3,
+      "impact": 0.12,
       "ticks": 3,
       "texts": [
         "BEHIND YOU",
@@ -38,11 +44,13 @@
     },
     "minecraft:red_vignette": {
       "weight": 0.3,
+      "impact": 0.15,
       "strength": 0.8,
       "seconds": 5
     },
     "minecraft:own_voice": {
       "weight": 0.2,
+      "impact": 0.15,
       "lines": [
         "help me",
         "it is here",
@@ -52,25 +60,30 @@
     },
     "minecraft:false_death": {
       "weight": 0.2,
+      "impact": 0.25,
       "killer": "???"
     },
     "minecraft:private_rain": {
       "weight": 0.3,
+      "impact": 0.12,
       "thunder_chance": 0.3,
       "seconds": 20
     },
     "minecraft:silent_lightning": {
       "weight": 0.2,
+      "impact": 0.12,
       "distance": 24.0
     },
     "minecraft:false_night": {
       "weight": 0.2,
+      "impact": 0.15,
       "day_ticks": 24000,
       "time_of_day": 18000,
       "seconds": 15
     },
     "minecraft:false_slot": {
       "weight": 0.3,
+      "impact": 0.12,
       "seconds": 20,
       "items": [
         "minecraft:skeleton_skull",
@@ -102,6 +115,7 @@
     },
     "minecraft:false_advancement": {
       "weight": 0.2,
+      "impact": 0.05,
       "revoke_ticks": 2,
       "advancements": [
         "whisper/who_are_you",
@@ -111,6 +125,7 @@
     },
     "minecraft:turned_head": {
       "weight": 0.2,
+      "impact": 0.45,
       "distance": 6.0,
       "sound": {
         "volume": 0.8,
@@ -121,11 +136,13 @@
     },
     "minecraft:stranger_joins": {
       "weight": 0.2,
+      "impact": 0.12,
       "seconds": 40,
       "latency": 120
     },
     "minecraft:false_whisper": {
       "weight": 0.0,
+      "impact": 0.12,
       "lines": [
         "behind you",
         "why did you leave me there",
@@ -135,6 +152,7 @@
     },
     "minecraft:stranger_death": {
       "weight": 0.2,
+      "impact": 0.2,
       "deaths": [
         "death.fell.accident.generic",
         "death.attack.drown",
@@ -145,33 +163,40 @@
     },
     "minecraft:pumpkin_head": {
       "weight": 0.2,
+      "impact": 0.3,
       "seconds": 4
     },
     "minecraft:xp_drain": {
       "weight": 0.2,
+      "impact": 0.15,
       "seconds": 3
     },
     "minecraft:phantom_flames": {
       "weight": 0.2,
+      "impact": 0.25,
       "ticks": 60
     },
     "minecraft:phantom_drowning": {
       "weight": 0.2,
+      "impact": 0.25,
       "ticks": 80,
       "drained": 0.8
     },
     "minecraft:phantom_frost": {
       "weight": 0.2,
+      "impact": 0.25,
       "ticks": 100,
       "ramp_ticks": 50,
       "hardcore_extra_ticks": 40
     },
     "minecraft:moon_phase": {
       "weight": 0.2,
+      "impact": 0.08,
       "seconds": 20
     },
     "minecraft:false_boss_bar": {
       "weight": 0.2,
+      "impact": 0.12,
       "names": [
         "???",
         "It Watches",
@@ -184,6 +209,7 @@
     },
     "minecraft:action_bar_whisper": {
       "weight": 0.3,
+      "impact": 0.12,
       "ticks": 40,
       "lines": [
         "Don't turn around",
@@ -195,36 +221,44 @@
     },
     "minecraft:false_absorption": {
       "weight": 0.2,
+      "impact": 0.12,
       "ticks": 80,
       "amount": 8.0
     },
     "minecraft:empty_armor_bar": {
       "weight": 0.2,
+      "impact": 0.12,
       "seconds": 4
     },
     "minecraft:hurt_tilt": {
-      "weight": 0.3
+      "weight": 0.3,
+      "impact": 0.12
     },
     "minecraft:own_hand_swings": {
       "weight": 0.2,
+      "impact": 0.12,
       "swings": 2,
       "interval_ticks": 14
     },
     "minecraft:night_eyes": {
       "weight": 0.2,
+      "impact": 0.15,
       "flash_ticks": 30,
       "dark_ticks": 80
     },
     "minecraft:dead_silence": {
       "weight": 0.2,
+      "impact": 0.15,
       "seconds": 5
     },
     "minecraft:all_on_cooldown": {
       "weight": 0.2,
+      "impact": 0.05,
       "seconds": 2
     },
     "minecraft:noon_moon": {
       "weight": 0.2,
+      "impact": 0.08,
       "time_of_day": 18000,
       "seconds": 10
     }

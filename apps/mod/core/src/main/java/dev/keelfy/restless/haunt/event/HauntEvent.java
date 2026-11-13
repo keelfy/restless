@@ -25,6 +25,15 @@ public interface HauntEvent {
     }
 
     /**
+     * How much the event weighs on the player, 0 to 1, from {@code events.<id>.impact}: a figure in the distance is
+     * near 0, a wither skeleton attacking is near 1. It decides only how soon the spirit acts again, never which event
+     * it rolls.
+     */
+    default double impact() {
+        return Config.event(id().toString()).num("impact");
+    }
+
+    /**
      * The one spirit type that may roll the event, from {@code events.<id>.spirit}; null when any type may. A
      * {@link Scenario} reads the same key as a boost instead, see {@link #signature}.
      */

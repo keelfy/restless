@@ -3,6 +3,7 @@
   "events": {
     "minecraft:villagers_at_windows": {
       "weight": 0.3,
+      "impact": 0.25,
       "radius": 20,
       "window_radius": 12,
       "max_villagers": 3,
@@ -14,6 +15,7 @@
     },
     "minecraft:strange_trader": {
       "weight": 0.2,
+      "impact": 0.25,
       "distance": 12.0,
       "min_angle": 0.0,
       "max_angle": 40.0,
@@ -50,6 +52,7 @@
     },
     "minecraft:golem_in_corner": {
       "weight": 0.3,
+      "impact": 0.25,
       "radius": 40,
       "corner_radius": 6,
       "min_distance": 2.0,
@@ -61,6 +64,7 @@
     },
     "minecraft:dolphins_lead": {
       "weight": 0.3,
+      "impact": 0.25,
       "radius": 32,
       "max_dolphins": 3,
       "fallback_distance": 60.0,
@@ -77,6 +81,7 @@
     },
     "minecraft:spiders_at_window": {
       "weight": 0.25,
+      "impact": 0.25,
       "radius": 24,
       "window_radius": 12,
       "min_spiders": 2,
@@ -90,11 +95,13 @@
     },
     "minecraft:squid_goes_dark": {
       "weight": 0.35,
+      "impact": 0.25,
       "radius": 32,
       "dark_ticks": 1200
     },
     "minecraft:pearl_strays": {
       "weight": 0.15,
+      "impact": 0.55,
       "radius": 8.0,
       "interval_ticks": 2,
       "armed_ticks": 6000,
@@ -105,6 +112,7 @@
     },
     "minecraft:hoglins_charge": {
       "weight": 0.2,
+      "impact": 0.8,
       "radius": 24,
       "min_hoglins": 2,
       "stop_distance": 3.2,

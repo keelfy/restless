@@ -3,6 +3,7 @@
   "events": {
     "minecraft:frogs_croak": {
       "weight": 0.35,
+      "impact": 0.2,
       "radius": 16,
       "min_frogs": 2,
       "max_frogs": 8,
@@ -15,6 +16,7 @@
     },
     "minecraft:ink_cloud": {
       "weight": 0.3,
+      "impact": 0.15,
       "radius": 14,
       "interval_ticks": 8,
       "pulses": 4,
@@ -29,6 +31,7 @@
     },
     "minecraft:rabbits_stream": {
       "weight": 0.35,
+      "impact": 0.2,
       "radius": 16,
       "interval_ticks": 10,
       "pulses": 8,
@@ -37,6 +40,7 @@
     },
     "minecraft:witch_giggles": {
       "weight": 0.25,
+      "impact": 0.45,
       "radius": 24,
       "min_distance": 6.0,
       "delay_ticks": 30,
@@ -60,6 +64,7 @@
     },
     "minecraft:hostiles_retreat": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 16,
       "interval_ticks": 10,
       "pulses": 8,
@@ -68,6 +73,7 @@
     },
     "minecraft:creeper_calms": {
       "weight": 0.35,
+      "impact": 0.2,
       "radius": 8,
       "interval_ticks": 10,
       "pulses": 8,
@@ -76,6 +82,7 @@
     },
     "minecraft:endermen_stare": {
       "weight": 0.3,
+      "impact": 0.25,
       "radius": 24,
       "interval_ticks": 1,
       "ticks": 200,
@@ -89,6 +96,7 @@
     },
     "minecraft:llama_spits": {
       "weight": 0.35,
+      "impact": 0.2,
       "radius": 16,
       "lift": 0.1,
       "power": 1.5,
@@ -99,6 +107,7 @@
     },
     "minecraft:goat_screams": {
       "weight": 0.3,
+      "impact": 0.2,
       "min_y": 100.0,
       "distance": 40.0,
       "sound": {
@@ -108,6 +117,7 @@
     },
     "minecraft:bats_hang": {
       "weight": 0.35,
+      "impact": 0.2,
       "min_distance": 3,
       "max_distance": 10,
       "count": 4,
@@ -117,6 +127,7 @@
     },
     "minecraft:sniffer_digs_up": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 20,
       "items": [
         "minecraft:player_head",
@@ -132,6 +143,7 @@
     },
     "minecraft:cat_at_anchor": {
       "weight": 0.25,
+      "impact": 0.4,
       "radius": 32,
       "distance": 12.0,
       "min_distance": 8,
@@ -139,6 +151,7 @@
     },
     "minecraft:wind_burst": {
       "weight": 0.35,
+      "impact": 0.2,
       "distance": 2.0,
       "item_radius": 5,
       "power": 0.5,
@@ -150,6 +163,7 @@
     },
     "minecraft:mobs_go_still": {
       "weight": 0.25,
+      "impact": 0.35,
       "radius": 16,
       "still_ticks": 200
     }

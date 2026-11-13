@@ -3,6 +3,7 @@
   "events": {
     "minecraft:roof_skeleton": {
       "weight": 0.25,
+      "impact": 0.15,
       "radius": 16,
       "min_distance": 8.0,
       "min_rise": 2,
@@ -14,6 +15,7 @@
     },
     "minecraft:water_guardian": {
       "weight": 0.2,
+      "impact": 0.15,
       "radius": 20,
       "min_distance": 6.0,
       "depth": 2,
@@ -25,6 +27,7 @@
     },
     "minecraft:far_warden": {
       "weight": 0.15,
+      "impact": 0.25,
       "min_distance": 30,
       "max_distance": 42,
       "emerge_ticks": 134,
@@ -37,6 +40,7 @@
     },
     "minecraft:swamp_witch": {
       "weight": 0.25,
+      "impact": 0.15,
       "radius": 12,
       "min_distance": 4.0,
       "interval_ticks": 5,
@@ -47,6 +51,7 @@
     },
     "minecraft:wall_shulker": {
       "weight": 0.2,
+      "impact": 0.15,
       "radius": 8,
       "min_distance": 3.0,
       "height": 2,
@@ -61,6 +66,7 @@
     },
     "minecraft:allay_thief": {
       "weight": 0.25,
+      "impact": 0.15,
       "distance": 3.0,
       "angle": 50.0,
       "length": 45.0,
@@ -73,6 +79,7 @@
     },
     "minecraft:forest_creaking": {
       "weight": 0.2,
+      "impact": 0.15,
       "min_distance": 24,
       "max_distance": 36,
       "interval_ticks": 2,
@@ -87,6 +94,7 @@
     },
     "minecraft:cow_herd_blink": {
       "weight": 0.2,
+      "impact": 0.15,
       "cows": 6,
       "min_cows": 3,
       "distance": 20.0,
@@ -104,6 +112,7 @@
     },
     "minecraft:spyglass_figure": {
       "weight": 0.25,
+      "impact": 0.1,
       "mob": "minecraft:villager",
       "distance": 48.0,
       "climb": 6,
@@ -114,6 +123,7 @@
     },
     "minecraft:flash_figure": {
       "weight": 0.2,
+      "impact": 0.2,
       "mob": "minecraft:wither_skeleton",
       "flashes": 4,
       "distance": 34.0,

@@ -96,6 +96,13 @@ final class HauntEventGameTests {
     static final Map<String, Integer> TIMEOUT = new HashMap<>();
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("every_event_has_an_impact", helper -> {
+            for (HauntEvent event : HauntEvents.all()) {
+                double impact = event.impact();
+                check(helper, impact >= 0.0 && impact <= 1.0, event.id() + " has impact " + impact + ", not in 0..1");
+            }
+            helper.succeed();
+        });
         for (Block skull : List.of(
                 Blocks.SKELETON_SKULL,
                 Blocks.WITHER_SKELETON_SKULL,

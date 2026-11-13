@@ -22,7 +22,9 @@ A spirit born from a deed starts at anger 0.5, so its power starts at 0.2.
 
 **Which events it rolls.** Light events (scares) are weighted by `1 − 0.7 × power`. Harmful events are weighted by `power`. A calm, young spirit (power 0) never rolls a harmful event; a fully grown, angry one (power 1) rolls light events at 30% of their base weight and harmful events at full weight. The spirit's type and its traits then multiply the weights for each kind of event, see [Spirits](/en/spirits).
 
-**How often.** The wait between two events is `4 − 2.5 × power` minutes, stretched by a random factor of 1 to 2 and divided by the spirit's activity. A calm spirit acts every 4 to 8 minutes; a fully powerful one every 1.5 to 3.
+**How often.** The wait between two events is `4 − 2.5 × power` minutes, stretched by a random factor of 1 to 2 and divided by the spirit's activity. A calm spirit acts every 4 to 8 minutes; a fully powerful one every 1.5 to 3. The wait is never shorter than 5 seconds. A new spirit's very first event comes 90 seconds after the journal is handed out, not after a full wait.
+
+**How hard an event hits.** Every event has an impact, from 0 for a far figure or sound to 1 for a lethal attack. It does not change which event rolls, only when the next one comes. After a light event the wait is multiplied by 0.25 to 0.5, so the spirit reminds you of itself soon. After a middling one (impact 0.6) the wait is unchanged. After a heavy attack it is multiplied by 1.25 to 1.5, so you get time to recover.
 
 **When it is quiet.** Spirits hold back in the open. Each of these stretches the wait by 1.2: it is day, you can see the sky, no thunderstorm is running. All three together stretch it by 1.7.
 

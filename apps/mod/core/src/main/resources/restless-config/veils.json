@@ -3,12 +3,14 @@
   "events": {
     "minecraft:red_wool": {
       "weight": 0.3,
+      "impact": 0.15,
       "radius": 10,
       "max_blocks": 64,
       "ticks": 300
     },
     "minecraft:sign_whisper": {
       "weight": 0.3,
+      "impact": 0.15,
       "radius": 10,
       "ticks": 300,
       "texts": [
@@ -38,12 +40,14 @@
     },
     "minecraft:wither_roses": {
       "weight": 0.3,
+      "impact": 0.15,
       "radius": 12,
       "max_blocks": 48,
       "ticks": 300
     },
     "minecraft:block_flicker": {
       "weight": 0.3,
+      "impact": 0.15,
       "radius": 8,
       "max_blocks": 200,
       "ticks": 1,
@@ -67,18 +71,21 @@
     },
     "restless:lone_gravestone": {
       "weight": 0.3,
+      "impact": 0.15,
       "distance": 9.0,
       "max_angle": 40.0,
       "ticks": 600
     },
     "minecraft:broken_portal": {
       "weight": 0.3,
+      "impact": 0.25,
       "radius": 16,
       "holes": 3,
       "ticks": 300
     },
     "minecraft:dark_circle": {
       "weight": 0.3,
+      "impact": 0.15,
       "max_light": 5,
       "distance": 8.0,
       "max_angle": 40.0,
@@ -92,6 +99,7 @@
     },
     "minecraft:fence_gaps": {
       "weight": 0.3,
+      "impact": 0.15,
       "radius": 12,
       "min_fences": 4,
       "gaps": 3,
@@ -99,6 +107,7 @@
     },
     "minecraft:corner_cobwebs": {
       "weight": 0.3,
+      "impact": 0.15,
       "radius": 8,
       "min_corners": 3,
       "max_blocks": 12,
@@ -106,6 +115,7 @@
     },
     "minecraft:redstone_trail": {
       "weight": 0.3,
+      "impact": 0.15,
       "start": 3,
       "length": 12,
       "min_blocks": 5,

@@ -66,28 +66,17 @@ public final class Director {
                 if (now < haunting.nextEventAt()) {
                     continue;
                 }
-                SpiritType spirit = spirit(haunting);
-                Outcome[] outcome = {Outcome.QUIET};
                 // A drinker of the Dreamless Draught is left alone by their mara while the night goes by.
-                if (canHaunt(player) && !(Draughts.dreamless(player) && "mara".equals(haunting.spirit()))) {
-                    Said.during(
-                            haunting.uuid(),
-                            () -> outcome[0] = pick(
-                                            player,
-                                            spirit,
-                                            Traits.of(haunting.traits()),
-                                            power(haunting, now),
-                                            haunting.evolved(),
-                                            null)
-                                    .map(event -> fireUnlessWarded(player, event, at))
-                                    .orElse(Outcome.NOTHING));
-                }
-                HauntData.Haunting acted = outcome[0] == Outcome.FIRED ? Births.noticing(player, haunting) : haunting;
+                Turn turn = canHaunt(player) && !(Draughts.dreamless(player) && "mara".equals(haunting.spirit()))
+                        ? roll(player, haunting, at, now)
+                        : Turn.QUIET;
+                HauntData.Haunting acted =
+                        turn.outcome() == Outcome.FIRED ? Births.noticing(player, haunting) : haunting;
                 spirits.set(
                         i,
                         acted.rescheduled(now
                                 + next(
-                                        outcome[0],
+                                        turn,
                                         player.level(),
                                         player.blockPosition(),
                                         haunting,
@@ -114,23 +103,12 @@ public final class Director {
             List<ServerPlayer> near = level.players().stream()
                     .filter(p -> canHaunt(p) && territorial.reaches(p))
                     .toList();
-            Outcome[] outcome = {Outcome.QUIET};
+            Turn turn = Turn.QUIET;
             if (!near.isEmpty()) {
                 ServerPlayer player = near.get(level.getRandom().nextInt(near.size()));
-                Said.during(
-                        territorial.haunting().uuid(),
-                        () -> outcome[0] = pick(
-                                        player,
-                                        spirit(territorial.haunting()),
-                                        Traits.of(territorial.haunting().traits()),
-                                        power(territorial.haunting(), now),
-                                        territorial.haunting().evolved(),
-                                        null)
-                                .map(event -> fireUnlessWarded(player, event, Vec3.atCenterOf(territorial.anchor())))
-                                .orElse(Outcome.NOTHING));
+                turn = roll(player, territorial.haunting(), Vec3.atCenterOf(territorial.anchor()), now);
             }
-            long next =
-                    now + next(outcome[0], level, territorial.anchor(), territorial.haunting(), now, level.getRandom());
+            long next = now + next(turn, level, territorial.anchor(), territorial.haunting(), now, level.getRandom());
             data.change(territorial.haunting().uuid(), h -> h.rescheduled(next));
         }
     }
@@ -148,19 +126,42 @@ public final class Director {
     }
 
     /**
+     * How a due spirit's turn ended.
+     *
+     * @param impact how much the event that ran weighs on the player, see {@link HauntEvent#impact}; 0 when none ran
+     */
+    private record Turn(Outcome outcome, double impact) {
+        static final Turn QUIET = new Turn(Outcome.QUIET, 0.0);
+    }
+
+    /** Rolls an event for the spirit on the player, and runs it unless a ward stops it. */
+    private static Turn roll(ServerPlayer player, HauntData.Haunting haunting, Vec3 at, long now) {
+        Turn[] turn = {new Turn(Outcome.NOTHING, 0.0)};
+        Said.during(
+                haunting.uuid(),
+                () -> pick(
+                                player,
+                                spirit(haunting),
+                                Traits.of(haunting.traits()),
+                                power(haunting, now),
+                                haunting.evolved(),
+                                null)
+                        .ifPresent(event -> turn[0] = new Turn(fireUnlessWarded(player, event, at), event.impact())));
+        return turn[0];
+    }
+
+    /**
      * Ticks until the spirit's next turn: a turn where it had somebody to haunt but nothing could run comes back after
-     * {@code director.retry_ticks}, not a full cooldown, so a bare surrounding does not silence it for minutes.
+     * {@code director.retry_ticks}, not a full cooldown, so a bare surrounding does not silence it for minutes. After
+     * an event that ran, a light one ({@link HauntEvent#impact}) shortens the wait and a heavy one stretches it.
      */
     private static long next(
-            Outcome outcome,
-            ServerLevel level,
-            BlockPos at,
-            HauntData.Haunting haunting,
-            long now,
-            RandomSource random) {
-        return outcome == Outcome.NOTHING
-                ? Config.section("director").integer("retry_ticks")
-                : cooldown(level, at, haunting, now, random);
+            Turn turn, ServerLevel level, BlockPos at, HauntData.Haunting haunting, long now, RandomSource random) {
+        return switch (turn.outcome()) {
+            case NOTHING -> Config.section("director").integer("retry_ticks");
+            case FIRED -> cooldown(level, at, haunting, now, random, Power.impactFactor(turn.impact()));
+            case WARDED, QUIET -> cooldown(level, at, haunting, now, random, 1.0);
+        };
     }
 
     private static boolean canHaunt(ServerPlayer player) {
@@ -180,7 +181,9 @@ public final class Director {
             List<SpiritType> pool = new ArrayList<>(Spirits.personal());
             List<HauntData.Haunting> rolled = new ArrayList<>();
             for (int i = 0, n = Config.section("director").integer("default_spirits"); i < n && !pool.isEmpty(); i++) {
-                rolled.add(bind(player, pool.remove(player.getRandom().nextInt(pool.size())), now));
+                // Nothing has happened yet: the first turn comes soon, not after a full cooldown.
+                rolled.add(bind(player, pool.remove(player.getRandom().nextInt(pool.size())), now)
+                        .rescheduled(now + Config.section("director").integer("first_event_ticks")));
             }
             data.put(player.getUUID(), rolled);
             Journal.begin(player);
@@ -233,7 +236,7 @@ public final class Director {
         HauntData.Haunting born = HauntData.Haunting.born(spirit.id(), now, level.getRandom());
         int radius = Config.section("director").integer("territorial_radius");
         data.putTerritorial(new HauntData.Territorial(
-                born.rescheduled(now + cooldown(level, anchor, born, now, level.getRandom())),
+                born.rescheduled(now + cooldown(level, anchor, born, now, level.getRandom(), 1.0)),
                 level.dimension(),
                 anchor,
                 radius));
@@ -270,7 +273,8 @@ public final class Director {
 
     private static HauntData.Haunting bind(ServerPlayer player, SpiritType spirit, long now) {
         HauntData.Haunting born = HauntData.Haunting.born(spirit.id(), now, player.getRandom());
-        return born.rescheduled(now + cooldown(player.level(), player.blockPosition(), born, now, player.getRandom()));
+        return born.rescheduled(
+                now + cooldown(player.level(), player.blockPosition(), born, now, player.getRandom(), 1.0));
     }
 
     /**
@@ -416,11 +420,16 @@ public final class Director {
     }
 
     private static long cooldown(
-            ServerLevel level, BlockPos at, HauntData.Haunting haunting, long now, RandomSource random) {
+            ServerLevel level,
+            BlockPos at,
+            HauntData.Haunting haunting,
+            long now,
+            RandomSource random,
+            double impactFactor) {
         double quiet = Power.daylightFactor(level.isBrightOutside(), level.canSeeSky(at), !level.isThundering());
         Set<Trait.Condition> around = conditions(level, at);
         double activity = spirit(haunting).activity(around) * Traits.activity(Traits.of(haunting.traits()), around);
-        return Power.cooldownTicks(power(haunting, now), activity, random.nextDouble(), quiet);
+        return Power.cooldownTicks(power(haunting, now), activity, random.nextDouble(), quiet, impactFactor);
     }
 
     private static Set<Trait.Condition> conditions(ServerLevel level, BlockPos at) {

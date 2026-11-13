@@ -3,6 +3,7 @@
   "events": {
     "minecraft:roof_figure": {
       "weight": 0.3,
+      "impact": 0.15,
       "radius": 20,
       "min_distance": 12.0,
       "interval_ticks": 20,
@@ -12,6 +13,7 @@
     },
     "minecraft:hill_waver": {
       "weight": 0.3,
+      "impact": 0.15,
       "tries": 16,
       "distance": 45.0,
       "min_angle": 0.0,
@@ -24,6 +26,7 @@
     },
     "minecraft:wall_miner": {
       "weight": 0.3,
+      "impact": 0.15,
       "stages": 10,
       "interval_ticks": 8,
       "max_ticks": 200,
@@ -36,6 +39,7 @@
     },
     "minecraft:table_figure": {
       "weight": 0.3,
+      "impact": 0.25,
       "radius": 16,
       "reach": 2,
       "min_distance": 6.0,
@@ -46,6 +50,7 @@
     },
     "minecraft:cave_torches": {
       "weight": 0.3,
+      "impact": 0.15,
       "tries": 12,
       "min_distance": 6.0,
       "max_distance": 28.0,
@@ -56,6 +61,7 @@
     },
     "minecraft:own_walker": {
       "weight": 0.3,
+      "impact": 0.15,
       "distance": 45.0,
       "min_angle": 0.0,
       "max_angle": 40.0,
@@ -69,6 +75,7 @@
     },
     "minecraft:night_runner": {
       "weight": 0.3,
+      "impact": 0.15,
       "max_light": 4,
       "distance": 22.0,
       "min_angle": 0.0,
@@ -84,6 +91,7 @@
     },
     "minecraft:bed_sleeper": {
       "weight": 0.3,
+      "impact": 0.3,
       "radius": 24,
       "min_distance": 8.0,
       "interval_ticks": 10,
@@ -93,6 +101,7 @@
     },
     "minecraft:shrieker_figure": {
       "weight": 0.3,
+      "impact": 0.3,
       "radius": 24,
       "reach": 3,
       "min_distance": 8.0,
@@ -103,6 +112,7 @@
     },
     "minecraft:hello_chat": {
       "weight": 0.3,
+      "impact": 0.1,
       "lines": [
         "hello?",
         "anyone here?",
@@ -116,12 +126,14 @@
     },
     "minecraft:ghost_teleport": {
       "weight": 0.2,
+      "impact": 0.25,
       "names": [
         "???"
       ]
     },
     "minecraft:stranger_advancement": {
       "weight": 0.2,
+      "impact": 0.05,
       "titles": [
         "Who's There?",
         "Not Alone",
@@ -132,6 +144,7 @@
     },
     "minecraft:grave_figure": {
       "weight": 0.3,
+      "impact": 0.15,
       "min_distance": 20.0,
       "max_distance": 60.0,
       "interval_ticks": 10,
@@ -141,6 +154,7 @@
     },
     "minecraft:bedside_figure": {
       "weight": 0.3,
+      "impact": 0.35,
       "interval_ticks": 20,
       "wait_ticks": 24000,
       "reach": 3,

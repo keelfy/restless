@@ -3,6 +3,7 @@
   "events": {
     "minecraft:held_light_out": {
       "weight": 0.8,
+      "impact": 0.3,
       "sound": {
         "volume": 0.6,
         "pitch": 1.4
@@ -10,6 +11,7 @@
     },
     "minecraft:extinguish_light": {
       "weight": 1.0,
+      "impact": 0.25,
       "radius": 10,
       "sound": {
         "volume": 0.6,
@@ -18,10 +20,12 @@
     },
     "minecraft:candles_out": {
       "weight": 0.8,
+      "impact": 0.2,
       "radius": 10
     },
     "minecraft:torch_chain": {
       "weight": 0.8,
+      "impact": 0.2,
       "radius": 10,
       "interval_ticks": 6,
       "max_torches": 8,
@@ -32,6 +36,7 @@
     },
     "minecraft:torches_behind": {
       "weight": 0.5,
+      "impact": 0.2,
       "radius": 16,
       "interval_ticks": 15,
       "max_torches": 8,
@@ -43,6 +48,7 @@
     },
     "minecraft:torch_swap": {
       "weight": 0.6,
+      "impact": 0.2,
       "radius": 10,
       "restore_ticks": 1200,
       "sound": {
@@ -52,6 +58,7 @@
     },
     "minecraft:lantern_flicker": {
       "weight": 0.8,
+      "impact": 0.2,
       "radius": 10,
       "interval_ticks": 4,
       "steps": 6,
@@ -66,6 +73,7 @@
     },
     "minecraft:lamp_off": {
       "weight": 0.8,
+      "impact": 0.2,
       "radius": 10,
       "relight_ticks": 20,
       "sound": {
@@ -75,6 +83,7 @@
     },
     "minecraft:campfire_out": {
       "weight": 0.8,
+      "impact": 0.2,
       "radius": 10,
       "sound": {
         "volume": 1.0,
@@ -83,6 +92,7 @@
     },
     "minecraft:furnace_dies": {
       "weight": 0.8,
+      "impact": 0.2,
       "radius": 10,
       "return_ticks": 100,
       "sound": {
@@ -92,6 +102,7 @@
     },
     "minecraft:dimming": {
       "weight": 0.6,
+      "impact": 0.2,
       "fall_ticks": 180,
       "hold_ticks": 0,
       "rise_ticks": 120,
@@ -101,6 +112,7 @@
     },
     "minecraft:blinking": {
       "weight": 0.4,
+      "impact": 0.2,
       "fall_ticks": 3,
       "hold_ticks": 4,
       "rise_ticks": 5,
@@ -110,6 +122,7 @@
     },
     "minecraft:candles_light": {
       "weight": 0.8,
+      "impact": 0.2,
       "radius": 10,
       "sound": {
         "volume": 0.6,
@@ -118,6 +131,7 @@
     },
     "minecraft:new_face": {
       "weight": 0.6,
+      "impact": 0.2,
       "radius": 10,
       "sound": {
         "volume": 1.0,
@@ -126,6 +140,7 @@
     },
     "minecraft:blackout": {
       "weight": 0.5,
+      "impact": 0.6,
       "radius": 16,
       "spawn_min": 5,
       "spawn_max": 9,
@@ -137,6 +152,7 @@
     },
     "minecraft:burning_hand": {
       "weight": 0.6,
+      "impact": 0.7,
       "lift": 0.15,
       "eye_drop": 0.3,
       "sound": {

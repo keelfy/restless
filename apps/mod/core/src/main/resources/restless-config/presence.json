@@ -3,6 +3,7 @@
   "events": {
     "minecraft:cold_breath": {
       "weight": 0.6,
+      "impact": 0.15,
       "forward": 0.4,
       "particles": {
         "count": 6,
@@ -15,6 +16,7 @@
     },
     "minecraft:footprints": {
       "weight": 0.6,
+      "impact": 0.1,
       "delay_ticks": 10,
       "interval_ticks": 10,
       "steps": 12,
@@ -34,6 +36,7 @@
     },
     "minecraft:local_rain": {
       "weight": 0.6,
+      "impact": 0.1,
       "interval_ticks": 2,
       "steps": 60,
       "sound_every_steps": 10,
@@ -52,10 +55,12 @@
     },
     "minecraft:lost_time": {
       "weight": 0.5,
+      "impact": 0.5,
       "skip_ticks": 1000
     },
     "minecraft:edge_figure": {
       "weight": 0.4,
+      "impact": 0.2,
       "distance": 16.0,
       "min_angle": 45.0,
       "max_angle": 65.0,
@@ -67,6 +72,7 @@
     },
     "minecraft:fog_silhouette": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 40.0,
       "min_angle": 0.0,
       "max_angle": 25.0,
@@ -78,6 +84,7 @@
     },
     "minecraft:distant_player": {
       "weight": 0.3,
+      "impact": 0.1,
       "distance": 60.0,
       "min_angle": 0.0,
       "max_angle": 40.0,
@@ -89,6 +96,7 @@
     },
     "minecraft:friend_double": {
       "weight": 0.3,
+      "impact": 0.15,
       "friend_distance": 16.0,
       "distance": 50.0,
       "min_angle": 0.0,
@@ -101,6 +109,7 @@
     },
     "minecraft:distant_walker": {
       "weight": 0.3,
+      "impact": 0.1,
       "distance": 45.0,
       "min_angle": 0.0,
       "max_angle": 40.0,
@@ -118,6 +127,7 @@
     },
     "minecraft:nametag": {
       "weight": 0.3,
+      "impact": 0.1,
       "under_chance": 0.5,
       "depth": 3.0,
       "distance": 30.0,
@@ -127,6 +137,7 @@
     },
     "minecraft:pillar": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 24.0,
       "max_angle": 40.0,
       "height": 8,
@@ -155,6 +166,7 @@
     },
     "minecraft:armor_stand": {
       "weight": 0.2,
+      "impact": 0.5,
       "distance": 8.0,
       "min_angle": 150.0,
       "max_angle": 180.0,
@@ -170,6 +182,7 @@
     },
     "minecraft:harvest": {
       "weight": 0.3,
+      "impact": 0.1,
       "radius": 16,
       "reach": 4,
       "min_distance": 8.0,

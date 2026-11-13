@@ -3,10 +3,12 @@
   "events": {
     "minecraft:cat_hiss": {
       "weight": 0.6,
+      "impact": 0.2,
       "radius": 16
     },
     "minecraft:cat_flee": {
       "weight": 0.5,
+      "impact": 0.15,
       "radius": 16,
       "interval_ticks": 20,
       "pulses": 5,
@@ -15,10 +17,12 @@
     },
     "minecraft:dog_barks": {
       "weight": 0.6,
+      "impact": 0.2,
       "radius": 16
     },
     "minecraft:animals_stare": {
       "weight": 0.6,
+      "impact": 0.15,
       "radius": 16,
       "min_animals": 2,
       "stare_ticks": 60,
@@ -26,6 +30,7 @@
     },
     "minecraft:pen_corner": {
       "weight": 0.5,
+      "impact": 0.15,
       "radius": 16,
       "min_animals": 2,
       "max_size": 16,
@@ -36,12 +41,14 @@
     },
     "minecraft:villager_stares": {
       "weight": 0.6,
+      "impact": 0.15,
       "radius": 16,
       "stare_ticks": 100,
       "look_interval_ticks": 2
     },
     "minecraft:villager_refuses": {
       "weight": 0.5,
+      "impact": 0.15,
       "radius": 16,
       "shake_ticks": 40,
       "sound": {
@@ -51,11 +58,13 @@
     },
     "minecraft:bats": {
       "weight": 0.6,
+      "impact": 0.25,
       "distance": 4.0,
       "count": 5
     },
     "minecraft:open_pen": {
       "weight": 0.6,
+      "impact": 0.45,
       "radius": 12,
       "animal_radius": 5,
       "sound": {
@@ -65,14 +74,17 @@
     },
     "minecraft:wild_pet": {
       "weight": 0.6,
+      "impact": 0.7,
       "radius": 32
     },
     "minecraft:copycat": {
       "weight": 0.6,
+      "impact": 0.7,
       "distance": 3.0
     },
     "minecraft:double": {
       "weight": 0.3,
+      "impact": 0.65,
       "margin": 8.0,
       "min_distance": 12,
       "max_distance": 18,
@@ -106,19 +118,23 @@
     },
     "minecraft:golem_rage": {
       "weight": 0.4,
+      "impact": 0.8,
       "radius": 24
     },
     "minecraft:golem_flower": {
       "weight": 0.6,
+      "impact": 0.15,
       "radius": 24,
       "hold_ticks": 300
     },
     "minecraft:wolf_rage": {
       "weight": 0.4,
+      "impact": 0.8,
       "radius": 16
     },
     "minecraft:dog_growls": {
       "weight": 0.6,
+      "impact": 0.25,
       "radius": 16,
       "distance": 2.0,
       "interval_ticks": 4,
@@ -131,10 +147,12 @@
     },
     "minecraft:angry_bees": {
       "weight": 0.5,
+      "impact": 0.7,
       "radius": 16
     },
     "minecraft:leash_snaps": {
       "weight": 0.5,
+      "impact": 0.5,
       "radius": 16,
       "sound": {
         "volume": 1.0,
@@ -143,6 +161,7 @@
     },
     "minecraft:enderman_takes": {
       "weight": 0.4,
+      "impact": 0.6,
       "radius": 16,
       "restore_ticks": 1200,
       "sound": {
@@ -152,6 +171,7 @@
     },
     "minecraft:goat_rams": {
       "weight": 0.4,
+      "impact": 0.75,
       "radius": 14,
       "min_run": 4.0,
       "sound": {
@@ -161,18 +181,21 @@
     },
     "minecraft:boat_drifts": {
       "weight": 0.5,
+      "impact": 0.2,
       "radius": 24,
       "speed": 0.02,
       "push_ticks": 200
     },
     "minecraft:minecart_rolls": {
       "weight": 0.5,
+      "impact": 0.25,
       "radius": 24,
       "speed": 0.04,
       "push_ticks": 100
     },
     "minecraft:parrot_echo": {
       "weight": 0.4,
+      "impact": 0.15,
       "radius": 16,
       "sound": {
         "volume": 1.0,
@@ -181,6 +204,7 @@
     },
     "minecraft:allay_bone": {
       "weight": 0.3,
+      "impact": 0.1,
       "radius": 24,
       "interval_ticks": 10,
       "ticks": 600,
@@ -193,6 +217,7 @@
     },
     "minecraft:fox_snatch": {
       "weight": 0.2,
+      "impact": 0.5,
       "radius": 16,
       "interval_ticks": 5,
       "ticks": 300,
@@ -206,12 +231,14 @@
     },
     "minecraft:armadillo_curls": {
       "weight": 0.4,
+      "impact": 0.1,
       "radius": 24,
       "interval_ticks": 20,
       "hold_ticks": 400
     },
     "minecraft:sheep_blacken": {
       "weight": 0.3,
+      "impact": 0.15,
       "radius": 16,
       "min_sheep": 2,
       "max_sheep": 8,
@@ -220,6 +247,7 @@
     },
     "minecraft:horse_bolts": {
       "weight": 0.2,
+      "impact": 0.5,
       "rear_ticks": 15,
       "interval_ticks": 10,
       "run_ticks": 200,
@@ -232,15 +260,18 @@
     },
     "minecraft:axolotl_plays_dead": {
       "weight": 0.4,
+      "impact": 0.15,
       "radius": 16,
       "dead_ticks": 200
     },
     "minecraft:cat_gift": {
       "weight": 0.3,
+      "impact": 0.1,
       "radius": 16
     },
     "minecraft:chickens_look_up": {
       "weight": 0.4,
+      "impact": 0.15,
       "radius": 16,
       "min_animals": 2,
       "stare_ticks": 100,
@@ -248,6 +279,7 @@
     },
     "minecraft:cows_face_anchor": {
       "weight": 0.4,
+      "impact": 0.15,
       "radius": 16,
       "min_animals": 2,
       "stare_ticks": 200,
@@ -255,21 +287,25 @@
     },
     "minecraft:villager_nitwit": {
       "weight": 0.3,
+      "impact": 0.1,
       "radius": 16,
       "restore_ticks": 1200
     },
     "minecraft:villager_prices": {
       "weight": 0.3,
+      "impact": 0.1,
       "radius": 16,
       "amount": 20
     },
     "minecraft:bees_stay_out": {
       "weight": 0.3,
+      "impact": 0.3,
       "radius": 16,
       "stay_ticks": 1200
     },
     "minecraft:fish_face": {
       "weight": 0.4,
+      "impact": 0.1,
       "radius": 16,
       "min_fish": 2,
       "stare_ticks": 100,
@@ -277,6 +313,7 @@
     },
     "minecraft:snowman_melts": {
       "weight": 0.2,
+      "impact": 0.3,
       "radius": 16,
       "interval_ticks": 20,
       "damage": 1.0,

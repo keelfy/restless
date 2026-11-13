@@ -3,6 +3,7 @@
   "events": {
     "restless:rake": {
       "weight": 0.5,
+      "impact": 0.85,
       "margin": 4.0,
       "scratches": 3,
       "hits": 3,
@@ -23,6 +24,7 @@
     },
     "restless:teeth_in_dark": {
       "weight": 0.5,
+      "impact": 0.85,
       "margin": 4.0,
       "dark_max": 0,
       "delay_ticks": 40,
@@ -40,6 +42,7 @@
     },
     "restless:searing_armor": {
       "weight": 0.4,
+      "impact": 0.75,
       "margin": 4.0,
       "interval_ticks": 20,
       "warn_steps": 2,
@@ -64,6 +67,7 @@
     },
     "restless:frost_grip": {
       "weight": 0.4,
+      "impact": 0.7,
       "margin": 4.0,
       "warm_light": 8,
       "interval_ticks": 10,
@@ -82,6 +86,7 @@
     },
     "restless:pinned": {
       "weight": 0.4,
+      "impact": 0.75,
       "margin": 4.0,
       "radius": 12.0,
       "ticks": 200,
@@ -102,6 +107,7 @@
     },
     "restless:throat": {
       "weight": 0.4,
+      "impact": 0.8,
       "margin": 4.0,
       "ticks": 400,
       "delay_ticks": 40,
@@ -122,6 +128,7 @@
     },
     "restless:undertow_dry": {
       "weight": 0.4,
+      "impact": 0.85,
       "margin": 4.0,
       "delay_ticks": 20,
       "interval_ticks": 2,
@@ -136,6 +143,7 @@
     },
     "restless:lantern_burst": {
       "weight": 0.4,
+      "impact": 0.85,
       "margin": 4.0,
       "radius": 6,
       "interval_ticks": 5,
@@ -172,6 +180,7 @@
     },
     "restless:blood_cough": {
       "weight": 0.4,
+      "impact": 0.65,
       "margin": 4.0,
       "delay_ticks": 20,
       "interval_ticks": 60,
@@ -192,6 +201,7 @@
     },
     "restless:wrong_step": {
       "weight": 0.4,
+      "impact": 0.6,
       "ahead": 3,
       "max_depth": 3,
       "warn_ticks": 8,
@@ -211,6 +221,7 @@
     },
     "restless:ash_storm": {
       "weight": 0.5,
+      "impact": 0.8,
       "margin": 4.0,
       "interval_ticks": 20,
       "warn_steps": 3,
@@ -238,6 +249,7 @@
     },
     "restless:hand_below": {
       "weight": 0.4,
+      "impact": 0.8,
       "margin": 4.0,
       "radius": 1.5,
       "interval_ticks": 5,
@@ -265,6 +277,7 @@
     },
     "restless:blade_behind": {
       "weight": 0.4,
+      "impact": 0.9,
       "margin": 4.0,
       "distance": 2.0,
       "delay_ticks": 30,
@@ -291,6 +304,7 @@
     },
     "restless:door_bite": {
       "weight": 0.3,
+      "impact": 0.7,
       "margin": 4.0,
       "radius": 8,
       "interval_ticks": 2,
@@ -305,6 +319,7 @@
     },
     "restless:night_terror": {
       "weight": 0.5,
+      "impact": 0.9,
       "margin": 4.0,
       "warn_ticks": 60,
       "min_left_ticks": 25,
@@ -323,6 +338,7 @@
     },
     "restless:stone_fists": {
       "weight": 0.4,
+      "impact": 0.9,
       "margin": 4.0,
       "lean_blocks": 0.8,
       "interval_ticks": 12,

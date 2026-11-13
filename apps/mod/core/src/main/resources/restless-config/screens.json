@@ -3,22 +3,26 @@
   "events": {
     "minecraft:screen_handprint": {
       "weight": 0.3,
+      "impact": 0.3,
       "ticks": 70,
       "strength": 0.8
     },
     "minecraft:screen_frost": {
       "weight": 0.3,
+      "impact": 0.3,
       "ticks": 160,
       "strength": 0.7
     },
     "minecraft:screen_face": {
       "weight": 0.0,
+      "impact": 0.3,
       "startle": true,
       "ticks": 2,
       "strength": 0.9
     },
     "minecraft:eyes_in_dark": {
       "weight": 0.3,
+      "impact": 0.3,
       "min_distance": 7.0,
       "max_distance": 14.0,
       "max_angle": 60.0,
@@ -27,6 +31,7 @@
     },
     "minecraft:photo_figure": {
       "weight": 0.2,
+      "impact": 0.3,
       "tall_min": 34,
       "tall_max": 60
     }

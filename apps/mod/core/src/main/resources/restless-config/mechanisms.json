@@ -3,10 +3,12 @@
   "events": {
     "minecraft:door": {
       "weight": 1.0,
+      "impact": 0.2,
       "radius": 12
     },
     "minecraft:trapdoor": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 12,
       "sound": {
         "volume": 1.0,
@@ -15,6 +17,7 @@
     },
     "minecraft:fence_gate": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 12,
       "sound": {
         "volume": 1.0,
@@ -23,14 +26,17 @@
     },
     "minecraft:button": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 12
     },
     "minecraft:lever": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 12
     },
     "minecraft:pressure_plate": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 12,
       "release_ticks": 20,
       "sound": {
@@ -40,16 +46,19 @@
     },
     "minecraft:iron_door": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 12
     },
     "minecraft:breathing_door": {
       "weight": 0.7,
+      "impact": 0.25,
       "radius": 12,
       "interval_ticks": 20,
       "toggles": 6
     },
     "minecraft:chest_lid": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 10,
       "close_after_ticks": 12,
       "sound": {
@@ -59,6 +68,7 @@
     },
     "minecraft:barrel_opens": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 10,
       "close_after_ticks": 30,
       "sound": {
@@ -68,10 +78,12 @@
     },
     "minecraft:jukebox_pop": {
       "weight": 0.7,
+      "impact": 0.15,
       "radius": 20
     },
     "minecraft:locked_door": {
       "weight": 0.7,
+      "impact": 0.5,
       "radius": 12,
       "lock_ticks": 200,
       "sync_range": 64.0,
@@ -86,10 +98,12 @@
     },
     "minecraft:open_house": {
       "weight": 0.7,
+      "impact": 0.5,
       "radius": 20
     },
     "minecraft:lectern_pages": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 12,
       "sound": {
         "volume": 1.0,
@@ -98,6 +112,7 @@
     },
     "minecraft:pot_wobble": {
       "weight": 0.7,
+      "impact": 0.2,
       "radius": 12,
       "sound": {
         "volume": 0.8,
@@ -106,20 +121,24 @@
     },
     "minecraft:bell_swing": {
       "weight": 0.7,
+      "impact": 0.15,
       "radius": 20
     },
     "minecraft:redstone_drift": {
       "weight": 0.5,
+      "impact": 0.4,
       "radius": 12,
       "restore_ticks": 2400
     },
     "minecraft:occupied_bed": {
       "weight": 0.6,
+      "impact": 0.3,
       "radius": 12,
       "restore_ticks": 1200
     },
     "minecraft:shuffled_books": {
       "weight": 0.5,
+      "impact": 0.2,
       "radius": 12,
       "restore_ticks": 2400,
       "sound": {
@@ -129,6 +148,7 @@
     },
     "minecraft:dispenser_shot": {
       "weight": 0.4,
+      "impact": 0.75,
       "radius": 12,
       "delay_ticks": 20,
       "speed": 1.6,
@@ -136,6 +156,7 @@
     },
     "minecraft:chest_blast": {
       "weight": 0.3,
+      "impact": 0.75,
       "radius": 6,
       "min_health": 10.0,
       "delay_ticks": 20,
@@ -147,11 +168,13 @@
     },
     "minecraft:wrong_smelt": {
       "weight": 0.5,
+      "impact": 0.2,
       "radius": 10,
       "restore_ticks": 2400
     },
     "minecraft:furniture_moves": {
       "weight": 0.3,
+      "impact": 0.45,
       "radius": 12,
       "min_distance": 2,
       "max_distance": 5,
@@ -159,6 +182,7 @@
     },
     "minecraft:doorstep_gift": {
       "weight": 0.4,
+      "impact": 0.2,
       "radius": 12,
       "items": [
         "minecraft:poppy",
@@ -169,6 +193,7 @@
     },
     "minecraft:hook_click": {
       "weight": 0.6,
+      "impact": 0.1,
       "radius": 12,
       "release_ticks": 4,
       "sound": {
@@ -178,20 +203,24 @@
     },
     "minecraft:daylight_flip": {
       "weight": 0.5,
+      "impact": 0.2,
       "radius": 12,
       "restore_ticks": 1200
     },
     "minecraft:rod_sparks": {
       "weight": 0.5,
+      "impact": 0.15,
       "radius": 16
     },
     "minecraft:torch_burnout": {
       "weight": 0.6,
+      "impact": 0.2,
       "radius": 12,
       "relight_ticks": 160
     },
     "minecraft:chests_open": {
       "weight": 0.4,
+      "impact": 0.2,
       "radius": 10,
       "min_chests": 2,
       "close_after_ticks": 40,
@@ -202,10 +231,12 @@
     },
     "minecraft:anvil_lands": {
       "weight": 0.5,
+      "impact": 0.4,
       "radius": 16
     },
     "minecraft:cake_bite": {
       "weight": 0.5,
+      "impact": 0.15,
       "radius": 12,
       "restore_ticks": 1200,
       "sound": {
@@ -215,6 +246,7 @@
     },
     "minecraft:tnt_hiss": {
       "weight": 0.4,
+      "impact": 0.35,
       "radius": 12,
       "sound": {
         "volume": 1.0,
@@ -223,6 +255,7 @@
     },
     "minecraft:pot_holds": {
       "weight": 0.5,
+      "impact": 0.1,
       "radius": 12,
       "restore_ticks": 2400,
       "items": [
@@ -237,6 +270,7 @@
     },
     "restless:muddy_footprints": {
       "weight": 0.4,
+      "impact": 0.15,
       "radius": 10,
       "max_steps": 24,
       "min_prints": 2,
@@ -249,12 +283,14 @@
     },
     "minecraft:piston_twitch": {
       "weight": 0.5,
+      "impact": 0.15,
       "radius": 12,
       "twitches": 2,
       "interval_ticks": 6
     },
     "minecraft:hopper_swallows": {
       "weight": 0.3,
+      "impact": 0.45,
       "radius": 12,
       "reach": 4.0,
       "mouth_height": 1.1,
@@ -264,6 +300,7 @@
     },
     "minecraft:sculk_chain": {
       "weight": 0.5,
+      "impact": 0.2,
       "radius": 16,
       "min_sensors": 2,
       "max_sensors": 8,
@@ -273,15 +310,18 @@
     },
     "minecraft:observer_pulse": {
       "weight": 0.3,
+      "impact": 0.4,
       "radius": 12,
       "pulses": 3,
       "interval_ticks": 4
     },
     "minecraft:bed_missing": {
-      "weight": 0.2
+      "weight": 0.2,
+      "impact": 0.45
     },
     "minecraft:ender_note": {
       "weight": 0.3,
+      "impact": 0.15,
       "texts": [
         "it is not yours",
         "do not open the lid",

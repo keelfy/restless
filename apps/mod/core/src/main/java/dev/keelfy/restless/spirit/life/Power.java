@@ -82,14 +82,26 @@ public final class Power {
     }
 
     /**
-     * Ticks until the next event: the calm cooldown shrinks with power, a roll stretches it up to twofold, then it is
-     * scaled by spirit activity and stretched by {@code quiet} (see {@link #daylightFactor}).
+     * How an event's impact (0 a figure in the distance, 1 a lethal attack) scales the wait that follows it: from
+     * {@code impact_min_factor} for the lightest to {@code impact_max_factor} for the heaviest.
      */
-    public static long cooldownTicks(double power, double activity, double roll, double quiet) {
+    public static double impactFactor(double impact) {
+        Config.Section config = Config.section("power");
+        double min = config.num("impact_min_factor");
+        return min + (config.num("impact_max_factor") - min) * impact;
+    }
+
+    /**
+     * Ticks until the next event: the calm cooldown shrinks with power, a roll stretches it up to twofold, then it is
+     * scaled by spirit activity and stretched by {@code quiet} (see {@link #daylightFactor}) and {@code impactFactor}
+     * (see {@link #impactFactor}); never under {@code min_cooldown_ticks}.
+     */
+    public static long cooldownTicks(double power, double activity, double roll, double quiet, double impactFactor) {
         Config.Section config = Config.section("power");
         double minutes = (config.num("cooldown_calm_minutes") - config.num("cooldown_drop_minutes") * power)
                 * (1.0 + roll)
-                * quiet;
+                * quiet
+                * impactFactor;
         return Math.max(config.integer("min_cooldown_ticks"), (long) (minutes * Ticks.MINUTE / activity));
     }
 }

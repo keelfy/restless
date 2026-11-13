@@ -3,6 +3,7 @@
   "events": {
     "minecraft:vex_through_wall": {
       "weight": 0.3,
+      "impact": 0.3,
       "distance": 12.0,
       "length": 24.0,
       "tries": 16,
@@ -12,6 +13,7 @@
     },
     "minecraft:phantom_swoop": {
       "weight": 0.3,
+      "impact": 0.4,
       "distance": 24.0,
       "height": 14.0,
       "speed": 1.0,
@@ -24,6 +26,7 @@
     },
     "minecraft:dead_on_path": {
       "weight": 0.3,
+      "impact": 0.3,
       "distance": 12.0,
       "max_angle": 35.0,
       "mobs": [
@@ -38,6 +41,7 @@
     },
     "minecraft:llama_caravan": {
       "weight": 0.25,
+      "impact": 0.2,
       "distance": 16.0,
       "max_angle": 25.0,
       "mob": "minecraft:trader_llama",
@@ -50,6 +54,7 @@
     },
     "minecraft:giant_slime": {
       "weight": 0.25,
+      "impact": 0.3,
       "distance": 32.0,
       "max_angle": 40.0,
       "size": 8,

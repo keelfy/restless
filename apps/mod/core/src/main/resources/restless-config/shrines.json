@@ -3,6 +3,7 @@
   "events": {
     "minecraft:abandoned_camp": {
       "weight": 0.3,
+      "impact": 0.2,
       "min_distance": 6,
       "max_distance": 14,
       "restore_ticks": 12000,
@@ -36,6 +37,7 @@
     },
     "minecraft:dirt_hut": {
       "weight": 0.3,
+      "impact": 0.2,
       "min_distance": 5,
       "max_distance": 12,
       "restore_ticks": 9000,
@@ -64,6 +66,7 @@
     },
     "minecraft:overnight_shrine": {
       "weight": 0.3,
+      "impact": 0.2,
       "min_distance": 6,
       "max_distance": 14,
       "restore_ticks": 12000,
@@ -109,6 +112,7 @@
     },
     "minecraft:far_house": {
       "weight": 0.2,
+      "impact": 0.2,
       "min_distance": 28,
       "max_distance": 44,
       "tries": 8,
@@ -118,6 +122,7 @@
     },
     "restless:ash_sign": {
       "weight": 0.3,
+      "impact": 0.2,
       "distance": 3.0,
       "spread_degrees": 25.0,
       "radius": 3,

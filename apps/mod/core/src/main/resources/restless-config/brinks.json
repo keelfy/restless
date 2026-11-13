@@ -3,6 +3,7 @@
   "events": {
     "restless:final_blow": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -22,6 +23,7 @@
     },
     "restless:the_hanging": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -52,6 +54,7 @@
     },
     "restless:held_under": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -77,6 +80,7 @@
     },
     "restless:pyre": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -100,6 +104,7 @@
     },
     "restless:withering": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -123,6 +128,7 @@
     },
     "restless:count": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -141,6 +147,7 @@
     },
     "restless:the_hollow": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -171,6 +178,7 @@
     },
     "restless:ledge_push": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -204,6 +212,7 @@
     },
     "restless:circle_of_knives": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -223,6 +232,7 @@
     },
     "restless:smother_brink": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -244,6 +254,7 @@
     },
     "restless:embrace_brink": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -271,6 +282,7 @@
     },
     "restless:red_room": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -295,6 +307,7 @@
     },
     "restless:drain": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,
@@ -322,6 +335,7 @@
     },
     "restless:bound": {
       "weight": 0.3,
+      "impact": 1.0,
       "band": "brink",
       "min_power": 0.6,
       "min_health": 4.0,

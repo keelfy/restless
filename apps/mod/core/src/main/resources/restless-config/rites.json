@@ -3,6 +3,7 @@
   "events": {
     "restless:scarecrow_closer": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 14,
       "min_gap": 4,
       "restore_ticks": 1200,
@@ -13,6 +14,7 @@
     },
     "restless:ouija_hi": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 8,
       "words": [
         "HI",
@@ -22,10 +24,12 @@
     },
     "restless:spirit_box_word": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 6
     },
     "restless:salt_gap": {
       "weight": 0.2,
+      "impact": 0.5,
       "radius": 8,
       "min_cells": 4,
       "restore_ticks": 2400,
@@ -36,6 +40,7 @@
     },
     "restless:grave_name": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 16,
       "lines": [
         "Here lies %s.",
@@ -49,6 +54,7 @@
     },
     "restless:journal_page_torn": {
       "weight": 0.3,
+      "impact": 0.2,
       "min_notes": 3,
       "restore_ticks": 6000,
       "sound": {
@@ -58,6 +64,7 @@
     },
     "restless:dreamcatcher_fails": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 8,
       "delay_ticks": 40,
       "sound": {
@@ -67,6 +74,7 @@
     },
     "restless:lantern_soul_fire": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 10,
       "restore_ticks": 600,
       "sound": {
@@ -76,10 +84,12 @@
     },
     "restless:charm_falls": {
       "weight": 0.2,
+      "impact": 0.5,
       "radius": 10
     },
     "restless:altar_midnight": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "interval_ticks": 10,
       "sound": {

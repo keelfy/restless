@@ -3,6 +3,7 @@
   "events": {
     "minecraft:border_closes": {
       "weight": 0.2,
+      "impact": 0.2,
       "from": 80.0,
       "to": 40.0,
       "ticks": 80,
@@ -10,6 +11,7 @@
     },
     "minecraft:false_recipe": {
       "weight": 0.25,
+      "impact": 0.1,
       "ticks": 200,
       "results": [
         "minecraft:skeleton_skull",
@@ -21,11 +23,13 @@
     },
     "minecraft:view_narrows": {
       "weight": 0.25,
+      "impact": 0.25,
       "speed": 0.02,
       "ticks": 20
     },
     "minecraft:line_pulls": {
       "weight": 0.25,
+      "impact": 0.55,
       "pull": 0.6,
       "lift": 0.25,
       "sound": {
@@ -35,6 +39,7 @@
     },
     "minecraft:odd_catch": {
       "weight": 0.3,
+      "impact": 0.15,
       "items": [
         "minecraft:player_head",
         "minecraft:bone",

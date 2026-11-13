@@ -4,522 +4,609 @@
     "minecraft:lights_out": {
       "script": "lantern_flicker +2 torch_chain +3 breathing +3 blackout",
       "weight": 0.06,
+      "impact": 0.7,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:playing_with_candles": {
       "script": "candles_out +4 candles_light +4 candles_out +2 ghost_laugh",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:behind_you": {
       "script": "torches_behind +3 footsteps +2 ghost_breath +1 turned_head",
       "weight": 0.06,
+      "impact": 0.55,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:hearth_dies": {
       "script": "furnace_dies +0 campfire_out +3 cold_breath +3 frostbite",
       "weight": 0.06,
+      "impact": 0.75,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:between_blinks": {
       "script": "dimming +4 blinking +0 edge_figure",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:lamp_code": {
       "script": "lamp_off +2 lamp_off +2 lamp_off +3 three_knocks +2 lever",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:soul_fire": {
       "script": "torch_swap +2 lantern_flicker +2 subliminal_title +3 sanity_drain",
       "weight": 0.06,
+      "impact": 0.6,
       "min_power": 0.6,
       "evolved": false
     },
     "minecraft:pocket_dark": {
       "script": "held_light_out +1 darkness +2 close_whispers +3 cold_touch",
       "weight": 0.06,
+      "impact": 0.8,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:the_path_of_lights": {
       "script": "torch_line +6 music_cut +4 fog_silhouette",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:jack_o_lanterns": {
       "script": "new_face +2 new_face +2 new_face +3 distant_walker",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:knock_knock": {
       "script": "three_knocks +3 door +2 approaching_steps +2 breathing",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:unlocked_house": {
       "script": "breathing_door +5 open_house +2 distant_mob",
       "weight": 0.06,
+      "impact": 0.6,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:locked_in": {
       "script": "three_knocks +2 locked_door +1 breathing +3 candles_out +2 cold_touch",
       "weight": 0.06,
+      "impact": 0.8,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:rearranged": {
       "script": "pot_wobble +2 shuffled_books +3 new_painting +3 furniture_moves +2 ghost_laugh",
       "weight": 0.06,
+      "impact": 0.55,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:midnight_kitchen": {
       "script": "chest_lid +2 eating_behind_wall +3 wrong_smelt +2 hunger_pang",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:a_visitor": {
       "script": "doorstep_gift +2 restless:muddy_footprints +4 three_knocks +4 door",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:trap_room": {
       "script": "pressure_plate +1 dispenser_shot +2 ghost_laugh",
       "weight": 0.06,
+      "impact": 0.85,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:ticking_chest": {
       "script": "chest_opens +3 chest_lid +3 chest_blast",
       "weight": 0.06,
+      "impact": 0.85,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:nothing_works": {
       "script": "lever +1 button +1 iron_door +2 redstone_drift +3 jukebox_pop",
       "weight": 0.06,
+      "impact": 0.5,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:last_song": {
       "script": "phantom_jukebox +6 jukebox_pop +3 crying_child",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:company": {
       "script": "stranger_joins +20 distant_player +30 pillar +20 stranger_death",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:someone_at_my_crops": {
       "script": "stranger_joins +10 harvest +5 lost_growth",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:closing_in": {
       "script": "distant_walker +5 approaching_steps +3 edge_figure",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.6,
       "evolved": false
     },
     "minecraft:gone_in_the_fog": {
       "script": "fog_silhouette >gone +2 footsteps +2 ghost_breath",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:a_name_below": {
       "script": "nametag +4 stranger_joins +3 whisper",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:the_other_builder": {
       "script": "pillar +8 many_breaks +3 cave_sign",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:died_out_there": {
       "script": "distant_walker +10 cut_off_scream +2 stranger_death +5 restless:mock_grave",
       "weight": 0.06,
+      "impact": 0.35,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:the_dead_party": {
       "script": "stranger_joins +5 stranger_joins +5 stranger_joins +10 distant_player +0 fog_silhouette +20 stranger_death +0 stranger_death +0 stranger_death",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.8,
       "evolved": false
     },
     "minecraft:friend_far_off": {
       "script": "friend_double +4 whisper +3 fake_subtitle",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.6,
       "evolved": false
     },
     "minecraft:statue_game": {
       "script": "footsteps +3 armor_stand +6 footsteps +4 turned_head",
       "weight": 0.06,
+      "impact": 0.6,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:your_armor_fits_it": {
       "script": "ghost_breath +2 armor_off +3 ghost_laugh +3 copycat",
       "weight": 0.06,
+      "impact": 0.8,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:who_said_that": {
       "script": "own_voice +3 echo +2 own_voice +2 subliminal_title",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:your_grave": {
       "script": "restless:mock_grave +3 edge_figure +4 false_death",
       "weight": 0.06,
+      "impact": 0.35,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:behind_the_glass": {
       "script": "false_windows +3 glass_wall +3 edge_figure",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.6,
       "evolved": false
     },
     "minecraft:same_steps": {
       "script": "footprints +3 fake_subtitle +3 edge_figure",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:someone_in_my_bed": {
       "script": "breathing +3 occupied_bed +4 heaviness +3 phantom_heartbeat",
       "weight": 0.06,
+      "impact": 0.4,
       "min_power": 0.6,
       "evolved": false
     },
     "minecraft:walking_in_sleep": {
       "script": "close_whispers +3 sleepwalk >waking restless:muddy_footprints +3 cave_sign",
       "weight": 0.06,
+      "impact": 0.7,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:bad_dream": {
       "script": "dream >waking false_night +4 close_whispers",
       "weight": 0.06,
+      "impact": 0.45,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:no_rest": {
       "script": "phantom_heartbeat +2 insomnia +2 whisper +5 occupied_bed",
       "weight": 0.06,
+      "impact": 0.6,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:shattered_sleep": {
       "script": "phantom_heartbeat +3 broken_bed +2 ghost_laugh",
       "weight": 0.06,
+      "impact": 0.6,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:night_at_noon": {
       "script": "false_night +2 circling_moan +4 silent_lightning +3 distant_mob",
       "weight": 0.06,
+      "impact": 0.35,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:lost_hour": {
       "script": "blinking +1 lost_time +2 whisper +3 sanity_drain",
       "weight": 0.06,
+      "impact": 0.6,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:sleep_paralysis": {
       "script": "darkness +1 trip +2 ghost_breath +2 subliminal_title",
       "weight": 0.06,
+      "impact": 0.85,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:the_other_miner": {
       "script": "distant_mining +5 many_breaks +3 cave_sign",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:overhead": {
       "script": "spider_overhead +3 ceiling_crack +3 cracking_floor",
       "weight": 0.06,
+      "impact": 0.65,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:floor_gives_way": {
       "script": "block_breaking +2 cracking_floor +2 shifting_floor +2 shove",
       "weight": 0.06,
+      "impact": 0.85,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:deep_calling": {
       "script": "ladder_steps +3 whisper +4 the_call",
       "weight": 0.06,
+      "impact": 0.95,
       "min_power": 0.8,
       "evolved": false
     },
     "minecraft:nest": {
       "script": "block_breaking +2 infested_stone +3 infested",
       "weight": 0.06,
+      "impact": 0.8,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:lava_tears": {
       "script": "lava_leak +3 scorch +3 burning_hand",
       "weight": 0.06,
+      "impact": 0.95,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:no_way_back": {
       "script": "torches_behind +2 approaching_steps +2 sealed_tunnel",
       "weight": 0.06,
+      "impact": 0.75,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:buried_alive": {
       "script": "cave_sign +4 walled_in +3 suffocation",
       "weight": 0.06,
+      "impact": 1.0,
       "min_power": 0.8,
       "evolved": false
     },
     "minecraft:ancient_city": {
       "script": "shrieker +3 phantom_heartbeat +3 darkness",
       "weight": 0.06,
+      "impact": 0.45,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:hole_in_the_wall": {
       "script": "block_blink +2 wall_hole +2 distant_mob",
       "weight": 0.06,
+      "impact": 0.65,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:dead_lake": {
       "script": "drowned_fish +3 guardian_face +3 undertow",
       "weight": 0.06,
+      "impact": 0.95,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:adrift": {
       "script": "boat_drifts +4 local_rain +3 broken_boat",
       "weight": 0.06,
+      "impact": 0.45,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:voice_from_the_water": {
       "script": "dripping +2 close_whispers +3 water_call",
       "weight": 0.06,
+      "impact": 0.9,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:frozen_pond": {
       "script": "ice_over +2 cold_breath +2 frostbite",
       "weight": 0.06,
+      "impact": 0.75,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:leaky_roof": {
       "script": "leak +3 dripping +3 dry_cauldron",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:into_the_corner": {
       "script": "animals_stare +3 pen_corner +15 open_pen",
       "weight": 0.06,
+      "impact": 0.55,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:the_dog_sees_it": {
       "script": "dog_growls +3 footsteps +2 cold_touch",
       "weight": 0.06,
+      "impact": 0.8,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:cats_know": {
       "script": "cat_flee +2 cat_hiss +3 edge_figure",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:not_my_dog": {
       "script": "dog_barks +3 dog_growls +4 wild_pet",
       "weight": 0.06,
+      "impact": 0.8,
       "min_power": 0.8,
       "evolved": false
     },
     "minecraft:swarm": {
       "script": "bats +3 spider_overhead +3 angry_bees",
       "weight": 0.06,
+      "impact": 0.8,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:wrong_herd": {
       "script": "disguise +3 animals_stare +3 hostile_animal",
       "weight": 0.06,
+      "impact": 0.4,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:the_golem_mourns": {
       "script": "golem_flower +4 distant_bell +3 villager_stares",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:the_golem_turns": {
       "script": "villager_refuses +3 golem_flower +4 golem_rage",
       "weight": 0.06,
+      "impact": 0.9,
       "min_power": 0.8,
       "evolved": false
     },
     "minecraft:stolen_block": {
       "script": "enderman_hiss +3 enderman_takes +3 wall_hole",
       "weight": 0.06,
+      "impact": 0.7,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:runaway_cart": {
       "script": "distant_mining +3 minecart_rolls +2 trip",
       "weight": 0.06,
+      "impact": 0.85,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:pack": {
       "script": "circling_moan +3 wolf_rage",
       "weight": 0.06,
+      "impact": 0.9,
       "min_power": 0.8,
       "evolved": false
     },
     "minecraft:billy_goat": {
       "script": "animals_stare +2 leash_snaps +2 goat_rams",
       "weight": 0.06,
+      "impact": 0.85,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:you_died": {
       "script": "false_wound +1 false_hearts +2 false_death",
       "weight": 0.06,
+      "impact": 0.35,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:saved_by_nothing": {
       "script": "false_wound +2 false_totem +3 ghost_laugh",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:achievement_get": {
       "script": "false_advancement +2 subliminal_title +2 own_voice",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:starving": {
       "script": "false_hunger +2 eating_behind_wall +3 ravenous",
       "weight": 0.06,
+      "impact": 0.4,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:what_s_in_my_pocket": {
       "script": "false_slot +3 swap_slots +3 hotbar_shift",
       "weight": 0.06,
+      "impact": 0.35,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:silence": {
       "script": "music_cut +3 fake_subtitle +3 breathing",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:seeing_red": {
       "script": "red_vignette +2 phantom_heartbeat +3 wrath",
       "weight": 0.06,
+      "impact": 0.95,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:the_sky_lies": {
       "script": "dragon_flyover +5 silent_lightning +3 distant_mob",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:mind_slipping": {
       "script": "blinking +2 sanity_drain +3 false_looks +3 sanity_crash",
       "weight": 0.06,
+      "impact": 0.85,
       "min_power": 0.8,
       "evolved": false
     },
     "minecraft:hoard": {
       "script": "shuffle_chest +3 vanishing_item +3 chest_opens",
       "weight": 0.06,
+      "impact": 0.65,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:butterfingers": {
       "script": "hotbar_shift +2 snatch +2 ghost_laugh",
       "weight": 0.06,
+      "impact": 0.8,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:x_marks_the_spot": {
       "script": "map_marker +3 false_compass +3 item_trail",
       "weight": 0.06,
+      "impact": 0.6,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:the_journal": {
       "script": "book_page +3 lectern_pages +2 close_whispers",
       "weight": 0.06,
+      "impact": 0.35,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:blight": {
       "script": "dead_ground +3 withering_crops +3 rot",
       "weight": 0.06,
+      "impact": 0.65,
       "min_power": 0.7,
       "evolved": false
     },
     "minecraft:funeral": {
       "script": "wilted_flowers +3 cross +3 death_cry",
       "weight": 0.06,
+      "impact": 0.3,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:walking_woods": {
       "script": "restless:ghost_tree +5 moving_tree +3 footsteps",
       "weight": 0.06,
+      "impact": 0.35,
       "min_power": 0.4,
       "evolved": false
     },
     "minecraft:tantrum": {
       "script": "breathing_door +2 open_house +2 furniture_moves +3 snatch +2 chest_blast",
       "weight": 0.06,
+      "impact": 0.85,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "poltergeist"
@@ -527,6 +614,7 @@
     "minecraft:supper": {
       "script": "extinguish_light +1 eating_behind_wall +2 torch_chain +1 eating_behind_wall +3 blackout",
       "weight": 0.06,
+      "impact": 0.7,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "shade"
@@ -534,6 +622,7 @@
     "minecraft:replacement": {
       "script": "footprints +3 own_voice +2 edge_figure +3 false_death +2 double",
       "weight": 0.06,
+      "impact": 0.75,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "phantom"
@@ -541,6 +630,7 @@
     "minecraft:taken_under": {
       "script": "close_whispers +3 water_call >water undertow +4 drowned_fish",
       "weight": 0.06,
+      "impact": 0.95,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "nix"
@@ -548,6 +638,7 @@
     "minecraft:wearing_faces": {
       "script": "disguise +3 hostile_animal +3 hallucination +3 armor_off +2 copycat",
       "weight": 0.06,
+      "impact": 0.8,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "mimic"
@@ -555,6 +646,7 @@
     "minecraft:lights_at_your_back": {
       "script": "torches_behind +2 held_light_out +2 approaching_steps +2 shadow",
       "weight": 0.06,
+      "impact": 0.95,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "wraith"
@@ -562,6 +654,7 @@
     "minecraft:rider": {
       "script": "occupied_bed +3 breathing +3 heaviness +2 darkness +3 embrace",
       "weight": 0.06,
+      "impact": 0.95,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "mara"
@@ -569,6 +662,7 @@
     "minecraft:foretold": {
       "script": "distant_bell +4 banshee +6 cut_off_scream +3 false_death +5 restless:mock_grave",
       "weight": 0.06,
+      "impact": 0.35,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "banshee"
@@ -576,6 +670,7 @@
     "minecraft:blood_for_blood": {
       "script": "death_cry +2 red_vignette +2 copycat +0 wild_pet +3 wrath",
       "weight": 0.06,
+      "impact": 0.95,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "revenant"
@@ -583,6 +678,7 @@
     "minecraft:the_way_they_went": {
       "script": "restless:muddy_footprints +3 item_trail +5 torch_line +10 stranger_death +2 lost_time",
       "weight": 0.06,
+      "impact": 0.6,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "lost_one"
@@ -590,6 +686,7 @@
     "minecraft:house_rules": {
       "script": "door +1 trapdoor +1 fence_gate +1 button +1 lever +2 locked_door +3 shuffled_books",
       "weight": 0.06,
+      "impact": 0.6,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "domovoi"
@@ -597,6 +694,7 @@
     "minecraft:feast": {
       "script": "false_hunger +2 eating_behind_wall +2 rot +3 wrong_smelt +3 vanishing_item",
       "weight": 0.06,
+      "impact": 0.65,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "hoarder"
@@ -604,6 +702,7 @@
     "minecraft:the_debt": {
       "script": "red_vignette +2 blackout +3 wrath +3 the_call",
       "weight": 0.06,
+      "impact": 0.95,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "demon"
@@ -611,6 +710,7 @@
     "minecraft:punchline": {
       "script": "false_advancement +1 false_totem +2 chest_lid +2 chest_blast +2 ghost_laugh",
       "weight": 0.06,
+      "impact": 0.85,
       "min_power": 0.7,
       "evolved": true,
       "spirit": "trickster"
@@ -618,6 +718,7 @@
     "minecraft:the_hunt": {
       "script": "footsteps +3 restless:volley +5 restless:stalker +5 restless:final_blow",
       "weight": 0.06,
+      "impact": 1.0,
       "min_power": 0.8,
       "evolved": false,
       "band": "brink"
@@ -625,6 +726,7 @@
     "minecraft:the_last_night": {
       "script": "phantom_heartbeat +10 restless:reaping",
       "weight": 0.06,
+      "impact": 1.0,
       "min_power": 0.9,
       "evolved": true,
       "band": "lethal",
@@ -636,6 +738,7 @@
     "minecraft:debt": {
       "script": "ghost_breath +3 restless:possessed_mob +5 restless:final_blow +20 restless:the_avenger",
       "weight": 0.06,
+      "impact": 1.0,
       "min_power": 0.9,
       "evolved": true,
       "band": "lethal",
@@ -646,6 +749,7 @@
     "minecraft:drowning_season": {
       "script": "dripping +3 undertow +30 restless:drowner",
       "weight": 0.06,
+      "impact": 1.0,
       "min_power": 0.9,
       "evolved": true,
       "band": "lethal",

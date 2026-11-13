@@ -14,7 +14,8 @@
     "repeat_share": 0.1,
     "startle_gap_ticks": 12000,
     "sure_start_factor": 0.5,
-    "retry_ticks": 600
+    "retry_ticks": 600,
+    "first_event_ticks": 1800
   },
   "power": {
     "maturity_days": 30,
@@ -24,7 +25,9 @@
     "daylight_step": 1.2,
     "cooldown_calm_minutes": 4.0,
     "cooldown_drop_minutes": 2.5,
-    "min_cooldown_ticks": 20
+    "min_cooldown_ticks": 100,
+    "impact_min_factor": 0.25,
+    "impact_max_factor": 1.5
   },
   "anger": {
     "kill_cat": 0.15,

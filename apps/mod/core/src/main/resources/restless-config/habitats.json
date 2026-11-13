@@ -3,6 +3,7 @@
   "events": {
     "minecraft:boat_grabbed": {
       "weight": 0.2,
+      "impact": 0.6,
       "hold_ticks": 160,
       "sound_interval_ticks": 30,
       "sound_depth": 1.0,
@@ -13,6 +14,7 @@
     },
     "minecraft:parrots_scatter": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 24,
       "lift": 0.45,
       "interval_ticks": 10,
@@ -27,18 +29,21 @@
     },
     "minecraft:window_vines": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "max_blocks": 24,
       "ticks": 1200
     },
     "minecraft:mooshroom_brown": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 24,
       "max_animals": 8,
       "ticks": 600
     },
     "minecraft:eyeblossoms_open": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "max_blocks": 12,
       "ticks": 600,
@@ -49,6 +54,7 @@
     },
     "minecraft:creaking_heart_call": {
       "weight": 0.3,
+      "impact": 0.2,
       "distance": 14.0,
       "count": 3,
       "interval_ticks": 40,
@@ -59,6 +65,7 @@
     },
     "minecraft:resin_clumps": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "max_blocks": 8,
       "ticks": 2400,
@@ -79,6 +86,7 @@
     },
     "minecraft:black_petals": {
       "weight": 0.3,
+      "impact": 0.2,
       "interval_ticks": 2,
       "ticks": 200,
       "count": 6,
@@ -88,6 +96,7 @@
     },
     "minecraft:canopy_closes": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 8,
       "min_height": 3,
       "min_blocks": 6,
@@ -96,6 +105,7 @@
     },
     "minecraft:sculk_creep": {
       "weight": 0.2,
+      "impact": 0.2,
       "radius": 14,
       "min_distance": 8,
       "stop_distance": 3,
@@ -109,6 +119,7 @@
     },
     "minecraft:berries_dark": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 14,
       "max_blocks": 10,
       "interval_ticks": 20,

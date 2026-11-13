@@ -3,6 +3,7 @@
   "events": {
     "restless:hurled_block": {
       "weight": 0.4,
+      "impact": 0.85,
       "margin": 4.0,
       "radius": 8,
       "min_distance": 3.0,
@@ -40,6 +41,7 @@
     },
     "restless:flung_tools": {
       "weight": 0.3,
+      "impact": 0.85,
       "margin": 4.0,
       "radius": 8,
       "warn_ticks": 60,
@@ -68,6 +70,7 @@
     },
     "restless:volley": {
       "weight": 0.4,
+      "impact": 0.9,
       "margin": 4.0,
       "dark_below": 8,
       "distance": 18.0,
@@ -91,6 +94,7 @@
     },
     "restless:cave_in": {
       "weight": 0.3,
+      "impact": 0.9,
       "margin": 4.0,
       "ceiling_max": 7,
       "min_drop": 3,
@@ -119,6 +123,7 @@
     },
     "restless:dripstone_rain": {
       "weight": 0.3,
+      "impact": 0.9,
       "margin": 4.0,
       "ceiling_max": 8,
       "min_drop": 3,
@@ -150,6 +155,7 @@
     },
     "restless:possessed_mob": {
       "weight": 0.4,
+      "impact": 0.95,
       "margin": 4.0,
       "radius": 12,
       "max_health": 40.0,
@@ -173,6 +179,7 @@
     },
     "restless:frenzy": {
       "weight": 0.3,
+      "impact": 0.95,
       "margin": 4.0,
       "radius": 16,
       "min_mobs": 2,
@@ -198,6 +205,7 @@
     },
     "restless:turned_pets": {
       "weight": 0.3,
+      "impact": 0.9,
       "margin": 4.0,
       "radius": 16,
       "interval_ticks": 10,
@@ -214,6 +222,7 @@
     },
     "restless:vex_swarm": {
       "weight": 0.3,
+      "impact": 0.95,
       "margin": 4.0,
       "pulse_ticks": 5,
       "warn_ticks": 60,
@@ -237,6 +246,7 @@
     },
     "restless:ghost_creeper": {
       "weight": 0.3,
+      "impact": 0.9,
       "margin": 4.0,
       "distance": 3.0,
       "yaw_offset": 180.0,
@@ -265,6 +275,7 @@
     },
     "restless:stalker": {
       "weight": 0.3,
+      "impact": 0.9,
       "margin": 4.0,
       "min_distance": 18,
       "max_distance": 26,
@@ -297,6 +308,7 @@
     },
     "restless:hail_of_bones": {
       "weight": 0.3,
+      "impact": 0.95,
       "margin": 4.0,
       "height": 14,
       "spread": 4.0,

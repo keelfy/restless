@@ -3,6 +3,7 @@
   "events": {
     "minecraft:lake_fisher": {
       "weight": 0.3,
+      "impact": 0.12,
       "radius": 16,
       "lake_span": 3,
       "tries": 12,
@@ -20,6 +21,7 @@
     },
     "minecraft:window_figure": {
       "weight": 0.3,
+      "impact": 0.12,
       "radius": 14,
       "min_distance": 4.0,
       "interval_ticks": 10,
@@ -29,6 +31,7 @@
     },
     "minecraft:trailing_figure": {
       "weight": 0.3,
+      "impact": 0.25,
       "distance": 30.0,
       "min_angle": 150.0,
       "max_angle": 180.0,
@@ -44,6 +47,7 @@
     },
     "minecraft:deep_swimmer": {
       "weight": 0.3,
+      "impact": 0.12,
       "tries": 12,
       "distance": 8.0,
       "min_angle": 15.0,
@@ -56,6 +60,7 @@
     },
     "minecraft:note_dropper": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 14.0,
       "min_angle": 0.0,
       "max_angle": 30.0,
@@ -77,6 +82,7 @@
     },
     "minecraft:horizon_choir": {
       "weight": 0.2,
+      "impact": 0.1,
       "count": 6,
       "min_count": 4,
       "distance": 45.0,
@@ -90,6 +96,7 @@
     },
     "minecraft:blade_stalker": {
       "weight": 0.25,
+      "impact": 0.3,
       "distance": 16.0,
       "min_angle": 140.0,
       "max_angle": 180.0,
@@ -105,6 +112,7 @@
     },
     "minecraft:cliff_faller": {
       "weight": 0.25,
+      "impact": 0.2,
       "tries": 24,
       "min_range": 12,
       "max_range": 22,
@@ -124,6 +132,7 @@
     },
     "minecraft:lake_ferry": {
       "weight": 0.2,
+      "impact": 0.12,
       "radius": 16,
       "lake_span": 5,
       "min_distance": 10.0,
@@ -142,6 +151,7 @@
     },
     "minecraft:cave_cart": {
       "weight": 0.2,
+      "impact": 0.12,
       "max_y": 50,
       "distance": 14.0,
       "min_angle": 10.0,

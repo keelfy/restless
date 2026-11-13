@@ -12,6 +12,7 @@
   "events": {
     "minecraft:cold_touch": {
       "weight": 1.0,
+      "impact": 0.7,
       "min_health": 2.0,
       "damage_min": 2,
       "damage_spread": 3,
@@ -23,6 +24,7 @@
     },
     "minecraft:trip": {
       "weight": 0.7,
+      "impact": 0.75,
       "ticks": 20,
       "amplifier": 6,
       "sound": {
@@ -32,11 +34,13 @@
     },
     "minecraft:scorch": {
       "weight": 0.6,
+      "impact": 0.85,
       "min_health": 6.0,
       "seconds": 1.0
     },
     "minecraft:wrath": {
       "weight": 0.6,
+      "impact": 0.85,
       "min_health": 8.0,
       "damage_min": 4,
       "damage_spread": 4,
@@ -48,6 +52,7 @@
     },
     "minecraft:snatch": {
       "weight": 0.7,
+      "impact": 0.7,
       "speed": 0.45,
       "lift": 0.3,
       "sound": {
@@ -57,6 +62,7 @@
     },
     "minecraft:suffocation": {
       "weight": 0.5,
+      "impact": 0.9,
       "margin": 2.0,
       "dark_below": 8,
       "delay_ticks": 40,
@@ -76,6 +82,7 @@
     },
     "minecraft:shove": {
       "weight": 0.5,
+      "impact": 0.75,
       "margin": 4.0,
       "push": 0.7,
       "lift": 0.2,
@@ -86,6 +93,7 @@
     },
     "minecraft:toss": {
       "weight": 0.5,
+      "impact": 0.8,
       "margin": 4.0,
       "lift": 1.0,
       "sound": {
@@ -95,6 +103,7 @@
     },
     "minecraft:thunder_knocks": {
       "weight": 0.5,
+      "impact": 0.8,
       "margin": 4.0,
       "strike_delay_ticks": 60,
       "miss_distance": 6.0,
@@ -105,6 +114,7 @@
     },
     "minecraft:embrace": {
       "weight": 0.5,
+      "impact": 0.85,
       "margin": 4.0,
       "delay_ticks": 30,
       "interval_ticks": 20,
@@ -130,6 +140,7 @@
     },
     "minecraft:shadow": {
       "weight": 0.4,
+      "impact": 0.85,
       "margin": 8.0,
       "min_distance": 14,
       "max_distance": 20,
@@ -167,6 +178,7 @@
     },
     "minecraft:the_call": {
       "weight": 0.3,
+      "impact": 0.85,
       "margin": 4.0,
       "radius": 12,
       "void_distance": 10.0,
@@ -191,6 +203,7 @@
     },
     "minecraft:undertow": {
       "weight": 0.4,
+      "impact": 0.85,
       "margin": 4.0,
       "interval_ticks": 2,
       "pull": 0.12,
@@ -198,6 +211,7 @@
     },
     "minecraft:water_call": {
       "weight": 0.3,
+      "impact": 0.8,
       "margin": 4.0,
       "radius": 12,
       "delay_ticks": 40,
@@ -212,6 +226,7 @@
     },
     "minecraft:drowned_fish": {
       "weight": 0.4,
+      "impact": 0.3,
       "radius": 24.0,
       "max_animals": 12,
       "sound": {
@@ -221,6 +236,7 @@
     },
     "minecraft:broken_boat": {
       "weight": 0.4,
+      "impact": 0.35,
       "radius": 24.0,
       "damage": 10.0,
       "sound": {

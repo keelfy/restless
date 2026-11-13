@@ -3,12 +3,14 @@
   "events": {
     "minecraft:phantom_self_join": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "phantom",
       "seconds": 40,
       "latency": 120
     },
     "minecraft:nix_catch": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "nix",
       "radius": 16,
       "tries": 40,
@@ -21,6 +23,7 @@
     },
     "minecraft:nix_call": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "nix",
       "radius": 12,
       "tries": 12,
@@ -35,6 +38,7 @@
     },
     "minecraft:mimic_voice": {
       "weight": 2.0,
+      "impact": 0.25,
       "spirit": "mimic",
       "radius": 12,
       "times": 3,
@@ -46,12 +50,14 @@
     },
     "minecraft:wraith_taken": {
       "weight": 2.0,
+      "impact": 0.85,
       "spirit": "wraith",
       "radius": 16,
       "dark_level": 4
     },
     "minecraft:domovoi_supper": {
       "weight": 2.0,
+      "impact": 0.2,
       "spirit": "domovoi",
       "radius": 12,
       "sound": {
@@ -61,11 +67,13 @@
     },
     "minecraft:domovoi_hearth": {
       "weight": 2.0,
+      "impact": 0.2,
       "spirit": "domovoi",
       "radius": 12
     },
     "minecraft:hoarder_payment": {
       "weight": 2.0,
+      "impact": 0.6,
       "spirit": "hoarder",
       "radius": 10,
       "junk": [
@@ -77,6 +85,7 @@
     },
     "minecraft:demon_offer": {
       "weight": 2.0,
+      "impact": 0.35,
       "spirit": "demon",
       "radius": 8,
       "min_distance": 3,
@@ -102,6 +111,7 @@
     },
     "minecraft:lost_one_sign": {
       "weight": 2.0,
+      "impact": 0.2,
       "spirit": "lost_one",
       "radius": 8,
       "min_distance": 3,
@@ -127,6 +137,7 @@
     },
     "minecraft:banshee_letter": {
       "weight": 2.0,
+      "impact": 0.25,
       "spirit": "banshee",
       "radius": 16,
       "title": "To %s",
@@ -143,6 +154,7 @@
     },
     "minecraft:banshee_gift": {
       "weight": 2.0,
+      "impact": 0.25,
       "spirit": "banshee",
       "radius": 16,
       "gifts": [
@@ -175,6 +187,7 @@
     },
     "minecraft:banshee_serenade": {
       "weight": 2.0,
+      "impact": 0.25,
       "spirit": "banshee",
       "radius": 12,
       "outside": 2.0,
@@ -185,6 +198,7 @@
     },
     "minecraft:banshee_jealous": {
       "weight": 2.0,
+      "impact": 0.25,
       "spirit": "banshee",
       "radius": 8,
       "seconds": 3,
@@ -193,6 +207,7 @@
     },
     "minecraft:poltergeist_toss": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "poltergeist",
       "radius": 10,
       "stacks": 3,
@@ -202,6 +217,7 @@
     },
     "minecraft:poltergeist_play": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "poltergeist",
       "radius": 12,
       "min_count": 2,
@@ -210,6 +226,7 @@
     },
     "minecraft:poltergeist_tantrum": {
       "weight": 2.0,
+      "impact": 0.8,
       "spirit": "poltergeist",
       "radius": 12,
       "min_count": 3,
@@ -218,6 +235,7 @@
     },
     "minecraft:shade_gathered": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "shade",
       "radius": 12,
       "min_count": 3,
@@ -229,6 +247,7 @@
     },
     "minecraft:shade_glance": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "shade",
       "radius": 16,
       "min_count": 3,
@@ -241,6 +260,7 @@
     },
     "minecraft:shade_room": {
       "weight": 2.0,
+      "impact": 0.65,
       "spirit": "shade",
       "radius": 12,
       "max_cells": 150,
@@ -251,6 +271,7 @@
     },
     "minecraft:phantom_rerun": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "phantom",
       "min_samples": 10,
       "min_distance": 20,
@@ -264,6 +285,7 @@
     },
     "minecraft:phantom_home": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "phantom",
       "min_distance": 12,
       "max_distance": 32,
@@ -274,6 +296,7 @@
     },
     "minecraft:nix_returns": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "nix",
       "radius": 16,
       "interval_ticks": 2,
@@ -283,6 +306,7 @@
     },
     "minecraft:mimic_parrot": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "mimic",
       "max_age_ticks": 12000,
       "delay_ticks": 100,
@@ -297,6 +321,7 @@
     },
     "minecraft:mimic_chest": {
       "weight": 2.0,
+      "impact": 0.7,
       "spirit": "mimic",
       "radius": 10,
       "restore_ticks": 2400,
@@ -304,6 +329,7 @@
     },
     "minecraft:wraith_steps": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "wraith",
       "dark_level": 4,
       "interval_ticks": 2,
@@ -318,6 +344,7 @@
     },
     "minecraft:wraith_edge": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "wraith",
       "light_level": 8,
       "min_distance": 4,
@@ -331,6 +358,7 @@
     },
     "minecraft:mara_dream": {
       "weight": 2.0,
+      "impact": 0.35,
       "spirit": "mara",
       "window_ticks": 2400,
       "title": "A dream",
@@ -345,12 +373,14 @@
     },
     "minecraft:mara_stolen_rest": {
       "weight": 2.0,
+      "impact": 0.6,
       "spirit": "mara",
       "window_ticks": 2400,
       "rest_ticks": 80000
     },
     "minecraft:mara_weight": {
       "weight": 2.0,
+      "impact": 0.65,
       "spirit": "mara",
       "window_ticks": 2400,
       "seconds": 60,
@@ -361,6 +391,7 @@
     },
     "minecraft:revenant_ledger": {
       "weight": 2.0,
+      "impact": 0.25,
       "spirit": "revenant",
       "radius": 12,
       "min_kills": 5,
@@ -370,18 +401,21 @@
     },
     "minecraft:revenant_tally": {
       "weight": 2.0,
+      "impact": 0.65,
       "spirit": "revenant",
       "min_distance": 8,
       "radius": 16
     },
     "minecraft:revenant_rises": {
       "weight": 2.0,
+      "impact": 0.8,
       "spirit": "revenant",
       "radius": 32,
       "max_age_ticks": 12000
     },
     "minecraft:lost_one_wanderer": {
       "weight": 2.0,
+      "impact": 0.2,
       "spirit": "lost_one",
       "min_distance": 20,
       "max_distance": 30,
@@ -401,6 +435,7 @@
     },
     "minecraft:lost_one_death_path": {
       "weight": 2.0,
+      "impact": 0.2,
       "spirit": "lost_one",
       "min_distance": 16,
       "max_distance": 64,
@@ -417,11 +452,13 @@
     },
     "minecraft:domovoi_tidy": {
       "weight": 2.0,
+      "impact": 0.2,
       "spirit": "domovoi",
       "radius": 12
     },
     "minecraft:hoarder_shiny": {
       "weight": 2.0,
+      "impact": 0.55,
       "spirit": "hoarder",
       "radius": 10,
       "items": [
@@ -438,6 +475,7 @@
     },
     "minecraft:hoarder_nest": {
       "weight": 2.0,
+      "impact": 0.25,
       "spirit": "hoarder",
       "min_stacks": 5,
       "tries": 20,
@@ -446,6 +484,7 @@
     },
     "minecraft:demon_trail": {
       "weight": 2.0,
+      "impact": 0.35,
       "spirit": "demon",
       "interval_ticks": 5,
       "seconds": 15,
@@ -453,6 +492,7 @@
     },
     "minecraft:demon_contract": {
       "weight": 2.0,
+      "impact": 0.7,
       "spirit": "demon",
       "price": 4.0,
       "min_health": 6.0,
@@ -462,6 +502,7 @@
     },
     "minecraft:trickster_gift": {
       "weight": 2.0,
+      "impact": 0.2,
       "spirit": "trickster",
       "min_distance": 3,
       "radius": 8,
@@ -483,6 +524,7 @@
     },
     "minecraft:trickster_dig": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "trickster",
       "radius": 12,
       "restore_ticks": 12000,
@@ -501,6 +543,7 @@
     },
     "minecraft:trickster_dud": {
       "weight": 2.0,
+      "impact": 0.3,
       "spirit": "trickster",
       "min_distance": 3,
       "radius": 6,
@@ -508,6 +551,7 @@
     },
     "minecraft:boggart_spiders": {
       "weight": 2.0,
+      "impact": 0.35,
       "spirit": "boggart",
       "count": 40,
       "scale": 0.2,
@@ -525,6 +569,7 @@
     },
     "minecraft:boggart_crawl": {
       "weight": 1.5,
+      "impact": 0.35,
       "spirit": "boggart",
       "count": 24,
       "scale": 0.15,
@@ -542,6 +587,7 @@
     },
     "minecraft:boggart_silverfish": {
       "weight": 1.5,
+      "impact": 0.35,
       "spirit": "boggart",
       "count": 40,
       "scale": 0.8,

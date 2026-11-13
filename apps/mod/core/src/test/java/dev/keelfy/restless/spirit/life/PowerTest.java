@@ -121,12 +121,27 @@ class PowerTest {
 
     @Test
     void cooldownShrinksWithPowerAndActivity() {
-        long calm = Power.cooldownTicks(0, 1, 0.5, 1);
-        long late = Power.cooldownTicks(1, 1, 0.5, 1);
-        long active = Power.cooldownTicks(0, 2, 0.5, 1);
+        long calm = Power.cooldownTicks(0, 1, 0.5, 1, 1);
+        long late = Power.cooldownTicks(1, 1, 0.5, 1, 1);
+        long active = Power.cooldownTicks(0, 2, 0.5, 1, 1);
         assertEquals(4 * 1.5 * 60 * 20, calm);
         assertTrue(late < calm);
         assertEquals(calm / 2, active);
+    }
+
+    @Test
+    void impactShortensTheWaitAfterAQuietEventAndStretchesItAfterAHeavyOne() {
+        assertEquals(0.25, Power.impactFactor(0.0), 1e-9);
+        assertEquals(1.0, Power.impactFactor(0.6), 1e-9);
+        assertEquals(1.5, Power.impactFactor(1.0), 1e-9);
+        long calm = Power.cooldownTicks(0, 1, 0.5, 1, 1);
+        assertEquals(calm / 4, Power.cooldownTicks(0, 1, 0.5, 1, Power.impactFactor(0.0)), 1);
+        assertEquals(calm * 3 / 2, Power.cooldownTicks(0, 1, 0.5, 1, Power.impactFactor(1.0)), 1);
+    }
+
+    @Test
+    void cooldownNeverDropsUnderTheFloor() {
+        assertEquals(100, Power.cooldownTicks(1, 100, 0, 1, 0.25));
     }
 
     @Test
@@ -134,10 +149,10 @@ class PowerTest {
         assertEquals(1.0, Power.daylightFactor(false, false, false));
         assertEquals(1.2, Power.daylightFactor(true, false, false), 1e-9);
         assertEquals(1.2 * 1.2 * 1.2, Power.daylightFactor(true, true, true), 1e-9);
-        assertEquals((long) (calmTicks() * 1.2), Power.cooldownTicks(0, 1, 0.5, 1.2), 1);
+        assertEquals((long) (calmTicks() * 1.2), Power.cooldownTicks(0, 1, 0.5, 1.2, 1), 1);
     }
 
     private static long calmTicks() {
-        return Power.cooldownTicks(0, 1, 0.5, 1);
+        return Power.cooldownTicks(0, 1, 0.5, 1, 1);
     }
 }

@@ -3,6 +3,7 @@
   "events": {
     "minecraft:crafter_crafts": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "craft_ticks": 6,
       "vanish_ticks": 1200,
@@ -14,6 +15,7 @@
     },
     "minecraft:golem_wrong_chest": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "step_ticks": 20,
       "sound": {
@@ -23,10 +25,12 @@
     },
     "minecraft:jukebox_quiet": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12
     },
     "minecraft:scaffold_collapses": {
       "weight": 0.2,
+      "impact": 0.6,
       "max_blocks": 6,
       "max_fall": 4.0,
       "creaks": 3,
@@ -38,11 +42,13 @@
     },
     "minecraft:wall_map_shows": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "restore_ticks": 2400
     },
     "minecraft:spirit_candle_out": {
       "weight": 0.3,
+      "impact": 0.2,
       "ticks": 600,
       "sound": {
         "volume": 0.8,
@@ -51,6 +57,7 @@
     },
     "minecraft:holy_water_cloudy": {
       "weight": 0.2,
+      "impact": 0.5,
       "sound": {
         "volume": 0.6,
         "pitch": 0.8
@@ -58,6 +65,7 @@
     },
     "minecraft:mirror_names": {
       "weight": 0.25,
+      "impact": 0.2,
       "ticks": 36000,
       "sound": {
         "volume": 0.5,
@@ -66,6 +74,7 @@
     },
     "minecraft:chat_repeats": {
       "weight": 0.3,
+      "impact": 0.2,
       "format": "<???> %s",
       "max_length": 100,
       "min_age_ticks": 200,

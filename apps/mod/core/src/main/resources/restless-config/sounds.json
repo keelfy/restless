@@ -3,6 +3,7 @@
   "events": {
     "minecraft:echo": {
       "weight": 0.4,
+      "impact": 0.12,
       "capture_radius": 2.0,
       "max_age_ticks": 100,
       "delay_ticks": 60,
@@ -13,6 +14,7 @@
     },
     "minecraft:footsteps": {
       "weight": 0.4,
+      "impact": 0.12,
       "distance": 2.0,
       "sound": {
         "volume": 1.0,
@@ -21,6 +23,7 @@
     },
     "minecraft:approaching_steps": {
       "weight": 0.4,
+      "impact": 0.2,
       "steps": 12,
       "interval_ticks": 7,
       "start_distance": 14.0,
@@ -32,6 +35,7 @@
     },
     "minecraft:distant_mining": {
       "weight": 0.4,
+      "impact": 0.08,
       "depth": 8.0,
       "spread": 4.0,
       "hits": 6,
@@ -43,6 +47,7 @@
     },
     "minecraft:many_breaks": {
       "weight": 0.3,
+      "impact": 0.12,
       "radius": 14,
       "min_blocks": 6,
       "count": 8,
@@ -54,6 +59,7 @@
     },
     "minecraft:ladder_steps": {
       "weight": 0.3,
+      "impact": 0.12,
       "radius": 16,
       "steps": 8,
       "interval_ticks": 8,
@@ -65,6 +71,7 @@
     },
     "minecraft:creeper_hiss": {
       "weight": 0.4,
+      "impact": 0.2,
       "distance": 3.0,
       "sound": {
         "volume": 1.0,
@@ -73,6 +80,7 @@
     },
     "minecraft:three_knocks": {
       "weight": 0.4,
+      "impact": 0.12,
       "radius": 12,
       "fallback_distance": 3.0,
       "interval_ticks": 10,
@@ -84,6 +92,7 @@
     },
     "minecraft:crying_child": {
       "weight": 0.4,
+      "impact": 0.15,
       "distance": 6.0,
       "sound": {
         "volume": 1.0,
@@ -92,6 +101,7 @@
     },
     "minecraft:block_breaking": {
       "weight": 0.4,
+      "impact": 0.12,
       "distance": 5.0,
       "sound": {
         "volume": 1.0,
@@ -100,6 +110,7 @@
     },
     "minecraft:eating_behind_wall": {
       "weight": 0.4,
+      "impact": 0.12,
       "distance": 3.0,
       "sound": {
         "volume": 1.0,
@@ -108,6 +119,7 @@
     },
     "minecraft:enderman_hiss": {
       "weight": 0.4,
+      "impact": 0.12,
       "distance": 6.0,
       "sound": {
         "volume": 0.8,
@@ -116,6 +128,7 @@
     },
     "minecraft:chest_opens": {
       "weight": 0.4,
+      "impact": 0.12,
       "distance": 4.0,
       "sound": {
         "volume": 1.0,
@@ -124,6 +137,7 @@
     },
     "minecraft:breathing": {
       "weight": 0.4,
+      "impact": 0.2,
       "distance": 1.0,
       "interval_ticks": 25,
       "breaths": 5,
@@ -135,6 +149,7 @@
     },
     "minecraft:distant_bell": {
       "weight": 0.4,
+      "impact": 0.08,
       "distance": 40.0,
       "sound": {
         "volume": 4.0,
@@ -143,6 +158,7 @@
     },
     "minecraft:phantom_jukebox": {
       "weight": 0.4,
+      "impact": 0.12,
       "distance": 8.0,
       "sound": {
         "volume": 2.0,
@@ -150,14 +166,17 @@
       }
     },
     "minecraft:music_cut": {
-      "weight": 0.4
+      "weight": 0.4,
+      "impact": 0.12
     },
     "minecraft:whisper": {
       "weight": 0.4,
+      "impact": 0.12,
       "format": "<???> %s"
     },
     "minecraft:death_cry": {
       "weight": 0.4,
+      "impact": 0.2,
       "distance": 7.0,
       "sound": {
         "volume": 0.5,
@@ -166,6 +185,7 @@
     },
     "minecraft:dripping": {
       "weight": 0.4,
+      "impact": 0.12,
       "distance": 3.0,
       "sound": {
         "volume": 1.0,
@@ -174,6 +194,7 @@
     },
     "minecraft:distant_mob": {
       "weight": 0.4,
+      "impact": 0.08,
       "min_distance": 2.0,
       "max_distance": 40.0,
       "blocks_per_volume": 12.0,
@@ -184,6 +205,7 @@
     },
     "minecraft:hostile_animal": {
       "weight": 0.4,
+      "impact": 0.12,
       "radius": 16,
       "sound": {
         "volume": 1.0,
@@ -192,6 +214,7 @@
     },
     "minecraft:spider_overhead": {
       "weight": 0.4,
+      "impact": 0.12,
       "interval_ticks": 8,
       "steps": 6,
       "step_blocks": 0.4,
@@ -201,14 +224,17 @@
       }
     },
     "minecraft:cracking_floor": {
-      "weight": 0.3
+      "weight": 0.3,
+      "impact": 0.55
     },
     "minecraft:bottle_shatter": {
       "weight": 0.4,
+      "impact": 0.12,
       "distance": 4.0
     },
     "minecraft:note_block_voice": {
       "weight": 0.5,
+      "impact": 0.12,
       "radius": 16,
       "sound": {
         "volume": 1.0,
@@ -217,10 +243,12 @@
     },
     "minecraft:shrieker": {
       "weight": 0.4,
+      "impact": 0.2,
       "radius": 16
     },
     "minecraft:fake_subtitle": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 3.0,
       "sound": {
         "volume": 1.0,
@@ -229,6 +257,7 @@
     },
     "minecraft:phantom_heartbeat": {
       "weight": 0.4,
+      "impact": 0.2,
       "interval_ticks": 18,
       "beats": 8,
       "sound": {
@@ -238,6 +267,7 @@
     },
     "minecraft:ghost_laugh": {
       "weight": 0.3,
+      "impact": 0.15,
       "distance": 9.0,
       "sound": {
         "volume": 0.5,
@@ -246,6 +276,7 @@
     },
     "minecraft:ghost_breath": {
       "weight": 0.3,
+      "impact": 0.2,
       "distance": 0.8,
       "sound": {
         "volume": 0.35,
@@ -254,6 +285,7 @@
     },
     "minecraft:close_whispers": {
       "weight": 0.3,
+      "impact": 0.2,
       "distance": 1.5,
       "whispers": 3,
       "interval_ticks": 50,
@@ -264,6 +296,7 @@
     },
     "minecraft:circling_moan": {
       "weight": 0.25,
+      "impact": 0.25,
       "distance": 6.0,
       "moans": 4,
       "step_degrees": 90.0,
@@ -275,6 +308,7 @@
     },
     "minecraft:cut_off_scream": {
       "weight": 0.25,
+      "impact": 0.25,
       "distance": 12.0,
       "sound": {
         "volume": 0.6,
@@ -283,6 +317,7 @@
     },
     "minecraft:long_scream": {
       "weight": 0.25,
+      "impact": 0.25,
       "distance": 12.0,
       "sound": {
         "volume": 0.6,
@@ -291,6 +326,7 @@
     },
     "minecraft:banshee": {
       "weight": 0.15,
+      "impact": 0.2,
       "distance": 30.0,
       "height": 12.0,
       "sound": {
@@ -300,6 +336,7 @@
     },
     "minecraft:distant_warden": {
       "weight": 0.25,
+      "impact": 0.08,
       "distance": 40.0,
       "interval_ticks": 40,
       "sound": {
@@ -309,6 +346,7 @@
     },
     "minecraft:sky_dragon": {
       "weight": 0.2,
+      "impact": 0.08,
       "distance": 30.0,
       "height": 25.0,
       "sound": {
@@ -318,6 +356,7 @@
     },
     "minecraft:distant_wither": {
       "weight": 0.2,
+      "impact": 0.08,
       "distance": 45.0,
       "sound": {
         "volume": 3.0,
@@ -326,6 +365,7 @@
     },
     "minecraft:end_portal_open": {
       "weight": 0.25,
+      "impact": 0.12,
       "distance": 30.0,
       "sound": {
         "volume": 2.0,
@@ -334,6 +374,7 @@
     },
     "minecraft:sky_ghast": {
       "weight": 0.25,
+      "impact": 0.08,
       "distance": 20.0,
       "height": 14.0,
       "sound": {
@@ -343,6 +384,7 @@
     },
     "minecraft:fox_screech": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 12.0,
       "sound": {
         "volume": 1.5,
@@ -351,6 +393,7 @@
     },
     "minecraft:rabbit_death": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 4.0,
       "sound": {
         "volume": 1.0,
@@ -359,6 +402,7 @@
     },
     "minecraft:phantom_hurt": {
       "weight": 0.3,
+      "impact": 0.12,
       "sound": {
         "volume": 1.0,
         "pitch": 1.0
@@ -366,6 +410,7 @@
     },
     "minecraft:phantom_tool_break": {
       "weight": 0.3,
+      "impact": 0.12,
       "sound": {
         "volume": 0.8,
         "pitch": 1.0
@@ -373,6 +418,7 @@
     },
     "minecraft:elytra_overhead": {
       "weight": 0.25,
+      "impact": 0.12,
       "height": 10.0,
       "span": 45.0,
       "passes": 12,
@@ -384,6 +430,7 @@
     },
     "minecraft:nether_ambience": {
       "weight": 0.25,
+      "impact": 0.12,
       "sounds": 6,
       "interval_ticks": 40,
       "sound": {
@@ -393,6 +440,7 @@
     },
     "minecraft:equip_behind": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 1.5,
       "interval_ticks": 6,
       "sound": {
@@ -402,6 +450,7 @@
     },
     "minecraft:phantom_fishing": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 6.0,
       "interval_ticks": 25,
       "sound": {
@@ -411,6 +460,7 @@
     },
     "minecraft:zombie_at_door": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "interval_ticks": 12,
       "sound": {
@@ -420,6 +470,7 @@
     },
     "minecraft:phantom_anchor": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 5.0,
       "sound": {
         "volume": 1.0,
@@ -428,6 +479,7 @@
     },
     "minecraft:bucket_spill": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 3.0,
       "sound": {
         "volume": 1.0,
@@ -436,6 +488,7 @@
     },
     "minecraft:lost_villager": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 4.0,
       "sound": {
         "volume": 1.0,
@@ -444,6 +497,7 @@
     },
     "minecraft:phantom_arrow": {
       "weight": 0.3,
+      "impact": 0.12,
       "sound": {
         "volume": 1.0,
         "pitch": 1.0
@@ -451,10 +505,12 @@
     },
     "minecraft:phantom_glass": {
       "weight": 0.3,
+      "impact": 0.12,
       "radius": 12
     },
     "minecraft:pen_cries": {
       "weight": 0.3,
+      "impact": 0.12,
       "radius": 16,
       "sound": {
         "volume": 1.0,
@@ -463,6 +519,7 @@
     },
     "minecraft:sniffing_behind": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 1.0,
       "sound": {
         "volume": 1.0,
@@ -471,6 +528,7 @@
     },
     "minecraft:distant_goat_horn": {
       "weight": 0.25,
+      "impact": 0.08,
       "distance": 40.0,
       "sound": {
         "volume": 3.0,
@@ -479,6 +537,7 @@
     },
     "minecraft:false_raid_horn": {
       "weight": 0.2,
+      "impact": 0.15,
       "distance": 35.0,
       "sound": {
         "volume": 4.0,
@@ -487,6 +546,7 @@
     },
     "minecraft:heavy_splash": {
       "weight": 0.3,
+      "impact": 0.12,
       "radius": 16,
       "sound": {
         "volume": 1.5,
@@ -495,6 +555,7 @@
     },
     "minecraft:distant_ravager": {
       "weight": 0.25,
+      "impact": 0.08,
       "distance": 30.0,
       "sound": {
         "volume": 2.0,
@@ -503,6 +564,7 @@
     },
     "minecraft:golem_circling": {
       "weight": 0.25,
+      "impact": 0.12,
       "distance": 7.0,
       "steps": 14,
       "step_degrees": 28.0,
@@ -514,6 +576,7 @@
     },
     "minecraft:burp_behind": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 1.5,
       "sound": {
         "volume": 1.0,
@@ -522,6 +585,7 @@
     },
     "minecraft:bubble_columns": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 1.0,
       "interval_ticks": 10,
       "sound": {
@@ -531,6 +595,7 @@
     },
     "minecraft:lava_pops": {
       "weight": 0.3,
+      "impact": 0.12,
       "distance": 2.0,
       "interval_ticks": 14,
       "sound": {
@@ -540,6 +605,7 @@
     },
     "minecraft:chain_rattle": {
       "weight": 0.25,
+      "impact": 0.12,
       "distance": 4.0,
       "steps": 12,
       "step_degrees": 40.0,
@@ -551,6 +617,7 @@
     },
     "minecraft:phantom_break": {
       "weight": 0.3,
+      "impact": 0.12,
       "max_age_ticks": 1200,
       "delay_ticks": 8,
       "distance": 5.0,

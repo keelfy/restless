@@ -3,6 +3,7 @@
   "events": {
     "minecraft:jolt_behind": {
       "weight": 0.12,
+      "impact": 0.55,
       "startle": true,
       "distance": 1.6,
       "min_angle": 150.0,
@@ -17,6 +18,7 @@
     },
     "minecraft:jolt_side": {
       "weight": 0.1,
+      "impact": 0.55,
       "startle": true,
       "distance": 1.8,
       "min_angle": 60.0,
@@ -31,6 +33,7 @@
     },
     "minecraft:jolt_dark": {
       "weight": 0.08,
+      "impact": 0.5,
       "startle": true,
       "distance": 2.0,
       "min_angle": 0.0,
@@ -46,6 +49,7 @@
     },
     "minecraft:jolt_lunge": {
       "weight": 0.07,
+      "impact": 0.6,
       "startle": true,
       "min_distance": 8,
       "max_distance": 12,

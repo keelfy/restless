@@ -3,11 +3,13 @@
   "events": {
     "minecraft:haunted_painting": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "restore_ticks": 1200
     },
     "minecraft:painting_darkens": {
       "weight": 0.25,
+      "impact": 0.2,
       "radius": 12,
       "stages": 4,
       "step_ticks": 400,
@@ -15,22 +17,26 @@
     },
     "minecraft:pale_pet": {
       "weight": 0.25,
+      "impact": 0.2,
       "radius": 24,
       "restore_ticks": 6000
     },
     "minecraft:pale_herd": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 24,
       "max_animals": 4,
       "restore_ticks": 2400
     },
     "minecraft:spirit_song": {
       "weight": 0.25,
+      "impact": 0.2,
       "radius": 16,
       "restore_ticks": 600
     },
     "minecraft:spirit_horn": {
       "weight": 0.25,
+      "impact": 0.2,
       "distance": 40.0,
       "sound": {
         "volume": 2.0,
@@ -39,21 +45,25 @@
     },
     "minecraft:sigil_banner": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "colour": "black",
       "restore_ticks": 2400
     },
     "minecraft:whispering_item": {
       "weight": 0.25,
+      "impact": 0.2,
       "restore_ticks": 3600
     },
     "minecraft:hollow_trim": {
       "weight": 0.25,
+      "impact": 0.2,
       "material": "minecraft:quartz",
       "restore_ticks": 2400
     },
     "minecraft:counting_children": {
       "weight": 0.3,
+      "impact": 0.2,
       "count": 10,
       "interval_ticks": 24,
       "distance": 8.0,
@@ -82,6 +92,7 @@
     },
     "minecraft:wall_scratching": {
       "weight": 0.3,
+      "impact": 0.2,
       "distance": 3.0,
       "stride": 0.7,
       "interval_ticks": 5,
@@ -93,6 +104,7 @@
     },
     "minecraft:chest_knocks": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "knocks": 4,
       "interval_ticks": 14,
@@ -103,6 +115,7 @@
     },
     "minecraft:bedroom_lullaby": {
       "weight": 0.25,
+      "impact": 0.2,
       "radius": 14,
       "melody": "4 4 7 4 4 7 4 7 12 11 9 9 7 7 4 5 4 2 2 4 5 2 0",
       "note_ticks": 9,

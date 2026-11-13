@@ -116,7 +116,7 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         /** The first event a spirit runs on the player: the signs and the tools. */
         HAUNTED(3),
         /** The first clue: reading clues, and that some lie. */
-        CLUES(2),
+        CLUES(3),
         /** The first photo, which names a type: natures, forms, the altar and the ritual. */
         WEAKNESS(5),
         /** The first grave or word of one: unfinished business. */

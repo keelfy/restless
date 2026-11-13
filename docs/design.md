@@ -69,6 +69,11 @@ punished for the world's age.
 `power` takes `danger`'s place everywhere: the tier factor (`LIGHT = 1 − 0.7 × power`, `HARMFUL = power`), the cooldown
 (`4 − 2.5 × power`), how hard the ritual is and how strong the essence is. Numbers are starting values, all in config.
 
+Every event also has an `impact` (0 to 1, `events.<id>.impact`). It never changes which event rolls, only the wait after
+it: `power.impact_min_factor` (0.25) to `power.impact_max_factor` (1.5) scales the cooldown, so a far figure brings the
+next event soon and a lethal attack gives a breather. A new spirit's first turn is `director.first_event_ticks` after
+the journal, not a full cooldown.
+
 ## What exists to build on
 
 | Piece | Reused for |

@@ -3,6 +3,7 @@
   "events": {
     "minecraft:brewing_swap": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 10,
       "restore_ticks": 6000,
       "potions": [
@@ -20,6 +21,7 @@
     },
     "minecraft:brewing_bubbles": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 10,
       "bubbles": 6,
       "interval_ticks": 8,
@@ -38,6 +40,7 @@
     },
     "minecraft:beacon_out": {
       "weight": 0.2,
+      "impact": 0.5,
       "radius": 16,
       "ticks": 600,
       "blocks": [
@@ -47,12 +50,14 @@
     },
     "minecraft:statue_pose": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "watch_degrees": 60.0,
       "restore_ticks": 2400
     },
     "minecraft:note_tune": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "step_ticks": 6,
       "sound": {
@@ -68,6 +73,7 @@
     },
     "minecraft:campfire_cooks": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 10,
       "ticks": 1200,
       "items": [
@@ -77,6 +83,7 @@
     },
     "minecraft:spawner_shows": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 16,
       "ticks": 600,
       "mobs": [
@@ -90,27 +97,32 @@
     },
     "minecraft:trial_ominous": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 16,
       "ticks": 200
     },
     "minecraft:vault_head": {
       "weight": 0.3,
+      "impact": 0.25,
       "radius": 16,
       "ticks": 600
     },
     "minecraft:black_bed": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 12,
       "ticks": 1200
     },
     "minecraft:black_carpets": {
       "weight": 0.3,
+      "impact": 0.2,
       "radius": 8,
       "max_blocks": 48,
       "ticks": 1200
     },
     "minecraft:black_ash": {
       "weight": 0.3,
+      "impact": 0.2,
       "interval_ticks": 5,
       "bursts": 24,
       "particles": {

@@ -3,6 +3,7 @@
   "events": {
     "restless:judgement": {
       "weight": 0.2,
+      "impact": 1.0,
       "band": "lethal",
       "min_power": 0.9,
       "evolved": true,
@@ -17,6 +18,7 @@
     },
     "restless:reaping": {
       "weight": 0.2,
+      "impact": 1.0,
       "band": "lethal",
       "min_power": 0.9,
       "evolved": true,
@@ -60,6 +62,7 @@
     },
     "restless:last_call": {
       "weight": 0.2,
+      "impact": 1.0,
       "band": "lethal",
       "min_power": 0.9,
       "evolved": true,
@@ -89,6 +92,7 @@
     },
     "restless:drowner": {
       "weight": 0.2,
+      "impact": 1.0,
       "band": "lethal",
       "min_power": 0.9,
       "evolved": true,
@@ -119,6 +123,7 @@
     },
     "restless:the_avenger": {
       "weight": 0.2,
+      "impact": 1.0,
       "band": "lethal",
       "min_power": 0.9,
       "evolved": true,
@@ -155,6 +160,7 @@
     },
     "restless:hellring": {
       "weight": 0.2,
+      "impact": 1.0,
       "band": "lethal",
       "min_power": 0.9,
       "evolved": true,
@@ -180,6 +186,7 @@
     },
     "restless:the_double": {
       "weight": 0.2,
+      "impact": 1.0,
       "band": "lethal",
       "min_power": 0.9,
       "evolved": true,
@@ -220,6 +227,7 @@
     },
     "restless:foretold": {
       "weight": 0.2,
+      "impact": 1.0,
       "band": "lethal",
       "min_power": 0.9,
       "evolved": true,
