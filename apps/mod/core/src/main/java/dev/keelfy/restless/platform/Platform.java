@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -33,6 +34,16 @@ public interface Platform {
     /** Declares a creative tab of this mod that lists {@code items}; they are looked up when the tab is filled. */
     void registerTab(
             String name, Component title, Supplier<ItemStack> icon, List<? extends Supplier<? extends Item>> items);
+
+    /**
+     * Declares a creative tab that {@code items} fills, and only for players who may use operator items; for anyone
+     * else it stays empty and hidden.
+     */
+    void registerOperatorTab(
+            String name,
+            Component title,
+            Supplier<ItemStack> icon,
+            Function<HolderLookup.Provider, List<ItemStack>> items);
 
     /** Whether an accessory-slot mod is present: worn charms then work from its slots instead of the off hand. */
     default boolean hasAccessories() {

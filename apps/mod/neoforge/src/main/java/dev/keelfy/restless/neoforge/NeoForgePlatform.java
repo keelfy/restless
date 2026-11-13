@@ -78,6 +78,26 @@ public final class NeoForgePlatform implements Platform {
     }
 
     @Override
+    public void registerOperatorTab(
+            String name,
+            Component title,
+            Supplier<ItemStack> icon,
+            java.util.function.Function<net.minecraft.core.HolderLookup.Provider, List<ItemStack>> items) {
+        register(
+                BuiltInRegistries.CREATIVE_MODE_TAB,
+                name,
+                key -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, 1)
+                        .title(title)
+                        .icon(icon)
+                        .displayItems((parameters, output) -> {
+                            if (parameters.hasPermissions()) {
+                                items.apply(parameters.holders()).forEach(output::accept);
+                            }
+                        })
+                        .build());
+    }
+
+    @Override
     public boolean hasAccessories() {
         return ModList.get().isLoaded("curios");
     }

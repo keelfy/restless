@@ -91,11 +91,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -110,6 +112,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.Block;
@@ -121,13 +124,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 /** Everything the mod adds to the game's registries; the loader fills them through {@link Platform#register}. */
 public final class Content {
-    public static final Supplier<Block> TEST_BLOCK = Platform.get()
-            .register(
-                    BuiltInRegistries.BLOCK,
-                    "test_block",
-                    key -> new Block(BlockBehaviour.Properties.of().setId(key).strength(1.5f)));
-    public static final Supplier<Item> TEST_ITEM = blockItem("test_block", TEST_BLOCK);
-
     public static final Supplier<Block> SALT_LINE = Platform.get()
             .register(
                     BuiltInRegistries.BLOCK,
@@ -619,6 +615,23 @@ public final class Content {
                                 tipped(new Item.Properties().setId(key), name).useBlockDescriptionPrefix()));
     }
 
+    /** One painting item per painting of the mod, for the operator tab. */
+    private static List<ItemStack> paintings(HolderLookup.Provider holders) {
+        var stacks = new java.util.ArrayList<ItemStack>();
+        holders.lookup(Registries.PAINTING_VARIANT)
+                .ifPresent(lookup -> lookup.listElements()
+                        .filter(variant ->
+                                variant.key().identifier().getNamespace().equals(Restless.MOD_ID))
+                        .sorted(java.util.Comparator.comparing(
+                                variant -> variant.key().identifier().getPath()))
+                        .forEach(variant -> {
+                            var stack = new ItemStack(Items.PAINTING);
+                            stack.set(DataComponents.PAINTING_VARIANT, variant);
+                            stacks.add(stack);
+                        }));
+        return stacks;
+    }
+
     /** Forces the class to load, which declares every entry and the creative tab that holds the items. */
     public static void init() {
         RelightingRecipe.init();
@@ -644,8 +657,7 @@ public final class Content {
                 DARK_EYE,
                 JOURNAL,
                 DIARY_PAGE,
-                GRAVESTONE_ITEM,
-                TEST_ITEM));
+                GRAVESTONE_ITEM));
         tabItems.addAll(ESSENCE.values());
         tabItems.addAll(List.of(
                 BORROWED_FACE_ITEM,
@@ -701,6 +713,12 @@ public final class Content {
                         Component.translatable("itemGroup.restless"),
                         () -> new ItemStack(SPIRIT_CANDLE.get()),
                         tabItems);
+        Platform.get()
+                .registerOperatorTab(
+                        "restless_debug",
+                        Component.translatable("itemGroup.restless_debug"),
+                        () -> new ItemStack(Items.PAINTING),
+                        Content::paintings);
         Restless.LOGGER.debug("Content declared");
     }
 }

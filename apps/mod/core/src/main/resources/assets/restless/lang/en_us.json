@@ -1,5 +1,4 @@
 {
-  "block.restless.test_block": "Test Block",
   "block.restless.salt_line": "Salt Line",
   "block.restless.ash_line": "Ash",
   "item.restless.salt": "Salt",
@@ -15,6 +14,7 @@
   "block.restless.hallowed_lantern": "Hallowed Lantern",
   "block.restless.scarecrow": "Scarecrow",
   "itemGroup.restless": "Restless",
+  "itemGroup.restless_debug": "Restless: Debug",
   "spirit.restless.shade": "shade",
   "spirit.restless.poltergeist": "poltergeist",
   "spirit.restless.nix": "nix",
@@ -670,7 +670,6 @@
   "requiem.restless.poem.13": "Nobody walks behind you. Nobody waits in the dark.",
   "requiem.restless.poem.14": "",
   "requiem.restless.poem.15": "Go home. The night is only night.",
-  "item.restless.test_block.tip": "A developer test block.",
   "item.restless.salt.tip": "When placed in a ring, it keeps every spirit event off anyone standing inside.",
   "item.restless.ash.tip": "Spirits leave prints in placed ash that reveal one trait. It never lies.",
   "item.restless.hallowed_wax.tip": "Seals charms, doors and altars.",
