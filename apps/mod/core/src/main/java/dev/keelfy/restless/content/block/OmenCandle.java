@@ -92,6 +92,45 @@ public final class OmenCandle extends AbstractCandleBlock {
         return List.of(new Vec3(0.5, 0.6, 0.5));
     }
 
+    /** Its flame burns blue: the candle's own particles, in the colour of soul fire. */
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (!state.getValue(LIT)) {
+            return;
+        }
+        for (Vec3 offset : getParticleOffsets(state)) {
+            level.addParticle(
+                    ParticleTypes.SOUL_FIRE_FLAME,
+                    pos.getX() + offset.x,
+                    pos.getY() + offset.y,
+                    pos.getZ() + offset.z,
+                    0.0,
+                    0.0,
+                    0.0);
+            if (random.nextFloat() < 0.3f) {
+                level.addParticle(
+                        ParticleTypes.SMOKE,
+                        pos.getX() + offset.x,
+                        pos.getY() + offset.y,
+                        pos.getZ() + offset.z,
+                        0.0,
+                        0.0,
+                        0.0);
+            }
+        }
+        if (random.nextFloat() < 0.17f) {
+            level.playLocalSound(
+                    pos.getX() + 0.5,
+                    pos.getY() + 0.5,
+                    pos.getZ() + 0.5,
+                    SoundEvents.CANDLE_AMBIENT,
+                    SoundSource.BLOCKS,
+                    1.0f + random.nextFloat(),
+                    random.nextFloat() * 0.7f + 0.3f,
+                    false);
+        }
+    }
+
     /** Only fire in a hand lights it; a burning arrow does not. */
     @Override
     protected boolean canBeLit(BlockState state) {

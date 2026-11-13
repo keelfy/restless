@@ -2,7 +2,8 @@
   "parent": "minecraft:block/block",
   "textures": {
     "particle": "restless:block/altar",
-    "sheet": "restless:block/altar"
+    "sheet": "restless:block/altar",
+    "wax": "restless:block/altar_wax"
   },
   "elements": [
     {
@@ -934,6 +935,31 @@
             5.0
           ],
           "texture": "#sheet"
+        }
+      }
+    },
+    {
+      "name": "Wax",
+      "from": [
+        3,
+        16.01,
+        3
+      ],
+      "to": [
+        13,
+        16.01,
+        13
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#wax",
+          "tintindex": 0
         }
       }
     }

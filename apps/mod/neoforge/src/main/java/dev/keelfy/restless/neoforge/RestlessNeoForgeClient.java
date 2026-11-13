@@ -8,6 +8,7 @@ import dev.keelfy.restless.content.block.AltarEntity;
 import dev.keelfy.restless.content.block.DreamcatcherEntity;
 import dev.keelfy.restless.content.block.MimicBlockEntity;
 import dev.keelfy.restless.content.client.AltarRenderer;
+import dev.keelfy.restless.content.client.AltarWax;
 import dev.keelfy.restless.content.client.AshFootprintRenderer;
 import dev.keelfy.restless.content.client.DreamcatcherRenderer;
 import dev.keelfy.restless.content.client.EyesParticle;
@@ -155,6 +156,8 @@ public final class RestlessNeoForgeClient {
         event.register(
                 List.of(BlockTintSources.constant(-8345771)),
                 Content.GHOST_WOODS.get("birch").leaves().get());
+        // The wax on an altar stand follows the candle on it; a bare altar's is cream.
+        event.register(List.of(new AltarWax()), Content.ALTAR.get());
     }
 
     /**
