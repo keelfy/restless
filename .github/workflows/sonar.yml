@@ -1,11 +1,7 @@
 name: Sonar
 
+# Temporarily disabled on push and pull_request: manual runs only. Restore the push/pull_request triggers to re-enable.
 on:
-  push:
-    branches: [master]
-    paths: [apps/mod/**, .github/workflows/sonar.yml]
-  pull_request:
-    paths: [apps/mod/**, .github/workflows/sonar.yml]
   workflow_dispatch:
 
 concurrency:
