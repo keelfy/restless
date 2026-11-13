@@ -42,6 +42,13 @@ public final class JournalView {
     private static final int ICON = 16;
     private static final int ENTRY_GAP = 5;
 
+    /** A crafting slot: an item in a sunken square of paper. */
+    private static final int SLOT = ICON + 2;
+
+    private static final int SLOT_DARK = 0xFFA08660;
+    private static final int SLOT_LIGHT = 0xFFF2E6C8;
+    private static final int SLOT_FILL = 0xFFD8C59C;
+
     /**
      * Light markup in journal text: a line of lang text that starts with this is a list item, drawn with a dot and a
      * hanging indent, and words between {@code **} are bold.
@@ -72,7 +79,10 @@ public final class JournalView {
 
     private static final Map<Kind, ItemStack> ICONS = new EnumMap<>(Kind.class);
 
-    /** What a page holds, top to bottom; {@code indent} shifts the text right, {@code bullet} puts a dot before it. */
+    /**
+     * What a page holds, top to bottom; {@code items} are a recipe's slots, {@code columns} to a row, and its result,
+     * {@code indent} shifts the text right, {@code bullet} puts a dot before it.
+     */
     private record Block(
             List<FormattedCharSequence> lines,
             @Nullable Kind icon,
@@ -80,6 +90,7 @@ public final class JournalView {
             @Nullable Set<Kind> clues,
             JournalPages.@Nullable Filing filing,
             List<ItemStack> items,
+            int columns,
             int indent,
             boolean bullet,
             int height) {
@@ -91,7 +102,7 @@ public final class JournalView {
                 JournalPages.@Nullable Filing filing,
                 List<ItemStack> items,
                 int height) {
-            this(lines, icon, picture, clues, filing, items, 0, false, height);
+            this(lines, icon, picture, clues, filing, items, 0, 0, false, height);
         }
     }
 
@@ -304,6 +315,7 @@ public final class JournalView {
                         null,
                         null,
                         List.of(),
+                        0,
                         block.indent(),
                         block.bullet(),
                         fit * LINE));
@@ -315,6 +327,7 @@ public final class JournalView {
                         null,
                         null,
                         List.of(),
+                        0,
                         block.indent(),
                         false,
                         block.height() - fit * LINE));
@@ -363,8 +376,11 @@ public final class JournalView {
                     null,
                     entry.filing().orElse(null),
                     entry.items(),
+                    entry.columns(),
+                    0,
+                    false,
                     Math.max(lines.size() * LINE, icon == null ? 0 : ICON)
-                            + (entry.items().isEmpty() ? 0 : ICON + 4)
+                            + recipeHeight(entry.items(), entry.columns())
                             + ENTRY_GAP));
         }
         return blocks;
@@ -383,7 +399,8 @@ public final class JournalView {
                     bold(bullet ? parts[i].substring(BULLET.length()) : parts[i]), Math.max(1, textWidth - indent));
             boolean listNext = i + 1 < parts.length && parts[i + 1].startsWith(BULLET);
             int gap = listNext ? 1 : ENTRY_GAP;
-            blocks.add(new Block(lines, null, null, null, null, List.of(), indent, bullet, lines.size() * LINE + gap));
+            blocks.add(
+                    new Block(lines, null, null, null, null, List.of(), 0, indent, bullet, lines.size() * LINE + gap));
         }
     }
 
@@ -532,8 +549,8 @@ public final class JournalView {
         }
         int x = left;
         if (!block.items().isEmpty()) {
-            drawRecipe(canvas, block.items(), left, y);
-            y += ICON + 4;
+            drawRecipe(canvas, block.items(), block.columns(), left, y);
+            y += recipeHeight(block.items(), block.columns());
         }
         if (block.icon() != null) {
             canvas.item(icon(block.icon()), left, y - 1);
@@ -552,20 +569,41 @@ public final class JournalView {
         }
     }
 
-    /** A recipe's ingredients with a plus between them, then an equals sign and what they make. */
-    private void drawRecipe(PageCanvas canvas, List<ItemStack> items, int left, int y) {
-        int step = Math.min(ICON + 12, textWidth / items.size());
-        for (int i = 0; i < items.size(); i++) {
-            int x = left + i * step;
-            canvas.item(items.get(i), x, y);
-            if (i < items.size() - 1 && step >= ICON + 6) {
-                String sign = i == items.size() - 2 ? "=" : "+";
-                canvas.text(
-                        Component.literal(sign).getVisualOrderText(),
-                        x + ICON + (step - ICON - font.width(sign)) / 2,
-                        y + 4,
-                        MUTED);
-            }
+    /** How many rows of slots a recipe takes. */
+    private static int recipeRows(List<ItemStack> items, int columns) {
+        return columns <= 0 ? 1 : Math.max(1, (items.size() - 2) / columns + 1);
+    }
+
+    /** The room a recipe's slots take above the text, with a little space under them; none for no recipe. */
+    private static int recipeHeight(List<ItemStack> items, int columns) {
+        return items.isEmpty() ? 0 : recipeRows(items, columns) * SLOT + 4;
+    }
+
+    /**
+     * A recipe as it is laid in the crafting table: its slots in a grid, an arrow, and the slot of what they make level
+     * with the grid's middle row.
+     */
+    private void drawRecipe(PageCanvas canvas, List<ItemStack> items, int columns, int left, int y) {
+        int across = Math.max(1, columns);
+        for (int i = 0; i < items.size() - 1; i++) {
+            slot(canvas, items.get(i), left + i % across * SLOT, y + i / across * SLOT);
+        }
+        int middle = y + recipeRows(items, columns) * SLOT / 2;
+        int arrow = left + across * SLOT + 5;
+        canvas.fill(arrow, middle - 1, arrow + 9, middle + 1, MUTED);
+        for (int i = 0; i < 4; i++) {
+            canvas.fill(arrow + 9 + i, middle - 4 + i, arrow + 10 + i, middle + 4 - i, MUTED);
+        }
+        slot(canvas, items.getLast(), arrow + 19, middle - SLOT / 2);
+    }
+
+    /** A crafting slot pressed into the paper, with an item in it or empty. */
+    private static void slot(PageCanvas canvas, ItemStack stack, int x, int y) {
+        canvas.fill(x, y, x + SLOT, y + SLOT, SLOT_LIGHT);
+        canvas.fill(x, y, x + SLOT - 1, y + SLOT - 1, SLOT_DARK);
+        canvas.fill(x + 1, y + 1, x + SLOT - 1, y + SLOT - 1, SLOT_FILL);
+        if (!stack.isEmpty()) {
+            canvas.item(stack, x + 1, y + 1);
         }
     }
 

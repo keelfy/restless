@@ -15,8 +15,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 
 /**
  * The pages of things to craft: a page per charm and relic the player knows how to make, and the recipes their recipe
@@ -66,6 +70,9 @@ public record Codex(List<Card> charms, List<Card> relics, List<Card> recipes, Op
             List.of("hollow_lantern", "ferrymans_coin", "exorcists_censer", "hoarders_hollow", "maras_cradle");
 
     private static final String ESSENCE = "_essence";
+
+    /** The crafting table's grid is this many slots a side. */
+    private static final int GRID = 3;
 
     /** What the player may read about, as of now. */
     public static Codex of(ServerPlayer player, Notebook notebook) {
@@ -137,32 +144,58 @@ public record Codex(List<Card> charms, List<Card> relics, List<Card> recipes, Op
         return cards;
     }
 
-    /** A recipe as a row of its ingredients and its result, with the ingredients' names under it. */
+    /**
+     * A recipe as the crafting table's 3 by 3 grid, ingredients where a shaped recipe puts them and in order for the
+     * others, or as its ingredients in a row for a recipe made elsewhere; then its result, and the ingredients' names.
+     */
     private static Optional<Entry> recipe(ServerPlayer player, String id) {
         return holder(player, id).map(holder -> {
-            List<ItemStack> row = new ArrayList<>();
+            Recipe<?> recipe = holder.value();
+            List<ItemStack> slots = new ArrayList<>();
+            int columns;
+            if (recipe instanceof ShapedRecipe shaped) {
+                columns = GRID;
+                for (int i = 0; i < GRID * GRID; i++) {
+                    int x = i % GRID;
+                    int y = i / GRID;
+                    slots.add(
+                            x < shaped.getWidth() && y < shaped.getHeight()
+                                    ? stack(shaped.getIngredients().get(y * shaped.getWidth() + x))
+                                    : ItemStack.EMPTY);
+                }
+            } else {
+                recipe.placementInfo().ingredients().forEach(ingredient -> slots.add(stack(Optional.of(ingredient))));
+                columns = recipe instanceof CraftingRecipe ? GRID : Math.max(1, slots.size());
+                while (recipe instanceof CraftingRecipe && slots.size() < GRID * GRID) {
+                    slots.add(ItemStack.EMPTY);
+                }
+            }
             MutableComponent names = Component.empty();
-            for (Ingredient ingredient : holder.value().placementInfo().ingredients()) {
-                ingredient.items().findFirst().ifPresent(h -> {
-                    ItemStack stack = new ItemStack(h);
-                    ItemStack same = row.stream()
-                            .filter(other -> ItemStack.isSameItem(other, stack))
-                            .findFirst()
-                            .orElse(null);
-                    if (same != null) {
-                        same.grow(1);
-                        return;
-                    }
-                    if (!row.isEmpty()) {
+            List<ItemStack> named = new ArrayList<>();
+            for (ItemStack stack : slots) {
+                if (!stack.isEmpty() && named.stream().noneMatch(other -> ItemStack.isSameItem(other, stack))) {
+                    if (!named.isEmpty()) {
                         names.append(" + ");
                     }
-                    row.add(stack);
+                    named.add(stack);
                     names.append(stack.getHoverName());
-                });
+                }
             }
-            row.add(new ItemStack(item(id)));
-            return Entry.recipe(Component.translatable("journal.restless.recipe", names), row);
+            ItemStack result = recipe.display().stream()
+                    .findFirst()
+                    .map(display -> display.result().resolveForFirstStack(SlotDisplayContext.fromLevel(player.level())))
+                    .filter(stack -> !stack.isEmpty())
+                    .orElseGet(() -> new ItemStack(item(id)));
+            return Entry.recipe(Component.translatable("journal.restless.recipe", names), slots, columns, result);
         });
+    }
+
+    /** The first item an ingredient takes, or nothing for an empty slot. */
+    private static ItemStack stack(Optional<Ingredient> ingredient) {
+        return ingredient
+                .flatMap(i -> i.items().findFirst())
+                .map(ItemStack::new)
+                .orElse(ItemStack.EMPTY);
     }
 
     private static Optional<RecipeHolder<?>> holder(ServerPlayer player, String id) {

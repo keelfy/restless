@@ -32,8 +32,10 @@ public record JournalPayload(List<JournalPages.Section> sections, boolean open) 
             JournalPages.Entry::text,
             ByteBufCodecs.optional(FILING_CODEC),
             JournalPages.Entry::filing,
-            ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list()),
             JournalPages.Entry::items,
+            ByteBufCodecs.VAR_INT,
+            JournalPages.Entry::columns,
             JournalPages.Entry::new);
     private static final StreamCodec<RegistryFriendlyByteBuf, JournalPages.Card> CARD_CODEC = StreamCodec.composite(
             ComponentSerialization.STREAM_CODEC,

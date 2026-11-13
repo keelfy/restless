@@ -32,19 +32,23 @@ public final class JournalPages {
 
     /**
      * One thing written on a card; {@code kind} tells what showed it, when a note did, {@code filing} makes it
-     * something to click, and {@code items} are drawn in a row above the text: a recipe's ingredients, then its result.
+     * something to click, and {@code items} are drawn above the text: a recipe's slots, {@code columns} to a row and
+     * empty where the recipe leaves a gap, then its result.
      */
-    public record Entry(Optional<Kind> kind, Component text, Optional<Filing> filing, List<ItemStack> items) {
+    public record Entry(
+            Optional<Kind> kind, Component text, Optional<Filing> filing, List<ItemStack> items, int columns) {
         public Entry(Optional<Kind> kind, Component text, Optional<Filing> filing) {
-            this(kind, text, filing, List.of());
+            this(kind, text, filing, List.of(), 0);
         }
 
         static Entry plain(Component text) {
             return new Entry(Optional.empty(), text, Optional.empty());
         }
 
-        public static Entry recipe(Component text, List<ItemStack> items) {
-            return new Entry(Optional.empty(), text, Optional.empty(), List.copyOf(items));
+        public static Entry recipe(Component text, List<ItemStack> slots, int columns, ItemStack result) {
+            List<ItemStack> items = new ArrayList<>(slots);
+            items.add(result);
+            return new Entry(Optional.empty(), text, Optional.empty(), List.copyOf(items), columns);
         }
     }
 
