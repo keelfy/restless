@@ -18,15 +18,13 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
-/** A paper ward attached to the side of the block selected during placement. */
+/** A wreath ward attached to the side of the block selected during placement. */
 public final class DoorCharm extends WornWard {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final Map<Direction, VoxelShape> SHAPES =
-            turned(Shapes.or(Block.box(1, 2, 14.5, 15, 16, 16), Block.box(6, 0, 14.5, 10, 2, 16)));
+    private static final Map<Direction, VoxelShape> SHAPES = turned(Block.box(1, 0.5, 11.4, 15, 15.5, 16));
 
     public DoorCharm(BlockBehaviour.Properties properties) {
         super(properties.noCollision(), SHAPES.get(Direction.NORTH), Kind.CHARM, 5);
