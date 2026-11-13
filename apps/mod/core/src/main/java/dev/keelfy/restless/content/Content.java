@@ -609,7 +609,7 @@ public final class Content {
                                         .noCollision())));
     }
 
-    /** An item for a block the world sets down, only for the operator tab: no tooltip, never crafted. */
+    /** An item for a block the world sets down, only for the creative tab: no tooltip, never crafted. */
     private static Supplier<Item> debugItem(String name, Supplier<Block> block) {
         return Platform.get()
                 .register(
@@ -629,7 +629,7 @@ public final class Content {
                                 tipped(new Item.Properties().setId(key), name).useBlockDescriptionPrefix()));
     }
 
-    /** One painting item per painting of the mod, for the operator tab. */
+    /** One painting item per painting of the mod, for the creative tab. */
     private static List<ItemStack> paintings(HolderLookup.Provider holders) {
         var stacks = new java.util.ArrayList<ItemStack>();
         holders.lookup(Registries.PAINTING_VARIANT)
@@ -643,16 +643,6 @@ public final class Content {
                             stack.set(DataComponents.PAINTING_VARIANT, variant);
                             stacks.add(stack);
                         }));
-        return stacks;
-    }
-
-    /** The operator tab: the things the world sets down on its own, and every painting. */
-    private static List<ItemStack> debugItems(HolderLookup.Provider holders) {
-        var stacks = new java.util.ArrayList<ItemStack>();
-        for (var item : List.of(DOLL_ITEM, MUSIC_BOX_ITEM, FOOTPRINTS_ITEM, CLAW_MARKS_ITEM)) {
-            stacks.add(new ItemStack(item.get()));
-        }
-        stacks.addAll(paintings(holders));
         return stacks;
     }
 
@@ -730,19 +720,18 @@ public final class Content {
                 HOARDERS_HOLLOW_ITEM,
                 MARAS_CRADLE_ITEM,
                 RELIQUARY,
-                REQUIEM_BELL));
+                REQUIEM_BELL,
+                DOLL_ITEM,
+                MUSIC_BOX_ITEM,
+                FOOTPRINTS_ITEM,
+                CLAW_MARKS_ITEM));
         Platform.get()
                 .registerTab(
                         "restless",
                         Component.translatable("itemGroup.restless"),
                         () -> new ItemStack(SPIRIT_CANDLE.get()),
-                        tabItems);
-        Platform.get()
-                .registerOperatorTab(
-                        "restless_debug",
-                        Component.translatable("itemGroup.restless_debug"),
-                        () -> new ItemStack(Items.PAINTING),
-                        Content::debugItems);
+                        tabItems,
+                        Content::paintings);
         Restless.LOGGER.debug("Content declared");
     }
 }

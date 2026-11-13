@@ -31,19 +31,16 @@ public interface Platform {
      */
     <T> Supplier<T> register(Registry<T> registry, String name, Function<ResourceKey<T>, T> factory);
 
-    /** Declares a creative tab of this mod that lists {@code items}; they are looked up when the tab is filled. */
-    void registerTab(
-            String name, Component title, Supplier<ItemStack> icon, List<? extends Supplier<? extends Item>> items);
-
     /**
-     * Declares a creative tab that {@code items} fills, and only for players who may use operator items; for anyone
-     * else it stays empty and hidden.
+     * Declares a creative tab of this mod that lists {@code items}, looked up when the tab is filled, then the stacks
+     * {@code extras} builds from the game's registries.
      */
-    void registerOperatorTab(
+    void registerTab(
             String name,
             Component title,
             Supplier<ItemStack> icon,
-            Function<HolderLookup.Provider, List<ItemStack>> items);
+            List<? extends Supplier<? extends Item>> items,
+            Function<HolderLookup.Provider, List<ItemStack>> extras);
 
     /** Whether an accessory-slot mod is present: worn charms then work from its slots instead of the off hand. */
     default boolean hasAccessories() {
