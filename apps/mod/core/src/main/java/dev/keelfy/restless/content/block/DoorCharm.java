@@ -26,15 +26,10 @@ import org.jspecify.annotations.Nullable;
 public final class DoorCharm extends WornWard {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final Map<Direction, VoxelShape> SHAPES = turned(Shapes.or(
-            Block.box(5.75, 3, 15.2, 6.5, 3.25, 15.8),
-            Block.box(5.5, 3.25, 15.08, 10.5, 5.5, 15.85),
-            Block.box(5, 5.5, 14.8, 11, 10, 16),
-            Block.box(5.5, 10, 14.75, 10.5, 10.65, 16),
-            Block.box(6, 10.65, 14.9, 10, 10.9, 16),
-            Block.box(7.4, 10.9, 14.9, 8.6, 11, 16),
-            Block.box(7, 11, 14.9, 9, 11.3, 16),
-            Block.box(7, 11.3, 15.3, 9, 12.6, 15.7),
-            Block.box(7.4, 12.6, 15.3, 8.6, 13, 15.7)));
+            Block.box(6, 0, 15.5, 7, 3, 16),
+            Block.box(9, 1, 15.5, 10, 3, 16),
+            Block.box(5, 3, 15, 11, 11, 16),
+            Block.box(6, 11, 15, 10, 15, 16)));
 
     public DoorCharm(BlockBehaviour.Properties properties) {
         super(properties.noCollision(), SHAPES.get(Direction.NORTH), Kind.CHARM, 5);
