@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "restless:block/omen_candle"
+    "model": "restless:item/omen_candle"
   }
 }

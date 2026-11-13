@@ -33,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * so the lights events snuff it too.
  */
 public final class OmenCandle extends AbstractCandleBlock {
-    private static final VoxelShape SHAPE = Block.box(6, 0, 6, 10, 7, 10);
+    private static final VoxelShape SHAPE = Block.box(5, 0, 5, 11, 8.5, 11);
 
     public OmenCandle(BlockBehaviour.Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LIT) ? 3 : 0));
@@ -52,7 +52,7 @@ public final class OmenCandle extends AbstractCandleBlock {
 
     @Override
     protected Iterable<Vec3> getParticleOffsets(BlockState state) {
-        return List.of(new Vec3(0.5, 0.55, 0.5));
+        return List.of(new Vec3(0.5, 0.6, 0.5));
     }
 
     /** Only fire in a hand lights it; a burning arrow does not. */
