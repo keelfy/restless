@@ -1,10 +1,10 @@
 {
   "gui_light": "front",
   "textures": {
-    "cover": "minecraft:block/brown_terracotta",
-    "paper": "minecraft:block/sandstone_top",
-    "spine": "minecraft:block/dark_oak_planks",
-    "particle": "minecraft:block/brown_terracotta"
+    "cover": "restless:item/journal_cover",
+    "paper": "restless:item/journal_paper",
+    "spine": "restless:item/journal_spine",
+    "particle": "restless:item/journal_cover"
   },
   "elements": [
     {
