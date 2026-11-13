@@ -18,70 +18,20 @@
       "model": "restless:block/altar_edge",
       "y": 270
     },
-    "part=north_west": [
-      {
-        "model": "restless:block/altar_corner",
-        "weight": 3
-      },
-      {
-        "model": "restless:block/altar_corner_b",
-        "weight": 4
-      },
-      {
-        "model": "restless:block/altar_corner_c",
-        "weight": 3
-      }
-    ],
-    "part=north_east": [
-      {
-        "model": "restless:block/altar_corner",
-        "weight": 3,
-        "y": 90
-      },
-      {
-        "model": "restless:block/altar_corner_b",
-        "weight": 4,
-        "y": 90
-      },
-      {
-        "model": "restless:block/altar_corner_c",
-        "weight": 3,
-        "y": 90
-      }
-    ],
-    "part=south_east": [
-      {
-        "model": "restless:block/altar_corner",
-        "weight": 3,
-        "y": 180
-      },
-      {
-        "model": "restless:block/altar_corner_b",
-        "weight": 4,
-        "y": 180
-      },
-      {
-        "model": "restless:block/altar_corner_c",
-        "weight": 3,
-        "y": 180
-      }
-    ],
-    "part=south_west": [
-      {
-        "model": "restless:block/altar_corner",
-        "weight": 3,
-        "y": 270
-      },
-      {
-        "model": "restless:block/altar_corner_b",
-        "weight": 4,
-        "y": 270
-      },
-      {
-        "model": "restless:block/altar_corner_c",
-        "weight": 3,
-        "y": 270
-      }
-    ]
+    "part=north_west": {
+      "model": "restless:block/altar_corner"
+    },
+    "part=north_east": {
+      "model": "restless:block/altar_corner",
+      "y": 90
+    },
+    "part=south_east": {
+      "model": "restless:block/altar_corner",
+      "y": 180
+    },
+    "part=south_west": {
+      "model": "restless:block/altar_corner",
+      "y": 270
+    }
   }
 }
