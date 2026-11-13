@@ -35,6 +35,8 @@ public final class Gravestone extends ShapedBlock {
     private static final VoxelShape MODEL = Shapes.or(
             Block.box(1, 0, 3, 15, 1, 13),
             Block.box(2, 1, 4, 14, 3, 12),
+            Block.box(1.9, 1.5, 9, 2, 3, 12),
+            Block.box(2, 1.5, 12, 5, 3, 12.1),
             Block.box(2, 3, 9, 13, 3.6, 10),
             Block.box(2, 3, 10, 8, 3.6, 12),
             Block.box(3, 3, 6, 13, 13, 9),

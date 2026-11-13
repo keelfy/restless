@@ -1,6 +1,7 @@
 package dev.keelfy.restless.content.block;
 
 import dev.keelfy.restless.content.item.Relics;
+import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -23,13 +24,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * turned to face the way the player who places it looks.
  */
 public final class WardLantern extends LanternBlock implements WardBlock {
-    private static final VoxelShape HALLOWED = Shapes.or(
-            Block.box(5, 0, 5, 11, 7.5, 11), Block.box(6, 7.5, 6.5, 10, 8, 9.5), Block.box(6, 8, 7.5, 10, 10, 8.5));
-    private static final VoxelShape HALLOWED_HANGING = Shapes.or(
+    private static final Map<Direction, VoxelShape> HALLOWED = ShapedBlock.turned(Shapes.or(
+            Block.box(5, 0, 5, 11, 7.5, 11), Block.box(6, 7.5, 6.5, 10, 8, 9.5), Block.box(6, 8, 7.5, 10, 10, 8.5)));
+    private static final Map<Direction, VoxelShape> HALLOWED_HANGING = ShapedBlock.turned(Shapes.or(
             Block.box(5, 4, 5, 11, 11.5, 11),
             Block.box(6, 11.5, 6.5, 10, 12, 9.5),
             Block.box(6, 12, 7.5, 10, 14, 8.5),
-            Block.box(7.5, 14, 7.5, 8.5, 16, 8.5));
+            Block.box(7.5, 14, 7.5, 8.5, 16, 8.5)));
     private static final VoxelShape HOLLOW = Shapes.or(Block.box(5, 0, 5, 11, 10, 11));
     private static final VoxelShape HOLLOW_HANGING =
             Shapes.or(Block.box(5, 4, 5, 11, 14, 11), Block.box(7.5, 14, 7.5, 8.5, 16, 8.5));
@@ -82,7 +83,7 @@ public final class WardLantern extends LanternBlock implements WardBlock {
         if (kind == Kind.HOLLOW) {
             return hanging ? HOLLOW_HANGING : HOLLOW;
         }
-        return hanging ? HALLOWED_HANGING : HALLOWED;
+        return (hanging ? HALLOWED_HANGING : HALLOWED).get(state.getValue(FACING));
     }
 
     @Override

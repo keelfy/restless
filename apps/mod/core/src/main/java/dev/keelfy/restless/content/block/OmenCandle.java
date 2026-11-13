@@ -55,21 +55,6 @@ public final class OmenCandle extends AbstractCandleBlock {
             Block.box(7.5, 4.5, 9.5, 8.5, 5.5, 10),
             Block.box(7.75, 7.5, 7.75, 8.25, 8.5, 8.25),
             Block.box(9.5, 4, 7, 10, 5.5, 8)));
-    private static final Map<Direction, VoxelShape> LIT_SHAPES = ShapedBlock.turned(Shapes.or(
-            Block.box(5, 0, 5, 11, 1, 11),
-            Block.box(5.5, 1, 5.5, 10.5, 1.5, 10.5),
-            Block.box(6, 1.5, 6, 10, 2, 10),
-            Block.box(6, 3.5, 7.5, 9.5, 5.5, 8.5),
-            Block.box(6.25, 3, 6.25, 9.75, 3.5, 9.75),
-            Block.box(6.5, 2, 6.5, 9.5, 3, 9.5),
-            Block.box(6.5, 3.5, 6.5, 9.5, 5.5, 7.5),
-            Block.box(6.5, 3.5, 8.5, 9.5, 5.5, 9.5),
-            Block.box(7, 5.5, 7, 9, 7.5, 9),
-            Block.box(7.25, 8.5, 7.25, 8.75, 10, 8.75),
-            Block.box(7.5, 4.5, 9.5, 8.5, 5.5, 10),
-            Block.box(7.5, 10, 7.5, 8.5, 11, 8.5),
-            Block.box(7.75, 7.5, 7.75, 8.25, 8.5, 8.25),
-            Block.box(9.5, 4, 7, 10, 5.5, 8)));
 
     public OmenCandle(BlockBehaviour.Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LIT) ? 3 : 0));
@@ -99,7 +84,7 @@ public final class OmenCandle extends AbstractCandleBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return (state.getValue(LIT) ? LIT_SHAPES : SHAPES).get(state.getValue(FACING));
+        return SHAPES.get(state.getValue(FACING));
     }
 
     @Override

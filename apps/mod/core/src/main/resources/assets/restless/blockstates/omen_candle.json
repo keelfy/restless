@@ -16,18 +16,18 @@
       "y": 270
     },
     "lit=true,facing=north": {
-      "model": "restless:block/omen_candle_lit"
+      "model": "restless:block/omen_candle"
     },
     "lit=true,facing=east": {
-      "model": "restless:block/omen_candle_lit",
+      "model": "restless:block/omen_candle",
       "y": 90
     },
     "lit=true,facing=south": {
-      "model": "restless:block/omen_candle_lit",
+      "model": "restless:block/omen_candle",
       "y": 180
     },
     "lit=true,facing=west": {
-      "model": "restless:block/omen_candle_lit",
+      "model": "restless:block/omen_candle",
       "y": 270
     }
   }
