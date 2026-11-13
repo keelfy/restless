@@ -71,7 +71,7 @@ final class DreamcatcherGameTests {
                 var state = helper.getLevel().getBlockState(helper.absolutePos(TARGET));
                 AABB shape = state.getShape(helper.getLevel(), helper.absolutePos(TARGET))
                         .bounds();
-                check(helper, shape.maxY == 1 && shape.minY == .25, "The shape must reach the ceiling");
+                check(helper, shape.maxY == 1 && shape.minY == 0, "The shape must reach the ceiling");
                 check(
                         helper,
                         facing.getAxis() == Direction.Axis.X

@@ -23,8 +23,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * turned to face the way the player who places it looks.
  */
 public final class WardLantern extends LanternBlock implements WardBlock {
-    private static final VoxelShape STANDING = Block.box(5, 0, 5, 11, 10, 11);
-    private static final VoxelShape HANGING_SHAPE =
+    private static final VoxelShape HALLOWED = Shapes.or(
+            Block.box(5, 0, 5, 11, 7.5, 11), Block.box(6, 7.5, 6.5, 10, 8, 9.5), Block.box(6, 8, 7.5, 10, 10, 8.5));
+    private static final VoxelShape HALLOWED_HANGING = Shapes.or(
+            Block.box(5, 4, 5, 11, 11.5, 11),
+            Block.box(6, 11.5, 6.5, 10, 12, 9.5),
+            Block.box(6, 12, 7.5, 10, 14, 8.5),
+            Block.box(7.5, 14, 7.5, 8.5, 16, 8.5));
+    private static final VoxelShape HOLLOW = Shapes.or(Block.box(5, 0, 5, 11, 10, 11));
+    private static final VoxelShape HOLLOW_HANGING =
             Shapes.or(Block.box(5, 4, 5, 11, 14, 11), Block.box(7.5, 14, 7.5, 8.5, 16, 8.5));
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -71,7 +78,11 @@ public final class WardLantern extends LanternBlock implements WardBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(HANGING) ? HANGING_SHAPE : STANDING;
+        boolean hanging = state.getValue(HANGING);
+        if (kind == Kind.HOLLOW) {
+            return hanging ? HOLLOW_HANGING : HOLLOW;
+        }
+        return hanging ? HALLOWED_HANGING : HALLOWED;
     }
 
     @Override

@@ -33,6 +33,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * A scarecrow stuffed with one essence and lit with fire. It burns for {@code effigy.burn_ticks} and then calls a
@@ -80,8 +82,18 @@ public final class Effigy extends ShapedBlock {
     public static final EnumProperty<Stuffing> STUFFING = EnumProperty.create("stuffing", Stuffing.class);
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
+    private static final VoxelShape SHAPE = Shapes.or(
+            Block.box(7, 0, 7, 9, 3.5, 9),
+            Block.box(4.5, 3.5, 5.75, 9, 4, 10),
+            Block.box(4.4, 4, 5.65, 11.6, 8, 10.1),
+            Block.box(1, 8, 5.65, 15, 10.25, 10),
+            Block.box(2.5, 10.25, 5.75, 13.5, 10.5, 10),
+            Block.box(5.75, 10.5, 6, 10.25, 11, 10),
+            Block.box(5.5, 11, 5.5, 10.5, 15.5, 10.5),
+            Block.box(7.5, 15.5, 7.5, 8.5, 16, 8.5));
+
     public Effigy(BlockBehaviour.Properties properties) {
-        super(properties.lightLevel(state -> state.getValue(LIT) ? 10 : 0), Block.box(1, 0, 6, 15, 16, 10));
+        super(properties.lightLevel(state -> state.getValue(LIT) ? 10 : 0), SHAPE);
         registerDefaultState(
                 stateDefinition.any().setValue(STUFFING, Stuffing.EMPTY).setValue(LIT, false));
     }

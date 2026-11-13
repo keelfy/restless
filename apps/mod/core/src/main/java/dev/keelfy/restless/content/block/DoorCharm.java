@@ -1,5 +1,6 @@
 package dev.keelfy.restless.content.block;
 
+import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -17,19 +18,26 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
 /** A paper ward attached to the side of the block selected during placement. */
 public final class DoorCharm extends WornWard {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape NORTH = Block.box(5, 3, 14, 11, 13, 16);
-    private static final VoxelShape SOUTH = Block.box(5, 3, 0, 11, 13, 2);
-    private static final VoxelShape EAST = Block.box(0, 3, 5, 2, 13, 11);
-    private static final VoxelShape WEST = Block.box(14, 3, 5, 16, 13, 11);
+    private static final Map<Direction, VoxelShape> SHAPES = turned(Shapes.or(
+            Block.box(5.75, 3, 15.2, 6.5, 3.25, 15.8),
+            Block.box(5.5, 3.25, 15.08, 10.5, 5.5, 15.85),
+            Block.box(5, 5.5, 14.8, 11, 10, 16),
+            Block.box(5.5, 10, 14.75, 10.5, 10.65, 16),
+            Block.box(6, 10.65, 14.9, 10, 10.9, 16),
+            Block.box(7.4, 10.9, 14.9, 8.6, 11, 16),
+            Block.box(7, 11, 14.9, 9, 11.3, 16),
+            Block.box(7, 11.3, 15.3, 9, 12.6, 15.7),
+            Block.box(7.4, 12.6, 15.3, 8.6, 13, 15.7)));
 
     public DoorCharm(BlockBehaviour.Properties properties) {
-        super(properties.noCollision(), NORTH, Kind.CHARM, 5);
+        super(properties.noCollision(), SHAPES.get(Direction.NORTH), Kind.CHARM, 5);
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
     }
 
@@ -71,13 +79,7 @@ public final class DoorCharm extends WornWard {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            case NORTH -> NORTH;
-            case SOUTH -> SOUTH;
-            case EAST -> EAST;
-            case WEST -> WEST;
-            default -> throw new IllegalStateException("Door charm must face horizontally");
-        };
+        return SHAPES.get(state.getValue(FACING));
     }
 
     @Override

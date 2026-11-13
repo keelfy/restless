@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
@@ -31,10 +32,21 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public final class Gravestone extends ShapedBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     /** The inscription is on the south side of the model, so a stone drawn facing south is the default. */
-    private static final Map<Direction, VoxelShape> SHAPES = turned(Block.box(2, 0, 4, 14, 15, 12));
+    private static final VoxelShape MODEL = Shapes.or(
+            Block.box(1, 0, 3, 15, 1, 13),
+            Block.box(2, 1, 4, 14, 3, 12),
+            Block.box(2, 3, 9, 13, 3.6, 10),
+            Block.box(2, 3, 10, 8, 3.6, 12),
+            Block.box(3, 3, 6, 13, 13, 9),
+            Block.box(3, 3.6, 9, 13, 13, 10),
+            Block.box(3, 3.6, 10, 6, 6, 10.1),
+            Block.box(4, 13, 6, 12, 14, 10),
+            Block.box(5, 14, 6, 10, 15, 10));
+    /** The model faces south as drawn: the turn that puts it on a side is the one for the opposite side. */
+    private static final Map<Direction, VoxelShape> SHAPES = turned(MODEL);
 
     public Gravestone(BlockBehaviour.Properties properties) {
-        super(properties, Block.box(2, 0, 4, 14, 15, 12));
+        super(properties, MODEL);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.SOUTH));
     }
 
@@ -51,7 +63,7 @@ public final class Gravestone extends ShapedBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPES.get(state.getValue(FACING));
+        return SHAPES.get(state.getValue(FACING).getOpposite());
     }
 
     @Override

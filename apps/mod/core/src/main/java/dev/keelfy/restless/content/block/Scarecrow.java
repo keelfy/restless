@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
@@ -33,11 +34,24 @@ import org.jspecify.annotations.Nullable;
 public final class Scarecrow extends WornWard {
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape LOWER = Block.box(4, 0, 4, 12, 16, 12);
-    private static final Map<Direction, VoxelShape> UPPER = turned(Block.box(0, 0, 5, 16, 16, 11));
+    private static final VoxelShape POST = Shapes.or(
+            Block.box(4, 0, 5, 11, 2.5, 11),
+            Block.box(7, 2.5, 7, 9, 5.5, 9),
+            Block.box(5.5, 5.5, 6.25, 9, 6, 9),
+            Block.box(5.5, 6, 6.25, 10.5, 7.5, 9.5),
+            Block.box(4.4, 7.5, 5.4, 11.6, 16, 10.6));
+    private static final Map<Direction, VoxelShape> LOWER = turned(POST);
+    private static final Map<Direction, VoxelShape> UPPER = turned(Shapes.or(
+            Block.box(2.1, 0, 5.4, 13.9, 6, 10.5),
+            Block.box(0, 6, 5.5, 16, 7.5, 10.5),
+            Block.box(2.1, 7.5, 6.25, 13.9, 8, 9.75),
+            Block.box(4.5, 8, 4.5, 15.25, 10.5, 11.5),
+            Block.box(4.5, 10.5, 4.5, 11.5, 14, 11.5),
+            Block.box(3.5, 14, 3.5, 12.5, 14.5, 12.5),
+            Block.box(4.9, 14.5, 4.9, 11.1, 15.75, 11.1)));
 
     public Scarecrow(BlockBehaviour.Properties properties) {
-        super(properties, LOWER, Kind.SCARECROW, 10);
+        super(properties, POST, Kind.SCARECROW, 10);
         registerDefaultState(
                 defaultBlockState().setValue(HALF, DoubleBlockHalf.LOWER).setValue(FACING, Direction.NORTH));
     }
@@ -84,7 +98,7 @@ public final class Scarecrow extends WornWard {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? LOWER : UPPER.get(state.getValue(FACING));
+        return (state.getValue(HALF) == DoubleBlockHalf.LOWER ? LOWER : UPPER).get(state.getValue(FACING));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package dev.keelfy.restless.content.block;
 
 import dev.keelfy.restless.content.Content;
+import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -27,14 +28,21 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
 /** Keeps spirits from a sleeper near it. */
 public final class Dreamcatcher extends Block implements WardBlock, EntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape NORTH_SOUTH = Block.box(3, 4, 7, 13, 16, 9);
-    private static final VoxelShape EAST_WEST = Block.box(7, 4, 3, 9, 16, 13);
+    private static final Map<Direction, VoxelShape> SHAPES = ShapedBlock.turned(Shapes.or(
+            Block.box(7.5, 0, 7.75, 8.5, 1, 8.25),
+            Block.box(4.5, 1, 7.75, 9, 2, 8.25),
+            Block.box(4, 2, 7.75, 11.5, 3, 8.25),
+            Block.box(2.9375, 3, 7.25, 13, 11.5, 8.75),
+            Block.box(3, 11.5, 7.375, 13.0625, 14, 8.625),
+            Block.box(4, 14, 7.375, 12, 15, 8.625),
+            Block.box(5, 15, 7.375, 11, 16, 8.625)));
 
     public Dreamcatcher(BlockBehaviour.Properties properties) {
         super(properties.noCollision());
@@ -75,7 +83,7 @@ public final class Dreamcatcher extends Block implements WardBlock, EntityBlock 
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(FACING).getAxis() == Direction.Axis.X ? EAST_WEST : NORTH_SOUTH;
+        return SHAPES.get(state.getValue(FACING));
     }
 
     @Override
