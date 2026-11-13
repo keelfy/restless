@@ -22,15 +22,15 @@
       "model": "restless:block/altar_corner"
     },
     "part=north_east": {
-      "model": "restless:block/altar_corner",
+      "model": "restless:block/altar_corner_1",
       "y": 90
     },
     "part=south_east": {
-      "model": "restless:block/altar_corner",
+      "model": "restless:block/altar_corner_2",
       "y": 180
     },
     "part=south_west": {
-      "model": "restless:block/altar_corner",
+      "model": "restless:block/altar_corner_3",
       "y": 270
     }
   }
