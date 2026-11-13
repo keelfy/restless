@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
@@ -39,6 +41,15 @@ public final class JournalView {
     private static final int LINE = 12;
     private static final int ICON = 16;
     private static final int ENTRY_GAP = 5;
+
+    /**
+     * Light markup in journal text: a line of lang text that starts with this is a list item, drawn with a dot and a
+     * hanging indent, and words between {@code **} are bold.
+     */
+    private static final String BULLET = "• ";
+
+    private static final String BOLD = "**";
+    private static final int INDENT = 9;
     private static final int EDGE = 0xFF5A4630;
 
     /** How far the bookmarks stick out past the book's pixels, for whoever centres the book. */
@@ -61,7 +72,7 @@ public final class JournalView {
 
     private static final Map<Kind, ItemStack> ICONS = new EnumMap<>(Kind.class);
 
-    /** What a page holds, top to bottom. */
+    /** What a page holds, top to bottom; {@code indent} shifts the text right, {@code bullet} puts a dot before it. */
     private record Block(
             List<FormattedCharSequence> lines,
             @Nullable Kind icon,
@@ -69,7 +80,20 @@ public final class JournalView {
             @Nullable Set<Kind> clues,
             JournalPages.@Nullable Filing filing,
             List<ItemStack> items,
-            int height) {}
+            int indent,
+            boolean bullet,
+            int height) {
+        Block(
+                List<FormattedCharSequence> lines,
+                @Nullable Kind icon,
+                @Nullable Picture picture,
+                @Nullable Set<Kind> clues,
+                JournalPages.@Nullable Filing filing,
+                List<ItemStack> items,
+                int height) {
+            this(lines, icon, picture, clues, filing, items, 0, false, height);
+        }
+    }
 
     /** Where a filing entry was drawn this frame, for clicks. */
     private record Hit(int x, int y, int width, int height, JournalPages.Filing filing) {}
@@ -273,7 +297,16 @@ public final class JournalView {
                     ? (room - used) / LINE
                     : 0;
             if (fit >= 1 && fit < lines.size()) {
-                laid.add(new Block(lines.subList(0, fit), block.icon(), null, null, null, List.of(), fit * LINE));
+                laid.add(new Block(
+                        lines.subList(0, fit),
+                        block.icon(),
+                        null,
+                        null,
+                        null,
+                        List.of(),
+                        block.indent(),
+                        block.bullet(),
+                        fit * LINE));
                 flush();
                 place(new Block(
                         lines.subList(fit, lines.size()),
@@ -282,7 +315,9 @@ public final class JournalView {
                         null,
                         null,
                         List.of(),
-                        (lines.size() - fit) * LINE + ENTRY_GAP));
+                        block.indent(),
+                        false,
+                        block.height() - fit * LINE));
                 return;
             }
             if (!laid.isEmpty()) {
@@ -311,6 +346,14 @@ public final class JournalView {
         }
         for (JournalPages.Entry entry : card.entries()) {
             Kind icon = entry.kind().filter(k -> icon(k) != null).orElse(null);
+            String raw = entry.text().getString();
+            if (icon == null
+                    && entry.filing().isEmpty()
+                    && entry.items().isEmpty()
+                    && (raw.indexOf('\n') >= 0 || raw.contains(BOLD))) {
+                marked(raw, blocks);
+                continue;
+            }
             int lineWidth = Math.max(1, textWidth - (icon == null ? 0 : ICON + 6));
             List<FormattedCharSequence> lines = font.split(entry.text(), lineWidth);
             blocks.add(new Block(
@@ -325,6 +368,36 @@ public final class JournalView {
                             + ENTRY_GAP));
         }
         return blocks;
+    }
+
+    /**
+     * Text with markup: each line its own block, list items indented under a dot, a list kept tight under the line that
+     * opens it, and a gap after the whole entry.
+     */
+    private void marked(String raw, List<Block> blocks) {
+        String[] parts = raw.split("\n");
+        for (int i = 0; i < parts.length; i++) {
+            boolean bullet = parts[i].startsWith(BULLET);
+            int indent = bullet ? INDENT : 0;
+            List<FormattedCharSequence> lines = font.split(
+                    bold(bullet ? parts[i].substring(BULLET.length()) : parts[i]), Math.max(1, textWidth - indent));
+            boolean listNext = i + 1 < parts.length && parts[i + 1].startsWith(BULLET);
+            int gap = listNext ? 1 : ENTRY_GAP;
+            blocks.add(new Block(lines, null, null, null, null, List.of(), indent, bullet, lines.size() * LINE + gap));
+        }
+    }
+
+    /** The words between {@code **} marks in bold, the marks dropped. */
+    private static Component bold(String text) {
+        MutableComponent out = Component.empty();
+        String[] bits = text.split(Pattern.quote(BOLD), -1);
+        for (int i = 0; i < bits.length; i++) {
+            if (!bits[i].isEmpty()) {
+                MutableComponent bit = Component.literal(bits[i]);
+                out.append(i % 2 == 1 ? bit.withStyle(ChatFormatting.BOLD) : bit);
+            }
+        }
+        return out;
     }
 
     private static @Nullable ItemStack icon(Kind kind) {
@@ -466,6 +539,10 @@ public final class JournalView {
             canvas.item(icon(block.icon()), left, y - 1);
             x += ICON + 6;
         }
+        if (block.bullet()) {
+            canvas.fill(x + 2, y + 3, x + 4, y + 5, INK);
+        }
+        x += block.indent();
         if (block.filing() != null) {
             hits.add(new Hit(x, y, textWidth, block.lines().size() * LINE, block.filing()));
         }

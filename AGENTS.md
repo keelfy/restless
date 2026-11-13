@@ -10,6 +10,8 @@
 - **Wiki**: keep the player wiki (`apps/frontend/content/{en,ru}`) current. Every code change that alters player-visible
   behavior (events, items, spirits, mechanics, numbers) updates the matching wiki pages in both languages, including
   counts in index pages, in the same change.
+- **Player text**: item tooltips and journal text follow the `player-text` skill (`.claude/skills/player-text`).
+  Never write them in the caveman register; tell subagents writing such text to use `player-text`, not `caveman`.
 - **Images**: image generation (item art, textures, icons) is delegated to the `chatgpt-6.1-sol` harness, never drawn
   by hand or by other tools.
 

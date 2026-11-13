@@ -18,6 +18,7 @@ import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.event.HauntEvent;
 import dev.keelfy.restless.haunt.event.HauntEvents;
+import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.sanity.Sanity;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
@@ -49,7 +50,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Debug/admin command: /haunt opens the debug screen; info|force (optionally after a delay in
- * seconds)|act|history|sanity|birth [structure]|spirit add|age|remove [player] work from chat.
+ * seconds)|act|history|sanity|journal|birth [structure]|spirit add|age|remove [player] work from chat.
  */
 public final class HauntCommand {
     private static final DynamicCommandExceptionType UNKNOWN_EVENT =
@@ -117,6 +118,10 @@ public final class HauntCommand {
                                 .executes(c -> sanity(c, c.getSource().getPlayerOrException()))
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(c -> sanity(c, EntityArgument.getPlayer(c, "player"))))))
+                .then(Commands.literal("journal")
+                        .executes(c -> journal(c.getSource(), c.getSource().getPlayerOrException()))
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(c -> journal(c.getSource(), EntityArgument.getPlayer(c, "player")))))
                 .then(Commands.literal("birth")
                         .then(Commands.literal("structure")
                                 .executes(c -> birthStructure(c, c.getSource().getPlayerOrException())))
@@ -330,6 +335,14 @@ public final class HauntCommand {
         }
         source.sendSuccess(() -> Component.literal(text.toString()), false);
         return entries.size();
+    }
+
+    private static int journal(CommandSourceStack source, ServerPlayer player) {
+        Journal.revealAll(player);
+        source.sendSuccess(
+                () -> Component.literal("Journal of " + player.getName().getString() + " filled with every entry"),
+                true);
+        return 1;
     }
 
     private static int birth(CommandContext<CommandSourceStack> c, ServerPlayer player) throws CommandSyntaxException {

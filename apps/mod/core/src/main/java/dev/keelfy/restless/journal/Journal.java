@@ -5,6 +5,8 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.journal.Notebook.Chapter;
 import dev.keelfy.restless.journal.Notebook.Kind;
 import dev.keelfy.restless.photo.Picture;
+import dev.keelfy.restless.spirit.SpiritType;
+import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.state.HauntData;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,6 +89,29 @@ public final class Journal {
         for (Chapter chapter : chapters(kind)) {
             unlock(player, chapter);
         }
+    }
+
+    /**
+     * Debug: opens every guide chapter and notes a photo of every spirit type, so the bestiary and the codex show all.
+     * Already held notes are kept, nothing is turned or announced.
+     */
+    public static void revealAll(ServerPlayer player) {
+        HauntData data = HauntData.get(player.level().getServer());
+        Notebook notebook = data.notebook(player.getUUID());
+        for (Chapter chapter : Chapter.values()) {
+            Notebook opened = notebook.opened(chapter);
+            notebook = opened != null ? opened : notebook;
+        }
+        for (SpiritType type : Spirits.all()) {
+            Notebook grown = notebook.with(new Notebook.Note(
+                    Kind.PHOTO,
+                    Optional.empty(),
+                    Optional.of(type.id()),
+                    List.of(Component.translatable("spirit.restless." + type.id()))));
+            notebook = grown != null ? grown : notebook;
+        }
+        data.putNotebook(player.getUUID(), notebook);
+        sync(player);
     }
 
     /** Pastes a developed photograph of a spirit into the player's notebook, in place of the last one. */
