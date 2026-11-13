@@ -15,6 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix3f;
 
 /**
  * Draws a journal view on the pages of the book in hand. Book pixels are laid over the item's face, the pose being the
@@ -26,6 +27,11 @@ final class HeldCanvas implements PageCanvas {
     private static final float PAPER = 0.0445f;
 
     private static final float GAP = 0.00012f;
+    /**
+     * How deep an item may be, as a share of its own size. A block's model is about as deep as it is wide, so at full
+     * depth its back half sinks through the slot and the paper drawn before it.
+     */
+    private static final float FLAT = 0.05f;
 
     private final PoseStack pose;
     private final SubmitNodeCollector collector;
@@ -77,6 +83,9 @@ final class HeldCanvas implements PageCanvas {
         begin(next());
         pose.translate(x + 8, y + 8, 0);
         pose.scale(16, -16, 1);
+        Matrix3f normal = new Matrix3f(pose.last().normal());
+        pose.scale(1, 1, FLAT);
+        pose.last().normal().set(normal);
         state.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, 0);
         pose.popPose();
     }
