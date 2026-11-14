@@ -42,5 +42,9 @@ Haunt sounds in `assets/restless/sounds/haunt` are CC0 recordings from [OpenGame
 | `laugh` | [Ghostly cackle laugh 1](https://opengameart.org/content/ghostly-cackle-laugh-1) | nocturnalvanguard (AuraVoice) |
 | `screech` | [Scary high pitched ghost](https://opengameart.org/content/scary-high-pitched-ghost) | fupi |
 | `whisper_*` | [Voices of Madness](https://opengameart.org/content/voices-of-madness) | eugeneloza |
+| `horn_*` | [War Horns](https://opengameart.org/node/153572) | Eldritch Grim |
+| `chair_creak_*` | [100 CC0 metal and wood SFX](https://opengameart.org/content/100-cc0-metal-and-wood-sfx) | rubberduck |
+| `claw_scratch_*` | [Scrapes](https://opengameart.org/content/scrapes) | AntumDeluge |
+| `rustle_*` | [Fabric Rustling](https://opengameart.org/content/fabric-rustling) | Iochi Glaucus |
 
 Spirit box voices in `assets/restless/sounds/spirit_box` are made by `apps/voice` with [Piper](https://github.com/OHF-Voice/piper1-gpl) voices `en_US-joe-medium` and `ru_RU-dmitri-medium`, both trained on CC0 recordings ([OHF-Voice/voice-datasets](https://github.com/OHF-Voice/voice-datasets)). Piper is GPL and only runs at build time; it is not in the mod.

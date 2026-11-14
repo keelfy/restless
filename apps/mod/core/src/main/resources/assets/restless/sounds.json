@@ -103,8 +103,10 @@
     "subtitle": "subtitles.restless.horn",
     "sounds": [
       {
-        "name": "minecraft:item.goat_horn.sound.2",
-        "type": "event"
+        "name": "restless:haunt/horn_1"
+      },
+      {
+        "name": "restless:haunt/horn_2"
       }
     ]
   },
@@ -130,8 +132,13 @@
     "subtitle": "subtitles.restless.claw_scratch",
     "sounds": [
       {
-        "name": "minecraft:item.axe.scrape",
-        "type": "event"
+        "name": "restless:haunt/claw_scratch_1"
+      },
+      {
+        "name": "restless:haunt/claw_scratch_2"
+      },
+      {
+        "name": "restless:haunt/claw_scratch_3"
       }
     ]
   },
@@ -139,8 +146,10 @@
     "subtitle": "subtitles.restless.chair_creak",
     "sounds": [
       {
-        "name": "minecraft:block.wooden_trapdoor.open",
-        "type": "event"
+        "name": "restless:haunt/chair_creak_1"
+      },
+      {
+        "name": "restless:haunt/chair_creak_2"
       }
     ]
   },
@@ -173,8 +182,13 @@
   "haunt.rustle": {
     "sounds": [
       {
-        "name": "minecraft:block.azalea_leaves.step",
-        "type": "event"
+        "name": "restless:haunt/rustle_1"
+      },
+      {
+        "name": "restless:haunt/rustle_2"
+      },
+      {
+        "name": "restless:haunt/rustle_3"
       }
     ]
   },

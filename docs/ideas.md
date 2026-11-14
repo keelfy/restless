@@ -3,6 +3,7 @@
 Backlog of ideas, added by hand. Move an idea out (or delete it) once it is implemented.
 
 
+- Development plan for the agent orchestrator (spirit model, rituals, mid game, sound, curation): [development-plan.md](development-plan.md).
 - 100 haunt event ideas: [event-ideas.md](event-ideas.md).
 - Roadmap past the event backlog (procedural spirits, clues, banishing, quests, spread, binding, the Other Side): [design.md](design.md).
 - Personal spirit births from the player's deeds (slaughter, death far from home, a pet's death and more): [births.md](births.md).
