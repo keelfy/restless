@@ -222,6 +222,7 @@ class ConfigTest {
         JsonObject grave = Config.defaults().getAsJsonObject("grave");
         literals.addAll(grave.getAsJsonObject("quests").keySet());
         literals.addAll(grave.getAsJsonObject("cause_quests").keySet());
+        literals.addAll(grave.getAsJsonObject("killer_mobs").keySet());
         for (String key : defined) {
             assertTrue(literals.contains(key), "default never read by code: " + key);
         }

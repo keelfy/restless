@@ -505,6 +505,18 @@
     "max_distance": 400,
     "essence": 2,
     "experience": 30,
+    "remains_min_distance": 50,
+    "remains_max_distance": 150,
+    "remains_hint_round": 10,
+    "remains_pace": 0.5,
+    "letter_radius": 4,
+    "killer_radius": 8,
+    "killer_default": "minecraft:zombie",
+    "killer_mobs": {
+      "was_shot_by_a_skeleton": "minecraft:skeleton",
+      "was_slain_by_a_zombie_horde": "minecraft:zombie",
+      "was_blown_up_by_a_creeper": "minecraft:creeper"
+    },
     "quests": {
       "item": 4,
       "remains": 2,

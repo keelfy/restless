@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -29,13 +30,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Unfinished business. Every spirit a player in the overworld can sense gets a grave somewhere around them, built when
@@ -69,8 +74,12 @@ public final class Graves {
                 data.putGrave(entry.getKey(), null); // banished or removed: the stone stays, quiet
             } else {
                 build(overworld, data, entry.getKey(), entry.getValue());
+                Optional.ofNullable(data.graves().get(entry.getKey()))
+                        .ifPresent(grave -> data.find(entry.getKey())
+                                .ifPresent(spirit -> Remains.tick(overworld, data, spirit, grave)));
             }
         }
+        Letter.tick(overworld, data);
     }
 
     private static BlockPos column(BlockPos from, Config.Section config, RandomSource random) {
@@ -139,7 +148,8 @@ public final class Graves {
         Quest quest = Quest.of(spirit.seed());
         boolean took = switch (quest) {
             case ITEM -> held.is(wanted(spirit.seed()));
-            case REMAINS, LETTER, KILLER, RIVAL -> false;
+            case REMAINS -> Remains.is(held, spirit.uuid());
+            case LETTER, KILLER, RIVAL -> false;
         };
         if (took || done(data, quest, grave)) {
             rest(player, pos, spirit, story);
@@ -148,7 +158,9 @@ public final class Graves {
         Component want = switch (quest) {
             case ITEM -> wanted(spirit.seed()).getDefaultInstance().getHoverName();
             case RIVAL -> Rival.read(player, data, spirit, grave);
-            case REMAINS, LETTER, KILLER -> Component.empty();
+            case REMAINS -> Remains.read(player, data, spirit, grave);
+            case LETTER -> Letter.read(player, data, spirit, grave);
+            case KILLER -> Killer.read(player, data, spirit, grave);
         };
         player.sendSystemMessage(Component.translatable(
                 quest == Quest.ITEM ? "message.restless.epitaph" : "message.restless.epitaph." + quest.id(),
@@ -166,6 +178,31 @@ public final class Graves {
                 pos.getZ(),
                 want);
         return false;
+    }
+
+    /** A named killer died, see {@link Killer}. */
+    public static void killed(@Nullable Entity killer, LivingEntity dead) {
+        if (dead.level() instanceof ServerLevel level) {
+            Killer.killed(HauntData.get(level.getServer()), killer, dead);
+        }
+    }
+
+    /** How fast the spirit acts for this player: faster while they carry its bones. */
+    public static double pace(ServerPlayer player, HauntData.Haunting spirit) {
+        return Remains.pace(player, spirit.uuid());
+    }
+
+    /** Marks a stack with the spirit it belongs to. */
+    static ItemStack tag(ItemStack stack, String key, UUID spirit) {
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.EMPTY.update(tag -> tag.putString(key, spirit.toString())));
+        return stack;
+    }
+
+    static boolean tagged(ItemStack stack, String key, UUID spirit) {
+        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+                .copyTag()
+                .getStringOr(key, "")
+                .equals(spirit.toString());
     }
 
     /** Whether the business is done and the next visit lays the spirit to rest. */

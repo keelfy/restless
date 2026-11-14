@@ -120,7 +120,7 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         /** The first photo, which names a type: natures, forms, the altar and the ritual. */
         WEAKNESS(5),
         /** The first grave or word of one: unfinished business. */
-        GRAVES(2),
+        GRAVES(3),
         /** The first time the edges darken. */
         SANITY(2),
         /** The first spirit that grew up. */

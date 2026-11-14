@@ -144,6 +144,7 @@ public final class Restless {
     public static void onKill(@Nullable Entity killer, LivingEntity dead) {
         Deeds.killed(killer, dead);
         Advanced.killed(killer, dead);
+        Graves.killed(killer, dead);
         if (dead instanceof ServerPlayer victim) {
             Bands.died(victim);
             DoubleEvent.dismiss(victim);

@@ -140,7 +140,7 @@ What to do with it:
 - A spirit has 1 to 4 habits, at most one of them foreign to its nature, and 1 or 2 conditions. Its nature is the one most of its habits point to; conditions never change it.
 - One note decides nothing. Gather several: true traits repeat, false ones are scattered over the rest.
 - Prints show the type of spirit, not its nature. Read the nature from habits before putting an offering on the [altar](#altar): the wrong nature is costly.
-- If the nature will not add up, there is another way: the [gravestone](#gravestone) names the thing the spirit wants back, and no guessing is needed.
+- If the nature will not add up, there is another way: the [gravestone](#gravestone) names the spirit's unfinished business, and no guessing is needed.
 
 ## Spirit Candle
 
@@ -217,7 +217,7 @@ Needs, when the offering goes down:
 Then it runs in waves of 5 seconds, through four phases:
 
 1. **The call**, 2 waves. The spirit comes in and does nothing yet.
-2. **The bargain**, 2 waves. The spirit names what it wants: the thing its [grave](#gravestone) asks for. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
+2. **The bargain**, 2 waves. The spirit names what it wants: the thing it lost, the one its [grave](#gravestone) asks for when its business is a lost thing. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
 3. **The fury**, 6 waves. A form the type does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
    - 25%: it snuffs one candle. Relight it before the next wave.
    - 50%: it runs one of its events on you.
@@ -281,9 +281,17 @@ Checked in this order, for each event about to run on you: salt ring, hallowed l
 
 ## Gravestone
 
-Not crafted. Every spirit you can sense gets a grave in the overworld, 100 to 400 blocks from you, built when its chunk first loads. Use the stone to read it: the name, days dead, the cause, and what the spirit **wants back**. Use it holding that item and the spirit is laid to rest: **2 essences** and 30 experience, no anger, and the spirit is gone. The item is spent. If someone else lays your personal spirit to rest, your journal notes it, even while you are away.
+Not crafted. Every spirit you can sense gets a grave in the overworld, 100 to 400 blocks from you, built when its chunk first loads. Use the stone to read it: the name, days dead, the cause, and the spirit's **unfinished business**. Settle the business and use the stone again: the spirit is laid to rest, **2 essences** and 30 experience, no anger, and the spirit is gone. If someone else lays your personal spirit to rest, your journal notes it, even while you are away. Breaking a gravestone angers your spirits (0.2).
 
-What a spirit wants is fixed for its life, and is one of: golden apple, diamond, compass, clock, name tag, jukebox, poppy, cake, iron pickaxe, lantern, emerald, spyglass. Breaking a gravestone angers your spirits (0.2).
+The business is fixed for the spirit's life. How it died decides it 6 times in 10 when the cause has a business of its own; otherwise it is drawn by weight (lost thing 4, bones 2, letter 2, killer 1, rival 1):
+
+| Business | What the stone asks | How it is settled | Causes that lean to it |
+|---|---|---|---|
+| **Lost thing** | an item it wants back: golden apple, diamond, compass, clock, name tag, jukebox, poppy, cake, iron pickaxe, lantern, emerald or spyglass | use the stone holding that item; it is spent | — |
+| **Bones** | its bones were never buried; the stone gives where they lie, rounded to 10 blocks | the bones (a named bone) lie on the ground 50 to 150 blocks from the grave once their chunk loads; bring them and use the stone holding them. While anyone carries them, that spirit acts **twice as often** | starved in a deep mine, drowned in a flooded cave, suffocated in a collapsed tunnel |
+| **Letter** | a last letter for a descendant, given to the reader (a lost one is given again on the next reading) | carry the letter within 4 blocks of any villager, then use the stone | lost in the Nether, never found the way back to bed |
+| **Killer** | the mob that killed it stands within 8 blocks of the grave, named | kill it yourself, then use the stone. If it dies any other way (sun, lava) or is gone, the next reading calls it up again | shot by a skeleton (a skeleton), slain by a zombie horde (a zombie), blown up by a creeper (a creeper); otherwise a zombie |
+| **Rival** | another of the owner's spirits killed it; the stone names it | that spirit must be gone (banished, laid to rest); with no other spirit, the killer is already gone | pushed off by a friend |
 
 ## Torn Page
 

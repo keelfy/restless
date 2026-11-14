@@ -25,6 +25,9 @@ public enum Quest {
     // Keeps the quest roll apart from the story and the wanted item, which use the same seed.
     private static final long SALT = 0x9E57L;
 
+    // Keeps the bones spot apart from the other rolls on the same seed.
+    private static final long BONES_SALT = 0xB04E5L;
+
     public String id() {
         return name().toLowerCase(Locale.ROOT);
     }
@@ -51,5 +54,16 @@ public enum Quest {
             }
         }
         return ITEM;
+    }
+
+    /** The turn from the grave to the bones, as x and z. */
+    @SuppressWarnings("java:S2245") // Seeded so the spot is reproducible; not security-sensitive.
+    static int[] bonesOffset(long seed, int graveX, int graveZ) {
+        Config.Section config = Config.section("grave");
+        Random random = new Random(seed ^ BONES_SALT ^ (graveX * 31L + graveZ));
+        double angle = random.nextDouble() * Math.PI * 2;
+        double min = config.num("remains_min_distance");
+        double distance = min + random.nextDouble() * (config.num("remains_max_distance") - min);
+        return new int[] {(int) Math.round(Math.cos(angle) * distance), (int) Math.round(Math.sin(angle) * distance)};
     }
 }
