@@ -3024,6 +3024,10 @@
     "minecraft:hide": {
       "name": "Hide",
       "description": "The action bar says \"Hide\" and a heartbeat sounds for ten seconds. Move, and something is at the player's face and hurts them, though it never leaves them at the safe floor. Keep still, and heavy steps pass outside."
+    },
+    "restless:tell_cold_touch": {
+      "name": "Frosted Breath",
+      "description": "Only a spirit with the cold touch habit: the player's breath frosts in front of their face, with a soft crunch of snow. The journal notes it."
     }
   }
 }

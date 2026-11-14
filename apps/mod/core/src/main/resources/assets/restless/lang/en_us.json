@@ -817,6 +817,8 @@
   "message.restless.bell_rung": "The bell rings, and the dead remember you.",
   "message.restless.requiem_laid": "%s, a %s, is laid to rest.",
   "journal.restless.note.laid": "%s, a %s, was laid to rest at the Requiem.",
+  "journal.restless.note.tell": "Seen: %s.",
+  "journal.restless.tell.cold_touch": "breath that turned to frost on a warm day",
   "message.restless.requiem_not_full": "The reliquary is not full: it needs one essence of every kind.",
   "message.restless.requiem_released": "You are already let go. Ring the bell if you want to go back.",
   "message.restless.requiem_wary": "The dead are still angry about the last Requiem. The altar will not answer yet.",

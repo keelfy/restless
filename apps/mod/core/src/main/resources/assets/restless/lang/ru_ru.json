@@ -817,6 +817,8 @@
   "message.restless.bell_rung": "Колокол звонит, и мёртвые вспоминают тебя.",
   "message.restless.requiem_laid": "%s (%s) упокоен.",
   "journal.restless.note.laid": "%s (%s) упокоен на Реквиеме.",
+  "journal.restless.note.tell": "Замечено: %s.",
+  "journal.restless.tell.cold_touch": "дыхание, застывшее инеем в тёплый день",
   "message.restless.requiem_not_full": "Реликварий не полон: нужна эссенция каждого вида.",
   "message.restless.requiem_released": "Ты уже отпущен. Позвони в колокол, если хочешь вернуться.",
   "message.restless.requiem_wary": "Мёртвые всё ещё гневаются за прошлый Реквием. Алтарь пока не откликнется.",

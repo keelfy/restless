@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "events": {
+    "restless:tell_cold_touch": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "cold_touch",
+      "sound": {
+        "volume": 0.6,
+        "pitch": 0.6
+      }
+    }
+  }
+}

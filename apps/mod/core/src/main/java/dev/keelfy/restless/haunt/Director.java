@@ -488,7 +488,7 @@ public final class Director {
      */
     private static double weight(
             HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power, boolean evolved) {
-        return ready
+        return ready && (event.habit() == null || traits.stream().anyMatch(t -> t.id().equals(event.habit())))
                 ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power)
                         * Rarity.boost(event.id().toString())
                         * event.signature(spirit, evolved)
