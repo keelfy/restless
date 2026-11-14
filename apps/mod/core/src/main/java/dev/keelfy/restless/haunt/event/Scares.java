@@ -28,6 +28,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -176,7 +177,13 @@ public final class Scares {
         if (spot != null) {
             MARKS.remove(player.getUUID());
             Director.landed(player, "eating", mark.spirit);
-            flash(player, Vec3.atBottomCenterOf(spot), -1, config.tone("sound"), config.integer("hold_ticks"));
+            flash(
+                    player,
+                    Vec3.atBottomCenterOf(spot),
+                    -1,
+                    HauntSounds.byId(config.text("sound_id")),
+                    config.tone("sound"),
+                    config.integer("hold_ticks"));
         }
     }
 
@@ -200,7 +207,7 @@ public final class Scares {
                     Place.standingAhead(p, config.num("distance"), config.num("min_angle"), config.num("max_angle"));
             if (spot != null) {
                 Director.landed(p, "first_light", mark.spirit);
-                flash(p, Vec3.atBottomCenterOf(spot), -1, null, config.integer("hold_ticks"));
+                flash(p, Vec3.atBottomCenterOf(spot), -1, null, null, config.integer("hold_ticks"));
             }
         });
     }
@@ -208,10 +215,10 @@ public final class Scares {
     // ---- scares ----
 
     /** The figure at {@code at} facing the player, with a bang if given, for {@code hold} ticks; -1 picks any shape. */
-    private static void flash(ServerPlayer player, Vec3 at, int shape, Config.@Nullable Tone bang, int hold) {
+    private static void flash(
+            ServerPlayer player, Vec3 at, int shape, @Nullable SoundEvent sound, Config.@Nullable Tone bang, int hold) {
         if (bang != null) {
-            Nearby.sound(
-                    player, HauntSounds.JOLT, at.add(0, Config.section("place").num("sound_height"), 0), bang);
+            Nearby.sound(player, sound, at.add(0, Config.section("place").num("sound_height"), 0), bang);
         }
         PacketEntity figure =
                 PacketEntity.show(player, Content.SILHOUETTE.get(), at, PacketEntity.yawToward(at, player.position()));
@@ -243,7 +250,13 @@ public final class Scares {
         Scheduler.later(player, 1, p -> {
             Swaps.show(p, List.of(behind, deep), Blocks.AIR.defaultBlockState(), hold + 2);
             Director.landed(p, "mined_face", spirit);
-            flash(p, Vec3.atBottomCenterOf(behind), SilhouetteRenderer.FACE, config.tone("sound"), hold);
+            flash(
+                    p,
+                    Vec3.atBottomCenterOf(behind),
+                    SilhouetteRenderer.FACE,
+                    HauntSounds.byId(config.text("sound_id")),
+                    config.tone("sound"),
+                    hold);
         });
         return true;
     }
@@ -273,7 +286,13 @@ public final class Scares {
         Scheduler.later(player, 1, p -> {
             Swaps.show(p, hollow, Blocks.AIR.defaultBlockState(), hold + 2);
             Director.landed(p, "dig_down", spirit);
-            flash(p, Vec3.atBottomCenterOf(pit), SilhouetteRenderer.LYING, config.tone("sound"), hold);
+            flash(
+                    p,
+                    Vec3.atBottomCenterOf(pit),
+                    SilhouetteRenderer.LYING,
+                    HauntSounds.byId(config.text("sound_id")),
+                    config.tone("sound"),
+                    hold);
         });
         return true;
     }
@@ -339,7 +358,13 @@ public final class Scares {
             }
             if (spot != null) {
                 Director.landed(p, "container_close", spirit);
-                flash(p, Vec3.atBottomCenterOf(spot), -1, config.tone("sound"), config.integer("hold_ticks"));
+                flash(
+                        p,
+                        Vec3.atBottomCenterOf(spot),
+                        -1,
+                        HauntSounds.byId(config.text("sound_id")),
+                        config.tone("sound"),
+                        config.integer("hold_ticks"));
             }
             return false;
         });
@@ -417,7 +442,13 @@ public final class Scares {
                 BlockPos spot = Place.standingAt(p, config.num("distance"), -side * config.num("angle"));
                 if (spot != null) {
                     Director.landed(p, "name_left_right", spirit);
-                    flash(p, Vec3.atBottomCenterOf(spot), -1, config.tone("bang"), config.integer("hold_ticks"));
+                    flash(
+                            p,
+                            Vec3.atBottomCenterOf(spot),
+                            -1,
+                            HauntSounds.byId(config.text("bang_id")),
+                            config.tone("bang"),
+                            config.integer("hold_ticks"));
                 }
                 return false;
             }
@@ -481,7 +512,7 @@ public final class Scares {
                 .normalize();
         Vec3 at = Vec3.atBottomCenterOf(pos).add(away.scale(0.6));
         Director.landed(player, "door_slam_face", spirit);
-        flash(player, at, -1, config.tone("sound"), hold);
+        flash(player, at, -1, HauntSounds.byId(config.text("sound_id")), config.tone("sound"), hold);
         return true;
     }
 
@@ -530,7 +561,11 @@ public final class Scares {
             if (p.level() == level && n <= lunge) {
                 figure.move(p, home.lerp(face, (double) n / lunge), PacketEntity.yawToward(face, p.position()));
                 if (n == lunge) {
-                    Nearby.sound(p, HauntSounds.JOLT, face.add(0, p.getEyeHeight(), 0), config.tone("sound"));
+                    Nearby.sound(
+                            p,
+                            HauntSounds.byId(config.text("sound_id")),
+                            face.add(0, p.getEyeHeight(), 0),
+                            config.tone("sound"));
                     float damage = Math.min(config.integer("damage"), Assaults.room(p, Band.THREAT));
                     if (damage > 0) {
                         p.hurtServer(level, Taken.by(level, Taken.TAKEN), damage);

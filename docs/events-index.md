@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 652 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 654 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -34,11 +34,11 @@ use `restless:<id>`. Grep both `"<id>"` and `"restless:<id>"`.
 
 `[wiki tag]` is the wiki page the event is listed on.
 
-### `event/Sounds.java` (67)
+### `event/Sounds.java` (69)
 
 Sounds with no source; never touch the world. [sound]
 
-`footsteps`, `creeper_hiss`, `three_knocks`, `crying_child`, `block_breaking`, `eating_behind_wall`, `enderman_hiss`, `chest_opens`, `breathing`, `distant_bell`, `phantom_jukebox`, `music_cut`, `whisper`, `echo`, `death_cry`, `dripping`, `distant_mob`, `hostile_animal`, `approaching_steps`, `distant_mining`, `many_breaks`, `ladder_steps`, `spider_overhead`, `cracking_floor`, `bottle_shatter`, `shrieker`, `fake_subtitle`, `phantom_heartbeat`, `note_block_voice`, `ghost_laugh`, `ghost_breath`, `close_whispers`, `circling_moan`, `cut_off_scream`, `long_scream`, `banshee`, `distant_warden`, `sky_dragon`, `distant_wither`, `end_portal_open`, `sky_ghast`, `fox_screech`, `rabbit_death`, `phantom_hurt`, `phantom_tool_break`, `elytra_overhead`, `nether_ambience`, `equip_behind`, `phantom_fishing`, `zombie_at_door`, `phantom_anchor`, `bucket_spill`, `lost_villager`, `phantom_arrow`, `phantom_glass`, `pen_cries`, `sniffing_behind`, `distant_goat_horn`, `false_raid_horn`, `heavy_splash`, `distant_ravager`, `golem_circling`, `burp_behind`, `bubble_columns`, `lava_pops`, `chain_rattle`, `phantom_break`
+`footsteps`, `creeper_hiss`, `three_knocks`, `crying_child`, `block_breaking`, `eating_behind_wall`, `enderman_hiss`, `chest_opens`, `breathing`, `distant_bell`, `phantom_jukebox`, `music_cut`, `whisper`, `echo`, `death_cry`, `dripping`, `distant_mob`, `hostile_animal`, `approaching_steps`, `distant_mining`, `many_breaks`, `ladder_steps`, `spider_overhead`, `cracking_floor`, `bottle_shatter`, `shrieker`, `fake_subtitle`, `phantom_heartbeat`, `note_block_voice`, `ghost_laugh`, `ghost_breath`, `close_whispers`, `circling_moan`, `cut_off_scream`, `long_scream`, `banshee`, `distant_warden`, `sky_dragon`, `distant_wither`, `end_portal_open`, `sky_ghast`, `fox_screech`, `rabbit_death`, `phantom_hurt`, `phantom_tool_break`, `elytra_overhead`, `nether_ambience`, `equip_behind`, `phantom_fishing`, `zombie_at_door`, `phantom_anchor`, `bucket_spill`, `lost_villager`, `phantom_arrow`, `phantom_glass`, `pen_cries`, `sniffing_behind`, `distant_goat_horn`, `false_raid_horn`, `heavy_splash`, `distant_ravager`, `golem_circling`, `burp_behind`, `bubble_columns`, `lava_pops`, `chain_rattle`, `phantom_break`, `dragged_chains`, `creature_rattle`
 
 ### `event/MobEvents.java` (36)
 

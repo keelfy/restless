@@ -14,7 +14,8 @@
       "sound": {
         "volume": 2.0,
         "pitch": 1.0
-      }
+      },
+      "sound_id": "restless:haunt.jolt"
     },
     "minecraft:jolt_side": {
       "weight": 0.1,
@@ -29,7 +30,8 @@
       "sound": {
         "volume": 2.0,
         "pitch": 1.0
-      }
+      },
+      "sound_id": "restless:haunt.jolt"
     },
     "minecraft:jolt_dark": {
       "weight": 0.08,
@@ -45,7 +47,8 @@
       "sound": {
         "volume": 2.0,
         "pitch": 1.0
-      }
+      },
+      "sound_id": "restless:haunt.sting_blast"
     },
     "minecraft:jolt_lunge": {
       "weight": 0.07,
@@ -67,7 +70,8 @@
       "bang": {
         "volume": 2.0,
         "pitch": 1.0
-      }
+      },
+      "bang_id": "restless:haunt.sting_roar"
     }
   }
 }

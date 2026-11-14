@@ -11,6 +11,7 @@ import dev.keelfy.restless.content.item.Essences;
 import dev.keelfy.restless.content.item.Reliquary;
 import dev.keelfy.restless.content.item.RequiemBell;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scan;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.Milestones;
@@ -114,6 +115,8 @@ public final class Requiem {
         Rite rite = new Rite(player, level, altar, ticks, held.held(), candles.subList(0, config.integer("candles")));
         RITES.put(player.getUUID(), rite);
         level.playSound(null, altar, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0f, 0.5f);
+        Config.Tone sting = config.tone("begin_sound");
+        level.playSound(null, altar, HauntSounds.REQUIEM, SoundSource.HOSTILE, sting.volume(), sting.pitch());
         player.sendSystemMessage(Component.translatable("message.restless.requiem_begins"));
         return true;
     }
@@ -405,6 +408,8 @@ public final class Requiem {
                 BlockPos.containing(
                         player.getX() + Math.cos(angle) * 3, player.getY(), player.getZ() + Math.sin(angle) * 3));
         level.setBlock(stone, Content.GRAVESTONE.get().defaultBlockState(), 3);
+        Config.Tone rest = Config.section("requiem").tone("rest_sound");
+        level.playSound(null, stone, HauntSounds.LAID_TO_REST, SoundSource.HOSTILE, rest.volume(), rest.pitch());
         Direction toward = Direction.getApproximateNearest(
                 player.getX() - stone.getX() - 0.5, 0, player.getZ() - stone.getZ() - 0.5);
         BlockPos signPos = surface(level, stone.relative(toward));

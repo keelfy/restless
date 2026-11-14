@@ -1,6 +1,7 @@
 package dev.keelfy.restless.spirit.life;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.spirit.Story;
@@ -10,7 +11,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
 /**
@@ -52,8 +52,15 @@ public final class Evolution {
     private static void tell(ServerPlayer player, HauntData.Haunting spirit) {
         Component was = Component.translatable("spirit.restless." + spirit.spirit());
         Component now = Component.translatable("spirit.restless." + spirit.spirit() + "_evolved");
+        Config.Tone sound = Config.section("evolution").tone("sound");
         player.level()
-                .playSound(null, player.blockPosition(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.HOSTILE, 1.0f, 0.6f);
+                .playSound(
+                        null,
+                        player.blockPosition(),
+                        HauntSounds.EVOLVE,
+                        SoundSource.HOSTILE,
+                        sound.volume(),
+                        sound.pitch());
         boolean known = HauntData.get(player.level().getServer())
                 .notebook(player.getUUID())
                 .photographed(spirit.uuid());

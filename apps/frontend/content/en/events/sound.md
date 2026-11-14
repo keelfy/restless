@@ -4,7 +4,7 @@ title: Sound
 
 # Sound
 
-83 events.
+85 events.
 
 ## `footsteps`
 
@@ -414,6 +414,18 @@ Runs when: Always
 The player is marked; the next block they break plays its break sound a second time 0.4 s later, 5 blocks away. The mark lapses after 1 min. Heard through the loader's block break hook, `Restless.onBreakBlock`
 
 Runs when: The player is not marked already
+
+## `dragged_chains`
+
+A chain rattle recording (`haunt.chain_rattle`, three cuts) 10 blocks away, out of sight
+
+Runs when: Always
+
+## `creature_rattle`
+
+A dry creature rattle recording (`haunt.creature_rattle`, three cuts) 8 blocks away, from no creature
+
+Runs when: Always
 
 ## `dead_silence`
 

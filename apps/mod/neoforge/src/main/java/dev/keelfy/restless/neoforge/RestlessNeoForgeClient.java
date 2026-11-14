@@ -29,6 +29,7 @@ import dev.keelfy.restless.haunt.effect.client.ScreenOverlay;
 import dev.keelfy.restless.photo.Picture;
 import dev.keelfy.restless.photo.client.Darkroom;
 import dev.keelfy.restless.photo.client.PhotoTooltip;
+import dev.keelfy.restless.sanity.client.SanityBed;
 import dev.keelfy.restless.sanity.client.SanityOverlay;
 import java.util.List;
 import net.minecraft.client.color.block.BlockTintSources;
@@ -66,6 +67,7 @@ public final class RestlessNeoForgeClient {
     @SubscribeEvent
     public static void tick(ClientTickEvent.Post event) {
         SpiritBoxVoice.tick();
+        SanityBed.tick();
     }
 
     @SubscribeEvent

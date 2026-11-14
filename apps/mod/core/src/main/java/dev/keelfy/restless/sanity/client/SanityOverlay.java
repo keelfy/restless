@@ -19,6 +19,10 @@ public final class SanityOverlay {
         sanity = value;
     }
 
+    public static float value() {
+        return sanity;
+    }
+
     /** Draws as a HUD layer: smooth fade, see EdgeFade. */
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
         Config.Section config = Config.section("sanity");

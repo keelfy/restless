@@ -58,4 +58,12 @@ Haunt sounds in `assets/restless/sounds/haunt` are CC0 recordings from [OpenGame
 | `claw_scratch_*` | [Scrapes](https://opengameart.org/content/scrapes) | AntumDeluge |
 | `rustle_*` | [Fabric Rustling](https://opengameart.org/content/fabric-rustling) | Iochi Glaucus |
 
+These haunt sounds are cut from a royalty-free pack supplied by the owner (sources to be listed by the owner), trimmed,
+levelled and re-encoded by `apps/voice/haunt_pack.py`: `jolt_*`, `sting_roar_*`, `sting_scream_*`, `sting_violin_*`,
+`sting_bass_*`, `sting_blast_*`, `blight_bed`, `sanity_bed`, `ritual_fury`, `evolve`, `offering_refused`,
+`ritual_leaving`, `requiem`, `laid_to_rest`, `heartbeat_*`, `chain_rattle_*`, `creature_rattle_*`, `laugh_2`,
+`screech_2`.
+
+`music_box_note` and `mirror_ring_*` are generated (additive synthesis in `apps/voice/haunt_pack.py`), not recorded.
+
 Spirit box voices in `assets/restless/sounds/spirit_box` are made by `apps/voice` with [Piper](https://github.com/OHF-Voice/piper1-gpl) voices `en_US-joe-medium` and `ru_RU-dmitri-medium`, both trained on CC0 recordings ([OHF-Voice/voice-datasets](https://github.com/OHF-Voice/voice-datasets)). Piper is GPL and only runs at build time; it is not in the mod.

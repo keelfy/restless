@@ -71,6 +71,9 @@
     "sounds": [
       {
         "name": "restless:haunt/laugh"
+      },
+      {
+        "name": "restless:haunt/laugh_2"
       }
     ]
   },
@@ -87,6 +90,9 @@
     "sounds": [
       {
         "name": "restless:haunt/screech"
+      },
+      {
+        "name": "restless:haunt/screech_2"
       }
     ]
   },
@@ -114,8 +120,7 @@
     "subtitle": "subtitles.restless.music_box",
     "sounds": [
       {
-        "name": "minecraft:block.note_block.chime",
-        "type": "event"
+        "name": "restless:haunt/music_box_note"
       }
     ]
   },
@@ -157,8 +162,10 @@
     "subtitle": "subtitles.restless.mirror_ring",
     "sounds": [
       {
-        "name": "minecraft:block.amethyst_block.chime",
-        "type": "event"
+        "name": "restless:haunt/mirror_ring_1"
+      },
+      {
+        "name": "restless:haunt/mirror_ring_2"
       }
     ]
   },
@@ -174,8 +181,13 @@
   "haunt.jolt": {
     "sounds": [
       {
-        "name": "minecraft:block.anvil.land",
-        "type": "event"
+        "name": "restless:haunt/jolt_1"
+      },
+      {
+        "name": "restless:haunt/jolt_2"
+      },
+      {
+        "name": "restless:haunt/jolt_3"
       }
     ]
   },
@@ -189,6 +201,179 @@
       },
       {
         "name": "restless:haunt/rustle_3"
+      }
+    ]
+  },
+  "haunt.sting_roar": {
+    "subtitle": "subtitles.restless.sting_roar",
+    "sounds": [
+      {
+        "name": "restless:haunt/sting_roar_1"
+      },
+      {
+        "name": "restless:haunt/sting_roar_2"
+      },
+      {
+        "name": "restless:haunt/sting_roar_3"
+      }
+    ]
+  },
+  "haunt.sting_scream": {
+    "subtitle": "subtitles.restless.sting_scream",
+    "sounds": [
+      {
+        "name": "restless:haunt/sting_scream_1"
+      },
+      {
+        "name": "restless:haunt/sting_scream_2"
+      },
+      {
+        "name": "restless:haunt/sting_scream_3"
+      }
+    ]
+  },
+  "haunt.sting_violin": {
+    "subtitle": "subtitles.restless.sting_violin",
+    "sounds": [
+      {
+        "name": "restless:haunt/sting_violin_1"
+      },
+      {
+        "name": "restless:haunt/sting_violin_2"
+      },
+      {
+        "name": "restless:haunt/sting_violin_3"
+      }
+    ]
+  },
+  "haunt.sting_bass": {
+    "subtitle": "subtitles.restless.sting_bass",
+    "sounds": [
+      {
+        "name": "restless:haunt/sting_bass_1"
+      },
+      {
+        "name": "restless:haunt/sting_bass_2"
+      },
+      {
+        "name": "restless:haunt/sting_bass_3"
+      }
+    ]
+  },
+  "haunt.sting_blast": {
+    "subtitle": "subtitles.restless.sting_blast",
+    "sounds": [
+      {
+        "name": "restless:haunt/sting_blast_1"
+      },
+      {
+        "name": "restless:haunt/sting_blast_2"
+      },
+      {
+        "name": "restless:haunt/sting_blast_3"
+      }
+    ]
+  },
+  "haunt.blight_bed": {
+    "sounds": [
+      {
+        "name": "restless:haunt/blight_bed",
+        "stream": true
+      }
+    ]
+  },
+  "haunt.sanity_bed": {
+    "sounds": [
+      {
+        "name": "restless:haunt/sanity_bed",
+        "stream": true
+      }
+    ]
+  },
+  "haunt.ritual_fury": {
+    "sounds": [
+      {
+        "name": "restless:haunt/ritual_fury",
+        "stream": true
+      }
+    ]
+  },
+  "haunt.evolve": {
+    "subtitle": "subtitles.restless.evolve",
+    "sounds": [
+      {
+        "name": "restless:haunt/evolve"
+      }
+    ]
+  },
+  "haunt.offering_refused": {
+    "subtitle": "subtitles.restless.offering_refused",
+    "sounds": [
+      {
+        "name": "restless:haunt/offering_refused"
+      }
+    ]
+  },
+  "haunt.ritual_leaving": {
+    "subtitle": "subtitles.restless.ritual_leaving",
+    "sounds": [
+      {
+        "name": "restless:haunt/ritual_leaving"
+      }
+    ]
+  },
+  "haunt.laid_to_rest": {
+    "subtitle": "subtitles.restless.laid_to_rest",
+    "sounds": [
+      {
+        "name": "restless:haunt/laid_to_rest"
+      }
+    ]
+  },
+  "haunt.requiem": {
+    "subtitle": "subtitles.restless.requiem",
+    "sounds": [
+      {
+        "name": "restless:haunt/requiem"
+      }
+    ]
+  },
+  "haunt.heartbeat": {
+    "subtitle": "subtitles.restless.heartbeat",
+    "sounds": [
+      {
+        "name": "restless:haunt/heartbeat_1"
+      },
+      {
+        "name": "restless:haunt/heartbeat_2"
+      }
+    ]
+  },
+  "haunt.chain_rattle": {
+    "subtitle": "subtitles.restless.chain_rattle",
+    "sounds": [
+      {
+        "name": "restless:haunt/chain_rattle_1"
+      },
+      {
+        "name": "restless:haunt/chain_rattle_2"
+      },
+      {
+        "name": "restless:haunt/chain_rattle_3"
+      }
+    ]
+  },
+  "haunt.creature_rattle": {
+    "subtitle": "subtitles.restless.creature_rattle",
+    "sounds": [
+      {
+        "name": "restless:haunt/creature_rattle_1"
+      },
+      {
+        "name": "restless:haunt/creature_rattle_2"
+      },
+      {
+        "name": "restless:haunt/creature_rattle_3"
       }
     ]
   },
