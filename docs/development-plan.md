@@ -356,6 +356,11 @@ Players see natures by name: objects, darkness, malice, deceit.
 - **Done when:** a GameTest from the stuffed effigy to the bound spirit, or a note in this file that it is already
   built.
 - **Size:** S.
+- **Status (2026-11-14): already built.** `content/block/Effigy` calls `Births.lure` when a stuffed effigy burns down:
+  a personal essence binds that type to the nearest player within `effigy.radius` (or feeds the one they have), a
+  territorial essence anchors a spirit where the effigy stood. Proved by `economy_effigy_calls_personal`,
+  `economy_effigy_respects_the_cap`, `economy_effigy_anchors_territorial` and `economy_effigy_covers_every_essence` in
+  `EconomyGameTests`.
 
 ### M4. A haunted thing
 
