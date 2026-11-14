@@ -113,32 +113,32 @@ Place it flat on the floor. Use it: after 1 second the planchette spells a phras
 
 ## Reading the Clues
 
-Every ouija and spirit box clue belongs to one trait, and every trait has a nature. The nature can be told from what the clue means. A board phrase is a riddle; the table gives what each can mean. Objects: it touches things. Darkness: it reaches for the dark, cold and night. Malice: it takes revenge, comes with the rain and calls from the deep. Deceit: it plays with your head, whispers, makes noise, steals sleep, lies. The full list:
+Every ouija and spirit box clue belongs to one trait. Traits are of two kinds. A **habit** is what the spirit does, and it has a nature. A **condition** is when the spirit acts or what it reacts to, and it says nothing about the nature. A board phrase is a riddle; the table gives what each can mean. Objects: it touches things and slams doors. Darkness: it feeds on light and chills the air. Malice: it takes revenge. Deceit: it whispers and lies. Rain, night, dark, noise, chests, sleep, the deep and grudges point to no nature. The full list:
 
 | Nature | Meaning | Ouija phrases | Spirit box words |
 | --- | --- | --- | --- |
 | Objects | It reaches for things left lying around | `do not drop it`, `hands`, `i will take it`, `lying unwatched`, `what is left is mine` | `fingers`, `mine`, `take` |
 | Objects | It slams doors | `shut it`, `slam`, `get out`, `creak and crash`, `the door is closed` | `leave`, `shut`, `slam` |
 | Objects | It meddles with the world around you | `i will move it`, `rearrange`, `not there`, `nothing is in its place`, `i will touch` | `move`, `change`, `mine` |
-| Objects | It guards what is in chests | `open it`, `lid`, `not yours`, `i guard`, `what lies inside` | `open`, `mine`, `lid` |
+| — | It guards what is in chests | `open it`, `lid`, `not yours`, `i guard`, `what lies inside` | `open`, `mine`, `lid` |
 | Darkness | It feeds on light | `put it out`, `hungry... light`, `darker`, `light tastes good`, `snuff the flame` | `dark`, `hungry`, `out` |
 | Darkness | It chills the air around you | `cold`, `your breath shows`, `frost`, `you will freeze`, `the air grows cold` | `cold`, `chill`, `frost` |
-| Darkness | It stalks at night | `behind you`, `at night`, `i follow`, `do not turn around`, `watching` | `behind`, `night`, `follow` |
-| Darkness | It lives in the dark | `below`, `black`, `deep`, `darkness is home`, `hiding` | `below`, `black`, `deep` |
+| — | It stalks at night | `behind you`, `at night`, `i follow`, `do not turn around`, `watching` | `behind`, `night`, `follow` |
+| — | It lives in the dark | `below`, `black`, `deep`, `darkness is home`, `hiding` | `below`, `black`, `deep` |
 | Malice | It wants revenge | `you will pay`, `blood for blood`, `you`, `revenge`, `debt` | `pay`, `blood`, `you` |
-| Malice | It walks in the rain | `wet`, `drip drip`, `the storm comes`, `steps in puddles`, `the sky weeps` | `wet`, `drip`, `storm` |
-| Malice | It calls from below | `down`, `come here`, `under the earth`, `calling`, `dig` | `down`, `come`, `under` |
-| Malice | It holds a grudge | `i remember`, `why`, `you killed`, `never forgiven`, `old grudge` | `remember`, `kill`, `why` |
+| — | It walks in the rain | `wet`, `drip drip`, `the storm comes`, `steps in puddles`, `the sky weeps` | `wet`, `drip`, `storm` |
+| — | It calls from below | `down`, `come here`, `under the earth`, `calling`, `dig` | `down`, `come`, `under` |
+| — | It holds a grudge | `i remember`, `why`, `you killed`, `never forgiven`, `old grudge` | `remember`, `kill`, `why` |
 | Deceit | It whispers | `listen`, `come closer`, `hush`, `in your ear`, `a secret` | `listen`, `closer`, `hush` |
-| Deceit | It feeds on noise | `loud`, `louder`, `noise`, `make more noise`, `silence starves` | `loud`, `louder`, `noise` |
-| Deceit | It steals your sleep | `wake up`, `dream`, `bed`, `do not sleep`, `your sleep is mine` | `wake`, `dream`, `bed` |
+| — | It feeds on noise | `loud`, `louder`, `noise`, `make more noise`, `silence starves` | `loud`, `louder`, `noise` |
+| — | It steals your sleep | `wake up`, `dream`, `bed`, `do not sleep`, `your sleep is mine` | `wake`, `dream`, `bed` |
 | Deceit | It lies | `yes`, `no`, `maybe`, `it is true`, `do not believe` | `yes`, `no`, `maybe` |
 
 What to do with it:
 
-- A spirit has 3 to 5 traits, and exactly one is foreign to its nature. Its nature is the one most of its traits point to.
+- A spirit has 1 to 4 habits, at most one of them foreign to its nature, and 1 or 2 conditions. Its nature is the one most of its habits point to; conditions never change it.
 - One note decides nothing. Gather several: true traits repeat, false ones are scattered over the rest.
-- Ash never lies. Confirm the nature with prints before putting an offering on the [altar](#altar): the wrong nature is costly.
+- Prints show the type of spirit, not its nature. Read the nature from habits before putting an offering on the [altar](#altar): the wrong nature is costly.
 - If the nature will not add up, there is another way: the [gravestone](#gravestone) names the thing the spirit wants back, and no guessing is needed.
 
 ## Spirit Candle

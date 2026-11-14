@@ -71,4 +71,4 @@ A territorial spirit slowly fouls the land around its anchor: grass turns to coa
 
 ## Traits
 
-Each spirit has a name, a story and **3 to 5 traits**, rolled when it is born. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
+Each spirit has a name, a story and **1 to 4 habits and 1 or 2 conditions**, rolled when it is born. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
