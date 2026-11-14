@@ -38,6 +38,9 @@ public final class Circle {
     private int wave;
     private Phase phase;
     private boolean over;
+    /** The spirit's name was said: it works once a ritual, see {@link Name}. */
+    boolean named;
+
     private final Gaze gaze = new Gaze(this);
     final Ring ring = new Ring(this);
 
@@ -65,6 +68,14 @@ public final class Circle {
     public static Optional<Circle> at(BlockPos altar) {
         Circle circle = RUNNING.get(altar);
         return circle == null || circle.over || circle.player.isRemoved() ? Optional.empty() : Optional.of(circle);
+    }
+
+    /** The ritual this player holds, if any. */
+    public static Optional<Circle> of(ServerPlayer player) {
+        return RUNNING.values().stream()
+                .filter(circle -> circle.player == player)
+                .findFirst()
+                .flatMap(circle -> at(circle.altar));
     }
 
     public ServerPlayer player() {
@@ -177,6 +188,20 @@ public final class Circle {
             case BARGAIN -> Bargain.enter(this);
             case FURY -> Fury.enter(this);
             case LEAVING -> Leaving.enter(this);
+        }
+    }
+
+    /** Ends the ritual now, banishing the spirit if the circle holds and failing it if not. */
+    void release() {
+        if (over) {
+            return;
+        }
+        boolean holds = holds();
+        end();
+        if (holds) {
+            Ritual.banish(player, level, altar, spirit, censer);
+        } else {
+            Ritual.fail(player, level, altar, spirit);
         }
     }
 

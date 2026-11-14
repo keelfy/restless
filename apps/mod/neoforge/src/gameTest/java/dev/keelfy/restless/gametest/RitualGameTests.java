@@ -1,5 +1,6 @@
 package dev.keelfy.restless.gametest;
 
+import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.banish.Circle;
 import dev.keelfy.restless.banish.Natures;
 import dev.keelfy.restless.banish.Phase;
@@ -321,6 +322,54 @@ final class RitualGameTests {
                     "as a failed ritual, it angers the spirit");
             helper.succeed();
         });
+    }
+
+    /** The name said in chat: right in the fury cuts it short, right in the leaving ends it, wrong angers. */
+    static void registerName(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("ritual_name_cuts_the_fury", helper -> {
+            Circle circle = furyOf(helper, IRON_TRAITS, Altar.Held.IRON);
+            int fury = circle.plan().fury();
+            Restless.onChat(circle.player(), " " + name().toUpperCase(java.util.Locale.ROOT) + "!");
+            check(helper, circle.plan().fury() == fury - 4, "the right name takes four waves off the fury");
+            check(helper, spirit(circle.player()).anger() == 0.0, "the right name does not anger");
+            Restless.onChat(circle.player(), name());
+            check(helper, circle.plan().fury() == fury - 4, "the name works once a ritual");
+            helper.succeed();
+        });
+        tests.put("ritual_name_ends_the_leaving", helper -> {
+            Circle circle = furyOf(helper, IRON_TRAITS, Altar.Held.IRON);
+            steps(helper, circle, circle.plan().fury());
+            check(helper, circle.phase().orElseThrow() == Phase.LEAVING, "the leaving is on");
+            Restless.onChat(circle.player(), name());
+            check(helper, circle.over(), "the right name ends the leaving at once");
+            check(
+                    helper,
+                    HauntData.get(helper.getLevel().getServer()).find(SPIRIT).isEmpty(),
+                    "the spirit is banished");
+            check(helper, essences(helper) == 1, "it leaves its essence");
+            helper.succeed();
+        });
+        tests.put("ritual_wrong_name_angers", helper -> {
+            Circle circle = furyOf(helper, IRON_TRAITS, Altar.Held.IRON);
+            int fury = circle.plan().fury();
+            Restless.onChat(circle.player(), "Nobody Atall");
+            check(helper, Math.abs(spirit(circle.player()).anger() - 0.1) < 1e-9, "a wrong name angers the spirit");
+            check(helper, circle.plan().fury() == fury && !circle.over(), "a wrong name changes nothing else");
+            helper.succeed();
+        });
+        tests.put("ritual_name_in_the_call_is_not_heard", helper -> {
+            Circle circle = started(helper, ready(helper));
+            Restless.onChat(circle.player(), "Nobody Atall");
+            Restless.onChat(circle.player(), name());
+            check(helper, spirit(circle.player()).anger() == 0.0, "the spirit does not listen yet");
+            check(helper, circle.plan().fury() == 6, "the fury keeps its length");
+            helper.succeed();
+        });
+    }
+
+    /** The test spirit's name, as its gravestone gives it. */
+    private static String name() {
+        return dev.keelfy.restless.spirit.Story.of(7L).name();
     }
 
     /** A ritual stepped into the bargain, before the fury could wipe the ring by its own roll. */

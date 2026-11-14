@@ -488,6 +488,8 @@
   "message.restless.gaze_broken": "Духу не понравился твой взгляд. Свеча погасла!",
   "message.restless.offering_thrown": "Дар сорван с алтаря!",
   "message.restless.lights_out": "Все огни вокруг гаснут!",
+  "message.restless.name_right": "Дух вздрагивает, услышав своё имя.",
+  "message.restless.name_wrong": "Это не его имя. Дух злится.",
   "message.restless.ring_broken": "Соляное кольцо разорвано! Замкни его до следующей волны.",
   "message.restless.ritual_failed": "Ритуал сорван.",
   "message.restless.wrong_focus": "Не та природа. Свечи погасли, дух в ярости.",

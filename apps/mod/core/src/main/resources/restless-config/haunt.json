@@ -397,6 +397,8 @@
     "deceit_candles": 2,
     "deceit_ticks": 60,
     "ring_radius": 8,
+    "name_waves": 4,
+    "name_anger": 0.1,
     "fail_anger": 0.3,
     "gaze_ticks": 40,
     "gaze_angle": 20.0,
