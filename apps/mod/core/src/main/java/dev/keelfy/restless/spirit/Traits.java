@@ -125,11 +125,20 @@ public final class Traits {
 
     /** Every trait in the catalog. */
     public static List<Trait> all() {
-        return Config.section("traits").keys().stream()
-                .sorted()
-                .map(Traits::byId)
-                .toList();
+        Config.Section section = Config.section("traits");
+        Catalog catalog = cached;
+        if (catalog == null || catalog.from() != section) {
+            catalog = new Catalog(
+                    section, section.keys().stream().sorted().map(Traits::byId).toList());
+            cached = catalog;
+        }
+        return catalog.traits();
     }
+
+    /** The catalog as built from one load of the config; rebuilt when the config is loaded again. */
+    private record Catalog(Config.Section from, List<Trait> traits) {}
+
+    private static volatile @Nullable Catalog cached;
 
     public static double affinity(List<Trait> traits, EventTag tag) {
         double factor = 1.0;

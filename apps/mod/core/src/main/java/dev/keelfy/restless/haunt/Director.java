@@ -444,6 +444,10 @@ public final class Director {
         if (level.getMaxLocalRawBrightness(at) < Config.section("director").integer("dark_light_level")) {
             now.add(Trait.Condition.DARK);
         }
+        // Never load a chunk for this: a structure's anchor may lie in one that is not.
+        if (!level.isLoaded(at)) {
+            return now;
+        }
         if (at.getY() < Config.section("director").integer("underground_below") && !level.canSeeSky(at)) {
             now.add(Trait.Condition.UNDERGROUND);
         }
