@@ -485,6 +485,7 @@
   "message.restless.ritual_fury": "Дара нет. Дух в бешенстве!",
   "message.restless.ritual_leaving": "Дух слабеет и отпускает. Держи свечи.",
   "message.restless.candle_snuffed": "Свеча погасла!",
+  "message.restless.gaze_broken": "Ты смотрел не так. Свеча погасла!",
   "message.restless.ritual_failed": "Ритуал сорван.",
   "message.restless.wrong_focus": "Не та природа. Свечи погасли, дух в ярости.",
   "block.restless.gravestone": "Надгробие",

@@ -107,6 +107,7 @@
   "message.restless.ritual_fury": "No gift came. The spirit is enraged!",
   "message.restless.ritual_leaving": "The spirit weakens and lets go. Hold the candles.",
   "message.restless.candle_snuffed": "A candle goes out!",
+  "message.restless.gaze_broken": "You looked wrong. A candle goes out!",
   "message.restless.ritual_failed": "The ritual breaks.",
   "message.restless.wrong_focus": "Wrong nature. The candles went out and the spirit is furious.",
   "message.restless.banished": "The %s is gone.",

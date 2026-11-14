@@ -175,10 +175,104 @@ final class RitualGameTests {
         });
     }
 
-    /** Starts the ritual with the offering the spirit takes whole. */
+    /** The gaze: the figure walks the ring in the fury and the leaving, and a nature's rule costs a candle. */
+    static void registerGaze(Map<String, Consumer<GameTestHelper>> tests) {
+        List<String> darkness = List.of("light_eater", "cold_touch", "night_stalker");
+        tests.put("ritual_gaze_darkness_punishes_the_stare", helper -> {
+            Circle circle = furyOf(helper, darkness, Altar.Held.GLOWSTONE);
+            int limit = Config.section("ritual").integer("gaze_ticks");
+            gaze(helper, circle, true, limit - 1);
+            check(helper, lit(helper) == 4, "a short stare costs nothing");
+            gaze(helper, circle, false, 5);
+            gaze(helper, circle, true, limit - 1);
+            check(helper, lit(helper) == 4, "looking away starts the count over");
+            gaze(helper, circle, true, 1);
+            check(helper, lit(helper) == 3, "a stare for the limit snuffs one candle");
+            helper.succeed();
+        });
+        tests.put("ritual_gaze_darkness_ignores_looking_away", helper -> {
+            Circle circle = furyOf(helper, darkness, Altar.Held.GLOWSTONE);
+            gaze(helper, circle, false, Config.section("ritual").integer("gaze_ticks") * 2);
+            check(helper, lit(helper) == 4, "looking away from a darkness spirit costs nothing");
+            helper.succeed();
+        });
+        tests.put("ritual_gaze_malice_punishes_the_stare", helper -> {
+            Circle circle = furyOf(helper, List.of("vengeful", "rain_walker", "grudge"), Altar.Held.HOLY_WATER);
+            gaze(helper, circle, true, Config.section("ritual").integer("gaze_ticks"));
+            check(helper, lit(helper) == 3, "a stare snuffs a candle for a malice spirit too");
+            helper.succeed();
+        });
+        tests.put("ritual_gaze_objects_punishes_looking_away", helper -> {
+            Circle circle = furyOf(helper, IRON_TRAITS, Altar.Held.IRON);
+            int limit = Config.section("ritual").integer("gaze_ticks");
+            gaze(helper, circle, true, limit * 2);
+            check(helper, lit(helper) == 4, "watching an objects spirit costs nothing");
+            gaze(helper, circle, false, limit - 1);
+            check(helper, lit(helper) == 4, "a short glance away costs nothing");
+            gaze(helper, circle, false, 1);
+            check(helper, lit(helper) == 3, "looking away for the limit snuffs one candle");
+            helper.succeed();
+        });
+        tests.put("ritual_gaze_deceit_punishes_looking_away", helper -> {
+            Circle circle = furyOf(helper, List.of("whisperer", "liar", "sleep_thief"), Altar.Held.MIRROR);
+            gaze(helper, circle, false, Config.section("ritual").integer("gaze_ticks"));
+            check(helper, lit(helper) == 3, "looking away snuffs a candle for a deceit spirit too");
+            helper.succeed();
+        });
+        tests.put("ritual_gaze_waits_for_the_fury", helper -> {
+            ServerPlayer player = ready(helper, IRON_TRAITS);
+            Circle circle = started(helper, player, Altar.Held.IRON);
+            int limit = Config.section("ritual").integer("gaze_ticks");
+            for (int i = 0; i < limit * 2; i++) {
+                circle.watch();
+            }
+            check(helper, !circle.gaze().shown(), "no figure before any wave");
+            steps(helper, circle, circle.plan().call() + circle.plan().bargain());
+            for (int i = 0; i < limit * 2; i++) {
+                circle.watch();
+            }
+            check(helper, !circle.gaze().shown(), "no figure in the call and the bargain");
+            check(helper, lit(helper) == 4, "no gaze penalty before the fury");
+            steps(helper, circle, 1);
+            circle.watch();
+            check(helper, circle.gaze().shown(), "the figure walks in the fury");
+            helper.succeed();
+        });
+    }
+
+    /** A ritual stepped to its first fury wave, with the player looking at nothing yet. */
+    private static Circle furyOf(GameTestHelper helper, List<String> traits, Altar.Held held) {
+        ServerPlayer player = ready(helper, traits);
+        Circle circle = started(helper, player, held);
+        steps(helper, circle, circle.plan().call() + circle.plan().bargain() + 1);
+        check(helper, circle.phase().orElseThrow() == Phase.FURY, "the fury is on");
+        return circle;
+    }
+
+    /** Runs {@code n} gaze ticks with the player looking at the figure or straight away from it. */
+    private static void gaze(GameTestHelper helper, Circle circle, boolean at, int n) {
+        ServerPlayer player = circle.player();
+        for (int i = 0; i < n; i++) {
+            Vec3 head = circle.gaze().head();
+            if (!circle.gaze().shown()) {
+                head = Vec3.atBottomCenterOf(helper.absolutePos(AltarGameTests.CENTER))
+                        .add(2.5, 2.5, 0);
+            }
+            Vec3 eye = player.getEyePosition();
+            Vec3 target = at ? head : eye.add(eye.subtract(head));
+            player.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, target);
+            circle.watch();
+        }
+    }
+
     private static Circle started(GameTestHelper helper, ServerPlayer player) {
+        return started(helper, player, Altar.Held.IRON);
+    }
+
+    /** Starts the ritual with the given offering. */
+    private static Circle started(GameTestHelper helper, ServerPlayer player, Altar.Held held) {
         BlockPos altar = helper.absolutePos(AltarGameTests.CENTER);
-        check(helper, Ritual.begin(player, helper.getLevel(), altar, Altar.Held.IRON), "the ritual must start");
+        check(helper, Ritual.begin(player, helper.getLevel(), altar, held), "the ritual must start");
         return Circle.at(altar).orElseThrow();
     }
 
@@ -232,6 +326,10 @@ final class RitualGameTests {
 
     /** An altar with its salt ring and four lit candles, and a player haunted by a poltergeist of iron nature. */
     private static ServerPlayer ready(GameTestHelper helper) {
+        return ready(helper, IRON_TRAITS);
+    }
+
+    private static ServerPlayer ready(GameTestHelper helper, List<String> traits) {
         AltarGameTests.place(helper);
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
@@ -245,16 +343,16 @@ final class RitualGameTests {
         ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
                 .add(SanityPayload.TYPE.id());
         player.setPos(Vec3.atBottomCenterOf(helper.absolutePos(AltarGameTests.CENTER.above())));
-        HauntData.get(helper.getLevel().getServer()).put(player.getUUID(), List.of(spirit(null)));
+        HauntData.get(helper.getLevel().getServer()).put(player.getUUID(), List.of(spirit(null, traits)));
         return player;
     }
 
     private static HauntData.Haunting spirit(ServerPlayer player) {
-        if (player != null) {
-            return HauntData.get(player.level().getServer()).find(SPIRIT).orElseThrow();
-        }
-        return new HauntData.Haunting(
-                SPIRIT, "poltergeist", 7L, IRON_TRAITS, 0L, 0.0, Long.MAX_VALUE / 2, false, 0, 0L);
+        return HauntData.get(player.level().getServer()).find(SPIRIT).orElseThrow();
+    }
+
+    private static HauntData.Haunting spirit(ServerPlayer player, List<String> traits) {
+        return new HauntData.Haunting(SPIRIT, "poltergeist", 7L, traits, 0L, 0.0, Long.MAX_VALUE / 2, false, 0, 0L);
     }
 
     private static void relight(GameTestHelper helper) {

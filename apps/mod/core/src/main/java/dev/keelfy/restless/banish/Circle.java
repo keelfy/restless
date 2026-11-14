@@ -36,6 +36,7 @@ public final class Circle {
     private int wave;
     private Phase phase;
     private boolean over;
+    private final Gaze gaze = new Gaze(this);
 
     Circle(
             ServerPlayer player,
@@ -80,6 +81,17 @@ public final class Circle {
         return wave;
     }
 
+    /** One tick of the spirit's gaze rule; does nothing outside the fury and the leaving. */
+    public void watch() {
+        if (!over) {
+            gaze.tick();
+        }
+    }
+
+    public Gaze gaze() {
+        return gaze;
+    }
+
     /** The phase of the last wave that ran, empty before the first. */
     public Optional<Phase> phase() {
         return Optional.ofNullable(phase);
@@ -91,6 +103,7 @@ public final class Circle {
 
     /** Called every tick by the ritual's task; {@code elapsed} counts from 1. @return whether it goes on */
     boolean tick(int elapsed) {
+        watch();
         int waveTicks = Math.max(1, Config.section("ritual").integer("wave_ticks"));
         if (elapsed % waveTicks == 0 && !step()) {
             return false;
@@ -163,6 +176,7 @@ public final class Circle {
 
     private void end() {
         over = true;
+        gaze.clear();
         RUNNING.remove(altar, this);
         send(Optional.empty());
     }

@@ -53,6 +53,7 @@ public final class AltarGameTests {
         JournalGameTests.register(TESTS);
         RitualGameTests.register(TESTS);
         RitualGameTests.registerPhases(TESTS);
+        RitualGameTests.registerGaze(TESTS);
         CharmGameTests.register(TESTS);
         CharmGameTests.registerRebalance(TESTS);
         AdvancedCharmGameTests.register(TESTS);
