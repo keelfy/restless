@@ -8,6 +8,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -43,8 +44,9 @@ public final class Traits {
      * its own: habits all but one from the nature's group and the last from any other, so the nature is always the
      * strict majority of the habits (see {@link #weakness}); then conditions; then leanings. An axis the catalog has
      * too few traits for gives what it has, and the foreign habit joins only beside at least two of the nature's own.
-     * The same seed always gives the same traits while the catalog is unchanged, so a save from before traits existed
-     * gets them from its seed on load.
+     * Leanings are {@code director.desires} desires, then {@code director.leanings} fears or hates. The same seed
+     * always gives the same traits while the catalog is unchanged, so a save from before traits existed gets them from
+     * its seed on load.
      */
     private static List<String> roll(long seed, Map<Focus, Double> natures) {
         Config.Section director = Config.section("director");
@@ -67,7 +69,13 @@ public final class Traits {
                 t -> t.kind() == Trait.Kind.CONDITION,
                 count(random, director, "conditions_min", "conditions_max"),
                 random);
-        draw(rolled, catalog, t -> t.kind() == Trait.Kind.LEANING, director.integer("leanings"), random);
+        draw(rolled, catalog, t -> t.leans() == Trait.Lean.DESIRE, director.integer("desires"), random);
+        draw(
+                rolled,
+                catalog,
+                t -> t.kind() == Trait.Kind.LEANING && t.leans() != Trait.Lean.DESIRE,
+                director.integer("leanings"),
+                random);
         return rolled;
     }
 
@@ -163,6 +171,25 @@ public final class Traits {
         return best;
     }
 
+    /** The spirit's fear, if it has one: its events do not run beside the feared thing. */
+    public static Optional<Trait> fear(List<Trait> traits) {
+        return leaning(traits, Trait.Lean.FEAR);
+    }
+
+    /** The spirit's desire, if it has one: what calms it when offered. A spirit born before leanings has none. */
+    public static Optional<Trait> desire(List<Trait> traits) {
+        return leaning(traits, Trait.Lean.DESIRE);
+    }
+
+    /** The spirit's hate, if it has one: what angers it when its player uses it. */
+    public static Optional<Trait> hate(List<Trait> traits) {
+        return leaning(traits, Trait.Lean.HATE);
+    }
+
+    private static Optional<Trait> leaning(List<Trait> traits, Trait.Lean lean) {
+        return traits.stream().filter(t -> t.leans() == lean).findFirst();
+    }
+
     public static boolean reacts(List<Trait> traits, Trait.Trigger trigger) {
         return traits.stream().anyMatch(t -> t.reacts().contains(trigger));
     }
@@ -199,6 +226,8 @@ public final class Traits {
                 config.texts("words"),
                 config.texts("planchette"),
                 config.has("lies") && config.num("lies") > 0,
-                config.has("weakness") ? Focus.valueOf(config.text("weakness").toUpperCase(Locale.ROOT)) : null);
+                config.has("weakness") ? Focus.valueOf(config.text("weakness").toUpperCase(Locale.ROOT)) : null,
+                config.has("leans") ? Trait.Lean.valueOf(config.text("leans").toUpperCase(Locale.ROOT)) : null,
+                config.has("things") ? config.texts("things") : List.of());
     }
 }

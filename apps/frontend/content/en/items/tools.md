@@ -265,6 +265,8 @@ It stands **two blocks tall**, so it needs two free blocks above the floor. With
 
 Checked in this order, for each event about to run on you: salt ring, hallowed lantern, dreamcatcher (asleep), door charm (door events), scarecrow. The first that applies stops the event. Only the door charm and the scarecrow pay a use, and only one of them does: a door event takes the charm's. A stopped event rings out and drifts ash around you. The ward stops the event; the spirit's rest still runs, so it is lost, not postponed.
 
+A spirit's fear works like a ward: its events do not run on a player standing near the feared thing, and the stopped event rings out and drifts ash in the same way. See [Leanings](/en/how-it-works#leanings).
+
 ## Gravestone
 
 Not crafted. Every spirit you can sense gets a grave in the overworld, 100 to 400 blocks from you, built when its chunk first loads. Use the stone to read it: the name, days dead, the cause, and what the spirit **wants back**. Use it holding that item and the spirit is laid to rest: **2 essences** and 30 experience, no anger, and the spirit is gone. The item is spent. If someone else lays your personal spirit to rest, your journal notes it, even while you are away.

@@ -68,7 +68,15 @@ Every trait has a `kind`, one of three axes rolled on their own:
   `cave_haunter`, `water_lurker`, `noise_feeder`, `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`); `director.conditions_min`–`conditions_max` of them. Their
   `weakness` is the vote they had before the axes existed: it breaks a habit tie and decides for a saved spirit with no
   habit, so an old spirit keeps its nature wherever its habits allow. A new condition leaves it out.
-- `leaning`: a fear or a desire; `director.leanings` of them. The axis is empty until T6 fills it, and the roll skips it.
+- `leaning`: a desire or a fear or hate (10: fears `fears_fire`, `fears_cats`, `fears_bells`, `fears_running_water`;
+  desires `wants_milk`, `wants_bread`, `wants_sweets`; hates `hates_lanterns`, `hates_bells`, `hates_music`). Every spirit
+  born now rolls `director.desires` desire and `director.leanings` fear or hate; spirits born before have none. Each has
+  `leans` (`fear`, `desire`, `hate`) and `things` (registry ids). Rules in `spirit/life/Leanings.java`, numbers in the
+  `leanings` group of `haunt.json`: a fear stops the spirit's events on a player within `fear_radius` (4) of the thing
+  (water only while it flows; same ash and chime as a ward); a desire takes one wanted item lying within `desire_radius`
+  (3) of the player and lowers anger by `desire_calm` (0.25), once per `desire_cooldown_ticks`; a hate raises anger by
+  `hate_anger` (0.1) when the player uses the hated block or uses a block holding the hated item, once per
+  `hate_cooldown_ticks`. A territorial spirit whose radius reaches the player counts too.
 
 `Traits.weakness` counts habit votes, breaks a tie by the votes of every trait carrying a `weakness`, and then by the
 order of `Focus`. Adding a trait is a config and lang change only.
@@ -180,8 +188,7 @@ events, holy water poured at the feet (pitch past `pour_pitch`) drops its runnin
 unmasks the blocks it showed and its double. The spirit comes from `Said.current()`, so only events run through `Director`
 honour it; every event tagged `DOORS`, `ITEMS` or `LIGHTS` does, with no per-event code.
 
-Not built yet: salt from a cauldron, and the traits that hate a ward (the lantern raising anger of light-hating
-traits, the bell of noise-hating ones). The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
+Not built yet: salt from a cauldron. The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
 
 ## Banishing
 

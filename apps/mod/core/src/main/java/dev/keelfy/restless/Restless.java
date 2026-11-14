@@ -40,6 +40,7 @@ import dev.keelfy.restless.spirit.life.Anger;
 import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.spirit.life.Deeds;
 import dev.keelfy.restless.spirit.life.Evolution;
+import dev.keelfy.restless.spirit.life.Leanings;
 import dev.keelfy.restless.state.Session;
 import dev.keelfy.restless.ward.Wards;
 import dev.keelfy.restless.ward.Weakness;
@@ -107,6 +108,7 @@ public final class Restless {
         Trail.tick(server);
         Consumables.tick(server);
         Weakness.tick(server);
+        Leanings.tick(server);
     }
 
     /**
@@ -266,6 +268,7 @@ public final class Restless {
         Level level = player.level();
         if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
             Reactions.used(server, level.getBlockState(pos));
+            Leanings.used(server, level.getBlockState(pos), server.getItemInHand(hand));
             Charms.used(server, pos);
             Scares.used(server);
             // Cake is eaten at the block, only by a hungry player whose hand does not take the click first.

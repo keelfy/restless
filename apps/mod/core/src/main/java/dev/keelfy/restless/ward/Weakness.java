@@ -10,8 +10,11 @@ import dev.keelfy.restless.haunt.event.HauntEvent;
 import dev.keelfy.restless.haunt.event.kit.Swaps;
 import dev.keelfy.restless.haunt.recall.Said;
 import dev.keelfy.restless.spirit.Focus;
+import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
+import dev.keelfy.restless.spirit.life.Leanings;
 import dev.keelfy.restless.state.HauntData;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -46,6 +49,13 @@ public final class Weakness {
         UUID spirit = Said.current();
         if (spirit == null) {
             return false;
+        }
+        List<Trait> traits = HauntData.get(player.level().getServer())
+                .find(spirit)
+                .map(h -> Traits.of(h.traits()))
+                .orElse(List.of());
+        if (Leanings.fears(player, traits)) {
+            return true;
         }
         Focus nature = nature(player.level().getServer(), spirit);
         Config.Section config = Config.section("weakness");

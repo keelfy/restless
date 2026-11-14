@@ -33,8 +33,11 @@ class TraitsTest {
             long conditions = count(Traits.of(traits), Trait.Kind.CONDITION);
             assertTrue(habits >= 1 && habits <= 4, traits.toString());
             assertTrue(conditions >= 1 && conditions <= 2, traits.toString());
-            // the leaning axis is still empty: the roll skips it
-            assertEquals(0, count(Traits.of(traits), Trait.Kind.LEANING));
+            // one desire, then one fear or hate
+            assertEquals(2, count(Traits.of(traits), Trait.Kind.LEANING));
+            assertTrue(Traits.desire(Traits.of(traits)).isPresent(), traits.toString());
+            assertTrue(Traits.fear(Traits.of(traits)).isPresent()
+                    ^ Traits.hate(Traits.of(traits)).isPresent());
         }
     }
 
@@ -207,8 +210,40 @@ class TraitsTest {
                             >= 6,
                     focus.name());
         }
-        assertTrue(Traits.all().stream().filter(t -> t.kind() == Trait.Kind.HABIT).count() >= 24);
-        assertTrue(Traits.all().stream().filter(t -> t.kind() == Trait.Kind.CONDITION).count() >= 10);
+        assertTrue(
+                Traits.all().stream().filter(t -> t.kind() == Trait.Kind.HABIT).count() >= 24);
+        assertTrue(Traits.all().stream()
+                        .filter(t -> t.kind() == Trait.Kind.CONDITION)
+                        .count()
+                >= 10);
+    }
+
+    @Test
+    void everyLeaningIsAFearADesireOrAHateAboutSomething() {
+        Set<Trait.Lean> leans = EnumSet.noneOf(Trait.Lean.class);
+        for (Trait trait : Traits.all()) {
+            assertEquals(trait.kind() == Trait.Kind.LEANING, trait.leans() != null, trait.id());
+            assertEquals(trait.leans() != null, !trait.things().isEmpty(), trait.id());
+            if (trait.leans() != null) {
+                leans.add(trait.leans());
+                assertFalse(trait.clues().isEmpty(), trait.id());
+            }
+        }
+        assertEquals(EnumSet.allOf(Trait.Lean.class), leans);
+        assertTrue(Traits.all().stream()
+                        .filter(t -> t.kind() == Trait.Kind.LEANING)
+                        .count()
+                >= 10);
+    }
+
+    @Test
+    void leaningsDoNotChangeTheHabitsOrConditionsASeedRolls() {
+        for (long seed : LongStream.range(0, 100).toArray()) {
+            List<Trait> rolled = Traits.of(Traits.roll(seed));
+            assertEquals(
+                    rolled.stream().filter(t -> t.kind() != Trait.Kind.LEANING).toList(),
+                    rolled.subList(0, rolled.size() - 2));
+        }
     }
 
     @Test

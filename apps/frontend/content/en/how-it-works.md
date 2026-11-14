@@ -71,7 +71,7 @@ A territorial spirit slowly fouls the land around its anchor: grass turns to coa
 
 ## Traits
 
-Each spirit has a name, a story and **3 or 4 habits and 1 or 2 conditions**, rolled when it is born. Habits come from the spirit's nature, except one that comes from another nature. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
+Each spirit has a name, a story and **3 or 4 habits and 1 or 2 conditions**, and **one desire and one fear or hate**, rolled when it is born. Habits come from the spirit's nature, except one that comes from another nature. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
 
 ### Habits
 
@@ -137,6 +137,27 @@ A condition decides when the spirit acts or what it reacts to. Activity ×n mean
 | Sleep thief | The player uses a bed | 25% chance to act on the next check | presence ×1.5 |
 | Deep caller | The player goes below y 0 | 25% chance to act on the next check | sounds ×1.5 |
 | Grudge | The player kills a mob | 25% chance to act on the next check | assaults ×1.5 |
+
+### Leanings
+
+Every spirit born now also has one desire and one fear or hate. Spirits born before this change have none.
+
+- **Fear.** The spirit's events do not run on a player within 4 blocks of the feared block or creature. Water counts only while it flows, never a still source. A stopped event shows the same ash and chime as a ward. A territorial spirit whose radius reaches the player counts too.
+- **Desire.** One of the wanted items lying on the ground within 3 blocks of the player is taken, with a puff of soul smoke and a sound, and the spirit's anger drops by 0.25. This happens at most once every 5 minutes.
+- **Hate.** When the player uses the hated block, or uses a block while holding the hated item, the spirit's anger rises by 0.1. This happens at most once a minute. Placing a lantern, ringing a bell and playing a note block or jukebox all count.
+
+| Trait | Kind | What it is about |
+|---|---|---|
+| Fears fire | Fear | Fire, soul fire, campfires, soul campfires and lava. |
+| Fears cats | Fear | Cats and ocelots. |
+| Fears bells | Fear | Bells. |
+| Fears running water | Fear | Flowing water. |
+| Wants milk | Desire | A bucket of milk on the ground. |
+| Wants bread | Desire | Bread on the ground. |
+| Wants sweets | Desire | Cake, cookies, pumpkin pie and honey bottles on the ground. |
+| Hates lanterns | Hate | Lanterns and soul lanterns, when placed. |
+| Hates bells | Hate | Bells, when rung. |
+| Hates music | Hate | Note blocks and jukeboxes, when played. |
 
 ## Weakness
 
