@@ -95,7 +95,9 @@ public final class Births {
 
     private static BirthRules.Verdict decide(
             ServerPlayer player, SpiritType spirit, HauntData data, long now, Config.Section config) {
-        List<HauntData.Haunting> own = Director.hauntings(player, data, now);
+        List<HauntData.Haunting> own = Director.hauntings(player, data, now).stream()
+                .filter(h -> !Echoes.is(data, h))
+                .toList();
         return BirthRules.decide(
                 own.stream().anyMatch(h -> h.spirit().equals(spirit.id())),
                 own.size(),
@@ -115,12 +117,16 @@ public final class Births {
             case FED -> {
                 double by = config.num("repeat_anger");
                 HauntData.Haunting same = Director.hauntings(player, data, now).stream()
-                        .filter(h -> h.spirit().equals(spirit.id()))
+                        .filter(h -> h.spirit().equals(spirit.id()) && !Echoes.is(data, h))
                         .findFirst()
                         .orElseThrow();
                 data.change(same.uuid(), h -> h.angered(by));
             }
             case BORN -> {
+                // A spirit born of an echo's type takes the echo's place.
+                Director.hauntings(player, data, now).stream()
+                        .filter(h -> h.spirit().equals(spirit.id()) && Echoes.is(data, h))
+                        .forEach(h -> Echoes.leave(data, h.uuid()));
                 HauntData.Haunting born = Director.add(player, data, spirit, now);
                 if (born == null) {
                     return BirthRules.Verdict.NOTHING;
@@ -210,7 +216,7 @@ public final class Births {
             return;
         }
         List<HauntData.Haunting> own = data.get(player.getUUID());
-        if (own != null && !own.isEmpty()) {
+        if (own != null && own.stream().anyMatch(h -> !Echoes.is(data, h))) {
             data.putSuccessor(player.getUUID(), null);
             return;
         }

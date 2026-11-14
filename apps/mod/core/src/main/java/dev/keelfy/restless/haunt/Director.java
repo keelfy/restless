@@ -22,6 +22,7 @@ import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.spirit.life.Births;
+import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.spirit.life.Power;
 import dev.keelfy.restless.state.HauntData;
 import dev.keelfy.restless.ward.Wards;
@@ -53,6 +54,7 @@ public final class Director {
         }
         long now = server.overworld().getGameTime();
         HauntData data = HauntData.get(server);
+        Echoes.tick(data, now);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             Reactions.watch(player, now);
             Births.successor(player, data, now);

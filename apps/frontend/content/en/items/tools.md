@@ -225,6 +225,8 @@ Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offeri
 
 **The wrong nature.** No spirit you sense is weak to it: the spirit eats the offering, every candle goes out, its anger peaks and it strikes at once with something harmful. It then refuses the altar for a day (24000 ticks) and ages by a day toward evolving.
 
+**The echo.** A spirit banished at the altar does not go quite all the way: it leaves an **echo**, a young, calm spirit of the same type and story that keeps haunting where it was (your echo stays with you; a territorial one lingers around the altar). An echo has no grave and no essence: it refuses every altar and leaves by itself after **7 days**. A spirit laid to rest at its [grave](/en/spirits#rewards) leaves no echo, which makes the grave the cleaner way out.
+
 ## Hallowed Lantern
 
 Lantern (L) + 2 hallowed wax (W) + 2 glowstone dust (G) + 2 salt (S), shaped:

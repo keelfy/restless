@@ -7,6 +7,7 @@ import dev.keelfy.restless.journal.Notebook.Kind;
 import dev.keelfy.restless.photo.Picture;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.state.HauntData;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +100,10 @@ public final class Journal {
             case BANISHED -> {
                 Milestones.award(player, "nature");
                 Milestones.award(player, "banished");
+                // The altar's hook for echoes: it writes BANISHED once the spirit is gone from the data.
+                if (spirit != null) {
+                    Echoes.banished(player, spirit);
+                }
             }
             default -> {}
         }

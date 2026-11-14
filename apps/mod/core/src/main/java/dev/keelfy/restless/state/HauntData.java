@@ -271,8 +271,8 @@ public final class HauntData extends SavedData {
                 .apply(i, Successor::new));
     }
 
-    /** The last two saved maps, nested so the record codec stays within 16 fields. */
-    private record Later(Map<UUID, Long> requiemWary, Map<UUID, Successor> successors) {}
+    /** The last saved maps, nested so the record codec stays within 16 fields. */
+    private record Later(Map<UUID, Long> requiemWary, Map<UUID, Successor> successors, Map<UUID, Long> echoes) {}
 
     private static final MapCodec<Later> LATER = RecordCodecBuilder.mapCodec(i -> i.group(
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
@@ -280,7 +280,10 @@ public final class HauntData extends SavedData {
                             .forGetter(Later::requiemWary),
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Successor.CODEC)
                             .optionalFieldOf("successors", Map.of())
-                            .forGetter(Later::successors))
+                            .forGetter(Later::successors),
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
+                            .optionalFieldOf("echoes", Map.of())
+                            .forGetter(Later::echoes))
             .apply(i, Later::new));
 
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL =
@@ -334,7 +337,7 @@ public final class HauntData extends SavedData {
                                     .listOf()
                                     .optionalFieldOf("released", List.of())
                                     .forGetter(data -> List.copyOf(data.released)),
-                            LATER.forGetter(data -> new Later(data.requiemWary, data.successors)))
+                            LATER.forGetter(data -> new Later(data.requiemWary, data.successors, data.echoes)))
                     .apply(
                             i,
                             (players,
@@ -377,6 +380,7 @@ public final class HauntData extends SavedData {
                                 data.released.addAll(released);
                                 data.requiemWary.putAll(later.requiemWary());
                                 data.successors.putAll(later.successors());
+                                data.echoes.putAll(later.echoes());
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -422,6 +426,8 @@ public final class HauntData extends SavedData {
     private final Map<UUID, GlobalPos> lost = new HashMap<>();
 
     private final Map<UUID, Successor> successors = new HashMap<>();
+    /** The echoes an altar left behind, keyed by spirit: the overworld game time each leaves by itself. */
+    private final Map<UUID, Long> echoes = new HashMap<>();
     /** The players the Requiem released: no spirit is born on them or acts on them. */
     private final Set<UUID> released = new HashSet<>();
     /** The game time until which the altar refuses a player a Requiem, after a failed one. Keyed by player. */
@@ -471,6 +477,26 @@ public final class HauntData extends SavedData {
             successors.remove(player);
         } else {
             successors.put(player, successor);
+        }
+        setDirty();
+    }
+
+    /** 0 unless the spirit is an echo; then the overworld game time it leaves. */
+    public long echo(UUID spirit) {
+        return echoes.getOrDefault(spirit, 0L);
+    }
+
+    /** Every echo and the time it leaves. */
+    public Map<UUID, Long> echoes() {
+        return Collections.unmodifiableMap(echoes);
+    }
+
+    /** Marks the spirit an echo that leaves at {@code leaveAt}; 0 unmarks it. */
+    public void putEcho(UUID spirit, long leaveAt) {
+        if (leaveAt == 0L) {
+            echoes.remove(spirit);
+        } else {
+            echoes.put(spirit, leaveAt);
         }
         setDirty();
     }
@@ -650,12 +676,18 @@ public final class HauntData extends SavedData {
 
     public void put(UUID player, List<Haunting> spirits) {
         List<Haunting> old = hauntings.put(player, List.copyOf(spirits));
-        if (!spirits.isEmpty()) {
+        // An echo neither cancels a successor nor starts one when it leaves.
+        if (spirits.stream().anyMatch(h -> !echoes.containsKey(h.uuid()))) {
             successors.remove(player);
-        } else if (old != null && !old.isEmpty()) {
+        } else if (old != null && old.stream().anyMatch(h -> !echoes.containsKey(h.uuid()))) {
             successors.put(
                     player,
-                    new Successor(-1L, old.stream().map(Haunting::spirit).toList()));
+                    new Successor(
+                            -1L,
+                            old.stream()
+                                    .filter(h -> !echoes.containsKey(h.uuid()))
+                                    .map(Haunting::spirit)
+                                    .toList()));
         }
         if (old != null) {
             old.forEach(h -> owners.remove(h.uuid()));
