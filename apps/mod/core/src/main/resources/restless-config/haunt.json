@@ -19,6 +19,7 @@
   },
   "power": {
     "maturity_days": 30,
+    "start_maturity": 0.15,
     "maturity_share": 0.6,
     "anger_share": 0.4,
     "light_penalty": 0.7,

@@ -12,15 +12,17 @@ Power runs from 0 to 1 and comes from the spirit alone, never from the world or 
 
 `power = 0.6 × maturity + 0.4 × anger`, never above 1
 
-- **Maturity** grows from 0 to 1 over the spirit's first **30 days** (24000 ticks each).
+- **Maturity** grows to 1 over the spirit's first **30 days** (24000 ticks each). A spirit that haunts a person (not a place) starts with 0.15 of it, so even a brand new one is not harmless; a spirit bound to a place starts at 0.
 - **Anger** is 0 to 1. See [Anger](#anger).
 - A spirit that has **evolved** never drops below power 0.7, however calm it gets.
 
-A spirit born from a deed starts at anger 0.5, so its power starts at 0.2.
+The spirit you get when you first join and a spirit born from a deed both start at anger 0.5, so their power starts at 0.29.
+
+When the last spirit that haunts you is gone (banished, laid to rest or otherwise removed), a new one of a different type finds you 2 to 4 days later, at anger 0.5. It does not come if you already have another spirit, if you are released by the Requiem, or while you are in creative or spectator mode.
 
 ## What power changes
 
-**Which events it rolls.** Light events (scares) are weighted by `1 − 0.7 × power`. Harmful events are weighted by `power`. A calm, young spirit (power 0) never rolls a harmful event; a fully grown, angry one (power 1) rolls light events at 30% of their base weight and harmful events at full weight. The spirit's type and its traits then multiply the weights for each kind of event, see [Spirits](/en/spirits).
+**Which events it rolls.** Light events (scares) are weighted by `1 − 0.7 × power`. Harmful events are weighted by `power`. A spirit with power 0 (only a place-bound spirit just born) never rolls a harmful event; a new spirit that haunts you can roll one within the first days, although it stays rare; a fully grown, angry one (power 1) rolls light events at 30% of their base weight and harmful events at full weight. The spirit's type and its traits then multiply the weights for each kind of event, see [Spirits](/en/spirits).
 
 **How often.** The wait between two events is `4 − 2.5 × power` minutes, stretched by a random factor of 1 to 2 and divided by the spirit's activity. A calm spirit acts every 4 to 8 minutes; a fully powerful one every 1.5 to 3. The wait is never shorter than 5 seconds. A new spirit's very first event comes 90 seconds after the journal is handed out, not after a full wait.
 
