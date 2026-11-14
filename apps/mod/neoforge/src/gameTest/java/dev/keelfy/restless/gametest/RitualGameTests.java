@@ -1,11 +1,13 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.banish.Circle;
+import dev.keelfy.restless.banish.Natures;
 import dev.keelfy.restless.banish.Phase;
 import dev.keelfy.restless.banish.Ritual;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Altar;
+import dev.keelfy.restless.content.block.UnlitLights;
 import dev.keelfy.restless.sanity.SanityPayload;
 import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.state.HauntData;
@@ -147,7 +149,8 @@ final class RitualGameTests {
             player.getRandom()
                     .setSeed(seed(r -> r.nextDouble() < config.num("snuff_chance")
                             && r.nextInt(CANDLES.size()) >= 0
-                            && r.nextDouble() >= config.num("fury_chance")));
+                            && r.nextDouble() >= config.num("fury_chance")
+                            && r.nextDouble() >= config.num("nature_chance")));
             check(helper, circle.step(), "the fury goes on");
             check(helper, circle.phase().orElseThrow() == Phase.FURY, "no gift: the fury follows");
             check(helper, lit(helper) == 3, "the spirit snuffs a candle in the fury");
@@ -240,6 +243,60 @@ final class RitualGameTests {
         });
     }
 
+    /** The natures' fury acts, called directly so the roll does not matter. */
+    static void registerNatures(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("ritual_nature_objects_throws_the_offering", helper -> {
+            Circle circle = furyOf(helper, IRON_TRAITS, Altar.Held.IRON);
+            Natures.objects(circle);
+            helper.assertBlockProperty(AltarGameTests.CENTER, Altar.HELD, Altar.Held.EMPTY);
+            check(helper, count(helper, new ItemStack(Items.IRON_INGOT)) == 1, "the offering lies off the altar");
+            check(helper, !circle.step(), "an offering not laid back breaks the ritual");
+            helper.succeed();
+        });
+        tests.put("ritual_nature_objects_offering_can_be_laid_back", helper -> {
+            Circle circle = furyOf(helper, IRON_TRAITS, Altar.Held.IRON);
+            Natures.objects(circle);
+            ItemStack other = new ItemStack(Items.IRON_NUGGET);
+            check(helper, !circle.relay(Altar.Held.IRON_NUGGET, other), "another offering is not the one thrown");
+            ItemStack back = new ItemStack(Items.IRON_INGOT, 2);
+            check(helper, circle.relay(Altar.Held.IRON, back), "the same offering goes back");
+            check(helper, back.getCount() == 1, "it is used up");
+            helper.assertBlockProperty(AltarGameTests.CENTER, Altar.HELD, Altar.Held.IRON);
+            steps(helper, circle, 1);
+            check(helper, !circle.over(), "the ritual goes on");
+            helper.succeed();
+        });
+        tests.put("ritual_nature_darkness_puts_out_the_lights", helper -> {
+            Circle circle = furyOf(helper, List.of("light_eater", "cold_touch", "night_stalker"), Altar.Held.GLOWSTONE);
+            BlockPos torch = AltarGameTests.CENTER.offset(5, 1, 0);
+            helper.setBlock(torch, Blocks.TORCH);
+            Natures.darkness(circle);
+            check(
+                    helper,
+                    !UnlitLights.isTorch(helper.getLevel().getBlockState(helper.absolutePos(torch))),
+                    "the torch is out");
+            check(helper, lit(helper) == 4, "the ritual's candles burn on");
+            steps(helper, circle, 1);
+            helper.succeed();
+        });
+        tests.put("ritual_nature_malice_strikes_the_player", helper -> {
+            Circle circle = furyOf(helper, List.of("vengeful", "rain_walker", "grudge"), Altar.Held.HOLY_WATER);
+            // a mock client never reports itself loaded, and until then the player takes no damage
+            circle.player().connection.markClientLoaded();
+            float before = circle.player().getHealth();
+            Natures.malice(circle);
+            check(helper, circle.player().getHealth() < before, "the player is hurt");
+            helper.succeed();
+        });
+        tests.put("ritual_nature_deceit_keeps_the_candles_lit", helper -> {
+            Circle circle = furyOf(helper, List.of("whisperer", "liar", "sleep_thief"), Altar.Held.MIRROR);
+            Natures.deceit(circle);
+            check(helper, lit(helper) == 4, "the server candles stay lit");
+            steps(helper, circle, 1);
+            helper.succeed();
+        });
+    }
+
     /** A ritual stepped to its first fury wave, with the player looking at nothing yet. */
     private static Circle furyOf(GameTestHelper helper, List<String> traits, Altar.Held held) {
         ServerPlayer player = ready(helper, traits);
@@ -256,7 +313,7 @@ final class RitualGameTests {
             Vec3 head = circle.gaze().head();
             if (!circle.gaze().shown()) {
                 head = Vec3.atBottomCenterOf(helper.absolutePos(AltarGameTests.CENTER))
-                        .add(2.5, 2.5, 0);
+                        .add(2.5, 1.5, 0);
             }
             Vec3 eye = player.getEyePosition();
             Vec3 target = at ? head : eye.add(eye.subtract(head));
@@ -279,8 +336,9 @@ final class RitualGameTests {
     /** Runs {@code n} waves that go on, with a calm spirit: neither a snuff nor a strike. */
     private static void steps(GameTestHelper helper, Circle circle, int n) {
         Config.Section config = Config.section("ritual");
-        long calm =
-                seed(r -> r.nextDouble() >= config.num("snuff_chance") && r.nextDouble() >= config.num("fury_chance"));
+        long calm = seed(r -> r.nextDouble() >= config.num("snuff_chance")
+                && r.nextDouble() >= config.num("fury_chance")
+                && r.nextDouble() >= config.num("nature_chance"));
         for (int i = 0; i < n; i++) {
             circle.player().getRandom().setSeed(calm);
             check(helper, circle.step(), "wave " + i + " must go on");

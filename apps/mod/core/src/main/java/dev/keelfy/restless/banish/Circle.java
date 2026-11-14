@@ -14,8 +14,10 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 
 /**
  * One running ritual at an altar: who holds it, what it called, and how far it has come through its {@link Plan}. Each
@@ -79,6 +81,17 @@ public final class Circle {
     /** Waves run so far. */
     public int wave() {
         return wave;
+    }
+
+    /** The player lays the thrown offering back on the altar. @return whether it was laid */
+    public boolean relay(Altar.@Nullable Held offered, ItemStack stack) {
+        BlockState state = level.getBlockState(altar);
+        if (offered != held || state.getValue(Altar.HELD) != Altar.Held.EMPTY) {
+            return false;
+        }
+        level.setBlock(altar, state.setValue(Altar.HELD, held), 3);
+        stack.consume(1, player);
+        return true;
     }
 
     /** One tick of the spirit's gaze rule; does nothing outside the fury and the leaving. */

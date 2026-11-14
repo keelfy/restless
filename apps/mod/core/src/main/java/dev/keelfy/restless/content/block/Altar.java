@@ -1,5 +1,6 @@
 package dev.keelfy.restless.content.block;
 
+import dev.keelfy.restless.banish.Circle;
 import dev.keelfy.restless.banish.Requiem;
 import dev.keelfy.restless.banish.Ritual;
 import dev.keelfy.restless.config.Config;
@@ -9,6 +10,7 @@ import dev.keelfy.restless.haunt.event.Machines;
 import dev.keelfy.restless.spirit.Focus;
 import dev.keelfy.restless.spirit.Form;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -347,6 +349,10 @@ public final class Altar extends Block implements EntityBlock {
         }
         if (Requiem.running(pos)) {
             return Requiem.used(caster, pos, stack);
+        }
+        Optional<Circle> running = Circle.at(pos);
+        if (running.isPresent()) {
+            return running.get().relay(held, stack) ? InteractionResult.SUCCESS_SERVER : InteractionResult.FAIL;
         }
         if (!isComplete(level, pos)) {
             caster.sendSystemMessage(Component.translatable("message.restless.altar_rebuild"), true);

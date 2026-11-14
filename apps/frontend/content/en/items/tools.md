@@ -220,6 +220,7 @@ Then it runs in waves of 5 seconds, through four phases:
 3. **The fury**, 6 waves. A form the type does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
    - 25%: it snuffs one candle. Relight it before the next wave.
    - 50%: it runs one of its events on you.
+   - 35%: it acts by its nature, whatever the censer does. Objects: it flings the offering off the altar; use the same offering on the altar again before the next wave, or the ritual fails. Darkness: it puts out every torch and lantern within 12 blocks for 30 seconds (the ritual's candles stay lit). Malice: it strikes you for a heart and a half of damage, never leaving you below the safe health. Deceit: it shows two of your candles as dark, but only to you; they still burn, so do not relight them.
    - It also shows itself: a dark figure walks the salt ring, and its nature sets a rule of gaze. Darkness and malice: do not look at it for more than 2 seconds. Objects and deceit: do not look away from it for more than 2 seconds. Break the rule and it snuffs a candle (the ritual goes on; relight it before the next wave).
 4. **The leaving**, 2 waves. The spirit lets go, but still walks the ring under the same rule of gaze; keep the candles lit to the end.
 
