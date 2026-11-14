@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 664 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 676 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -415,13 +415,15 @@ What the territorial spirits do to a place. The hoarder's nest remembers what it
 
 `nix_returns`, `domovoi_tidy`, `hoarder_shiny`, `hoarder_nest`, `demon_trail`, `demon_contract`
 
-### `event/Tells.java` (12)
+### `event/Tells.java` (24)
 
 One small sign per habit that only a spirit with that habit gives (`habit` in the config), each noting what was seen in
-the journal as a `TELL`. Objects and darkness habits so far. [AFFLICTION, ITEMS, DOORS, BLOCKS, LIGHTS, PRESENCE]
+the journal as a `TELL`. All habits. [AFFLICTION, ITEMS, DOORS, BLOCKS, LIGHTS, PRESENCE, SOUND, MOBS, WATER, PLAYER]
 
 `tell_cold_touch`, `tell_restless_hands`, `tell_door_slammer`, `tell_meddler`, `tell_thrower`, `tell_stacker`,
-`tell_knocker`, `tell_light_eater`, `tell_shadow_caster`, `tell_blinder`, `tell_hearth_killer`, `tell_corner_lurker`
+`tell_knocker`, `tell_light_eater`, `tell_shadow_caster`, `tell_blinder`, `tell_hearth_killer`, `tell_corner_lurker`,
+`tell_vengeful`, `tell_hunter`, `tell_scratcher`, `tell_beast_caller`, `tell_drowner`,
+`tell_snarler`, `tell_whisperer`, `tell_liar`, `tell_face_thief`, `tell_illusionist`, `tell_false_friend`, `tell_lure`
 
 ## Scenarios (`scenarios.json`, 104)
 

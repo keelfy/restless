@@ -110,6 +110,117 @@
       "weight": 1.0,
       "impact": 0.1,
       "habit": "corner_lurker"
+    },
+    "restless:tell_vengeful": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "vengeful",
+      "sound": {
+        "volume": 0.5,
+        "pitch": 0.6
+      }
+    },
+    "restless:tell_hunter": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "hunter",
+      "gap_ticks": 10,
+      "sound": {
+        "volume": 0.7,
+        "pitch": 0.7
+      }
+    },
+    "restless:tell_scratcher": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "scratcher",
+      "gap_ticks": 5,
+      "sound": {
+        "volume": 0.6,
+        "pitch": 1.2
+      }
+    },
+    "restless:tell_beast_caller": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "beast_caller",
+      "sound": {
+        "volume": 1.0,
+        "pitch": 0.5
+      }
+    },
+    "restless:tell_drowner": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "drowner",
+      "sound": {
+        "volume": 0.6,
+        "pitch": 0.8
+      }
+    },
+    "restless:tell_snarler": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "snarler",
+      "sound": {
+        "volume": 0.6,
+        "pitch": 0.5
+      }
+    },
+    "restless:tell_whisperer": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "whisperer",
+      "sound": {
+        "volume": 0.6,
+        "pitch": 1.0
+      }
+    },
+    "restless:tell_liar": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "liar",
+      "gap_ticks": 12,
+      "sound": {
+        "volume": 0.7,
+        "pitch": 0.8
+      }
+    },
+    "restless:tell_face_thief": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "face_thief",
+      "sound": {
+        "volume": 0.4,
+        "pitch": 0.7
+      }
+    },
+    "restless:tell_illusionist": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "illusionist",
+      "ticks": 60,
+      "sound": {
+        "volume": 0.6,
+        "pitch": 0.8
+      }
+    },
+    "restless:tell_false_friend": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "false_friend",
+      "ticks": 80
+    },
+    "restless:tell_lure": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "lure",
+      "steps": 5,
+      "gap_ticks": 6,
+      "sound": {
+        "volume": 0.5,
+        "pitch": 1.2
+      }
     }
   }
 }

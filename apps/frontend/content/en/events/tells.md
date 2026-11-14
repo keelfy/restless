@@ -4,7 +4,7 @@ title: Tells
 
 # Tells
 
-12 small signs, one per habit, that only a spirit with that habit gives. Each is a light event with low impact and never harms. Whatever the player sees, the journal notes it ("Seen: ...") against that spirit, so watching is a way to learn which habits it has. This page covers the cold touch and the habits of objects and darkness; the rest follow.
+24 small signs, one per habit, that only a spirit with that habit gives. Each is a light event with low impact and never harms. Whatever the player sees, the journal notes it ("Seen: ...") against that spirit, so watching is a way to learn which habits it has.
 
 ## `tell_cold_touch`
 
@@ -75,5 +75,77 @@ Runs when: A lit campfire or furnace within 6
 ## `tell_corner_lurker`
 
 Only a spirit with the corner lurker habit. Two dark points, a hand apart, hang at head height some blocks away and fade. The journal notes it.
+
+Runs when: Always
+
+## `tell_vengeful`
+
+Only a spirit with the vengeful habit. Four red marks hang in the air a few blocks ahead of the player, with a low moan. The journal notes it.
+
+Runs when: Always
+
+## `tell_hunter`
+
+Only a spirit with the hunter habit. Three heavy footsteps pass behind the player from one side to the other, 0.5 s apart. The journal notes it.
+
+Runs when: Always
+
+## `tell_scratcher`
+
+Only a spirit with the scratcher habit. Three scrapes and sparks sound in the air beside the player, as of claws on a wall. The journal notes it.
+
+Runs when: Always
+
+## `tell_beast_caller`
+
+Only a spirit with the beast caller habit. A wolf's cry sounds from about 24 blocks off, with no wolf near. The journal notes it.
+
+Runs when: Always
+
+## `tell_drowner`
+
+Only a spirit with the drowner habit. Bubbles rise round the player's feet on dry land, with a gurgle. The journal notes it.
+
+Runs when: Always
+
+## `tell_snarler`
+
+Only a spirit with the snarler habit. A low snarl sounds right beside the player's ear. The journal notes it.
+
+Runs when: Always
+
+## `tell_whisperer`
+
+Only a spirit with the whisperer habit. A whisper, too low to make out, sounds close behind the player. The journal notes it.
+
+Runs when: Always
+
+## `tell_liar`
+
+Only a spirit with the liar habit. A villager's yes sounds behind the player, and a villager's no follows it after 0.6 s, with no villager near. The journal notes it.
+
+Runs when: Always
+
+## `tell_face_thief`
+
+Only a spirit with the face thief habit. A small cloud of the player's own head hangs at face height about 2.5 blocks ahead and thins away. The journal notes it.
+
+Runs when: Always
+
+## `tell_illusionist`
+
+Only a spirit with the illusionist habit. A crafting table stands about 4 blocks ahead for 3 s, then vanishes. Only this player's client is told of it; nothing changes on the server. The journal notes it.
+
+Runs when: Always (needs standing room ahead)
+
+## `tell_false_friend`
+
+Only a spirit with the false friend habit. A dog stands about 5 blocks off and watches the player for 4 s, then vanishes. Only this player's client is told of it; no dog exists on the server. The journal notes it.
+
+Runs when: Always (needs standing room ahead)
+
+## `tell_lure`
+
+Only a spirit with the lure habit. A soft light drifts away ahead of the player a little at a time, with a faint chime. The journal notes it.
 
 Runs when: Always

@@ -1,9 +1,11 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.effect.DimPayload;
 import dev.keelfy.restless.haunt.event.kit.Nearby;
+import dev.keelfy.restless.haunt.event.kit.PacketEntity;
 import dev.keelfy.restless.haunt.event.kit.Place;
 import dev.keelfy.restless.haunt.event.kit.SimpleEvent;
 import dev.keelfy.restless.haunt.event.kit.Swaps;
@@ -16,7 +18,9 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -27,6 +31,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.animal.wolf.WolfSoundVariants;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -63,7 +69,19 @@ final class Tells {
                 shadowCaster(),
                 blinder(),
                 hearthKiller(),
-                cornerLurker());
+                cornerLurker(),
+                vengeful(),
+                hunter(),
+                scratcher(),
+                beastCaller(),
+                drowner(),
+                snarler(),
+                whisperer(),
+                liar(),
+                faceThief(),
+                illusionist(),
+                falseFriend(),
+                lure());
     }
 
     private static final String LIGHT_EATER = "restless:tell_light_eater";
@@ -234,6 +252,175 @@ final class Tells {
             particles(player, ParticleTypes.SQUID_INK, eyes.add(across), 0.01, 2);
             particles(player, ParticleTypes.SQUID_INK, eyes.subtract(across), 0.01, 2);
             particles(player, ParticleTypes.SMOKE, eyes, 0.3, 5);
+        });
+    }
+
+    /** A tally of four red marks hangs in the air ahead, with a low moan. */
+    private static HauntEvent vengeful() {
+        String id = "restless:tell_vengeful";
+        return tell(id, EventTag.PRESENCE, SimpleEvent.ALWAYS, player -> {
+            Vec3 centre = Nearby.around(player, 3.0, 0.0).with(Direction.Axis.Y, player.getEyeY() - 0.3);
+            Vec3 across = new Vec3(
+                            -Math.cos(Math.toRadians(player.getYRot())),
+                            0.0,
+                            -Math.sin(Math.toRadians(player.getYRot())))
+                    .scale(0.25);
+            for (int mark = 0; mark < 4; mark++) {
+                Vec3 base = centre.add(across.scale(mark - 1.5));
+                for (int dot = 0; dot < 5; dot++) {
+                    particles(player, new DustParticleOptions(0xAA0000, 1.0f), base.add(0.0, dot * 0.1, 0.0), 0.0, 1);
+                }
+            }
+            soundAt(player, SoundEvents.WITHER_AMBIENT, centre, id);
+        });
+    }
+
+    /** Three heavy footsteps pass behind the player from one side to the other. */
+    private static HauntEvent hunter() {
+        String id = "restless:tell_hunter";
+        return tell(id, EventTag.SOUND, SimpleEvent.ALWAYS, player -> {
+            int gap = Config.event(id).integer("gap_ticks");
+            for (int step = 0; step < 3; step++) {
+                Vec3 at = Nearby.around(player, 3.0, 120.0 + step * 60.0);
+                Scheduler.later(player, step * gap, p -> soundAt(p, SoundEvents.RAVAGER_STEP, at, id));
+            }
+        });
+    }
+
+    /** Three scratches on the air beside the player, as of claws on a wall. */
+    private static HauntEvent scratcher() {
+        String id = "restless:tell_scratcher";
+        return tell(id, EventTag.BLOCKS, SimpleEvent.ALWAYS, player -> {
+            Vec3 at = Nearby.around(player, 1.5, 90.0 * (player.getRandom().nextBoolean() ? 1 : -1))
+                    .add(0.0, 0.4, 0.0);
+            int gap = Config.event(id).integer("gap_ticks");
+            for (int claw = 0; claw < 3; claw++) {
+                Scheduler.later(player, claw * gap, p -> {
+                    particles(p, ParticleTypes.CRIT, at, 0.15, 4);
+                    soundAt(p, SoundEvents.GRINDSTONE_USE, at, id);
+                });
+            }
+        });
+    }
+
+    /** A wolf's call from far off. */
+    private static HauntEvent beastCaller() {
+        String id = "restless:tell_beast_caller";
+        return tell(id, EventTag.MOBS, SimpleEvent.ALWAYS, player -> {
+            soundAt(
+                    player,
+                    SoundEvents.WOLF_SOUNDS
+                            .get(WolfSoundVariants.SoundSet.CLASSIC)
+                            .adultSounds()
+                            .whineSound()
+                            .value(),
+                    Nearby.randomAround(player, 24.0),
+                    id);
+        });
+    }
+
+    /** Bubbles rise round the player's feet on dry land, with a gurgle. */
+    private static HauntEvent drowner() {
+        String id = "restless:tell_drowner";
+        return tell(id, EventTag.WATER, SimpleEvent.ALWAYS, player -> {
+            particles(player, ParticleTypes.BUBBLE, player.position().add(0.0, 0.2, 0.0), 0.3, 14);
+            sound(player, SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, id);
+        });
+    }
+
+    /** A low snarl right at the ear. */
+    private static HauntEvent snarler() {
+        String id = "restless:tell_snarler";
+        return tell(id, EventTag.SOUND, SimpleEvent.ALWAYS, player -> {
+            Vec3 ear = Nearby.around(player, 0.4, 90.0 * (player.getRandom().nextBoolean() ? 1 : -1))
+                    .with(Direction.Axis.Y, player.getEyeY());
+            soundAt(
+                    player,
+                    SoundEvents.WOLF_SOUNDS
+                            .get(WolfSoundVariants.SoundSet.CLASSIC)
+                            .adultSounds()
+                            .growlSound()
+                            .value(),
+                    ear,
+                    id);
+        });
+    }
+
+    /** A whisper, too low to make out, close behind the player. */
+    private static HauntEvent whisperer() {
+        String id = "restless:tell_whisperer";
+        return tell(id, EventTag.SOUND, SimpleEvent.ALWAYS, player -> {
+            soundAt(player, HauntSounds.WHISPER, Nearby.around(player, 1.0, 180.0), id);
+        });
+    }
+
+    /** A villager says yes, and then no, to nothing. */
+    private static HauntEvent liar() {
+        String id = "restless:tell_liar";
+        return tell(id, EventTag.SOUND, SimpleEvent.ALWAYS, player -> {
+            Vec3 at = Nearby.around(player, 2.0, 160.0);
+            soundAt(player, SoundEvents.VILLAGER_YES, at, id);
+            Scheduler.later(
+                    player, Config.event(id).integer("gap_ticks"), p -> soundAt(p, SoundEvents.VILLAGER_NO, at, id));
+        });
+    }
+
+    /** A little cloud of the player's own head hangs at face height ahead and thins. */
+    private static HauntEvent faceThief() {
+        String id = "restless:tell_face_thief";
+        return tell(id, EventTag.PLAYER, SimpleEvent.ALWAYS, player -> {
+            Vec3 at = Nearby.around(player, 2.5, 0.0).with(Direction.Axis.Y, player.getEyeY());
+            particles(player, new ItemParticleOption(ParticleTypes.ITEM, Items.PLAYER_HEAD), at, 0.12, 10);
+            soundAt(player, SoundEvents.ENDERMAN_TELEPORT, at, id);
+        });
+    }
+
+    /** A crafting table stands a few blocks ahead for three seconds, where there is none. */
+    private static HauntEvent illusionist() {
+        String id = "restless:tell_illusionist";
+        return tell(id, EventTag.BLOCKS, SimpleEvent.ALWAYS, player -> {
+            BlockPos at = Place.standingAhead(player, 4.0, 0.0, 40.0);
+            if (at != null) {
+                Swaps.show(
+                        player,
+                        at,
+                        Blocks.CRAFTING_TABLE.defaultBlockState(),
+                        Config.event(id).integer("ticks"));
+                particles(player, ParticleTypes.POOF, Vec3.atCenterOf(at), 0.3, 6);
+                soundAt(player, SoundEvents.WOOD_PLACE, Vec3.atCenterOf(at), id);
+            }
+        });
+    }
+
+    /** A dog sits a few blocks off and watches the player, then is gone. */
+    private static HauntEvent falseFriend() {
+        String id = "restless:tell_false_friend";
+        return tell(id, EventTag.MOBS, SimpleEvent.ALWAYS, player -> {
+            BlockPos at = Place.standingAhead(player, 5.0, 0.0, 60.0);
+            if (at != null) {
+                Vec3 spot = Vec3.atBottomCenterOf(at);
+                PacketEntity dog = PacketEntity.show(
+                        player, EntityTypes.WOLF, spot, PacketEntity.yawToward(spot, player.position()));
+                Scheduler.later(player, Config.event(id).integer("ticks"), dog::remove);
+            }
+        });
+    }
+
+    /** A soft light drifts away ahead of the player, a little at a time, with a faint chime. */
+    private static HauntEvent lure() {
+        String id = "restless:tell_lure";
+        return tell(id, EventTag.LIGHTS, SimpleEvent.ALWAYS, player -> {
+            Config.Section config = Config.event(id);
+            Vec3 look = player.getLookAngle().multiply(1.0, 0.0, 1.0).normalize();
+            Vec3 start = player.position().add(0.0, 1.3, 0.0);
+            for (int step = 1; step <= config.integer("steps"); step++) {
+                Vec3 at = start.add(look.scale(1.5 + step * 1.5));
+                Scheduler.later(
+                        player,
+                        step * config.integer("gap_ticks"),
+                        p -> particles(p, ParticleTypes.END_ROD, at, 0.05, 3));
+            }
+            sound(player, SoundEvents.AMETHYST_BLOCK_CHIME, id);
         });
     }
 

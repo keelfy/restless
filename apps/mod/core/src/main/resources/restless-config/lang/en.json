@@ -3072,6 +3072,54 @@
     "restless:tell_corner_lurker": {
       "name": "Two Dark Points",
       "description": "Only a spirit with the corner lurker habit: two dark points, a hand apart, hang at head height some blocks away in the dark and fade. The journal notes it."
+    },
+    "restless:tell_vengeful": {
+      "name": "Red Tally",
+      "description": "Only a spirit with the vengeful habit: four red marks hang in the air a few blocks ahead of the player, with a low moan. The journal notes it."
+    },
+    "restless:tell_hunter": {
+      "name": "Heavy Tread",
+      "description": "Only a spirit with the hunter habit: three heavy footsteps pass behind the player from one side to the other, half a second apart. The journal notes it."
+    },
+    "restless:tell_scratcher": {
+      "name": "Claws on Nothing",
+      "description": "Only a spirit with the scratcher habit: three scrapes and sparks sound in the air beside the player, as of claws on a wall. The journal notes it."
+    },
+    "restless:tell_beast_caller": {
+      "name": "Far Call",
+      "description": "Only a spirit with the beast caller habit: a wolf's cry sounds from far off, with no wolf near. The journal notes it."
+    },
+    "restless:tell_drowner": {
+      "name": "Dry Bubbles",
+      "description": "Only a spirit with the drowner habit: bubbles rise round the player's feet on dry land, with a gurgle. The journal notes it."
+    },
+    "restless:tell_snarler": {
+      "name": "Snarl at the Ear",
+      "description": "Only a spirit with the snarler habit: a low snarl sounds right beside the player's ear. The journal notes it."
+    },
+    "restless:tell_whisperer": {
+      "name": "Whisper Behind",
+      "description": "Only a spirit with the whisperer habit: a whisper, too low to make out, sounds close behind the player. The journal notes it."
+    },
+    "restless:tell_liar": {
+      "name": "Yes and No",
+      "description": "Only a spirit with the liar habit: a villager's yes sounds behind the player, and a villager's no follows it after 0.6 seconds, with no villager near. The journal notes it."
+    },
+    "restless:tell_face_thief": {
+      "name": "Borrowed Face",
+      "description": "Only a spirit with the face thief habit: a small cloud of the player's own head hangs at face height a few blocks ahead and thins away. The journal notes it."
+    },
+    "restless:tell_illusionist": {
+      "name": "Passing Table",
+      "description": "Only a spirit with the illusionist habit: a crafting table stands a few blocks ahead for three seconds, shown to this player only. The journal notes it."
+    },
+    "restless:tell_false_friend": {
+      "name": "Strange Dog",
+      "description": "Only a spirit with the false friend habit: a dog stands a few blocks off and watches the player for four seconds, shown to this player only. The journal notes it."
+    },
+    "restless:tell_lure": {
+      "name": "Drifting Light",
+      "description": "Only a spirit with the lure habit: a soft light drifts away ahead of the player a little at a time, with a faint chime. The journal notes it."
     }
   }
 }
