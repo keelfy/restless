@@ -17,28 +17,73 @@ import java.util.stream.Collectors;
 public final class Traits {
     private Traits() {}
 
-    /**
-     * The spirit's nature is picked first, evenly. Each axis is then drawn on its own: habits all but one from the
-     * nature's group and the last from any other, so the nature is always the strict majority of the habits (see
-     * {@link #weakness}); then conditions; then leanings. An axis the catalog has too few traits for gives what it has,
-     * and the foreign habit joins only beside at least two of the nature's own. The same seed always gives the same
-     * traits while the catalog is unchanged, so a save from before traits existed gets them from its seed on load.
-     */
+    /** The roll with every nature equally likely: the rule for a save whose spirit was born before types leaned. */
     public static List<String> roll(long seed) {
+        return roll(seed, Map.of());
+    }
+
+    /**
+     * The roll of a spirit born now: its nature is drawn by the weights in {@code spirits.<type>.natures}, so a type
+     * leans to a nature; a type without them, and a nature it leaves out, weighs 1.
+     */
+    public static List<String> roll(long seed, String spirit) {
+        Config.Section type = Config.section("spirits." + spirit);
+        Map<Focus, Double> natures = new EnumMap<>(Focus.class);
+        if (type.has("natures")) {
+            Config.Section weights = type.section("natures");
+            for (String focus : weights.keys()) {
+                natures.put(Focus.valueOf(focus), weights.num(focus));
+            }
+        }
+        return roll(seed, natures);
+    }
+
+    /**
+     * The spirit's nature is picked first, by {@code natures} (a nature missing weighs 1). Each axis is then drawn on
+     * its own: habits all but one from the nature's group and the last from any other, so the nature is always the
+     * strict majority of the habits (see {@link #weakness}); then conditions; then leanings. An axis the catalog has
+     * too few traits for gives what it has, and the foreign habit joins only beside at least two of the nature's own.
+     * The same seed always gives the same traits while the catalog is unchanged, so a save from before traits existed
+     * gets them from its seed on load.
+     */
+    private static List<String> roll(long seed, Map<Focus, Double> natures) {
         Config.Section director = Config.section("director");
         Random random = new Random(seed);
         List<Trait> catalog = all();
-        Focus nature = Focus.values()[random.nextInt(Focus.values().length)];
+        Focus nature = nature(random, natures);
         List<String> rolled = new ArrayList<>();
-        draw(rolled, catalog, t -> t.kind() == Trait.Kind.HABIT && t.weakness() == nature,
-                count(random, director, "habits_min", "habits_max") - 1, random);
+        draw(
+                rolled,
+                catalog,
+                t -> t.kind() == Trait.Kind.HABIT && t.weakness() == nature,
+                count(random, director, "habits_min", "habits_max") - 1,
+                random);
         if (rolled.size() >= 2) {
             draw(rolled, catalog, t -> t.kind() == Trait.Kind.HABIT && t.weakness() != nature, 1, random);
         }
-        draw(rolled, catalog, t -> t.kind() == Trait.Kind.CONDITION,
-                count(random, director, "conditions_min", "conditions_max"), random);
+        draw(
+                rolled,
+                catalog,
+                t -> t.kind() == Trait.Kind.CONDITION,
+                count(random, director, "conditions_min", "conditions_max"),
+                random);
         draw(rolled, catalog, t -> t.kind() == Trait.Kind.LEANING, director.integer("leanings"), random);
         return rolled;
+    }
+
+    private static Focus nature(Random random, Map<Focus, Double> natures) {
+        double total = 0;
+        for (Focus focus : Focus.values()) {
+            total += natures.getOrDefault(focus, 1.0);
+        }
+        double left = random.nextDouble() * total;
+        for (Focus focus : Focus.values()) {
+            left -= natures.getOrDefault(focus, 1.0);
+            if (left < 0) {
+                return focus;
+            }
+        }
+        return Focus.values()[Focus.values().length - 1];
     }
 
     private static int count(Random random, Config.Section director, String min, String max) {
@@ -48,7 +93,8 @@ public final class Traits {
 
     /** Adds up to {@code count} distinct ids of the traits that pass {@code pick}, fewer when the pool runs out. */
     private static void draw(List<String> into, List<Trait> catalog, Predicate<Trait> pick, int count, Random random) {
-        List<String> pool = new ArrayList<>(catalog.stream().filter(pick).map(Trait::id).toList());
+        List<String> pool =
+                new ArrayList<>(catalog.stream().filter(pick).map(Trait::id).toList());
         for (int i = 0; i < count && !pool.isEmpty(); i++) {
             into.add(pool.remove(random.nextInt(pool.size())));
         }

@@ -5,7 +5,9 @@ import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.History;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.sanity.SanityPayload;
+import dev.keelfy.restless.spirit.Focus;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.spirit.life.BirthRules.Verdict;
 import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.state.HauntData;
@@ -93,6 +95,47 @@ final class BirthGameTests {
                     Births.deed(creative, Births.Deed.SLAUGHTER, false) == Verdict.NOTHING,
                     "Creative players must not be haunted");
             creative.discard();
+            helper.succeed();
+        });
+        tests.put("birth_old_spirit_keeps_nature", helper -> {
+            // a deceit poltergeist saved before types leaned to a nature: poltergeists now lean to objects
+            var json = new com.google.gson.JsonObject();
+            json.addProperty("spirit", "poltergeist");
+            json.addProperty("seed", 5L);
+            json.addProperty("next_event_at", 0L);
+            var traits = new com.google.gson.JsonArray();
+            List.of("whisperer", "liar", "door_slammer", "night_stalker").forEach(traits::add);
+            json.add("traits", traits);
+            var old = HauntData.Haunting.CODEC
+                    .parse(com.mojang.serialization.JsonOps.INSTANCE, json)
+                    .getOrThrow();
+            var again = HauntData.Haunting.CODEC
+                    .parse(
+                            com.mojang.serialization.JsonOps.INSTANCE,
+                            HauntData.Haunting.CODEC
+                                    .encodeStart(com.mojang.serialization.JsonOps.INSTANCE, old)
+                                    .getOrThrow())
+                    .getOrThrow();
+            HauntEventGameTests.check(
+                    helper,
+                    again.traits().equals(old.traits()) && Traits.weakness(Traits.of(again.traits())) == Focus.MIRROR,
+                    "A saved spirit must keep its traits and its nature");
+            // a save from before traits rolls them by the old even rule, not the type's lean
+            json.remove("traits");
+            HauntEventGameTests.check(
+                    helper,
+                    HauntData.Haunting.CODEC
+                            .parse(com.mojang.serialization.JsonOps.INSTANCE, json)
+                            .getOrThrow()
+                            .traits()
+                            .equals(Traits.roll(5L)),
+                    "A save without traits must roll them by the even rule");
+            var born =
+                    HauntData.Haunting.born("poltergeist", 0L, helper.getLevel().getRandom());
+            HauntEventGameTests.check(
+                    helper,
+                    born.traits().equals(Traits.roll(born.seed(), "poltergeist")),
+                    "A spirit born now must roll by its type's lean");
             helper.succeed();
         });
         tests.put("birth_generated", helper -> {

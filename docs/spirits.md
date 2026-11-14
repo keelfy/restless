@@ -176,13 +176,16 @@ traits, the bell of noise-hating ones). The salt, the charm and the scarecrow ha
 
 ## Banishing
 
-Every trait names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror, four traits
-each. A spirit has a **nature**, named after what it does and not after its weakness: objects (iron), darkness
-(glowstone), malice (holy water) and deceit (mirror). Players see only these names; code and config keep the
-weakness (`Focus`). The nature is picked from its seed evenly among the four: all its traits but one come from that
-nature's group and one is foreign, so it is weak to the nature (`Traits.weakness` counts votes; a spirit from before
-natures keeps its old vote, ties to the first in that order). Nothing shows the nature directly: the player reads the
-traits (ouija board, spirit box, ash) and finds the group two of them share.
+Every habit names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror. A spirit has
+a **nature**, named after what it does and not after its weakness: objects (iron), darkness (glowstone), malice (holy
+water) and deceit (mirror). Players see only these names; code and config keep the weakness (`Focus`). The nature is
+drawn from the seed by the type's weights (`spirits.<type>.natures`, keyed by `Focus` name; a missing one weighs 1):
+each type has 4.5 on one nature and 1 on the others, so 60% of its spirits share that nature. All its habits but one
+come from that nature's group and one is foreign, so it is weak to the nature (`Traits.weakness` counts habit votes,
+see [Traits](#traits)). Traits are saved at birth, so a spirit born before the weights keeps its nature; a save without
+traits rolls them with even weights (`Traits.roll(seed)`), a spirit born now with its type's (`Traits.roll(seed,
+type)`). Nothing shows the nature directly: the player reads the habits (ouija board, spirit box) and finds the group
+two of them share.
 
 The type adds a **form** (`form` in `spirits.json`): `whole`, `bit` or `crafted`. The bestiary card, which a photo
 opens, names it. The offering is the nature's category in a form:
