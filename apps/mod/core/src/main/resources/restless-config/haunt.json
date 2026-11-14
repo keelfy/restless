@@ -213,7 +213,32 @@
   },
   "ash": {
     "reveal_ticks": 600,
-    "reach": 16
+    "reach": 16,
+    "prints": [
+      [
+        "mimic",
+        "lost_one",
+        "domovoi",
+        "nix",
+        "trickster"
+      ],
+      [
+        "mara",
+        "hoarder",
+        "boggart",
+        "poltergeist"
+      ],
+      [
+        "demon",
+        "revenant"
+      ],
+      [
+        "shade",
+        "phantom",
+        "wraith",
+        "banshee"
+      ]
+    ]
   },
   "camera": {
     "cooldown_ticks": 600

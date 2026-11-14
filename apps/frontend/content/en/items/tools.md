@@ -11,7 +11,7 @@ A spirit you **sense** is one of your own personal spirits, or a territorial spi
 | Tool | Does |
 | --- | --- |
 | [Hallowed Wax](#hallowed-wax) | the seal in every charm and in the mid-tier tools |
-| [Ash](#ash) | shows one trait of a spirit as a print; never lies |
+| [Ash](#ash) | shows the build of a spirit's type as a print; never lies |
 | [Camera Obscura](#camera-obscura) | photographs a spirit: its type |
 | [Spirit Box](#spirit-box) | answers aloud what you ask around a clue word; may lie |
 | [Ouija Board](#ouija-board) | spells out a trait; may lie |
@@ -41,16 +41,16 @@ Honeycomb + salt + ash makes **2**, shapeless. Honeycomb comes from bees, so wax
 
 Cook 1 charcoal on a campfire: **4**. Place it like salt. Every 30 seconds each ash block asks the spirits within 16 blocks for a clue (your own, and any territorial one whose reach covers the spot). A spirit that answers leaves a trail of prints across the ash, one every 8 ticks, and the print goes into the journal: a personal spirit's only into the journal of the player it haunts, a territorial one's into that of everyone within 16 blocks. A print fades after 2 minutes. Ash with a print within 1.5 blocks stays quiet.
 
-The print is the **nature** of one of the spirit's traits. Ash never lies, but a spirit has exactly one trait foreign to its nature, so go by the print you see most:
+The print is the build of the spirit's **type**, the same build its photograph shows, and says nothing about its nature: two spirits of one type leave the same print, whatever their traits. Ash never lies about the kind of spirit that walked:
 
-| Print | Nature |
+| Print | Types |
 | --- | --- |
-| a paw | Objects |
-| a drag mark | Darkness |
-| a hoof | Malice |
-| a bare foot | Deceit |
+| a bare foot | Mimic, Lost One, Domovoi, Nix, Trickster |
+| a paw | Mara, Hoarder, Boggart, Poltergeist |
+| a hoof | Demon, Revenant |
+| a drag mark | Shade, Phantom, Wraith, Banshee |
 
-Each print is noted in the [journal](#journal). Nature decides the [altar](#altar) offering.
+A spirit with the Rain Walker trait leaves damp prints, drawn darker. Each print is noted in the [journal](#journal).
 
 ## Camera Obscura
 
