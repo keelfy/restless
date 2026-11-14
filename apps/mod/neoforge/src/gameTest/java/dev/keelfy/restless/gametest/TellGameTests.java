@@ -27,6 +27,21 @@ final class TellGameTests {
     /** What a tell needs around the player before it can run, by habit. */
     private static final Map<String, Consumer<ServerPlayer>> SETUPS = new HashMap<>();
 
+    static {
+        SETUPS.put(
+                "light_eater",
+                player -> player.level()
+                        .setBlockAndUpdate(
+                                player.blockPosition().east(2),
+                                net.minecraft.world.level.block.Blocks.TORCH.defaultBlockState()));
+        SETUPS.put(
+                "hearth_killer",
+                player -> player.level()
+                        .setBlockAndUpdate(
+                                player.blockPosition().east(2),
+                                net.minecraft.world.level.block.Blocks.CAMPFIRE.defaultBlockState()));
+    }
+
     private TellGameTests() {}
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {

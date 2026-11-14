@@ -9,6 +9,107 @@
         "volume": 0.6,
         "pitch": 0.6
       }
+    },
+    "restless:tell_restless_hands": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "restless_hands",
+      "sound": {
+        "volume": 0.7,
+        "pitch": 0.7
+      }
+    },
+    "restless:tell_door_slammer": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "door_slammer",
+      "sound": {
+        "volume": 0.8,
+        "pitch": 0.6
+      }
+    },
+    "restless:tell_meddler": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "meddler",
+      "sound": {
+        "volume": 0.7,
+        "pitch": 0.8
+      }
+    },
+    "restless:tell_thrower": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "thrower",
+      "sound": {
+        "volume": 0.6,
+        "pitch": 0.7
+      }
+    },
+    "restless:tell_stacker": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "stacker",
+      "ticks": 60,
+      "sound": {
+        "volume": 0.6,
+        "pitch": 0.7
+      }
+    },
+    "restless:tell_knocker": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "knocker",
+      "gap_ticks": 14,
+      "sound": {
+        "volume": 0.8,
+        "pitch": 0.8
+      }
+    },
+    "restless:tell_light_eater": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "light_eater",
+      "radius": 6,
+      "ticks": 30,
+      "sound": {
+        "volume": 0.5,
+        "pitch": 1.0
+      }
+    },
+    "restless:tell_shadow_caster": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "shadow_caster",
+      "sound": {
+        "volume": 0.4,
+        "pitch": 0.5
+      }
+    },
+    "restless:tell_blinder": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "blinder",
+      "fall_ticks": 6,
+      "hold_ticks": 10,
+      "rise_ticks": 14,
+      "peak": 0.85
+    },
+    "restless:tell_hearth_killer": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "hearth_killer",
+      "radius": 6,
+      "ticks": 40,
+      "sound": {
+        "volume": 0.5,
+        "pitch": 0.8
+      }
+    },
+    "restless:tell_corner_lurker": {
+      "weight": 1.0,
+      "impact": 0.1,
+      "habit": "corner_lurker"
     }
   }
 }
