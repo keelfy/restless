@@ -367,6 +367,31 @@ final class RitualGameTests {
         });
     }
 
+    /** Place and hour: a ritual by the spirit's grave runs a longer fury and leaves one more essence. */
+    static void registerHallow(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("ritual_by_the_grave_is_hallowed", helper -> {
+            ServerPlayer player = ready(helper);
+            BlockPos altar = helper.absolutePos(AltarGameTests.CENTER);
+            HauntData.get(helper.getLevel().getServer())
+                    .putGrave(SPIRIT, new HauntData.Grave(altar.offset(5, 0, 0), true));
+            Circle circle = started(helper, player);
+            check(helper, circle.plan().fury() == 8, "the grave adds two waves to the fury");
+            steps(helper, circle, circle.plan().total() - 1);
+            check(helper, circle.phase().orElseThrow() == Phase.LEAVING, "the leaving is on");
+            check(helper, !circle.step(), "the last wave ends the ritual");
+            check(helper, essences(helper) == 2, "a hallowed banishing leaves one more essence");
+            helper.succeed();
+        });
+        tests.put("ritual_far_from_the_grave_is_plain", helper -> {
+            ServerPlayer player = ready(helper);
+            BlockPos altar = helper.absolutePos(AltarGameTests.CENTER);
+            HauntData.get(helper.getLevel().getServer())
+                    .putGrave(SPIRIT, new HauntData.Grave(altar.offset(40, 0, 0), true));
+            check(helper, started(helper, player).plan().fury() == 6, "a far grave changes nothing");
+            helper.succeed();
+        });
+    }
+
     /** The test spirit's name, as its gravestone gives it. */
     private static String name() {
         return dev.keelfy.restless.spirit.Story.of(7L).name();

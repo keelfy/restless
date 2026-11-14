@@ -40,6 +40,8 @@ public final class Circle {
     private boolean over;
     /** The spirit's name was said: it works once a ritual, see {@link Name}. */
     boolean named;
+    /** Held near the spirit's grave or begun at midnight, see {@link Hallow}. */
+    boolean hallowed;
 
     private final Gaze gaze = new Gaze(this);
     final Ring ring = new Ring(this);
@@ -158,7 +160,7 @@ public final class Circle {
         }
         if (wave + 1 >= plan.total()) {
             end();
-            Ritual.banish(player, level, altar, spirit, censer);
+            Ritual.banish(player, level, altar, spirit, extra());
             return false;
         }
         Phase now = plan.at(wave);
@@ -191,6 +193,11 @@ public final class Circle {
         }
     }
 
+    /** Essences on top of the usual: one for the censer, one for a hallowed ritual. */
+    private int extra() {
+        return (censer ? 1 : 0) + Hallow.essences(hallowed);
+    }
+
     /** Ends the ritual now, banishing the spirit if the circle holds and failing it if not. */
     void release() {
         if (over) {
@@ -199,7 +206,7 @@ public final class Circle {
         boolean holds = holds();
         end();
         if (holds) {
-            Ritual.banish(player, level, altar, spirit, censer);
+            Ritual.banish(player, level, altar, spirit, extra());
         } else {
             Ritual.fail(player, level, altar, spirit);
         }

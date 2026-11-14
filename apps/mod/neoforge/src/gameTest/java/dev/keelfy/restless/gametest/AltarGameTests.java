@@ -55,6 +55,7 @@ public final class AltarGameTests {
         RitualGameTests.registerPhases(TESTS);
         RitualGameTests.registerRing(TESTS);
         RitualGameTests.registerName(TESTS);
+        RitualGameTests.registerHallow(TESTS);
         RitualGameTests.registerGaze(TESTS);
         RitualGameTests.registerNatures(TESTS);
         CharmGameTests.register(TESTS);

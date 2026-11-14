@@ -16,6 +16,7 @@ import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.spirit.land.Corruption;
+import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.spirit.life.Evolution;
 import dev.keelfy.restless.state.HauntData;
 import dev.keelfy.restless.ward.Wards;
@@ -100,8 +101,14 @@ public final class Ritual {
                 Component.translatable(offForm ? "message.restless.ritual_off_form" : "message.restless.ritual_begins"),
                 true);
         level.playSound(null, altar, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0f, 0.6f);
-        Circle circle =
-                new Circle(player, level, altar, held, candles, spirit, censer, plan(spirit.haunting(), held, censer));
+        boolean hallowed = hallowed(level, altar, spirit.haunting());
+        if (hallowed) {
+            player.sendSystemMessage(Component.translatable("message.restless.ritual_hallowed"), false);
+        }
+        Plan plan =
+                plan(spirit.haunting(), held, censer).longerFury(hallowed ? config.integer("hallowed_fury_waves") : 0);
+        Circle circle = new Circle(player, level, altar, held, candles, spirit, censer, plan);
+        circle.hallowed = hallowed;
         Scheduler.repeat(player, 1, 1, (p, n) -> circle.tick(n + 1));
         return true;
     }
@@ -141,6 +148,20 @@ public final class Ritual {
                 config.integer("call_waves"), config.integer("bargain_waves"), fury, config.integer("leaving_waves"));
     }
 
+    /** Whether the altar stands near the spirit's gravestone, or the ritual begins around midnight. */
+    private static boolean hallowed(ServerLevel level, BlockPos altar, HauntData.Haunting spirit) {
+        Config.Section config = Config.section("ritual");
+        double grave = Graves.of(HauntData.get(level.getServer()), spirit.uuid())
+                .map(pos -> Math.sqrt(pos.distSqr(altar)))
+                .orElse(Double.POSITIVE_INFINITY);
+        return Hallow.hallowed(
+                grave,
+                config.num("hallowed_grave_radius"),
+                level.getOverworldClockTime(),
+                config.integer("midnight_from"),
+                config.integer("midnight_to"));
+    }
+
     /** Dense vanilla soot follows the offering's bob; its task ends with the ritual, including player departure. */
     static void smoke(ServerLevel level, BlockPos altar, Altar.Held held) {
         BlockState state = level.getBlockState(altar);
@@ -160,7 +181,8 @@ public final class Ritual {
                 0.008);
     }
 
-    static void banish(ServerPlayer player, ServerLevel level, BlockPos altar, Sense.Spirit spirit, boolean censer) {
+    /** @param extra essences on top of the usual: the censer's and a hallowed ritual's */
+    static void banish(ServerPlayer player, ServerLevel level, BlockPos altar, Sense.Spirit spirit, int extra) {
         clear(level, altar);
         HauntData data = HauntData.get(level.getServer());
         // A censer's circle never lost a candle to the spirit, and a candle lost any other way fails the ritual first.
@@ -168,7 +190,7 @@ public final class Ritual {
                         spirit.haunting().evolved(),
                         Corruption.spots(data, spirit.haunting().uuid()),
                         Config.section("ritual").integer("blight_reward_spots"))
-                + (censer ? 1 : 0);
+                + extra;
         data.change(spirit.haunting().uuid(), h -> null);
         Location.forget(spirit.haunting().uuid());
         Supplier<Item> essence = Content.ESSENCE.get(spirit.haunting().spirit());

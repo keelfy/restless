@@ -225,6 +225,8 @@ Then it runs in waves of 5 seconds, through four phases:
    - It also shows itself: a dark figure walks the salt ring, and its nature sets a rule of gaze. Darkness and malice: do not look at it for more than 2 seconds. Objects and deceit: do not look away from it for more than 2 seconds. Break the rule and it snuffs a candle (the ritual goes on; relight it before the next wave).
 4. **The leaving**, 2 waves. The spirit lets go, but still walks the ring under the same rule of gaze; keep the candles lit to the end.
 
+**Place and hour.** A ritual held within 8 blocks of the spirit's [gravestone](#gravestone), or begun around midnight (day time 17000 to 19000), is hallowed: the fury runs 2 waves longer and the banished spirit leaves one more essence.
+
 **The name.** In the fury and the leaving the spirit listens to the chat. Say its name, as its [gravestone](#gravestone) gives it (case and punctuation do not matter): in the fury it takes 4 waves off the fury, in the leaving the spirit is banished at once. It works once a ritual. Anything else you say then is a wrong name: its anger rises by 0.1.
 
 Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offering is taken off, or you wander off: what lay on the altar is lost and the spirit grows 0.3 angrier. If every candle burns at the end, it is **banished**. For the essences it leaves, see [Essences](/en/items/essences#where-they-come-from).

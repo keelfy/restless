@@ -101,6 +101,7 @@
   "message.restless.ritual_silent": "Nothing answers the altar.",
   "message.restless.ritual_begins": "The ritual begins. Keep the candles lit.",
   "message.restless.ritual_off_form": "The spirit resists: the offering is alien to it. The ritual will drag on.",
+  "message.restless.ritual_hallowed": "The place and the hour are on your side. The spirit will fight harder, and leave more behind.",
   "message.restless.ritual_wary": "The spirit lies low and turns the altar away.",
   "message.restless.ritual_bargain": "The spirit whispers what it wants: %s. Throw it onto the altar and it will go quiet.",
   "message.restless.ritual_bargained": "The spirit takes the gift and falls quiet. It is still here.",
