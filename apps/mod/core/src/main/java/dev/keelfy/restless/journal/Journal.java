@@ -1,5 +1,6 @@
 package dev.keelfy.restless.journal;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.config.Settings;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.journal.Notebook.Chapter;
@@ -8,9 +9,12 @@ import dev.keelfy.restless.photo.Picture;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.state.HauntData;
+import dev.keelfy.restless.state.Session;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
@@ -30,6 +34,9 @@ import org.jspecify.annotations.Nullable;
  * into.
  */
 public final class Journal {
+    /** The server tick each player's last request for the pages was answered, see {@link #read}. */
+    private static final Map<UUID, Integer> ANSWERED = Session.SERVER.keep(new HashMap<>());
+
     private Journal() {}
 
     /**
@@ -171,6 +178,23 @@ public final class Journal {
             turnPage(player, Component.translatable("message.restless.journal_filed"));
             sync(player);
         }
+    }
+
+    /**
+     * The client asked for the pages ({@link ReadPayload}). Every answer carries the whole journal with its photos, so
+     * a player gets one per {@code journal_pages.read_gap_ticks}; asks in between are dropped.
+     *
+     * @return whether the pages were sent
+     */
+    public static boolean read(ServerPlayer player) {
+        int now = player.level().getServer().getTickCount();
+        Integer last = ANSWERED.get(player.getUUID());
+        if (last != null && now - last < Config.section("journal_pages").integer("read_gap_ticks")) {
+            return false;
+        }
+        ANSWERED.put(player.getUUID(), now);
+        sync(player);
+        return true;
     }
 
     /** Sends the pages for the book in the player's hands, which is read without opening a screen. */

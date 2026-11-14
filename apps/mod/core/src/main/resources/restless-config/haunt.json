@@ -216,6 +216,9 @@
   "camera": {
     "cooldown_ticks": 600
   },
+  "journal_pages": {
+    "read_gap_ticks": 20
+  },
   "spirit_box": {
     "radius": 6,
     "delay_ticks": 40,
