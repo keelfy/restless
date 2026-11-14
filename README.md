@@ -30,6 +30,17 @@ mise run voice:generate  # re-voice the spirit box after its words or answers ch
 With Java 25, run `./gradlew :neoforge:runGameTestServer` from `apps/mod` to verify altar placement,
 dismantling, offerings and salt rings in a dedicated test world. Test code is excluded from the mod jar.
 
+## Release
+
+The version is `mod_version` in `apps/mod/gradle.properties`; changes are listed in [CHANGELOG.md](CHANGELOG.md).
+Pushing a tag `v<mod_version>` (for example `v0.1.0-alpha.1`) makes the `release` job in `.github/workflows/mod.yml`
+build the jar and attach it to the workflow run as an artifact. Nothing is published anywhere else.
+
+## Licence
+
+Copyright keelfy. All Rights Reserved (`mod_license` in `apps/mod/gradle.properties`), except the third-party sounds
+listed under Credits, which keep their own licences.
+
 ## Credits
 
 Haunt sounds in `assets/restless/sounds/haunt` are CC0 recordings from [OpenGameArt](https://opengameart.org), cut, mixed down to mono and re-encoded:

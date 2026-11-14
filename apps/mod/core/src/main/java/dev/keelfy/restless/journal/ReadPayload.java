@@ -6,7 +6,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
-/** A reader picked the journal up and wants its pages for the book in their hands, see {@link Journal#sync}. */
+/** A reader picked the journal up and wants its pages for the book in their hands, see {@link Journal#read}. */
 public record ReadPayload() implements CustomPacketPayload {
     public static final Type<ReadPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "read"));
     public static final StreamCodec<ByteBuf, ReadPayload> CODEC = StreamCodec.unit(new ReadPayload());

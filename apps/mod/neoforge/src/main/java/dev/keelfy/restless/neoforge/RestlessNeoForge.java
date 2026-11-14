@@ -122,7 +122,7 @@ public final class RestlessNeoForge {
                 .playToServer(
                         ReadPayload.TYPE,
                         ReadPayload.CODEC,
-                        (payload, context) -> Journal.sync((ServerPlayer) context.player()))
+                        (payload, context) -> Journal.read((ServerPlayer) context.player()))
                 .playToServer(
                         FilePayload.TYPE,
                         FilePayload.CODEC,

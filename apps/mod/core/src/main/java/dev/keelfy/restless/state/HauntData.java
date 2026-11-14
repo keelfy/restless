@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.haunt.Tally;
 import dev.keelfy.restless.haunt.harm.Menace;
 import dev.keelfy.restless.haunt.recall.Said;
 import dev.keelfy.restless.journal.Notebook;
@@ -254,11 +255,35 @@ public final class HauntData extends SavedData {
                 .apply(i, Spoken::new));
     }
 
+    /**
+     * A block a haunt event changed and has not yet put back.
+     *
+     * @param at the block, with its dimension
+     * @param from what stood there before
+     * @param to what the event put there; the block goes back only while it still is this
+     * @param due overworld game time to put it back
+     */
+    public record Undo(GlobalPos at, BlockState from, BlockState to, long due) {
+        static final Codec<Undo> CODEC = RecordCodecBuilder.create(i -> i.group(
+                        GlobalPos.CODEC.fieldOf("at").forGetter(Undo::at),
+                        BlockState.CODEC.fieldOf("from").forGetter(Undo::from),
+                        BlockState.CODEC.fieldOf("to").forGetter(Undo::to),
+                        Codec.LONG.fieldOf("due").forGetter(Undo::due))
+                .apply(i, Undo::new));
+    }
+
     private static final Codec<Menace> MENACE = RecordCodecBuilder.create(i -> i.group(
                     Codec.LONG.optionalFieldOf("last_lethal_at", -1L).forGetter(Menace::lastLethalAt),
                     Codec.BOOL.optionalFieldOf("warned", false).forGetter(Menace::warned),
                     Codec.LONG.optionalFieldOf("mercy_until", 0L).forGetter(Menace::mercyUntil))
             .apply(i, Menace::new));
+
+    private static final Codec<Tally.Counts> COUNTS = RecordCodecBuilder.create(i -> i.group(
+                    Codec.INT.optionalFieldOf("rolled", 0).forGetter(Tally.Counts::rolled),
+                    Codec.INT.optionalFieldOf("ran", 0).forGetter(Tally.Counts::ran),
+                    Codec.INT.optionalFieldOf("warded", 0).forGetter(Tally.Counts::warded),
+                    Codec.INT.optionalFieldOf("failed", 0).forGetter(Tally.Counts::failed))
+            .apply(i, Tally.Counts::new));
 
     /**
      * A player who lost their last personal spirit gets another: {@code dueAt} is the overworld game time it is bound
@@ -271,8 +296,12 @@ public final class HauntData extends SavedData {
                 .apply(i, Successor::new));
     }
 
-    /** The last two saved maps, nested so the record codec stays within 16 fields. */
-    private record Later(Map<UUID, Long> requiemWary, Map<UUID, Successor> successors) {}
+    /** The last saved fields, nested so the record codec stays within 16 fields. */
+    private record Later(
+            Map<UUID, Long> requiemWary,
+            Map<UUID, Successor> successors,
+            Map<String, Tally.Counts> tally,
+            List<Undo> undos) {}
 
     private static final MapCodec<Later> LATER = RecordCodecBuilder.mapCodec(i -> i.group(
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
@@ -280,7 +309,11 @@ public final class HauntData extends SavedData {
                             .forGetter(Later::requiemWary),
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Successor.CODEC)
                             .optionalFieldOf("successors", Map.of())
-                            .forGetter(Later::successors))
+                            .forGetter(Later::successors),
+                    Codec.unboundedMap(Codec.STRING, COUNTS)
+                            .optionalFieldOf("tally", Map.of())
+                            .forGetter(Later::tally),
+                    Undo.CODEC.listOf().optionalFieldOf("undos", List.of()).forGetter(Later::undos))
             .apply(i, Later::new));
 
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL =
@@ -334,7 +367,8 @@ public final class HauntData extends SavedData {
                                     .listOf()
                                     .optionalFieldOf("released", List.of())
                                     .forGetter(data -> List.copyOf(data.released)),
-                            LATER.forGetter(data -> new Later(data.requiemWary, data.successors)))
+                            LATER.forGetter(data -> new Later(
+                                    data.requiemWary, data.successors, data.tally.all(), List.copyOf(data.undos))))
                     .apply(
                             i,
                             (players,
@@ -377,6 +411,8 @@ public final class HauntData extends SavedData {
                                 data.released.addAll(released);
                                 data.requiemWary.putAll(later.requiemWary());
                                 data.successors.putAll(later.successors());
+                                data.tally.load(later.tally());
+                                data.undos.addAll(later.undos());
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -386,6 +422,11 @@ public final class HauntData extends SavedData {
     // No vanilla data fixer for mod data; NeoForge skips fixing when this is null.
     private static final SavedDataType<HauntData> TYPE = new SavedDataType<>(
             Identifier.fromNamespaceAndPath(Restless.MOD_ID, "hauntings"), HauntData::new, CODEC, null);
+
+    /** The save format, for a test to write a world out and read it back. */
+    public static Codec<HauntData> codec() {
+        return CODEC;
+    }
 
     private static final int CELL_SHIFT = 6;
 
@@ -426,6 +467,10 @@ public final class HauntData extends SavedData {
     private final Set<UUID> released = new HashSet<>();
     /** The game time until which the altar refuses a player a Requiem, after a failed one. Keyed by player. */
     private final Map<UUID, Long> requiemWary = new HashMap<>();
+    /** Block undos not yet done, so a crash does not leave the changes in the world. */
+    private final List<Undo> undos = new ArrayList<>();
+    /** How often each event was rolled, ran, was warded off or failed, since the world began. */
+    private final Tally tally = new Tally();
     /**
      * Decided the first time anyone asks and never again, so changing the config later does not flip a world; null
      * until then.
@@ -492,6 +537,30 @@ public final class HauntData extends SavedData {
 
     public void putRequiemWary(UUID player, long until) {
         requiemWary.put(player, until);
+        setDirty();
+    }
+
+    public List<Undo> undos() {
+        return List.copyOf(undos);
+    }
+
+    public void addUndo(Undo undo) {
+        undos.add(undo);
+        setDirty();
+    }
+
+    public void removeUndo(Undo undo) {
+        if (undos.remove(undo)) {
+            setDirty();
+        }
+    }
+
+    public Tally tally() {
+        return tally;
+    }
+
+    public void count(String event, Tally.Kind kind) {
+        tally.add(event, kind);
         setDirty();
     }
 

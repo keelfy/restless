@@ -12,6 +12,7 @@ import dev.keelfy.restless.photo.Picture;
 import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.state.HauntData;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -46,6 +48,22 @@ final class JournalGameTests {
         registerArchive(tests);
         registerDiary(tests);
         registerPath(tests);
+        tests.put("journal_read_answers_once_per_gap", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            EmbeddedChannel channel =
+                    (EmbeddedChannel) player.connection.getConnection().channel();
+            channel.outboundMessages().clear();
+            for (int i = 0; i < 10; i++) {
+                Journal.read(player);
+            }
+            long answers = channel.outboundMessages().stream()
+                    .filter(m -> m instanceof ClientboundCustomPayloadPacket packet
+                            && packet.payload() instanceof JournalPayload)
+                    .count();
+            check(helper, answers == 1, "ten requests in one tick must get one answer, got " + answers);
+            player.discard();
+            helper.succeed();
+        });
         tests.put("photo_develops_once", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             ItemStack photo = new ItemStack(Content.PHOTO.get());
