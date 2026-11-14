@@ -103,7 +103,7 @@ final class Jolts {
         Vec3 at = Vec3.atBottomCenterOf(spot);
         Nearby.sound(
                 player,
-                HauntSounds.JOLT,
+                HauntSounds.byId(config.text("sound_id")),
                 at.add(0, Config.section("place").num("sound_height"), 0),
                 config.tone("sound"));
         PacketEntity figure =
@@ -184,7 +184,11 @@ final class Jolts {
             if (t <= lunge) {
                 figure[0].move(p, home.lerp(face, (double) t / lunge), PacketEntity.yawToward(face, p.position()));
                 if (t == lunge) {
-                    Nearby.sound(p, HauntSounds.JOLT, face.add(0, p.getEyeHeight(), 0), config.tone("bang"));
+                    Nearby.sound(
+                            p,
+                            HauntSounds.byId(config.text("bang_id")),
+                            face.add(0, p.getEyeHeight(), 0),
+                            config.tone("bang"));
                 }
             }
             boolean over = t >= lunge + config.integer("hold_ticks");

@@ -1,6 +1,7 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.History;
 import dev.keelfy.restless.haunt.event.HauntEvent;
@@ -14,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,6 +51,15 @@ final class ScareGameTests {
                     set(helper, wall, Blocks.AIR.defaultBlockState());
                     helper.runAfterDelay(6, () -> {
                         check(helper, scene.figures() == 1, "mined_face must show one figure");
+                        check(
+                                helper,
+                                scene.heard(Config.event("mined_face").text("sound_id")),
+                                "mined_face must play its own sting");
+                        check(
+                                helper,
+                                !"restless:haunt.jolt"
+                                        .equals(Config.event("mined_face").text("sound_id")),
+                                "mined_face must not use the plain jolt");
                         check(helper, scene.blockUpdates() >= 2, "mined_face must open the rock behind the hole");
                         scene.end(helper);
                     });
@@ -63,6 +74,10 @@ final class ScareGameTests {
                     Restless.onBreakBlock(scene.player, Blocks.STONE.defaultBlockState(), hole);
                     helper.runAfterDelay(6, () -> {
                         check(helper, scene.figures() == 1, "dig_down must show one figure");
+                        check(
+                                helper,
+                                scene.heard(Config.event("dig_down").text("sound_id")),
+                                "dig_down must play its own sting");
                         check(helper, scene.blockUpdates() >= 2, "dig_down must open the rock under the hole");
                         scene.end(helper);
                     });
@@ -131,6 +146,10 @@ final class ScareGameTests {
                                     helper,
                                     scene.figures() == 1,
                                     "a door shut near the player must fly open on a figure");
+                            check(
+                                    helper,
+                                    scene.heard(Config.event("door_slam_face").text("sound_id")),
+                                    "door_slam_face must play its own sting");
                             scene.end(helper);
                         });
                     }));
@@ -172,6 +191,10 @@ final class ScareGameTests {
                                     scene.player.getHealth() < scene.player.getMaxHealth(),
                                     "the figure must hit, health=" + scene.player.getHealth() + " figures="
                                             + scene.figures());
+                            check(
+                                    helper,
+                                    scene.heard(Config.event("hide").text("sound_id")),
+                                    "hide must play its own sting");
                             check(helper, scene.player.isAlive(), "hide must not kill");
                             scene.end(helper);
                         });
@@ -231,6 +254,8 @@ final class ScareGameTests {
                             EmbeddedChannel channel = (EmbeddedChannel)
                                     player.connection.getConnection().channel();
                             channel.outboundMessages().clear();
+                            // A mock player is not in the level's list as a joined one is: sounds skip it.
+                            helper.getLevel().players().add(player);
                             event.run(player);
                             then.accept(new Scene(player, channel));
                         },
@@ -288,7 +313,18 @@ final class ScareGameTests {
                     .count();
         }
 
+        boolean heard(String sound) {
+            return channel.outboundMessages().stream()
+                    .anyMatch(m -> m instanceof ClientboundSoundPacket packet
+                            && packet.getSound()
+                                    .unwrap()
+                                    .map(key -> key.identifier(), event -> event.location())
+                                    .toString()
+                                    .equals(sound));
+        }
+
         void end(GameTestHelper helper) {
+            helper.getLevel().players().remove(player);
             player.discard();
             helper.succeed();
         }
