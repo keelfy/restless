@@ -166,6 +166,8 @@ Sections show once they have something to say:
 | Recipes | the recipes in your recipe book that make an item of the mod: the ones diary pages taught you |
 | Chronicle | what happened: rests and banishings |
 
+**Case sheet.** Each dossier carries your own guesses: its nature (iron, glowstone, holy water or a mirror), its form (the thing whole, a bit or something crafted) and each habit you think you have seen. Click a line to move it on to its next value; after the last it is cleared. The journal keeps what you marked and never says whether you are right.
+
 **Filing.** A dossier offers the banishments it could be: click one to file it, and the spirit moves to the Archive under the name that note gave it. Types must agree where both are known. The journal cannot tell whether they are the same spirit; that is your call.
 
 ## Altar

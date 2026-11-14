@@ -24,6 +24,8 @@ public record JournalPayload(List<JournalPages.Section> sections, boolean open) 
             JournalPages.Filing::record,
             ByteBufCodecs.VAR_INT,
             JournalPages.Filing::dossier,
+            ByteBufCodecs.STRING_UTF8,
+            JournalPages.Filing::field,
             JournalPages.Filing::new);
     private static final StreamCodec<RegistryFriendlyByteBuf, JournalPages.Entry> ENTRY_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.idMapper(i -> Kind.values()[i], Kind::ordinal)),

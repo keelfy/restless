@@ -26,6 +26,7 @@ import dev.keelfy.restless.haunt.effect.client.ScreenOverlay;
 import dev.keelfy.restless.journal.FilePayload;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.JournalPayload;
+import dev.keelfy.restless.journal.MarkPayload;
 import dev.keelfy.restless.journal.ReadPayload;
 import dev.keelfy.restless.journal.client.JournalScreen;
 import dev.keelfy.restless.neoforge.compat.VoiceAddon;
@@ -124,6 +125,10 @@ public final class RestlessNeoForge {
                         FilePayload.TYPE,
                         FilePayload.CODEC,
                         (payload, context) -> Journal.file((ServerPlayer) context.player(), payload))
+                .playToServer(
+                        MarkPayload.TYPE,
+                        MarkPayload.CODEC,
+                        (payload, context) -> Journal.mark((ServerPlayer) context.player(), payload))
                 .playToServer(
                         FirePayload.TYPE,
                         FirePayload.CODEC,
