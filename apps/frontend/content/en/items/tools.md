@@ -181,7 +181,7 @@ Placing it builds a 3 by 3 platform and needs a clear 3 by 3 on solid ground. Th
 
 ### Holy water
 
-Lay a **water bottle** in the bowl. It needs only the finished platform, not the ring or the candles. After **12000 ticks** it turns into holy water; take it with an empty hand. Taken earlier, it is the bottle again. Holy water stacks to 16. A spirit may cloud it until dawn, and the altar will not take it then.
+Lay a **water bottle** in the bowl. It needs only the finished platform, not the ring or the candles. After **12000 ticks** it turns into holy water; take it with an empty hand. Taken earlier, it is the bottle again. Holy water stacks to 16. A spirit may cloud it until dawn, and the altar will not take it then. Used while looking down (pitch 70° or more), one bottle is poured at your feet and ends every pending event of a Malice spirit on you, with the same falling ash and chime as a ward. See [Weakness](/en/how-it-works#weakness).
 
 ### The offering
 
@@ -194,7 +194,7 @@ Use an offering on the altar. It is of one **nature**, which decides which spiri
 | Malice | holy water | holy water | salt | bell |
 | Deceit | the mirror, which shows the truth | mirror | glass pane | spyglass |
 
-Mirror: a glass pane between 2 iron nuggets, in one row. A spirit may mark it so the next time you lay it down it shows a spirit's name.
+Mirror: a glass pane between 2 iron nuggets, in one row. A spirit may mark it so the next time you lay it down it shows a spirit's name. Held in the hand, it shows the fake blocks and the doubles of a Deceit spirit for what they are, see [Weakness](/en/how-it-works#weakness).
 
 Each type takes one form, shown in its bestiary card:
 

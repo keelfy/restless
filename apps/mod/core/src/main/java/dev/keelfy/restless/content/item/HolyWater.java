@@ -18,9 +18,11 @@ public final class HolyWater extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        if (!(player instanceof ServerPlayer server)
-                || player.getXRot() < Config.section("weakness").integer("pour_pitch")) {
+        if (player.getXRot() < Config.section("weakness").integer("pour_pitch")) {
             return InteractionResult.PASS;
+        }
+        if (!(player instanceof ServerPlayer server)) {
+            return InteractionResult.SUCCESS;
         }
         server.level()
                 .sendParticles(
