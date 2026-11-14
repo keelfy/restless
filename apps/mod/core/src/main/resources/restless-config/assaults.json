@@ -3,6 +3,10 @@
   "assaults": {
     "safe_health": 6.0,
     "brink_health": 1.0,
+    "brink_heartbeat": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
     "mercy_ticks": 1200,
     "lethal": "on",
     "lethal_cooldown_days": 3.0,

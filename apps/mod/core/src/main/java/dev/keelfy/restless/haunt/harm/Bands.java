@@ -2,13 +2,17 @@ package dev.keelfy.restless.haunt.harm;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Hardcore;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.event.HauntEvent;
 import dev.keelfy.restless.haunt.event.HauntTier;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.life.Anger;
 import dev.keelfy.restless.state.HauntData;
+import net.minecraft.core.Holder;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -68,6 +72,18 @@ public final class Bands {
         HauntData data = HauntData.get(player.level().getServer());
         Menace menace = data.menace(player.getUUID());
         long now = now(player);
+        if (band == Band.BRINK) {
+            Config.Tone beat = Config.section("assaults").tone("brink_heartbeat");
+            player.connection.send(new ClientboundSoundPacket(
+                    Holder.direct(HauntSounds.HEARTBEAT),
+                    SoundSource.HOSTILE,
+                    player.getX(),
+                    player.getY(),
+                    player.getZ(),
+                    beat.volume(),
+                    beat.pitch(),
+                    player.getRandom().nextLong()));
+        }
         data.putMenace(
                 player.getUUID(),
                 band == Band.BRINK

@@ -5,7 +5,9 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.UnlitLights;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.event.HauntEvents;
+import dev.keelfy.restless.haunt.harm.Bands;
 import dev.keelfy.restless.sanity.Sanity;
 import dev.keelfy.restless.sanity.SanityPayload;
 import dev.keelfy.restless.state.HauntData;
@@ -111,6 +113,23 @@ final class SanityGameTests {
                 helper.succeed();
             });
         }
+        tests.put("brink_heartbeat", helper -> {
+            var player = HauntEventGameTests.connected(helper);
+            var channel = (io.netty.channel.embedded.EmbeddedChannel)
+                    player.connection.getConnection().channel();
+            var threat = HauntEvents.byId(Identifier.withDefaultNamespace("sanity_crash"))
+                    .orElseThrow();
+            channel.outboundMessages().clear();
+            Bands.fired(threat, player);
+            HauntEventGameTests.check(helper, !heartbeat(channel), "A threat event must not play the heartbeat");
+            var brink = HauntEvents.byId(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "final_blow"))
+                    .orElseThrow();
+            Bands.fired(brink, player);
+            HauntEventGameTests.check(
+                    helper, heartbeat(channel), "A brink event must play the heartbeat to the player");
+            player.discard();
+            helper.succeed();
+        });
         tests.put("sanity_sweets", helper -> {
             var player = HauntEventGameTests.connected(helper);
             ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
@@ -223,6 +242,12 @@ final class SanityGameTests {
                     })
                     .thenSucceed();
         });
+    }
+
+    private static boolean heartbeat(io.netty.channel.embedded.EmbeddedChannel channel) {
+        return channel.outboundMessages().stream()
+                .anyMatch(m -> m instanceof net.minecraft.network.protocol.game.ClientboundSoundPacket packet
+                        && packet.getSound().value().location().equals(HauntSounds.HEARTBEAT.location()));
     }
 
     private static void rate(GameTestHelper helper, ServerPlayer player, double expected, String message) {
