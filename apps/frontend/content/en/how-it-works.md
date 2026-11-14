@@ -49,12 +49,13 @@ A spirit's anger rises when you do something spirits hate:
 | Use the Borrowed Dream | +0.2 |
 | Use the Devil's Coin | +0.1 |
 | Fail a ritual at the altar | +0.3 |
+| Say a wrong name in a ritual's fury or leaving | +0.1 |
 | Lay an offering of the wrong nature | straight to 1 |
 | Do a deed again whose spirit you already have (it angers that one instead of a new birth) | +0.15 |
 
 Your personal spirits take offence at everything you do, wherever you are. A territorial spirit takes it only when it happens inside its radius (48 blocks), and also when its anchor is broken (+0.3, within 3 blocks of it).
 
-Nothing wears anger down with time. It falls when a spirit's anger is spent: you beat an avenger, or a lethal event takes a player.
+Nothing wears anger down with time. It falls when a spirit's anger is spent: you beat an avenger, or a lethal event takes a player. A gift in the [bargain of a ritual](/en/items/tools#the-ritual) lowers it by 0.3.
 
 ## Evolving
 

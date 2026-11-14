@@ -5,8 +5,6 @@ import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Altar;
 import dev.keelfy.restless.haunt.Ticks;
-import dev.keelfy.restless.journal.Journal;
-import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.spirit.life.Echoes;
@@ -17,7 +15,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -193,10 +190,10 @@ final class EchoGameTests {
         });
     }
 
-    /** What the altar does at the end of a banishing: the spirit leaves the data, then the journal records it. */
+    /** What {@code Ritual.banish} does at the end of a banishing: the spirit leaves the data, then the echo comes. */
     private static void banish(ServerPlayer player, HauntData data, HauntData.Haunting spirit) {
         data.change(spirit.uuid(), h -> null);
-        Journal.tagged(player, Notebook.Kind.BANISHED, spirit, "shade", Component.literal("Shade"));
+        Echoes.banished(player, spirit, player.blockPosition());
     }
 
     private static HauntData.Haunting spirit(UUID id, String type) {

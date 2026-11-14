@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
@@ -24,8 +25,11 @@ import net.minecraft.server.level.ServerPlayer;
 public final class Echoes {
     private Echoes() {}
 
-    /** Call once the altar has banished {@code banished} for {@code player}; it is already gone from the data. */
-    public static void banished(ServerPlayer player, HauntData.Haunting banished) {
+    /**
+     * Call once the altar at {@code altar} has banished {@code banished} for {@code player}; it is already gone from the
+     * data.
+     */
+    public static void banished(ServerPlayer player, HauntData.Haunting banished, BlockPos altar) {
         HauntData data = HauntData.get(player.level().getServer());
         Optional<SpiritType> type = Spirits.byId(banished.spirit());
         if (data.echo(banished.uuid()) != 0L || type.isEmpty() || Requiem.released(player)) {
@@ -56,7 +60,7 @@ public final class Echoes {
             data.putTerritorial(new HauntData.Territorial(
                     echo,
                     player.level().dimension(),
-                    player.blockPosition(),
+                    altar,
                     Config.section("director").integer("territorial_radius")));
         }
     }
