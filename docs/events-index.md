@@ -20,6 +20,7 @@ Paths below are under `apps/mod/core/src/main/java/dev/keelfy/restless/haunt/` u
 | Damage bands: safe / threat / brink / lethal | `harm/Band.java`, `harm/Bands.java`, `docs/assaults.md` |
 | World changes undone later | `Restore.java`, `event/kit/Swaps.java` (client-only blocks), `event/kit/PacketEntity.java` (client-only mobs) |
 | Habit gate: an event with `habit` in its config only rolls for a spirit that has that habit (`HauntEvent.habit`, `Director.weight`); the tells use it | `event/HauntEvent.java`, `event/Tells.java` |
+| Harsh form: above `anger.harsh_above` (0.7) a tell with `harsh` in its config runs that event instead, where it can run | `event/Harsh.java`, `event/Tells.java` |
 | Tunables, `events.<namespace:id>` (`weight` + event keys) | `apps/mod/core/src/main/resources/restless-config/<group>.json`, read via `Config.event(id)` |
 | Scenarios: scripts of beats | `restless-config/scenarios.json` (`script`), loaded by `scenario/Scenarios.java`; `docs/scenarios.md` |
 | Wiki page per tag | `apps/frontend/content/{en,ru}/events/<tag>.md` |

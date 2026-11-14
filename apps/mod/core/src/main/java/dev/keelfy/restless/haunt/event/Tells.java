@@ -430,7 +430,7 @@ final class Tells {
      */
     static HauntEvent tell(String id, EventTag tag, Predicate<ServerPlayer> condition, Consumer<ServerPlayer> action) {
         return SimpleEvent.light(id, tag, condition, player -> {
-            action.accept(player);
+            Harsh.of(player, id).ifPresentOrElse(harsh -> harsh.run(player), () -> action.accept(player));
             note(player, Config.event(id).text("habit"));
         });
     }

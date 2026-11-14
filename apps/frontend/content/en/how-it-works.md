@@ -50,7 +50,9 @@ A spirit's anger rises when you do something spirits hate:
 
 Your personal spirits take offence at everything you do, wherever you are. A territorial spirit takes it only when it happens inside its radius (48 blocks), and also when its anchor is broken (+0.3, within 3 blocks of it).
 
-Nothing wears anger down with time. It falls when a spirit's anger is spent: you beat an avenger, or a lethal event takes a player.
+Nothing wears anger down with time. It falls when a spirit's anger is spent: you beat an avenger, or a lethal event takes a player. A spirit's [desire](#leanings) left near you also calms it, and its hate angers it.
+
+Above anger 0.7 some [tells](/en/events/tells) turn harsh: the door slammer locks a door near you (`locked_door`), the cold touch brings frostbite (`frostbite`), the vengeful strikes (`wrath`) and the whisperer drains sanity (`sanity_drain`). Where the harsh form has nothing to act on, the mild tell runs.
 
 ## Evolving
 

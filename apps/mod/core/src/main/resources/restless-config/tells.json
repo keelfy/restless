@@ -5,6 +5,7 @@
       "weight": 1.0,
       "impact": 0.1,
       "habit": "cold_touch",
+      "harsh": "minecraft:frostbite",
       "sound": {
         "volume": 0.6,
         "pitch": 0.6
@@ -23,6 +24,7 @@
       "weight": 1.0,
       "impact": 0.1,
       "habit": "door_slammer",
+      "harsh": "minecraft:locked_door",
       "sound": {
         "volume": 0.8,
         "pitch": 0.6
@@ -115,6 +117,7 @@
       "weight": 1.0,
       "impact": 0.1,
       "habit": "vengeful",
+      "harsh": "minecraft:wrath",
       "sound": {
         "volume": 0.5,
         "pitch": 0.6
@@ -171,6 +174,7 @@
       "weight": 1.0,
       "impact": 0.1,
       "habit": "whisperer",
+      "harsh": "minecraft:sanity_drain",
       "sound": {
         "volume": 0.6,
         "pitch": 1.0
