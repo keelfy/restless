@@ -505,6 +505,25 @@
     "max_distance": 400,
     "essence": 2,
     "experience": 30,
+    "quests": {
+      "item": 4,
+      "remains": 2,
+      "letter": 2,
+      "killer": 1,
+      "rival": 1
+    },
+    "cause_chance": 0.6,
+    "cause_quests": {
+      "starved_in_a_deep_mine": "remains",
+      "drowned_in_a_flooded_cave": "remains",
+      "suffocated_in_a_collapsed_tunnel": "remains",
+      "was_lost_in_the_nether": "letter",
+      "never_found_the_way_back_to_bed": "letter",
+      "was_shot_by_a_skeleton": "killer",
+      "was_slain_by_a_zombie_horde": "killer",
+      "was_blown_up_by_a_creeper": "killer",
+      "was_pushed_off_by_a_friend": "rival"
+    },
     "wants": [
       "minecraft:golden_apple",
       "minecraft:diamond",

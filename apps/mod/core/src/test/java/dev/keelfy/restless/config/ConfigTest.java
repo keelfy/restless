@@ -218,6 +218,10 @@ class ConfigTest {
                 .getAsJsonObject("spirit_box")
                 .getAsJsonObject("questions")
                 .keySet());
+        // Grave quests and causes of death are keyed by id, read through Quest.id() and Story.cause().
+        JsonObject grave = Config.defaults().getAsJsonObject("grave");
+        literals.addAll(grave.getAsJsonObject("quests").keySet());
+        literals.addAll(grave.getAsJsonObject("cause_quests").keySet());
         for (String key : defined) {
             assertTrue(literals.contains(key), "default never read by code: " + key);
         }

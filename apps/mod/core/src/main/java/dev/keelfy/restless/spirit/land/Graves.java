@@ -98,7 +98,7 @@ public final class Graves {
             return;
         }
         level.setBlock(top, Content.GRAVESTONE.get().defaultBlockState(), 3);
-        data.putGrave(spirit, new HauntData.Grave(top, true));
+        data.putGrave(spirit, new HauntData.Grave(top, true, grave.stage(), grave.mark()));
     }
 
     /** What the spirit wants back, the same for its whole life. */
@@ -123,8 +123,8 @@ public final class Graves {
     }
 
     /**
-     * A player at a grave holding {@code held}: the wanted thing lays the spirit to rest, anything else reads the
-     * stone. @return whether it took the item
+     * A player at a grave holding {@code held}: once its unfinished business ({@link Quest}) is done the spirit is laid
+     * to rest, otherwise the stone is read and the business begins. @return whether it took the item
      */
     public static boolean visit(ServerPlayer player, BlockPos pos, ItemStack held) {
         HauntData data = HauntData.get(player.level().getServer());
@@ -134,21 +134,47 @@ public final class Graves {
             return false;
         }
         HauntData.Haunting spirit = buried.get();
+        HauntData.Grave grave = data.graves().get(spirit.uuid());
         Story story = Story.of(spirit.seed());
-        Item wanted = wanted(spirit.seed());
-        if (held.is(wanted)) {
+        Quest quest = Quest.of(spirit.seed());
+        boolean took = switch (quest) {
+            case ITEM -> held.is(wanted(spirit.seed()));
+            case REMAINS, LETTER, KILLER, RIVAL -> false;
+        };
+        if (took || done(data, quest, grave)) {
             rest(player, pos, spirit, story);
-            return true;
+            return took;
         }
-        Component thing = wanted.getDefaultInstance().getHoverName();
+        Component want = switch (quest) {
+            case ITEM -> wanted(spirit.seed()).getDefaultInstance().getHoverName();
+            case RIVAL -> Rival.read(player, data, spirit, grave);
+            case REMAINS, LETTER, KILLER -> Component.empty();
+        };
         player.sendSystemMessage(Component.translatable(
-                "message.restless.epitaph",
+                quest == Quest.ITEM ? "message.restless.epitaph" : "message.restless.epitaph." + quest.id(),
                 story.name(),
                 story.daysDead(),
                 Component.translatable(story.causeKey()),
-                thing));
-        Journal.note(player, Notebook.Kind.GRAVE, spirit, story.name(), pos.getX(), pos.getZ(), thing);
+                want));
+        Journal.tagged(
+                player,
+                Notebook.Kind.GRAVE,
+                spirit,
+                quest == Quest.ITEM ? null : quest.id(),
+                story.name(),
+                pos.getX(),
+                pos.getZ(),
+                want);
         return false;
+    }
+
+    /** Whether the business is done and the next visit lays the spirit to rest. */
+    private static boolean done(HauntData data, Quest quest, HauntData.Grave grave) {
+        return switch (quest) {
+            case ITEM, REMAINS -> false; // brought to the grave in hand
+            case LETTER, KILLER -> grave.stage() >= 2;
+            case RIVAL -> Rival.gone(data, grave);
+        };
     }
 
     private static void rest(ServerPlayer player, BlockPos pos, HauntData.Haunting spirit, Story story) {

@@ -253,7 +253,11 @@ public final class JournalPages {
             return Component.translatable("journal.restless.note.evolved_unknown");
         }
         MutableComponent line = Component.translatable(
-                "journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT),
+                "journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT)
+                        + note.tag()
+                                .filter(t -> note.kind() == Kind.GRAVE)
+                                .map(t -> "." + t)
+                                .orElse(""),
                 note.args().toArray());
         return note.kind().reliable
                 ? line
