@@ -1357,6 +1357,69 @@
         "hmusic_hate",
         "hmusic_silence"
       ]
+    },
+    "unseen": {
+      "kind": "veil",
+      "affinity": {},
+      "foils": "silhouette",
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "shadow",
+        "there",
+        "look"
+      ],
+      "planchette": [
+        "unseen_no_picture",
+        "unseen_not_there",
+        "unseen_look",
+        "unseen_glass",
+        "unseen_nobody"
+      ]
+    },
+    "light_footed": {
+      "kind": "veil",
+      "affinity": {},
+      "foils": "footprints",
+      "clues": [
+        "voice",
+        "silhouette"
+      ],
+      "words": [
+        "wait",
+        "behind",
+        "follow"
+      ],
+      "planchette": [
+        "footed_no_steps",
+        "footed_light",
+        "footed_ash",
+        "footed_float",
+        "footed_clean"
+      ]
+    },
+    "voiceless": {
+      "kind": "veil",
+      "affinity": {},
+      "foils": "voice",
+      "clues": [
+        "planchette",
+        "silhouette"
+      ],
+      "words": [
+        "hush",
+        "listen",
+        "closer"
+      ],
+      "planchette": [
+        "voiceless_silent",
+        "voiceless_no_voice",
+        "voiceless_static",
+        "voiceless_mute",
+        "voiceless_mouth"
+      ]
     }
   },
   "story": {

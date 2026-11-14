@@ -13,9 +13,15 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.jspecify.annotations.Nullable;
 
 /** The trait catalog from the {@code traits} config section, and the roll that gives each spirit its own few. */
 public final class Traits {
+    /** Mixed into the seed so the hidden habit and the grown one do not follow the roll's own draws. */
+    private static final long HIDDEN = 0x5EC12E7L;
+
+    private static final long GROWN = 0x6120A7L;
+
     private Traits() {}
 
     /** The roll with every nature equally likely: the rule for a save whose spirit was born before types leaned. */
@@ -44,9 +50,9 @@ public final class Traits {
      * its own: habits all but one from the nature's group and the last from any other, so the nature is always the
      * strict majority of the habits (see {@link #weakness}); then conditions; then leanings. An axis the catalog has
      * too few traits for gives what it has, and the foreign habit joins only beside at least two of the nature's own.
-     * Leanings are {@code director.desires} desires, then {@code director.leanings} fears or hates. The same seed
-     * always gives the same traits while the catalog is unchanged, so a save from before traits existed gets them from
-     * its seed on load.
+     * Leanings are {@code director.desires} desires, then {@code director.leanings} fears or hates; last, with the
+     * chance {@code director.veil_chance}, one veil. The same seed always gives the same traits while the catalog is
+     * unchanged, so a save from before traits existed gets them from its seed on load.
      */
     private static List<String> roll(long seed, Map<Focus, Double> natures) {
         Config.Section director = Config.section("director");
@@ -76,6 +82,9 @@ public final class Traits {
                 t -> t.kind() == Trait.Kind.LEANING && t.leans() != Trait.Lean.DESIRE,
                 director.integer("leanings"),
                 random);
+        if (random.nextDouble() < director.num("veil_chance")) {
+            draw(rolled, catalog, t -> t.kind() == Trait.Kind.VEIL, 1, random);
+        }
         return rolled;
     }
 
@@ -171,6 +180,29 @@ public final class Traits {
         return best;
     }
 
+    /**
+     * The habit that every tool keeps quiet about until its player is shaken or the spirit has evolved; picked by the
+     * seed. Null for a spirit with fewer than two habits, so its only habit is never hidden.
+     */
+    public static @Nullable Trait hidden(long seed, List<Trait> traits) {
+        List<Trait> habits =
+                traits.stream().filter(t -> t.kind() == Trait.Kind.HABIT).toList();
+        return habits.size() < 2 ? null : habits.get(new Random(seed ^ HIDDEN).nextInt(habits.size()));
+    }
+
+    /**
+     * The habit a spirit gains when it evolves: one of its own nature that it lacks, picked by the seed, so the nature
+     * stays the majority; null when it has them all.
+     */
+    public static @Nullable String grown(long seed, List<Trait> traits) {
+        Focus nature = weakness(traits);
+        List<String> pool = all().stream()
+                .filter(t -> t.kind() == Trait.Kind.HABIT && t.weakness() == nature && !traits.contains(t))
+                .map(Trait::id)
+                .toList();
+        return pool.isEmpty() ? null : pool.get(new Random(seed ^ GROWN).nextInt(pool.size()));
+    }
+
     /** The spirit's fear, if it has one: its events do not run beside the feared thing. */
     public static Optional<Trait> fear(List<Trait> traits) {
         return leaning(traits, Trait.Lean.FEAR);
@@ -228,6 +260,7 @@ public final class Traits {
                 config.has("lies") && config.num("lies") > 0,
                 config.has("weakness") ? Focus.valueOf(config.text("weakness").toUpperCase(Locale.ROOT)) : null,
                 config.has("leans") ? Trait.Lean.valueOf(config.text("leans").toUpperCase(Locale.ROOT)) : null,
-                config.has("things") ? config.texts("things") : List.of());
+                config.has("things") ? config.texts("things") : List.of(),
+                config.has("foils") ? Clue.valueOf(config.text("foils").toUpperCase(Locale.ROOT)) : null);
     }
 }

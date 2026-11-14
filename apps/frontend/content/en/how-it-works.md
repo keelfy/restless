@@ -59,6 +59,8 @@ A spirit left alone for **10 days** grows up: a poltergeist turns raging, a shad
 An evolved spirit:
 
 - never drops below power 0.7;
+- gains one more habit of its own nature, so it starts to act in a new way;
+- no longer hides its [hidden habit](#hidden-habit);
 - rolls its signature events 3 times as often, see [Signatures](/en/events/signatures);
 - asks for 4 more waves in the [banishing ritual](/en/items/tools#the-ritual);
 - if territorial, fouls its land 3 times faster.
@@ -71,7 +73,7 @@ A territorial spirit slowly fouls the land around its anchor: grass turns to coa
 
 ## Traits
 
-Each spirit has a name, a story and **3 or 4 habits and 1 or 2 conditions**, and **one desire and one fear or hate**, rolled when it is born. Habits come from the spirit's nature, except one that comes from another nature. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
+Each spirit has a name, a story and **3 or 4 habits and 1 or 2 conditions**, and **one desire and one fear or hate**, rolled when it is born; one in four also has a [veil](#veils). Habits come from the spirit's nature, except one that comes from another nature. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
 
 ### Habits
 
@@ -158,6 +160,20 @@ Every spirit born now also has one desire and one fear or hate. Spirits born bef
 | Hates lanterns | Hate | Lanterns and soul lanterns, when placed. |
 | Hates bells | Hate | Bells, when rung. |
 | Hates music | Hate | Note blocks and jukeboxes, when played. |
+
+### Hidden habit
+
+A spirit with two or more habits keeps one of them hidden: no camera, spirit box or ouija board names it while the player's sanity is above 35%. A shaken player, below 35% sanity, can learn it; so can anyone once the spirit has evolved.
+
+### Veils
+
+One spirit in four is born with a veil: it hides from one tool. That tool finds nothing of it, and the journal notes the silence, which is itself a clue. The other tools read it as usual.
+
+| Trait | Hidden from |
+|---|---|
+| Unseen | The camera: it never shows on a photograph. |
+| Light-footed | Ash: it leaves no prints. |
+| Voiceless | The spirit box: it never answers. |
 
 ## Weakness
 

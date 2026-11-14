@@ -26,6 +26,7 @@ import org.jspecify.annotations.Nullable;
  * @param leans what a leaning is: a fear, a desire or a hate; {@code null} for habits and conditions
  * @param things registry ids a leaning is about: the blocks or entities a fear shuns, the items a desire takes, the
  *     items or blocks whose use a hate takes offence at; see {@link dev.keelfy.restless.spirit.life.Leanings}
+ * @param foils the clue a veil hides: the tool that reads it finds nothing of this spirit; {@code null} for the rest
  */
 public record Trait(
         String id,
@@ -41,7 +42,8 @@ public record Trait(
         boolean lies,
         @Nullable Focus weakness,
         @Nullable Lean leans,
-        List<String> things) {
+        List<String> things,
+        @Nullable Clue foils) {
     /** A habit or condition: no leaning, nothing it is about. */
     public Trait(
             String id,
@@ -70,7 +72,8 @@ public record Trait(
                 lies,
                 weakness,
                 null,
-                List.of());
+                List.of(),
+                null);
     }
 
     /** The axis of a trait. */
@@ -80,7 +83,9 @@ public record Trait(
         /** When the spirit acts, or what it reacts to. */
         CONDITION,
         /** What the spirit fears or wants. */
-        LEANING
+        LEANING,
+        /** A tool the spirit cannot be read by; a spirit has at most one. */
+        VEIL
     }
 
     /** What a leaning is. */

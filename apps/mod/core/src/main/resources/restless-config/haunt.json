@@ -10,6 +10,7 @@
     "conditions_max": 2,
     "desires": 1,
     "leanings": 1,
+    "veil_chance": 0.25,
     "dark_light_level": 8,
     "underground_below": 40,
     "react_chance": 0.25,

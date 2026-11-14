@@ -240,10 +240,48 @@ class TraitsTest {
     void leaningsDoNotChangeTheHabitsOrConditionsASeedRolls() {
         for (long seed : LongStream.range(0, 100).toArray()) {
             List<Trait> rolled = Traits.of(Traits.roll(seed));
-            assertEquals(
-                    rolled.stream().filter(t -> t.kind() != Trait.Kind.LEANING).toList(),
-                    rolled.subList(0, rolled.size() - 2));
+            List<Trait> early = rolled.stream()
+                    .filter(t -> t.kind() == Trait.Kind.HABIT || t.kind() == Trait.Kind.CONDITION)
+                    .toList();
+            assertEquals(early, rolled.subList(0, early.size()));
         }
+    }
+
+    @Test
+    void aSpiritHasAtMostOneVeilAndEveryToolButTheBoardHasOne() {
+        Set<Clue> foiled = EnumSet.noneOf(Clue.class);
+        for (Trait trait : Traits.all()) {
+            assertEquals(trait.kind() == Trait.Kind.VEIL, trait.foils() != null, trait.id());
+            if (trait.foils() != null) {
+                foiled.add(trait.foils());
+            }
+        }
+        assertEquals(EnumSet.of(Clue.SILHOUETTE, Clue.FOOTPRINTS, Clue.VOICE), foiled);
+        int veiled = 0;
+        for (long seed : LongStream.range(0, 400).toArray()) {
+            long veils = count(Traits.of(Traits.roll(seed)), Trait.Kind.VEIL);
+            assertTrue(veils <= 1);
+            veiled += (int) veils;
+        }
+        assertTrue(veiled > 40 && veiled < 160, "veiled " + veiled);
+    }
+
+    @Test
+    void oneOfTwoOrMoreHabitsIsHiddenAndEvolvingAddsOneOfTheNature() {
+        for (long seed : LongStream.range(0, 200).toArray()) {
+            List<Trait> rolled = Traits.of(Traits.roll(seed));
+            Trait hidden = Traits.hidden(seed, rolled);
+            assertNotNull(hidden);
+            assertEquals(Trait.Kind.HABIT, hidden.kind());
+            assertEquals(hidden, Traits.hidden(seed, rolled));
+            String grown = Traits.grown(seed, rolled);
+            assertNotNull(grown);
+            assertFalse(rolled.stream().anyMatch(t -> t.id().equals(grown)));
+            List<Trait> after = new ArrayList<>(rolled);
+            after.addAll(Traits.of(List.of(grown)));
+            assertEquals(Traits.weakness(rolled), Traits.weakness(after));
+        }
+        assertEquals(null, Traits.hidden(1, Traits.of(List.of("vengeful", "grudge"))));
     }
 
     @Test

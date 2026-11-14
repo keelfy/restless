@@ -77,6 +77,12 @@ Every trait has a `kind`, one of three axes rolled on their own:
   (3) of the player and lowers anger by `desire_calm` (0.25), once per `desire_cooldown_ticks`; a hate raises anger by
   `hate_anger` (0.1) when the player uses the hated block or uses a block holding the hated item, once per
   `hate_cooldown_ticks`. A territorial spirit whose radius reaches the player counts too.
+- `veil`: hides the spirit from one tool (3: `unseen` foils the camera, `light_footed` ash, `voiceless` the spirit box;
+  key `foils`, a `Clue`). Rolled last, with the chance `director.veil_chance` (0.25), so a spirit has at most one.
+  `Clues.reveal` gives nothing for a foiled clue; `Divination.silent` and `AshBlock` note a `SILENCE` in the journal.
+- Hidden habit: `Traits.hidden(seed, traits)` picks one of two or more habits by the seed; `Divination.known` leaves
+  it out of every tool's reading until `Sanity.shaken` (`sanity.reveal_below`) or the spirit has evolved. Evolving
+  (`Evolution.grow`) also adds `Traits.grown(seed, traits)`, a habit of its own nature it lacked, saved in its trait list.
 
 `Traits.weakness` counts habit votes, breaks a tie by the votes of every trait carrying a `weakness`, and then by the
 order of `Focus`. Adding a trait is a config and lang change only.

@@ -17,10 +17,15 @@ public final class Clues {
      *
      * @param owned the spirit's traits
      * @param catalog every trait, where a lie is taken from
-     * @return empty only when {@code owned} is
+     * @return empty only when {@code owned} is, or a veil in it hides the spirit from this tool
      */
     public static Optional<Trait> reveal(List<Trait> owned, List<Trait> catalog, Clue clue, Random random) {
         return reveal(owned, catalog, clue, random, false);
+    }
+
+    /** Whether a veil among {@code owned} hides the spirit from the tool behind {@code clue}. */
+    public static boolean foiled(List<Trait> owned, Clue clue) {
+        return owned.stream().anyMatch(t -> t.foils() == clue);
     }
 
     /** Whether the tool behind {@code clue} speaks, and so may lie. */
@@ -31,7 +36,7 @@ public final class Clues {
     /** As above; {@code honest} makes this one reveal tell no lie. */
     public static Optional<Trait> reveal(
             List<Trait> owned, List<Trait> catalog, Clue clue, Random random, boolean honest) {
-        if (owned.isEmpty()) {
+        if (owned.isEmpty() || foiled(owned, clue)) {
             return Optional.empty();
         }
         boolean speaks = speaks(clue) && !honest;
