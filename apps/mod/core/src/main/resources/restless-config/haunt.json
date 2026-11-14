@@ -53,6 +53,8 @@
     "notice_within": 5,
     "repeat_anger": 0.15,
     "start_anger": 0.5,
+    "successor_min_days": 2,
+    "successor_max_days": 4,
     "grace_ticks": 2400,
     "structure_spacing": 96,
     "witness_radius": 16,

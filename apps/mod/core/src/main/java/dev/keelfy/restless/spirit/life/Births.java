@@ -9,6 +9,7 @@ import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.state.HauntData;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -196,6 +197,42 @@ public final class Births {
                 .min()
                 .orElse(Long.MAX_VALUE);
         return BirthRules.settle(nearest, config.integer("structure_spacing"));
+    }
+
+    /**
+     * Call at each director check. A player left with no personal spirit gets another of a type that did not just leave
+     * after {@code births.successor_min_days} to {@code successor_max_days}; the wait starts the first time they are
+     * seen without one. Nothing is born on a released, creative or spectator player.
+     */
+    public static void successor(ServerPlayer player, HauntData data, long now) {
+        HauntData.Successor waiting = data.successor(player.getUUID());
+        if (waiting == null || player.isSpectator() || player.isCreative() || Requiem.released(player)) {
+            return;
+        }
+        List<HauntData.Haunting> own = data.get(player.getUUID());
+        if (own != null && !own.isEmpty()) {
+            data.putSuccessor(player.getUUID(), null);
+            return;
+        }
+        Config.Section config = Config.section("births");
+        if (waiting.dueAt() < 0) {
+            double days = config.num("successor_min_days")
+                    + player.getRandom().nextDouble()
+                            * (config.num("successor_max_days") - config.num("successor_min_days"));
+            data.putSuccessor(
+                    player.getUUID(), new HauntData.Successor(now + (long) (days * Ticks.DAY), waiting.gone()));
+            return;
+        }
+        if (now < waiting.dueAt()) {
+            return;
+        }
+        List<SpiritType> pool = new ArrayList<>(Spirits.personal());
+        pool.removeIf(t -> waiting.gone().contains(t.id()));
+        if (pool.isEmpty()) {
+            pool.addAll(Spirits.personal());
+        }
+        bind(player, pool.get(player.getRandom().nextInt(pool.size())));
+        data.putSuccessor(player.getUUID(), null);
     }
 
     /**

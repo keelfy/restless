@@ -55,6 +55,7 @@ public final class Director {
         HauntData data = HauntData.get(server);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             Reactions.watch(player, now);
+            Births.successor(player, data, now);
             List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
             boolean changed = false;
             int sounds = Reactions.takeSounds(player.getUUID());
