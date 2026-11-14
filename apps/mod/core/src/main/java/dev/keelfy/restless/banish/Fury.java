@@ -11,7 +11,8 @@ import net.minecraft.world.level.block.AbstractCandleBlock;
 
 /**
  * The fury: the spirit fights for the candles. Each wave it may snuff one (never past a censer) and may strike the
- * player (only with harmful events past a censer), and may act by its nature (see {@link Natures}).
+ * player (only with harmful events past a censer), may act by its nature (see {@link Natures}), and once wipes a tile
+ * of the ring (see {@link Ring}).
  */
 final class Fury {
     private Fury() {}
@@ -39,6 +40,7 @@ final class Fury {
                     circle.censer ? HauntTier.HARMFUL : null);
         }
         Natures.fight(circle);
+        circle.ring.wave();
         return true;
     }
 }

@@ -297,6 +297,39 @@ final class RitualGameTests {
         });
     }
 
+    /** The ring: the spirit wipes a tile once, and the ritual holds only if it is closed again. */
+    static void registerRing(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("ritual_ring_wiped_and_closed_holds", helper -> {
+            Circle circle = beforeFury(helper);
+            check(helper, circle.ring().gap().isEmpty(), "the ring is whole before the spirit wipes it");
+            check(helper, circle.ring().wipe(), "the spirit wipes a tile");
+            BlockPos gap = circle.ring().gap().orElseThrow();
+            check(helper, helper.getLevel().getBlockState(gap).isAir(), "the tile is wiped");
+            check(helper, !circle.ring().wipe(), "only once per ritual");
+            helper.getLevel().setBlockAndUpdate(gap, Content.SALT_LINE.get().defaultBlockState());
+            steps(helper, circle, 1);
+            check(helper, !circle.over() && circle.ring().gap().isEmpty(), "a closed ring keeps the ritual going");
+            helper.succeed();
+        });
+        tests.put("ritual_ring_left_open_fails", helper -> {
+            Circle circle = beforeFury(helper);
+            check(helper, circle.ring().wipe(), "the spirit wipes a tile");
+            check(helper, !circle.step(), "an open ring breaks the ritual at the next wave");
+            check(
+                    helper,
+                    Math.abs(spirit(circle.player()).anger() - 0.3) < 1e-9,
+                    "as a failed ritual, it angers the spirit");
+            helper.succeed();
+        });
+    }
+
+    /** A ritual stepped into the bargain, before the fury could wipe the ring by its own roll. */
+    private static Circle beforeFury(GameTestHelper helper) {
+        Circle circle = started(helper, ready(helper));
+        steps(helper, circle, circle.plan().call() + 1);
+        return circle;
+    }
+
     /** A ritual stepped to its first fury wave, with the player looking at nothing yet. */
     private static Circle furyOf(GameTestHelper helper, List<String> traits, Altar.Held held) {
         ServerPlayer player = ready(helper, traits);
@@ -342,6 +375,11 @@ final class RitualGameTests {
         for (int i = 0; i < n; i++) {
             circle.player().getRandom().setSeed(calm);
             check(helper, circle.step(), "wave " + i + " must go on");
+            // the player closes the ring the spirit wipes once in the fury
+            circle.ring()
+                    .gap()
+                    .ifPresent(pos -> helper.getLevel()
+                            .setBlockAndUpdate(pos, Content.SALT_LINE.get().defaultBlockState()));
         }
     }
 

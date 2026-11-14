@@ -39,6 +39,7 @@ public final class Circle {
     private Phase phase;
     private boolean over;
     private final Gaze gaze = new Gaze(this);
+    final Ring ring = new Ring(this);
 
     Circle(
             ServerPlayer player,
@@ -103,6 +104,10 @@ public final class Circle {
 
     public Gaze gaze() {
         return gaze;
+    }
+
+    public Ring ring() {
+        return ring;
     }
 
     /** The phase of the last wave that ran, empty before the first. */
@@ -175,7 +180,7 @@ public final class Circle {
         }
     }
 
-    /** The offering lies on a whole altar, every candle burns, and the player stays near. */
+    /** The offering lies on a whole altar, every candle burns, the player stays near, and a wiped ring is closed. */
     private boolean holds() {
         BlockState state = level.getBlockState(altar);
         boolean laid =
@@ -184,7 +189,7 @@ public final class Circle {
         boolean near = player.level() == level
                 && player.blockPosition()
                         .closerThan(altar, Config.section("ritual").integer("radius"));
-        return laid && lit && near;
+        return laid && lit && near && ring.holds();
     }
 
     private void end() {

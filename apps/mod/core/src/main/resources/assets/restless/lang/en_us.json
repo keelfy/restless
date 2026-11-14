@@ -110,6 +110,7 @@
   "message.restless.gaze_broken": "The spirit did not like your eyes. A candle goes out!",
   "message.restless.offering_thrown": "The offering is flung from the altar!",
   "message.restless.lights_out": "Every light around you dies!",
+  "message.restless.ring_broken": "The salt ring is broken! Mend it before the next wave.",
   "message.restless.ritual_failed": "The ritual breaks.",
   "message.restless.wrong_focus": "Wrong nature. The candles went out and the spirit is furious.",
   "message.restless.banished": "The %s is gone.",
