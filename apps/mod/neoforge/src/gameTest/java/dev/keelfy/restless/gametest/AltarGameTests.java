@@ -45,6 +45,7 @@ public final class AltarGameTests {
 
     public AltarGameTests(IEventBus bus) {
         AshGameTests.register(TESTS);
+        CalendarGameTests.register(TESTS);
         DreamcatcherGameTests.register(TESTS);
         WeaknessGameTests.register(TESTS);
         LanternGameTests.register(TESTS);
@@ -53,8 +54,8 @@ public final class AltarGameTests {
         HardcoreGameTests.register(TESTS);
         JournalGameTests.register(TESTS);
         RitualGameTests.register(TESTS);
-        CharmGameTests.register(TESTS);
         EchoGameTests.register(TESTS);
+        CharmGameTests.register(TESTS);
         CharmGameTests.registerRebalance(TESTS);
         AdvancedCharmGameTests.register(TESTS);
         RelicGameTests.register(TESTS);

@@ -550,6 +550,13 @@
     "warning_ticks": 60,
     "lean": 0.5
   },
+  "calendar": {
+    "moon_power": 0.2,
+    "blood_night_days": 7,
+    "blood_wear_factor": 2,
+    "season_days": 28,
+    "dusk_tick": 13000
+  },
   "restore": {
     "retry_ticks": 20
   },

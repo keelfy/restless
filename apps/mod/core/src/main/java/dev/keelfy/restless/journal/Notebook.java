@@ -155,6 +155,8 @@ public record Notebook(
         EVOLUTION(2),
         /** The first spirit gone for good: essences. */
         ESSENCE(2),
+        /** The first dusk of a full moon, a blood night or the day of the dead. */
+        CALENDAR(3),
         /** The Requiem was sung: the closing chapter. */
         REQUIEM(2);
 

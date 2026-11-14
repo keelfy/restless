@@ -14,6 +14,7 @@ import dev.keelfy.restless.content.item.consumable.Consumables;
 import dev.keelfy.restless.divine.Candle;
 import dev.keelfy.restless.divine.Divination;
 import dev.keelfy.restless.divine.Heard;
+import dev.keelfy.restless.haunt.Calendar;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Earshot;
 import dev.keelfy.restless.haunt.Reactions;
@@ -40,8 +41,8 @@ import dev.keelfy.restless.spirit.life.Anger;
 import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.spirit.life.Deeds;
 import dev.keelfy.restless.spirit.life.Evolution;
-import dev.keelfy.restless.state.Session;
 import dev.keelfy.restless.spirit.life.Haunted;
+import dev.keelfy.restless.state.Session;
 import dev.keelfy.restless.ward.Wards;
 import dev.keelfy.restless.ward.Weakness;
 import java.util.Collection;
@@ -99,15 +100,16 @@ public final class Restless {
         Restore.tick(server);
         Director.tick(server);
         Candle.tick(server);
+        Calendar.tick(server);
         Graves.tick(server);
         Sanity.tick(server);
         Corruption.tick(server);
         Evolution.tick(server);
         Charms.tick(server);
         Deeds.tick(server);
+        Haunted.tick(server);
         Trail.tick(server);
         Consumables.tick(server);
-        Haunted.tick(server);
         Weakness.tick(server);
     }
 
