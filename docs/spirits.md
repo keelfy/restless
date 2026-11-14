@@ -171,6 +171,12 @@ stands on, with walls closing the gaps, through four-way neighbours only (a diag
 may not exceed `salt.max_cells`. Walls alone do not ward a room; at least one salt tile has to border it. The first
 ward found decides; the lantern, then the dreamcatcher, the door charm and the scarecrow.
 
+A spirit's nature also works outside the altar (`ward/Weakness`, `weakness.*` in `haunt.json`): iron (an iron door, or a
+container under iron bars, within `iron_radius`) stops its door and item events, glowstone within `glow_radius` its light
+events, holy water poured at the feet (pitch past `pour_pitch`) drops its running scheduler steps, a mirror in the hand
+unmasks the blocks it showed and its double. The spirit comes from `Said.current()`, so only events run through `Director`
+honour it; every event tagged `DOORS`, `ITEMS` or `LIGHTS` does, with no per-event code.
+
 Not built yet: salt from a cauldron, and the traits that hate a ward (the lantern raising anger of light-hating
 traits, the bell of noise-hating ones). The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
 

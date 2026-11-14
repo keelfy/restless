@@ -34,7 +34,7 @@ public final class Wards {
     private Wards() {}
 
     public static boolean stops(ServerPlayer player, HauntEvent event) {
-        if (shelters(player) || Charms.spared(player, event)) {
+        if (shelters(player) || Charms.spared(player, event) || Weakness.stops(player, event)) {
             return true;
         }
         ServerLevel level = player.level();

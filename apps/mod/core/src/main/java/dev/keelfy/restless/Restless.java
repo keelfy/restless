@@ -42,6 +42,7 @@ import dev.keelfy.restless.spirit.life.Deeds;
 import dev.keelfy.restless.spirit.life.Evolution;
 import dev.keelfy.restless.state.Session;
 import dev.keelfy.restless.ward.Wards;
+import dev.keelfy.restless.ward.Weakness;
 import java.util.Collection;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -105,6 +106,7 @@ public final class Restless {
         Deeds.tick(server);
         Trail.tick(server);
         Consumables.tick(server);
+        Weakness.tick(server);
     }
 
     /**

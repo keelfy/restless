@@ -207,6 +207,11 @@
     "charm_radius": 8,
     "scarecrow_radius": 16
   },
+  "weakness": {
+    "iron_radius": 6,
+    "glow_radius": 4,
+    "pour_pitch": 70
+  },
   "bell": {
     "radius": 24,
     "delay_ticks": 1200
