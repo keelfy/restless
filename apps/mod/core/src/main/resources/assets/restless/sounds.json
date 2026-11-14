@@ -1902,5 +1902,753 @@
         "name": "restless:spirit_box/ru_ru/answer/with_you_1"
       }
     ]
+  },
+  "spirit_box.en_us.word.ash": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/ash_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/ash_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.blind": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/blind_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/blind_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.breathe": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/breathe_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/breathe_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.catch": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/catch_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/catch_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.claw": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/claw_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/claw_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.corner": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/corner_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/corner_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.die": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/die_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/die_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.drown": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/drown_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/drown_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.eyes": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/eyes_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/eyes_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.feed": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/feed_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/feed_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.found": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/found_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/found_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.friend": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/friend_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/friend_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.hate": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/hate_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/hate_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.hello": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/hello_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/hello_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.here": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/here_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/here_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.hurt": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/hurt_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/hurt_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.knock": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/knock_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/knock_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.look": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/look_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/look_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.lost": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/lost_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/lost_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.me": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/me_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/me_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.order": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/order_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/order_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.real": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/real_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/real_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.run": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/run_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/run_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.safe": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/safe_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/safe_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.shadow": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/shadow_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/shadow_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.stack": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/stack_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/stack_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.stay": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/stay_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/stay_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.stone": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/stone_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/stone_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.teeth": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/teeth_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/teeth_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.there": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/there_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/there_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.throw": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/throw_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/throw_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.wait": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/wait_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/wait_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.walls": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/walls_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/walls_1"
+      }
+    ]
+  },
+  "spirit_box.en_us.word.water": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/en_us/word/water_0"
+      },
+      {
+        "name": "restless:spirit_box/en_us/word/water_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.ash": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/ash_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/ash_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.blind": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/blind_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/blind_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.breathe": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/breathe_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/breathe_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.catch": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/catch_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/catch_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.claw": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/claw_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/claw_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.corner": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/corner_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/corner_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.die": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/die_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/die_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.drown": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/drown_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/drown_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.eyes": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/eyes_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/eyes_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.feed": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/feed_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/feed_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.found": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/found_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/found_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.friend": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/friend_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/friend_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.hate": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/hate_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/hate_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.hello": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/hello_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/hello_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.here": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/here_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/here_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.hurt": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/hurt_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/hurt_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.knock": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/knock_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/knock_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.look": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/look_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/look_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.lost": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/lost_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/lost_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.me": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/me_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/me_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.order": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/order_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/order_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.real": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/real_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/real_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.run": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/run_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/run_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.safe": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/safe_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/safe_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.shadow": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/shadow_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/shadow_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.stack": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/stack_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/stack_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.stay": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/stay_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/stay_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.stone": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/stone_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/stone_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.teeth": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/teeth_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/teeth_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.there": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/there_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/there_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.throw": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/throw_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/throw_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.wait": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/wait_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/wait_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.walls": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/walls_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/walls_1"
+      }
+    ]
+  },
+  "spirit_box.ru_ru.word.water": {
+    "subtitle": "subtitles.restless.spirit_box",
+    "sounds": [
+      {
+        "name": "restless:spirit_box/ru_ru/word/water_0"
+      },
+      {
+        "name": "restless:spirit_box/ru_ru/word/water_1"
+      }
+    ]
   }
 }

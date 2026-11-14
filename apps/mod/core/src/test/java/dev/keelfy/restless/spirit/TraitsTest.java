@@ -198,6 +198,20 @@ class TraitsTest {
     }
 
     @Test
+    void theCatalogHasSixHabitsPerNatureAndTenConditions() {
+        for (Focus focus : Focus.values()) {
+            assertTrue(
+                    Traits.all().stream()
+                                    .filter(t -> t.kind() == Trait.Kind.HABIT && t.weakness() == focus)
+                                    .count()
+                            >= 6,
+                    focus.name());
+        }
+        assertTrue(Traits.all().stream().filter(t -> t.kind() == Trait.Kind.HABIT).count() >= 24);
+        assertTrue(Traits.all().stream().filter(t -> t.kind() == Trait.Kind.CONDITION).count() >= 10);
+    }
+
+    @Test
     void everyFocusIsSomeHabitsWeakness() {
         Set<Focus> named = EnumSet.noneOf(Focus.class);
         Traits.all().stream().filter(t -> t.kind() == Trait.Kind.HABIT).forEach(t -> named.add(t.weakness()));

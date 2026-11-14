@@ -57,12 +57,15 @@ Ids the catalog no longer has are skipped. So two spirits of one type differ in 
 
 Every trait has a `kind`, one of three axes rolled on their own:
 
-- `habit`: what the spirit does (the affinity traits and `liar`). Only a habit needs a `weakness`, and only habits vote for
-  the nature. The roll picks the nature evenly, then `director.habits_min`–`habits_max` habits: all but one from the
-  nature, one from another, and that foreign one only beside at least two of the nature's own, so the nature is always
-  the strict majority. A pool too small gives what it has (today malice has one habit, `vengeful`).
-- `condition`: when it acts or what it reacts to (`rain_walker`, `night_stalker`, `dark_dweller`, `noise_feeder`,
-  `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`); `director.conditions_min`–`conditions_max` of them. Their
+- `habit`: what the spirit does (the affinity traits and `liar`). There are 24, six per nature: objects (`restless_hands`,
+  `door_slammer`, `meddler`, `thrower`, `stacker`, `knocker`), darkness (`light_eater`, `cold_touch`, `shadow_caster`,
+  `blinder`, `hearth_killer`, `corner_lurker`), malice (`vengeful`, `hunter`, `scratcher`, `beast_caller`, `drowner`,
+  `snarler`) and deceit (`whisperer`, `liar`, `face_thief`, `illusionist`, `false_friend`, `lure`). Only a habit needs a
+  `weakness`, and only habits vote for the nature. The roll picks the nature evenly, then `director.habits_min`–`habits_max`
+  habits: all but one from the nature, one from another, and that foreign one only beside at least two of the nature's
+  own, so the nature is always the strict majority.
+- `condition`: when it acts or what it reacts to (there are 10: `rain_walker`, `night_stalker`, `dark_dweller`,
+  `cave_haunter`, `water_lurker`, `noise_feeder`, `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`); `director.conditions_min`–`conditions_max` of them. Their
   `weakness` is the vote they had before the axes existed: it breaks a habit tie and decides for a saved spirit with no
   habit, so an old spirit keeps its nature wherever its habits allow. A new condition leaves it out.
 - `leaning`: a fear or a desire; `director.leanings` of them. The axis is empty until T6 fills it, and the roll skips it.
@@ -72,11 +75,11 @@ order of `Focus`. Adding a trait is a config and lang change only.
 
 A trait has any of:
 
-- `affinity`: tag multipliers, multiplied into the weight with the type's. `light_eater` (lights ×2.5), `door_slammer`,
-  `restless_hands`, `whisperer`, `cold_touch`, `vengeful`, `meddler`.
-- `activity` + `when` (`rain`, `night`, `dark`; light level below `director.dark_light_level`): the spirit acts that many
+- `affinity`: tag multipliers, multiplied into the weight with the type's. Every habit (for example `light_eater`: lights ×2.5) and some conditions.
+- `activity` + `when` (`rain`, `night`, `dark`: light level below `director.dark_light_level`; `underground`: below y
+  `director.underground_below` (40) with no sky overhead; `water`: the player is in water): the spirit acts that many
   times as often while the condition holds at the moment it schedules its next event. `rain_walker`, `night_stalker`,
-  `dark_dweller`.
+  `dark_dweller`, `cave_haunter`, `water_lurker`.
 - `noise`: ticks the next event comes sooner for every sound the player makes (`noise_feeder`: 6 per sound, so sprinting
   hastens it most). Sneaking instead delays it by `director.sneak_delay_ticks` per check. Sounds are the ones `Echoes` hears.
 - `reacts`: after the player opens a chest or barrel (`chest`), uses a bed (`bed`), goes below y 0 (`deep`) or kills a mob

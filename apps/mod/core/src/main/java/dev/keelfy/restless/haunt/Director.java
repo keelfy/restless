@@ -36,6 +36,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -442,6 +443,12 @@ public final class Director {
         }
         if (level.getMaxLocalRawBrightness(at) < Config.section("director").integer("dark_light_level")) {
             now.add(Trait.Condition.DARK);
+        }
+        if (at.getY() < Config.section("director").integer("underground_below") && !level.canSeeSky(at)) {
+            now.add(Trait.Condition.UNDERGROUND);
+        }
+        if (level.getFluidState(at).is(FluidTags.WATER)) {
+            now.add(Trait.Condition.WATER);
         }
         return now;
     }

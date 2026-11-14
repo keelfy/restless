@@ -71,7 +71,72 @@ A territorial spirit slowly fouls the land around its anchor: grass turns to coa
 
 ## Traits
 
-Each spirit has a name, a story and **1 to 4 habits and 1 or 2 conditions**, rolled when it is born. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
+Each spirit has a name, a story and **3 or 4 habits and 1 or 2 conditions**, rolled when it is born. Habits come from the spirit's nature, except one that comes from another nature. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
+
+### Habits
+
+A habit decides what the spirit does. The favored kinds of events are multiplied in on top of the type.
+
+### Objects (iron)
+
+| Trait | What it does | Favors |
+|---|---|---|
+| Restless hands | It reaches for things left lying around. | items ×2, doors ×1.5 |
+| Door slammer | It slams doors. | doors ×2.5 |
+| Meddler | It meddles with the world around you. | blocks ×2.5, mobs ×1.5 |
+| Thrower | It throws what it finds. | items ×2.5, blocks ×1.2 |
+| Stacker | It stacks things in neat piles. | blocks ×2, items ×1.5 |
+| Knocker | It knocks on walls and doors. | doors ×2, sounds ×1.5 |
+
+### Darkness (glowstone)
+
+| Trait | What it does | Favors |
+|---|---|---|
+| Light eater | It feeds on light. | lights ×2.5 |
+| Cold touch | It chills the air around you. | afflictions ×2 |
+| Shadow caster | It casts shadows where there are none. | presence ×2, lights ×1.3 |
+| Blinder | It takes away sight. | afflictions ×2, lights ×1.3 |
+| Hearth killer | It puts out hearths and fires. | lights ×2, blocks ×1.3 |
+| Corner lurker | It waits in corners. | presence ×1.5, mobs ×1.5 |
+
+### Malice (holy water)
+
+| Trait | What it does | Favors |
+|---|---|---|
+| Vengeful | It wants revenge. | assaults ×2 |
+| Hunter | It hunts by scent. | presence ×2, assaults ×1.3 |
+| Scratcher | It leaves scratches and wounds. | afflictions ×2, assaults ×1.3 |
+| Beast caller | It calls beasts to its side. | mobs ×2.5 |
+| Drowner | It pulls its prey under water. | water ×2.5, assaults ×1.2 |
+| Snarler | It snarls and threatens. | sounds ×2, assaults ×1.3 |
+
+### Deceit (mirror)
+
+| Trait | What it does | Favors |
+|---|---|---|
+| Whisperer | It whispers. | sounds ×2, presence ×1.5 |
+| Liar | It lies through the spirit box and the ouija board. | — |
+| Face thief | It wears a familiar face. | player ×2.5 |
+| Illusionist | It makes things appear that are not there. | blocks ×2, presence ×1.3 |
+| False friend | It poses as a friend. | mobs ×2, player ×1.3 |
+| Lure | It lures its prey away. | presence ×2, sounds ×1.3 |
+
+### Conditions
+
+A condition decides when the spirit acts or what it reacts to. Activity ×n means the spirit acts that many times as often while the condition holds.
+
+| Trait | When or reacts to | Effect | Favors |
+|---|---|---|---|
+| Rain walker | Rain | Activity ×2 while it rains | — |
+| Night stalker | Night | Activity ×1.8 at night | — |
+| Dark dweller | Darkness (light level below 8) | Activity ×1.8 in the dark | — |
+| Cave haunter | Underground (below y 40 with no sky overhead) | Activity ×2 underground | — |
+| Water lurker | The player is in water | Activity ×2 in water | water ×1.5 |
+| Noise feeder | Every sound the player makes | Its next event comes 6 ticks sooner per sound; sprinting hastens it most | — |
+| Chest watcher | The player opens a chest or barrel | 25% chance to act on the next check | items ×1.5 |
+| Sleep thief | The player uses a bed | 25% chance to act on the next check | presence ×1.5 |
+| Deep caller | The player goes below y 0 | 25% chance to act on the next check | sounds ×1.5 |
+| Grudge | The player kills a mob | 25% chance to act on the next check | assaults ×1.5 |
 
 ## Weakness
 

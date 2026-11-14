@@ -52,7 +52,11 @@ public record Trait(
         ANY,
         RAIN,
         NIGHT,
-        DARK
+        DARK,
+        /** Below {@code director.underground_below} with no sky overhead. */
+        UNDERGROUND,
+        /** In water. */
+        WATER
     }
 
     /** A player action a spirit can react to. */
