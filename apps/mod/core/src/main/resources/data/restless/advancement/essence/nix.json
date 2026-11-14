@@ -1,0 +1,34 @@
+{
+  "parent": "restless:rested",
+  "criteria": {
+    "held": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "restless:nix_essence"
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "restless:nix_essence"
+    },
+    "title": {
+      "translate": "item.restless.nix_essence"
+    },
+    "description": {
+      "translate": "advancements.restless.essence.description",
+      "with": [
+        {
+          "translate": "item.restless.nix_essence"
+        }
+      ]
+    },
+    "frame": "task",
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}

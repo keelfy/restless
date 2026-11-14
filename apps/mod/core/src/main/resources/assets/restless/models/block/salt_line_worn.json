@@ -1,0 +1,7 @@
+{
+  "parent": "restless:block/salt_line",
+  "textures": {
+    "particle": "minecraft:block/light_gray_concrete_powder",
+    "grain": "minecraft:block/light_gray_concrete_powder"
+  }
+}

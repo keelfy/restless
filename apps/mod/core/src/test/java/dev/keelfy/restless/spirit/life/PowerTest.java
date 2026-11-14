@@ -3,6 +3,7 @@ package dev.keelfy.restless.spirit.life;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.event.EventTag;
 import dev.keelfy.restless.haunt.event.HauntTier;
@@ -10,6 +11,7 @@ import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Trait;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -154,5 +156,57 @@ class PowerTest {
 
     private static long calmTicks() {
         return Power.cooldownTicks(0, 1, 0.5, 1, 1);
+    }
+
+    @Test
+    void personalSpiritStartsWithMaturityTerritorialDoesNot() {
+        double share = Config.section("power").num("maturity_share")
+                * Config.section("power").num("start_maturity");
+        assertTrue(share > 0);
+        assertEquals(share, Power.of(0, 0, false, true), 1e-9);
+        assertTrue(Power.of(0, 0, false, true) > 0);
+        assertEquals(0.0, Power.of(0, 0, false, false));
+        assertEquals(0.7, Power.of(0, 0, true, true), 1e-9);
+        assertEquals(1.0, Power.of(1000 * Ticks.DAY, 1, false, true), 1e-9);
+    }
+
+    /**
+     * A first-join spirit (anger {@code births.start_anger}) over the first three game days: events spaced by
+     * {@link Power#cooldownTicks}, each harmful with the share of a 1:3 harmful to light base weight (spirit and trait
+     * affinity left out). Most runs must see a harmful event.
+     */
+    @Test
+    void firstThreeDaysRollAHarmfulEventInMostRuns() {
+        // The catalog has about 142 harmful and 383 light plain events, nearly all of base weight 1 (counted from the
+        // source; HauntEvents cannot load without Minecraft). 1:3 is a little under that.
+        double harmful = 1;
+        double light = 3;
+        double anger = Config.section("births").num("start_anger");
+        int runs = 1000;
+        int withHarm = 0;
+        for (int seed = 0; seed < runs; seed++) {
+            Random random = new Random(seed);
+            long t = Config.section("director").integer("first_event_ticks");
+            boolean harm = false;
+            while (t < 3 * Ticks.DAY && !harm) {
+                double power = Power.of(t, anger, false, true);
+                double pHarm = harmful
+                        * Power.tierFactor(HauntTier.HARMFUL, power)
+                        / (harmful * Power.tierFactor(HauntTier.HARMFUL, power)
+                                + light * Power.tierFactor(HauntTier.LIGHT, power));
+                harm = random.nextDouble() < pHarm;
+                boolean day = t % Ticks.DAY < Ticks.DAY / 2;
+                t += Power.cooldownTicks(
+                        power,
+                        1.0,
+                        random.nextDouble(),
+                        Power.daylightFactor(day, false, true),
+                        Power.impactFactor(0.5));
+            }
+            if (harm) {
+                withHarm++;
+            }
+        }
+        assertTrue(withHarm > runs / 2, withHarm + " of " + runs + " runs rolled a harmful event");
     }
 }

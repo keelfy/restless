@@ -30,6 +30,7 @@ Sand + dried kelp makes **2**. Place it on the floor like redstone dust: flat, w
 - A stopped event is lost, not postponed: the spirit's rest still runs.
 - Inside the ring sanity also creeps back, +0.003 a second.
 - Assaults are stopped this way too.
+- **Salt wears out.** Every event the ring stops wears the salt tiles that close it; after **12** stopped events they turn grey and the ring stops nothing. Time alone never wears it. Lay a fresh tile next to the grey ones (for example, break one and lay it again) and every tile joined to it is fresh again. A grey ring also gives no sanity back and does not count for the altar.
 
 The same ring is needed by the [altar](#altar).
 

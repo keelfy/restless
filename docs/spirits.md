@@ -339,6 +339,12 @@ the spirit's own radius over `grow_days` (3) in-game days of its age, and turns 
 `corruption.blocks` says: grass to coarse dirt, grass, ferns and flowers to dead bushes. It stops at `max_blocks` (1500).
 Each spot keeps what stood there, saved with the world.
 
+A spirit with anger above `corruption.walk_anger` (0.7) grows its blight as a strip instead of a disc: each try picks a
+point along the line from the anchor toward the bed of the player who angered it (`Territorial.angeredBy`, set by
+`Anger` whenever a player raises its anger), no further than `walk_reach` (64) or the bed, and within `walk_width` (5)
+across (`Strip.offset`). If that player is offline or the bed is in another dimension, it spreads evenly. The spots go
+in the same blight, so they heal with the rest.
+
 Each try also turns that column's biome to `restless:blighted` (`data/restless/worldgen/biome/blighted.json`): grey-brown
 grass and leaves, murky water, a thick grey haze like the basalt deltas' (fog from 4 to 40 blocks, sky and clouds
 greyed out, ash as dense as the deltas', and `restless:mist` wisps creeping along the ground), a pale sky light and

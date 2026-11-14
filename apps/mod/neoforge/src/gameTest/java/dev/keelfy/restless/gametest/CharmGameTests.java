@@ -64,9 +64,17 @@ final class CharmGameTests {
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         tests.put("every_item_has_a_tip", helper -> {
+            // Creative-tab items for blocks the world sets down have no tip on purpose.
+            List<Item> debug = List.of(
+                    Content.DOLL_ITEM.get(),
+                    Content.MUSIC_BOX_ITEM.get(),
+                    Content.FOOTPRINTS_ITEM.get(),
+                    Content.CLAW_MARKS_ITEM.get());
             for (Item item : BuiltInRegistries.ITEM) {
                 Identifier id = BuiltInRegistries.ITEM.getKey(item);
-                if (!id.getNamespace().equals(Restless.MOD_ID) || id.getPath().startsWith("unlit_")) {
+                if (!id.getNamespace().equals(Restless.MOD_ID)
+                        || id.getPath().startsWith("unlit_")
+                        || debug.contains(item)) {
                     continue;
                 }
                 // debug props: placed by events, given only from the creative tab, no tip

@@ -55,6 +55,7 @@ public final class Director {
         HauntData data = HauntData.get(server);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             Reactions.watch(player, now);
+            Births.successor(player, data, now);
             List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
             boolean changed = false;
             int sounds = Reactions.takeSounds(player.getUUID());
@@ -181,8 +182,10 @@ public final class Director {
             List<SpiritType> pool = new ArrayList<>(Spirits.personal());
             List<HauntData.Haunting> rolled = new ArrayList<>();
             for (int i = 0, n = Config.section("director").integer("default_spirits"); i < n && !pool.isEmpty(); i++) {
-                // Nothing has happened yet: the first turn comes soon, not after a full cooldown.
+                // Nothing has happened yet: the first turn comes soon, not after a full cooldown. It starts as angry
+                // as a born spirit, so the first session can bring a harmful event.
                 rolled.add(bind(player, pool.remove(player.getRandom().nextInt(pool.size())), now)
+                        .angered(Config.section("births").num("start_anger"))
                         .rescheduled(now + Config.section("director").integer("first_event_ticks")));
             }
             data.put(player.getUUID(), rolled);
@@ -416,7 +419,11 @@ public final class Director {
 
     /** How harmful and how frequent the spirit is right now; depends only on the spirit. */
     public static double power(HauntData.Haunting haunting, long now) {
-        return Power.of(now - haunting.bornAt(), haunting.anger(), haunting.evolved());
+        return Power.of(
+                now - haunting.bornAt(),
+                haunting.anger(),
+                haunting.evolved(),
+                spirit(haunting).kind() == SpiritType.Kind.PERSONAL);
     }
 
     private static long cooldown(

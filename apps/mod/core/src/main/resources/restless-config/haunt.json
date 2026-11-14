@@ -22,6 +22,7 @@
   },
   "power": {
     "maturity_days": 30,
+    "start_maturity": 0.15,
     "maturity_share": 0.6,
     "anger_share": 0.4,
     "light_penalty": 0.7,
@@ -55,6 +56,8 @@
     "notice_within": 5,
     "repeat_anger": 0.15,
     "start_anger": 0.5,
+    "successor_min_days": 2,
+    "successor_max_days": 4,
     "grace_ticks": 2400,
     "structure_spacing": 96,
     "witness_radius": 16,
@@ -199,7 +202,8 @@
     "radius": 24
   },
   "salt": {
-    "max_cells": 400
+    "max_cells": 400,
+    "wear_stops": 12
   },
   "wards": {
     "lantern_radius": 6,
@@ -514,6 +518,9 @@
     "start_reach": 6,
     "grow_days": 3,
     "max_blocks": 1500,
+    "walk_anger": 0.7,
+    "walk_width": 5,
+    "walk_reach": 64,
     "recede": 48,
     "biome_depth": 2,
     "biome_height": 8,

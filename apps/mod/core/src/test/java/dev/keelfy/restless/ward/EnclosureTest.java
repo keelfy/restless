@@ -1,5 +1,6 @@
 package dev.keelfy.restless.ward;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,6 +16,7 @@ class EnclosureTest {
             return switch (rows[z].charAt(x)) {
                 case '#' -> Enclosure.Cell.WALL;
                 case 's' -> Enclosure.Cell.SALT;
+                case 'w' -> Enclosure.Cell.WORN;
                 default -> Enclosure.Cell.OPEN;
             };
         };
@@ -40,5 +42,25 @@ class EnclosureTest {
     void bigRoomsPastTheBudgetDoNotCount() {
         assertFalse(Enclosure.sealed(
                 3, 3, grid("sssssss", "s.....s", "s.....s", "s.....s", "s.....s", "s.....s", "sssssss"), 10));
+    }
+
+    @Test
+    void ringNamesTheSaltThatShutsTheCellIn() {
+        assertEquals(4, Enclosure.ring(1, 1, grid("sss.", "s.s.", "sss."), 100).size());
+        assertTrue(Enclosure.ring(2, 2, grid(".sss.", ".s.s.", ".s...", ".sss."), 100)
+                .isEmpty());
+    }
+
+    @Test
+    void wornSaltIsAGapAndShelterIsGone() {
+        assertTrue(Enclosure.sealed(2, 2, grid(".sss.", ".s.s.", ".s.s.", ".sss."), 100));
+        assertFalse(Enclosure.sealed(2, 2, grid(".sws.", ".s.s.", ".s.s.", ".sss."), 100));
+        assertFalse(Enclosure.sealed(2, 2, grid(".www.", ".w.w.", ".w.w.", ".www."), 100));
+    }
+
+    @Test
+    void ringWearsOutAtTheLimit() {
+        assertFalse(Enclosure.wornOut(11, 12));
+        assertTrue(Enclosure.wornOut(12, 12));
     }
 }

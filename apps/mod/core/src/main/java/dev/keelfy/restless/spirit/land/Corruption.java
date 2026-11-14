@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
 import net.minecraft.core.Registry;
@@ -24,6 +25,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -37,7 +39,8 @@ import org.jspecify.annotations.Nullable;
  * ferns wither to dead bushes, and the biome turns to {@code restless:blighted} (grey grass, thick fog, ash in the air)
  * a column of cells at a time. The reach grows with the spirit's age, an evolved one spreads faster. Every spot and
  * column remembers what was there, and once the spirit is gone (banished, at rest or removed) the land heals a little
- * every check, wherever its chunk is loaded.
+ * every check, wherever its chunk is loaded. A territorial spirit angrier than {@code walk_anger} grows its blight as a
+ * strip toward the bed of the player who angered it (when that player is online and the bed is in its dimension).
  */
 public final class Corruption {
     public static final ResourceKey<Biome> BLIGHTED =
@@ -46,10 +49,14 @@ public final class Corruption {
     private Corruption() {}
 
     public static void tick(MinecraftServer server) {
-        Config.Section config = Config.section("corruption");
-        if (server.getTickCount() % config.integer("check_ticks") != 0) {
-            return;
+        if (server.getTickCount() % Config.section("corruption").integer("check_ticks") == 0) {
+            run(server);
         }
+    }
+
+    /** One check: every territorial spirit spreads its blight, every blight with no spirit left heals. */
+    public static void run(MinecraftServer server) {
+        Config.Section config = Config.section("corruption");
         HauntData data = HauntData.get(server);
         long now = server.overworld().getGameTime();
         for (HauntData.Territorial spirit : data.territorial()) {
@@ -78,11 +85,27 @@ public final class Corruption {
         double reach = Power.blightReach(now - spirit.haunting().bornAt(), spirit.radius());
         int tries = config.integer("tries") * (spirit.haunting().evolved() ? config.integer("evolved_factor") : 1);
         RandomSource random = level.getRandom();
+        Optional<BlockPos> bed = spirit.haunting().anger() > config.num("walk_anger")
+                ? bedOf(level.getServer(), spirit)
+                : Optional.empty();
         for (int i = 0; i < tries && spots.size() < config.integer("max_blocks"); i++) {
-            double angle = random.nextDouble() * Math.PI * 2;
-            double distance = Math.sqrt(random.nextDouble()) * reach;
-            BlockPos column = spirit.anchor().offset((int) Math.round(Math.cos(angle) * distance), 0, (int)
-                    Math.round(Math.sin(angle) * distance));
+            BlockPos column;
+            if (bed.isPresent()) {
+                BlockPos to = bed.get();
+                Strip.Offset step = Strip.offset(
+                        to.getX() - spirit.anchor().getX(),
+                        to.getZ() - spirit.anchor().getZ(),
+                        config.num("walk_reach"),
+                        config.num("walk_width"),
+                        random.nextDouble(),
+                        random.nextDouble());
+                column = spirit.anchor().offset(step.x(), 0, step.z());
+            } else {
+                double angle = random.nextDouble() * Math.PI * 2;
+                double distance = Math.sqrt(random.nextDouble()) * reach;
+                column = spirit.anchor().offset((int) Math.round(Math.cos(angle) * distance), 0, (int)
+                        Math.round(Math.sin(angle) * distance));
+            }
             LevelChunk chunk = loaded(level, column);
             if (chunk == null) {
                 continue;
@@ -117,6 +140,26 @@ public final class Corruption {
                 || columns.size() != blight.columns().size()) {
             data.putBlight(id, new HauntData.Blight(spirit.dimension(), spots, columns));
         }
+    }
+
+    /** The bed of the online player who angered this spirit, if it is in the spirit's dimension. */
+    private static Optional<BlockPos> bedOf(MinecraftServer server, HauntData.Territorial spirit) {
+        return spirit.angeredBy()
+                .flatMap(id -> online(server, id))
+                .map(ServerPlayer::getRespawnConfig)
+                .map(config -> config.respawnData().globalPos())
+                .filter(home -> home.dimension().equals(spirit.dimension()))
+                .map(GlobalPos::pos);
+    }
+
+    /** The player wherever they are, if they are in the world. */
+    private static Optional<ServerPlayer> online(MinecraftServer server, UUID id) {
+        for (ServerLevel level : server.getAllLevels()) {
+            if (level.getPlayerByUUID(id) instanceof ServerPlayer player) {
+                return Optional.of(player);
+            }
+        }
+        return Optional.empty();
     }
 
     /**

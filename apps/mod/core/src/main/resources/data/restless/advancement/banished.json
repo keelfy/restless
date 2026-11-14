@@ -1,0 +1,22 @@
+{
+  "parent": "restless:nature",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "restless:holy_water"
+    },
+    "title": {
+      "translate": "advancements.restless.banished.title"
+    },
+    "description": {
+      "translate": "advancements.restless.banished.description"
+    },
+    "frame": "task",
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}

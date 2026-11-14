@@ -1,6 +1,7 @@
 package dev.keelfy.restless.state;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.haunt.harm.Menace;
@@ -148,20 +149,31 @@ public final class HauntData extends SavedData {
      *
      * @param radius blocks
      */
-    public record Territorial(Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius) {
+    public record Territorial(
+            Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius, Optional<UUID> angeredBy) {
         static final Codec<Territorial> CODEC = RecordCodecBuilder.create(i -> i.group(
                         Haunting.CODEC.fieldOf("haunting").forGetter(Territorial::haunting),
                         Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(Territorial::dimension),
                         BlockPos.CODEC.fieldOf("anchor").forGetter(Territorial::anchor),
-                        Codec.INT.fieldOf("radius").forGetter(Territorial::radius))
+                        Codec.INT.fieldOf("radius").forGetter(Territorial::radius),
+                        UUIDUtil.CODEC.optionalFieldOf("angered_by").forGetter(Territorial::angeredBy))
                 .apply(i, Territorial::new));
 
+        public Territorial(Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius) {
+            this(haunting, dimension, anchor, radius, Optional.empty());
+        }
+
+        /** The same spirit, angered by this player: its blight walks toward that player's bed. */
+        public Territorial angeredBy(UUID player) {
+            return new Territorial(haunting, dimension, anchor, radius, Optional.of(player));
+        }
+
         public Territorial rescheduled(long nextEventAt) {
-            return new Territorial(haunting.rescheduled(nextEventAt), dimension, anchor, radius);
+            return new Territorial(haunting.rescheduled(nextEventAt), dimension, anchor, radius, angeredBy);
         }
 
         public Territorial angered(double by) {
-            return new Territorial(haunting.angered(by), dimension, anchor, radius);
+            return new Territorial(haunting.angered(by), dimension, anchor, radius, angeredBy);
         }
 
         /**
@@ -248,6 +260,29 @@ public final class HauntData extends SavedData {
                     Codec.LONG.optionalFieldOf("mercy_until", 0L).forGetter(Menace::mercyUntil))
             .apply(i, Menace::new));
 
+    /**
+     * A player who lost their last personal spirit gets another: {@code dueAt} is the overworld game time it is bound
+     * (-1 until the player is next seen, which fixes it), {@code gone} the types that left, which it must not repeat.
+     */
+    public record Successor(long dueAt, List<String> gone) {
+        public static final Codec<Successor> CODEC = RecordCodecBuilder.create(i -> i.group(
+                        Codec.LONG.optionalFieldOf("due_at", -1L).forGetter(Successor::dueAt),
+                        Codec.STRING.listOf().optionalFieldOf("gone", List.of()).forGetter(Successor::gone))
+                .apply(i, Successor::new));
+    }
+
+    /** The last two saved maps, nested so the record codec stays within 16 fields. */
+    private record Later(Map<UUID, Long> requiemWary, Map<UUID, Successor> successors) {}
+
+    private static final MapCodec<Later> LATER = RecordCodecBuilder.mapCodec(i -> i.group(
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
+                            .optionalFieldOf("requiem_wary", Map.of())
+                            .forGetter(Later::requiemWary),
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Successor.CODEC)
+                            .optionalFieldOf("successors", Map.of())
+                            .forGetter(Later::successors))
+            .apply(i, Later::new));
+
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL =
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Haunting.CODEC.listOf());
 
@@ -299,9 +334,7 @@ public final class HauntData extends SavedData {
                                     .listOf()
                                     .optionalFieldOf("released", List.of())
                                     .forGetter(data -> List.copyOf(data.released)),
-                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
-                                    .optionalFieldOf("requiem_wary", Map.of())
-                                    .forGetter(data -> data.requiemWary))
+                            LATER.forGetter(data -> new Later(data.requiemWary, data.successors)))
                     .apply(
                             i,
                             (players,
@@ -319,7 +352,7 @@ public final class HauntData extends SavedData {
                                     cradles,
                                     lost,
                                     released,
-                                    requiemWary) -> {
+                                    later) -> {
                                 HauntData data = new HauntData(players, territorial, graves, sanity, notebooks, blight);
                                 journal.forEach((player, entries) -> {
                                     List<Notebook.Note> notes = new ArrayList<>();
@@ -342,7 +375,8 @@ public final class HauntData extends SavedData {
                                 data.cradles.putAll(cradles);
                                 data.lost.putAll(lost);
                                 data.released.addAll(released);
-                                data.requiemWary.putAll(requiemWary);
+                                data.requiemWary.putAll(later.requiemWary());
+                                data.successors.putAll(later.successors());
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -386,6 +420,8 @@ public final class HauntData extends SavedData {
     private final Map<UUID, GlobalPos> cradles = new HashMap<>();
     /** The cradle a player's spawn point stood on when it was broken, until the spawn has used it once. */
     private final Map<UUID, GlobalPos> lost = new HashMap<>();
+
+    private final Map<UUID, Successor> successors = new HashMap<>();
     /** The players the Requiem released: no spirit is born on them or acts on them. */
     private final Set<UUID> released = new HashSet<>();
     /** The game time until which the altar refuses a player a Requiem, after a failed one. Keyed by player. */
@@ -423,6 +459,20 @@ public final class HauntData extends SavedData {
     /** @return null for a player never seen before; an empty list means every spirit was removed */
     public @Nullable List<Haunting> get(UUID player) {
         return hauntings.get(player);
+    }
+
+    /** @return null unless the player has no personal spirit and is waiting for another */
+    public @Nullable Successor successor(UUID player) {
+        return successors.get(player);
+    }
+
+    public void putSuccessor(UUID player, @Nullable Successor successor) {
+        if (successor == null) {
+            successors.remove(player);
+        } else {
+            successors.put(player, successor);
+        }
+        setDirty();
     }
 
     public boolean released(UUID player) {
@@ -600,6 +650,13 @@ public final class HauntData extends SavedData {
 
     public void put(UUID player, List<Haunting> spirits) {
         List<Haunting> old = hauntings.put(player, List.copyOf(spirits));
+        if (!spirits.isEmpty()) {
+            successors.remove(player);
+        } else if (old != null && !old.isEmpty()) {
+            successors.put(
+                    player,
+                    new Successor(-1L, old.stream().map(Haunting::spirit).toList()));
+        }
         if (old != null) {
             old.forEach(h -> owners.remove(h.uuid()));
         }
@@ -633,7 +690,7 @@ public final class HauntData extends SavedData {
             if (kept == null) {
                 removeTerritorial(spirit);
             } else {
-                putTerritorial(new Territorial(kept, t.dimension(), t.anchor(), t.radius()));
+                putTerritorial(new Territorial(kept, t.dimension(), t.anchor(), t.radius(), t.angeredBy()));
             }
         }
     }

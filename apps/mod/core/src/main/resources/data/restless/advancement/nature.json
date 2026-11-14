@@ -1,0 +1,22 @@
+{
+  "parent": "restless:photo",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "restless:altar"
+    },
+    "title": {
+      "translate": "advancements.restless.nature.title"
+    },
+    "description": {
+      "translate": "advancements.restless.nature.description"
+    },
+    "frame": "task",
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}
