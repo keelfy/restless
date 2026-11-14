@@ -146,7 +146,10 @@ public final class Director {
                                 power(haunting, now),
                                 haunting.evolved(),
                                 null)
-                        .ifPresent(event -> turn[0] = new Turn(fireUnlessWarded(player, event, at), event.impact())));
+                        .ifPresent(event -> {
+                            count(player, event, Tally.Kind.ROLLED);
+                            turn[0] = new Turn(fireUnlessWarded(player, event, at), event.impact());
+                        }));
         return turn[0];
     }
 
@@ -297,6 +300,7 @@ public final class Director {
                                 haunting.evolved(),
                                 tier)
                         .ifPresent(event -> {
+                            count(player, event, Tally.Kind.ROLLED);
                             fire(player, event, at);
                             Journal.unlock(player, Notebook.Chapter.HAUNTED);
                             acted[0] = event;
@@ -308,6 +312,7 @@ public final class Director {
     public static Outcome fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
         if (Wards.stops(player, event)) {
             Wards.blocked(player);
+            count(player, event, Tally.Kind.WARDED);
             return Outcome.WARDED;
         }
         boolean keened = event.tags().contains(EventTag.ASSAULT) && Charms.warn(player, at);
@@ -319,6 +324,7 @@ public final class Director {
             Scheduler.later(player, warning, p -> {
                 if (Wards.stops(p, event)) {
                     Wards.blocked(p);
+                    count(p, event, Tally.Kind.WARDED);
                 } else if (fire(p, event, at)) {
                     Journal.unlock(p, Notebook.Chapter.HAUNTED);
                 }
@@ -368,6 +374,7 @@ public final class Director {
         if (ran[0] && !event.waits()) {
             felt(player, event);
         }
+        count(player, event, ran[0] ? Tally.Kind.RAN : Tally.Kind.FAILED);
         return ran[0];
     }
 
@@ -382,6 +389,10 @@ public final class Director {
             note(player, event, spirit);
             felt(player, event);
         });
+    }
+
+    private static void count(ServerPlayer player, HauntEvent event, Tally.Kind kind) {
+        HauntData.get(player.level().getServer()).count(event.id().toString(), kind);
     }
 
     /** The event ran for the player: for the jump scare gap and /haunt history. */

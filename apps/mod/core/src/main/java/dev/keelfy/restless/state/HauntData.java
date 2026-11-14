@@ -1,8 +1,10 @@
 package dev.keelfy.restless.state;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.haunt.Tally;
 import dev.keelfy.restless.haunt.harm.Menace;
 import dev.keelfy.restless.haunt.recall.Said;
 import dev.keelfy.restless.journal.Notebook;
@@ -247,6 +249,13 @@ public final class HauntData extends SavedData {
                     Codec.LONG.optionalFieldOf("mercy_until", 0L).forGetter(Menace::mercyUntil))
             .apply(i, Menace::new));
 
+    private static final Codec<Tally.Counts> COUNTS = RecordCodecBuilder.create(i -> i.group(
+                    Codec.INT.optionalFieldOf("rolled", 0).forGetter(Tally.Counts::rolled),
+                    Codec.INT.optionalFieldOf("ran", 0).forGetter(Tally.Counts::ran),
+                    Codec.INT.optionalFieldOf("warded", 0).forGetter(Tally.Counts::warded),
+                    Codec.INT.optionalFieldOf("failed", 0).forGetter(Tally.Counts::failed))
+            .apply(i, Tally.Counts::new));
+
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL =
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Haunting.CODEC.listOf());
 
@@ -298,9 +307,13 @@ public final class HauntData extends SavedData {
                                     .listOf()
                                     .optionalFieldOf("released", List.of())
                                     .forGetter(data -> List.copyOf(data.released)),
-                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
-                                    .optionalFieldOf("requiem_wary", Map.of())
-                                    .forGetter(data -> data.requiemWary))
+                            // The group holds 16 fields at most, so the last two share one.
+                            Codec.mapPair(
+                                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
+                                                    .optionalFieldOf("requiem_wary", Map.of()),
+                                            Codec.unboundedMap(Codec.STRING, COUNTS)
+                                                    .optionalFieldOf("tally", Map.of()))
+                                    .forGetter(data -> Pair.of(data.requiemWary, data.tally.all())))
                     .apply(
                             i,
                             (players,
@@ -318,7 +331,7 @@ public final class HauntData extends SavedData {
                                     cradles,
                                     lost,
                                     released,
-                                    requiemWary) -> {
+                                    waryAndTally) -> {
                                 HauntData data = new HauntData(players, territorial, graves, sanity, notebooks, blight);
                                 journal.forEach((player, entries) -> {
                                     List<Notebook.Note> notes = new ArrayList<>();
@@ -341,7 +354,8 @@ public final class HauntData extends SavedData {
                                 data.cradles.putAll(cradles);
                                 data.lost.putAll(lost);
                                 data.released.addAll(released);
-                                data.requiemWary.putAll(requiemWary);
+                                data.requiemWary.putAll(waryAndTally.getFirst());
+                                data.tally.load(waryAndTally.getSecond());
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -351,6 +365,11 @@ public final class HauntData extends SavedData {
     // No vanilla data fixer for mod data; NeoForge skips fixing when this is null.
     private static final SavedDataType<HauntData> TYPE = new SavedDataType<>(
             Identifier.fromNamespaceAndPath(Restless.MOD_ID, "hauntings"), HauntData::new, CODEC, null);
+
+    /** The save format, for a test to write a world out and read it back. */
+    public static Codec<HauntData> codec() {
+        return CODEC;
+    }
 
     private static final int CELL_SHIFT = 6;
 
@@ -389,6 +408,8 @@ public final class HauntData extends SavedData {
     private final Set<UUID> released = new HashSet<>();
     /** The game time until which the altar refuses a player a Requiem, after a failed one. Keyed by player. */
     private final Map<UUID, Long> requiemWary = new HashMap<>();
+    /** How often each event was rolled, ran, was warded off or failed, since the world began. */
+    private final Tally tally = new Tally();
     /**
      * Decided the first time anyone asks and never again, so changing the config later does not flip a world; null
      * until then.
@@ -441,6 +462,15 @@ public final class HauntData extends SavedData {
 
     public void putRequiemWary(UUID player, long until) {
         requiemWary.put(player, until);
+        setDirty();
+    }
+
+    public Tally tally() {
+        return tally;
+    }
+
+    public void count(String event, Tally.Kind kind) {
+        tally.add(event, kind);
         setDirty();
     }
 
