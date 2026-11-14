@@ -1,7 +1,7 @@
 # Improvement plan
 
 Result of a code and architecture review of `apps/mod` (2026-11-03). Ordered by priority. Line numbers are as of commit
-`9446372`. Steps 1, 3 (mostly), 4 (mostly), 5 (mostly) and 7 are done, step 2 is partly done; the rest is not built yet.
+`9446372`. Steps 1, 2, 3 (mostly), 4 (mostly), 5 (mostly) and 7 are done; the rest is not built yet.
 
 What stays as it is: `core` on vanilla only behind `Platform`, versioned config with migrations and the key coverage
 test, `optionalFieldOf` codecs for old saves, payload validation, `Hardcore` / `Restore.revert` as one policy.
@@ -22,12 +22,16 @@ server tick.
 
 **Done when.** A deliberately throwing test event is logged and skipped, the server keeps running.
 
-## 2. Make the event roll cheap (partly done)
+## 2. Make the event roll cheap (done)
 
 Done: `Nearby` skips every chunk section whose palette has no matching state and `any` stops at the first hit;
 `Director.pick` checks `opensAt` and `Bands.open` before `canRun`, so closed events are not scanned (and no longer feed
-`Rarity`). Measured with a GameTest on a 10x10 stone plot: all `canRun`s took ~100 ms, now ~8 ms. Not at the 1 ms goal;
-left is the shared neighbourhood snapshot (last bullet) and the weights-first option. Real terrain is not measured.
+`Rarity`). Measured with a GameTest on a 10x10 stone plot: all `canRun`s took ~100 ms, then ~8 ms. Then the
+weights-first option (G4): `pick` draws on weight and calls `canRun` on the drawn event only, redrawing among the rest
+when it cannot run (`haunt/Draw`). The odds are exactly those of a draw among the ready events (`DrawTest`); `Rarity`
+learns only from the events asked. Measured by `roll_is_cheap_on_generated_terrain` on overworld noise terrain (median
+of 100 rolls, one evolved spirit at full power): surface 5.8 → 0.7 ms, cave 7.3 → 0.5 ms, among plains village houses
+15.3 → 0.4 ms. The shared neighbourhood snapshot is not needed.
 
 **Problem.** `pick` calls `canRun` on every event (`Director.java:349`). ~190 `canRun`s use `Nearby.any`, which scans
 the whole cube and collects every hit before picking one (`haunt/event/kit/Nearby.java:48-60`). Radii in config: 16 for
