@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -499,7 +500,18 @@ public final class Director {
                 : 0.0;
     }
 
-    /** Events the player went through lately ({@link Recent}) are left out, unless they are all that can run. */
+    /** The event a due spirit's roll would choose on the player now, without running it; for measuring the roll. */
+    public static Optional<HauntEvent> choose(ServerPlayer player, HauntData.Haunting haunting, long now) {
+        return pick(
+                player, spirit(haunting), Traits.of(haunting.traits()), power(haunting, now), haunting.evolved(), null);
+    }
+
+    /**
+     * Events the player went through lately ({@link Recent}) are left out, unless they are all that can run. Drawn on
+     * weight first and {@link HauntEvent#canRun} asked of the drawn one only ({@link Draw}): the odds are those of a
+     * draw among the events that can run, without looking around the player for every one. {@link Rarity} learns from
+     * the events asked.
+     */
     private static Optional<HauntEvent> pick(
             ServerPlayer player,
             SpiritType spirit,
@@ -507,10 +519,10 @@ public final class Director {
             double power,
             boolean evolved,
             @Nullable HauntTier tier) {
-        List<HauntEvent> candidates = new ArrayList<>();
-        List<Double> weights = new ArrayList<>();
-        List<Boolean> stale = new ArrayList<>();
-        boolean anyFresh = false;
+        List<HauntEvent> fresh = new ArrayList<>();
+        List<Double> freshWeights = new ArrayList<>();
+        List<HauntEvent> stale = new ArrayList<>();
+        List<Double> staleWeights = new ArrayList<>();
         for (HauntEvent event : HauntEvents.all()) {
             if (tier != null && event.tier() != tier) {
                 continue;
@@ -518,35 +530,20 @@ public final class Director {
             if (!open(event, player, spirit, power, evolved)) {
                 continue;
             }
-            String id = event.id().toString();
-            boolean ready = Faults.canRun(event, player);
-            Rarity.observe(id, ready);
-            double weight = weight(event, ready, spirit, traits, power, evolved);
+            double weight = weight(event, true, spirit, traits, power, evolved);
             if (weight > 0) {
-                boolean repeat = Recent.blocks(player.getUUID(), id);
-                candidates.add(event);
-                weights.add(weight);
-                stale.add(repeat);
-                anyFresh |= !repeat;
-            }
-        }
-        double total = 0;
-        for (int i = candidates.size() - 1; i >= 0; i--) {
-            if (anyFresh && stale.get(i)) {
-                candidates.remove(i);
-                weights.remove(i);
-            } else {
-                total += weights.get(i);
+                boolean repeat = Recent.blocks(player.getUUID(), event.id().toString());
+                (repeat ? stale : fresh).add(event);
+                (repeat ? staleWeights : freshWeights).add(weight);
             }
         }
         RandomSource random = player.getRandom();
-        double roll = random.nextDouble() * total;
-        for (int i = 0; i < candidates.size(); i++) {
-            roll -= weights.get(i);
-            if (roll < 0) {
-                return Optional.of(candidates.get(i));
-            }
-        }
-        return Optional.empty();
+        Predicate<HauntEvent> ready = event -> {
+            boolean can = Faults.canRun(event, player);
+            Rarity.observe(event.id().toString(), can);
+            return can;
+        };
+        Optional<HauntEvent> picked = Draw.first(fresh, freshWeights, ready, random::nextDouble);
+        return picked.isPresent() ? picked : Draw.first(stale, staleWeights, ready, random::nextDouble);
     }
 }
