@@ -5,6 +5,7 @@ import dev.keelfy.restless.banish.Circle;
 import dev.keelfy.restless.banish.Natures;
 import dev.keelfy.restless.banish.Phase;
 import dev.keelfy.restless.banish.Ritual;
+import dev.keelfy.restless.banish.Second;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Altar;
@@ -388,6 +389,44 @@ final class RitualGameTests {
             HauntData.get(helper.getLevel().getServer())
                     .putGrave(SPIRIT, new HauntData.Grave(altar.offset(40, 0, 0), true));
             check(helper, started(helper, player).plan().fury() == 6, "a far grave changes nothing");
+            helper.succeed();
+        });
+    }
+
+    /** Two at the altar: a helper with a bell cuts the fury, and the spirit's strikes land on both. */
+    static void registerSecond(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("ritual_second_with_a_bell_cuts_the_fury", helper -> {
+            Circle circle = beforeFury(helper);
+            ServerPlayer second = HauntEventGameTests.connected(helper);
+            second.setPos(Vec3.atBottomCenterOf(helper.absolutePos(AltarGameTests.CENTER.offset(1, 1, 1))));
+            helper.getLevel().addNewPlayer(second); // the circle looks for helpers among the level's players
+            second.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.BELL));
+            check(helper, Second.inside(circle).contains(second), "the helper stands in the circle");
+            check(
+                    helper,
+                    Second.targets(circle).containsAll(List.of(circle.player(), second)),
+                    "the spirit's strikes land on both");
+            steps(helper, circle, 2);
+            check(helper, circle.phase().orElseThrow() == Phase.FURY, "the fury is on");
+            check(helper, circle.plan().fury() == 4, "a bell in the circle takes two waves off the fury");
+            steps(helper, circle, 1);
+            check(helper, circle.plan().fury() == 4, "only once a ritual");
+            circle.player().connection.markClientLoaded();
+            second.connection.markClientLoaded();
+            float before = second.getHealth();
+            Natures.malice(circle);
+            check(helper, second.getHealth() < before, "the malice strike hurts the helper too");
+            second.discard(); // other tests must not find a stray player in the level
+            helper.succeed();
+        });
+        tests.put("ritual_second_empty_handed_changes_nothing", helper -> {
+            Circle circle = beforeFury(helper);
+            ServerPlayer second = HauntEventGameTests.connected(helper);
+            second.setPos(Vec3.atBottomCenterOf(helper.absolutePos(AltarGameTests.CENTER.offset(1, 1, 1))));
+            helper.getLevel().addNewPlayer(second); // the circle looks for helpers among the level's players
+            steps(helper, circle, 2);
+            check(helper, circle.plan().fury() == 6, "a helper with nothing in hand does not cut the fury");
+            second.discard(); // other tests must not find a stray player in the level
             helper.succeed();
         });
     }

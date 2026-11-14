@@ -403,6 +403,8 @@
     "midnight_from": 17000,
     "midnight_to": 19000,
     "hallowed_fury_waves": 2,
+    "second_radius": 3.0,
+    "second_fury_waves": 2,
     "fail_anger": 0.3,
     "gaze_ticks": 40,
     "gaze_angle": 20.0,

@@ -227,6 +227,8 @@ Then it runs in waves of 5 seconds, through four phases:
 
 **Place and hour.** A ritual held within 8 blocks of the spirit's [gravestone](#gravestone), or begun around midnight (day time 17000 to 19000), is hallowed: the fury runs 2 waves longer and the banished spirit leaves one more essence.
 
+**Two at the altar.** Another player standing within 3 blocks of the altar helps. If they hold a bell or a flint and steel during the fury, the fury is 2 waves shorter (once a ritual). But the spirit's strikes in the fury, its events and the blow of malice, land on everyone in the circle.
+
 **The name.** In the fury and the leaving the spirit listens to the chat. Say its name, as its [gravestone](#gravestone) gives it (case and punctuation do not matter): in the fury it takes 4 waves off the fury, in the leaving the spirit is banished at once. It works once a ritual. Anything else you say then is a wrong name: its anger rises by 0.1.
 
 Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offering is taken off, or you wander off: what lay on the altar is lost and the spirit grows 0.3 angrier. If every candle burns at the end, it is **banished**. For the essences it leaves, see [Essences](/en/items/essences#where-they-come-from).

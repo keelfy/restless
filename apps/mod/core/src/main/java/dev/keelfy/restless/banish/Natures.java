@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -80,10 +81,12 @@ public final class Natures {
 
     /** A blow to the player, never past what the threat band leaves them. */
     public static void malice(Circle circle) {
-        float allowed = Math.min(
-                (float) Config.section("ritual").num("malice_damage"), Band.THREAT.room(circle.player.getHealth()));
-        if (allowed > 0.0f) {
-            circle.player.hurtServer(circle.level, Taken.by(circle.level, Taken.TAKEN), allowed);
+        for (ServerPlayer target : Second.targets(circle)) {
+            float allowed = Math.min(
+                    (float) Config.section("ritual").num("malice_damage"), Band.THREAT.room(target.getHealth()));
+            if (allowed > 0.0f) {
+                target.hurtServer(circle.level, Taken.by(circle.level, Taken.TAKEN), allowed);
+            }
         }
     }
 

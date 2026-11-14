@@ -42,6 +42,8 @@ public final class Circle {
     boolean named;
     /** Held near the spirit's grave or begun at midnight, see {@link Hallow}. */
     boolean hallowed;
+    /** A second player has already cut the fury short, see {@link Second}. */
+    boolean seconded;
 
     private final Gaze gaze = new Gaze(this);
     final Ring ring = new Ring(this);
