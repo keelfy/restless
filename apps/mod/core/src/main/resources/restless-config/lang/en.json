@@ -1381,6 +1381,14 @@
       "name": "Phantom Break",
       "description": "The next block the player breaks sounds a second time, a few blocks away."
     },
+    "minecraft:dragged_chains": {
+      "name": "Dragged Chains",
+      "description": "Chains drag and clatter somewhere out of sight."
+    },
+    "minecraft:creature_rattle": {
+      "name": "Creature Rattle",
+      "description": "A dry rattling call from something that is not there."
+    },
     "minecraft:pumpkin_head": {
       "name": "Pumpkin Head",
       "description": "The blur of a carved pumpkin falls over the screen for a few seconds, though nothing is on the player's head."

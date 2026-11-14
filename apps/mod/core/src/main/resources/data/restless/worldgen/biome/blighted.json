@@ -35,6 +35,9 @@
     "minecraft:audio/background_music": {},
     "minecraft:audio/music_volume": 0.0,
     "minecraft:audio/ambient_sounds": {
+      "loop": {
+        "sound_id": "restless:haunt.blight_bed"
+      },
       "mood": {
         "sound": "minecraft:ambient.cave",
         "tick_delay": 3000,

@@ -9,7 +9,7 @@ title: Assault
 65 events.
 
 Events come in three bands. A **threat** event never takes the player below `assaults.safe_health` (3 hearts). A **brink** event
-may leave half a heart, needs power 0.6 and is followed by a quiet spell. A **lethal** event can kill, and runs only for an
+may leave half a heart, needs power 0.6, sets your heart pounding and is followed by a quiet spell. A **lethal** event can kill, and runs only for an
 evolved spirit on its list, at power 0.9, at most once per 3 days and only after a brink event. See the `assaults` settings to
 turn lethal events off. A player killed this way lowers the spirit's anger. Every one gives a warning and a way out.
 

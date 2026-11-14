@@ -24,7 +24,8 @@ Light levels 4 to 9 move nothing. Rows add up: standing in the dark inside a spi
 
 ## What it does to you
 
-- **Below 0.6** darkness closes in from the edges of the screen, deeper the lower it falls. The journal opens its sanity chapter the first time.
+- **Below 0.6** darkness closes in from the edges of the screen, deeper the lower it falls, and a low drone rises with it. The journal opens its sanity chapter the first time.
+- **Below 0.2** you hear your own heartbeat.
 - **Below 0.35** you are **shaken**: you see what is hidden from the calm. The [Spirit Box](/en/items/tools#spirit-box) says more, and it tells where the spirit's bones lie.
 - **At 0** nothing more can be taken. The events that drain sanity stop running on you, but the other spirits' events do not.
 

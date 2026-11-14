@@ -509,7 +509,11 @@
     },
     "reveal_below": 0.35,
     "overlay_below": 0.6,
-    "overlay_peak": 0.9
+    "overlay_peak": 0.9,
+    "bed_volume": 0.6,
+    "heartbeat_below": 0.2,
+    "heartbeat_gap_ticks": 30,
+    "heartbeat_volume": 0.8
   },
   "corruption": {
     "check_ticks": 100,
@@ -540,7 +544,11 @@
     "days": 10,
     "power_floor": 0.7,
     "extra_waves": 4,
-    "signature_boost": 3.0
+    "signature_boost": 3.0,
+    "sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    }
   },
   "candle": {
     "step_ticks": 4,
@@ -608,6 +616,14 @@
     "cradle_wake_delay_ticks": 100
   },
   "requiem": {
+    "begin_sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
+    "rest_sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
     "bell_ticks": 100,
     "bell_spirits": 3,
     "poem_line_ticks": 30,
