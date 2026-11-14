@@ -5,6 +5,7 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.divine.Sense;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.journal.Journal;
+import dev.keelfy.restless.journal.Milestones;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.life.Evolution;
@@ -170,6 +171,7 @@ public final class Graves {
         Component type = Evolution.name(spirit);
         player.sendSystemMessage(Component.translatable("message.restless.rested", story.name()), true);
         Journal.note(player, Notebook.Kind.RESTED, spirit, story.name(), type);
+        Milestones.award(player, "rested");
         // Somebody else laid it to rest: its owner is told too, even if they are away.
         owner.ifPresent(id -> Journal.noteFor(level.getServer(), id, Notebook.Kind.RESTED, spirit, story.name(), type));
     }

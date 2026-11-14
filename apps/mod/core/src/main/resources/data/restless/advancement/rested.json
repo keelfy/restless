@@ -1,0 +1,22 @@
+{
+  "parent": "restless:banished",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:soul_lantern"
+    },
+    "title": {
+      "translate": "advancements.restless.rested.title"
+    },
+    "description": {
+      "translate": "advancements.restless.rested.description"
+    },
+    "frame": "task",
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}

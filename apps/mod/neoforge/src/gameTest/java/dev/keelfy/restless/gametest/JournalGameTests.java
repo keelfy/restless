@@ -9,6 +9,7 @@ import dev.keelfy.restless.journal.JournalPayload;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.photo.DevelopPayload;
 import dev.keelfy.restless.photo.Picture;
+import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.state.HauntData;
 import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ final class JournalGameTests {
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         registerArchive(tests);
         registerDiary(tests);
+        registerPath(tests);
         tests.put("photo_develops_once", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             ItemStack photo = new ItemStack(Content.PHOTO.get());
@@ -451,5 +453,76 @@ final class JournalGameTests {
 
     private static void check(GameTestHelper helper, boolean condition, String message) {
         HauntEventGameTests.check(helper, condition, message);
+    }
+
+    /** The advancement chain: every file loads, and the code and data triggers grant their step. */
+    private static void registerPath(Map<String, Consumer<GameTestHelper>> tests) {
+        List<String> chain =
+                new ArrayList<>(List.of("root", "clue", "photo", "nature", "banished", "rested", "requiem"));
+        Content.ESSENCE.keySet().forEach(type -> chain.add("essence/" + type));
+        tests.put("advancement_path_loads", helper -> {
+            for (String path : chain) {
+                check(helper, advancement(helper, path) != null, "advancement " + path + " must load");
+            }
+            helper.succeed();
+        });
+        tests.put("advancement_path_code_triggers", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            check(helper, !done(helper, player, "photo"), "no photo advancement before a photograph");
+            Journal.tagged(player, Notebook.Kind.PHOTO, null, "shade", Component.literal("Shade"));
+            check(
+                    helper,
+                    done(helper, player, "clue") && done(helper, player, "photo"),
+                    "a photo must grant clue and photo");
+            check(helper, !done(helper, player, "banished"), "a photo must not grant the banishing");
+            Journal.tagged(player, Notebook.Kind.BANISHED, null, "shade", Component.literal("Shade"));
+            check(
+                    helper,
+                    done(helper, player, "nature") && done(helper, player, "banished"),
+                    "a banishing must grant its steps");
+
+            ServerLevel level = helper.getLevel();
+            HauntData data = HauntData.get(level.getServer());
+            var spirit = new HauntData.Haunting(
+                    java.util.UUID.randomUUID(), "shade", 0x5EED5L, List.of(), 0L, 1.0, 0L, false, 0, 0L);
+            data.putTerritorial(new HauntData.Territorial(spirit, level.dimension(), player.blockPosition(), 48));
+            BlockPos grave = helper.absolutePos(new BlockPos(1, 2, 1));
+            data.putGrave(spirit.uuid(), new HauntData.Grave(grave, true));
+            check(helper, !done(helper, player, "rested"), "no grave advancement before a grave is visited");
+            check(
+                    helper,
+                    Graves.visit(player, grave, new ItemStack(Graves.wanted(spirit.seed()))),
+                    "the grave must take what the spirit wanted");
+            check(helper, done(helper, player, "rested"), "laying a spirit to rest must grant its advancement");
+            data.removeTerritorial(spirit.uuid());
+            player.discard();
+            helper.succeed();
+        });
+        tests.put("advancement_path_essence_trigger", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            String path = "essence/shade";
+            check(helper, !done(helper, player, path), "no essence advancement without the essence");
+            // A mock player never loaded its advancements, so nothing listens for triggers yet.
+            player.getAdvancements().reload(helper.getLevel().getServer().getAdvancements());
+            ItemStack essence = new ItemStack(Content.ESSENCE.get("shade").get());
+            player.getInventory().add(essence.copy());
+            // A mock player has no menu listener: fire the trigger the way the real one does on a slot change.
+            net.minecraft.advancements.triggers.CriteriaTriggers.INVENTORY_CHANGED.trigger(
+                    player, player.getInventory(), essence);
+            check(helper, done(helper, player, path), "holding an essence must grant its advancement");
+            check(helper, !done(helper, player, "essence/nix"), "another essence must stay ungranted");
+            player.discard();
+            helper.succeed();
+        });
+    }
+
+    private static net.minecraft.advancements.AdvancementHolder advancement(GameTestHelper helper, String path) {
+        return helper.getLevel().getServer().getAdvancements().get(Identifier.fromNamespaceAndPath("restless", path));
+    }
+
+    private static boolean done(GameTestHelper helper, ServerPlayer player, String path) {
+        return player.getAdvancements()
+                .getOrStartProgress(advancement(helper, path))
+                .isDone();
     }
 }

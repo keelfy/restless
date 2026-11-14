@@ -1,0 +1,34 @@
+{
+  "parent": "restless:rested",
+  "criteria": {
+    "held": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "restless:domovoi_essence"
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "restless:domovoi_essence"
+    },
+    "title": {
+      "translate": "item.restless.domovoi_essence"
+    },
+    "description": {
+      "translate": "advancements.restless.essence.description",
+      "with": [
+        {
+          "translate": "item.restless.domovoi_essence"
+        }
+      ]
+    },
+    "frame": "task",
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}

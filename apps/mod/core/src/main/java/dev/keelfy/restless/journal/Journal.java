@@ -89,6 +89,19 @@ public final class Journal {
         for (Chapter chapter : chapters(kind)) {
             unlock(player, chapter);
         }
+        // The altar writes BANISHED only when its offering fitted the spirit's nature and the ritual was finished.
+        switch (kind) {
+            case FOOTPRINTS, VOICE, PLANCHETTE -> Milestones.award(player, "clue");
+            case PHOTO -> {
+                Milestones.award(player, "clue");
+                Milestones.award(player, "photo");
+            }
+            case BANISHED -> {
+                Milestones.award(player, "nature");
+                Milestones.award(player, "banished");
+            }
+            default -> {}
+        }
     }
 
     /**

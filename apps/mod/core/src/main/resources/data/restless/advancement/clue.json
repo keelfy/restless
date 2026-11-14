@@ -1,0 +1,22 @@
+{
+  "parent": "restless:root",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:spyglass"
+    },
+    "title": {
+      "translate": "advancements.restless.clue.title"
+    },
+    "description": {
+      "translate": "advancements.restless.clue.description"
+    },
+    "frame": "task",
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}
