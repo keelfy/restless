@@ -212,13 +212,16 @@ Altars with nothing to answer, or missing candles or salt, refuse the offering. 
 
 | Essence | Artifact | Use |
 |---|---|---|
-| Poltergeist | **Telekinesis amulet** (essence, gold ingot, string) | Pulls every dropped item within `artifacts.amulet_radius` to you. |
-| Shade | **Dark eye** (essence, eye of ender) | Night vision, and every living thing within `artifacts.eye_radius` glows, for `artifacts.eye_ticks`. |
+| Poltergeist | **Telekinesis amulet** (2 gold ingots, hallowed wax, essence) | Pulls every dropped item and experience orb within `artifacts.amulet_radius` to you. |
+| Shade | **Dark eye** (2 tinted glass, eye of ender, hallowed wax, essence) | Night vision, and every living thing within `artifacts.eye_radius` glows, for `artifacts.eye_ticks`. |
 
-Only the poltergeist and the shade have an essence; every other type drops nothing (graves give no essence for it either).
+Every one of the 15 types has an essence (`Content.ESSENCE`); banishing and graves drop it for every type. Each essence
+also crafts a base charm and a consumable, and three of different types a relic; [crafting-economy.md](crafting-economy.md)
+has every recipe. The two above are the poltergeist's and shade's base charms. The **effigy** (scarecrow, candle,
+hallowed wax) burned with an essence of a type calls that spirit: a personal one to the nearest player (`Births.lure`), a territorial one to the effigy (`Births.place`).
 
-Not built yet: offerings, throwing holy water to end a running event, the essence lure, and the pact enchantment and
-mimic mask (there are no spirit types for them yet). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
+Not built yet: offerings that calm a spirit (the altar's offering only starts the ritual), and throwing holy water to end
+a running event (holy water is only made and used on the altar). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
 
 ## Unfinished business, sanity, journal
 
@@ -288,7 +291,7 @@ The journal opens a dedicated parchment screen with section bookmarks. Only disc
 reader. Text wraps and splits into additional pages at the current GUI size and font; wheel and Page Up/Page Down
 turn pages, Tab navigates controls, and Escape closes it. The screen supports narration.
 
-Not built yet: illustrated photos and footprint stamps, portraits in chests,
+Not built yet: portraits in chests,
 the other quest kinds (bury remains, a letter to a descendant, a named killer mob, a killer spirit), hallucinations at
 very low sanity, and research: the journal unlocks no recipes.
 
@@ -340,9 +343,9 @@ territorial one tries `corruption.evolved_factor` (3) times as many columns. The
 those in its radius) hear a heartbeat, are told, and it goes in their journal; from then on it goes by its grown name.
 A personal spirit grows only while its player is online.
 
-Not built yet: world-born spirits (death spots, blood moon), merging, the calendar (full
-moon, blood night, day of the dead), possessed mobs in corrupted land, crops stopping, and new events or clues
-for evolved spirits.
+Not built yet: merging, the calendar (full
+moon, blood night, day of the dead), possessed mobs in corrupted land, crops stopping, and new clues
+for evolved spirits (evolved spirits do get their own events, such as `judgement` and `reaping`).
 
 ## Spirits
 
@@ -366,10 +369,10 @@ for evolved spirits.
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
-Besides their signature events (below), the ten types after `nix` only pick from the existing events. Their own gimmicks from [design.md](design.md) are not built:
-a fake chat with a name of its own (mimic), the nightmare room (mara), honest warnings (banshee), birth from killing
-(revenant), winning a domovoi with offerings, a hoarder's nest that banishing empties, pacts with a real term (demon)
-and fake gifts beyond the one chest (trickster). None has an essence or artifact.
+Besides their signature events (below), the eleven types after `nix` only pick from the existing events. Their own gimmicks from [design.md](design.md) are not built:
+a fake chat with a name of its own (mimic), the nightmare room (mara), honest warnings (banshee),
+winning a domovoi with offerings, a hoarder's nest that banishing empties
+and fake gifts beyond the one chest (trickster). A revenant is born from killing (`slaughter` deed, `spirit/life/Deeds.java`), and every type has an essence and charms.
 
 ## Events
 
