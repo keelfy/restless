@@ -33,7 +33,7 @@ import org.jspecify.annotations.Nullable;
  * by weight. The figure is a {@link Silhouette} sent as a {@link PacketEntity}, so only this player's client is told of
  * it and nothing is left on the server.
  */
-final class Jolts {
+public final class Jolts {
     private Jolts() {}
 
     static List<HauntEvent> all() {
@@ -199,7 +199,7 @@ final class Jolts {
      * A random one of the first silhouette shapes, or the given one: the client is sent the entity data of a model that
      * is never added. The registry is typed {@code EntityType<?>}; this one is built for Silhouette.
      */
-    static void shape(ServerPlayer player, PacketEntity figure) {
+    public static void shape(ServerPlayer player, PacketEntity figure) {
         shape(player, figure, player.getRandom().nextInt(SilhouetteRenderer.ANY));
     }
 
@@ -214,7 +214,7 @@ final class Jolts {
     }
 
     /** Whether {@code at} is within {@code degrees} of where the player looks, with nothing solid between. */
-    static boolean watched(ServerPlayer player, Vec3 at, double degrees) {
+    public static boolean watched(ServerPlayer player, Vec3 at, double degrees) {
         Vec3 eye = player.getEyePosition();
         return player.getLookAngle().dot(at.subtract(eye).normalize()) >= Math.cos(Math.toRadians(degrees))
                 && clear(player, at);

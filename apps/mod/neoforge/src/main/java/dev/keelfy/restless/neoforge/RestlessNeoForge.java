@@ -2,7 +2,9 @@ package dev.keelfy.restless.neoforge;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.banish.RequiemPayload;
+import dev.keelfy.restless.banish.RitualPayload;
 import dev.keelfy.restless.banish.client.RequiemScreen;
+import dev.keelfy.restless.banish.client.RitualCue;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.EyesType;
 import dev.keelfy.restless.content.Presence;
@@ -105,6 +107,7 @@ public final class RestlessNeoForge {
                 .playToClient(
                         JournalPayload.TYPE, JournalPayload.CODEC, (payload, context) -> JournalScreen.receive(payload))
                 .playToClient(RequiemPayload.TYPE, RequiemPayload.CODEC, (payload, context) -> RequiemScreen.open())
+                .playToClient(RitualPayload.TYPE, RitualPayload.CODEC, (payload, context) -> RitualCue.receive(payload))
                 .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))
                 .playToClient(
                         ShutterPayload.TYPE, ShutterPayload.CODEC, (payload, context) -> Darkroom.shutter(payload))

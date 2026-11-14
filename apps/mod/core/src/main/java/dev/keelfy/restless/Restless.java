@@ -2,6 +2,7 @@ package dev.keelfy.restless;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
+import dev.keelfy.restless.banish.Name;
 import dev.keelfy.restless.banish.Requiem;
 import dev.keelfy.restless.command.HauntCommand;
 import dev.keelfy.restless.config.Config;
@@ -235,6 +236,7 @@ public final class Restless {
         Divination.ask(player, Heard.typed(line));
         Machines.said(player, line);
         Overheard.heard(player, line);
+        Name.said(player, line);
     }
 
     /**

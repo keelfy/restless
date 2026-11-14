@@ -1975,6 +1975,7 @@ final class HauntEventGameTests {
                 dev.keelfy.restless.sanity.SanityPayload.TYPE,
                 dev.keelfy.restless.journal.JournalPayload.TYPE,
                 dev.keelfy.restless.banish.RequiemPayload.TYPE,
+                dev.keelfy.restless.banish.RitualPayload.TYPE,
                 dev.keelfy.restless.debug.DebugPayload.TYPE,
                 dev.keelfy.restless.photo.ShutterPayload.TYPE,
                 dev.keelfy.restless.divine.SpiritBoxPayload.TYPE)) {

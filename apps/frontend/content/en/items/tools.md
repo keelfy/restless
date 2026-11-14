@@ -214,10 +214,23 @@ Needs, when the offering goes down:
 - a closed **salt ring** around it, see [Salt](#salt) (the platform does not count as a wall);
 - a spirit you sense that is weak to the offering's nature, and is not wary.
 
-Then it runs **12 waves of 5 seconds**. A form the type does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
+Then it runs in waves of 5 seconds, through four phases:
 
-- 25%: it snuffs one candle. Relight it before the next wave.
-- 50%: it runs one of its events on you.
+1. **The call**, 2 waves. The spirit comes in and does nothing yet.
+2. **The bargain**, 2 waves. The spirit names what it wants: the thing its [grave](#gravestone) asks for. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
+3. **The fury**, 6 waves. A form the type does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
+   - 25%: it snuffs one candle. Relight it before the next wave.
+   - 50%: it runs one of its events on you.
+   - 35%: it acts by its nature, whatever the censer does. Objects: it flings the offering off the altar; use the same offering on the altar again before the next wave, or the ritual fails. Darkness: it puts out every torch and lantern within 12 blocks for 30 seconds (the ritual's candles stay lit). Malice: it strikes you for a heart and a half of damage, never leaving you below the safe health. Deceit: it shows two of your candles as dark, but only to you; they still burn, so do not relight them.
+   - Once per ritual it wipes one tile of the salt ring. Lay salt on that tile again before the next wave, or the ritual fails.
+   - It also shows itself: a dark figure walks the salt ring, and its nature sets a rule of gaze. Darkness and malice: do not look at it for more than 2 seconds. Objects and deceit: do not look away from it for more than 2 seconds. Break the rule and it snuffs a candle (the ritual goes on; relight it before the next wave).
+4. **The leaving**, 2 waves. The spirit lets go, but still walks the ring under the same rule of gaze; keep the candles lit to the end.
+
+**Place and hour.** A ritual held within 8 blocks of the spirit's [gravestone](#gravestone), or begun around midnight (day time 17000 to 19000), is hallowed: the fury runs 2 waves longer and the banished spirit leaves one more essence.
+
+**Two at the altar.** Another player standing within 3 blocks of the altar helps. If they hold a bell or a flint and steel during the fury, the fury is 2 waves shorter (once a ritual). But the spirit's strikes in the fury, its events and the blow of malice, land on everyone in the circle.
+
+**The name.** In the fury and the leaving the spirit listens to the chat. Say its name, as its [gravestone](#gravestone) gives it (case and punctuation do not matter): in the fury it takes 4 waves off the fury, in the leaving the spirit is banished at once. It works once a ritual. Anything else you say then is a wrong name: its anger rises by 0.1.
 
 Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offering is taken off, or you wander off: what lay on the altar is lost and the spirit grows 0.3 angrier. If every candle burns at the end, it is **banished**. For the essences it leaves, see [Essences](/en/items/essences#where-they-come-from).
 
