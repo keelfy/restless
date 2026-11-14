@@ -25,8 +25,7 @@ public final class Calendar {
     /** Vanilla's moon phases, one per day (MoonPhase.COUNT; a plain number so the pure part runs in unit tests). */
     private static final int MOON_PHASES = 8;
 
-    @Nullable
-    private static volatile Date forced;
+    @Nullable private static volatile Date forced;
 
     private Calendar() {}
 
@@ -78,7 +77,8 @@ public final class Calendar {
         }
         Date date = today(server);
         if (!date.special()
-                || Math.floorMod(ticks(server), Ticks.DAY) < Config.section("calendar").integer("dusk_tick")
+                || Math.floorMod(ticks(server), Ticks.DAY)
+                        < Config.section("calendar").integer("dusk_tick")
                 || !ANNOUNCED.add(date.day())) {
             return;
         }

@@ -79,14 +79,21 @@ final class CalendarGameTests {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             var server = helper.getLevel().getServer();
             HauntData data = HauntData.get(server);
-            List<String> liars = Traits.all().stream()
-                    .filter(Trait::lies)
-                    .map(Trait::id)
-                    .toList();
+            List<String> liars =
+                    Traits.all().stream().filter(Trait::lies).map(Trait::id).toList();
             check(helper, !liars.isEmpty(), "the test needs a lying trait");
             // Old and angry: the spirit is at full power, so harm would be likely on any other day.
             var spirit = new HauntData.Haunting(
-                    UUID.randomUUID(), "revenant", 0x5EED5L, liars, -1000L * 24000, 1.0, Long.MAX_VALUE / 2, false, 0, 0L);
+                    UUID.randomUUID(),
+                    "revenant",
+                    0x5EED5L,
+                    liars,
+                    -1000L * 24000,
+                    1.0,
+                    Long.MAX_VALUE / 2,
+                    false,
+                    0,
+                    0L);
             data.put(player.getUUID(), List.of(spirit));
             try {
                 Calendar.force(DEAD);
@@ -101,9 +108,7 @@ final class CalendarGameTests {
                 for (int i = 0; i < 80; i++) {
                     Divination.read(player, Clue.VOICE)
                             .ifPresent(reading -> check(
-                                    helper,
-                                    owned.contains(reading.trait()),
-                                    "no tool lies on the day of the dead"));
+                                    helper, owned.contains(reading.trait()), "no tool lies on the day of the dead"));
                 }
                 Calendar.force(new Calendar.Date(1, false, false, false));
                 boolean lied = false;

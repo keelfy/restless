@@ -286,10 +286,7 @@ final class BirthGameTests {
             Haunted.check(player);
             HauntEventGameTests.check(
                     helper, data.get(player.getUUID()).size() == 1, "Holding a haunted thing must bind a spirit");
-            HauntEventGameTests.check(
-                    helper,
-                    !holdsMark(player),
-                    "The mark must be gone once it has bound");
+            HauntEventGameTests.check(helper, !holdsMark(player), "The mark must be gone once it has bound");
             Haunted.check(player);
             HauntEventGameTests.check(
                     helper, data.get(player.getUUID()).size() == 1, "A haunted thing must bind only once");
@@ -315,10 +312,7 @@ final class BirthGameTests {
                     helper,
                     before == max && data.get(player.getUUID()).size() == max,
                     "A player at the cap must get no new spirit");
-            HauntEventGameTests.check(
-                    helper,
-                    !holdsMark(player),
-                    "The mark must go even when nothing binds");
+            HauntEventGameTests.check(helper, !holdsMark(player), "The mark must go even when nothing binds");
             player.discard();
             helper.succeed();
         });

@@ -432,7 +432,8 @@ public final class Director {
 
     /** As {@link #power(HauntData.Haunting, long)}, lifted on a full moon (see {@link Calendar}). */
     public static double power(HauntData.Haunting haunting, long now, ServerLevel level) {
-        return Power.moonlit(power(haunting, now), Calendar.today(level.getServer()).fullMoon());
+        return Power.moonlit(
+                power(haunting, now), Calendar.today(level.getServer()).fullMoon());
     }
 
     private static long cooldown(
@@ -517,7 +518,8 @@ public final class Director {
         List<Boolean> stale = new ArrayList<>();
         boolean anyFresh = false;
         // The day of the dead is quiet; only a ritual that names a tier overrides it.
-        boolean quiet = tier == null && Calendar.today(player.level().getServer()).dayOfTheDead();
+        boolean quiet =
+                tier == null && Calendar.today(player.level().getServer()).dayOfTheDead();
         for (HauntEvent event : HauntEvents.all()) {
             if (tier != null && event.tier() != tier || quiet && event.tier() == HauntTier.HARMFUL) {
                 continue;

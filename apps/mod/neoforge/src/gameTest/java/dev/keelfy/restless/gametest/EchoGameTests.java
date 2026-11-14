@@ -100,10 +100,7 @@ final class EchoGameTests {
             check(
                     helper,
                     !Ritual.begin(
-                            player,
-                            helper.getLevel(),
-                            helper.absolutePos(AltarGameTests.CENTER),
-                            Altar.Held.IRON),
+                            player, helper.getLevel(), helper.absolutePos(AltarGameTests.CENTER), Altar.Held.IRON),
                     "an echo must refuse the altar, so it brings no essence");
             HauntData.Haunting echo = data.get(player.getUUID()).get(0);
             Echoes.leave(data, echo.uuid());
@@ -168,7 +165,10 @@ final class EchoGameTests {
             check(
                     helper,
                     own.size() == 2
-                            && own.stream().filter(h -> data.echo(h.uuid()) == 0L).count() == 1
+                            && own.stream()
+                                            .filter(h -> data.echo(h.uuid()) == 0L)
+                                            .count()
+                                    == 1
                             && data.successor(player.getUUID()) == null,
                     "a successor must come when due even with an echo about");
             data.put(player.getUUID(), List.of());

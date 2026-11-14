@@ -26,8 +26,8 @@ public final class Echoes {
     private Echoes() {}
 
     /**
-     * Call once the altar at {@code altar} has banished {@code banished} for {@code player}; it is already gone from the
-     * data.
+     * Call once the altar at {@code altar} has banished {@code banished} for {@code player}; it is already gone from
+     * the data.
      */
     public static void banished(ServerPlayer player, HauntData.Haunting banished, BlockPos altar) {
         HauntData data = HauntData.get(player.level().getServer());

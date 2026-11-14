@@ -179,7 +179,10 @@ final class RitualGameTests {
                     "the spirit is banished");
             check(helper, essences(helper) == 1, "it leaves its essence");
             check(helper, echoes(helper).size() == 1, "an altar banishing leaves an echo at the altar");
-            echoes(helper).forEach(t -> Echoes.leave(HauntData.get(helper.getLevel().getServer()), t.haunting().uuid()));
+            echoes(helper)
+                    .forEach(t -> Echoes.leave(
+                            HauntData.get(helper.getLevel().getServer()),
+                            t.haunting().uuid()));
             helper.succeed();
         });
     }
