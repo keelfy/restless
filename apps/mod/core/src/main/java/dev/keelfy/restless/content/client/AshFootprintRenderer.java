@@ -21,6 +21,7 @@ public final class AshFootprintRenderer extends EntityRenderer<AshFootprint, Ash
     public static final class State extends EntityRenderState {
         int shape;
         boolean left;
+        boolean wet;
         float yaw;
     }
 
@@ -38,6 +39,7 @@ public final class AshFootprintRenderer extends EntityRenderer<AshFootprint, Ash
         super.extractRenderState(entity, state, partialTick);
         state.shape = entity.shape();
         state.left = entity.left();
+        state.wet = entity.wet();
         state.yaw = entity.getYRot();
     }
 
@@ -51,21 +53,22 @@ public final class AshFootprintRenderer extends EntityRenderer<AshFootprint, Ash
         float left = state.left ? u + .5f : u;
         float right = state.left ? u : u + .5f;
         int light = state.lightCoords;
+        int color = state.wet ? 0xFF8A94A6 : -1;
         pose.pushPose();
         pose.rotateDegrees(Axis.YP, -state.yaw);
         collector.submitCustomGeometry(pose, RenderTypes.entityCutout(TEXTURE), (transform, vertices) -> {
-            vertex(vertices, transform, -.25f, -.25f, left, v, light);
-            vertex(vertices, transform, -.25f, .25f, left, v + .5f, light);
-            vertex(vertices, transform, .25f, .25f, right, v + .5f, light);
-            vertex(vertices, transform, .25f, -.25f, right, v, light);
+            vertex(vertices, transform, -.25f, -.25f, left, v, light, color);
+            vertex(vertices, transform, -.25f, .25f, left, v + .5f, light, color);
+            vertex(vertices, transform, .25f, .25f, right, v + .5f, light, color);
+            vertex(vertices, transform, .25f, -.25f, right, v, light, color);
         });
         pose.popPose();
     }
 
     private static void vertex(
-            VertexConsumer vertices, PoseStack.Pose pose, float x, float z, float u, float v, int light) {
+            VertexConsumer vertices, PoseStack.Pose pose, float x, float z, float u, float v, int light, int color) {
         vertices.addVertex(pose, x, 0, z)
-                .setColor(-1)
+                .setColor(color)
                 .setUv(u, v)
                 .setOverlay(OverlayTexture.NO_OVERLAY)
                 .setLight(light)

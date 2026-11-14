@@ -71,7 +71,7 @@ public final class HauntData extends SavedData {
             boolean evolved,
             int notice,
             long waryUntil) {
-        static final Codec<Haunting> CODEC = RecordCodecBuilder.create(i -> i.group(
+        public static final Codec<Haunting> CODEC = RecordCodecBuilder.create(i -> i.group(
                         UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(h -> Optional.of(h.uuid)),
                         Codec.STRING.fieldOf("spirit").forGetter(Haunting::spirit),
                         Codec.LONG.optionalFieldOf("seed").forGetter(h -> Optional.of(h.seed)),
@@ -100,7 +100,8 @@ public final class HauntData extends SavedData {
 
         public static Haunting born(String spirit, long now, RandomSource random) {
             long seed = random.nextLong();
-            return new Haunting(UUID.randomUUID(), spirit, seed, Traits.roll(seed), now, 0.0, now, false, 0, 0L);
+            return new Haunting(
+                    UUID.randomUUID(), spirit, seed, Traits.roll(seed, spirit), now, 0.0, now, false, 0, 0L);
         }
 
         public Haunting rescheduled(long nextEventAt) {

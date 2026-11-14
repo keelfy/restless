@@ -71,4 +71,13 @@ A territorial spirit slowly fouls the land around its anchor: grass turns to coa
 
 ## Traits
 
-Each spirit has a name, a story and **3 to 5 traits**, rolled when it is born. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
+Each spirit has a name, a story and **1 to 4 habits and 1 or 2 conditions**, rolled when it is born. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
+
+## Weakness
+
+The material a spirit is weak to holds it back outside the altar too. A stopped event shows the same ash and chime as a ward.
+
+- **Objects** (iron): its door and item events do not run within 6 blocks of an iron door or a container under iron bars.
+- **Darkness** (glowstone): its light events do not run within 4 blocks of glowstone.
+- **Malice** (holy water): holy water poured at your feet (use it while looking down) ends the events of this spirit that are still running.
+- **Deceit** (mirror): a mirror in your hand shows a fake block or a double of this spirit for what it is.

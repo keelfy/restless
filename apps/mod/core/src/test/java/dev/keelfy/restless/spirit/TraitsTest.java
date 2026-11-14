@@ -3,14 +3,20 @@ package dev.keelfy.restless.spirit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.keelfy.restless.haunt.event.EventTag;
 import dev.keelfy.restless.haunt.event.HauntTier;
 import dev.keelfy.restless.spirit.life.Power;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.LongStream;
 import org.junit.jupiter.api.Test;
@@ -22,8 +28,13 @@ class TraitsTest {
             List<String> traits = Traits.roll(seed);
             assertEquals(traits, Traits.roll(seed));
             assertEquals(traits.size(), new HashSet<>(traits).size());
-            assertTrue(traits.size() >= 3 && traits.size() <= 5, traits.toString());
             assertEquals(traits.size(), Traits.of(traits).size());
+            long habits = count(Traits.of(traits), Trait.Kind.HABIT);
+            long conditions = count(Traits.of(traits), Trait.Kind.CONDITION);
+            assertTrue(habits >= 1 && habits <= 4, traits.toString());
+            assertTrue(conditions >= 1 && conditions <= 2, traits.toString());
+            // the leaning axis is still empty: the roll skips it
+            assertEquals(0, count(Traits.of(traits), Trait.Kind.LEANING));
         }
     }
 
@@ -62,21 +73,40 @@ class TraitsTest {
     }
 
     @Test
-    void theSpiritIsWeakToWhatMostOfItsTraitsName() {
+    void theSpiritIsWeakToWhatMostOfItsHabitsName() {
         // light_eater, cold_touch: glowstone; door_slammer: iron
         assertEquals(Focus.GLOWSTONE, Traits.weakness(Traits.of(List.of("door_slammer", "light_eater", "cold_touch"))));
         // a tie goes to the focus declared first
         assertEquals(Focus.IRON, Traits.weakness(Traits.of(List.of("light_eater", "door_slammer"))));
+        // conditions never outvote a habit
+        assertEquals(Focus.IRON, Traits.weakness(Traits.of(List.of("door_slammer", "night_stalker", "dark_dweller"))));
+        // a habit tie goes to the old vote of every trait
+        assertEquals(
+                Focus.GLOWSTONE, Traits.weakness(Traits.of(List.of("door_slammer", "light_eater", "night_stalker"))));
+        // no habit at all: the old vote decides
+        assertEquals(
+                Focus.HOLY_WATER, Traits.weakness(Traits.of(List.of("night_stalker", "rain_walker", "deep_caller"))));
     }
 
     @Test
-    void aRolledSpiritHasANatureAndExactlyOneForeignTrait() {
-        java.util.Map<Focus, Integer> natures = new java.util.EnumMap<>(Focus.class);
-        java.util.Random seeds = new java.util.Random(42);
+    void aRolledSpiritsNatureIsTheStrictMajorityOfItsHabitsAndConditionsNeverChangeIt() {
+        Map<Focus, Integer> natures = new EnumMap<>(Focus.class);
+        List<Trait> conditions = Traits.all().stream()
+                .filter(t -> t.kind() == Trait.Kind.CONDITION)
+                .toList();
+        Random seeds = new Random(42);
         for (int i = 0; i < 1000; i++) {
             List<Trait> traits = Traits.of(Traits.roll(seeds.nextLong()));
             Focus nature = Traits.weakness(traits);
-            assertEquals(1, traits.stream().filter(t -> t.weakness() != nature).count(), traits.toString());
+            List<Trait> habits =
+                    traits.stream().filter(t -> t.kind() == Trait.Kind.HABIT).toList();
+            long own = habits.stream().filter(t -> t.weakness() == nature).count();
+            assertTrue(own > habits.size() - own, traits.toString());
+            assertTrue(habits.size() - own <= 1, traits.toString());
+            assertEquals(nature, Traits.weakness(habits), traits.toString());
+            List<Trait> every = new ArrayList<>(habits);
+            every.addAll(conditions);
+            assertEquals(nature, Traits.weakness(every), traits.toString());
             natures.merge(nature, 1, Integer::sum);
         }
         for (Focus focus : Focus.values()) {
@@ -85,9 +115,92 @@ class TraitsTest {
     }
 
     @Test
-    void everyFocusIsSomeTraitsWeakness() {
+    void aSpiritRolledBeforeTheAxesKeepsItsNatureWhereverItsHabitsAllow() {
+        Random seeds = new Random(7);
+        int kept = 0;
+        for (int i = 0; i < 1000; i++) {
+            Random random = new Random(seeds.nextLong());
+            // the roll as it was: the nature's group took every trait voting for it, conditions included
+            Focus before = Focus.values()[random.nextInt(Focus.values().length)];
+            List<String> own = new ArrayList<>(Traits.all().stream()
+                    .filter(t -> t.weakness() == before)
+                    .map(Trait::id)
+                    .toList());
+            List<String> foreign = new ArrayList<>(Traits.all().stream()
+                    .filter(t -> t.weakness() != null && t.weakness() != before)
+                    .map(Trait::id)
+                    .toList());
+            int size = 3 + random.nextInt(3);
+            List<String> ids = new ArrayList<>();
+            for (int j = 0; j < size - 1 && !own.isEmpty(); j++) {
+                ids.add(own.remove(random.nextInt(own.size())));
+            }
+            ids.add(foreign.remove(random.nextInt(foreign.size())));
+            List<Trait> traits = Traits.of(ids);
+            int[] votes = new int[Focus.values().length];
+            traits.stream()
+                    .filter(t -> t.kind() == Trait.Kind.HABIT)
+                    .forEach(t -> votes[t.weakness().ordinal()]++);
+            boolean allowed = Arrays.stream(votes).allMatch(v -> v <= votes[before.ordinal()]);
+            if (allowed) {
+                assertEquals(before, Traits.weakness(traits), ids.toString());
+                kept++;
+            }
+        }
+        assertTrue(kept > 500, "kept " + kept);
+    }
+
+    @Test
+    void aTypeLeansToItsNature() {
+        Map<Focus, Integer> poltergeist = new EnumMap<>(Focus.class);
+        Map<Focus, Integer> even = new EnumMap<>(Focus.class);
+        Random seeds = new Random(11);
+        for (int i = 0; i < 4000; i++) {
+            long seed = seeds.nextLong();
+            poltergeist.merge(Traits.weakness(Traits.of(Traits.roll(seed, "poltergeist"))), 1, Integer::sum);
+            even.merge(Traits.weakness(Traits.of(Traits.roll(seed))), 1, Integer::sum);
+        }
+        // weights 4.5 : 1 : 1 : 1, so 60% objects and about 13% each of the rest
+        assertTrue(poltergeist.get(Focus.IRON) > 2200 && poltergeist.get(Focus.IRON) < 2600, poltergeist.toString());
+        for (Focus focus : List.of(Focus.GLOWSTONE, Focus.HOLY_WATER, Focus.MIRROR)) {
+            assertTrue(poltergeist.get(focus) > 380 && poltergeist.get(focus) < 700, poltergeist.toString());
+        }
+        for (Focus focus : Focus.values()) {
+            assertTrue(even.get(focus) > 850 && even.get(focus) < 1150, even.toString());
+        }
+    }
+
+    @Test
+    void everyTypeLeansToOneNature() {
+        for (String type : Spirits.all().stream().map(SpiritType::id).toList()) {
+            Map<Focus, Integer> natures = new EnumMap<>(Focus.class);
+            Random seeds = new Random(type.hashCode());
+            for (int i = 0; i < 1000; i++) {
+                long seed = seeds.nextLong();
+                natures.merge(Traits.weakness(Traits.of(Traits.roll(seed, type))), 1, Integer::sum);
+            }
+            assertTrue(natures.values().stream().anyMatch(n -> n > 500), type + " " + natures);
+        }
+    }
+
+    @Test
+    void onlyHabitsAndOldVotersCarryAWeakness() {
+        for (Trait trait : Traits.all()) {
+            if (trait.kind() == Trait.Kind.HABIT) {
+                assertNotNull(trait.weakness(), trait.id());
+            }
+            assertFalse(trait.kind() == Trait.Kind.LEANING && trait.weakness() != null, trait.id());
+        }
+    }
+
+    private static long count(List<Trait> traits, Trait.Kind kind) {
+        return traits.stream().filter(t -> t.kind() == kind).count();
+    }
+
+    @Test
+    void everyFocusIsSomeHabitsWeakness() {
         Set<Focus> named = EnumSet.noneOf(Focus.class);
-        Traits.all().forEach(t -> named.add(t.weakness()));
+        Traits.all().stream().filter(t -> t.kind() == Trait.Kind.HABIT).forEach(t -> named.add(t.weakness()));
         assertEquals(EnumSet.allOf(Focus.class), named);
     }
 }

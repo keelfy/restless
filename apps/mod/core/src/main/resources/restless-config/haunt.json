@@ -4,8 +4,11 @@
     "check_interval_ticks": 20,
     "default_spirits": 1,
     "territorial_radius": 48,
-    "traits_min": 3,
-    "traits_max": 5,
+    "habits_min": 3,
+    "habits_max": 4,
+    "conditions_min": 1,
+    "conditions_max": 2,
+    "leanings": 1,
     "dark_light_level": 8,
     "react_chance": 0.25,
     "sneak_delay_ticks": 10,
@@ -204,13 +207,43 @@
     "charm_radius": 8,
     "scarecrow_radius": 16
   },
+  "weakness": {
+    "iron_radius": 6,
+    "glow_radius": 4,
+    "pour_pitch": 70
+  },
   "bell": {
     "radius": 24,
     "delay_ticks": 1200
   },
   "ash": {
     "reveal_ticks": 600,
-    "reach": 16
+    "reach": 16,
+    "prints": [
+      [
+        "mimic",
+        "lost_one",
+        "domovoi",
+        "nix",
+        "trickster"
+      ],
+      [
+        "mara",
+        "hoarder",
+        "boggart",
+        "poltergeist"
+      ],
+      [
+        "demon",
+        "revenant"
+      ],
+      [
+        "shade",
+        "phantom",
+        "wraith",
+        "banshee"
+      ]
+    ]
   },
   "camera": {
     "cooldown_ticks": 600

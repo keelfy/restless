@@ -11,7 +11,7 @@ A spirit you **sense** is one of your own personal spirits, or a territorial spi
 | Tool | Does |
 | --- | --- |
 | [Hallowed Wax](#hallowed-wax) | the seal in every charm and in the mid-tier tools |
-| [Ash](#ash) | shows one trait of a spirit as a print; never lies |
+| [Ash](#ash) | shows the build of a spirit's type as a print; never lies |
 | [Camera Obscura](#camera-obscura) | photographs a spirit: its type |
 | [Spirit Box](#spirit-box) | answers aloud what you ask around a clue word; may lie |
 | [Ouija Board](#ouija-board) | spells out a trait; may lie |
@@ -41,16 +41,16 @@ Honeycomb + salt + ash makes **2**, shapeless. Honeycomb comes from bees, so wax
 
 Cook 1 charcoal on a campfire: **4**. Place it like salt. Every 30 seconds each ash block asks the spirits within 16 blocks for a clue (your own, and any territorial one whose reach covers the spot). A spirit that answers leaves a trail of prints across the ash, one every 8 ticks, and the print goes into the journal: a personal spirit's only into the journal of the player it haunts, a territorial one's into that of everyone within 16 blocks. A print fades after 2 minutes. Ash with a print within 1.5 blocks stays quiet.
 
-The print is the **nature** of one of the spirit's traits. Ash never lies, but a spirit has exactly one trait foreign to its nature, so go by the print you see most:
+The print is the build of the spirit's **type**, the same build its photograph shows, and says nothing about its nature: two spirits of one type leave the same print, whatever their traits. Ash never lies about the kind of spirit that walked:
 
-| Print | Nature |
+| Print | Types |
 | --- | --- |
-| a paw | Objects |
-| a drag mark | Darkness |
-| a hoof | Malice |
-| a bare foot | Deceit |
+| a bare foot | Mimic, Lost One, Domovoi, Nix, Trickster |
+| a paw | Mara, Hoarder, Boggart, Poltergeist |
+| a hoof | Demon, Revenant |
+| a drag mark | Shade, Phantom, Wraith, Banshee |
 
-Each print is noted in the [journal](#journal). Nature decides the [altar](#altar) offering.
+A spirit with the Rain Walker trait leaves damp prints, drawn darker. Each print is noted in the [journal](#journal).
 
 ## Camera Obscura
 
@@ -113,32 +113,32 @@ Place it flat on the floor. Use it: after 1 second the planchette spells a phras
 
 ## Reading the Clues
 
-Every ouija and spirit box clue belongs to one trait, and every trait has a nature. The nature can be told from what the clue means. A board phrase is a riddle; the table gives what each can mean. Objects: it touches things. Darkness: it reaches for the dark, cold and night. Malice: it takes revenge, comes with the rain and calls from the deep. Deceit: it plays with your head, whispers, makes noise, steals sleep, lies. The full list:
+Every ouija and spirit box clue belongs to one trait. Traits are of two kinds. A **habit** is what the spirit does, and it has a nature. A **condition** is when the spirit acts or what it reacts to, and it says nothing about the nature. A board phrase is a riddle; the table gives what each can mean. Objects: it touches things and slams doors. Darkness: it feeds on light and chills the air. Malice: it takes revenge. Deceit: it whispers and lies. Rain, night, dark, noise, chests, sleep, the deep and grudges point to no nature. The full list:
 
 | Nature | Meaning | Ouija phrases | Spirit box words |
 | --- | --- | --- | --- |
 | Objects | It reaches for things left lying around | `do not drop it`, `hands`, `i will take it`, `lying unwatched`, `what is left is mine` | `fingers`, `mine`, `take` |
 | Objects | It slams doors | `shut it`, `slam`, `get out`, `creak and crash`, `the door is closed` | `leave`, `shut`, `slam` |
 | Objects | It meddles with the world around you | `i will move it`, `rearrange`, `not there`, `nothing is in its place`, `i will touch` | `move`, `change`, `mine` |
-| Objects | It guards what is in chests | `open it`, `lid`, `not yours`, `i guard`, `what lies inside` | `open`, `mine`, `lid` |
+| — | It guards what is in chests | `open it`, `lid`, `not yours`, `i guard`, `what lies inside` | `open`, `mine`, `lid` |
 | Darkness | It feeds on light | `put it out`, `hungry... light`, `darker`, `light tastes good`, `snuff the flame` | `dark`, `hungry`, `out` |
 | Darkness | It chills the air around you | `cold`, `your breath shows`, `frost`, `you will freeze`, `the air grows cold` | `cold`, `chill`, `frost` |
-| Darkness | It stalks at night | `behind you`, `at night`, `i follow`, `do not turn around`, `watching` | `behind`, `night`, `follow` |
-| Darkness | It lives in the dark | `below`, `black`, `deep`, `darkness is home`, `hiding` | `below`, `black`, `deep` |
+| — | It stalks at night | `behind you`, `at night`, `i follow`, `do not turn around`, `watching` | `behind`, `night`, `follow` |
+| — | It lives in the dark | `below`, `black`, `deep`, `darkness is home`, `hiding` | `below`, `black`, `deep` |
 | Malice | It wants revenge | `you will pay`, `blood for blood`, `you`, `revenge`, `debt` | `pay`, `blood`, `you` |
-| Malice | It walks in the rain | `wet`, `drip drip`, `the storm comes`, `steps in puddles`, `the sky weeps` | `wet`, `drip`, `storm` |
-| Malice | It calls from below | `down`, `come here`, `under the earth`, `calling`, `dig` | `down`, `come`, `under` |
-| Malice | It holds a grudge | `i remember`, `why`, `you killed`, `never forgiven`, `old grudge` | `remember`, `kill`, `why` |
+| — | It walks in the rain | `wet`, `drip drip`, `the storm comes`, `steps in puddles`, `the sky weeps` | `wet`, `drip`, `storm` |
+| — | It calls from below | `down`, `come here`, `under the earth`, `calling`, `dig` | `down`, `come`, `under` |
+| — | It holds a grudge | `i remember`, `why`, `you killed`, `never forgiven`, `old grudge` | `remember`, `kill`, `why` |
 | Deceit | It whispers | `listen`, `come closer`, `hush`, `in your ear`, `a secret` | `listen`, `closer`, `hush` |
-| Deceit | It feeds on noise | `loud`, `louder`, `noise`, `make more noise`, `silence starves` | `loud`, `louder`, `noise` |
-| Deceit | It steals your sleep | `wake up`, `dream`, `bed`, `do not sleep`, `your sleep is mine` | `wake`, `dream`, `bed` |
+| — | It feeds on noise | `loud`, `louder`, `noise`, `make more noise`, `silence starves` | `loud`, `louder`, `noise` |
+| — | It steals your sleep | `wake up`, `dream`, `bed`, `do not sleep`, `your sleep is mine` | `wake`, `dream`, `bed` |
 | Deceit | It lies | `yes`, `no`, `maybe`, `it is true`, `do not believe` | `yes`, `no`, `maybe` |
 
 What to do with it:
 
-- A spirit has 3 to 5 traits, and exactly one is foreign to its nature. Its nature is the one most of its traits point to.
+- A spirit has 1 to 4 habits, at most one of them foreign to its nature, and 1 or 2 conditions. Its nature is the one most of its habits point to; conditions never change it.
 - One note decides nothing. Gather several: true traits repeat, false ones are scattered over the rest.
-- Ash never lies. Confirm the nature with prints before putting an offering on the [altar](#altar): the wrong nature is costly.
+- Prints show the type of spirit, not its nature. Read the nature from habits before putting an offering on the [altar](#altar): the wrong nature is costly.
 - If the nature will not add up, there is another way: the [gravestone](#gravestone) names the thing the spirit wants back, and no guessing is needed.
 
 ## Spirit Candle
@@ -181,7 +181,7 @@ Placing it builds a 3 by 3 platform and needs a clear 3 by 3 on solid ground. Th
 
 ### Holy water
 
-Lay a **water bottle** in the bowl. It needs only the finished platform, not the ring or the candles. After **12000 ticks** it turns into holy water; take it with an empty hand. Taken earlier, it is the bottle again. Holy water stacks to 16. A spirit may cloud it until dawn, and the altar will not take it then.
+Lay a **water bottle** in the bowl. It needs only the finished platform, not the ring or the candles. After **12000 ticks** it turns into holy water; take it with an empty hand. Taken earlier, it is the bottle again. Holy water stacks to 16. A spirit may cloud it until dawn, and the altar will not take it then. Used while looking down (pitch 70° or more), one bottle is poured at your feet and ends every pending event of a Malice spirit on you, with the same falling ash and chime as a ward. See [Weakness](/en/how-it-works#weakness).
 
 ### The offering
 
@@ -194,7 +194,7 @@ Use an offering on the altar. It is of one **nature**, which decides which spiri
 | Malice | holy water | holy water | salt | bell |
 | Deceit | the mirror, which shows the truth | mirror | glass pane | spyglass |
 
-Mirror: a glass pane between 2 iron nuggets, in one row. A spirit may mark it so the next time you lay it down it shows a spirit's name.
+Mirror: a glass pane between 2 iron nuggets, in one row. A spirit may mark it so the next time you lay it down it shows a spirit's name. Held in the hand, it shows the fake blocks and the doubles of a Deceit spirit for what they are, see [Weakness](/en/how-it-works#weakness).
 
 Each type takes one form, shown in its bestiary card:
 

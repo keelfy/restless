@@ -21,6 +21,7 @@ Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as its
 - Favors: lights ×3, sounds ×2.5, afflictions ×2, presence ×2
 - Avoids: doors ×0.3, items ×0.5
 - Activity: 0.8
+- Nature: usually Darkness (60%), each of the other three 13%
 - Signature events: `shade_gathered`, `shade_glance`, `shade_room`, see [Signatures](/en/events/signatures).
 
 ### Phantom
@@ -30,6 +31,7 @@ Likes to be seen, as other players: far-off strangers, a name in the player list
 - Favors: player ×6, presence ×2
 - Avoids: doors ×0.5, lights ×0.5, afflictions ×0.5, items ×0.5, assaults ×0.3
 - Activity: 1.0
+- Nature: usually Deceit (60%), each of the other three 13%
 - Signature events: `phantom_self_join`, `phantom_rerun`, `phantom_home`, see [Signatures](/en/events/signatures).
 
 ### Mimic
@@ -39,6 +41,7 @@ Fakes things: blocks that are not there, strangers, mobs that vanish.
 - Favors: blocks ×3, player ×2, presence ×1.5, mobs ×1.5
 - Avoids: lights ×0.5, doors ×0.5, assaults ×0.5
 - Activity: 1.0
+- Nature: usually Deceit (60%), each of the other three 13%
 - Signature events: `mimic_voice`, `mimic_parrot`, `mimic_chest`, see [Signatures](/en/events/signatures).
 
 ### Wraith
@@ -48,6 +51,7 @@ Hunts in the dark: snuffs lights and hurts.
 - Favors: assaults ×2.5, lights ×2, afflictions ×1.5, presence ×1.5
 - Avoids: doors ×0.5, blocks ×0.5, items ×0.3
 - Activity: 2.0 in the dark (`when: dark`), 1 elsewhere
+- Nature: usually Darkness (60%), each of the other three 13%
 - Signature events: `wraith_taken`, `wraith_steps`, `wraith_edge`, see [Signatures](/en/events/signatures).
 
 ### Mara
@@ -57,6 +61,7 @@ Rides the sleeper: afflictions and presence at night, may act when the player us
 - Favors: afflictions ×3, presence ×2, sounds ×1.5
 - Avoids: doors ×0.5, items ×0.3, blocks ×0.3
 - Activity: 1.8 at night (`when: night`), 1 by day
+- Nature: usually Deceit (60%), each of the other three 13%
 - Signature events: `mara_dream`, `mara_stolen_rest`, `mara_weight`, see [Signatures](/en/events/signatures).
 
 ### Banshee
@@ -66,6 +71,7 @@ A voice: mostly sounds, rarely touches anything.
 - Favors: sounds ×5, presence ×1.5
 - Avoids: doors ×0.5, items ×0.3, blocks ×0.3, assaults ×0.3
 - Activity: 0.9
+- Nature: usually Malice (60%), each of the other three 13%
 - Signature events: `banshee_letter`, `banshee_gift`, `banshee_serenade`, `banshee_jealous`, see [Signatures](/en/events/signatures).
 
 ### Revenant
@@ -75,6 +81,7 @@ Vengeful: hurts and sends mobs, may act after the player kills a mob (`reacts: k
 - Favors: assaults ×3, mobs ×2.5
 - Avoids: lights ×0.5, doors ×0.3, items ×0.3
 - Activity: 1.0
+- Nature: usually Malice (60%), each of the other three 13%
 - Signature events: `revenant_ledger`, `revenant_tally`, `revenant_rises`, see [Signatures](/en/events/signatures).
 
 ### Lost one
@@ -84,6 +91,7 @@ Wanders: figures, strangers and steps, may act when the player goes below y 0 (`
 - Favors: presence ×3, player ×2, sounds ×1.5
 - Avoids: blocks ×0.5, items ×0.5, assaults ×0.2
 - Activity: 0.9
+- Nature: usually Darkness (60%), each of the other three 13%
 - Signature events: `lost_one_sign`, `lost_one_wanderer`, `lost_one_death_path`, see [Signatures](/en/events/signatures).
 
 ### Boggart
@@ -93,6 +101,7 @@ Illusions that disgust: swarms of tiny spiders and silverfish that only you see,
 - Favors: mobs ×3, presence ×3, sounds ×2, blocks ×1.5, lights ×1
 - Avoids: afflictions ×0.5, assaults ×0.3, doors ×0.3, items ×0.3
 - Activity: 1.1
+- Nature: usually Darkness (60%), each of the other three 13%
 - Signature events: `boggart_spiders`, `boggart_crawl`, `boggart_silverfish`, see [Signatures](/en/events/signatures).
 
 ## Territorial
@@ -106,6 +115,7 @@ Noisy and physical. Mostly messes with doors and belongings; rarely hurts at fir
 - Favors: doors ×4, items ×3, blocks ×1.5
 - Avoids: afflictions ×0.5, assaults ×0.5, sounds ×0.5, presence ×0.5
 - Activity: 1.3
+- Nature: usually Objects (60%), each of the other three 13%
 - Signature events: `poltergeist_toss`, `poltergeist_play`, `poltergeist_tantrum`, see [Signatures](/en/events/signatures).
 
 ### Nix
@@ -115,6 +125,7 @@ Territorial, bound to water. Keeps swimmers under, calls players to the water, k
 - Favors: water ×8
 - Avoids: assaults ×0.5, sounds ×0.5, blocks ×0.3, presence ×0.3
 - Activity: 1.0
+- Nature: usually Malice (60%), each of the other three 13%
 - Signature events: `nix_catch`, `nix_call`, `nix_returns`, see [Signatures](/en/events/signatures).
 
 ### Domovoi
@@ -124,6 +135,7 @@ Territorial house spirit: doors, belongings and household noises, hardly harmful
 - Favors: doors ×2, items ×2, sounds ×1.5
 - Avoids: mobs ×0.5, afflictions ×0.3, assaults ×0.2
 - Activity: 0.7
+- Nature: usually Objects (60%), each of the other three 13%
 - Signature events: `domovoi_supper`, `domovoi_hearth`, `domovoi_tidy`, see [Signatures](/en/events/signatures).
 
 ### Hoarder
@@ -133,6 +145,7 @@ Territorial: takes and moves items.
 - Favors: items ×5, blocks ×1.5, doors ×1.5
 - Avoids: lights ×0.5, presence ×0.5, assaults ×0.3
 - Activity: 1.2
+- Nature: usually Objects (60%), each of the other three 13%
 - Signature events: `hoarder_payment`, `hoarder_shiny`, `hoarder_nest`, see [Signatures](/en/events/signatures).
 
 ### Demon
@@ -142,6 +155,7 @@ Territorial and dangerous: assaults, afflictions and mobs.
 - Favors: assaults ×3, afflictions ×2, mobs ×2, lights ×1.5
 - Avoids: doors ×0.5, items ×0.5
 - Activity: 1.1
+- Nature: usually Malice (60%), each of the other three 13%
 - Signature events: `demon_offer`, `demon_trail`, `demon_contract`, see [Signatures](/en/events/signatures).
 
 ### Trickster
@@ -151,6 +165,7 @@ Territorial prankster: changes blocks and items, shows things.
 - Favors: blocks ×2.5, items ×2, mobs ×1.5, presence ×1.5
 - Avoids: assaults ×0.2
 - Activity: 1.2
+- Nature: usually Deceit (60%), each of the other three 13%
 - Signature events: `trickster_gift`, `trickster_dig`, `trickster_dud`, see [Signatures](/en/events/signatures).
 
 ## Meeting a type

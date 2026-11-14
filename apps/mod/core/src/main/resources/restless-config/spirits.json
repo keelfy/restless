@@ -4,6 +4,12 @@
     "poltergeist": {
       "kind": "territorial",
       "form": "whole",
+      "natures": {
+        "IRON": 4.5,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 1.0
+      },
       "activity": 1.3,
       "affinity": {
         "DOORS": 4.0,
@@ -19,6 +25,12 @@
     "shade": {
       "kind": "personal",
       "form": "bit",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 4.5,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 1.0
+      },
       "activity": 0.8,
       "affinity": {
         "DOORS": 0.3,
@@ -33,6 +45,12 @@
     "nix": {
       "kind": "territorial",
       "form": "crafted",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 4.5,
+        "MIRROR": 1.0
+      },
       "activity": 1.0,
       "affinity": {
         "WATER": 8.0,
@@ -46,6 +64,12 @@
     "phantom": {
       "kind": "personal",
       "form": "bit",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 4.5
+      },
       "activity": 1.0,
       "affinity": {
         "PLAYER": 6.0,
@@ -60,6 +84,12 @@
     "mimic": {
       "kind": "personal",
       "form": "crafted",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 4.5
+      },
       "activity": 1.0,
       "affinity": {
         "BLOCKS": 3.0,
@@ -74,6 +104,12 @@
     "wraith": {
       "kind": "personal",
       "form": "whole",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 4.5,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 1.0
+      },
       "activity": 2.0,
       "when": "dark",
       "affinity": {
@@ -89,6 +125,12 @@
     "mara": {
       "kind": "personal",
       "form": "bit",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 4.5
+      },
       "activity": 1.8,
       "when": "night",
       "reacts": [
@@ -106,6 +148,12 @@
     "banshee": {
       "kind": "personal",
       "form": "bit",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 4.5,
+        "MIRROR": 1.0
+      },
       "activity": 0.9,
       "affinity": {
         "SOUND": 5.0,
@@ -119,6 +167,12 @@
     "revenant": {
       "kind": "personal",
       "form": "whole",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 4.5,
+        "MIRROR": 1.0
+      },
       "activity": 1.0,
       "reacts": [
         "kill"
@@ -135,6 +189,12 @@
     "lost_one": {
       "kind": "personal",
       "form": "bit",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 4.5,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 1.0
+      },
       "activity": 0.9,
       "reacts": [
         "deep"
@@ -151,6 +211,12 @@
     "domovoi": {
       "kind": "territorial",
       "form": "crafted",
+      "natures": {
+        "IRON": 4.5,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 1.0
+      },
       "activity": 0.7,
       "affinity": {
         "DOORS": 2.0,
@@ -164,6 +230,12 @@
     "hoarder": {
       "kind": "territorial",
       "form": "whole",
+      "natures": {
+        "IRON": 4.5,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 1.0
+      },
       "activity": 1.2,
       "affinity": {
         "ITEMS": 5.0,
@@ -177,6 +249,12 @@
     "demon": {
       "kind": "territorial",
       "form": "whole",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 4.5,
+        "MIRROR": 1.0
+      },
       "activity": 1.1,
       "affinity": {
         "ASSAULT": 3.0,
@@ -190,6 +268,12 @@
     "trickster": {
       "kind": "territorial",
       "form": "crafted",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 1.0,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 4.5
+      },
       "activity": 1.2,
       "affinity": {
         "BLOCKS": 2.5,
@@ -202,6 +286,12 @@
     "boggart": {
       "kind": "personal",
       "form": "crafted",
+      "natures": {
+        "IRON": 1.0,
+        "GLOWSTONE": 4.5,
+        "HOLY_WATER": 1.0,
+        "MIRROR": 1.0
+      },
       "activity": 1.1,
       "affinity": {
         "MOBS": 3.0,
@@ -218,6 +308,7 @@
   },
   "traits": {
     "restless_hands": {
+      "kind": "habit",
       "affinity": {
         "ITEMS": 2.0,
         "DOORS": 1.5
@@ -241,6 +332,7 @@
       "weakness": "iron"
     },
     "light_eater": {
+      "kind": "habit",
       "affinity": {
         "LIGHTS": 2.5
       },
@@ -263,6 +355,7 @@
       "weakness": "glowstone"
     },
     "door_slammer": {
+      "kind": "habit",
       "affinity": {
         "DOORS": 2.5
       },
@@ -285,6 +378,7 @@
       "weakness": "iron"
     },
     "whisperer": {
+      "kind": "habit",
       "affinity": {
         "SOUND": 2.0,
         "PRESENCE": 1.5
@@ -308,6 +402,7 @@
       "weakness": "mirror"
     },
     "cold_touch": {
+      "kind": "habit",
       "affinity": {
         "AFFLICTION": 2.0
       },
@@ -329,6 +424,7 @@
       "weakness": "glowstone"
     },
     "vengeful": {
+      "kind": "habit",
       "affinity": {
         "ASSAULT": 2.0
       },
@@ -351,6 +447,7 @@
       "weakness": "holy_water"
     },
     "meddler": {
+      "kind": "habit",
       "affinity": {
         "BLOCKS": 2.5,
         "MOBS": 1.5
@@ -374,6 +471,7 @@
       "weakness": "iron"
     },
     "rain_walker": {
+      "kind": "condition",
       "affinity": {},
       "activity": 2.0,
       "when": "rain",
@@ -395,6 +493,7 @@
       "weakness": "holy_water"
     },
     "night_stalker": {
+      "kind": "condition",
       "affinity": {},
       "activity": 1.8,
       "when": "night",
@@ -416,6 +515,7 @@
       "weakness": "glowstone"
     },
     "dark_dweller": {
+      "kind": "condition",
       "affinity": {},
       "activity": 1.8,
       "when": "dark",
@@ -437,6 +537,7 @@
       "weakness": "glowstone"
     },
     "noise_feeder": {
+      "kind": "condition",
       "affinity": {},
       "noise": 6.0,
       "clues": [
@@ -457,6 +558,7 @@
       "weakness": "mirror"
     },
     "chest_watcher": {
+      "kind": "condition",
       "affinity": {
         "ITEMS": 1.5
       },
@@ -482,6 +584,7 @@
       "weakness": "iron"
     },
     "sleep_thief": {
+      "kind": "condition",
       "affinity": {
         "PRESENCE": 1.5
       },
@@ -506,6 +609,7 @@
       "weakness": "mirror"
     },
     "deep_caller": {
+      "kind": "condition",
       "affinity": {
         "SOUND": 1.5
       },
@@ -531,6 +635,7 @@
       "weakness": "holy_water"
     },
     "grudge": {
+      "kind": "condition",
       "affinity": {
         "ASSAULT": 1.5
       },
@@ -555,6 +660,7 @@
       "weakness": "holy_water"
     },
     "liar": {
+      "kind": "habit",
       "affinity": {},
       "clues": [
         "voice",

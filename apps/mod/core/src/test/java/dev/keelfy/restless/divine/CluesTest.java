@@ -18,6 +18,7 @@ class CluesTest {
     private static Trait trait(String id, boolean lies, Clue... clues) {
         return new Trait(
                 id,
+                Trait.Kind.HABIT,
                 Map.of(),
                 1.0,
                 Trait.Condition.ANY,

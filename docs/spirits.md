@@ -51,10 +51,26 @@ Each spirit has an identity: `uuid`, `seed`, `bornAt` (game time it appeared) an
 
 ### Traits
 
-Besides its type, every spirit has 3–5 traits (`director.traits_min`/`traits_max`) drawn from the `traits` catalog in
-`spirits.json` by its seed: the same seed gives the same traits, and the ids are saved with the spirit. A save from before
-traits gets them from its seed on load. Ids the catalog no longer has are skipped. So two spirits of one type differ in
-what they pick and when they act. A trait has any of:
+Besides its type, every spirit has traits drawn from the `traits` catalog in `spirits.json` by its seed: the same seed
+gives the same traits, and the ids are saved with the spirit. A save from before traits gets them from its seed on load.
+Ids the catalog no longer has are skipped. So two spirits of one type differ in what they pick and when they act.
+
+Every trait has a `kind`, one of three axes rolled on their own:
+
+- `habit`: what the spirit does (the affinity traits and `liar`). Only a habit needs a `weakness`, and only habits vote for
+  the nature. The roll picks the nature evenly, then `director.habits_min`–`habits_max` habits: all but one from the
+  nature, one from another, and that foreign one only beside at least two of the nature's own, so the nature is always
+  the strict majority. A pool too small gives what it has (today malice has one habit, `vengeful`).
+- `condition`: when it acts or what it reacts to (`rain_walker`, `night_stalker`, `dark_dweller`, `noise_feeder`,
+  `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`); `director.conditions_min`–`conditions_max` of them. Their
+  `weakness` is the vote they had before the axes existed: it breaks a habit tie and decides for a saved spirit with no
+  habit, so an old spirit keeps its nature wherever its habits allow. A new condition leaves it out.
+- `leaning`: a fear or a desire; `director.leanings` of them. The axis is empty until T6 fills it, and the roll skips it.
+
+`Traits.weakness` counts habit votes, breaks a tie by the votes of every trait carrying a `weakness`, and then by the
+order of `Focus`. Adding a trait is a config and lang change only.
+
+A trait has any of:
 
 - `affinity`: tag multipliers, multiplied into the weight with the type's. `light_eater` (lights ×2.5), `door_slammer`,
   `restless_hands`, `whisperer`, `cold_touch`, `vengeful`, `meddler`.
@@ -155,18 +171,27 @@ stands on, with walls closing the gaps, through four-way neighbours only (a diag
 may not exceed `salt.max_cells`. Walls alone do not ward a room; at least one salt tile has to border it. The first
 ward found decides; the lantern, then the dreamcatcher, the door charm and the scarecrow.
 
+A spirit's nature also works outside the altar (`ward/Weakness`, `weakness.*` in `haunt.json`): iron (an iron door, or a
+container under iron bars, within `iron_radius`) stops its door and item events, glowstone within `glow_radius` its light
+events, holy water poured at the feet (pitch past `pour_pitch`) drops its running scheduler steps, a mirror in the hand
+unmasks the blocks it showed and its double. The spirit comes from `Said.current()`, so only events run through `Director`
+honour it; every event tagged `DOORS`, `ITEMS` or `LIGHTS` does, with no per-event code.
+
 Not built yet: salt from a cauldron, and the traits that hate a ward (the lantern raising anger of light-hating
 traits, the bell of noise-hating ones). The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
 
 ## Banishing
 
-Every trait names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror, four traits
-each. A spirit has a **nature**, named after what it does and not after its weakness: objects (iron), darkness
-(glowstone), malice (holy water) and deceit (mirror). Players see only these names; code and config keep the
-weakness (`Focus`). The nature is picked from its seed evenly among the four: all its traits but one come from that
-nature's group and one is foreign, so it is weak to the nature (`Traits.weakness` counts votes; a spirit from before
-natures keeps its old vote, ties to the first in that order). Nothing shows the nature directly: the player reads the
-traits (ouija board, spirit box, ash) and finds the group two of them share.
+Every habit names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror. A spirit has
+a **nature**, named after what it does and not after its weakness: objects (iron), darkness (glowstone), malice (holy
+water) and deceit (mirror). Players see only these names; code and config keep the weakness (`Focus`). The nature is
+drawn from the seed by the type's weights (`spirits.<type>.natures`, keyed by `Focus` name; a missing one weighs 1):
+each type has 4.5 on one nature and 1 on the others, so 60% of its spirits share that nature. All its habits but one
+come from that nature's group and one is foreign, so it is weak to the nature (`Traits.weakness` counts habit votes,
+see [Traits](#traits)). Traits are saved at birth, so a spirit born before the weights keeps its nature; a save without
+traits rolls them with even weights (`Traits.roll(seed)`), a spirit born now with its type's (`Traits.roll(seed,
+type)`). Nothing shows the nature directly: the player reads the habits (ouija board, spirit box) and finds the group
+two of them share.
 
 The type adds a **form** (`form` in `spirits.json`): `whole`, `bit` or `crafted`. The bestiary card, which a photo
 opens, names it. The offering is the nature's category in a form:

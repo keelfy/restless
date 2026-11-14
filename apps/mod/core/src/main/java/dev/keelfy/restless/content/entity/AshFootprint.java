@@ -21,6 +21,8 @@ public final class AshFootprint extends Entity {
             SynchedEntityData.defineId(AshFootprint.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> LEFT =
             SynchedEntityData.defineId(AshFootprint.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> WET =
+            SynchedEntityData.defineId(AshFootprint.class, EntityDataSerializers.BOOLEAN);
     public static final int LIFETIME = 2400;
     private int age;
     /** Ticks it lasts; a free print (not on ash) fades sooner than the ones in the powder. */
@@ -38,6 +40,7 @@ public final class AshFootprint extends Entity {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(SHAPE, 1);
         builder.define(LEFT, true);
+        builder.define(WET, false);
     }
 
     public int shape() {
@@ -48,8 +51,17 @@ public final class AshFootprint extends Entity {
         return entityData.get(LEFT);
     }
 
-    /** Walk across the connected powder in half-block strides, revealing alternating feet eight ticks apart. */
+    /** Whether the print is damp, drawn darker: the mark of a spirit that walks in rain. */
+    public boolean wet() {
+        return entityData.get(WET);
+    }
+
     public static boolean leaveTrail(ServerLevel level, BlockPos origin, int shape, double angle) {
+        return leaveTrail(level, origin, shape, angle, false);
+    }
+
+    /** Walk across the connected powder in half-block strides, revealing alternating feet eight ticks apart. */
+    public static boolean leaveTrail(ServerLevel level, BlockPos origin, int shape, double angle, boolean wet) {
         Vec3 forward = new Vec3(Math.cos(angle), 0, Math.sin(angle));
         Vec3 side = new Vec3(-forward.z, 0, forward.x);
         Vec3 center = new Vec3(origin.getX() + .5, origin.getY() + 1.0 / 16 + .002, origin.getZ() + .5);
@@ -79,6 +91,7 @@ public final class AshFootprint extends Entity {
             print.setYRot((float) (angle * 180 / Math.PI + 90));
             print.entityData.set(SHAPE, Math.clamp(shape, 1, AshBlock.PRINTS));
             print.entityData.set(LEFT, left);
+            print.entityData.set(WET, wet);
             print.age = -count * 8;
             print.setInvisible(count > 0);
             if (level.addFreshEntity(print)) {
@@ -146,6 +159,7 @@ public final class AshFootprint extends Entity {
         free = input.getBooleanOr("Free", false);
         entityData.set(SHAPE, Math.clamp(input.getIntOr("Shape", 1), 1, AshBlock.PRINTS));
         entityData.set(LEFT, input.getBooleanOr("Left", true));
+        entityData.set(WET, input.getBooleanOr("Wet", false));
         setInvisible(age < 0);
     }
 
@@ -156,5 +170,6 @@ public final class AshFootprint extends Entity {
         output.putBoolean("Free", free);
         output.putInt("Shape", shape());
         output.putBoolean("Left", left());
+        output.putBoolean("Wet", wet());
     }
 }

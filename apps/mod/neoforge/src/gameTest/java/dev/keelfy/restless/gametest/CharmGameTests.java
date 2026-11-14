@@ -69,6 +69,15 @@ final class CharmGameTests {
                 if (!id.getNamespace().equals(Restless.MOD_ID) || id.getPath().startsWith("unlit_")) {
                     continue;
                 }
+                // debug props: placed by events, given only from the creative tab, no tip
+                if (java.util.stream.Stream.of(
+                                Content.DOLL_ITEM,
+                                Content.MUSIC_BOX_ITEM,
+                                Content.FOOTPRINTS_ITEM,
+                                Content.CLAW_MARKS_ITEM)
+                        .anyMatch(debug -> debug.get() == item)) {
+                    continue;
+                }
                 ItemLore lore = item.components().get(DataComponents.LORE);
                 check(helper, lore != null && lore.lines().size() == 1, id + " has no tip");
                 if (lore != null && lore.lines().getFirst().getContents() instanceof TranslatableContents tip) {

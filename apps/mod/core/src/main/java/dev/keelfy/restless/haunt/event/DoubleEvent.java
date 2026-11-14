@@ -7,6 +7,7 @@ import dev.keelfy.restless.haunt.event.kit.Figure;
 import dev.keelfy.restless.haunt.event.kit.Gait;
 import dev.keelfy.restless.haunt.event.kit.Place;
 import dev.keelfy.restless.haunt.harm.Band;
+import dev.keelfy.restless.haunt.recall.Said;
 import dev.keelfy.restless.state.Session;
 import java.util.Map;
 import java.util.Set;
@@ -49,6 +50,9 @@ public final class DoubleEvent implements HauntEvent {
 
     /** Marks a ghost made by {@link #decoy}. */
     private static final String GHOST = "restless_ghost";
+
+    /** Marks the spirit that made a double: this prefix and its uuid. */
+    private static final String MADE_BY = "restless_by:";
 
     /** The double each player has now; one at a time. */
     private static final Map<UUID, Mannequin> ACTIVE = Session.SERVER.keep(new ConcurrentHashMap<>());
@@ -112,6 +116,9 @@ public final class DoubleEvent implements HauntEvent {
             twin.setHealth(twin.getMaxHealth());
         }
         UUID owner = player.getUUID();
+        if (Said.current() != null) {
+            twin.addTag(MADE_BY + Said.current());
+        }
         ACTIVE.put(owner, twin);
         play(player, SoundEvents.ENDERMAN_STARE, config.tone("sound"));
         // The chase ends itself; this catches the cases where the scheduler drops it (the player died or left).
@@ -190,6 +197,19 @@ public final class DoubleEvent implements HauntEvent {
         if (twin != null) {
             vanish(twin, player.getUUID(), null);
         }
+    }
+
+    /** Sends away the player's double if the spirit that made it is one {@code by} accepts. */
+    public static boolean dismiss(ServerPlayer player, java.util.function.Predicate<UUID> by) {
+        Mannequin twin = ACTIVE.get(player.getUUID());
+        if (twin == null
+                || twin.entityTags().stream()
+                        .noneMatch(t ->
+                                t.startsWith(MADE_BY) && by.test(UUID.fromString(t.substring(MADE_BY.length()))))) {
+            return false;
+        }
+        vanish(twin, player.getUUID(), null);
+        return true;
     }
 
     private @Nullable BlockPos spot(ServerPlayer player) {
