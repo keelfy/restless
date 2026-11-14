@@ -424,6 +424,11 @@
       "volume": 0.8,
       "pitch": 1.0
     },
+    "fury_bed_volume": 0.7,
+    "wrong_sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
     "snuff_chance": 0.25,
     "fury_chance": 0.5,
     "nature_chance": 0.35,

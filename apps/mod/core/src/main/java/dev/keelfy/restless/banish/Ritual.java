@@ -5,6 +5,7 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Altar;
 import dev.keelfy.restless.divine.Sense;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Scan;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -272,7 +273,9 @@ public final class Ritual {
                         h -> h.angered(1.0)
                                 .wary(now + config.integer("wary_ticks"))
                                 .aged(config.integer("wrong_age_ticks")));
-        level.playSound(null, altar, SoundEvents.WITHER_SPAWN, SoundSource.HOSTILE, 0.6f, 1.4f);
+        Config.Tone refused = config.tone("wrong_sound");
+        level.playSound(
+                null, altar, HauntSounds.OFFERING_REFUSED, SoundSource.HOSTILE, refused.volume(), refused.pitch());
         player.sendSystemMessage(Component.translatable("message.restless.wrong_focus"), true);
         Director.act(player, angered, spirit.at(), HauntTier.HARMFUL);
     }

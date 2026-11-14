@@ -53,9 +53,9 @@ moves the event back to the table above.
 | `haunt.creature_rattle` | `creature_rattle_1..3`, 2.4–3.4 s | Pack: `Alien Monster Noises (Horror Creature Rattle)`, 2.9–6.3, 7.95–10.7, 11.95–14.3 s | New event `creature_rattle`. Source peaks at 0.22, raised about 3× with its noise |
 | `haunt.laugh` | adds `laugh_2`, 3.9 s | Pack: `Horror Kid Laugh (Layered with Echo)`, louder channel kept | A child's laugh beside the existing adult cackle: the two variants differ a lot |
 | `haunt.screech` | adds `screech_2`, 3.7 s | Pack: `Demonic Woman Scream (Horror Screech)` | Longer than the existing `screech` |
-| `haunt.ritual_fury` | `ritual_fury`, 30 s stereo loop | Pack: `Tense & Pressured Horror Ambience`, 5.5–35.5 s, 2 s cross-fade | **Not played yet:** for the fury phase of the rewritten ritual (R1) |
-| `haunt.ritual_leaving` | `ritual_leaving`, 3.3 s | Pack: `build-up-of-transition`, first riser (0–3.75 s) | **Not played yet:** for the leaving phase of the rewritten ritual |
-| `haunt.offering_refused` | `offering_refused`, 3.3 s | Pack: `metallic-surge`, 0–3.5 s, louder channel kept | **Not played yet:** for a wrong offering, which lives in `banish/Ritual.java` |
+| `haunt.ritual_fury` | `ritual_fury`, 30 s stereo loop | Pack: `Tense & Pressured Horror Ambience`, 5.5–35.5 s, 2 s cross-fade | Loops on the player while the ritual is in its fury phase (`RitualCue`), at `ritual.fury_bed_volume` 0.7; stops on any other phase or the ritual's end. Seam not heard |
+| `haunt.ritual_leaving` | `ritual_leaving`, 3.3 s | Pack: `build-up-of-transition`, first riser (0–3.75 s) | The leaving phase's cue (`RitualCue`), in place of the soul escape. Ends on its peak with a 30 ms cut |
+| `haunt.offering_refused` | `offering_refused`, 3.3 s | Pack: `metallic-surge`, 0–3.5 s, louder channel kept | A wrong offering at the altar (`Ritual.wrong`), in place of the wither spawn |
 
 ## Notes
 
