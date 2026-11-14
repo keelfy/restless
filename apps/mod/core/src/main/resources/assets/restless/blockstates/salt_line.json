@@ -1,13 +1,25 @@
 {
   "multipart": [
     {
+      "when": {
+        "worn": "false"
+      },
       "apply": {
         "model": "restless:block/salt_line"
       }
     },
     {
       "when": {
-        "north": "true"
+        "worn": "true"
+      },
+      "apply": {
+        "model": "restless:block/salt_line_worn"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "worn": "false"
       },
       "apply": {
         "model": "restless:block/salt_line_arm",
@@ -16,7 +28,18 @@
     },
     {
       "when": {
-        "east": "true"
+        "north": "true",
+        "worn": "true"
+      },
+      "apply": {
+        "model": "restless:block/salt_line_arm_worn",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "worn": "false"
       },
       "apply": {
         "model": "restless:block/salt_line_arm",
@@ -25,7 +48,18 @@
     },
     {
       "when": {
-        "south": "true"
+        "east": "true",
+        "worn": "true"
+      },
+      "apply": {
+        "model": "restless:block/salt_line_arm_worn",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "worn": "false"
       },
       "apply": {
         "model": "restless:block/salt_line_arm",
@@ -34,10 +68,31 @@
     },
     {
       "when": {
-        "west": "true"
+        "south": "true",
+        "worn": "true"
+      },
+      "apply": {
+        "model": "restless:block/salt_line_arm_worn",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "worn": "false"
       },
       "apply": {
         "model": "restless:block/salt_line_arm",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "worn": "true"
+      },
+      "apply": {
+        "model": "restless:block/salt_line_arm_worn",
         "y": 270
       }
     }

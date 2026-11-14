@@ -199,7 +199,8 @@
     "radius": 24
   },
   "salt": {
-    "max_cells": 400
+    "max_cells": 400,
+    "wear_stops": 12
   },
   "wards": {
     "lantern_radius": 6,

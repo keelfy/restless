@@ -2,6 +2,7 @@ package dev.keelfy.restless.ward;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.block.SaltLineBlock;
 import dev.keelfy.restless.content.block.WardBlock;
 import dev.keelfy.restless.content.block.WornWard;
 import dev.keelfy.restless.content.item.charm.Charms;
@@ -28,16 +29,22 @@ import net.minecraft.world.level.block.state.BlockState;
  * Local protection, checked when a spirit's event is about to run on a player. A ward stops that one event; the
  * spirit's cooldown still runs, so the event is lost, not postponed. Salt: the player stands inside a closed loop of it
  * (walls may close the gaps). Hallowed lantern, dreamcatcher (while the player sleeps), door charm (door events) and
- * scarecrow (any event) work by the blocks near the player; the last two wear out.
+ * scarecrow (any event) work by the blocks near the player; the last two wear out. So does salt: each event a ring
+ * stops wears its tiles, and a worn ring is a gap until a tile is laid beside it.
  */
 public final class Wards {
     private Wards() {}
 
     public static boolean stops(ServerPlayer player, HauntEvent event) {
-        if (shelters(player) || Charms.spared(player, event)) {
+        ServerLevel level = player.level();
+        List<BlockPos> ring = ring(level, player.blockPosition());
+        if (!ring.isEmpty()) {
+            SaltLineBlock.wear(level, ring);
             return true;
         }
-        ServerLevel level = player.level();
+        if (Charms.spared(player, event)) {
+            return true;
+        }
         Config.Section config = Config.section("wards");
         Map<WardBlock.Kind, BlockPos> near = new EnumMap<>(WardBlock.Kind.class);
         int radius = Math.max(
@@ -104,13 +111,21 @@ public final class Wards {
         return ringed(player.level(), player.blockPosition());
     }
 
-    /** Whether {@code pos} lies inside a closed loop of salt, walls closing the gaps. */
+    /** Whether {@code pos} lies inside a closed loop of fresh salt, walls closing the gaps. Worn salt is a gap. */
     public static boolean ringed(ServerLevel level, BlockPos pos) {
-        return Enclosure.sealed(
-                pos.getX(),
-                pos.getZ(),
-                (x, z) -> cell(level, new BlockPos(x, pos.getY(), z)),
-                Config.section("salt").integer("max_cells"));
+        return !ring(level, pos).isEmpty();
+    }
+
+    /** The salt tiles that close {@code pos} in; empty when it is not ringed. */
+    private static List<BlockPos> ring(ServerLevel level, BlockPos pos) {
+        return Enclosure.ring(
+                        pos.getX(),
+                        pos.getZ(),
+                        (x, z) -> cell(level, new BlockPos(x, pos.getY(), z)),
+                        Config.section("salt").integer("max_cells"))
+                .stream()
+                .map(c -> new BlockPos(c[0], pos.getY(), c[1]))
+                .toList();
     }
 
     /** Whether {@code pos} is in a room walls close and a roof covers, with no salt needed. */
@@ -130,7 +145,7 @@ public final class Wards {
     private static Enclosure.Cell cell(ServerLevel level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
         if (state.is(Content.SALT_LINE.get())) {
-            return Enclosure.Cell.SALT;
+            return state.getValue(SaltLineBlock.WORN) ? Enclosure.Cell.WORN : Enclosure.Cell.SALT;
         }
         // The ritual platform must not wall off the flood fill before it reaches the salt outside it.
         if (state.is(Content.ALTAR.get())) {
