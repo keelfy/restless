@@ -51,10 +51,26 @@ Each spirit has an identity: `uuid`, `seed`, `bornAt` (game time it appeared) an
 
 ### Traits
 
-Besides its type, every spirit has 3–5 traits (`director.traits_min`/`traits_max`) drawn from the `traits` catalog in
-`spirits.json` by its seed: the same seed gives the same traits, and the ids are saved with the spirit. A save from before
-traits gets them from its seed on load. Ids the catalog no longer has are skipped. So two spirits of one type differ in
-what they pick and when they act. A trait has any of:
+Besides its type, every spirit has traits drawn from the `traits` catalog in `spirits.json` by its seed: the same seed
+gives the same traits, and the ids are saved with the spirit. A save from before traits gets them from its seed on load.
+Ids the catalog no longer has are skipped. So two spirits of one type differ in what they pick and when they act.
+
+Every trait has a `kind`, one of three axes rolled on their own:
+
+- `habit`: what the spirit does (the affinity traits and `liar`). Only a habit needs a `weakness`, and only habits vote for
+  the nature. The roll picks the nature evenly, then `director.habits_min`–`habits_max` habits: all but one from the
+  nature, one from another, and that foreign one only beside at least two of the nature's own, so the nature is always
+  the strict majority. A pool too small gives what it has (today malice has one habit, `vengeful`).
+- `condition`: when it acts or what it reacts to (`rain_walker`, `night_stalker`, `dark_dweller`, `noise_feeder`,
+  `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`); `director.conditions_min`–`conditions_max` of them. Their
+  `weakness` is the vote they had before the axes existed: it breaks a habit tie and decides for a saved spirit with no
+  habit, so an old spirit keeps its nature wherever its habits allow. A new condition leaves it out.
+- `leaning`: a fear or a desire; `director.leanings` of them. The axis is empty until T6 fills it, and the roll skips it.
+
+`Traits.weakness` counts habit votes, breaks a tie by the votes of every trait carrying a `weakness`, and then by the
+order of `Focus`. Adding a trait is a config and lang change only.
+
+A trait has any of:
 
 - `affinity`: tag multipliers, multiplied into the weight with the type's. `light_eater` (lights ×2.5), `door_slammer`,
   `restless_hands`, `whisperer`, `cold_touch`, `vengeful`, `meddler`.

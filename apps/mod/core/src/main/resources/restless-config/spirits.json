@@ -218,6 +218,7 @@
   },
   "traits": {
     "restless_hands": {
+      "kind": "habit",
       "affinity": {
         "ITEMS": 2.0,
         "DOORS": 1.5
@@ -241,6 +242,7 @@
       "weakness": "iron"
     },
     "light_eater": {
+      "kind": "habit",
       "affinity": {
         "LIGHTS": 2.5
       },
@@ -263,6 +265,7 @@
       "weakness": "glowstone"
     },
     "door_slammer": {
+      "kind": "habit",
       "affinity": {
         "DOORS": 2.5
       },
@@ -285,6 +288,7 @@
       "weakness": "iron"
     },
     "whisperer": {
+      "kind": "habit",
       "affinity": {
         "SOUND": 2.0,
         "PRESENCE": 1.5
@@ -308,6 +312,7 @@
       "weakness": "mirror"
     },
     "cold_touch": {
+      "kind": "habit",
       "affinity": {
         "AFFLICTION": 2.0
       },
@@ -329,6 +334,7 @@
       "weakness": "glowstone"
     },
     "vengeful": {
+      "kind": "habit",
       "affinity": {
         "ASSAULT": 2.0
       },
@@ -351,6 +357,7 @@
       "weakness": "holy_water"
     },
     "meddler": {
+      "kind": "habit",
       "affinity": {
         "BLOCKS": 2.5,
         "MOBS": 1.5
@@ -374,6 +381,7 @@
       "weakness": "iron"
     },
     "rain_walker": {
+      "kind": "condition",
       "affinity": {},
       "activity": 2.0,
       "when": "rain",
@@ -395,6 +403,7 @@
       "weakness": "holy_water"
     },
     "night_stalker": {
+      "kind": "condition",
       "affinity": {},
       "activity": 1.8,
       "when": "night",
@@ -416,6 +425,7 @@
       "weakness": "glowstone"
     },
     "dark_dweller": {
+      "kind": "condition",
       "affinity": {},
       "activity": 1.8,
       "when": "dark",
@@ -437,6 +447,7 @@
       "weakness": "glowstone"
     },
     "noise_feeder": {
+      "kind": "condition",
       "affinity": {},
       "noise": 6.0,
       "clues": [
@@ -457,6 +468,7 @@
       "weakness": "mirror"
     },
     "chest_watcher": {
+      "kind": "condition",
       "affinity": {
         "ITEMS": 1.5
       },
@@ -482,6 +494,7 @@
       "weakness": "iron"
     },
     "sleep_thief": {
+      "kind": "condition",
       "affinity": {
         "PRESENCE": 1.5
       },
@@ -506,6 +519,7 @@
       "weakness": "mirror"
     },
     "deep_caller": {
+      "kind": "condition",
       "affinity": {
         "SOUND": 1.5
       },
@@ -531,6 +545,7 @@
       "weakness": "holy_water"
     },
     "grudge": {
+      "kind": "condition",
       "affinity": {
         "ASSAULT": 1.5
       },
@@ -555,6 +570,7 @@
       "weakness": "holy_water"
     },
     "liar": {
+      "kind": "habit",
       "affinity": {},
       "clues": [
         "voice",
