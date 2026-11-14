@@ -213,10 +213,14 @@ Needs, when the offering goes down:
 - a closed **salt ring** around it, see [Salt](#salt) (the platform does not count as a wall);
 - a spirit you sense that is weak to the offering's nature, and is not wary.
 
-Then it runs **12 waves of 5 seconds**. A form the type does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
+Then it runs in waves of 5 seconds, through four phases:
 
-- 25%: it snuffs one candle. Relight it before the next wave.
-- 50%: it runs one of its events on you.
+1. **The call**, 2 waves. The spirit comes in and does nothing yet.
+2. **The bargain**, 2 waves. The spirit names what it wants: the thing its [grave](#gravestone) asks for. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
+3. **The fury**, 6 waves. A form the type does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
+   - 25%: it snuffs one candle. Relight it before the next wave.
+   - 50%: it runs one of its events on you.
+4. **The leaving**, 2 waves. The spirit lets go; keep the candles lit to the end.
 
 Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offering is taken off, or you wander off: what lay on the altar is lost and the spirit grows 0.3 angrier. If every candle burns at the end, it is **banished**. For the essences it leaves, see [Essences](/en/items/essences#where-they-come-from).
 

@@ -1,9 +1,13 @@
 package dev.keelfy.restless.gametest;
 
+import dev.keelfy.restless.banish.Circle;
+import dev.keelfy.restless.banish.Phase;
 import dev.keelfy.restless.banish.Ritual;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Altar;
 import dev.keelfy.restless.sanity.SanityPayload;
+import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.state.HauntData;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +18,10 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
@@ -83,6 +91,143 @@ final class RitualGameTests {
             helper.assertBlockProperty(AltarGameTests.CENTER, Altar.HELD, Altar.Held.EMPTY);
             helper.succeed();
         });
+    }
+
+    /** The phases: one test per edge, stepping the ritual's waves by hand instead of waiting for them. */
+    static void registerPhases(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("ritual_call_is_quiet", helper -> {
+            ServerPlayer player = ready(helper);
+            Circle circle = started(helper, player);
+            check(helper, circle.plan().call() == 2, "the call lasts two waves");
+            for (int i = 0; i < circle.plan().call(); i++) {
+                check(helper, circle.step(), "the call must go on");
+                check(helper, circle.phase().orElseThrow() == Phase.CALL, "the first waves are the call");
+            }
+            check(helper, lit(helper) == 4, "the spirit must not snuff a candle in the call");
+            check(helper, spirit(player).anger() == 0.0, "nothing changes in the call");
+            helper.succeed();
+        });
+        tests.put("ritual_broken_circle_fails_in_the_call", helper -> {
+            ServerPlayer player = ready(helper);
+            Circle circle = started(helper, player);
+            check(helper, circle.step(), "the first wave holds");
+            helper.setBlock(CANDLES.getFirst(), Blocks.CANDLE.defaultBlockState());
+            check(helper, !circle.step(), "a dark candle must break the ritual even in the call");
+            check(helper, circle.over(), "the ritual is over");
+            check(helper, Circle.at(helper.absolutePos(AltarGameTests.CENTER)).isEmpty(), "nothing runs at the altar");
+            check(helper, spirit(player).anger() == 0.3, "a failed ritual angers the spirit");
+            helper.assertBlockProperty(AltarGameTests.CENTER, Altar.HELD, Altar.Held.EMPTY);
+            helper.succeed();
+        });
+        tests.put("ritual_bargain_gift_calms_the_spirit", helper -> {
+            ServerPlayer player = ready(helper);
+            HauntData.get(helper.getLevel().getServer()).change(SPIRIT, h -> h.angered(0.5));
+            Circle circle = started(helper, player);
+            steps(helper, circle, circle.plan().call());
+            drop(helper, new ItemStack(Graves.wanted(7L) == Items.STICK ? Items.BONE : Items.STICK));
+            check(helper, circle.step(), "a thing it did not ask for is no gift");
+            check(helper, circle.phase().orElseThrow() == Phase.BARGAIN, "the bargain follows the call");
+            drop(helper, new ItemStack(Graves.wanted(7L), 2));
+            check(helper, !circle.step(), "the gift ends the ritual");
+            HauntData.Haunting after = spirit(player);
+            check(helper, Math.abs(after.anger() - 0.2) < 1e-9, "the gift lowers anger by 0.3, got " + after.anger());
+            check(helper, gifts(helper) == 1, "the spirit takes one gift and leaves the rest");
+            check(helper, essences(helper) == 0, "a bargain leaves no essence");
+            helper.assertBlockProperty(AltarGameTests.CENTER, Altar.HELD, Altar.Held.EMPTY);
+            check(helper, lit(helper) == 4, "the candles still burn");
+            helper.succeed();
+        });
+        tests.put("ritual_unanswered_bargain_turns_to_fury", helper -> {
+            ServerPlayer player = ready(helper);
+            Circle circle = started(helper, player);
+            steps(helper, circle, circle.plan().call() + circle.plan().bargain());
+            check(helper, circle.phase().orElseThrow() == Phase.BARGAIN, "the bargain runs its length");
+            Config.Section config = Config.section("ritual");
+            // snuffs, picks a candle, does not strike: a strike could touch the candles too
+            player.getRandom()
+                    .setSeed(seed(r -> r.nextDouble() < config.num("snuff_chance")
+                            && r.nextInt(CANDLES.size()) >= 0
+                            && r.nextDouble() >= config.num("fury_chance")));
+            check(helper, circle.step(), "the fury goes on");
+            check(helper, circle.phase().orElseThrow() == Phase.FURY, "no gift: the fury follows");
+            check(helper, lit(helper) == 3, "the spirit snuffs a candle in the fury");
+            helper.succeed();
+        });
+        tests.put("ritual_leaving_ends_in_banishing", helper -> {
+            ServerPlayer player = ready(helper);
+            Circle circle = started(helper, player);
+            int toLeaving = circle.plan().call()
+                    + circle.plan().bargain()
+                    + circle.plan().fury();
+            steps(helper, circle, toLeaving);
+            check(helper, circle.phase().orElseThrow() == Phase.FURY, "the fury runs its length");
+            for (int i = 0; i < circle.plan().leaving() - 1; i++) {
+                check(helper, circle.step(), "the leaving goes on");
+                check(helper, circle.phase().orElseThrow() == Phase.LEAVING, "the leaving follows the fury");
+            }
+            check(helper, !circle.step(), "the last wave ends the ritual");
+            check(
+                    helper,
+                    HauntData.get(helper.getLevel().getServer()).find(SPIRIT).isEmpty(),
+                    "the spirit is banished");
+            check(helper, essences(helper) == 1, "it leaves its essence");
+            helper.succeed();
+        });
+    }
+
+    /** Starts the ritual with the offering the spirit takes whole. */
+    private static Circle started(GameTestHelper helper, ServerPlayer player) {
+        BlockPos altar = helper.absolutePos(AltarGameTests.CENTER);
+        check(helper, Ritual.begin(player, helper.getLevel(), altar, Altar.Held.IRON), "the ritual must start");
+        return Circle.at(altar).orElseThrow();
+    }
+
+    /** Runs {@code n} waves that go on, with a calm spirit: neither a snuff nor a strike. */
+    private static void steps(GameTestHelper helper, Circle circle, int n) {
+        Config.Section config = Config.section("ritual");
+        long calm =
+                seed(r -> r.nextDouble() >= config.num("snuff_chance") && r.nextDouble() >= config.num("fury_chance"));
+        for (int i = 0; i < n; i++) {
+            circle.player().getRandom().setSeed(calm);
+            check(helper, circle.step(), "wave " + i + " must go on");
+        }
+    }
+
+    /** The first seed whose rolls pass {@code test}. */
+    private static long seed(java.util.function.Predicate<RandomSource> test) {
+        long seed = 0;
+        while (!test.test(RandomSource.create(seed))) {
+            seed++;
+        }
+        return seed;
+    }
+
+    private static void drop(GameTestHelper helper, ItemStack stack) {
+        BlockPos above = helper.absolutePos(AltarGameTests.CENTER.above());
+        helper.getLevel()
+                .addFreshEntity(
+                        new ItemEntity(helper.getLevel(), above.getX() + 0.5, above.getY(), above.getZ() + 0.5, stack));
+    }
+
+    private static int gifts(GameTestHelper helper) {
+        return count(helper, Graves.wanted(7L).getDefaultInstance());
+    }
+
+    private static int essences(GameTestHelper helper) {
+        return count(helper, new ItemStack(Content.ESSENCE.get("poltergeist").get()));
+    }
+
+    private static int count(GameTestHelper helper, ItemStack kind) {
+        BlockPos at = helper.absolutePos(AltarGameTests.CENTER);
+        return helper
+                .getLevel()
+                .getEntitiesOfClass(
+                        ItemEntity.class,
+                        new net.minecraft.world.phys.AABB(at).inflate(4),
+                        e -> e.isAlive() && e.getItem().is(kind.getItem()))
+                .stream()
+                .mapToInt(e -> e.getItem().getCount())
+                .sum();
     }
 
     /** An altar with its salt ring and four lit candles, and a player haunted by a poltergeist of iron nature. */
