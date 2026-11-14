@@ -144,7 +144,7 @@ What to do with it:
 
 ## Spirit Candle
 
-Candle + hallowed wax + soul sand, shapeless. Hold it in either hand. Its flame leans toward the spirit you sense that acts next, and burns blue for the last **3 seconds** before that event: the warning is exact, it reads the same timer the spirits run on. A spirit may snuff it for 30 seconds.
+Candle + hallowed wax + soul sand, shapeless. Hold it in either hand. Its flame leans toward the spirit you sense that acts next, and burns blue for the last **3 seconds** before that event: the warning is exact, it reads the same timer the spirits run on. A spirit may snuff it for 30 seconds. Its flame also shows the [date](/en/how-it-works#the-calendar): pale on a full moon, red on a blood night, green on the day of the dead.
 
 ## Journal
 
@@ -156,7 +156,7 @@ Sections show once they have something to say:
 
 | Section | Holds |
 | --- | --- |
-| Guide | chapters that open as you run into what they are about: *Read this first* (given), *Signs* (the first event), *Telling them apart* (the first clue), *The altar* (the first photo; it also shows the altar's recipe), *Graves*, *Your head* (the first darkening of the edges), *Left alone* (the first evolution), *Essence* (the first banishing or rest) |
+| Guide | chapters that open as you run into what they are about: *Read this first* (given), *Signs* (the first event), *Telling them apart* (the first clue), *The altar* (the first photo; it also shows the altar's recipe), *Graves*, *Your head* (the first darkening of the edges), *Left alone* (the first evolution), *Essence* (the first banishing or rest), *The calendar* (the first dusk of a full moon, blood night or day of the dead) |
 | Spirits | a dossier per spirit you have met, in order: met means any clue came from it. Until photographed it is an *Unknown spirit*; the photo names its type, its grave its name. Notes under it, and the latest photo. When a spirit evolves, its dossier says so: it names the grown type if you have photographed the spirit, otherwise only that it most likely evolved |
 | Archive | spirits you banished and filed |
 | Loose notes | what was seen of nobody in particular, such as an omen dream |

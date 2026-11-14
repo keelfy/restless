@@ -87,6 +87,16 @@ The material a spirit is weak to holds it back outside the altar too. A stopped 
 - **Malice** (holy water): holy water poured at your feet (use it while looking down) ends the events of this spirit that are still running.
 - **Deceit** (mirror): a mirror in your hand shows a fake block or a double of this spirit for what it is.
 
+## The calendar
+
+Days are counted from the start of the world, and three of them stand apart:
+
+- **Full moon**, every 8th day (the vanilla full moon): every spirit's power is 0.2 higher, up to 1.
+- **Blood night**, every 7th day: each event a ward stops wears it twice (salt rings, door charms, scarecrows). At dusk you are warned in chat.
+- **Day of the dead**, the last day of every 28-day season: spirits run no harmful events, and no tool lies. A blood night that falls on it does not happen.
+
+At the first dusk of any of them the journal opens its *Calendar* chapter. The [spirit candle](/en/items/tools#spirit-candle) shows the date by its flame.
+
 ## Advancements
 
 The mod has its own advancement tab, **Restless**, that follows the hunt: the first clue, the first photograph of a spirit, a banishing at the altar with an offering that suits the spirit's nature, the first spirit laid to rest at its grave, then one advancement for every kind of essence, and the [Requiem](/en/items/requiem) at the end.
