@@ -243,6 +243,23 @@ public final class HauntData extends SavedData {
                 .apply(i, Spoken::new));
     }
 
+    /**
+     * A block a haunt event changed and has not yet put back.
+     *
+     * @param at the block, with its dimension
+     * @param from what stood there before
+     * @param to what the event put there; the block goes back only while it still is this
+     * @param due overworld game time to put it back
+     */
+    public record Undo(GlobalPos at, BlockState from, BlockState to, long due) {
+        static final Codec<Undo> CODEC = RecordCodecBuilder.create(i -> i.group(
+                        GlobalPos.CODEC.fieldOf("at").forGetter(Undo::at),
+                        BlockState.CODEC.fieldOf("from").forGetter(Undo::from),
+                        BlockState.CODEC.fieldOf("to").forGetter(Undo::to),
+                        Codec.LONG.fieldOf("due").forGetter(Undo::due))
+                .apply(i, Undo::new));
+    }
+
     private static final Codec<Menace> MENACE = RecordCodecBuilder.create(i -> i.group(
                     Codec.LONG.optionalFieldOf("last_lethal_at", -1L).forGetter(Menace::lastLethalAt),
                     Codec.BOOL.optionalFieldOf("warned", false).forGetter(Menace::warned),
@@ -307,13 +324,16 @@ public final class HauntData extends SavedData {
                                     .listOf()
                                     .optionalFieldOf("released", List.of())
                                     .forGetter(data -> List.copyOf(data.released)),
-                            // The group holds 16 fields at most, so the last two share one.
+                            // The group holds 16 fields at most, so the last three share one.
                             Codec.mapPair(
-                                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
-                                                    .optionalFieldOf("requiem_wary", Map.of()),
-                                            Codec.unboundedMap(Codec.STRING, COUNTS)
-                                                    .optionalFieldOf("tally", Map.of()))
-                                    .forGetter(data -> Pair.of(data.requiemWary, data.tally.all())))
+                                            Codec.mapPair(
+                                                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
+                                                            .optionalFieldOf("requiem_wary", Map.of()),
+                                                    Codec.unboundedMap(Codec.STRING, COUNTS)
+                                                            .optionalFieldOf("tally", Map.of())),
+                                            Undo.CODEC.listOf().optionalFieldOf("undos", List.of()))
+                                    .forGetter(data -> Pair.of(
+                                            Pair.of(data.requiemWary, data.tally.all()), List.copyOf(data.undos))))
                     .apply(
                             i,
                             (players,
@@ -354,8 +374,9 @@ public final class HauntData extends SavedData {
                                 data.cradles.putAll(cradles);
                                 data.lost.putAll(lost);
                                 data.released.addAll(released);
-                                data.requiemWary.putAll(waryAndTally.getFirst());
-                                data.tally.load(waryAndTally.getSecond());
+                                data.requiemWary.putAll(waryAndTally.getFirst().getFirst());
+                                data.tally.load(waryAndTally.getFirst().getSecond());
+                                data.undos.addAll(waryAndTally.getSecond());
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -408,6 +429,8 @@ public final class HauntData extends SavedData {
     private final Set<UUID> released = new HashSet<>();
     /** The game time until which the altar refuses a player a Requiem, after a failed one. Keyed by player. */
     private final Map<UUID, Long> requiemWary = new HashMap<>();
+    /** Block undos not yet done, so a crash does not leave the changes in the world. */
+    private final List<Undo> undos = new ArrayList<>();
     /** How often each event was rolled, ran, was warded off or failed, since the world began. */
     private final Tally tally = new Tally();
     /**
@@ -463,6 +486,21 @@ public final class HauntData extends SavedData {
     public void putRequiemWary(UUID player, long until) {
         requiemWary.put(player, until);
         setDirty();
+    }
+
+    public List<Undo> undos() {
+        return List.copyOf(undos);
+    }
+
+    public void addUndo(Undo undo) {
+        undos.add(undo);
+        setDirty();
+    }
+
+    public void removeUndo(Undo undo) {
+        if (undos.remove(undo)) {
+            setDirty();
+        }
     }
 
     public Tally tally() {

@@ -65,6 +65,7 @@ public final class AltarGameTests {
         SignatureGameTests.register(TESTS);
         FaultGameTests.register(TESTS);
         TelemetryGameTests.register(TESTS);
+        UndoLogGameTests.register(TESTS);
         ScaleGameTests.register(TESTS);
         SettingsGameTests.register(TESTS);
         TagGameTests.register(TESTS);
