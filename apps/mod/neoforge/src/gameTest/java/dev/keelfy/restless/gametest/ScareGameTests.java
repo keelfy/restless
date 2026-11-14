@@ -8,14 +8,15 @@ import dev.keelfy.restless.haunt.event.HauntEvent;
 import dev.keelfy.restless.haunt.event.HauntEvents;
 import dev.keelfy.restless.haunt.event.Scares;
 import io.netty.channel.embedded.EmbeddedChannel;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +27,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.PlayLevelSoundEvent;
 
 /** The scares the player sets off: each is armed or started, the habit is acted out, and the figure is sent. */
 final class ScareGameTests {
@@ -35,6 +39,21 @@ final class ScareGameTests {
     private static final int LIGHT_SLACK = 100;
 
     private static final int LIGHT_WAIT = LIGHT_SLACK / LIGHT_TICKS;
+    /** How near the player a sting must be played to count as theirs. */
+    private static final double HEARD_RADIUS = 4.0;
+
+    /** Sounds played in any level during the tests, from the level's sound hook. */
+    private record Played(String sound, Vec3 at) {}
+
+    private static final List<Played> PLAYED = new CopyOnWriteArrayList<>();
+
+    static {
+        NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtPosition e) -> {
+            if (e.getSound() != null) {
+                PLAYED.add(new Played(e.getSound().value().location().toString(), e.getPosition()));
+            }
+        });
+    }
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         HauntEventGameTests.PADDING.put("scare_slow_turn", 40);
@@ -254,8 +273,6 @@ final class ScareGameTests {
                             EmbeddedChannel channel = (EmbeddedChannel)
                                     player.connection.getConnection().channel();
                             channel.outboundMessages().clear();
-                            // A mock player is not in the level's list as a joined one is: sounds skip it.
-                            helper.getLevel().players().add(player);
                             event.run(player);
                             then.accept(new Scene(player, channel));
                         },
@@ -313,18 +330,16 @@ final class ScareGameTests {
                     .count();
         }
 
+        /**
+         * Whether the sound was played within {@code HEARD_RADIUS} of the player. A mock player is not in the player
+         * list, so no sound packet reaches it; the level's sound hook sees every sound played.
+         */
         boolean heard(String sound) {
-            return channel.outboundMessages().stream()
-                    .anyMatch(m -> m instanceof ClientboundSoundPacket packet
-                            && packet.getSound()
-                                    .unwrap()
-                                    .map(key -> key.identifier(), event -> event.location())
-                                    .toString()
-                                    .equals(sound));
+            return PLAYED.stream()
+                    .anyMatch(p -> p.sound().equals(sound) && p.at().distanceTo(player.position()) <= HEARD_RADIUS);
         }
 
         void end(GameTestHelper helper) {
-            helper.getLevel().players().remove(player);
             player.discard();
             helper.succeed();
         }
