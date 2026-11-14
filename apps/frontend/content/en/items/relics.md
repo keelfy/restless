@@ -59,7 +59,7 @@ C L C
 
 Carry it in the **off hand** when you offer at an [altar](/en/items/tools#altar). The ritual changes:
 
-- It runs **8 waves** instead of 12. A spirit that has evolved still adds its 4, and a form it does not take still adds 6.
+- The fury runs **2 waves** instead of 6, so the ritual takes 8 waves instead of 12. A spirit that has evolved still adds its 4, and a form it does not take still adds 6.
 - The spirit cannot snuff the candles.
 - The spirit's fury in the ritual is made of harmful events only.
 - The banished spirit leaves **one more essence**.

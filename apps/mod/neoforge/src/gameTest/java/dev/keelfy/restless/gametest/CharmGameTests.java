@@ -83,7 +83,7 @@ final class CharmGameTests {
                                 Content.MUSIC_BOX_ITEM,
                                 Content.FOOTPRINTS_ITEM,
                                 Content.CLAW_MARKS_ITEM)
-                        .anyMatch(debug -> debug.get() == item)) {
+                        .anyMatch(prop -> prop.get() == item)) {
                     continue;
                 }
                 ItemLore lore = item.components().get(DataComponents.LORE);
