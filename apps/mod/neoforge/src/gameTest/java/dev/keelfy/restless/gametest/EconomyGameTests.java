@@ -6,11 +6,13 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Effigy;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.land.Corruption;
 import dev.keelfy.restless.spirit.life.Deeds;
 import dev.keelfy.restless.state.HauntData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
@@ -24,7 +26,9 @@ import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -171,6 +175,56 @@ final class EconomyGameTests {
             use(helper, player, at, new ItemStack(Items.FLINT_AND_STEEL));
             check(helper, !lit(helper, at), "a call that cannot be answered must not light the effigy");
             check(helper, spirits(player).size() == 3, "nothing must be born at the cap");
+            discard(helper, player);
+            helper.succeed();
+        });
+        tests.put("economy_blight_walks_to_the_bed_and_recedes", helper -> {
+            ServerPlayer player = fresh(helper);
+            var level = helper.getLevel();
+            var data = HauntData.get(level.getServer());
+            data.putTerritorial(List.of());
+            BlockPos anchor = helper.absolutePos(new BlockPos(1, 1, 1));
+            BlockPos bed = anchor.offset(40, 0, 0);
+            HauntEventGameTests.forceChunks(helper, anchor.offset(10, 0, 0), 5, true);
+            BlockPos floor = anchor.below();
+            for (int x = -20; x <= 45; x++) {
+                for (int z = -12; z <= 12; z++) {
+                    level.setBlock(floor.offset(x, 0, z), Blocks.GRASS_BLOCK.defaultBlockState(), 2);
+                }
+            }
+            player.setRespawnPosition(
+                    new ServerPlayer.RespawnConfig(LevelData.RespawnData.of(level.dimension(), bed, 0.0F, 0.0F), false),
+                    false);
+            HauntData.Haunting haunting = HauntData.Haunting.born("revenant", 0, level.getRandom())
+                    .rescheduled(Long.MAX_VALUE / 2)
+                    .angered(0.9);
+            data.putTerritorial(
+                    new HauntData.Territorial(haunting, level.dimension(), anchor, 48).angeredBy(player.getUUID()));
+            UUID id = haunting.uuid();
+            for (int i = 0; i < 300; i++) {
+                Corruption.run(level.getServer());
+            }
+            var spots = data.blight().get(id).spots();
+            check(helper, spots.size() > 20, "an angry spirit must foul land: " + spots.size());
+            int east = 0;
+            for (var spot : spots) {
+                int dx = spot.pos().getX() - anchor.getX();
+                int dz = spot.pos().getZ() - anchor.getZ();
+                check(helper, dx >= -6, "no blight behind the anchor beyond the start reach: " + dx);
+                check(helper, Math.abs(dz) <= 3, "blight stays in the strip: " + dz);
+                east += dx > 15 ? 1 : 0;
+            }
+            check(helper, east > 0, "the strip must walk well past the start reach toward the bed");
+            data.removeTerritorial(id);
+            for (int i = 0; i < 100 && Corruption.spots(data, id) > 0; i++) {
+                Corruption.run(level.getServer());
+            }
+            check(helper, Corruption.spots(data, id) == 0, "the strip must heal once the spirit is gone");
+            check(
+                    helper,
+                    level.getBlockState(floor.offset(20, 0, 0)).is(Blocks.GRASS_BLOCK),
+                    "healed ground must be grass again");
+            HauntEventGameTests.forceChunks(helper, anchor.offset(10, 0, 0), 5, false);
             discard(helper, player);
             helper.succeed();
         });

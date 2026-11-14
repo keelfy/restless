@@ -69,7 +69,7 @@ A wrong offering at the altar ages the spirit by a day toward evolving.
 
 ## Blight
 
-A territorial spirit slowly fouls the land around its anchor: grass turns to coarse dirt, flowers to dead bushes. At first it reaches 6 blocks. Over 3 days it grows to the spirit's full radius of 48 blocks. A spirit whose blight has reached 64 spots leaves an extra essence when banished.
+A territorial spirit slowly fouls the land around its anchor: grass turns to coarse dirt, flowers to dead bushes. At first it reaches 6 blocks. Over 3 days it grows to the spirit's full radius of 48 blocks. A territorial spirit angrier than 0.7 stops spreading evenly: its blight grows as a narrow strip, about 5 blocks wide, toward the bed of the player who angered it, up to 64 blocks away. This works only while that player is online and their bed is in the same dimension; otherwise it spreads evenly again. The strip goes away with the spirit, like the rest of the blight. A spirit whose blight has reached 64 spots leaves an extra essence when banished.
 
 ## Traits
 

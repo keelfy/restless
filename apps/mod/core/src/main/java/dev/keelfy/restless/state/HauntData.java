@@ -148,20 +148,31 @@ public final class HauntData extends SavedData {
      *
      * @param radius blocks
      */
-    public record Territorial(Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius) {
+    public record Territorial(
+            Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius, Optional<UUID> angeredBy) {
         static final Codec<Territorial> CODEC = RecordCodecBuilder.create(i -> i.group(
                         Haunting.CODEC.fieldOf("haunting").forGetter(Territorial::haunting),
                         Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(Territorial::dimension),
                         BlockPos.CODEC.fieldOf("anchor").forGetter(Territorial::anchor),
-                        Codec.INT.fieldOf("radius").forGetter(Territorial::radius))
+                        Codec.INT.fieldOf("radius").forGetter(Territorial::radius),
+                        UUIDUtil.CODEC.optionalFieldOf("angered_by").forGetter(Territorial::angeredBy))
                 .apply(i, Territorial::new));
 
+        public Territorial(Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius) {
+            this(haunting, dimension, anchor, radius, Optional.empty());
+        }
+
+        /** The same spirit, angered by this player: its blight walks toward that player's bed. */
+        public Territorial angeredBy(UUID player) {
+            return new Territorial(haunting, dimension, anchor, radius, Optional.of(player));
+        }
+
         public Territorial rescheduled(long nextEventAt) {
-            return new Territorial(haunting.rescheduled(nextEventAt), dimension, anchor, radius);
+            return new Territorial(haunting.rescheduled(nextEventAt), dimension, anchor, radius, angeredBy);
         }
 
         public Territorial angered(double by) {
-            return new Territorial(haunting.angered(by), dimension, anchor, radius);
+            return new Territorial(haunting.angered(by), dimension, anchor, radius, angeredBy);
         }
 
         /**
@@ -678,7 +689,7 @@ public final class HauntData extends SavedData {
             if (kept == null) {
                 removeTerritorial(spirit);
             } else {
-                putTerritorial(new Territorial(kept, t.dimension(), t.anchor(), t.radius()));
+                putTerritorial(new Territorial(kept, t.dimension(), t.anchor(), t.radius(), t.angeredBy()));
             }
         }
     }
