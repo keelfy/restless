@@ -48,7 +48,7 @@ Agents use the default and do not wait. Change a default here before the wave th
 |---|---|---|---|
 | D1 | Is a spirit's first hour meant to be harmless (power 0 for the first days)? | Personal spirits start at maturity 0.15 | M10 |
 | D2 | May the altar leave an "echo" spirit behind, making the grave the cleaner way out? | Yes | M2 |
-| D3 | Where do new recordings come from, and under what licence? | The owner's pack (see S1) first, CC0 sources for what it lacks. The pack's licence is not confirmed: no file from it ships until the owner names its source for the `README.md` credits | S1, S2, S4 |
+| D3 | Where do new recordings come from, and under what licence? | The owner's pack (see S1) first, CC0 sources for what it lacks. Settled 2026-11-14: the owner checked the pack, every file is from an open source and royalty free, so its files may ship. `README.md` credits it as the owner's royalty-free pack until the owner lists the sources | S1, S2, S4 |
 | D4 | Does the visible spirit get a model per type or one model with a shape per type? | One model, shapes from `photo/Apparition` | S3 |
 | D5 | Is a public alpha wanted, and where? | Not decided; C3 only prepares the build | C3 |
 | D6 | Does salt wear out? It changes the "home is safe" rule. | Yes, only from events it stops | M7 |
