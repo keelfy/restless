@@ -57,26 +57,43 @@ Ids the catalog no longer has are skipped. So two spirits of one type differ in 
 
 Every trait has a `kind`, one of three axes rolled on their own:
 
-- `habit`: what the spirit does (the affinity traits and `liar`). Only a habit needs a `weakness`, and only habits vote for
-  the nature. The roll picks the nature evenly, then `director.habits_min`–`habits_max` habits: all but one from the
-  nature, one from another, and that foreign one only beside at least two of the nature's own, so the nature is always
-  the strict majority. A pool too small gives what it has (today malice has one habit, `vengeful`).
-- `condition`: when it acts or what it reacts to (`rain_walker`, `night_stalker`, `dark_dweller`, `noise_feeder`,
-  `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`); `director.conditions_min`–`conditions_max` of them. Their
+- `habit`: what the spirit does (the affinity traits and `liar`). There are 24, six per nature: objects (`restless_hands`,
+  `door_slammer`, `meddler`, `thrower`, `stacker`, `knocker`), darkness (`light_eater`, `cold_touch`, `shadow_caster`,
+  `blinder`, `hearth_killer`, `corner_lurker`), malice (`vengeful`, `hunter`, `scratcher`, `beast_caller`, `drowner`,
+  `snarler`) and deceit (`whisperer`, `liar`, `face_thief`, `illusionist`, `false_friend`, `lure`). Only a habit needs a
+  `weakness`, and only habits vote for the nature. The roll picks the nature evenly, then `director.habits_min`–`habits_max`
+  habits: all but one from the nature, one from another, and that foreign one only beside at least two of the nature's
+  own, so the nature is always the strict majority.
+- `condition`: when it acts or what it reacts to (there are 10: `rain_walker`, `night_stalker`, `dark_dweller`,
+  `cave_haunter`, `water_lurker`, `noise_feeder`, `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`); `director.conditions_min`–`conditions_max` of them. Their
   `weakness` is the vote they had before the axes existed: it breaks a habit tie and decides for a saved spirit with no
   habit, so an old spirit keeps its nature wherever its habits allow. A new condition leaves it out.
-- `leaning`: a fear or a desire; `director.leanings` of them. The axis is empty until T6 fills it, and the roll skips it.
+- `leaning`: a desire or a fear or hate (10: fears `fears_fire`, `fears_cats`, `fears_bells`, `fears_running_water`;
+  desires `wants_milk`, `wants_bread`, `wants_sweets`; hates `hates_lanterns`, `hates_bells`, `hates_music`). Every spirit
+  born now rolls `director.desires` desire and `director.leanings` fear or hate; spirits born before have none. Each has
+  `leans` (`fear`, `desire`, `hate`) and `things` (registry ids). Rules in `spirit/life/Leanings.java`, numbers in the
+  `leanings` group of `haunt.json`: a fear stops the spirit's events on a player within `fear_radius` (4) of the thing
+  (water only while it flows; same ash and chime as a ward); a desire takes one wanted item lying within `desire_radius`
+  (3) of the player and lowers anger by `desire_calm` (0.25), once per `desire_cooldown_ticks`; a hate raises anger by
+  `hate_anger` (0.1) when the player uses the hated block or uses a block holding the hated item, once per
+  `hate_cooldown_ticks`. A territorial spirit whose radius reaches the player counts too.
+- `veil`: hides the spirit from one tool (3: `unseen` foils the camera, `light_footed` ash, `voiceless` the spirit box;
+  key `foils`, a `Clue`). Rolled last, with the chance `director.veil_chance` (0.25), so a spirit has at most one.
+  `Clues.reveal` gives nothing for a foiled clue; `Divination.silent` and `AshBlock` note a `SILENCE` in the journal.
+- Hidden habit: `Traits.hidden(seed, traits)` picks one of two or more habits by the seed; `Divination.known` leaves
+  it out of every tool's reading until `Sanity.shaken` (`sanity.reveal_below`) or the spirit has evolved. Evolving
+  (`Evolution.grow`) also adds `Traits.grown(seed, traits)`, a habit of its own nature it lacked, saved in its trait list.
 
 `Traits.weakness` counts habit votes, breaks a tie by the votes of every trait carrying a `weakness`, and then by the
 order of `Focus`. Adding a trait is a config and lang change only.
 
 A trait has any of:
 
-- `affinity`: tag multipliers, multiplied into the weight with the type's. `light_eater` (lights ×2.5), `door_slammer`,
-  `restless_hands`, `whisperer`, `cold_touch`, `vengeful`, `meddler`.
-- `activity` + `when` (`rain`, `night`, `dark`; light level below `director.dark_light_level`): the spirit acts that many
+- `affinity`: tag multipliers, multiplied into the weight with the type's. Every habit (for example `light_eater`: lights ×2.5) and some conditions.
+- `activity` + `when` (`rain`, `night`, `dark`: light level below `director.dark_light_level`; `underground`: below y
+  `director.underground_below` (40) with no sky overhead; `water`: the player is in water): the spirit acts that many
   times as often while the condition holds at the moment it schedules its next event. `rain_walker`, `night_stalker`,
-  `dark_dweller`.
+  `dark_dweller`, `cave_haunter`, `water_lurker`.
 - `noise`: ticks the next event comes sooner for every sound the player makes (`noise_feeder`: 6 per sound, so sprinting
   hastens it most). Sneaking instead delays it by `director.sneak_delay_ticks` per check. Sounds are the ones `Echoes` hears.
 - `reacts`: after the player opens a chest or barrel (`chest`), uses a bed (`bed`), goes below y 0 (`deep`) or kills a mob
@@ -177,8 +194,7 @@ events, holy water poured at the feet (pitch past `pour_pitch`) drops its runnin
 unmasks the blocks it showed and its double. The spirit comes from `Said.current()`, so only events run through `Director`
 honour it; every event tagged `DOORS`, `ITEMS` or `LIGHTS` does, with no per-event code.
 
-Not built yet: salt from a cauldron, and the traits that hate a ward (the lantern raising anger of light-hating
-traits, the bell of noise-hating ones). The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
+Not built yet: salt from a cauldron. The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
 
 ## Banishing
 

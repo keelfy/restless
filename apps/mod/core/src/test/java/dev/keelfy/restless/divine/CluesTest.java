@@ -85,4 +85,28 @@ class CluesTest {
             assertFalse(trait.clues().isEmpty(), trait.id());
         }
     }
+
+    @Test
+    void aVeilSilencesOnlyTheToolItFoils() {
+        Trait cold = trait("cold", false, Clue.SILHOUETTE);
+        Trait veil = new Trait(
+                "veil",
+                Trait.Kind.VEIL,
+                Map.of(),
+                1.0,
+                Trait.Condition.ANY,
+                0.0,
+                List.of(),
+                Set.of(Clue.VOICE),
+                List.of("word"),
+                List.of("phrase"),
+                false,
+                null,
+                null,
+                List.of(),
+                Clue.SILHOUETTE);
+        List<Trait> owned = List.of(cold, veil);
+        assertTrue(Clues.reveal(owned, owned, Clue.SILHOUETTE, new Random(1)).isEmpty());
+        assertTrue(Clues.reveal(owned, owned, Clue.VOICE, new Random(1)).isPresent());
+    }
 }

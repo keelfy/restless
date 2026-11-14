@@ -47,6 +47,11 @@ public final class AltarGameTests {
         AshGameTests.register(TESTS);
         DreamcatcherGameTests.register(TESTS);
         WeaknessGameTests.register(TESTS);
+        LeaningGameTests.register(TESTS);
+        TellGameTests.register(TESTS);
+        VeilGameTests.register(TESTS);
+        HiddenGameTests.register(TESTS);
+        HarshGameTests.register(TESTS);
         LanternGameTests.register(TESTS);
         HeldLightGameTests.register(TESTS);
         HauntEventGameTests.register(TESTS);

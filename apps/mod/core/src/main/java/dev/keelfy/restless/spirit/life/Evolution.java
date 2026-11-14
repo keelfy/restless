@@ -5,6 +5,7 @@ import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.spirit.Story;
+import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.state.HauntData;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -31,7 +32,7 @@ public final class Evolution {
             List<HauntData.Haunting> spirits = data.get(player.getUUID());
             for (HauntData.Haunting spirit : spirits == null ? List.<HauntData.Haunting>of() : spirits) {
                 if (grows(spirit, now)) {
-                    data.change(spirit.uuid(), HauntData.Haunting::evolve);
+                    data.change(spirit.uuid(), Evolution::grow);
                     tell(player, spirit);
                 }
             }
@@ -39,10 +40,32 @@ public final class Evolution {
         for (HauntData.Territorial spirit : data.territorial()) {
             ServerLevel level = server.getLevel(spirit.dimension());
             if (level != null && grows(spirit.haunting(), now)) {
-                data.change(spirit.haunting().uuid(), HauntData.Haunting::evolve);
+                data.change(spirit.haunting().uuid(), Evolution::grow);
                 level.players().stream().filter(spirit::reaches).forEach(p -> tell(p, spirit.haunting()));
             }
         }
+    }
+
+    /** The spirit grown up: evolved, and with one more habit of its nature ({@link Traits#grown}) when one is left. */
+    public static HauntData.Haunting grow(HauntData.Haunting spirit) {
+        HauntData.Haunting grown = spirit.evolve();
+        String habit = Traits.grown(spirit.seed(), Traits.of(spirit.traits()));
+        if (habit == null) {
+            return grown;
+        }
+        List<String> traits = new java.util.ArrayList<>(grown.traits());
+        traits.add(habit);
+        return new HauntData.Haunting(
+                grown.uuid(),
+                grown.spirit(),
+                grown.seed(),
+                List.copyOf(traits),
+                grown.bornAt(),
+                grown.anger(),
+                grown.nextEventAt(),
+                true,
+                grown.notice(),
+                grown.waryUntil());
     }
 
     private static boolean grows(HauntData.Haunting spirit, long now) {

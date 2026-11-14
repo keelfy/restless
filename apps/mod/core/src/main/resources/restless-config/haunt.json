@@ -8,8 +8,11 @@
     "habits_max": 4,
     "conditions_min": 1,
     "conditions_max": 2,
+    "desires": 1,
     "leanings": 1,
+    "veil_chance": 0.25,
     "dark_light_level": 8,
+    "underground_below": 40,
     "react_chance": 0.25,
     "sneak_delay_ticks": 10,
     "rarity_memory": 0.05,
@@ -43,6 +46,7 @@
     "contract": 0.3,
     "devil": 0.1,
     "break_anchor": 0.3,
+    "harsh_above": 0.7,
     "anchor_reach": 3,
     "graves": [
       "minecraft:skeleton_skull",
@@ -216,6 +220,15 @@
     "iron_radius": 6,
     "glow_radius": 4,
     "pour_pitch": 70
+  },
+  "leanings": {
+    "fear_radius": 4,
+    "desire_radius": 3,
+    "desire_period_ticks": 20,
+    "desire_cooldown_ticks": 6000,
+    "desire_calm": 0.25,
+    "hate_cooldown_ticks": 1200,
+    "hate_anger": 0.1
   },
   "bell": {
     "radius": 24,

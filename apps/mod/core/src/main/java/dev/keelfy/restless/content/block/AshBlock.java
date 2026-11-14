@@ -3,6 +3,7 @@ package dev.keelfy.restless.content.block;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.entity.AshFootprint;
 import dev.keelfy.restless.divine.Clues;
+import dev.keelfy.restless.divine.Divination;
 import dev.keelfy.restless.divine.Sense;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.Notebook;
@@ -71,6 +72,14 @@ public final class AshBlock extends CarpetBlock {
         for (Sense.Spirit spirit :
                 Sense.around(level, pos, Config.section("ash").integer("reach"), data)) {
             HauntData.Haunting haunting = spirit.haunting();
+            if (Clues.foiled(Traits.of(haunting.traits()), Clue.FOOTPRINTS)) {
+                level.players().stream()
+                        .filter(p -> p.blockPosition().distSqr(pos)
+                                <= (double) Config.section("ash").integer("reach")
+                                        * Config.section("ash").integer("reach"))
+                        .forEach(p -> Divination.silent(p, haunting, Clue.FOOTPRINTS));
+                continue;
+            }
             Optional<Trait> shown = Clues.reveal(
                     Traits.of(haunting.traits()), Traits.all(), Clue.FOOTPRINTS, new Random(random.nextLong()));
             if (shown.isPresent()) {

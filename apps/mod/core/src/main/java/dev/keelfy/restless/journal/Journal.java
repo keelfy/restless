@@ -225,7 +225,7 @@ public final class Journal {
     private static List<Chapter> chapters(Kind kind) {
         return switch (kind) {
             case PHOTO -> List.of(Chapter.CLUES, Chapter.WEAKNESS);
-            case FOOTPRINTS, VOICE, PLANCHETTE -> List.of(Chapter.CLUES);
+            case FOOTPRINTS, VOICE, PLANCHETTE, TELL, SILENCE -> List.of(Chapter.CLUES);
             case GRAVE, GRAVE_WHISPER -> List.of(Chapter.GRAVES);
             case EVOLVED -> List.of(Chapter.EVOLUTION);
             case RESTED, BANISHED -> List.of(Chapter.ESSENCE);

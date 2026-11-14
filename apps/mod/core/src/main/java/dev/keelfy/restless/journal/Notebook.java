@@ -74,6 +74,10 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         EVOLVED(true),
         /** A spirit laid to rest at the Requiem: the last line of its dossier. Args: name, type. */
         LAID(true),
+        /** A habit's tell was seen. Args: what was seen. */
+        TELL(true),
+        /** A tool found nothing of a spirit that a veil hides from it. Args: what stayed silent. */
+        SILENCE(true),
         /** An entry from before the journal had kinds. Args: its text. */
         OLD(true);
 

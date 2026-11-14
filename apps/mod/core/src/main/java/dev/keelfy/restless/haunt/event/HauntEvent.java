@@ -42,6 +42,15 @@ public interface HauntEvent {
         return config.has("spirit") ? config.text("spirit") : null;
     }
 
+    /**
+     * The habit whose tell this is, from {@code events.<id>.habit}: only a spirit with that habit rolls it; null when
+     * any spirit may.
+     */
+    default @Nullable String habit() {
+        Config.Section config = Config.event(id().toString());
+        return config.has("habit") ? config.text("habit") : null;
+    }
+
     /** Whether a spirit this strong may roll the event at all; only {@link Scenario}s are gated. */
     default boolean opensAt(double power, boolean evolved) {
         return true;
