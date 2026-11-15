@@ -439,9 +439,33 @@
   "interrogation": {
     "sanity_cost": 0.2,
     "questions": {
-      "habit": ["do", "does", "doing", "habit*", "делаешь", "делает", "повадк*"],
-      "desire": ["want", "wants", "desire*", "wish", "хочешь", "хочет", "желаешь", "желани*"],
-      "grave": ["grave", "buried", "bones", "могил*", "похорон*", "кост*"]
+      "habit": [
+        "do",
+        "does",
+        "doing",
+        "habit*",
+        "делаешь",
+        "делает",
+        "повадк*"
+      ],
+      "desire": [
+        "want",
+        "wants",
+        "desire*",
+        "wish",
+        "хочешь",
+        "хочет",
+        "желаешь",
+        "желани*"
+      ],
+      "grave": [
+        "grave",
+        "buried",
+        "bones",
+        "могил*",
+        "похорон*",
+        "кост*"
+      ]
     }
   },
   "ritual": {

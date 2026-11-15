@@ -15,10 +15,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.AABB;
 
 /**
- * A second nature: an evolved spirit's foreign habit ({@link Traits#foreign}), or the nature of a spirit it merged
- * with ({@link dev.keelfy.restless.spirit.life.Merging}), is a second nature. In the bargain it
- * asks for an offering of that nature too, thrown onto the altar like the gift; the fury does not begin without it,
- * and the ritual fails.
+ * A second nature: an evolved spirit's foreign habit ({@link Traits#foreign}), or the nature of a spirit it merged with
+ * ({@link dev.keelfy.restless.spirit.life.Merging}), is a second nature. In the bargain it asks for an offering of that
+ * nature too, thrown onto the altar like the gift; the fury does not begin without it, and the ritual fails.
  */
 public final class Twofold {
     private Twofold() {}
@@ -30,9 +29,8 @@ public final class Twofold {
     public static Optional<Focus> of(HauntData data, HauntData.Haunting spirit) {
         List<dev.keelfy.restless.spirit.Trait> traits = Traits.of(spirit.traits());
         Optional<Focus> merged = data.marks(spirit.uuid()).merged();
-        Optional<Focus> second = merged.isPresent()
-                ? merged
-                : spirit.evolved() ? Traits.foreign(traits) : Optional.empty();
+        Optional<Focus> second =
+                merged.isPresent() ? merged : spirit.evolved() ? Traits.foreign(traits) : Optional.empty();
         return second.filter(focus -> focus != Traits.weakness(traits));
     }
 
@@ -46,7 +44,8 @@ public final class Twofold {
                 .ifPresent(focus -> circle.player.sendSystemMessage(
                         Component.translatable(
                                 "message.restless.ritual_twofold",
-                                Component.translatable("focus.restless." + focus.name().toLowerCase(Locale.ROOT))),
+                                Component.translatable(
+                                        "focus.restless." + focus.name().toLowerCase(Locale.ROOT))),
                         false));
     }
 

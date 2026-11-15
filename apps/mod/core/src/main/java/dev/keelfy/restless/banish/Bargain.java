@@ -37,9 +37,7 @@ final class Bargain {
                 .map(id -> BuiltInRegistries.ITEM.getOptional(Identifier.parse(id)))
                 .flatMap(java.util.Optional::stream)
                 .toList();
-        return desired.isEmpty()
-                ? List.of(Graves.wanted(HauntData.get(circle.level.getServer()), spirit))
-                : desired;
+        return desired.isEmpty() ? List.of(Graves.wanted(HauntData.get(circle.level.getServer()), spirit)) : desired;
     }
 
     static void enter(Circle circle) {

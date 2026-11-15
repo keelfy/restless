@@ -38,7 +38,8 @@ final class FormGameTests {
             check(helper, Ritual.waves(data, marked, Altar.Held.IRON) == 18, "the type's form is now off form");
             Altar.Held fits = death == Form.BIT ? Altar.Held.IRON_NUGGET : Altar.Held.IRON_CHAIN;
             check(helper, Ritual.waves(data, marked, fits) == 12, "the death's form keeps the usual length");
-            String wanted = BuiltInRegistries.ITEM.getKey(Graves.wanted(data, marked)).toString();
+            String wanted =
+                    BuiltInRegistries.ITEM.getKey(Graves.wanted(data, marked)).toString();
             check(
                     helper,
                     Story.of(seed).wants().contains(wanted),

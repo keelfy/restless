@@ -20,8 +20,7 @@ public record Story(String name, int daysDead, String cause) {
      * {@link dev.keelfy.restless.state.Marks#deathForm} use it, see {@link Spirits#form}.
      */
     public Form form() {
-        return Form.valueOf(
-                Config.section("story").section("forms").text(cause).toUpperCase(java.util.Locale.ROOT));
+        return Form.valueOf(Config.section("story").section("forms").text(cause).toUpperCase(java.util.Locale.ROOT));
     }
 
     /** The things a spirit that died this way may want back at its grave, from {@code story.wants}. */

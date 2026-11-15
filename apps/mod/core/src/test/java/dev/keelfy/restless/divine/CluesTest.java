@@ -37,8 +37,10 @@ class CluesTest {
         List<Trait> catalog = List.of(cold, trait("other", false, Clue.VOICE));
         assertEquals(
                 cold,
-                Clues.reveal(List.of(cold), catalog, Clue.PLANCHETTE, new Random(1)).orElseThrow());
-        assertTrue(Clues.reveal(List.of(), catalog, Clue.PLANCHETTE, new Random(1)).isEmpty());
+                Clues.reveal(List.of(cold), catalog, Clue.PLANCHETTE, new Random(1))
+                        .orElseThrow());
+        assertTrue(
+                Clues.reveal(List.of(), catalog, Clue.PLANCHETTE, new Random(1)).isEmpty());
     }
 
     @Test
@@ -48,13 +50,22 @@ class CluesTest {
         Trait desire = of("desire", Trait.Kind.LEANING);
         List<Trait> owned = List.of(habit, condition, desire);
         for (int i = 0; i < 100; i++) {
-            assertEquals(habit, Clues.reveal(owned, owned, Clue.PLANCHETTE, new Random(i)).orElseThrow());
-            assertEquals(condition, Clues.reveal(owned, owned, Clue.FOOTPRINTS, new Random(i)).orElseThrow());
-            assertEquals(desire, Clues.reveal(owned, owned, Clue.VOICE, new Random(i)).orElseThrow());
+            assertEquals(
+                    habit,
+                    Clues.reveal(owned, owned, Clue.PLANCHETTE, new Random(i)).orElseThrow());
+            assertEquals(
+                    condition,
+                    Clues.reveal(owned, owned, Clue.FOOTPRINTS, new Random(i)).orElseThrow());
+            assertEquals(
+                    desire,
+                    Clues.reveal(owned, owned, Clue.VOICE, new Random(i)).orElseThrow());
         }
-        assertTrue(Clues.reveal(List.of(habit), owned, Clue.VOICE, new Random(1)).isEmpty());
-        assertTrue(Clues.reveal(List.of(habit), owned, Clue.FOOTPRINTS, new Random(1)).isEmpty());
-        assertTrue(Clues.reveal(List.of(desire), owned, Clue.SILHOUETTE, new Random(1)).isPresent());
+        assertTrue(
+                Clues.reveal(List.of(habit), owned, Clue.VOICE, new Random(1)).isEmpty());
+        assertTrue(Clues.reveal(List.of(habit), owned, Clue.FOOTPRINTS, new Random(1))
+                .isEmpty());
+        assertTrue(Clues.reveal(List.of(desire), owned, Clue.SILHOUETTE, new Random(1))
+                .isPresent());
     }
 
     @Test
@@ -109,8 +120,9 @@ class CluesTest {
         List<Trait> catalog = List.of(liar, other);
         Random random = new Random(3);
         long lies = java.util.stream.IntStream.range(0, 200)
-                .filter(i ->
-                        Clues.reveal(List.of(liar), catalog, Clue.PLANCHETTE, random).orElseThrow() == other)
+                .filter(i -> Clues.reveal(List.of(liar), catalog, Clue.PLANCHETTE, random)
+                                .orElseThrow()
+                        == other)
                 .count();
         assertTrue(lies > 50 && lies < 150, "lies: " + lies);
     }

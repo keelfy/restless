@@ -37,9 +37,8 @@ class StoryTest {
 
     @Test
     void everyDeathHasSpiritBoxWordsTheTraitsAlreadyVoice() {
-        Set<String> voiced = Traits.all().stream()
-                .flatMap(t -> t.words().stream())
-                .collect(Collectors.toSet());
+        Set<String> voiced =
+                Traits.all().stream().flatMap(t -> t.words().stream()).collect(Collectors.toSet());
         for (String cause : Config.section("story").texts("causes")) {
             var words = Config.section("story").section("words").texts(cause);
             assertFalse(words.isEmpty(), cause);

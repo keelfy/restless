@@ -103,7 +103,8 @@ public final class Divination {
             // The spirit box also tells how the spirit died, and only that of a spirit that wants and fears nothing.
             if (clue == Clue.VOICE
                     && (trait.isEmpty()
-                            || random.nextDouble() < Config.section("spirit_box").num("story_chance"))) {
+                            || random.nextDouble()
+                                    < Config.section("spirit_box").num("story_chance"))) {
                 return Optional.of(new Reading(spirit, null, random));
             }
             if (trait.isPresent()) {

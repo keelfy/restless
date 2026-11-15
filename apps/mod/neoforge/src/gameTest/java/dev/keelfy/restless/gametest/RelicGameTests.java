@@ -85,15 +85,29 @@ final class RelicGameTests {
                     0L);
             check(
                     helper,
-                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, dev.keelfy.restless.content.block.Altar.Held.IRON) == 12,
+                    Ritual.waves(
+                                    HauntData.get(helper.getLevel().getServer()),
+                                    spirit,
+                                    dev.keelfy.restless.content.block.Altar.Held.IRON)
+                            == 12,
                     "a plain ritual");
             check(
                     helper,
-                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, dev.keelfy.restless.content.block.Altar.Held.IRON, true) == 8,
+                    Ritual.waves(
+                                    HauntData.get(helper.getLevel().getServer()),
+                                    spirit,
+                                    dev.keelfy.restless.content.block.Altar.Held.IRON,
+                                    true)
+                            == 8,
                     "the censer must cut the ritual to eight waves");
             check(
                     helper,
-                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit.evolve(), dev.keelfy.restless.content.block.Altar.Held.IRON, true) == 12,
+                    Ritual.waves(
+                                    HauntData.get(helper.getLevel().getServer()),
+                                    spirit.evolve(),
+                                    dev.keelfy.restless.content.block.Altar.Held.IRON,
+                                    true)
+                            == 12,
                     "a grown spirit must still add its waves");
             helper.succeed();
         });

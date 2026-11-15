@@ -1543,18 +1543,54 @@
       "was_pushed_off_by_a_friend"
     ],
     "words": {
-      "fell_into_lava": ["burn", "down"],
-      "starved_in_a_deep_mine": ["hungry", "deep"],
-      "was_blown_up_by_a_creeper": ["loud", "hurt"],
-      "drowned_in_a_flooded_cave": ["drown", "water"],
-      "was_shot_by_a_skeleton": ["hurt", "run"],
-      "fell_from_a_high_place": ["down", "die"],
-      "burned_down_with_the_house": ["fire", "burn"],
-      "was_lost_in_the_nether": ["lost", "fire"],
-      "suffocated_in_a_collapsed_tunnel": ["breathe", "stone"],
-      "was_slain_by_a_zombie_horde": ["teeth", "run"],
-      "never_found_the_way_back_to_bed": ["bed", "lost"],
-      "was_pushed_off_by_a_friend": ["friend", "trust"]
+      "fell_into_lava": [
+        "burn",
+        "down"
+      ],
+      "starved_in_a_deep_mine": [
+        "hungry",
+        "deep"
+      ],
+      "was_blown_up_by_a_creeper": [
+        "loud",
+        "hurt"
+      ],
+      "drowned_in_a_flooded_cave": [
+        "drown",
+        "water"
+      ],
+      "was_shot_by_a_skeleton": [
+        "hurt",
+        "run"
+      ],
+      "fell_from_a_high_place": [
+        "down",
+        "die"
+      ],
+      "burned_down_with_the_house": [
+        "fire",
+        "burn"
+      ],
+      "was_lost_in_the_nether": [
+        "lost",
+        "fire"
+      ],
+      "suffocated_in_a_collapsed_tunnel": [
+        "breathe",
+        "stone"
+      ],
+      "was_slain_by_a_zombie_horde": [
+        "teeth",
+        "run"
+      ],
+      "never_found_the_way_back_to_bed": [
+        "bed",
+        "lost"
+      ],
+      "was_pushed_off_by_a_friend": [
+        "friend",
+        "trust"
+      ]
     },
     "forms": {
       "fell_into_lava": "bit",
@@ -1571,18 +1607,54 @@
       "was_pushed_off_by_a_friend": "crafted"
     },
     "wants": {
-      "fell_into_lava": ["minecraft:water_bucket", "minecraft:obsidian"],
-      "starved_in_a_deep_mine": ["minecraft:bread", "minecraft:cooked_beef"],
-      "was_blown_up_by_a_creeper": ["minecraft:shield", "minecraft:gunpowder"],
-      "drowned_in_a_flooded_cave": ["minecraft:oak_boat", "minecraft:turtle_helmet"],
-      "was_shot_by_a_skeleton": ["minecraft:shield", "minecraft:bow"],
-      "fell_from_a_high_place": ["minecraft:feather", "minecraft:water_bucket"],
-      "burned_down_with_the_house": ["minecraft:oak_door", "minecraft:water_bucket"],
-      "was_lost_in_the_nether": ["minecraft:compass", "minecraft:gold_ingot"],
-      "suffocated_in_a_collapsed_tunnel": ["minecraft:iron_pickaxe", "minecraft:torch"],
-      "was_slain_by_a_zombie_horde": ["minecraft:iron_sword", "minecraft:golden_apple"],
-      "never_found_the_way_back_to_bed": ["minecraft:red_bed", "minecraft:compass"],
-      "was_pushed_off_by_a_friend": ["minecraft:name_tag", "minecraft:poppy"]
+      "fell_into_lava": [
+        "minecraft:water_bucket",
+        "minecraft:obsidian"
+      ],
+      "starved_in_a_deep_mine": [
+        "minecraft:bread",
+        "minecraft:cooked_beef"
+      ],
+      "was_blown_up_by_a_creeper": [
+        "minecraft:shield",
+        "minecraft:gunpowder"
+      ],
+      "drowned_in_a_flooded_cave": [
+        "minecraft:oak_boat",
+        "minecraft:turtle_helmet"
+      ],
+      "was_shot_by_a_skeleton": [
+        "minecraft:shield",
+        "minecraft:bow"
+      ],
+      "fell_from_a_high_place": [
+        "minecraft:feather",
+        "minecraft:water_bucket"
+      ],
+      "burned_down_with_the_house": [
+        "minecraft:oak_door",
+        "minecraft:water_bucket"
+      ],
+      "was_lost_in_the_nether": [
+        "minecraft:compass",
+        "minecraft:gold_ingot"
+      ],
+      "suffocated_in_a_collapsed_tunnel": [
+        "minecraft:iron_pickaxe",
+        "minecraft:torch"
+      ],
+      "was_slain_by_a_zombie_horde": [
+        "minecraft:iron_sword",
+        "minecraft:golden_apple"
+      ],
+      "never_found_the_way_back_to_bed": [
+        "minecraft:red_bed",
+        "minecraft:compass"
+      ],
+      "was_pushed_off_by_a_friend": [
+        "minecraft:name_tag",
+        "minecraft:poppy"
+      ]
     }
   }
 }

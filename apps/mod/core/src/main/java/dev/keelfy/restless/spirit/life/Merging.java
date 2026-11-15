@@ -48,9 +48,9 @@ public final class Merging {
         double days = Config.section("merging").num("days");
         return (own == null ? List.<HauntData.Haunting>of() : own)
                 .stream()
-                .filter(h -> !Echoes.is(data, h) && now - h.bornAt() >= days * Ticks.DAY)
-                .sorted(Comparator.comparingLong(HauntData.Haunting::bornAt))
-                .toList();
+                        .filter(h -> !Echoes.is(data, h) && now - h.bornAt() >= days * Ticks.DAY)
+                        .sorted(Comparator.comparingLong(HauntData.Haunting::bornAt))
+                        .toList();
     }
 
     /** The elder swallows the younger; @return the merged spirit, under the elder's id */
@@ -92,7 +92,13 @@ public final class Merging {
         data.putGrave(younger.uuid(), null);
         Location.forget(younger.uuid());
         player.level()
-                .playSound(null, player.blockPosition(), SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.HOSTILE, 0.8f, 0.6f);
+                .playSound(
+                        null,
+                        player.blockPosition(),
+                        SoundEvents.SCULK_SHRIEKER_SHRIEK,
+                        SoundSource.HOSTILE,
+                        0.8f,
+                        0.6f);
         player.sendSystemMessage(Component.translatable("message.restless.merged"), true);
         Journal.note(
                 player,

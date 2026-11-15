@@ -51,7 +51,15 @@ public final class Appease {
         data.change(spirit.uuid(), h -> h.angered(-Config.section("leanings").num("appease_anger")));
         data.putMarks(spirit.uuid(), data.marks(spirit.uuid()).appeasedOnce());
         level.sendParticles(
-                ParticleTypes.SOUL, altar.getX() + 0.5, altar.getY() + 1.2, altar.getZ() + 0.5, 10, 0.2, 0.2, 0.2, 0.01);
+                ParticleTypes.SOUL,
+                altar.getX() + 0.5,
+                altar.getY() + 1.2,
+                altar.getZ() + 0.5,
+                10,
+                0.2,
+                0.2,
+                0.2,
+                0.01);
         level.playSound(null, altar, SoundEvents.SOUL_ESCAPE.value(), SoundSource.BLOCKS, 1.0f, 0.8f);
         player.sendSystemMessage(Component.translatable("message.restless.appeased"), true);
         return true;
@@ -59,6 +67,7 @@ public final class Appease {
 
     /** How many of its desire the spirit asks for at its next appeasement. */
     public static int cost(HauntData data, HauntData.Haunting spirit) {
-        return Config.section("leanings").integer("appease_cost") + data.marks(spirit.uuid()).appeased();
+        return Config.section("leanings").integer("appease_cost")
+                + data.marks(spirit.uuid()).appeased();
     }
 }

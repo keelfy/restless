@@ -112,8 +112,9 @@ public final class Graves {
     }
 
     /**
-     * What this spirit wants back: for a spirit whose form comes from its death ({@link dev.keelfy.restless.state.Marks#deathForm}) one thing of
-     * the family its cause names ({@link Story#wants}), for an older one {@link #wanted(long)}.
+     * What this spirit wants back: for a spirit whose form comes from its death
+     * ({@link dev.keelfy.restless.state.Marks#deathForm}) one thing of the family its cause names
+     * ({@link Story#wants}), for an older one {@link #wanted(long)}.
      */
     @SuppressWarnings("java:S2245") // Seeded so the wish is reproducible; not security-sensitive.
     public static Item wanted(HauntData data, HauntData.Haunting spirit) {

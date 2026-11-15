@@ -40,7 +40,9 @@ final class MergeGameTests {
                 HauntData.Haunting merged = Merging.merge(player, data, ripe.get(0), ripe.get(1));
                 List<HauntData.Haunting> own = data.get(player.getUUID());
                 check(helper, own.size() == 2, "the younger is swallowed, the baby stays: " + own.size());
-                check(helper, merged.traits().containsAll(List.of("cold_touch", "blinder", "shadow_caster")),
+                check(
+                        helper,
+                        merged.traits().containsAll(List.of("cold_touch", "blinder", "shadow_caster")),
                         "the merged spirit carries the younger's habits");
                 check(helper, !merged.traits().contains("wants_bread"), "only habits pass over");
                 check(helper, Traits.weakness(Traits.of(merged.traits())) == Focus.IRON, "the elder's nature leads");
@@ -51,13 +53,20 @@ final class MergeGameTests {
                         data.graves().get(elder.uuid()) != null
                                 && data.graves().get(elder.uuid()).pos().equals(grave),
                         "the younger's grave passes to the merged spirit");
-                var saved = Marks.CODEC.encodeStart(NbtOps.INSTANCE, data.marks(elder.uuid())).getOrThrow();
+                var saved = Marks.CODEC
+                        .encodeStart(NbtOps.INSTANCE, data.marks(elder.uuid()))
+                        .getOrThrow();
                 Marks loaded = Marks.CODEC.parse(NbtOps.INSTANCE, saved).getOrThrow();
                 check(helper, loaded.merged().orElse(null) == Focus.GLOWSTONE, "the second nature survives a save");
-                var spirit = HauntData.Haunting.CODEC.encodeStart(NbtOps.INSTANCE, merged).getOrThrow();
+                var spirit = HauntData.Haunting.CODEC
+                        .encodeStart(NbtOps.INSTANCE, merged)
+                        .getOrThrow();
                 check(
                         helper,
-                        HauntData.Haunting.CODEC.parse(NbtOps.INSTANCE, spirit).getOrThrow().traits()
+                        HauntData.Haunting.CODEC
+                                .parse(NbtOps.INSTANCE, spirit)
+                                .getOrThrow()
+                                .traits()
                                 .equals(merged.traits()),
                         "the merged habits survive a save");
             } finally {

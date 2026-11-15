@@ -61,10 +61,9 @@ public final class Clues {
         if (speaks
                 && all.stream().anyMatch(Trait::lies)
                 && random.nextDouble() < Config.section("clues").num("lie_chance")) {
-            List<Trait> others =
-                    catalog.stream()
-                            .filter(t -> reads(clue, t) && !all.contains(t))
-                            .toList();
+            List<Trait> others = catalog.stream()
+                    .filter(t -> reads(clue, t) && !all.contains(t))
+                    .toList();
             if (!others.isEmpty()) {
                 return Optional.of(others.get(random.nextInt(others.size())));
             }

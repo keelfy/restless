@@ -10,8 +10,8 @@ import java.util.Optional;
  * many callers stay as they are.
  *
  * @param appeased how many times the spirit was appeased at an altar; each time costs one more of what it wants
- * @param deathForm born since the form of offering comes from the cause of death; an older spirit, without this
- *     mark, keeps the form of its type
+ * @param deathForm born since the form of offering comes from the cause of death; an older spirit, without this mark,
+ *     keeps the form of its type
  * @param merged the nature of the spirit it swallowed when two merged; its ritual asks for an offering of it too
  */
 public record Marks(int appeased, boolean deathForm, Optional<Focus> merged) {

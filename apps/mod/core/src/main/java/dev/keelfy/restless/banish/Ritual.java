@@ -107,8 +107,8 @@ public final class Ritual {
         if (hallowed) {
             player.sendSystemMessage(Component.translatable("message.restless.ritual_hallowed"), false);
         }
-        Plan plan =
-                plan(HauntData.get(level.getServer()), spirit.haunting(), held, censer).longerFury(hallowed ? config.integer("hallowed_fury_waves") : 0);
+        Plan plan = plan(HauntData.get(level.getServer()), spirit.haunting(), held, censer)
+                .longerFury(hallowed ? config.integer("hallowed_fury_waves") : 0);
         Circle circle = new Circle(player, level, altar, held, candles, spirit, censer, plan);
         circle.hallowed = hallowed;
         Scheduler.repeat(player, 1, 1, (p, n) -> circle.tick(n + 1));

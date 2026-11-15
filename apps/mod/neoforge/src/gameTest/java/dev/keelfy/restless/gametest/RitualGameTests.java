@@ -39,8 +39,8 @@ final class RitualGameTests {
     private static final List<String> IRON_TRAITS = List.of("door_slammer", "meddler", "light_eater");
 
     /** Two merged spirits: four iron habits and three glowstone ones. */
-    private static final List<String> MERGED = List.of(
-            "door_slammer", "meddler", "thrower", "knocker", "cold_touch", "blinder", "shadow_caster");
+    private static final List<String> MERGED =
+            List.of("door_slammer", "meddler", "thrower", "knocker", "cold_touch", "blinder", "shadow_caster");
 
     private static final UUID SPIRIT = UUID.fromString("00000000-0000-0000-0000-000000000042");
     private static final List<BlockPos> CANDLES = List.of(
@@ -56,11 +56,18 @@ final class RitualGameTests {
             ServerPlayer player = ready(helper);
             HauntData.Haunting spirit = spirit(player);
             // a poltergeist takes iron whole
-            check(helper, Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, Altar.Held.IRON) == 12, "the form it takes keeps the usual length");
-            check(helper, Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, Altar.Held.IRON_NUGGET) == 18, "another form must add six waves");
             check(
                     helper,
-                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit.evolve(), Altar.Held.IRON_CHAIN) == 22,
+                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, Altar.Held.IRON) == 12,
+                    "the form it takes keeps the usual length");
+            check(
+                    helper,
+                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, Altar.Held.IRON_NUGGET) == 18,
+                    "another form must add six waves");
+            check(
+                    helper,
+                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit.evolve(), Altar.Held.IRON_CHAIN)
+                            == 22,
                     "grown and off form must add both");
             check(
                     helper,

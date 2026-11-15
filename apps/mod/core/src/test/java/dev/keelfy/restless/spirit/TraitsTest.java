@@ -296,7 +296,8 @@ class TraitsTest {
         assertEquals(
                 java.util.Optional.of(Focus.GLOWSTONE),
                 Traits.foreign(Traits.of(List.of("door_slammer", "meddler", "light_eater"))));
-        assertTrue(Traits.foreign(Traits.of(List.of("door_slammer", "light_eater"))).isEmpty());
+        assertTrue(Traits.foreign(Traits.of(List.of("door_slammer", "light_eater")))
+                .isEmpty());
         assertTrue(Traits.foreign(Traits.of(List.of("door_slammer", "meddler"))).isEmpty());
         for (long seed = 0; seed < 300; seed++) {
             List<Trait> rolled = Traits.of(Traits.roll(seed));

@@ -123,8 +123,10 @@ public final class Interrogation {
     /** What the line asks, by the words of {@code interrogation.questions}; empty when it asks none of them. */
     public static Optional<Question> question(String line) {
         Config.Section questions = Config.section("interrogation").section("questions");
-        List<String> words = List.of(
-                line.toLowerCase(Locale.ROOT).replaceAll("[^\\p{L}\\p{N}]+", " ").trim().split(" "));
+        List<String> words = List.of(line.toLowerCase(Locale.ROOT)
+                .replaceAll("[^\\p{L}\\p{N}]+", " ")
+                .trim()
+                .split(" "));
         // "What do you want?" asks for the desire, so the habit's plain words are tried last.
         if (heard(questions.texts("desire"), words)) {
             return Optional.of(Question.DESIRE);
@@ -140,21 +142,24 @@ public final class Interrogation {
 
     /** Whether a word was said; a listed word ending in {@code *} matches every word it starts. */
     private static boolean heard(List<String> listed, List<String> words) {
-        return listed.stream().anyMatch(w -> words.stream()
-                .anyMatch(said -> w.endsWith("*") ? said.startsWith(w.substring(0, w.length() - 1)) : said.equals(w)));
+        return listed.stream()
+                .anyMatch(w -> words.stream()
+                        .anyMatch(said ->
+                                w.endsWith("*") ? said.startsWith(w.substring(0, w.length() - 1)) : said.equals(w)));
     }
 
     /** The true answer; empty when the spirit has nothing to tell of it. */
     public static Optional<Component> answer(
             ServerPlayer player, HauntData data, HauntData.Haunting spirit, BlockPos altar, Question question) {
         return switch (question) {
-            case HABIT -> Clues.reveal(
-                            Divination.known(player, spirit),
-                            Traits.all(),
-                            Clue.PLANCHETTE,
-                            new Random(player.getRandom().nextLong()),
-                            true)
-                    .map(Divination::hint);
+            case HABIT ->
+                Clues.reveal(
+                                Divination.known(player, spirit),
+                                Traits.all(),
+                                Clue.PLANCHETTE,
+                                new Random(player.getRandom().nextLong()),
+                                true)
+                        .map(Divination::hint);
             case DESIRE -> Traits.desire(Traits.of(spirit.traits())).map(Divination::hint);
             case GRAVE -> Graves.of(data, spirit.uuid()).map(grave -> direction(altar, grave));
         };
@@ -166,7 +171,6 @@ public final class Interrogation {
         int dz = to.getZ() - from.getZ();
         String quarter = Math.abs(dx) > Math.abs(dz) ? (dx > 0 ? "east" : "west") : (dz > 0 ? "south" : "north");
         return Component.translatable(
-                "message.restless.interrogation_grave",
-                Component.translatable("direction.restless." + quarter));
+                "message.restless.interrogation_grave", Component.translatable("direction.restless." + quarter));
     }
 }

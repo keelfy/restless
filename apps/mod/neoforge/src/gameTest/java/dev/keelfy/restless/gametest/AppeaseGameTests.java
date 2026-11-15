@@ -41,7 +41,10 @@ final class AppeaseGameTests {
             ItemStack left = offer(helper, player, new ItemStack(Items.BREAD, 3));
             check(helper, left.getCount() == 1, "the second time takes two, left " + left.getCount());
             check(helper, Math.abs(anger(player) - 0.2) < 1e-9, "anger falls again, got " + anger(player));
-            check(helper, HauntData.get(helper.getLevel().getServer()).find(SPIRIT).isPresent(), "the spirit stays");
+            check(
+                    helper,
+                    HauntData.get(helper.getLevel().getServer()).find(SPIRIT).isPresent(),
+                    "the spirit stays");
             player.discard();
             helper.succeed();
         });
@@ -87,7 +90,9 @@ final class AppeaseGameTests {
         BlockPos altar = helper.absolutePos(AltarGameTests.CENTER);
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
         BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(altar).add(0, 0.5, 0), Direction.UP, altar, false);
-        helper.getLevel().getBlockState(altar).useItemOn(stack, helper.getLevel(), player, InteractionHand.MAIN_HAND, hit);
+        helper.getLevel()
+                .getBlockState(altar)
+                .useItemOn(stack, helper.getLevel(), player, InteractionHand.MAIN_HAND, hit);
         return player.getItemInHand(InteractionHand.MAIN_HAND);
     }
 
@@ -106,7 +111,10 @@ final class AppeaseGameTests {
     }
 
     private static double anger(ServerPlayer player) {
-        return HauntData.get(player.level().getServer()).find(SPIRIT).orElseThrow().anger();
+        return HauntData.get(player.level().getServer())
+                .find(SPIRIT)
+                .orElseThrow()
+                .anger();
     }
 
     private static void check(GameTestHelper helper, boolean condition, String message) {

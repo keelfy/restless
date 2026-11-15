@@ -62,12 +62,14 @@ final class ToolGameTests {
     }
 
     private static List<String> storyWords(HauntData.Haunting spirit) {
-        return Config.section("story").section("words").texts(Story.of(spirit.seed()).cause());
+        return Config.section("story")
+                .section("words")
+                .texts(Story.of(spirit.seed()).cause());
     }
 
     private static HauntData.Haunting spirit(ServerPlayer player, List<String> traits) {
-        HauntData.Haunting born = new HauntData.Haunting(
-                UUID.randomUUID(), "shade", 7L, traits, 0L, 0.0, Long.MAX_VALUE, false, 0, 0L);
+        HauntData.Haunting born =
+                new HauntData.Haunting(UUID.randomUUID(), "shade", 7L, traits, 0L, 0.0, Long.MAX_VALUE, false, 0, 0L);
         HauntData.get(player.level().getServer()).put(player.getUUID(), new ArrayList<>(List.of(born)));
         return born;
     }

@@ -78,7 +78,8 @@ final class InterrogationGameTests {
                     "the desire is told");
             check(
                     helper,
-                    Interrogation.answer(player, data, spirit, altar, Interrogation.Question.GRAVE).isEmpty(),
+                    Interrogation.answer(player, data, spirit, altar, Interrogation.Question.GRAVE)
+                            .isEmpty(),
                     "no grave yet, nothing to tell");
             data.putGrave(SPIRIT, new HauntData.Grave(altar.offset(2, 0, -60), true));
             Component grave = Interrogation.answer(player, data, spirit, altar, Interrogation.Question.GRAVE)
