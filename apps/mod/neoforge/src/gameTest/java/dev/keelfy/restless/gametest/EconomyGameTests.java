@@ -205,7 +205,7 @@ final class EconomyGameTests {
             data.putTerritorial(List.of());
             BlockPos anchor = helper.absolutePos(new BlockPos(1, 1, 1));
             BlockPos bed = anchor.offset(40, 0, 0);
-            HauntEventGameTests.forceChunks(helper, anchor.offset(10, 0, 0), 5, true);
+            HauntEventGameTests.forceChunks(helper, anchor.offset(10, 0, 0), 5);
             BlockPos floor = anchor.below();
             for (int x = -20; x <= 45; x++) {
                 for (int z = -12; z <= 12; z++) {
@@ -244,7 +244,6 @@ final class EconomyGameTests {
                     helper,
                     level.getBlockState(floor.offset(20, 0, 0)).is(Blocks.GRASS_BLOCK),
                     "healed ground must be grass again");
-            HauntEventGameTests.forceChunks(helper, anchor.offset(10, 0, 0), 5, false);
             discard(helper, player);
             helper.succeed();
         });

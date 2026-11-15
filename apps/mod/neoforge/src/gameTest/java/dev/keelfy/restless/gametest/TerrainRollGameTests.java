@@ -31,6 +31,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
  * among village houses.
  */
 final class TerrainRollGameTests {
+    static final String TIMED = "roll_is_cheap_on_generated_terrain";
     private static final int REACH = 40;
     private static final long SEED = 1234L;
     private static final int WARMUP = 30;
@@ -49,7 +50,7 @@ final class TerrainRollGameTests {
     private TerrainRollGameTests() {}
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
-        tests.put("roll_is_cheap_on_generated_terrain", helper -> {
+        tests.put(TIMED, helper -> {
             ServerLevel level = helper.getLevel();
             BlockPos centre = helper.absolutePos(BlockPos.ZERO).offset(6000, 0, 6000);
             int[] surface = generate(level, centre);
@@ -85,7 +86,7 @@ final class TerrainRollGameTests {
             player.discard();
             helper.succeed();
         });
-        HauntEventGameTests.TIMEOUT.put("roll_is_cheap_on_generated_terrain", 400);
+        HauntEventGameTests.TIMEOUT.put(TIMED, 400);
     }
 
     /** Median milliseconds of one roll, after a warm-up. */

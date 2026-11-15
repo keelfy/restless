@@ -122,7 +122,7 @@ final class SignatureBatchTests {
 
     private static void ring(GameTestHelper helper, int from, int to) {
         BlockPos centre = helper.absolutePos(FEET);
-        HauntEventGameTests.forceChunks(helper, centre, to + 4, true);
+        HauntEventGameTests.forceChunks(helper, centre, to + 4);
         for (int x = -to - 2; x <= to + 2; x++) {
             for (int z = -to - 2; z <= to + 2; z++) {
                 double ring = Math.hypot(x, z);
@@ -131,10 +131,6 @@ final class SignatureBatchTests {
                 }
             }
         }
-    }
-
-    private static void unforce(GameTestHelper helper, int reach) {
-        HauntEventGameTests.forceChunks(helper, helper.absolutePos(FEET), reach + 4, false);
     }
 
     private static boolean written(ItemStack stack, String title) {
@@ -273,7 +269,9 @@ final class SignatureBatchTests {
                         || pos.getX() == 20
                         || pos.getZ() == -2
                         || pos.getZ() == 10;
-                helper.setBlock(pos, shell ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState());
+                if (shell) {
+                    helper.setBlock(pos, Blocks.STONE);
+                }
             }
             for (int z = 3; z <= 5; z++) {
                 helper.setBlock(new BlockPos(-6, 1, z), Blocks.TORCH);
@@ -334,20 +332,33 @@ final class SignatureBatchTests {
             helper.runAfterDelay(40, () -> signature(helper, "wraith_steps", Spirits.WRAITH, player -> {}, () -> {}));
         });
         put(tests, "signature_wraith_edge", 120, 0, helper -> {
-            SignatureGameTests.darkRoom(helper);
+            // A dark hall wide enough that every spot 4 to 6 blocks from the player is on its floor: the event picks
+            // its
+            // spot at random, and a hall any smaller makes it miss now and then. Inside, the padding is cleared to air.
+            HauntEventGameTests.forceChunks(helper, helper.absolutePos(FEET), 12);
+            for (BlockPos pos : BlockPos.betweenClosed(-3, 0, -3, 12, 4, 12)) {
+                boolean shell = pos.getY() == 0
+                        || pos.getY() == 4
+                        || pos.getX() == -3
+                        || pos.getX() == 12
+                        || pos.getZ() == -3
+                        || pos.getZ() == 12;
+                if (shell) {
+                    helper.setBlock(pos, Blocks.STONE);
+                }
+            }
             // The player stands in a shut stone cell with a torch: lit, and shut off from the dark around it.
             for (BlockPos pos : BlockPos.betweenClosed(3, 1, 3, 5, 3, 5)) {
                 boolean inside = pos.getX() == 4 && pos.getZ() == 4 && pos.getY() < 3;
                 helper.setBlock(pos, inside ? Blocks.AIR.defaultBlockState() : Blocks.STONE.defaultBlockState());
             }
             helper.setBlock(new BlockPos(4, 2, 4), Blocks.TORCH);
-            helper.runAfterDelay(
-                    40,
-                    () -> signature(helper, "wraith_edge", Spirits.WRAITH, player -> {}, () -> {
-                        List<Mannequin> figures = around(helper, Mannequin.class, 12);
-                        check(helper, figures.size() == 1, "wraith_edge must leave one figure");
-                        figures.forEach(Entity::discard);
-                    }));
+            HauntEventGameTests.settleLight(helper, helper.absolutePos(FEET), 12);
+            signature(helper, "wraith_edge", Spirits.WRAITH, player -> {}, () -> {
+                List<Mannequin> figures = around(helper, Mannequin.class, 12);
+                check(helper, figures.size() == 1, "wraith_edge must leave one figure");
+                figures.forEach(Entity::discard);
+            });
         });
     }
 
@@ -384,7 +395,7 @@ final class SignatureBatchTests {
             for (BlockPos pos : BlockPos.betweenClosed(bed.offset(-3, -1, -3), bed.offset(3, -1, 3))) {
                 helper.getLevel().setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
             }
-            HauntEventGameTests.forceChunks(helper, bed, 8, true);
+            HauntEventGameTests.forceChunks(helper, bed, 8);
             helper.getLevel().setBlock(bed, Blocks.BED.red().defaultBlockState(), 2);
             signature(
                     helper,
@@ -401,7 +412,6 @@ final class SignatureBatchTests {
                                 helper.getLevel().getEntitiesOfClass(Mannequin.class, new AABB(bed).inflate(6));
                         check(helper, figures.size() == 1, "phantom_home must leave one figure by the bed");
                         figures.forEach(Entity::discard);
-                        HauntEventGameTests.forceChunks(helper, bed, 8, false);
                     });
         });
         put(
@@ -414,7 +424,6 @@ final class SignatureBatchTests {
                             List<Mannequin> figures = around(helper, Mannequin.class, 40);
                             check(helper, figures.size() == 1, "lost_one_wanderer must leave one figure");
                             figures.forEach(Entity::discard);
-                            unforce(helper, 30);
                         }));
         put(tests, "signature_lost_one_death_path", 150, 0, helper -> {
             for (int x = 4; x <= 20; x++) {
@@ -441,12 +450,15 @@ final class SignatureBatchTests {
                     });
         });
         put(tests, "signature_nix_returns", 80, 0, helper -> {
-            for (int x = 6; x <= 9; x++) {
+            // A still pool on the floor, walled in: the scene lays the floor again, and open water would flow.
+            for (int x = 5; x <= 9; x++) {
                 for (int z = 0; z <= 9; z++) {
-                    helper.setBlock(new BlockPos(x, 0, z), Blocks.WATER);
+                    boolean wall = x == 5 || x == 9 || z == 0 || z == 9;
+                    helper.setBlock(new BlockPos(x, 0, z), Blocks.STONE);
+                    helper.setBlock(new BlockPos(x, 1, z), wall ? Blocks.STONE : Blocks.WATER);
                 }
             }
-            ItemEntity stick = helper.spawnItem(Items.STICK, 8.5F, 0.5F, 4.5F);
+            ItemEntity stick = helper.spawnItem(Items.STICK, 7.5F, 1.5F, 4.5F);
             double start = stick.getX();
             helper.runAfterDelay(
                     5,
@@ -553,6 +565,7 @@ final class SignatureBatchTests {
                     player -> {
                         ring(helper, 8, 16);
                         kill(helper, player, 3);
+                        inLevel(helper, player);
                     },
                     () -> {
                         noon(helper);
@@ -564,16 +577,31 @@ final class SignatureBatchTests {
                                                 && z.getCustomName().getString().endsWith(" 3")),
                                 "revenant_tally must send a zombie named with the count");
                         zombies.forEach(Entity::discard);
-                        unforce(helper, 16);
                     });
         });
         tests.put("signature_revenant_rises", helper -> {
-            signature(helper, "revenant_rises", Spirits.REVENANT, player -> kill(helper, player, 1), () -> {
-                List<Skeleton> found = around(helper, Skeleton.class, 12);
-                check(helper, !found.isEmpty(), "revenant_rises must raise a skeleton where the player killed");
-                found.forEach(Entity::discard);
-            });
+            signature(
+                    helper,
+                    "revenant_rises",
+                    Spirits.REVENANT,
+                    player -> {
+                        kill(helper, player, 1);
+                        inLevel(helper, player);
+                    },
+                    () -> {
+                        List<Skeleton> found = around(helper, Skeleton.class, 12);
+                        check(helper, !found.isEmpty(), "revenant_rises must raise a skeleton where the player killed");
+                        found.forEach(Entity::discard);
+                    });
         });
+    }
+
+    /**
+     * Puts the player in the level, as a haunted player is. A monster spawned for a player outside it despawns on its
+     * first tick if any other test's player in the level is more than 128 blocks away.
+     */
+    private static void inLevel(GameTestHelper helper, ServerPlayer player) {
+        helper.getLevel().addNewPlayer(player);
     }
 
     /** The player has killed this many cows, the last one beside them. */
@@ -716,7 +744,6 @@ final class SignatureBatchTests {
             }
             check(helper, diamonds == 1 + 2 + 3 + 4 + 5 - 0 || diamonds > 0, "the barrel must hold what was taken");
             player.discard();
-            unforce(helper, 30);
             helper.succeed();
         });
         tests.put(
