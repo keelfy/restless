@@ -8,5 +8,5 @@ export default {
   sanity: 'Рассудок',
   spirits: 'Духи',
   items: 'Предметы',
-  events: 'Ивенты',
+  events: 'События',
 }

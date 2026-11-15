@@ -8,264 +8,264 @@ title: Items
 
 ## `swap_slots`
 
-Two inventory slots swap
+Two inventory slots swap places.
 
-Runs when: Inventory not empty
+Runs when: the inventory is not empty.
 
 ## `hotbar_shift`
 
-Selected hotbar slot changes
+The selected hotbar slot changes.
 
-Runs when: Always
+Runs when: at any time.
 
 ## `book_page`
 
-One creepy page is appended (nothing is erased)
+One creepy page is appended to the book, and nothing is erased.
 
-Runs when: A book and quill or a written book
+Runs when: the player has a book and quill or a written book.
 
 ## `shuffle_chest`
 
-Its contents are shuffled
+The contents of the chest are shuffled.
 
-Runs when: A non-empty chest within 10
+Runs when: a non-empty chest is within 10 blocks.
 
 ## `wear`
 
 **Harmful.**
-Loses 10% durability, never breaks
+The item loses 10% durability but never breaks.
 
-Runs when: A damageable tool with durability to spare
+Runs when: the player has a damageable tool with durability to spare.
 
 ## `rot`
 
 **Harmful.**
-One food stack becomes rotten flesh
+One food stack becomes rotten flesh.
 
-Runs when: Food in the inventory
+Runs when: the inventory holds food.
 
 ## `tool_look`
 
-Drawn as another such tool for 5 min (it still works the same); under hardcore or real swaps it becomes that tool
+The tool is drawn as another tool of the same kind for 5 min, though it still works the same. Under hardcore or real swaps it actually becomes that tool.
 
-Runs when: A wooden, stone, iron or diamond tool in the inventory
+Runs when: the inventory holds a wooden, stone, iron or diamond tool.
 
 ## `armor_off`
 
 **Harmful.**
-1–4 random worn pieces come off (a random set, so sometimes all of it). Each goes to the inventory, or to the floor at the player's feet if it is full; nothing is lost
+1–4 random worn pieces come off, from a random set, so sometimes all of the armor. Each piece goes to the inventory, or to the floor at the player's feet if the inventory is full, and nothing is lost.
 
-Runs when: Any armor worn
+Runs when: the player wears any armor.
 
 ## `vanishing_item`
 
 **Harmful.**
-One stack moves to the other chest
+One stack moves to the other chest.
 
-Runs when: Two chests (not halves of one) within 10, one non-empty, one with space
+Runs when: two chests (not the halves of one) are within 10 blocks, and one of them is non-empty while the other has space.
 
 ## `false_compass`
 
 **Harmful.**
-Points at a spot 30–60 blocks away (stays that way)
+The compass points at a spot 30–60 blocks away, and it stays that way.
 
-Runs when: A plain compass in the inventory
+Runs when: the inventory holds a plain compass.
 
 ## `map_marker`
 
-A red X appears on it somewhere in its area. Permanent: the marker is stored in the map item
+A red X appears on the map somewhere in its area. The marker is permanent, because it is stored in the map item.
 
-Runs when: A filled map in the inventory without a marker of this event
+Runs when: the inventory holds a filled map that has no marker from this event.
 
 ## `elytra_flicker`
 
-Worn elytra look almost broken for 2 s (only shown to the player); under hardcore they are worn down for real
+Worn elytra look almost broken for 2 s, and only the player sees it. Under hardcore they are worn down for real.
 
-Runs when: Elytra worn with durability to spare, 12 or more blocks above the ground
+Runs when: the player wears elytra with durability to spare, 12 or more blocks above the ground.
 
 ## `stew_bowl`
 
 **Harmful.**
-One stew becomes an empty bowl
+One stew becomes an empty bowl.
 
-Runs when: Mushroom, beetroot, rabbit or suspicious stew in the inventory
+Runs when: the inventory holds mushroom, beetroot, rabbit or suspicious stew.
 
 ## `bucket_pufferfish`
 
-A water bucket looks like a pufferfish bucket for 5 s (only shown to the player); under hardcore it is swapped for real
+A water bucket looks like a pufferfish bucket for 5 s, and only the player sees it. Under hardcore it is swapped for real.
 
-Runs when: A water bucket in the inventory
+Runs when: the inventory holds a water bucket.
 
 ## `torch_burn`
 
 **Harmful.**
-Half of a stack of torches is gone, at least one is left
+Half of a stack of torches is gone, but at least one is left.
 
-Runs when: A stack of 2 or more torches or soul torches
+Runs when: the inventory holds a stack of 2 or more torches or soul torches.
 
 ## `bundle_bone`
 
-A bone is added to a bundle's contents (nothing is taken out)
+A bone is added to the bundle's contents, and nothing is taken out.
 
-Runs when: A bundle with room for a bone
+Runs when: the player has a bundle with room for a bone.
 
 ## `shield_ghost`
 
-The sound of a shield blocking a hit, with nothing there
+The sound of a shield blocking a hit is heard, though nothing is there.
 
-Runs when: A shield in either hand
+Runs when: a shield is in either hand.
 
 ## `item_throwback`
 
-A dropped item is thrown at the player, slowly enough to dodge
+A dropped item is thrown at the player, slowly enough to be dodged.
 
-Runs when: A dropped item 3–12 blocks away
+Runs when: a dropped item lies 3–12 blocks away.
 
 ## `phantom_horn`
 
-The goat horn's own tune sounds at the player
+The goat horn's own tune sounds at the player.
 
-Runs when: A goat horn with a tune in the inventory
+Runs when: the inventory holds a goat horn with a tune.
 
 ## `armor_dye`
 
-A piece of leather armor is dyed black, and its old colour returns after 5 min; under hardcore it stays black
+A piece of leather armor is dyed black, and its old colour returns after 5 min. Under hardcore it stays black.
 
-Runs when: A leather armor piece, worn or carried, that is not black
+Runs when: the player wears or carries a piece of leather armor that is not black.
 
 ## `item_glint`
 
-An item glints as if enchanted for 10 s
+An item glints as if it were enchanted for 10 s.
 
-Runs when: An item that does not glint
+Runs when: the player has an item that does not already glint.
 
 ## `item_lore`
 
-A lore line such as "it remembers you" is added and removed after 5 min; under hardcore it stays
+A lore line such as "it remembers you" is added to the item and removed after 5 min. Under hardcore it stays.
 
-Runs when: Any item in the inventory or worn
+Runs when: the player has any item in the inventory or worn.
 
 ## `tool_mirage`
 
 **Harmful.**
-A tool shows full durability, then almost broken, then the truth (only shown to the player); under hardcore it is worn down for real
+A tool shows full durability, then almost broken, and then the truth, and only the player sees it. Under hardcore it is worn down for real.
 
-Runs when: A damageable tool with durability to spare
+Runs when: the player has a damageable tool with durability to spare.
 
 ## `lodestone_lure`
 
-A lodestone compass points at the anchor of the spirit nearby for 5 min; under hardcore it stays that way
+A lodestone compass points at the anchor of the nearby spirit for 5 min. Under hardcore it stays that way.
 
-Runs when: A compass with a lodestone target in the inventory, with a territorial spirit's reach around the player
+Runs when: the inventory holds a compass with a lodestone target, and the player is within the reach of a territorial spirit.
 
 ## `ghost_author`
 
-A written book signed with the player's own name turns up, with one creepy page
+A written book signed with the player's own name turns up, with one creepy page.
 
-Runs when: A free inventory slot and no book signed by the player yet
+Runs when: the inventory has a free slot and holds no book signed by the player yet.
 
 ## `potion_swap`
 
-A potion becomes another one for 5 min; under hardcore it stays
+A potion becomes another one for 5 min. Under hardcore it stays that way.
 
-Runs when: A potion, splash or lingering potion with a base potion and no custom effects
+Runs when: the player has a potion, splash potion or lingering potion that has a base potion and no custom effects.
 
 ## `vanishing_arrows`
 
 **Harmful.**
-Up to 6 arrows leave the inventory one by one and come back after 3 min; under hardcore they stay gone
+Up to 6 arrows leave the inventory one by one and come back after 3 min. Under hardcore they stay gone.
 
-Runs when: An arrow in the inventory
+Runs when: the inventory holds an arrow.
 
 ## `crossbow_misfire`
 
 **Harmful.**
-A loaded crossbow fires straight up with reduced power
+A loaded crossbow fires straight up with reduced power.
 
-Runs when: A loaded crossbow in either hand
+Runs when: a loaded crossbow is in either hand.
 
 ## `map_elsewhere`
 
-The map in the hand shows the area around the anchor of the spirit nearby for 5 min; under hardcore it stays
+The map in the hand shows the area around the anchor of the nearby spirit for 5 min. Under hardcore it stays that way.
 
-Runs when: A map in either hand, with a territorial spirit's reach around the player
+Runs when: a map is in either hand, and the player is within the reach of a territorial spirit.
 
 ## `shy_item`
 
-One dropped item slides away from the player
+One dropped item slides away from the player.
 
-Runs when: A dropped item within 5
+Runs when: a dropped item lies within 5 blocks.
 
 ## `orb_scatter`
 
-Experience orbs fly away from the player
+Experience orbs fly away from the player.
 
-Runs when: An experience orb within 8
+Runs when: an experience orb is within 8 blocks.
 
 ## `hand_drop`
 
-The item in the main hand falls out of it, as if the player had dropped it
+The item in the main hand falls out of it, as if the player had dropped it.
 
-Runs when: Something in the main hand
+Runs when: the main hand holds something.
 
 ## `inventory_drop`
 
-A stack from the inventory, not the one in hand, falls out of it
+A stack from the inventory, other than the one in hand, falls out of it.
 
-Runs when: Something in the inventory besides the held item
+Runs when: the inventory holds something besides the held item.
 
 ## `line_pulls`
 
 **Harmful.**
-A shove toward the bobber, with a splash there
+The player is shoved toward the bobber, and a splash appears there.
 
-Runs when: The player's bobber floats in water
+Runs when: the player's bobber floats in water.
 
 ## `odd_catch`
 
-A player head in their own likeness, a bone, a skeleton skull or rotten flesh is thrown out of the water at the player, as a real catch is. It vanishes after 1 min if not picked up
+A player head in the player's own likeness, a bone, a skeleton skull or rotten flesh is thrown out of the water at the player, as a real catch is. If it is not picked up, it vanishes after 1 min.
 
-Runs when: The player's bobber floats in water
+Runs when: the player's bobber floats in water.
 
 ## `allay_thief`
 
-Only this player's client is told of an allay by their side holding a copy of one of their stacks, which flies 45 blocks straight away and is gone. Nothing is taken and nothing is on the server
+Only this player's client is told of an allay at the player's side, holding a copy of one of their stacks. It flies 45 blocks straight away and is gone. Nothing is taken, and nothing exists on the server.
 
-Runs when: The player carries anything
+Runs when: the player carries anything.
 
 ## `holy_water_cloudy`
 
 **Harmful.**
-Every holy water stack gets a "cloudy" mark and a lore line; the altar refuses it until the next dawn, then the mark is removed. Stays
+Every holy water stack gets a "cloudy" mark and a lore line. The altar refuses such water until the next dawn, when the mark is removed, and nothing else undoes the change.
 
-Runs when: Clear holy water in the inventory
+Runs when: the inventory holds clear holy water.
 
 ## `mirror_names`
 
-A soft chime marks the mirror. The next time a mirror is placed on the altar, the name of a spirit around the player is shown in chat, once. The mark lapses after 30 min
+A soft chime marks the mirror. The next time a mirror is placed on the altar, the name of a spirit around the player is shown in chat, once. The mark lapses after 30 min.
 
-Runs when: A mirror in the inventory, a spirit that senses the player, none already marked
+Runs when: the inventory holds a mirror, a spirit senses the player, and no mirror is marked already.
 
 ## `pearl_strays`
 
-For 5 min the first pearl the player throws is moved above standing room 8 to 24 blocks away and dropped, so the player lands there (with the usual 5 damage)
+For 5 min, the first pearl the player throws is moved above standing room 8 to 24 blocks away and dropped there, so the player lands in that spot (with the usual 5 damage).
 
-Runs when: An ender pearl in the inventory
+Runs when: the inventory holds an ender pearl.
 
 ## `whispering_item`
 
-The item in the player's hand gains the Curse of the Restless and whispers now and then while held; the curse is lifted after 3 min (stays under hardcore)
+The item in the player's hand gains the Curse of the Restless and whispers now and then while it is held. The curse is lifted after 3 min (under hardcore it stays).
 
-Runs when: The player holds an item without the curse
+Runs when: the player holds an item without the curse.
 
 ## `hollow_trim`
 
-A worn piece of armor shows a hollow trim for 2 min (stays under hardcore)
+A worn piece of armor shows a hollow trim for 2 min (under hardcore it stays).
 
-Runs when: The player wears trimmable armor with no trim
+Runs when: the player wears trimmable armor that has no trim.
 
 ## `photo_figure`
 
-A pale hollow-eyed figure 34–60 px tall is painted into one developed photo's picture; the change is kept
+A pale, hollow-eyed figure 34–60 px tall is painted into the picture of one developed photo, and the change is kept.
 
-Runs when: A developed photo in the inventory
+Runs when: the inventory holds a developed photo.

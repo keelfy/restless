@@ -4,7 +4,7 @@ title: Духи
 
 # Духи
 
-За каждым игроком, как я убедился, ходят личные духи. Тип духа определяет, каким ивентам он отдаёт предпочтение, так что по ивентам можно понять, кто рядом. Кроме личных, есть территориальные духи, привязанные к месту.
+За каждым игроком, как я убедился, ходят личные духи. Тип духа определяет, каким событиям он отдаёт предпочтение, так что по событиям можно понять, кто рядом. Кроме личных, есть территориальные духи, привязанные к месту.
 
 Как возраст, злость и сила заставляют духа действовать, описано в разделе [Как это устроено](/ru/how-it-works).
 
@@ -22,7 +22,7 @@ title: Духи
 - Избегает: двери ×0.3, предметы ×0.5
 - Активность: 0.8
 - Природа: чаще всего Тьма (60%), каждая из трёх других 13%
-- Знаковые события: `shade_gathered`, `shade_glance`, `shade_room`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `shade_gathered`, `shade_glance`, `shade_room`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Фантом [#phantom]
 
@@ -32,7 +32,7 @@ title: Духи
 - Избегает: двери ×0.5, свет ×0.5, недуги ×0.5, предметы ×0.5, нападения ×0.3
 - Активность: 1.0
 - Природа: чаще всего Ложь (60%), каждая из трёх других 13%
-- Знаковые события: `phantom_self_join`, `phantom_rerun`, `phantom_home`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `phantom_self_join`, `phantom_rerun`, `phantom_home`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Мимик [#mimic]
 
@@ -42,7 +42,7 @@ title: Духи
 - Избегает: свет ×0.5, двери ×0.5, нападения ×0.5
 - Активность: 1.0
 - Природа: чаще всего Ложь (60%), каждая из трёх других 13%
-- Знаковые события: `mimic_voice`, `mimic_parrot`, `mimic_chest`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `mimic_voice`, `mimic_parrot`, `mimic_chest`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Призрак [#wraith]
 
@@ -52,7 +52,7 @@ title: Духи
 - Избегает: двери ×0.5, блоки ×0.5, предметы ×0.3
 - Активность: 2.0 в темноте (`when: dark`), 1 в остальных случаях
 - Природа: чаще всего Тьма (60%), каждая из трёх других 13%
-- Знаковые события: `wraith_taken`, `wraith_steps`, `wraith_edge`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `wraith_taken`, `wraith_steps`, `wraith_edge`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Мара [#mara]
 
@@ -62,7 +62,7 @@ title: Духи
 - Избегает: двери ×0.5, предметы ×0.3, блоки ×0.3
 - Активность: 1.8 ночью (`when: night`), 1 днём
 - Природа: чаще всего Ложь (60%), каждая из трёх других 13%
-- Знаковые события: `mara_dream`, `mara_stolen_rest`, `mara_weight`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `mara_dream`, `mara_stolen_rest`, `mara_weight`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Банши [#banshee]
 
@@ -72,7 +72,7 @@ title: Духи
 - Избегает: двери ×0.5, предметы ×0.3, блоки ×0.3, нападения ×0.3
 - Активность: 0.9
 - Природа: чаще всего Злоба (60%), каждая из трёх других 13%
-- Знаковые события: `banshee_letter`, `banshee_gift`, `banshee_serenade`, `banshee_jealous`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `banshee_letter`, `banshee_gift`, `banshee_serenade`, `banshee_jealous`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Ревенант [#revenant]
 
@@ -82,7 +82,7 @@ title: Духи
 - Избегает: свет ×0.5, двери ×0.3, предметы ×0.3
 - Активность: 1.0
 - Природа: чаще всего Злоба (60%), каждая из трёх других 13%
-- Знаковые события: `revenant_ledger`, `revenant_tally`, `revenant_rises`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `revenant_ledger`, `revenant_tally`, `revenant_rises`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Потерянный [#lost-one]
 
@@ -92,7 +92,7 @@ title: Духи
 - Избегает: блоки ×0.5, предметы ×0.5, нападения ×0.2
 - Активность: 0.9
 - Природа: чаще всего Тьма (60%), каждая из трёх других 13%
-- Знаковые события: `lost_one_sign`, `lost_one_wanderer`, `lost_one_death_path`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `lost_one_sign`, `lost_one_wanderer`, `lost_one_death_path`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Боггарт [#boggart]
 
@@ -102,7 +102,7 @@ title: Духи
 - Избегает: недуги ×0.5, нападения ×0.3, двери ×0.3, предметы ×0.3
 - Активность: 1.1
 - Природа: чаще всего Тьма (60%), каждая из трёх других 13%
-- Знаковые события: `boggart_spiders`, `boggart_crawl`, `boggart_silverfish`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `boggart_spiders`, `boggart_crawl`, `boggart_silverfish`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ## Территориальные [#territorial]
 
@@ -116,7 +116,7 @@ title: Духи
 - Избегает: недуги ×0.5, нападения ×0.5, звуки ×0.5, присутствие ×0.5
 - Активность: 1.3
 - Природа: чаще всего Вещи (60%), каждая из трёх других 13%
-- Знаковые события: `poltergeist_toss`, `poltergeist_play`, `poltergeist_tantrum`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `poltergeist_toss`, `poltergeist_play`, `poltergeist_tantrum`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Никс [#nix]
 
@@ -126,7 +126,7 @@ title: Духи
 - Избегает: нападения ×0.5, звуки ×0.5, блоки ×0.3, присутствие ×0.3
 - Активность: 1.0
 - Природа: чаще всего Злоба (60%), каждая из трёх других 13%
-- Знаковые события: `nix_catch`, `nix_call`, `nix_returns`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `nix_catch`, `nix_call`, `nix_returns`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Домовой [#domovoi]
 
@@ -136,7 +136,7 @@ title: Духи
 - Избегает: мобы ×0.5, недуги ×0.3, нападения ×0.2
 - Активность: 0.7
 - Природа: чаще всего Вещи (60%), каждая из трёх других 13%
-- Знаковые события: `domovoi_supper`, `domovoi_hearth`, `domovoi_tidy`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `domovoi_supper`, `domovoi_hearth`, `domovoi_tidy`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Скопидом [#hoarder]
 
@@ -146,7 +146,7 @@ title: Духи
 - Избегает: свет ×0.5, присутствие ×0.5, нападения ×0.3
 - Активность: 1.2
 - Природа: чаще всего Вещи (60%), каждая из трёх других 13%
-- Знаковые события: `hoarder_payment`, `hoarder_shiny`, `hoarder_nest`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `hoarder_payment`, `hoarder_shiny`, `hoarder_nest`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Демон [#demon]
 
@@ -156,7 +156,7 @@ title: Духи
 - Избегает: двери ×0.5, предметы ×0.5
 - Активность: 1.1
 - Природа: чаще всего Злоба (60%), каждая из трёх других 13%
-- Знаковые события: `demon_offer`, `demon_trail`, `demon_contract`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `demon_offer`, `demon_trail`, `demon_contract`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ### Трикстер [#trickster]
 
@@ -166,7 +166,7 @@ title: Духи
 - Избегает: нападения ×0.2
 - Активность: 1.2
 - Природа: чаще всего Ложь (60%), каждая из трёх других 13%
-- Знаковые события: `trickster_gift`, `trickster_dig`, `trickster_dud`, описаны в [Signatures](/ru/events/signatures).
+- Знаковые события: `trickster_gift`, `trickster_dig`, `trickster_dud`, описаны в [«Знаковые»](/ru/events/signatures).
 
 ## Как встретить тип [#meeting-a-type]
 
