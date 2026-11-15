@@ -25,22 +25,25 @@ final class Bargain {
      * What the spirit asks for: the first thing it desires, or for a spirit with no desire the thing its grave says it
      * wants back, the same for its whole life.
      */
-    static Item gift(HauntData.Haunting spirit) {
-        return gifts(spirit).getFirst();
+    static Item gift(Circle circle) {
+        return gifts(circle).getFirst();
     }
 
     /** Every gift the spirit takes: all it desires, or its grave's wanted thing. */
-    static List<Item> gifts(HauntData.Haunting spirit) {
+    static List<Item> gifts(Circle circle) {
+        HauntData.Haunting spirit = circle.spirit.haunting();
         List<Item> desired = Traits.desire(Traits.of(spirit.traits())).stream()
                 .flatMap(d -> d.things().stream())
                 .map(id -> BuiltInRegistries.ITEM.getOptional(Identifier.parse(id)))
                 .flatMap(java.util.Optional::stream)
                 .toList();
-        return desired.isEmpty() ? List.of(Graves.wanted(spirit.seed())) : desired;
+        return desired.isEmpty()
+                ? List.of(Graves.wanted(HauntData.get(circle.level.getServer()), spirit))
+                : desired;
     }
 
     static void enter(Circle circle) {
-        Item gift = gift(circle.spirit.haunting());
+        Item gift = gift(circle);
         circle.player.sendSystemMessage(
                 Component.translatable(
                         "message.restless.ritual_bargain",
@@ -51,7 +54,7 @@ final class Bargain {
 
     /** @return whether the ritual goes on: false once the gift is taken */
     static boolean wave(Circle circle) {
-        List<Item> gifts = gifts(circle.spirit.haunting());
+        List<Item> gifts = gifts(circle);
         double reach = Config.section("ritual").num("gift_radius");
         List<ItemEntity> given = circle.level.getEntitiesOfClass(
                 ItemEntity.class,

@@ -46,4 +46,15 @@ class StoryTest {
             words.forEach(w -> assertTrue(voiced.contains(w), cause + ": " + w + " has no recorded clip"));
         }
     }
+
+    @Test
+    void everyDeathNamesAFormFourCausesEachAndThingsToWantBack() {
+        java.util.Map<Form, Integer> per = new java.util.EnumMap<>(Form.class);
+        for (String cause : Config.section("story").texts("causes")) {
+            Story story = new Story("x", 1, cause);
+            per.merge(story.form(), 1, Integer::sum);
+            assertFalse(story.wants().isEmpty(), cause);
+        }
+        assertEquals(java.util.Map.of(Form.WHOLE, 4, Form.BIT, 4, Form.CRAFTED, 4), per);
+    }
 }

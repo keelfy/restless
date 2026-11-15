@@ -91,7 +91,7 @@ public final class Ritual {
             return true;
         }
         Sense.Spirit spirit = weak.get();
-        boolean offForm = offForm(spirit.haunting(), held);
+        boolean offForm = offForm(HauntData.get(level.getServer()), spirit.haunting(), held);
         boolean censer = censed(player);
         if (censer) {
             HauntData.get(level.getServer())
@@ -108,18 +108,16 @@ public final class Ritual {
             player.sendSystemMessage(Component.translatable("message.restless.ritual_hallowed"), false);
         }
         Plan plan =
-                plan(spirit.haunting(), held, censer).longerFury(hallowed ? config.integer("hallowed_fury_waves") : 0);
+                plan(HauntData.get(level.getServer()), spirit.haunting(), held, censer).longerFury(hallowed ? config.integer("hallowed_fury_waves") : 0);
         Circle circle = new Circle(player, level, altar, held, candles, spirit, censer, plan);
         circle.hallowed = hallowed;
         Scheduler.repeat(player, 1, 1, (p, n) -> circle.tick(n + 1));
         return true;
     }
 
-    /** Whether the spirit's type does not take this offering's form. */
-    static boolean offForm(HauntData.Haunting spirit, Altar.Held held) {
-        return Spirits.byId(spirit.spirit())
-                .filter(type -> type.form() != held.form)
-                .isPresent();
+    /** Whether the spirit does not take this offering's form ({@link Spirits#form}). */
+    static boolean offForm(HauntData data, HauntData.Haunting spirit, Altar.Held held) {
+        return Spirits.form(data, spirit) != held.form;
     }
 
     /** Whether the player holds the Exorcist's Censer in the off hand. */
@@ -128,24 +126,24 @@ public final class Ritual {
     }
 
     /** How many waves the ritual runs: longer against a grown spirit, and for a form it does not take. */
-    public static int waves(HauntData.Haunting spirit, Altar.Held held) {
-        return waves(spirit, held, false);
+    public static int waves(HauntData data, HauntData.Haunting spirit, Altar.Held held) {
+        return waves(data, spirit, held, false);
     }
 
-    /** As {@link #waves(HauntData.Haunting, Altar.Held)}; a censer shortens the fury. */
-    public static int waves(HauntData.Haunting spirit, Altar.Held held, boolean censer) {
-        return plan(spirit, held, censer).total();
+    /** As {@link #waves(HauntData, HauntData.Haunting, Altar.Held)}; a censer shortens the fury. */
+    public static int waves(HauntData data, HauntData.Haunting spirit, Altar.Held held, boolean censer) {
+        return plan(data, spirit, held, censer).total();
     }
 
     /**
      * How long each phase runs. A grown spirit and a form it does not take lengthen the fury; a censer cuts its base
      * length.
      */
-    public static Plan plan(HauntData.Haunting spirit, Altar.Held held, boolean censer) {
+    public static Plan plan(HauntData data, HauntData.Haunting spirit, Altar.Held held, boolean censer) {
         Config.Section config = Config.section("ritual");
         int fury = (censer ? Config.section("relics").integer("censer_fury_waves") : config.integer("fury_waves"))
                 + (spirit.evolved() ? Config.section("evolution").integer("extra_waves") : 0)
-                + (offForm(spirit, held) ? config.integer("off_form_waves") : 0);
+                + (offForm(data, spirit, held) ? config.integer("off_form_waves") : 0);
         return new Plan(
                 config.integer("call_waves"), config.integer("bargain_waves"), fury, config.integer("leaving_waves"));
     }

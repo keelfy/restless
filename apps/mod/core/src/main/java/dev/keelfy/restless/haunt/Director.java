@@ -237,6 +237,7 @@ public final class Director {
             return same.get();
         }
         HauntData.Haunting bound = bind(player, spirit, now);
+        data.putMarks(bound.uuid(), data.marks(bound.uuid()).withDeathForm());
         spirits.add(bound);
         data.put(player.getUUID(), spirits);
         return bound;
@@ -245,6 +246,7 @@ public final class Director {
     /** Places a territorial spirit of the given type at {@code anchor} with the configured radius. */
     public static void anchor(HauntData data, SpiritType spirit, ServerLevel level, BlockPos anchor, long now) {
         HauntData.Haunting born = HauntData.Haunting.born(spirit.id(), now, level.getRandom());
+        data.putMarks(born.uuid(), data.marks(born.uuid()).withDeathForm());
         int radius = Config.section("director").integer("territorial_radius");
         data.putTerritorial(new HauntData.Territorial(
                 born.rescheduled(now + cooldown(level, anchor, born, now, level.getRandom(), 1.0)),

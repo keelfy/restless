@@ -52,11 +52,11 @@ final class RitualGameTests {
             ServerPlayer player = ready(helper);
             HauntData.Haunting spirit = spirit(player);
             // a poltergeist takes iron whole
-            check(helper, Ritual.waves(spirit, Altar.Held.IRON) == 12, "the form it takes keeps the usual length");
-            check(helper, Ritual.waves(spirit, Altar.Held.IRON_NUGGET) == 18, "another form must add six waves");
+            check(helper, Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, Altar.Held.IRON) == 12, "the form it takes keeps the usual length");
+            check(helper, Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, Altar.Held.IRON_NUGGET) == 18, "another form must add six waves");
             check(
                     helper,
-                    Ritual.waves(spirit.evolve(), Altar.Held.IRON_CHAIN) == 22,
+                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit.evolve(), Altar.Held.IRON_CHAIN) == 22,
                     "grown and off form must add both");
             check(
                     helper,
