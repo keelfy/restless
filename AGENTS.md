@@ -72,6 +72,21 @@ to the feature that sends it.
 | `content` | Registration (`Content`); `block`, `entity`, `item` (`charm`, `consumable`), `recipe`, `client` |
 | `config`, `command`, `debug`, `platform` | Tunables and lang, `/haunt`, debug menu, loader bridge |
 
+## GameTests
+
+Tests run side by side in one world, about 15 blocks apart. A test that leaks state makes other tests fail at random.
+
+- Get players from `HauntEventGameTests.connected(helper)`: it stands the player in the test's own spot and removes it
+  when the test ends. Never leave a player at the world origin.
+- A test that spawns monsters for its player adds the player to the level, or a far player of another test despawns them.
+- Padding is at least the reach of the event or item under test (`radius`, `rag_radius`…).
+- Never unforce chunks; use `forceChunks(helper, centre, reach)`. The runner unforces at batch end.
+- Do not wait a tick count for light; use `settleLight`.
+- A mob that must not pick its own target gets `setNoAi(true)`; removing its goals is not enough.
+- Do not replace global `HauntData` lists (`putTerritorial`…) while other tests run.
+- Wall-clock assertions go in the `timing` environment.
+- Kill a stuck test server by PID, never `pkill` by name: other worktrees run the same command.
+
 ## Commands
 
 `mise run mod:build`, `mise run mod:client`, `mise run wiki:build`. Game tests: `./gradlew :neoforge:runGameTestServer`
