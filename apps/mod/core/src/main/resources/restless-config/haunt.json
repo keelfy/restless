@@ -278,6 +278,7 @@
     "answer_chance": 0.6,
     "echo_chance": 0.3,
     "glitch_chance": 0.35,
+    "story_chance": 0.4,
     "questions": {
       "count": {
         "heard": [

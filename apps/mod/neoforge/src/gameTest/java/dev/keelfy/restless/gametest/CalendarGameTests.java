@@ -106,18 +106,18 @@ final class CalendarGameTests {
                 }
                 List<Trait> owned = Traits.of(liars);
                 for (int i = 0; i < 80; i++) {
-                    Divination.read(player, Clue.VOICE)
+                    Divination.read(player, Clue.PLANCHETTE)
                             .ifPresent(reading -> check(
                                     helper, owned.contains(reading.trait()), "no tool lies on the day of the dead"));
                 }
                 Calendar.force(new Calendar.Date(1, false, false, false));
                 boolean lied = false;
                 for (int i = 0; i < 80 && !lied; i++) {
-                    lied = Divination.read(player, Clue.VOICE)
+                    lied = Divination.read(player, Clue.PLANCHETTE)
                             .map(reading -> !owned.contains(reading.trait()))
                             .orElse(false);
                 }
-                check(helper, lied, "on an ordinary day a liar's voice must lie sometimes");
+                check(helper, lied, "on an ordinary day a liar's board must lie sometimes");
             } finally {
                 Calendar.force(null);
                 data.put(player.getUUID(), List.of());

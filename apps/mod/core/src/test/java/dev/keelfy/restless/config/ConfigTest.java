@@ -218,6 +218,11 @@ class ConfigTest {
                 .getAsJsonObject("spirit_box")
                 .getAsJsonObject("questions")
                 .keySet());
+        // Story words are keyed by the cause of death, looked up from the story's roll.
+        literals.addAll(Config.defaults()
+                .getAsJsonObject("story")
+                .getAsJsonObject("words")
+                .keySet());
         for (String key : defined) {
             assertTrue(literals.contains(key), "default never read by code: " + key);
         }

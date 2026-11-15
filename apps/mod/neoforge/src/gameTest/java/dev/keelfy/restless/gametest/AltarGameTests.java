@@ -51,6 +51,7 @@ public final class AltarGameTests {
         LeaningGameTests.register(TESTS);
         TellGameTests.register(TESTS);
         VeilGameTests.register(TESTS);
+        ToolGameTests.register(TESTS);
         HiddenGameTests.register(TESTS);
         HarshGameTests.register(TESTS);
         LanternGameTests.register(TESTS);

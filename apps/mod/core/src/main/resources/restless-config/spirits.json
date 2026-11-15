@@ -1541,6 +1541,20 @@
       "was_slain_by_a_zombie_horde",
       "never_found_the_way_back_to_bed",
       "was_pushed_off_by_a_friend"
-    ]
+    ],
+    "words": {
+      "fell_into_lava": ["burn", "down"],
+      "starved_in_a_deep_mine": ["hungry", "deep"],
+      "was_blown_up_by_a_creeper": ["loud", "hurt"],
+      "drowned_in_a_flooded_cave": ["drown", "water"],
+      "was_shot_by_a_skeleton": ["hurt", "run"],
+      "fell_from_a_high_place": ["down", "die"],
+      "burned_down_with_the_house": ["fire", "burn"],
+      "was_lost_in_the_nether": ["lost", "fire"],
+      "suffocated_in_a_collapsed_tunnel": ["breathe", "stone"],
+      "was_slain_by_a_zombie_horde": ["teeth", "run"],
+      "never_found_the_way_back_to_bed": ["bed", "lost"],
+      "was_pushed_off_by_a_friend": ["friend", "trust"]
+    }
   }
 }

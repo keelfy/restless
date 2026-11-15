@@ -377,6 +377,7 @@
   "journal.restless.print.2": "a paw, the tread of a stooped spirit",
   "journal.restless.print.3": "a hoof, the tread of a heavy, horned spirit",
   "journal.restless.print.4": "a drag mark, left by a spirit that trails along the floor",
+  "journal.restless.print.marked": "%s; the ash beside it showed that %s",
   "journal.restless.bestiary.grown": "**Grows into:** %s.",
   "journal.restless.form.whole": "At the altar it takes **the thing whole**: an iron ingot, glowstone, holy water or a mirror, depending on the spirit's nature.",
   "journal.restless.form.bit": "At the altar it takes **a bit**: an iron nugget, glowstone dust, salt or a glass pane, depending on the spirit's nature.",
