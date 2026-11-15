@@ -472,34 +472,30 @@ final class RitualGameTests {
             check(helper, Math.abs(spirit(circle.player()).anger() - 0.3) < 1e-9, "a failed ritual angers it");
             helper.succeed();
         });
-        tests.put("ritual_merged_spirit_needs_both_offerings", helper -> {
-            for (boolean both : new boolean[] {true, false}) {
+        for (boolean both : new boolean[] {true, false}) {
+            tests.put("ritual_merged_spirit_" + (both ? "falls_to_both_offerings" : "breaks_with_one"), helper -> {
                 ServerPlayer player = ready(helper, MERGED);
                 HauntData data = HauntData.get(helper.getLevel().getServer());
                 data.putMarks(SPIRIT, data.marks(SPIRIT).mergedWith(dev.keelfy.restless.spirit.Focus.GLOWSTONE));
-                Circle circle = started(helper, player);
-                steps(helper, circle, circle.plan().call() + 1);
-                if (both) {
-                    drop(helper, new ItemStack(Items.GLOWSTONE_DUST));
-                    steps(helper, circle, circle.plan().total() - circle.wave() - 1);
-                    check(helper, !circle.step(), "the last wave ends the ritual");
-                    check(helper, essences(helper) >= 1, "a merged spirit falls to both offerings");
-                    helper.getLevel()
-                            .getEntitiesOfClass(
-                                    ItemEntity.class,
-                                    new net.minecraft.world.phys.AABB(helper.absolutePos(AltarGameTests.CENTER))
-                                            .inflate(6))
-                            .forEach(ItemEntity::discard);
-                } else {
-                    steps(helper, circle, circle.plan().bargain() - 1);
-                    check(helper, !circle.step(), "a merged spirit with one offering breaks the ritual");
-                    check(helper, essences(helper) == 0, "no essence");
+                try {
+                    Circle circle = started(helper, player);
+                    steps(helper, circle, circle.plan().call() + 1);
+                    if (both) {
+                        drop(helper, new ItemStack(Items.GLOWSTONE_DUST));
+                        steps(helper, circle, circle.plan().total() - circle.wave() - 1);
+                        check(helper, !circle.step(), "the last wave ends the ritual");
+                        check(helper, essences(helper) >= 1, "a merged spirit falls to both offerings");
+                    } else {
+                        steps(helper, circle, circle.plan().bargain() - 1);
+                        check(helper, !circle.step(), "a merged spirit with one offering breaks the ritual");
+                        check(helper, essences(helper) == 0, "no essence");
+                    }
+                } finally {
+                    data.putMarks(SPIRIT, dev.keelfy.restless.state.Marks.NONE);
                 }
-                data.putMarks(SPIRIT, dev.keelfy.restless.state.Marks.NONE);
-                player.discard();
-            }
-            helper.succeed();
-        });
+                helper.succeed();
+            });
+        }
         tests.put("ritual_twofold_only_once_evolved", helper -> {
             Circle circle = started(helper, ready(helper));
             steps(helper, circle, circle.plan().call() + circle.plan().bargain() + 1);
