@@ -18,6 +18,7 @@ import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.spirit.land.Corruption;
 import dev.keelfy.restless.spirit.land.Graves;
+import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.spirit.life.Evolution;
 import dev.keelfy.restless.state.HauntData;
 import dev.keelfy.restless.ward.Wards;
@@ -194,6 +195,7 @@ public final class Ritual {
                 + extra;
         data.change(spirit.haunting().uuid(), h -> null);
         Location.forget(spirit.haunting().uuid());
+        Echoes.banished(player, spirit.haunting(), altar);
         Supplier<Item> essence = Content.ESSENCE.get(spirit.haunting().spirit());
         if (essence != null) {
             level.addFreshEntity(new ItemEntity(

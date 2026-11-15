@@ -144,7 +144,7 @@ What to do with it:
 
 ## Spirit Candle
 
-Candle + hallowed wax + soul sand, shapeless. Hold it in either hand. Its flame leans toward the spirit you sense that acts next, and burns blue for the last **3 seconds** before that event: the warning is exact, it reads the same timer the spirits run on. A spirit may snuff it for 30 seconds.
+Candle + hallowed wax + soul sand, shapeless. Hold it in either hand. Its flame leans toward the spirit you sense that acts next, and burns blue for the last **3 seconds** before that event: the warning is exact, it reads the same timer the spirits run on. A spirit may snuff it for 30 seconds. Its flame also shows the [date](/en/how-it-works#the-calendar): pale on a full moon, red on a blood night, green on the day of the dead.
 
 ## Journal
 
@@ -156,7 +156,7 @@ Sections show once they have something to say:
 
 | Section | Holds |
 | --- | --- |
-| Guide | chapters that open as you run into what they are about: *Read this first* (given), *Signs* (the first event), *Telling them apart* (the first clue), *The altar* (the first photo; it also shows the altar's recipe), *Graves*, *Your head* (the first darkening of the edges), *Left alone* (the first evolution), *Essence* (the first banishing or rest) |
+| Guide | chapters that open as you run into what they are about: *Read this first* (given), *Signs* (the first event), *Telling them apart* (the first clue), *The altar* (the first photo; it also shows the altar's recipe), *Graves*, *Your head* (the first darkening of the edges), *Left alone* (the first evolution), *Essence* (the first banishing or rest), *The calendar* (the first dusk of a full moon, blood night or day of the dead) |
 | Spirits | a dossier per spirit you have met, in order: met means any clue came from it. Until photographed it is an *Unknown spirit*; the photo names its type, its grave its name. Notes under it, and the latest photo. When a spirit evolves, its dossier says so: it names the grown type if you have photographed the spirit, otherwise only that it most likely evolved |
 | Archive | spirits you banished and filed |
 | Loose notes | what was seen of nobody in particular, such as an omen dream |
@@ -165,6 +165,8 @@ Sections show once they have something to say:
 | Relics | a page per [relic](/en/items/relics), opened the same way: when all three spirits it is made of are known |
 | Recipes | the recipes in your recipe book that make an item of the mod: the ones diary pages taught you |
 | Chronicle | what happened: rests and banishings |
+
+**Case sheet.** Each dossier carries your own guesses: its nature (iron, glowstone, holy water or a mirror), its form (the thing whole, a bit or something crafted) and each habit you think you have seen. Click a line to move it on to its next value; after the last it is cleared. The journal keeps what you marked and never says whether you are right.
 
 **Filing.** A dossier offers the banishments it could be: click one to file it, and the spirit moves to the Archive under the name that note gave it. Types must agree where both are known. The journal cannot tell whether they are the same spirit; that is your call.
 
@@ -235,6 +237,8 @@ Then it runs in waves of 5 seconds, through four phases:
 Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offering is taken off, or you wander off: what lay on the altar is lost and the spirit grows 0.3 angrier. If every candle burns at the end, it is **banished**. For the essences it leaves, see [Essences](/en/items/essences#where-they-come-from).
 
 **The wrong nature.** No spirit you sense is weak to it: the spirit eats the offering, every candle goes out, its anger peaks and it strikes at once with something harmful. It then refuses the altar for a day (24000 ticks) and ages by a day toward evolving.
+
+**The echo.** A spirit banished at the altar does not go quite all the way: it leaves an **echo**, a young, calm spirit of the same type and story that keeps haunting where it was (your echo stays with you; a territorial one lingers around the altar). An echo has no grave and no essence: it refuses every altar and leaves by itself after **7 days**. A spirit laid to rest at its [grave](/en/spirits#rewards) leaves no echo, which makes the grave the cleaner way out.
 
 ## Hallowed Lantern
 

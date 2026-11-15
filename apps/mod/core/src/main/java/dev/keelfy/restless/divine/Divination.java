@@ -3,6 +3,7 @@ package dev.keelfy.restless.divine;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.item.charm.Advanced;
+import dev.keelfy.restless.haunt.Calendar;
 import dev.keelfy.restless.haunt.Scan;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.journal.Journal;
@@ -78,9 +79,11 @@ public final class Divination {
                 continue;
             }
             boolean honest = Advanced.truthful(player, clue) && owned.stream().anyMatch(Trait::lies);
-            Optional<Trait> trait = Clues.reveal(owned, catalog, clue, random, honest);
+            // On the day of the dead no tool lies, and the eye keeps its rest.
+            boolean quiet = Calendar.today(player.level().getServer()).dayOfTheDead();
+            Optional<Trait> trait = Clues.reveal(owned, catalog, clue, random, honest || quiet);
             if (trait.isPresent()) {
-                if (honest) {
+                if (honest && !quiet) {
                     Advanced.truthSpent(player);
                 }
                 return Optional.of(new Reading(spirit, trait.get(), random));

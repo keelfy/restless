@@ -6,6 +6,7 @@ import dev.keelfy.restless.journal.Codex;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.JournalPages;
 import dev.keelfy.restless.journal.JournalPayload;
+import dev.keelfy.restless.journal.MarkPayload;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.photo.DevelopPayload;
 import dev.keelfy.restless.photo.Picture;
@@ -46,6 +47,7 @@ final class JournalGameTests {
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         registerArchive(tests);
+        registerCaseSheet(tests);
         registerDiary(tests);
         registerPath(tests);
         tests.put("journal_read_answers_once_per_gap", helper -> {
@@ -254,6 +256,65 @@ final class JournalGameTests {
                     data.notebook(player.getUUID()).notes().size() == notes,
                     "the same note must not be written twice");
             data.putNotebook(player.getUUID(), Notebook.EMPTY);
+            helper.succeed();
+        });
+    }
+
+    private static void registerCaseSheet(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("journal_keeps_case_sheet_guesses", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            HauntData data = HauntData.get(helper.getLevel().getServer());
+            HauntData.Haunting met = HauntData.Haunting.born(
+                    "shade", helper.getLevel().getGameTime(), helper.getLevel().getRandom());
+            Journal.tagged(player, Notebook.Kind.PHOTO, met, "shade", Component.translatable("spirit.restless.shade"));
+            String habit = Notebook.HABIT + "light_eater";
+
+            Journal.mark(player, new MarkPayload(0, Notebook.NATURE));
+            Journal.mark(player, new MarkPayload(0, Notebook.FORM));
+            Journal.mark(player, new MarkPayload(0, Notebook.FORM));
+            Journal.mark(player, new MarkPayload(0, habit));
+            Journal.mark(player, new MarkPayload(0, "nonsense"));
+            Journal.mark(player, new MarkPayload(5, Notebook.NATURE));
+            Notebook book = data.notebook(player.getUUID());
+            check(helper, book.mark(0, Notebook.NATURE).equals("iron"), "a click must make the first guess");
+            check(helper, book.mark(0, Notebook.FORM).equals("bit"), "a second click must move the guess on");
+            check(helper, book.mark(0, habit).equals(Notebook.SEEN), "a habit must be markable");
+            check(helper, book.marks().get(met.uuid()).size() == 3, "bad clicks must write nothing");
+
+            Notebook reloaded = Notebook.CODEC
+                    .parse(
+                            net.minecraft.nbt.NbtOps.INSTANCE,
+                            Notebook.CODEC
+                                    .encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, book)
+                                    .getOrThrow())
+                    .getOrThrow();
+            check(helper, reloaded.equals(book), "the guesses must survive saving");
+            check(
+                    helper,
+                    Notebook.CODEC
+                            .parse(net.minecraft.nbt.NbtOps.INSTANCE, new net.minecraft.nbt.CompoundTag())
+                            .getOrThrow()
+                            .marks()
+                            .isEmpty(),
+                    "a save from before case sheets must load with no guesses");
+
+            List<String> texts = new ArrayList<>();
+            JournalPages.sections(reloaded).stream()
+                    .filter(section -> section.key().equals("spirits"))
+                    .forEach(section -> texts(section, texts));
+            check(
+                    helper,
+                    texts.contains("journal.restless.mark.nature.iron")
+                            && texts.contains("journal.restless.mark.form.bit"),
+                    "the dossier must show the guesses as marked");
+
+            for (int i = 0; i < 4; i++) {
+                Journal.mark(player, new MarkPayload(0, Notebook.NATURE));
+            }
+            check(
+                    helper,
+                    data.notebook(player.getUUID()).mark(0, Notebook.NATURE).isEmpty(),
+                    "guesses must cycle through every nature and back to none");
             helper.succeed();
         });
     }

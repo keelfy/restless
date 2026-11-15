@@ -20,6 +20,8 @@ The spirit you get when you first join and a spirit born from a deed both start 
 
 When the last spirit that haunts you is gone (banished, laid to rest or otherwise removed), a new one of a different type finds you 2 to 4 days later, at anger 0.5. It does not come if you already have another spirit, if you are released by the Requiem, or while you are in creative or spectator mode.
 
+An [echo](/en/items/tools#the-ritual) left by an altar banishing does not count here: it neither keeps the new spirit away nor brings one when it leaves, and it does not count toward the limit of personal spirits or their cooldown. A new spirit of the echo's own type takes the echo's place.
+
 ## What power changes
 
 **Which events it rolls.** Light events (scares) are weighted by `1 − 0.7 × power`. Harmful events are weighted by `power`. A spirit with power 0 (only a place-bound spirit just born) never rolls a harmful event; a new spirit that haunts you can roll one within the first days, although it stays rare; a fully grown, angry one (power 1) rolls light events at 30% of their base weight and harmful events at full weight. The spirit's type and its traits then multiply the weights for each kind of event, see [Spirits](/en/spirits).
@@ -188,6 +190,16 @@ The material a spirit is weak to holds it back outside the altar too. A stopped 
 - **Darkness** (glowstone): its light events do not run within 4 blocks of glowstone.
 - **Malice** (holy water): holy water poured at your feet (use it while looking down) ends the events of this spirit that are still running.
 - **Deceit** (mirror): a mirror in your hand shows a fake block or a double of this spirit for what it is.
+
+## The calendar
+
+Days are counted from the start of the world, and three of them stand apart:
+
+- **Full moon**, every 8th day (the vanilla full moon): every spirit's power is 0.2 higher, up to 1.
+- **Blood night**, every 7th day: each event a ward stops wears it twice (salt rings, door charms, scarecrows). At dusk you are warned in chat.
+- **Day of the dead**, the last day of every 28-day season: spirits run no harmful events, and no tool lies. A blood night that falls on it does not happen.
+
+At the first dusk of any of them the journal opens its *Calendar* chapter. The [spirit candle](/en/items/tools#spirit-candle) shows the date by its flame.
 
 ## Advancements
 

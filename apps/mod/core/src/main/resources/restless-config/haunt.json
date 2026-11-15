@@ -63,6 +63,9 @@
     "start_anger": 0.5,
     "successor_min_days": 2,
     "successor_max_days": 4,
+    "echo_days": 7,
+    "echo_grace_ticks": 2400,
+    "haunted_check_ticks": 20,
     "grace_ticks": 2400,
     "structure_spacing": 96,
     "witness_radius": 16,
@@ -605,6 +608,13 @@
     "step_ticks": 4,
     "warning_ticks": 60,
     "lean": 0.5
+  },
+  "calendar": {
+    "moon_power": 0.2,
+    "blood_night_days": 7,
+    "blood_wear_factor": 2,
+    "season_days": 28,
+    "dusk_tick": 13000
   },
   "restore": {
     "retry_ticks": 20

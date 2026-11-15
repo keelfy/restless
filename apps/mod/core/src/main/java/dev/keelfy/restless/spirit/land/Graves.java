@@ -8,6 +8,7 @@ import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.Milestones;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.spirit.Story;
+import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.spirit.life.Evolution;
 import dev.keelfy.restless.state.HauntData;
 import java.util.List;
@@ -57,7 +58,8 @@ public final class Graves {
         HauntData data = HauntData.get(server);
         for (ServerPlayer player : overworld.players()) {
             for (Sense.Spirit spirit : Sense.of(player, data)) {
-                if (!data.graves().containsKey(spirit.haunting().uuid())) {
+                // An echo has no grave: it was never laid to rest, only sent off.
+                if (!data.graves().containsKey(spirit.haunting().uuid()) && !Echoes.is(data, spirit.haunting())) {
                     data.putGrave(
                             spirit.haunting().uuid(),
                             new HauntData.Grave(column(player.blockPosition(), config, player.getRandom()), false));

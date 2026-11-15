@@ -36,6 +36,14 @@ class PowerTest {
     }
 
     @Test
+    void fullMoonLiftsPowerByTheConfiguredStepUpToOne() {
+        assertEquals(0.5, Power.moonlit(0.5, false), 1e-9);
+        assertEquals(0.7, Power.moonlit(0.5, true), 1e-9);
+        assertEquals(0.2, Power.moonlit(0.0, true), 1e-9);
+        assertEquals(1.0, Power.moonlit(0.9, true), 1e-9);
+    }
+
+    @Test
     void harmfulEventsNeverRollForNewSpirit() {
         assertEquals(0.0, Power.weight(HauntTier.HARMFUL, Set.of(EventTag.ASSAULT), 1, Spirits.SHADE, List.of(), 0));
     }
