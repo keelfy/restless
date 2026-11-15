@@ -191,12 +191,7 @@ public final class Charms {
                 }
                 attacker.level()
                         .playSound(
-                                null,
-                                attacker.blockPosition(),
-                                HauntSounds.HEARTBEAT,
-                                SoundSource.PLAYERS,
-                                1.5f,
-                                1.0f);
+                                null, attacker.blockPosition(), HauntSounds.HEARTBEAT, SoundSource.PLAYERS, 1.5f, 1.0f);
             }
         }
         if (victim instanceof ServerPlayer holder
@@ -258,8 +253,7 @@ public final class Charms {
             return false;
         }
         Vec3 from = at == null ? player.position() : at;
-        player.level()
-                .playSound(null, from.x, from.y, from.z, HauntSounds.SCREECH, SoundSource.HOSTILE, 2.0f, 1.0f);
+        player.level().playSound(null, from.x, from.y, from.z, HauntSounds.SCREECH, SoundSource.HOSTILE, 2.0f, 1.0f);
         return true;
     }
 
