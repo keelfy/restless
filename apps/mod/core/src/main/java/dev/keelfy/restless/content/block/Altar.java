@@ -2,6 +2,7 @@ package dev.keelfy.restless.content.block;
 
 import dev.keelfy.restless.banish.Appease;
 import dev.keelfy.restless.banish.Circle;
+import dev.keelfy.restless.banish.Interrogation;
 import dev.keelfy.restless.banish.Requiem;
 import dev.keelfy.restless.banish.Ritual;
 import dev.keelfy.restless.config.Config;
@@ -351,7 +352,9 @@ public final class Altar extends Block implements EntityBlock {
                 && !Requiem.running(pos)
                 && Circle.at(pos).isEmpty()
                 && isComplete(level, pos)
-                && Appease.offer(caster, server, pos, stack)) {
+                && (stack.is(Items.BOOK)
+                        ? Interrogation.begin(caster, server, pos)
+                        : Appease.offer(caster, server, pos, stack))) {
             return InteractionResult.SUCCESS_SERVER;
         }
         if ((held == null && !vessel) || state.getValue(HELD) != Held.EMPTY) {

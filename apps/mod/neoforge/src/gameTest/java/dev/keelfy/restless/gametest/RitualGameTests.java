@@ -38,6 +38,10 @@ final class RitualGameTests {
     /** Iron by nature: two iron traits and one glowstone. */
     private static final List<String> IRON_TRAITS = List.of("door_slammer", "meddler", "light_eater");
 
+    /** Two merged spirits: four iron habits and three glowstone ones. */
+    private static final List<String> MERGED = List.of(
+            "door_slammer", "meddler", "thrower", "knocker", "cold_touch", "blinder", "shadow_caster");
+
     private static final UUID SPIRIT = UUID.fromString("00000000-0000-0000-0000-000000000042");
     private static final List<BlockPos> CANDLES = List.of(
             AltarGameTests.CENTER.offset(-3, 1, -3),
@@ -466,6 +470,34 @@ final class RitualGameTests {
             check(helper, circle.over(), "the ritual is over");
             check(helper, essences(helper) == 0, "no essence");
             check(helper, Math.abs(spirit(circle.player()).anger() - 0.3) < 1e-9, "a failed ritual angers it");
+            helper.succeed();
+        });
+        tests.put("ritual_merged_spirit_needs_both_offerings", helper -> {
+            for (boolean both : new boolean[] {true, false}) {
+                ServerPlayer player = ready(helper, MERGED);
+                HauntData data = HauntData.get(helper.getLevel().getServer());
+                data.putMarks(SPIRIT, data.marks(SPIRIT).mergedWith(dev.keelfy.restless.spirit.Focus.GLOWSTONE));
+                Circle circle = started(helper, player);
+                steps(helper, circle, circle.plan().call() + 1);
+                if (both) {
+                    drop(helper, new ItemStack(Items.GLOWSTONE_DUST));
+                    steps(helper, circle, circle.plan().total() - circle.wave() - 1);
+                    check(helper, !circle.step(), "the last wave ends the ritual");
+                    check(helper, essences(helper) >= 1, "a merged spirit falls to both offerings");
+                    helper.getLevel()
+                            .getEntitiesOfClass(
+                                    ItemEntity.class,
+                                    new net.minecraft.world.phys.AABB(helper.absolutePos(AltarGameTests.CENTER))
+                                            .inflate(6))
+                            .forEach(ItemEntity::discard);
+                } else {
+                    steps(helper, circle, circle.plan().bargain() - 1);
+                    check(helper, !circle.step(), "a merged spirit with one offering breaks the ritual");
+                    check(helper, essences(helper) == 0, "no essence");
+                }
+                data.putMarks(SPIRIT, dev.keelfy.restless.state.Marks.NONE);
+                player.discard();
+            }
             helper.succeed();
         });
         tests.put("ritual_twofold_only_once_evolved", helper -> {

@@ -106,6 +106,10 @@ public record Notebook(
         TELL(true),
         /** A tool found nothing of a spirit that a veil hides from it. Args: what stayed silent. */
         SILENCE(true),
+        /** A spirit's true answer at an interrogation. Args: the answer. */
+        ANSWER(true),
+        /** In the dossier of the elder of two spirits that merged. Args: its name, the swallowed one's name. */
+        MERGED(true),
         /** An entry from before the journal had kinds. Args: its text. */
         OLD(true);
 

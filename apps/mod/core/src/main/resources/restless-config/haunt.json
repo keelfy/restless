@@ -432,6 +432,18 @@
     "lie_chance": 0.5,
     "preferred_weight": 3
   },
+  "merging": {
+    "days": 15,
+    "check_ticks": 1200
+  },
+  "interrogation": {
+    "sanity_cost": 0.2,
+    "questions": {
+      "habit": ["do", "does", "doing", "habit*", "делаешь", "делает", "повадк*"],
+      "desire": ["want", "wants", "desire*", "wish", "хочешь", "хочет", "желаешь", "желани*"],
+      "grave": ["grave", "buried", "bones", "могил*", "похорон*", "кост*"]
+    }
+  },
   "ritual": {
     "candles": 4,
     "candle_radius": 3,

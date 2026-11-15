@@ -2,6 +2,7 @@ package dev.keelfy.restless;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
+import dev.keelfy.restless.banish.Interrogation;
 import dev.keelfy.restless.banish.Name;
 import dev.keelfy.restless.banish.Requiem;
 import dev.keelfy.restless.command.HauntCommand;
@@ -42,6 +43,7 @@ import dev.keelfy.restless.spirit.life.Anger;
 import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.spirit.life.Deeds;
 import dev.keelfy.restless.spirit.life.Evolution;
+import dev.keelfy.restless.spirit.life.Merging;
 import dev.keelfy.restless.spirit.life.Haunted;
 import dev.keelfy.restless.spirit.life.Leanings;
 import dev.keelfy.restless.state.Session;
@@ -107,6 +109,7 @@ public final class Restless {
         Sanity.tick(server);
         Corruption.tick(server);
         Evolution.tick(server);
+        Merging.tick(server);
         Charms.tick(server);
         Deeds.tick(server);
         Haunted.tick(server);
@@ -243,6 +246,7 @@ public final class Restless {
         Machines.said(player, line);
         Overheard.heard(player, line);
         Name.said(player, line);
+        Interrogation.said(player, line);
     }
 
     /**

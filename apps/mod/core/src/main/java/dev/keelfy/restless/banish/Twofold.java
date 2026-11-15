@@ -15,16 +15,25 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.AABB;
 
 /**
- * A second nature: an evolved spirit's foreign habit ({@link Traits#foreign}) is a second nature. In the bargain it
+ * A second nature: an evolved spirit's foreign habit ({@link Traits#foreign}), or the nature of a spirit it merged
+ * with ({@link dev.keelfy.restless.spirit.life.Merging}), is a second nature. In the bargain it
  * asks for an offering of that nature too, thrown onto the altar like the gift; the fury does not begin without it,
  * and the ritual fails.
  */
 public final class Twofold {
     private Twofold() {}
 
-    /** The spirit's second nature, if it has one. */
+    /**
+     * The spirit's second nature, if it has one: the nature of the spirit it merged with, or once evolved its foreign
+     * habit's. Never the nature the altar takes it by.
+     */
     public static Optional<Focus> of(HauntData data, HauntData.Haunting spirit) {
-        return spirit.evolved() ? Traits.foreign(Traits.of(spirit.traits())) : Optional.empty();
+        List<dev.keelfy.restless.spirit.Trait> traits = Traits.of(spirit.traits());
+        Optional<Focus> merged = data.marks(spirit.uuid()).merged();
+        Optional<Focus> second = merged.isPresent()
+                ? merged
+                : spirit.evolved() ? Traits.foreign(traits) : Optional.empty();
+        return second.filter(focus -> focus != Traits.weakness(traits));
     }
 
     /** Whether the ritual may go on into the fury: no second nature, or its offering was taken. */
