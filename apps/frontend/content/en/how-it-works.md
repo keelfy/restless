@@ -55,7 +55,7 @@ A spirit's anger rises when you do something spirits hate:
 
 Your personal spirits take offence at everything you do, wherever you are. A territorial spirit takes it only when it happens inside its radius (48 blocks), and also when its anchor is broken (+0.3, within 3 blocks of it).
 
-Nothing wears anger down with time. It falls when a spirit's anger is spent: you beat an avenger, or a lethal event takes a player. A spirit's [desire](#leanings) left near you also calms it, and its hate angers it. A gift in the [bargain of a ritual](/en/items/tools#the-ritual) lowers it by 0.3.
+Nothing wears anger down with time. It falls when a spirit's anger is spent: you beat an avenger, or a lethal event takes a player. A spirit's [desire](#leanings) left near you also calms it, and its hate angers it. A gift in the [bargain of a ritual](/en/items/tools#the-ritual) lowers it by 0.3, and so does its desire laid on an altar ([appeasement](/en/items/tools#appeasement)).
 
 Above anger 0.7 some [tells](/en/events/tells) turn harsh: the door slammer locks a door near you (`locked_door`), the cold touch brings frostbite (`frostbite`), the vengeful strikes (`wrath`) and the whisperer drains sanity (`sanity_drain`). Where the harsh form has nothing to act on, the mild tell runs.
 
@@ -152,7 +152,7 @@ A condition decides when the spirit acts or what it reacts to. Activity ×n mean
 Every spirit born now also has one desire and one fear or hate. Spirits born before this change have none.
 
 - **Fear.** The spirit's events do not run on a player within 4 blocks of the feared block or creature. Water counts only while it flows, never a still source. A stopped event shows the same ash and chime as a ward. A territorial spirit whose radius reaches the player counts too.
-- **Desire.** One of the wanted items lying on the ground within 3 blocks of the player is taken, with a puff of soul smoke and a sound, and the spirit's anger drops by 0.25. This happens at most once every 5 minutes.
+- **Desire.** One of the wanted items lying on the ground within 3 blocks of the player is taken, with a puff of soul smoke and a sound, and the spirit's anger drops by 0.1. This happens at most once every 5 minutes. Laid on an altar it does more, see [Appeasement](/en/items/tools#appeasement).
 - **Hate.** When the player uses the hated block, or uses a block while holding the hated item, the spirit's anger rises by 0.1. This happens at most once a minute. Placing a lantern, ringing a bell and playing a note block or jukebox all count.
 
 | Trait | Kind | What it is about |

@@ -229,7 +229,9 @@
     "desire_radius": 3,
     "desire_period_ticks": 20,
     "desire_cooldown_ticks": 6000,
-    "desire_calm": 0.25,
+    "desire_calm": 0.1,
+    "appease_anger": 0.3,
+    "appease_cost": 1,
     "hate_cooldown_ticks": 1200,
     "hate_anger": 0.1
   },

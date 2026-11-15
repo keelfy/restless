@@ -748,6 +748,8 @@
   "message.restless.ritual_wary": "Дух затаился и алтаря не пускает.",
   "message.restless.ritual_bargain": "Дух шепчет, чего хочет: %s. Брось это на алтарь, и он утихнет.",
   "message.restless.ritual_bargained": "Дух принял дар и утих. Но он всё ещё здесь.",
+  "message.restless.appeased": "Дух забрал желанное и стал спокойнее. Но он всё ещё здесь.",
+  "message.restless.appease_more": "На этот раз духу нужно больше: %s шт. «%s».",
   "message.restless.ritual_fury": "Дара нет. Дух в бешенстве!",
   "message.restless.ritual_leaving": "Дух слабеет и отпускает. Держи свечи.",
   "message.restless.candle_snuffed": "Свеча погасла!",

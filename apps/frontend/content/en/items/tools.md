@@ -260,7 +260,7 @@ Needs, when the offering goes down:
 Then it runs in waves of 5 seconds, through four phases:
 
 1. **The call**, 2 waves. The spirit comes in and does nothing yet.
-2. **The bargain**, 2 waves. The spirit names what it wants: the thing its [grave](#gravestone) asks for. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
+2. **The bargain**, 2 waves. The spirit names what it wants: one of the things it [desires](/en/how-it-works#leanings), any of which it takes, or for a spirit with no desire the thing its [grave](#gravestone) asks for. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
 3. **The fury**, 6 waves. A form the type does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
    - 25%: it snuffs one candle. Relight it before the next wave.
    - 50%: it runs one of its events on you.
@@ -280,6 +280,10 @@ Stay within 16 blocks. It **fails** if a candle is dark at a wave, or the offeri
 **The wrong nature.** No spirit you sense is weak to it: the spirit eats the offering, every candle goes out, its anger peaks and it strikes at once with something harmful. It then refuses the altar for a day (24000 ticks) and ages by a day toward evolving.
 
 **The echo.** A spirit banished at the altar does not go quite all the way: it leaves an **echo**, a young, calm spirit of the same type and story that keeps haunting where it was (your echo stays with you; a territorial one lingers around the altar). An echo has no grave and no essence: it refuses every altar and leaves by itself after **7 days**. A spirit laid to rest at its [grave](/en/spirits#rewards) leaves no echo, which makes the grave the cleaner way out.
+
+### Appeasement
+
+A whole altar takes what a spirit near you [desires](/en/how-it-works#leanings) without candles or a salt ring. Use the item on the bowl: the spirit takes it, its anger drops by **0.3** and it **stays**. Each further appeasement of the same spirit costs one more of the item: 1, then 2, then 3. Holding fewer than it asks, the spirit says how many it wants and takes nothing. An item no spirit near you desires does nothing, and a spirit born before desires existed cannot be appeased. An echo refuses the altar.
 
 ## Hallowed Lantern
 

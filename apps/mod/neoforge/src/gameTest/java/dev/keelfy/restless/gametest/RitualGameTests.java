@@ -496,6 +496,23 @@ final class RitualGameTests {
         return Circle.at(altar).orElseThrow();
     }
 
+    /** The salt ring and the four lit candles around the altar. */
+    static void ringAndCandles(GameTestHelper helper) {
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
+                if (Math.abs(x) == 2 || Math.abs(z) == 2) {
+                    helper.setBlock(AltarGameTests.CENTER.offset(x, 0, z), Content.SALT_LINE.get());
+                }
+            }
+        }
+        relight(helper);
+    }
+
+    /** {@link #steps}, for other test classes. */
+    static void calmSteps(GameTestHelper helper, Circle circle, int n) {
+        steps(helper, circle, n);
+    }
+
     /** Runs {@code n} waves that go on, with a calm spirit: neither a snuff nor a strike. */
     private static void steps(GameTestHelper helper, Circle circle, int n) {
         Config.Section config = Config.section("ritual");
@@ -557,14 +574,7 @@ final class RitualGameTests {
 
     private static ServerPlayer ready(GameTestHelper helper, List<String> traits) {
         AltarGameTests.place(helper);
-        for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
-                if (Math.abs(x) == 2 || Math.abs(z) == 2) {
-                    helper.setBlock(AltarGameTests.CENTER.offset(x, 0, z), Content.SALT_LINE.get());
-                }
-            }
-        }
-        relight(helper);
+        ringAndCandles(helper);
         ServerPlayer player = HauntEventGameTests.connected(helper);
         ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
                 .add(SanityPayload.TYPE.id());

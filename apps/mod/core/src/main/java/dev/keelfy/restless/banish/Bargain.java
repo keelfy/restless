@@ -1,10 +1,13 @@
 package dev.keelfy.restless.banish;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.state.HauntData;
 import java.util.List;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -19,11 +22,21 @@ final class Bargain {
     private Bargain() {}
 
     /**
-     * What the spirit asks for. Until spirits have desires of their own it is the thing its grave says it wants back,
-     * the same for its whole life.
+     * What the spirit asks for: the first thing it desires, or for a spirit with no desire the thing its grave says it
+     * wants back, the same for its whole life.
      */
     static Item gift(HauntData.Haunting spirit) {
-        return Graves.wanted(spirit.seed());
+        return gifts(spirit).getFirst();
+    }
+
+    /** Every gift the spirit takes: all it desires, or its grave's wanted thing. */
+    static List<Item> gifts(HauntData.Haunting spirit) {
+        List<Item> desired = Traits.desire(Traits.of(spirit.traits())).stream()
+                .flatMap(d -> d.things().stream())
+                .map(id -> BuiltInRegistries.ITEM.getOptional(Identifier.parse(id)))
+                .flatMap(java.util.Optional::stream)
+                .toList();
+        return desired.isEmpty() ? List.of(Graves.wanted(spirit.seed())) : desired;
     }
 
     static void enter(Circle circle) {
@@ -38,12 +51,12 @@ final class Bargain {
 
     /** @return whether the ritual goes on: false once the gift is taken */
     static boolean wave(Circle circle) {
-        Item gift = gift(circle.spirit.haunting());
+        List<Item> gifts = gifts(circle.spirit.haunting());
         double reach = Config.section("ritual").num("gift_radius");
         List<ItemEntity> given = circle.level.getEntitiesOfClass(
                 ItemEntity.class,
                 new AABB(circle.altar.above()).inflate(reach),
-                item -> item.isAlive() && item.getItem().is(gift));
+                item -> item.isAlive() && gifts.contains(item.getItem().getItem()));
         if (given.isEmpty()) {
             return true;
         }
