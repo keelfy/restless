@@ -63,7 +63,7 @@ C A C
 C C C
 ```
 
-Use it: a flash, and a **Photograph** of one spirit you can sense, chosen at random if there are several. The photo names its **type** and nothing more ("A silhouette of a Shade"); an evolved spirit shows under its grown name. With nothing to sense, the photo shows nothing. Rest: 30 seconds, spent either way.
+Use it: a flash, and a **Photograph** of one spirit you can sense, chosen at random if there are several. The photo names its **type** and nothing more ("A silhouette of a Shade"); an evolved spirit shows under its grown name. With nothing to sense, the photo shows nothing. Rest: 30 seconds, spent either way. While held, it shows spirits' bodies the way the [spirit candle](#spirit-candle) does.
 
 - The picture itself is painted on your client and shows in the photo's tooltip. It is also pasted into the spirit's page in the [journal](#journal).
 - A developed photo can go in an item frame, where it shows the picture itself, flat on the wall like a map, with the frame itself hidden. Without the mod on the client the frame shows the plain card.
@@ -146,6 +146,8 @@ What to do with it:
 
 Candle + hallowed wax + soul sand, shapeless. Hold it in either hand. Its flame leans toward the spirit you sense that acts next, and burns blue for the last **3 seconds** before that event: the warning is exact, it reads the same timer the spirits run on. A spirit may snuff it for 30 seconds.
 
+While it burns in your hand, it also shows the **body** of every spirit you sense within 32 blocks, standing at the spirit's point: pale and see-through, shaped by its type as on a photograph, so two spirits of one type look alike but never the same. Only you see it, and only while you hold the lit candle or the camera obscura.
+
 ## Journal
 
 Book + salt + ink sac. A player gets one the first time they join, unless the server turned that off. Use it to read.
@@ -183,6 +185,12 @@ Placing it builds a 3 by 3 platform and needs a clear 3 by 3 on solid ground. Th
 ### Holy water
 
 Lay a **water bottle** in the bowl. It needs only the finished platform, not the ring or the candles. After **12000 ticks** it turns into holy water; take it with an empty hand. Taken earlier, it is the bottle again. Holy water stacks to 16. A spirit may cloud it until dawn, and the altar will not take it then. Used while looking down (pitch 70° or more), one bottle is poured at your feet and ends every pending event of a Malice spirit on you, with the same falling ash and chime as a ward. See [Weakness](/en/how-it-works#weakness).
+
+### Blessing a house
+
+A water bottle laid in the bowl of an altar that stands inside a closed ring of salt, with **8** lit candles around it, begins a **blessing** instead of making holy water. Fewer candles or no ring, and it is holy water as before. The blessing runs **12 waves** of 100 ticks. If the player has spirits, each wave one of them may put out one of the 8 candles (25%), and it must be lit again. It fails, and the water is lost, if at the end of a wave the altar is broken, the ring is open or the player is more than 16 blocks away, or if a candle is out at the end of the last wave. Nothing else is lost.
+
+When it succeeds, no haunt event runs within **16 blocks** of the altar for **7 days** (168000 ticks). This does not wear salt, wards or charms. When the week ends, every spirit of the player who blessed the house returns with its anger raised by **0.2**.
 
 ### The offering
 
@@ -223,7 +231,7 @@ Then it runs in waves of 5 seconds, through four phases:
    - 50%: it runs one of its events on you.
    - 35%: it acts by its nature, whatever the censer does. Objects: it flings the offering off the altar; use the same offering on the altar again before the next wave, or the ritual fails. Darkness: it puts out every torch and lantern within 12 blocks for 30 seconds (the ritual's candles stay lit). Malice: it strikes you for a heart and a half of damage, never leaving you below the safe health. Deceit: it shows two of your candles as dark, but only to you; they still burn, so do not relight them.
    - Once per ritual it wipes one tile of the salt ring. Lay salt on that tile again before the next wave, or the ritual fails.
-   - It also shows itself: a dark figure walks the salt ring, and its nature sets a rule of gaze. Darkness and malice: do not look at it for more than 2 seconds. Objects and deceit: do not look away from it for more than 2 seconds. Break the rule and it snuffs a candle (the ritual goes on; relight it before the next wave).
+   - It also shows itself: its pale body walks the salt ring, and its nature sets a rule of gaze. Darkness and malice: do not look at it for more than 2 seconds. Objects and deceit: do not look away from it for more than 2 seconds. Break the rule and it snuffs a candle (the ritual goes on; relight it before the next wave).
 4. **The leaving**, 2 waves. The spirit lets go, but still walks the ring under the same rule of gaze; keep the candles lit to the end.
 
 **Place and hour.** A ritual held within 8 blocks of the spirit's [gravestone](#gravestone), or begun around midnight (day time 17000 to 19000), is hallowed: the fury runs 2 waves longer and the banished spirit leaves one more essence.

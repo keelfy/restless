@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
@@ -27,7 +28,9 @@ public final class Spells extends SavedData {
     /** What kind of spell a record is. */
     public enum Kind implements StringRepresentable {
         KNOT,
-        DUSK;
+        DUSK,
+        /** Quiet week over a house; the owner's spirits return when it ends, see {@link Blessing}. */
+        BLESSING;
 
         static final Codec<Kind> CODEC = StringRepresentable.fromEnum(Kind::values);
 
@@ -40,12 +43,17 @@ public final class Spells extends SavedData {
     /** The end of a spell that lasts until it is taken back. */
     public static final long FOREVER = Long.MAX_VALUE;
 
-    public record Spell(Kind kind, ResourceKey<Level> dimension, BlockPos pos, long until) {
+    public record Spell(Kind kind, ResourceKey<Level> dimension, BlockPos pos, long until, Optional<UUID> owner) {
+        public Spell(Kind kind, ResourceKey<Level> dimension, BlockPos pos, long until) {
+            this(kind, dimension, pos, until, Optional.empty());
+        }
+
         static final Codec<Spell> CODEC = RecordCodecBuilder.create(i -> i.group(
                         Kind.CODEC.fieldOf("kind").forGetter(Spell::kind),
                         Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(Spell::dimension),
                         BlockPos.CODEC.fieldOf("pos").forGetter(Spell::pos),
-                        Codec.LONG.fieldOf("until").forGetter(Spell::until))
+                        Codec.LONG.fieldOf("until").forGetter(Spell::until),
+                        UUIDUtil.STRING_CODEC.optionalFieldOf("owner").forGetter(Spell::owner))
                 .apply(i, Spell::new));
     }
 
@@ -103,9 +111,9 @@ public final class Spells extends SavedData {
         return spells.stream().filter(s -> s.kind == kind).toList();
     }
 
-    /** Drops the spells that have ended. */
+    /** Drops the spells that have ended; a blessing stays until {@link Blessing#release} has returned its spirits. */
     public void prune(long now) {
-        if (spells.removeIf(s -> s.until <= now)) {
+        if (spells.removeIf(s -> s.until <= now && s.kind != Kind.BLESSING)) {
             setDirty();
         }
     }

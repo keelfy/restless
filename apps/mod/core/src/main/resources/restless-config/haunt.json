@@ -457,6 +457,15 @@
     "bless_ticks": 12000,
     "blight_reward_spots": 64
   },
+  "blessing": {
+    "candles": 8,
+    "waves": 12,
+    "snuff_chance": 0.25,
+    "ticks": 168000,
+    "radius": 16,
+    "return_anger": 0.2,
+    "check_ticks": 20
+  },
   "charms": {
     "face_ticks": 500,
     "face_noise_radius": 6,
@@ -610,6 +619,10 @@
     "step_ticks": 4,
     "warning_ticks": 60,
     "lean": 0.5
+  },
+  "body": {
+    "step_ticks": 4,
+    "radius": 32
   },
   "restore": {
     "retry_ticks": 20

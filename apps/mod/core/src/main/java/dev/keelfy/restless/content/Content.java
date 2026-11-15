@@ -32,6 +32,7 @@ import dev.keelfy.restless.content.entity.AshFootprint;
 import dev.keelfy.restless.content.entity.RagEntity;
 import dev.keelfy.restless.content.entity.SightingMark;
 import dev.keelfy.restless.content.entity.Silhouette;
+import dev.keelfy.restless.content.entity.SpiritBody;
 import dev.keelfy.restless.content.item.CameraObscura;
 import dev.keelfy.restless.content.item.DiaryPage;
 import dev.keelfy.restless.content.item.Essences;
@@ -154,6 +155,19 @@ public final class Content {
                     "silhouette",
                     key -> EntityType.Builder.<Silhouette>of(Silhouette::new, MobCategory.MISC)
                             .sized(.6f, 1.8f)
+                            .clientTrackingRange(8)
+                            .noUpdateInterval()
+                            .fireImmune()
+                            .noLootTable()
+                            .noSave()
+                            .build(key));
+
+    public static final Supplier<EntityType<?>> SPIRIT_BODY = Platform.get()
+            .register(
+                    BuiltInRegistries.ENTITY_TYPE,
+                    "spirit_body",
+                    key -> EntityType.Builder.<SpiritBody>of(SpiritBody::new, MobCategory.MISC)
+                            .sized(.6f, 2.2f)
                             .clientTrackingRange(8)
                             .noUpdateInterval()
                             .fireImmune()

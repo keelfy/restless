@@ -12,6 +12,7 @@ import dev.keelfy.restless.content.item.Relics;
 import dev.keelfy.restless.content.item.charm.Advanced;
 import dev.keelfy.restless.content.item.charm.Charms;
 import dev.keelfy.restless.content.item.consumable.Consumables;
+import dev.keelfy.restless.divine.Body;
 import dev.keelfy.restless.divine.Candle;
 import dev.keelfy.restless.divine.Divination;
 import dev.keelfy.restless.divine.Heard;
@@ -42,6 +43,7 @@ import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.spirit.life.Deeds;
 import dev.keelfy.restless.spirit.life.Evolution;
 import dev.keelfy.restless.state.Session;
+import dev.keelfy.restless.ward.Blessing;
 import dev.keelfy.restless.ward.Wards;
 import dev.keelfy.restless.ward.Weakness;
 import java.util.Collection;
@@ -99,6 +101,7 @@ public final class Restless {
         Restore.tick(server);
         Director.tick(server);
         Candle.tick(server);
+        Body.tick(server);
         Graves.tick(server);
         Sanity.tick(server);
         Corruption.tick(server);
@@ -108,6 +111,7 @@ public final class Restless {
         Trail.tick(server);
         Consumables.tick(server);
         Weakness.tick(server);
+        Blessing.tick(server);
     }
 
     /**
