@@ -75,6 +75,18 @@ An evolved spirit:
 
 A wrong offering at the altar ages the spirit by a day toward evolving.
 
+## Merging
+
+A player who has two or more personal spirits older than **15 days** (echoes do not count) will see the eldest swallow the next eldest; this is checked every minute while they are online. The merged spirit:
+
+- keeps the elder's type, name, story, conditions and leanings;
+- adds the younger's habits;
+- takes the higher anger and the longer wary time;
+- is [evolved](#evolving) if either was;
+- has the nature that most of its habits belong to. The other nature becomes a **second nature**, so the [ritual](/en/items/tools#the-ritual) asks for two offerings. If both natures were the same, there is no second nature.
+
+The elder's grave stays. If it had none, the younger's grave passes to it, and the other grave is dropped. You are told, and the journal notes it.
+
 ## Blight
 
 A territorial spirit slowly fouls the land around its anchor: grass turns to coarse dirt, flowers to dead bushes. At first it reaches 6 blocks. Over 3 days it grows to the spirit's full radius of 48 blocks. A territorial spirit angrier than 0.7 stops spreading evenly: its blight grows as a narrow strip, about 5 blocks wide, toward the bed of the player who angered it, up to 64 blocks away. This works only while that player is online and their bed is in the same dimension; otherwise it spreads evenly again. The strip goes away with the spirit, like the rest of the blight. A spirit whose blight has reached 64 spots leaves an extra essence when banished. Blighted ground turns into the Blighted Land biome: grey fog, ash in the air and a low drone while you stand in it.

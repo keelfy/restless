@@ -295,6 +295,16 @@ A whole altar takes what a spirit near you [desires](/en/how-it-works#leanings) 
 
 ## Hallowed Lantern
 
+### Interrogation
+
+A plain **Book** used on a whole altar, inside a closed [salt ring](#salt) with at least 4 lit candles within 3 blocks, calls the first spirit you sense (not an echo, not a wary one). It costs 0.2 [sanity](/en/sanity) and the book is not used up. The spirit stays for 10 seconds (2 waves of 5 seconds). In that time the first chat line that asks a question gets one **true** answer, even from a liar, after a short spirit box delay, and the journal writes it down. The question is read by its words:
+
+- **desire** ("want", "wish"): what the spirit [desires](/en/how-it-works#leanings);
+- **grave** ("grave", "buried", "bones"): which quarter (north, east, south or west) of the altar its [grave](#gravestone) lies in;
+- **habit** ("do", "habit"): one of its habits. The [hidden habit](/en/how-it-works#hidden-habit) is told only to a shaken player or by an evolved spirit.
+
+They are checked in that order. When there is nothing to tell, the spirit says so. If no question comes in time, the spirit leaves.
+
 Lantern (L) + 2 hallowed wax (W) + 2 glowstone dust (G) + 2 salt (S), shaped:
 
 ```

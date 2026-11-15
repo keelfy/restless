@@ -154,13 +154,13 @@ public record Notebook(
         /** The first clue: reading clues, and that some lie. */
         CLUES(4),
         /** The first photo, which names a type: natures, forms, the altar and the ritual. */
-        WEAKNESS(6),
+        WEAKNESS(7),
         /** The first grave or word of one: unfinished business. */
         GRAVES(2),
         /** The first time the edges darken. */
         SANITY(2),
         /** The first spirit that grew up. */
-        EVOLUTION(2),
+        EVOLUTION(3),
         /** The first spirit gone for good: essences. */
         ESSENCE(2),
         /** The first dusk of a full moon, a blood night or the day of the dead. */
