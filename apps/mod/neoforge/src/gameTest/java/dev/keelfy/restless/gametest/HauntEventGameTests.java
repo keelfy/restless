@@ -1453,7 +1453,7 @@ final class HauntEventGameTests {
         TIMEOUT.put("event_sleepwalk", 200);
         tests.put("event_sleepwalk", helper -> {
             BlockPos centre = helper.absolutePos(FEET);
-            forceChunks(helper, centre, 24, true);
+            forceChunks(helper, centre, 24);
             for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-22, -1, -22), centre.offset(22, -1, 22))) {
                 helper.getLevel().setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
             }
@@ -1498,12 +1498,13 @@ final class HauntEventGameTests {
                                 && helper.getLevel().isEmptyBlock(at.above()),
                         "sleepwalk must leave the player standing on solid ground with room overhead");
                 check(helper, event.canRun(player), "the walk must be spent on waking");
-                forceChunks(helper, centre, 24, false);
                 player.discard();
                 helper.succeed();
             });
         });
         TIMEOUT.put("event_pen_corner", 120);
+        // The event herds the first pen within 16 blocks of the player: no other test's animals may be in reach.
+        PADDING.put("event_pen_corner", 16);
         tests.put("event_pen_corner", helper -> {
             for (BlockPos pos : BlockPos.betweenClosed(0, 0, 0, 9, 0, 9)) {
                 helper.setBlock(pos, Blocks.STONE);
@@ -1749,7 +1750,7 @@ final class HauntEventGameTests {
         tests.put("event_double_approaches", helper -> {
             // The player on a mound one block high and nine across, which the twin has to jump onto.
             BlockPos centre = helper.absolutePos(FEET);
-            forceChunks(helper, centre, 24, true);
+            forceChunks(helper, centre, 24);
             for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-22, -2, -22), centre.offset(22, -1, 22))) {
                 boolean mound = pos.getY() == centre.getY() - 1
                         && Math.hypot(pos.getX() - centre.getX(), pos.getZ() - centre.getZ()) <= 9;
@@ -1783,7 +1784,6 @@ final class HauntEventGameTests {
                         twin.distanceTo(player) < 3,
                         "the twin must come up onto the mound to the player, is " + twin.distanceTo(player) + " away");
                 twin.discard();
-                forceChunks(helper, centre, 24, false);
                 player.discard();
                 helper.succeed();
             });
@@ -1848,7 +1848,7 @@ final class HauntEventGameTests {
                             int reach = distance + 4;
                             // A player's view distance keeps the ring loaded in a game; here only the test's own chunks
                             // are.
-                            forceChunks(helper, centre, reach, true);
+                            forceChunks(helper, centre, reach);
                             for (int x = -reach; x <= reach; x++) {
                                 for (int z = -reach; z <= reach; z++) {
                                     double ring = Math.hypot(x, z);
@@ -1868,14 +1868,36 @@ final class HauntEventGameTests {
                                     id + " must leave one " + kind.getSimpleName() + ", found " + found.size());
                             also.accept(helper, found.get(0));
                             found.get(0).discard();
-                            forceChunks(helper, helper.absolutePos(FEET), distance + 4, false);
                         }));
     }
 
-    static void forceChunks(GameTestHelper helper, BlockPos centre, int reach, boolean forced) {
+    /**
+     * Waits for the light engine to finish the chunks around {@code centre}. It works on its own thread while the test
+     * server ticks as fast as it can, so a wait counted in ticks may end before the light is right.
+     */
+    static void settleLight(GameTestHelper helper, BlockPos centre, int reach) {
+        var light = helper.getLevel().getChunkSource().getLightEngine();
+        List<java.util.concurrent.CompletableFuture<?>> pending = new java.util.ArrayList<>();
         for (int x = (centre.getX() - reach) >> 4; x <= (centre.getX() + reach) >> 4; x++) {
             for (int z = (centre.getZ() - reach) >> 4; z <= (centre.getZ() + reach) >> 4; z++) {
-                helper.getLevel().setChunkForced(x, z, forced);
+                pending.add(light.waitForPendingTasks(x, z));
+            }
+        }
+        while (!pending.stream().allMatch(java.util.concurrent.CompletableFuture::isDone)) {
+            light.tryScheduleUpdate();
+            Thread.onSpinWait();
+        }
+    }
+
+    /**
+     * Keeps the chunks around {@code centre} loaded until the batch ends, when the runner lets every forced chunk go. A
+     * chunk is forced or not, with no count: a test that let its chunks go could unload another test's, and that test
+     * would wait for its chunks forever.
+     */
+    static void forceChunks(GameTestHelper helper, BlockPos centre, int reach) {
+        for (int x = (centre.getX() - reach) >> 4; x <= (centre.getX() + reach) >> 4; x++) {
+            for (int z = (centre.getZ() - reach) >> 4; z <= (centre.getZ() + reach) >> 4; z++) {
+                helper.getLevel().setChunkForced(x, z, true);
             }
         }
     }
@@ -1954,8 +1976,37 @@ final class HauntEventGameTests {
         return channel.outboundMessages().stream().anyMatch(m -> m instanceof ClientboundSoundPacket);
     }
 
+    /**
+     * A survival player standing at {@link #FEET} of this test; it is discarded when the test ends, passed or failed.
+     * Left where a new player stands (the world origin), it would share one spot and its chunks with every other test's
+     * player; left in the level after a failure, it would be the nearest player of every later test.
+     */
     static ServerPlayer connected(GameTestHelper helper) {
         ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
+        helper.testInfo.addListener(new net.minecraft.gametest.framework.GameTestListener() {
+            @Override
+            public void testStructureLoaded(net.minecraft.gametest.framework.GameTestInfo info) {}
+
+            @Override
+            public void testPassed(
+                    net.minecraft.gametest.framework.GameTestInfo info,
+                    net.minecraft.gametest.framework.GameTestRunner runner) {
+                player.discard();
+            }
+
+            @Override
+            public void testFailed(
+                    net.minecraft.gametest.framework.GameTestInfo info,
+                    net.minecraft.gametest.framework.GameTestRunner runner) {
+                player.discard();
+            }
+
+            @Override
+            public void testAddedForRerun(
+                    net.minecraft.gametest.framework.GameTestInfo original,
+                    net.minecraft.gametest.framework.GameTestInfo copy,
+                    net.minecraft.gametest.framework.GameTestRunner runner) {}
+        });
         Connection connection = new Connection(PacketFlow.SERVERBOUND);
         new EmbeddedChannel(connection);
         new ServerGamePacketListenerImpl(
@@ -1981,6 +2032,8 @@ final class HauntEventGameTests {
                 dev.keelfy.restless.divine.SpiritBoxPayload.TYPE)) {
             channels.add(type.id());
         }
+        BlockPos feet = helper.absolutePos(FEET);
+        player.snapTo(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5);
         return player;
     }
 

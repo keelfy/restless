@@ -299,6 +299,10 @@ public final class AltarGameTests {
             // Hardcore is one switch for the whole server, so the tests that need it run in a batch of their own.
             var hardcore = event.registerEnvironment(id("hardcore"));
             var smoke = event.registerEnvironment(id("smoke"));
+            // Tests that time themselves on the wall clock run alone: a batch's other tests keep the light and chunk
+            // threads busy, and those take the CPU from the server thread.
+            var timing = event.registerEnvironment(id("timing"));
+            var timed = java.util.Set.of(ScaleGameTests.MANY, TerrainRollGameTests.TIMED);
             TESTS.forEach((name, test) -> event.registerTest(
                     id(name),
                     new FunctionGameTestInstance(
@@ -306,7 +310,9 @@ public final class AltarGameTests {
                             new TestData<>(
                                     HardcoreGameTests.BATCH.contains(name)
                                             ? hardcore
-                                            : FaultGameTests.BATCH.contains(name) ? smoke : environment,
+                                            : FaultGameTests.BATCH.contains(name)
+                                                    ? smoke
+                                                    : timed.contains(name) ? timing : environment,
                                     net.minecraft.world.level.Level.OVERWORLD,
                                     id("empty"),
                                     HauntEventGameTests.TIMEOUT.getOrDefault(name, 40),
