@@ -15,17 +15,17 @@ Everything a spirit leaves behind is an **essence**, and nearly everything in th
 | [Relic](/en/items/relics) | three essences of different types + rare finds, in a shape | carried, placed or slept in; one of a kind, never spent |
 | [Reliquary](/en/items/requiem#the-reliquary) | gold, amethyst, hallowed wax and a book, then one essence of every type | held until the [Requiem](/en/items/requiem) is sung; then it becomes the Requiem Bell |
 
-[Essences](/en/items/essences) says where they come from and how to call a spirit on purpose when you need a type you have not met.
+[Essences](/en/items/essences) says where they come from and how to call a spirit on purpose when a type is needed that has not been met.
 
 Every item carries a one-line reminder of what it does, shown under its name in the tooltip.
 
 ## Rules every charm shares
 
-- **Worn charms and tools of the craft.** A charm is one of two kinds, told apart in the tooltip. **Worn** charms work on their own while you wear them; their reminder is aqua and starts with "Worn". **Tools of the craft** are used from the hand; their reminder is gold and starts with "Use". The Stash is neither: it works from any inventory slot.
+- **Worn charms and tools of the craft.** A charm is one of two kinds, told apart in the tooltip. **Worn** charms work on their own while they are worn; their reminder is aqua and starts with the condition "While worn". **Tools of the craft** are used from the hand; their reminder is gold and describes what the item does when used. The Stash is neither: it works from any inventory slot.
 - **Where a worn charm goes.** With the [Curios](https://modrinth.com/mod/curios) mod installed, a worn charm works **only from its accessory slot**, never from the hand: Death Wail and Requital Wail on the necklace; Drowned Stone and Tidecaller on the bracelet; Grudge and Blood Debt on the ring; House Key, Keeper's Key and Grave Satchel on the belt (one slot, so one at a time); Magpie's Hook on the hands; Truthseer's Eye on the head; Nightwalk Shroud on the back; Ferryman's Coin in the charm slot. Without Curios a worn charm works from the **off hand** instead, one at a time. The Death Wail, Requital Wail and Nightwalk Shroud then work from anywhere in the inventory, as the wail always did.
 - **Tools of the craft** are the Dark Lens, Telekinesis Rod, Borrowed Face, Changeling Guise, Wraith's Breath, Lost Step, Fetch's Path, Phantom Double, Twin's Mirror, Bargain, Black Bargain, Borrowed Dream, Hearth Dream, Trickster's Coin, Devil's Coin and the Exorcist's Censer. They stay in the hand with or without Curios.
 - **Rest.** A charm used on purpose shows a cooldown bar. The rest is saved with the item, so putting it away or logging out does not skip it.
 - **Sanity.** Some charms spend sanity. The cost is listed on each.
-- **Anger.** Some charms pay in your spirits' anger: the Borrowed Dream, the Bargain and the Devil's Coin each raise it a little when used.
+- **Anger.** Some charms pay in the holder's spirits' anger: the Borrowed Dream, the Bargain and the Devil's Coin each raise it a little when used.
 - **Upgrades keep their base.** An advanced charm is crafted in a crafting grid with the base charm, one essence of another type and a catalyst. Whatever the base held comes with it: a stash's stack, a rest not yet over.
 - **Time.** A day is 24000 ticks, twenty minutes.

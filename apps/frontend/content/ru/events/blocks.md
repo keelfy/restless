@@ -1,708 +1,706 @@
 ---
-title: Blocks
+title: Блоки
 ---
 
-# Blocks
+# Блоки
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-115 events.
+Событий: 115.
 
 ## `wilted_flowers`
 
-Every one becomes a potted dead bush; restored after 2 min
+Каждый такой цветок превращается в засохший куст в горшке; через 2 мин всё возвращается
 
-Runs when: A potted flower within 10
+Когда срабатывает: Цветок в горшке в пределах 10 блоков
 
 ## `withering_crops`
 
-Every crop within 6 loses one growth stage
+Каждая культура в пределах 6 блоков теряет одну стадию роста
 
-Runs when: A grown crop within 6
+Когда срабатывает: Выросшая культура в пределах 6 блоков
 
 ## `lost_growth`
 
-One of them is set back to age 0
+Одна из них возвращается к возрасту 0
 
-Runs when: A crop, stem, berry bush or cocoa past its first stage within 8
+Когда срабатывает: Культура, стебель, ягодный куст или какао, миновавшие первую стадию, в пределах 8 блоков
 
 ## `false_windows`
 
-Only this player's client is told that the 64 nearest glass blocks and panes are, all alike, air, an oak fence (connected to the walls) or the full block most of its neighbours are. 10 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 64 ближайших стеклянных блока и панели все как один являются воздухом, дубовым забором (соединённым со стенами) или целым блоком того вида, которого больше всего среди соседних. Через 10 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Glass or a glass pane within 10
+Когда срабатывает: Стекло или стеклянная панель в пределах 10 блоков
 
 ## `false_looks`
 
-Only this player's client is told that the 16 nearest of them are each another random block of the list, keeping the facing. 10 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 16 ближайших из них стали каждый другим случайным блоком из списка, с сохранением направления. Через 10 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A block from `blocks` within 10 (workstations, containers and other blocks one uses: crafting table, furnaces, chests, barrel, stonecutter, fletching, smithing and cartography tables, loom, grindstone, anvil, lectern, brewing stand and so on)
+Когда срабатывает: Блок из списка `blocks` в пределах 10 блоков (рабочие блоки, контейнеры и другие блоки, которыми пользуются: верстак, печи, сундуки, бочка, камнерез, стол лучника, стол кузнеца, стол картографа, ткацкий станок, точило, наковальня, кафедра, варочная стойка и так далее)
 
 ## `ghost_tree`
 
-Only this player's client is told of a small round tree there, pale oak, oak or birch, with a 4 to 6 block trunk and the vanilla blob crown, of `ghost_<wood>_log` and `ghost_<wood>_leaves` (same look and leaf tint, no collision, no drops; leaves only on air), so they walk through it. A minute later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают о небольшом круглом дереве на этом месте: бледном дубе, дубе или берёзе со стволом высотой от 4 до 6 блоков и обычной округлой кроной. Оно состоит из блоков `ghost_<wood>_log` и `ghost_<wood>_leaves` (тот же вид и оттенок листвы, но без столкновения и без выпадения предметов; листва ставится только в воздух), так что игрок проходит сквозь него. Через минуту клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Standing room 12 blocks away within 40° of where the player looks (up to 16 bearings tried), with open space (air, grass, flowers) for a 6-block trunk
+Когда срабатывает: В 12 блоках есть место, где можно встать, в пределах 40° от направления взгляда игрока (пробуется до 16 направлений), и свободное место (воздух, трава, цветы) для ствола высотой в 6 блоков
 
 ## `moving_tree`
 
-Takes a log standing on dirt, the logs joined to it and the non-persistent leaves that grew from them (a leaf no nearer to these logs than its own distance to a log, so touching crowns stay; up to 300 blocks, with a crown), and moves them 2 to 4 blocks in a random direction if every spot is open (air, grass, flowers) and the foot stands on dirt; a rustle sounds. 30 s later it moves back, and the grass and flowers it stood in come back, unless it was cut or built on meanwhile. Under hardcore it stays
+Берёт бревно, стоящее на земле, связанные с ним брёвна и непостоянную листву, выросшую от них (лист относится к дереву, если он не дальше от этих брёвен, чем от ближайшего к нему бревна, поэтому соприкасающиеся кроны остаются на месте; до 300 блоков, обязательно с кроной), и сдвигает всё на 2–4 блока в случайную сторону, если каждое место свободно (воздух, трава, цветы), а основание стоит на земле; слышен шорох. Через 30 с дерево возвращается, а трава и цветы, среди которых оно стояло, появляются снова, если его тем временем не срубили и не застроили. При хардкоре оно остаётся на новом месте
 
-Runs when: A log on dirt within 16 blocks
+Когда срабатывает: Бревно на земле в пределах 16 блоков
 
 ## `turning_frame`
 
-Rotates its item
+Предмет в рамке поворачивается
 
-Runs when: A filled item frame within 12
+Когда срабатывает: Рамка с предметом в пределах 12 блоков
 
 ## `new_sign`
 
-The front text becomes one creepy phrase of up to three short lines (at most eight letters each, so it fits a hanging sign); restored after 1 min unless the player has edited it
+Текст на лицевой стороне таблички превращается в одну жуткую фразу не длиннее трёх коротких строк (в каждой не больше восьми букв, чтобы она помещалась на подвесной табличке); через 1 мин прежний текст возвращается, если игрок его не правил
 
-Runs when: A sign within 10
+Когда срабатывает: Табличка в пределах 10 блоков
 
 ## `new_painting`
 
-Becomes another painting; restored after 1 min
+Картина меняется на другую; через 1 мин возвращается
 
-Runs when: A painting within 12 with another variant of the same size
+Когда срабатывает: Картина в пределах 12 блоков, у которой есть другой вариант того же размера
 
 ## `glass_wall`
 
-The wall's two blocks in front of the player become glass for 4 s; a silent, motionless husk stands behind them facing the player
+Два блока стены перед игроком на 4 с становятся стеклом; за ними неподвижно и беззвучно стоит кадавр, обращённый лицом к игроку
 
-Runs when: Not peaceful; a one-block wall 2–6 blocks away with standing room behind it
+Когда срабатывает: Сложность не мирная; стена в один блок толщиной в 2–6 блоках от игрока, за которой есть место, где можно встать
 
 ## `dry_cauldron`
 
-Empties it
+Котёл опустошается
 
-Runs when: A water cauldron within 10
+Когда срабатывает: Котёл с водой в пределах 10 блоков
 
 ## `dead_ground`
 
-A ragged patch of grass (radius 3, dense in the middle, sparse at the edge) becomes dirt or coarse dirt
+Неровное пятно травы (радиус 3, густое посередине и редкое по краю) превращается в землю или каменистую землю
 
-Runs when: Player on grass
+Когда срабатывает: Игрок стоит на траве
 
 ## `shifting_floor`
 
-**Harmful.**
-A ragged patch of the floor (radius 2, a handful of blocks, always the one underfoot) turns into another kind of the same material for 1.5 s
+**Вредящее событие.**
+Неровное пятно пола (радиус 2, несколько блоков, всегда включающее блок под ногами) на 1.5 с превращается в другой вид того же материала
 
-Runs when: On the ground, and the block under the player has a variant (see below)
+Когда срабатывает: Игрок на земле, и у блока под ним есть разновидность (см. ниже)
 
 ## `broken_bed`
 
-**Harmful.**
-Breaks it; it drops as an item
+**Вредящее событие.**
+Кровать ломается и выпадает предметом
 
-Runs when: A bed within 16
+Когда срабатывает: Кровать в пределах 16 блоков
 
 ## `wall_hole`
 
-**Harmful.**
-Two blocks vanish for 30 s, no drops
+**Вредящее событие.**
+Два блока на 30 с исчезают, ничего не выронив
 
-Runs when: A one-block wall 2–6 blocks away with standing room behind it
+Когда срабатывает: Стена в один блок толщиной в 2–6 блоках от игрока, за которой есть место, где можно встать
 
 ## `cross`
 
-A plus of bone blocks for 1 min
+На 1 мин появляется крест из костных блоков
 
-Runs when: Room for a plus of five free blocks on solid ground 3–6 blocks away
+Когда срабатывает: Место для креста из пяти свободных блоков на твёрдой земле в 3–6 блоках от игрока
 
 ## `infested_stone`
 
-**Harmful.**
-The block is shown as its infested kind (a swap, see the `swaps` setting); restored after 30 s
+**Вредящее событие.**
+Блок показывается заражённым (подмена, см. настройку `swaps`); через 30 с он возвращается
 
-Runs when: Stone, cobblestone, deepslate or stone bricks in sight within 6
+Когда срабатывает: Камень, булыжник, глубинный сланец или каменные кирпичи в поле зрения в пределах 6 блоков
 
 ## `ceiling_crack`
 
-Crack progress and particles on it, as if mined from above, silent; the block never breaks
+На блоке появляются стадии разрушения и частицы, будто его добывают сверху; звука нет, блок не ломается
 
-Runs when: A solid block 1–4 above the eyes
+Когда срабатывает: Твёрдый блок в 1–4 блоках над уровнем глаз
 
 ## `ice_over`
 
-Up to 24 of them become ice (a swap); restored after 30 s
+До 24 таких блоков превращаются в лёд (подмена); через 30 с они возвращаются
 
-Runs when: Source water within 8
+Когда срабатывает: Источник воды в пределах 8 блоков
 
 ## `portal_out`
 
-**Harmful.**
-The whole portal (every connected block) is broken for good in every mode, with a fizzle; the frame stays
+**Вредящее событие.**
+Весь портал (каждый связанный блок) разрушается насовсем в любом режиме, с шипением; рамка остаётся
 
-Runs when: Nether portal blocks within 12
+Когда срабатывает: Блоки портала в Нижний мир в пределах 12 блоков
 
 ## `block_blink`
 
-Breaks with its sound and dust (a swap to air), back after 2 s; under hardcore it stays gone, no drop
+Блок ломается со своим звуком и пылью (подмена на воздух) и через 2 с возвращается; при хардкоре он остаётся сломанным, без выпадения предметов
 
-Runs when: The block looked at within 5, no block entity, not below the feet
+Когда срабатывает: Блок, на который смотрит игрок, в пределах 5 блоков, без блочной сущности и не ниже уровня ног
 
 ## `leak`
 
-Water drips from it for 8 s, particles and sound only, in every mode
+Из него 8 с капает вода: только частицы и звук, в любом режиме
 
-Runs when: Air just under a ceiling 1–4 above the eyes
+Когда срабатывает: Воздух сразу под потолком в 1–4 блоках над уровнем глаз
 
 ## `lava_leak`
 
-Lava drips from it for 6 s, particles and sound only, in every mode
+Из него 6 с капает лава: только частицы и звук, в любом режиме
 
-Runs when: Same
+Когда срабатывает: То же
 
 ## `mock_grave`
 
-A gravestone with a sign (R.I.P., the player's name, tomorrow's date); removed after 5 min, stays under hardcore
+Появляется надгробие с табличкой (R.I.P., имя игрока, завтрашняя дата); через 5 мин оно убирается, при хардкоре остаётся
 
-Runs when: Open standing room 5–10 away with a free cell in front
+Когда срабатывает: Открытое место, где можно встать, в 5–10 блоках от игрока, со свободной клеткой перед ним
 
 ## `cave_sign`
 
-A wall sign with a short warning (go back, turn around, too late); removed after 5 min, stays under hardcore
+На стене появляется табличка с коротким предостережением («назад», «обернись», «слишком поздно»); через 5 мин она убирается, при хардкоре остаётся
 
-Runs when: Underground (no sky above), a wall 4–8 blocks out in one of the four directions
+Когда срабатывает: Под землёй (над головой нет неба), стена в 4–8 блоках от игрока в одном из четырёх направлений
 
 ## `item_trail`
 
-Bones, rotten flesh and string every 3 blocks along the ground from the player to a standing sign with a short note; the items cannot be picked up. Items cleared and sign removed (if unedited) after 5 min; under hardcore the items can be taken and the sign stays
+Кости, куски гнили и нити лежат на земле через каждые 3 блока от игрока до стоящей таблички с короткой запиской; эти предметы нельзя подобрать. Через 5 мин предметы исчезают, а табличка убирается (если на ней ничего не правили); при хардкоре предметы можно взять, а табличка остаётся
 
-Runs when: Standing room 10–16 away
+Когда срабатывает: Место, где можно встать, в 10–16 блоках от игрока
 
 ## `repaint`
 
-Up to 40 blocks of that one kind turn into the neighbouring colour (dyes form a ring), planks into the stripped log of their wood, stone bricks into stone, cobblestone and stone bricks into their mossy or cracked kind and back, one deepslate kind into another; swapped back after 60 seconds
+До 40 блоков этого вида меняют цвет на соседний (красители образуют кольцо), доски превращаются в обтёсанное бревно своего дерева, каменные кирпичи в камень, булыжник и каменные кирпичи в свой мшистый или потрескавшийся вид и обратно, один вид глубинного сланца в другой; через 60 секунд всё возвращается
 
-Runs when: A dyed block (wool, concrete, terracotta, stained glass; stairs and slabs of wool and concrete too), planks, cobblestone, stone bricks or deepslate bricks, tiles and cobbled deepslate (with their stairs, slabs and walls) within 10
+Когда срабатывает: Окрашенный блок (шерсть, бетон, терракота, окрашенное стекло; ступени и плиты из шерсти и бетона тоже), доски, булыжник, каменные кирпичи или глубинносланцевые кирпичи, глубинносланцевая плитка и булыжный глубинный сланец (с их ступенями, плитами и стенами) в пределах 10 блоков
 
 ## `lava_cauldron`
 
-It turns to a lava cauldron with a sizzle, and back after half a minute
+Котёл с шипением превращается в котёл с лавой и через полминуты возвращается прежним
 
-Runs when: A water cauldron within 10
+Когда срабатывает: Котёл с водой в пределах 10 блоков
 
 ## `cauldron_fills`
 
-It fills to a random level with drip particles, and runs dry again after a minute
+Котёл наполняется до случайного уровня, с частицами капель, и через минуту снова пустеет
 
-Runs when: Indoors, and a dry cauldron within 10
+Когда срабатывает: В помещении, пустой котёл в пределах 10 блоков
 
 ## `turning_terracotta`
 
-Every piece turns a quarter and stands back after a minute
+Каждый блок поворачивается на четверть и через минуту встаёт обратно
 
-Runs when: Glazed terracotta within 10
+Когда срабатывает: Глазурованная терракота в пределах 10 блоков
 
 ## `end_rod_gaze`
 
-One rod turns to point at the player and stands back after a minute
+Один стержень поворачивается к игроку и через минуту встаёт обратно
 
-Runs when: An end rod within 12 that does not already face the player
+Когда срабатывает: Стержень Энда в пределах 12 блоков, который ещё не обращён к игроку
 
 ## `bricked_door`
 
-Only this player's client is told that the door's two blocks are the full block most of the blocks around it are (bricks if none are). 10 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что оба блока двери являются целым блоком того вида, которого больше всего среди окружающих (кирпичами, если подходящих нет). Через 10 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A wooden door within 10
+Когда срабатывает: Деревянная дверь в пределах 10 блоков
 
 ## `boarded_windows`
 
-Only this player's client is told that the 48 nearest glass blocks and panes are oak planks. 15 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 48 ближайших стеклянных блоков и панелей являются дубовыми досками. Через 15 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Sky visible at the player's feet, and glass or a glass pane within 12
+Когда срабатывает: У ног игрока видно небо, и в пределах 12 блоков есть стекло или стеклянная панель
 
 ## `stair_wall`
 
-Only this player's client is told that the two blocks above that step are the floor block ahead of it, so the stairs lead into a wall. 15 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что два блока над этой ступенью являются блоком пола впереди неё, так что лестница ведёт в стену. Через 15 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: The last step of a flight of stairs within 10: a bottom stair with another below it behind, solid floor ahead and open space above
+Когда срабатывает: Последняя ступень лестничного марша в пределах 10 блоков: нижняя ступень, позади которой ниже есть ещё одна, впереди твёрдый пол, а сверху свободное место
 
 ## `yard_pit`
 
-Only this player's client is told that a 3×3 patch of ground two blocks deep there is air (and the plants over it). 15 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что участок земли 3×3 глубиной в два блока на этом месте является воздухом (как и растения над ним). Через 15 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Standing room under open sky 8 to 14 blocks away
+Когда срабатывает: Место, где можно встать, под открытым небом в 8–14 блоках от игрока
 
 ## `unlit_torches`
 
-Only this player's client is told that the 24 nearest torches are the burnt-out `unlit_` ones. 30 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 24 ближайших факела являются потухшими факелами `unlit_`. Через 30 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A torch within 12
+Когда срабатывает: Факел в пределах 12 блоков
 
 ## `torch_line`
 
-Only this player's client is told that up to 8 torches stand in a line along where they look, the first 10 blocks away and one every 3, following the ground up and down. Each is gone for them once they come within 4 blocks (checked every 0.25 s), and the rest after 60 s. Nothing on the server (really placed in `real` mode, put back after 60 s; stays under hardcore)
+Только клиенту этого игрока сообщают, что до 8 факелов стоят в ряд вдоль направления его взгляда: первый в 10 блоках, затем по одному через каждые 3, повторяя подъёмы и спуски земли. Каждый пропадает для игрока, когда он подходит ближе чем на 4 блока (проверка каждые 0.25 с), а остальные пропадают через 60 с. На сервере ничего не меняется (в режиме `real` факелы ставятся по-настоящему и убираются через 60 с; при хардкоре остаются)
 
-Runs when: Outdoors at night under open sky, or under leaves with a log within 8; room for a torch at 3 or more spots in a row
+Когда срабатывает: Под открытым небом ночью или под листвой, если в пределах 8 блоков есть бревно; место для факела не менее чем в 3 точках подряд
 
 ## `fake_ore`
 
-Only this player's client is told that one such block is a diamond ore (deepslate diamond ore in deepslate). A click on it shows the stone. After 1 min it gets the real block back. Nothing on the server
+Только клиенту этого игрока сообщают, что один такой блок является алмазной рудой (глубинной алмазной рудой в глубинном сланце). Если игрок начинает ломать этот блок, ему показывается камень. Через 1 мин клиент снова получает настоящий блок. На сервере ничего не меняется
 
-Runs when: No sky overhead, and stone or deepslate touching air within 8
+Когда срабатывает: Над головой нет неба, и камень или глубинный сланец касается воздуха в пределах 8 блоков
 
 ## `ladder_stub`
 
-Only this player's client is told that the upper half of the column is air. 20 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что верхняя половина колонны является воздухом. Через 20 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A column of at least 3 ladders within 10
+Когда срабатывает: Колонна не менее чем из 3 лестниц в пределах 10 блоков
 
 ## `second_door`
 
-Only this player's client is told of an oak door in the wall. 20 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают о дубовой двери в стене. Через 20 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A wall one block thick and two high in front of the player with free room behind it
+Когда срабатывает: Стена в один блок толщиной и в два высотой перед игроком, за которой есть свободное место
 
 ## `false_harvest`
 
-Only this player's client is told that the 40 nearest such crops are fully grown. 20 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 40 ближайших таких культур полностью выросли. Через 20 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A crop not fully grown within 10
+Когда срабатывает: Не до конца выросшая культура в пределах 10 блоков
 
 ## `lava_pond`
 
-Only this player's client is told that the 200 nearest such water blocks are lava. 1 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 200 ближайших таких блоков воды являются лавой. Через 1 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A source of water with open air above within 12
+Когда срабатывает: Источник воды со свободным воздухом над ним в пределах 12 блоков
 
 ## `lava_as_water`
 
-A sizzle sounds at the lava, and only this player's client is told that the 300 nearest lava blocks are water. They show as lava again when the player comes within 8 blocks, or after 30 s, or at once on a click. Always an illusion, never real, in any swaps mode
+У лавы раздаётся шипение, и только клиенту этого игрока сообщают, что 300 ближайших блоков лавы являются водой. Они снова показываются лавой, когда игрок подходит ближе чем на 8 блоков, через 30 с или сразу, когда игрок начинает ломать один из них. Это всегда иллюзия и никогда не бывает по-настоящему, в любом режиме `swaps`
 
-Runs when: Health > 5 hearts, at least 6 lava blocks within 16 and none within 9
+Когда срабатывает: Здоровье больше 5 сердец, не менее 6 блоков лавы в пределах 16 блоков и ни одного в пределах 9
 
 ## `roof_snow`
 
-Only this player's client is told of two layers of snow on the 80 nearest roof blocks. 1 min later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают о двух слоях снега на 80 ближайших блоках крыши. Через 1 мин клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Sky visible at the player's feet, and a roof of planks, cobblestone, stone bricks, bricks, terracotta or deepslate within 8, at least 2 blocks above the player
+Когда срабатывает: У ног игрока видно небо, и в пределах 8 блоков есть крыша из досок, булыжника, каменных кирпичей, кирпичей, терракоты или глубинного сланца, расположенная не менее чем на 2 блока выше игрока
 
 ## `black_glass`
 
-Only this player's client is told that the 48 nearest glass blocks are tinted glass and the panes black stained glass panes. 15 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 48 ближайших стеклянных блоков являются тонированным стеклом, а панели чёрными окрашенными стеклянными панелями. Через 15 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Glass or a glass pane within 10
+Когда срабатывает: Стекло или стеклянная панель в пределах 10 блоков
 
 ## `red_wool`
 
-Only this player's client is told that the 64 nearest wool blocks and carpets are red. 15 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 64 ближайших блока шерсти и ковра красные. Через 15 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Wool or a carpet within 10 that is not red
+Когда срабатывает: Шерсть или ковёр в пределах 10 блоков, не красного цвета
 
 ## `sign_whisper`
 
-Only this player's client gets the sign's block entity with one of the listed texts on its front. 15 s later it gets the real text. Nothing on the server
+Только клиент этого игрока получает блочную сущность таблички с одним из перечисленных текстов на лицевой стороне. Через 15 с он получает настоящий текст. На сервере ничего не меняется
 
-Runs when: A sign within 10
+Когда срабатывает: Табличка в пределах 10 блоков
 
 ## `wither_roses`
 
-Only this player's client is told that the 48 nearest small flowers are wither roses. 15 s later it gets the real flowers back. Nothing on the server
+Только клиенту этого игрока сообщают, что 48 ближайших мелких цветков являются иссушающими розами. Через 15 с клиент снова получает настоящие цветы. На сервере ничего не меняется
 
-Runs when: A small flower within 12 that is not a wither rose
+Когда срабатывает: Мелкий цветок в пределах 12 блоков, не являющийся иссушающей розой
 
 ## `block_flicker`
 
-Only this player's client is told that up to 200 nearest blocks of one kind found there are one random block of the list `to`. One tick later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что до 200 ближайших блоков одного из найденных там видов являются одним случайным блоком из списка `to`. Через один тик клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A block of the list `from` (stone, dirt, grass, cobblestone, deepslate, sand, oak planks) within 8
+Когда срабатывает: Блок из списка `from` (камень, земля, трава, булыжник, глубинный сланец, песок, дубовые доски) в пределах 8 блоков
 
 ## `lone_gravestone`
 
-Only this player's client is told of a gravestone there. 30 s later it gets the real block back. Nothing on the server
+Только клиенту этого игрока сообщают о надгробии на этом месте. Через 30 с клиент снова получает настоящий блок. На сервере ничего не меняется
 
-Runs when: Standing room 9 blocks ahead (within 40 degrees) under the open sky
+Когда срабатывает: Место, где можно встать, в 9 блоках впереди (в пределах 40 градусов) под открытым небом
 
 ## `broken_portal`
 
-Only this player's client is told that 3 random obsidian blocks touching the portal are air. 15 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 3 случайных блока обсидиана, касающихся портала, являются воздухом. Через 15 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A nether portal block within 16
+Когда срабатывает: Блок портала в Нижний мир в пределах 16 блоков
 
 ## `dark_circle`
 
-Only this player's client is told of light blocks (level 12) in a ring of radius 3 and in its middle. They go out when the player comes within 3 blocks of the middle, or after 30 s. Nothing on the server
+Только клиенту этого игрока сообщают о блоках света (уровень 12) в кольце радиусом 3 и в его середине. Они гаснут, когда игрок подходит ближе чем на 3 блока к середине, или через 30 с. На сервере ничего не меняется
 
-Runs when: Underground (no sky) with block light 5 or less at the player, and standing room 8 blocks ahead with at least 6 of 12 ring points free
+Когда срабатывает: Под землёй (неба нет), уровень света от блоков у игрока не больше 5, и в 8 блоках впереди есть место, где можно встать, причём свободны не менее 6 из 12 точек кольца
 
 ## `fence_gaps`
 
-Only this player's client is told that 3 random fence posts there are air. 20 s later it gets the real posts back. Nothing on the server
+Только клиенту этого игрока сообщают, что 3 случайных столба забора на этом месте являются воздухом. Через 20 с клиент снова получает настоящие столбы. На сервере ничего не меняется
 
-Runs when: At least 4 fence posts within 12
+Когда срабатывает: Не менее 4 столбов забора в пределах 12 блоков
 
 ## `corner_cobwebs`
 
-Only this player's client is told that up to 12 random such corners hold a cobweb. 20 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что не более чем в 12 случайных таких углах есть паутина. Через 20 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: At least 3 empty corners within 8 where the ceiling meets two walls
+Когда срабатывает: Не менее 3 пустых углов в пределах 8 блоков, где потолок сходится с двумя стенами
 
 ## `redstone_trail`
 
-Only this player's client is told of the dust, following the ground up and down. 20 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают о редстоуновой пыли, повторяющей подъёмы и спуски земли. Через 20 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Room on the floor for at least 5 blocks of a straight line in one of the four directions, 3 to 15 blocks away
+Когда срабатывает: На полу есть место не менее чем для 5 блоков прямой линии в одном из четырёх направлений, в 3–15 блоках от игрока
 
 ## `composter_swing`
 
-An empty composter looks full, or a full one looks emptied, for about a minute
+Пустой компостер выглядит полным, а полный выглядит опустевшим, примерно минуту
 
-Runs when: A composter within 12
+Когда срабатывает: Компостер в пределах 12 блоков
 
 ## `banner_skull`
 
-A black skull appears on a banner, and is taken off again after a couple of minutes
+На знамени появляется чёрный череп, и через пару минут его снимают
 
-Runs when: A banner within 12 with room for another pattern
+Когда срабатывает: Знамя в пределах 12 блоков, на которое можно нанести ещё один узор
 
 ## `stairs_flip`
 
-A few stairs behind your back turn upside down, then right again after a minute
+Несколько ступеней за спиной игрока переворачиваются вверх дном, а через минуту снова встают как были
 
-Runs when: Stairs within 12 behind where you are looking
+Когда срабатывает: Ступени в пределах 12 блоков позади того места, куда смотрит игрок
 
 ## `lectern_swap`
 
-The book on a lectern is another one, signed by the spirit; the first comes back later
+Книга на кафедре заменяется другой, подписанной духом; первая возвращается позже
 
-Runs when: A lectern with a book within 12
+Когда срабатывает: Кафедра с книгой в пределах 12 блоков
 
 ## `skulls_turn`
 
-Every such skull is shown turned to face the player (a swap, see the `swaps` setting); restored after 30 s
+Каждый такой череп показывается повёрнутым лицом к игроку (подмена, см. настройку `swaps`); через 30 с он возвращается
 
-Runs when: Any floor or wall skull within 12, in any dimension
+Когда срабатывает: Любой напольный или настенный череп в пределах 12 блоков, в любом измерении
 
 ## `anchor_charge`
 
-One of them shows one more charge, with the charging sound (a swap, see the `swaps` setting); restored after 30 s, and under hardcore it stays
+Один из них показывает ещё один заряд, со звуком зарядки (подмена, см. настройку `swaps`); через 30 с он возвращается, а при хардкоре остаётся
 
-Runs when: Nether, a respawn anchor below full charge within 10
+Когда срабатывает: Нижний мир, якорь возрождения с неполным зарядом в пределах 10 блоков
 
 ## `vines_reach`
 
-The vine nearest the player grows up to 3 blocks down into the air, ending in a full-grown head; put back after 30 s, and under hardcore it stays
+Ближайшая к игроку лоза вырастает на 3 блока вниз в воздух и заканчивается полностью выросшей верхушкой; через 30 с её убирают, а при хардкоре она остаётся
 
-Runs when: Nether, a weeping vine end with air below within 12
+Когда срабатывает: Нижний мир, конец плакучей лозы со свободным воздухом под ним в пределах 12 блоков
 
 ## `void_wind`
 
-A wind-burst howl, then after 2 s the player on the ground is nudged outward at about 2.4 blocks/s every 0.1 s for 5 s, with the howl repeated each second. It ends the moment ground is missing within 10 blocks along the way, so the edge is never reached
+Раздаётся вой порыва ветра, а через 2 с игрока на земле каждые 0.1 с подталкивает наружу со скоростью около 2.4 блока/с в течение 5 с, причём вой повторяется каждую секунду. Всё обрывается, как только на пути в пределах 10 блоков не оказывается земли, поэтому до края игрок никогда не доходит
 
-Runs when: End, health > 5 hearts, on the ground, not riding, 24 or more blocks from the middle, and ground (within 4 blocks below) at every second block out to 10 blocks along the way outward
+Когда срабатывает: Край, здоровье больше 5 сердец, игрок на земле и не верхом, в 24 или более блоках от середины, и земля (в пределах 4 блоков ниже) есть под каждым вторым блоком на пути наружу до 10 блоков
 
 ## `gateway_beam`
 
-The gateway's own beam event is sent, as when an entity enters it, so it shows its beam for 2 s. Nobody is moved
+Подаётся собственный сигнал луча врат, как при входе сущности, и врата 2 с показывают свой луч. Никого не перемещает
 
-Runs when: End, a gateway in the 9×9 chunks around the player
+Когда срабатывает: Край, врата в области 9×9 чанков вокруг игрока
 
 ## `chorus_shift`
 
-Only this player's client is told that the 24 nearest such blocks are one block over in a single direction (air where they were). After 10 s it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 24 ближайших таких блока сдвинуты на один блок в одну сторону (на прежнем месте воздух). Через 10 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: End, a chorus plant or flower within 12 blocks with free air beside it
+Когда срабатывает: Край, хорус или цветок хоруса в пределах 12 блоков со свободным воздухом рядом
 
 ## `phantom_egg`
 
-Only this player's client is told of a dragon egg standing there. A click shows the truth. After 10 s it gets the real block back. Nothing on the server
+Только клиенту этого игрока сообщают о яйце дракона на этом месте. Если игрок начинает его ломать, ему показывается правда. Через 10 с клиент снова получает настоящий блок. На сервере ничего не меняется
 
-Runs when: End, standing room 4–12 blocks away
+Когда срабатывает: Край, место, где можно встать, в 4–12 блоках от игрока
 
 ## `ender_chests_open`
 
-Five ender chest open sounds, 3–8 blocks away at random bearings, 0.4 s apart, each followed by the close sound 1.5 s after. Nothing in the world
+Пять звуков открытия сундука Края раздаются в 3–8 блоках от игрока, со случайных направлений, с интервалом 0.4 с, и через 1.5 с после каждого звучит закрытие. В мире ничего нет
 
-Runs when: End
+Когда срабатывает: Край
 
 ## `nowhere_portal`
 
-Only this player's client is told of a lit nether portal in a frame of obsidian (no corners) there, facing them, with the portal ambient sound. A click shows air. After 15 s it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают о горящем портале в Нижний мир в обсидиановой раме (без углов) на этом месте, обращённом к игроку, со звуком портала. Если игрок начинает его ломать, ему показывается воздух. Через 15 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Overworld, a 4×5 empty space on solid ground 14 blocks away within 40° of where the player looks
+Когда срабатывает: Верхний мир, пустое место 4×5 на твёрдой земле в 14 блоках, в пределах 40° от направления взгляда игрока
 
 ## `desert_sand_trickle`
 
-Falling sand particles under the first solid block above the player's head, 12 pulses 0.25 s apart, with a sand-breaking sound. Nothing in the world changes
+Частицы падающего песка сыплются из-под первого твёрдого блока над головой игрока, 12 импульсов с интервалом 0.25 с, со звуком ломающегося песка. В мире ничего не меняется
 
-Runs when: In a desert, with a solid block within 6 above the player's head
+Когда срабатывает: В пустыне, твёрдый блок в пределах 6 блоков над головой игрока
 
 ## `cauldron`
 
-Brewing bubble sounds and bubble particles over a cauldron within 12, 8 pulses 0.5 s apart
+Над котлом в пределах 12 блоков слышны звуки кипящего зелья и видны частицы пузырей, 8 импульсов с интервалом 0.5 с
 
-Runs when: A cauldron within 12, in any biome
+Когда срабатывает: Котёл в пределах 12 блоков, в любом биоме
 
 ## `fireflies_dark`
 
-Only this player's client is told that every firefly bush within 12 is a plain bush. 30 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что каждый куст со светлячками в пределах 12 блоков является обычным кустом. Через 30 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A firefly bush within 12, in any biome
+Когда срабатывает: Куст со светлячками в пределах 12 блоков, в любом биоме
 
 ## `snow_door_drift`
 
-Four layers of real snow on the outside of a wooden door within 12 and three layers on each side along the wall; removed after 2 min (stays under hardcore)
+Четыре слоя настоящего снега ложатся снаружи деревянной двери в пределах 12 блоков и по три слоя с каждой стороны вдоль стены; через 2 мин снег убирается (при хардкоре остаётся)
 
-Runs when: In a snowy biome, with a wooden door within 12 that has open sky and free ground outside it
+Когда срабатывает: В заснеженном биоме, деревянная дверь в пределах 12 блоков, снаружи которой открытое небо и свободная земля
 
 ## `window_vines`
 
-Real vines grow on up to 24 of the nearest air blocks beside the glass, hung toward it. 60 s later each goes unless it was changed meanwhile. Under hardcore they stay
+Настоящие лианы вырастают не более чем на 24 ближайших блоках воздуха рядом со стеклом, свисая к нему. Через 60 с каждая пропадает, если её тем временем не меняли. При хардкоре они остаются
 
-Runs when: In a jungle, swamp or mangrove swamp biome, glass or a glass pane within 12 with air beside it
+Когда срабатывает: В джунглях, болоте или мангровом болоте, стекло или стеклянная панель в пределах 12 блоков со свободным воздухом рядом
 
 ## `eyeblossoms_open`
 
-Only this player's client is told that up to 12 of the nearest such flowers are open, and an opening sounds. 30 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что до 12 ближайших таких цветков раскрыты, и слышен звук раскрытия. Через 30 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: A closed eyeblossom within 12, regardless of biome or view
+Когда срабатывает: Закрытый глазоцвет в пределах 12 блоков, независимо от биома и направления взгляда
 
 ## `resin_clumps`
 
-Real resin clumps grow on up to 8 air blocks beside the walls, clustered around a random spot, with a placing sound. 2 min later each goes unless it was changed meanwhile. Under hardcore they stay
+Настоящие комки смолы вырастают не более чем на 8 блоках воздуха рядом со стенами, кучкой вокруг случайного места, со звуком установки блока. Через 2 мин каждый пропадает, если его тем временем не меняли. При хардкоре они остаются
 
-Runs when: In a forest, flower forest, birch forest, old growth birch forest, dark forest or pale garden, a plank, cobblestone, stone brick, brick or wool wall within 12 with air beside it
+Когда срабатывает: В лесу, цветочном лесу, берёзовом лесу, старом берёзовом лесу, тёмном лесу или бледном саду, стена из досок, булыжника, каменных кирпичей, кирпичей или шерсти в пределах 12 блоков со свободным воздухом рядом
 
 ## `canopy_closes`
 
-Only this player's client is told that the 40 nearest such blocks are persistent dark oak leaves. 15 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что 40 ближайших таких блоков являются постоянной листвой тёмного дуба. Через 15 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: In the dark forest or pale garden, at least 6 air blocks touching leaves at least 3 above the player within 8
+Когда срабатывает: В тёмном лесу или бледном саду, не менее 6 блоков воздуха, касающихся листвы, расположенной не менее чем на 3 блока выше игрока, в пределах 8 блоков
 
 ## `sculk_creep`
 
-Real sculk spreads in a trail of up to 12 blocks from far ground toward the player, one every second, each next to the last and nearer, stopping 3 blocks away. 2 min later each goes unless it was changed meanwhile. Under hardcore it stays
+Настоящий скалк расползается дорожкой до 12 блоков от дальней земли к игроку, по одному блоку в секунду, каждый рядом с предыдущим и ближе к игроку, и останавливается в 3 блоках от него. Через 2 мин каждый пропадает, если его тем временем не меняли. При хардкоре он остаётся
 
-Runs when: In the deep dark, sculk-replaceable ground with air above, 8 to 14 blocks away
+Когда срабатывает: В глубинной тьме, земля, на которую может лечь скалк, со свободным воздухом над ней в 8–14 блоках от игрока
 
 ## `berries_dark`
 
-Up to 10 of the nearest bunches lose their berries, one per second; 1 min later each has them again. Under hardcore they stay dark
+До 10 ближайших гроздьев теряют ягоды, по одной в секунду; через 1 мин у каждой они появляются снова. При хардкоре ягоды остаются тёмными
 
-Runs when: Glow berries within 14, in any biome
+Когда срабатывает: Светящиеся ягоды в пределах 14 блоков, в любом биоме
 
 ## `scarecrow_closer`
 
-A scarecrow stands a step closer than it did, then goes back after a minute
+Пугало стоит на шаг ближе, чем стояло, а через минуту возвращается
 
-Runs when: A scarecrow within 14, at least 4 away, with room to step toward you
+Когда срабатывает: Пугало в пределах 14 блоков, не ближе 4, с местом для шага к игроку
 
 ## `ouija_hi`
 
-The planchette spells "HI" on its own
+Планшетка сама выводит «HI»
 
-Runs when: An ouija board within 8
+Когда срабатывает: Доска уиджа в пределах 8 блоков
 
 ## `spirit_box_word`
 
-The spirit box says a word nobody asked for
+Спирит-бокс произносит слово, о котором никто не спрашивал
 
-Runs when: A spirit box within 6
+Когда срабатывает: Спирит-бокс в пределах 6 блоков
 
 ## `salt_gap`
 
-One cell of a salt line disappears, the one nearest the spirit, and returns after two minutes
+Одна клетка соляной линии, ближайшая к духу, исчезает и возвращается через две минуты
 
-Runs when: At least 4 salt cells within 8
+Когда срабатывает: Не менее 4 клеток соли в пределах 8 блоков
 
 ## `grave_name`
 
-A gravestone reads your own name
+На надгробии написано собственное имя игрока
 
-Runs when: A gravestone within 16
+Когда срабатывает: Надгробие в пределах 16 блоков
 
 ## `journal_page_torn`
 
-One journal entry is gone for a few minutes, then back in its place
+Одна запись журнала пропадает на несколько минут, а потом возвращается на своё место
 
-Runs when: You carry a journal with at least 3 entries
+Когда срабатывает: Игрок носит с собой журнал не менее чем с 3 записями
 
 ## `dreamcatcher_fails`
 
-A dreamcatcher swings hard, and the dream comes anyway
+Ловец снов сильно раскачивается, но сон всё равно приходит
 
-Runs when: A dreamcatcher within 8 and a dream that can start
+Когда срабатывает: Ловец снов в пределах 8 блоков и сон, который может начаться
 
 ## `lantern_soul_fire`
 
-A hallowed lantern burns with soul fire for half a minute and does not ward meanwhile
+Освящённый фонарь полминуты горит огнём душ и в это время не оберегает
 
-Runs when: A hallowed lantern within 10 and a spirit about
+Когда срабатывает: Освящённый фонарь в пределах 10 блоков и поблизости дух
 
 ## `charm_falls`
 
-A door charm drops off its hook as an item
+Оберег на дверь падает с крючка предметом
 
-Runs when: A door charm within 10
+Когда срабатывает: Оберег на дверь в пределах 10 блоков
 
 ## `altar_midnight`
 
-At night the candles around an altar light themselves one after another
+Ночью свечи вокруг алтаря сами зажигаются одна за другой
 
-Runs when: Night in the overworld and an altar within 12 with unlit candles beside it
+Когда срабатывает: Ночь в Верхнем мире и алтарь в пределах 12 блоков с незажжёнными свечами рядом
 
 ## `beacon_out`
 
-**Harmful.**
-An obsidian or black stained glass block is shown right above it, so the beam goes out or turns black. 30 s, this player only (a real block under `real` swaps; under hardcore it stays)
+**Вредящее событие.**
+Прямо над маяком показывается блок обсидиана или чёрного окрашенного стекла, так что луч гаснет или чернеет. 30 с, только для этого игрока (при подменах `real` блок настоящий; при хардкоре остаётся)
 
-Runs when: An active beacon within 16 with air above it
+Когда срабатывает: Действующий маяк в пределах 16 блоков со свободным воздухом над ним
 
 ## `campfire_cooks`
 
-Rotten flesh or a rabbit foot shows on the grill for 1 min, to this player only. Nothing cooks and the real campfire is unchanged
+На решётке на 1 мин показывается кусок гнили или кроличья лапка, только для этого игрока. Ничего не готовится, настоящий костёр не меняется
 
-Runs when: A campfire with a free slot within 10
+Когда срабатывает: Костёр со свободным слотом в пределах 10 блоков
 
 ## `spawner_shows`
 
-The spinning mob inside is a villager, iron golem, cat, wandering trader, chicken or witch for 30 s, this player only. The real spawner is unchanged
+Вращающееся внутри существо на 30 с оказывается жителем, железным големом, котом, странствующим торговцем, курицей или ведьмой, только для этого игрока. Настоящий спавнер не меняется
 
-Runs when: A monster spawner within 16
+Когда срабатывает: Спавнер монстров в пределах 16 блоков
 
 ## `trial_ominous`
 
-Shown as ominous for 10 s, this player only
+На 10 с показывается зловещим, только для этого игрока
 
-Runs when: A calm trial spawner within 16
+Когда срабатывает: Спокойный спавнер испытаний в пределах 16 блоков
 
 ## `vault_head`
 
-Its display item is the player's own head for 30 s, this player only
+Показываемый предмет на 30 с становится головой самого игрока, только для этого игрока
 
-Runs when: A vault within 16
+Когда срабатывает: Хранилище в пределах 16 блоков
 
 ## `black_bed`
 
-Both halves show as the black bed, same facing and part, for 1 min, this player only (a bed is never really swapped)
+Обе половины на 1 мин показываются как чёрная кровать, с тем же направлением и частью, только для этого игрока (кровать никогда не подменяется по-настоящему)
 
-Runs when: A bed that is not black within 12
+Когда срабатывает: Кровать не чёрного цвета в пределах 12 блоков
 
 ## `black_carpets`
 
-The 48 nearest show as black carpets for 1 min (really changed in `real` mode; stays under hardcore)
+48 ближайших ковров на 1 мин показываются чёрными (в режиме `real` они меняются по-настоящему; при хардкоре остаются)
 
-Runs when: Indoors, a carpet that is not black within 8
+Когда срабатывает: В помещении, ковёр не чёрного цвета в пределах 8 блоков
 
 ## `netherrack_behind`
 
-Only this player's client is told that the 40 nearest such blocks are netherrack. They get the real blocks back when the player looks within 70° of any of them, or after 30 s. Nothing on the server (with the `swaps` setting `REAL`, changed for 30 s)
+Только клиенту этого игрока сообщают, что 40 ближайших таких блоков являются адским камнем. Клиент получает настоящие блоки, когда игрок смотрит в пределах 70° от любого из них, или через 30 с. На сервере ничего не меняется (при значении `REAL` настройки `swaps` блоки меняются по-настоящему на 30 с)
 
-Runs when: A solid block with a free face 2 to 8 away, more than 100° from where the player looks
+Когда срабатывает: Твёрдый блок со свободной гранью в 2–8 блоках от игрока, более чем в 100° от направления его взгляда
 
 ## `roof_gone`
 
-Only this player's client is told that every block from 2 above the player to the sky, 2 blocks to either side, is air. 20 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что каждый блок от 2 блоков над игроком до неба, на 2 блока в каждую сторону, является воздухом. Через 20 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Indoors, with at most 6 blocks of roof over the player's head; at least 4 blocks to hide
+Когда срабатывает: В помещении, над головой игрока не больше 6 блоков крыши; нужно скрыть не менее 4 блоков
 
 ## `path_rearranged`
 
-Only this player's client is told that those floor blocks are shuffled among each other. They get the real blocks back when the player looks within 70° of any of them, or after 30 s. Nothing on the server
+Только клиенту этого игрока сообщают, что эти блоки пола перемешаны между собой. Клиент получает настоящие блоки, когда игрок смотрит в пределах 70° от любого из них, или через 30 с. На сервере ничего не меняется
 
-Runs when: At least 8 floor blocks 3 to 10 behind the player (1 to either side) of at least two kinds
+Когда срабатывает: Не менее 8 блоков пола в 3–10 блоках позади игрока (по 1 в каждую сторону) не менее чем двух видов
 
 ## `landmark_tree_gone`
 
-Only this player's client is told that the tallest such tree (logs and leaves) is air. It gets the real blocks back when the player comes within 12 of it, or after 60 s. Nothing on the server
+Только клиенту этого игрока сообщают, что самое высокое такое дерево (брёвна и листва) является воздухом. Клиент получает настоящие блоки, когда игрок подходит к нему ближе чем на 12 блоков, или через 60 с. На сервере ничего не меняется
 
-Runs when: The player's bed is in this dimension; a tree of at most 250 blocks and 8 leaves within 24 of it, 18 to 64 from the player
+Когда срабатывает: Кровать игрока находится в этом измерении; дерево не больше 250 блоков и не менее 8 листьев в пределах 24 блоков от неё, в 18–64 блоках от игрока
 
 ## `tunnel_filled`
 
-Only this player's client is told that both blocks of each such cell are stone. They get the real blocks back when the player looks within 70° of any of them, or after 30 s. Nothing on the server. Not limited to tunnels the player dug
+Только клиенту этого игрока сообщают, что оба блока каждой такой клетки являются камнем. Клиент получает настоящие блоки, когда игрок смотрит в пределах 70° от любого из них, или через 30 с. На сервере ничего не меняется. Событие не ограничено тоннелями, которые прорыл сам игрок
 
-Runs when: Under no sky; at least 6 walkway cells 2 to 10 behind the player (1 to either side) with a solid block 2 above and no sky
+Когда срабатывает: Неба нет; не менее 6 клеток прохода в 2–10 блоках позади игрока (по 1 в каждую сторону) с твёрдым блоком на 2 выше и без неба
 
 ## `walled_in`
 
-**Harmful.**
-Four knocks, 0.25 s apart, come from random sides at head height, with the hit sound of the surrounding block. 1 s after the first the player is pulled to the middle of their block and every free block around their feet and head and over their head (up to 9) turns into the commonest plain block within 2 blocks (stone if none; never ores, beacon blocks, ancient debris or falling blocks), with Mining Fatigue III for 20 s. The walls are put back after 20 s (stay under hardcore). Nothing happens if the player is dead or in water at the 1 s mark
+**Вредящее событие.**
+Раздаются четыре стука с интервалом 0.25 с, со случайных сторон на уровне головы, со звуком удара по окружающему блоку. Через 1 с после первого игрока перемещает в середину его блока, а каждый свободный блок вокруг его ног и головы и над головой (до 9) превращается в самый распространённый простой блок в пределах 2 блоков (в камень, если таких нет; никогда не в руды, блоки маяка, древние обломки и падающие блоки), и на 20 с накладывается Утомление III. Стены убираются через 20 с (при хардкоре остаются). Если в момент 1 с игрок мёртв или в воде, ничего не происходит
 
-Runs when: On the ground, not in water, not riding, and at least 5 of those blocks are empty with nobody in them
+Когда срабатывает: Игрок на земле, не в воде, не верхом, и не менее 5 из этих блоков пусты, и в них никого нет
 
 ## `sealed_tunnel`
 
-**Harmful.**
-The cross-section of the tunnel 2 to 5 blocks straight behind the player (up to 6 air blocks) is filled in, wall to wall, with the commonest plain block of its walls (stone if none). It is put back after 60 s (stays under hardcore)
+**Вредящее событие.**
+Поперечное сечение тоннеля в 2–5 блоках прямо позади игрока (до 6 блоков воздуха) заполняется от стены до стены самым распространённым простым блоком его стен (камнем, если таких нет). Через 60 с всё возвращается (при хардкоре остаётся)
 
-Runs when: On the ground, not in water, under a roof, and open tunnel behind the player (opposite their facing) leading to a cross-section 2 to 5 away that full blocks shut in, with nobody in it
+Когда срабатывает: Игрок на земле, не в воде, под крышей, а позади него (напротив направления его взгляда) открытый тоннель, ведущий к сечению в 2–5 блоках, замкнутому целыми блоками, в котором никого нет
 
 ## `ceiling_furniture`
 
-Only this player's client is told that up to 6 such blocks hold an upside-down stair or slab, or a bed (two blocks), at random facings. 30 s later it gets the real blocks back. Nothing on the server
+Только клиенту этого игрока сообщают, что до 6 таких блоков занимают перевёрнутая ступень или плита либо кровать (два блока) со случайным направлением. Через 30 с клиент снова получает настоящие блоки. На сервере ничего не меняется
 
-Runs when: Indoors, an air block under the ceiling 6 blocks around the player, at least 1.5 from them and above their feet
+Когда срабатывает: В помещении, блок воздуха под потолком в пределах 6 блоков вокруг игрока, не ближе 1.5 к нему и выше уровня его ног
 
 ## `crafter_crafts`
 
-The crafter shows its crafting state (6 ticks) with the craft sound and particles, and ejects a bone, skeleton skull or paper named after the player from its face; the item vanishes after 1 min. Its real contents are not touched
+Крафтер показывает состояние крафта (6 тиков) со звуком и частицами крафта и выбрасывает из своей грани кость, череп скелета или бумагу с именем игрока; предмет пропадает через 1 мин. Настоящее содержимое крафтера не затрагивается
 
-Runs when: A crafter within 12
+Когда срабатывает: Крафтер в пределах 12 блоков
 
 ## `scaffold_collapses`
 
-**Harmful.**
-Three creaks, 14 ticks apart, then every scaffolding block of the column breaks and drops (only if the player still stands on it)
+**Вредящее событие.**
+Три скрипа с интервалом 14 тиков, затем каждый блок строительных лесов в колонне ломается и выпадает (только если игрок всё ещё стоит на ней)
 
-Runs when: Standing on a scaffolding column on solid ground, a fall of under 4 blocks
+Когда срабатывает: Игрок стоит на колонне строительных лесов на твёрдой земле, падение меньше 4 блоков
 
 ## `wall_map_shows`
 
-The framed map is replaced by a new map of the area around the spirit's anchor; the original is put back after 2 min (stays under hardcore)
+Карта в рамке заменяется новой картой окрестностей якоря духа; оригинал возвращается через 2 мин (при хардкоре остаётся)
 
-Runs when: A framed filled map within 12 and a territorial spirit whose reach holds the player, with the 128-block area around its anchor loaded
+Когда срабатывает: Рамка с заполненной картой в пределах 12 блоков и территориальный дух, в зоне досягаемости которого находится игрок, при загруженной области в 128 блоков вокруг его якоря
 
 ## `haunted_painting`
 
-A painting becomes one of the mod's own (a portrait of no one, the house at night, a pair of eyes), and is put back after a minute (stays under hardcore)
+Картина становится одной из картин мода (портрет никого, дом ночью, пара глаз) и возвращается через минуту (при хардкоре остаётся)
 
-Runs when: A painting within 12 that has a mod variant of the same size
+Когда срабатывает: Картина в пределах 12 блоков, у которой есть вариант мода того же размера
 
 ## `painting_darkens`
 
-A large painting darkens in four steps, 20 s apart, and a figure comes up the path to the house; put back after 3 min (stays under hardcore)
+Большая картина темнеет в четыре шага с интервалом 20 с, и по тропе к дому поднимается фигура; через 3 мин картина возвращается (при хардкоре остаётся)
 
-Runs when: A 2 by 2 painting within 12
+Когда срабатывает: Картина 2 на 2 в пределах 12 блоков
 
 ## `sigil_banner`
 
-A black spirit sigil appears on a banner, and is taken off after 2 min (stays under hardcore)
+На знамени появляется чёрный знак духа, и через 2 мин его снимают (при хардкоре остаётся)
 
-Runs when: A banner within 12 with room for another pattern
+Когда срабатывает: Знамя в пределах 12 блоков, на которое можно нанести ещё один узор
 
 ## `abandoned_camp`
 
-A bed, a campfire and a chest holding a signed book in the spirit's voice (a page from a pool, never repeated for the same spirit); every block is removed after 10 min unless it was changed, a chest with the player's own items stays; stays under hardcore
+Появляются кровать, костёр и сундук с подписанной книгой, написанной голосом духа (страница из набора, которая никогда не повторяется для одного и того же духа); каждый блок убирается через 10 мин, если его не меняли, а сундук с вещами самого игрока остаётся; при хардкоре всё остаётся
 
-Runs when: Overworld; open standing room for a 4×3 camp 6–14 away; the spirit still has a book page it has not said
+Когда срабатывает: Верхний мир; открытое место для лагеря 4×3 в 6–14 блоках; у духа ещё есть страница книги, которую он не произносил
 
 ## `dirt_hut`
 
-A dirt hut with a two-high doorway and a roof; removed block by block after 7.5 min, stays under hardcore
+Появляется земляная хижина с дверным проёмом высотой в два блока и крышей; она убирается блок за блоком через 7.5 мин, при хардкоре остаётся
 
-Runs when: Overworld; open ground for a 3×3 hut 5–12 away
+Когда срабатывает: Верхний мир; открытая земля для хижины 3×3 в 5–12 блоках
 
 ## `rocking_chair`
 
-A rocking chair appears and leans forward and back 24 times with a creak, then is gone 5 s later
+Появляется кресло-качалка и 24 раза со скрипом наклоняется вперёд и назад, а через 5 с после этого пропадает
 
-Runs when: A spot of free floor under a roof within 10, 3+ away and outside 55° of where the player looks
+Когда срабатывает: Свободное место на полу под крышей в пределах 10 блоков, не ближе 3 и вне 55° от направления взгляда игрока
 
 ## `rotten_planks`
 
-One plank turns into rotten planks, then the rot spreads to touching planks, 2 per second, up to 24 blocks. They are put back after 2 min; under hardcore they stay
+Одна доска превращается в гнилые доски, затем гниль переходит на соседние доски, по 2 в секунду, до 24 блоков. Через 2 мин доски возвращаются; при хардкоре они остаются
 
-Runs when: Indoors, planks within 10
+Когда срабатывает: В помещении, доски в пределах 10 блоков
 
 ## `cracked_mirror`
 
-A cracked mirror appears on the wall. When the player looks at it from within 6 blocks, a dark figure shows in it for 2 s. Gone after 30 s more
+На стене появляется треснувшее зеркало. Когда игрок смотрит на него с расстояния до 6 блоков, в нём на 2 с показывается тёмная фигура. Ещё через 30 с зеркало исчезает
 
-Runs when: Indoors, a wall at head height within 8, 2+ away and outside 60° of where the player looks
+Когда срабатывает: В помещении, стена на уровне головы в пределах 8 блоков, не ближе 2 и вне 60° от направления взгляда игрока

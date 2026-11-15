@@ -4,7 +4,7 @@ title: How it works
 
 # How it works
 
-Every spirit has an **age**, an **anger** and a **power**. Together they decide how often it acts and how much it can hurt. For where spirits come from, see [Deeds and places](/en/items/essences#deeds-and-places). Your grip on yourself is a separate bar, see [Sanity](/en/sanity).
+Every spirit I have met had an **age**, an **anger** and a **power**. Together they decide how often it acts and how much it can hurt. For where spirits come from, see [Deeds and places](/en/items/essences#deeds-and-places). The player's own grip on themselves is a separate bar, see [Sanity](/en/sanity).
 
 ## Power
 
@@ -16,52 +16,52 @@ Power runs from 0 to 1 and comes from the spirit alone, never from the world or 
 - **Anger** is 0 to 1. See [Anger](#anger).
 - A spirit that has **evolved** never drops below power 0.7, however calm it gets.
 
-The spirit you get when you first join and a spirit born from a deed both start at anger 0.5, so their power starts at 0.29.
+The spirit a player gets on first joining and a spirit born from a deed both start at anger 0.5, so their power starts at 0.29.
 
-When the last spirit that haunts you is gone (banished, laid to rest or otherwise removed), a new one of a different type finds you 2 to 4 days later, at anger 0.5. It does not come if you already have another spirit, if you are released by the Requiem, or while you are in creative or spectator mode.
+When the last spirit that haunts a player is gone (banished, laid to rest or otherwise removed), a new one of a different type finds the player 2 to 4 days later, at anger 0.5. It does not come if the player already has another spirit, if the player is released by the Requiem, or while the player is in creative or spectator mode.
 
 An [echo](/en/items/tools#the-ritual) left by an altar banishing does not count here: it neither keeps the new spirit away nor brings one when it leaves, and it does not count toward the limit of personal spirits or their cooldown. A new spirit of the echo's own type takes the echo's place.
 
 ## What power changes
 
-**Which events it rolls.** Light events (scares) are weighted by `1 − 0.7 × power`. Harmful events are weighted by `power`. A spirit with power 0 (only a place-bound spirit just born) never rolls a harmful event; a new spirit that haunts you can roll one within the first days, although it stays rare; a fully grown, angry one (power 1) rolls light events at 30% of their base weight and harmful events at full weight. The spirit's type and its traits then multiply the weights for each kind of event, see [Spirits](/en/spirits).
+**Which events it rolls.** Light events (scares) are weighted by `1 − 0.7 × power`. Harmful events are weighted by `power`. A spirit with power 0 (only a place-bound spirit just born) never rolls a harmful event; a new spirit that haunts a player can roll one within the first days, although it stays rare; a fully grown, angry one (power 1) rolls light events at 30% of their base weight and harmful events at full weight. The spirit's type and its traits then multiply the weights for each kind of event, see [Spirits](/en/spirits).
 
 **How often.** The wait between two events is `4 − 2.5 × power` minutes, stretched by a random factor of 1 to 2 and divided by the spirit's activity. A calm spirit acts every 4 to 8 minutes; a fully powerful one every 1.5 to 3. The wait is never shorter than 5 seconds. A new spirit's very first event comes 90 seconds after the journal is handed out, not after a full wait.
 
-**How hard an event hits.** Every event has an impact, from 0 for a far figure or sound to 1 for a lethal attack. It does not change which event rolls, only when the next one comes. After a light event the wait is multiplied by 0.25 to 0.5, so the spirit reminds you of itself soon. After a middling one (impact 0.6) the wait is unchanged. After a heavy attack it is multiplied by 1.25 to 1.5, so you get time to recover.
+**How hard an event hits.** Every event has an impact, from 0 for a far figure or sound to 1 for a lethal attack. It does not change which event rolls, only when the next one comes. After a light event the wait is multiplied by 0.25 to 0.5, so the spirit soon reminds the player of itself. After a middling one (impact 0.6) the wait is unchanged. After a heavy attack it is multiplied by 1.25 to 1.5, so the player gets time to recover.
 
-**When it is quiet.** Spirits hold back in the open. Each of these stretches the wait by 1.2: it is day, you can see the sky, no thunderstorm is running. All three together stretch it by 1.7.
+**When it is quiet.** Spirits hold back in the open. Each of these stretches the wait by 1.2: it is day, the player can see the sky, no thunderstorm is running. All three together stretch it by 1.7.
 
 ## Who hears it
 
-The sounds of your personal spirit's events reach only you: a player standing beside you hears nothing. A territorial spirit's sounds are heard by everyone near, like any other sound. What an event does to the world, such as a block it breaks, everyone still sees.
+The sounds of a personal spirit's events reach only its player: another player standing beside them hears nothing. A territorial spirit's sounds are heard by everyone near, like any other sound. What an event does to the world, such as a block it breaks, everyone still sees.
 
 ## Anger
 
-A spirit's anger rises when you do something spirits hate:
+A spirit's anger rises when the player does something spirits hate:
 
-| What you do | Anger |
+| What the player does | Anger |
 | --- | --- |
-| Kill a cat | +0.15 |
-| Break a grave: a skeleton skull, a wither skeleton skull, a bone block or a gravestone | +0.2 |
-| Burn a forest | +0.1 |
-| Use the Bargain, the Black Bargain or the Infernal Contract | +0.3 |
-| Use the Borrowed Dream | +0.2 |
-| Use the Devil's Coin | +0.1 |
-| Fail a ritual at the altar | +0.3 |
-| Say a wrong name in a ritual's fury or leaving | +0.1 |
-| Lay an offering of the wrong nature | straight to 1 |
-| Do a deed again whose spirit you already have (it angers that one instead of a new birth) | +0.15 |
+| Kills a cat | +0.15 |
+| Breaks a grave: a skeleton skull, a wither skeleton skull, a bone block or a gravestone | +0.2 |
+| Burns a forest | +0.1 |
+| Uses the Bargain, the Black Bargain or the Infernal Contract | +0.3 |
+| Uses the Borrowed Dream | +0.2 |
+| Uses the Devil's Coin | +0.1 |
+| Fails a ritual at the altar | +0.3 |
+| Says a wrong name in a ritual's fury or leaving | +0.1 |
+| Lays an offering of the wrong nature | straight to 1 |
+| Does a deed again whose spirit the player already has (it angers that one instead of a new birth) | +0.15 |
 
-Your personal spirits take offence at everything you do, wherever you are. A territorial spirit takes it only when it happens inside its radius (48 blocks), and also when its anchor is broken (+0.3, within 3 blocks of it).
+A player's personal spirits take offence at everything the player does, wherever they are. A territorial spirit takes it only when it happens inside its radius (48 blocks), and also when its anchor is broken (+0.3, within 3 blocks of it).
 
-Nothing wears anger down with time. It falls when a spirit's anger is spent: you beat an avenger, or a lethal event takes a player. A spirit's [desire](#leanings) left near you also calms it, and its hate angers it. A gift in the [bargain of a ritual](/en/items/tools#the-ritual) lowers it by 0.3, and so does its desire laid on an altar ([appeasement](/en/items/tools#appeasement)).
+Nothing wears anger down with time. It falls when a spirit's anger is spent: the player beats an avenger, or a lethal event takes a player. A spirit's [desire](#leanings) left nearby also calms it, and its hate angers it. A gift in the [bargain of a ritual](/en/items/tools#the-ritual) lowers it by 0.3, and so does its desire laid on an altar ([appeasement](/en/items/tools#appeasement)).
 
-Above anger 0.7 some [tells](/en/events/tells) turn harsh: the door slammer locks a door near you (`locked_door`), the cold touch brings frostbite (`frostbite`), the vengeful strikes (`wrath`) and the whisperer drains sanity (`sanity_drain`). Where the harsh form has nothing to act on, the mild tell runs.
+Above anger 0.7 some [tells](/en/events/tells) turn harsh: the door slammer locks a door nearby (`locked_door`), the cold touch brings frostbite (`frostbite`), the vengeful strikes (`wrath`) and the whisperer drains sanity (`sanity_drain`). Where the harsh form has nothing to act on, the mild tell runs.
 
 ## Evolving
 
-A spirit left alone for **10 days** grows up: a poltergeist turns raging, a shade a light-eater. Personal spirits grow while their player is online. You are told, and the journal notes it.
+A spirit left alone for **10 days** grows up: a poltergeist turns raging, a shade a light-eater. Personal spirits grow while their player is online. The player is told, and the journal notes it.
 
 An evolved spirit:
 
@@ -77,7 +77,7 @@ A wrong offering at the altar ages the spirit by a day toward evolving.
 
 ## Merging
 
-A player who has two or more personal spirits older than **15 days** (echoes do not count) will see the eldest swallow the next eldest; this is checked every minute while they are online. The merged spirit:
+When a player has two or more personal spirits older than **15 days** (echoes do not count), the eldest swallows the next eldest; this is checked every minute while the player is online. The merged spirit:
 
 - keeps the elder's type, name, story, conditions and leanings;
 - adds the younger's habits;
@@ -85,15 +85,15 @@ A player who has two or more personal spirits older than **15 days** (echoes do 
 - is [evolved](#evolving) if either was;
 - has the nature that most of its habits belong to. The other nature becomes a **second nature**, so the [ritual](/en/items/tools#the-ritual) asks for two offerings. If both natures were the same, there is no second nature.
 
-The elder's grave stays. If it had none, the younger's grave passes to it, and the other grave is dropped. You are told, and the journal notes it.
+The elder's grave stays. If it had none, the younger's grave passes to it, and the other grave is dropped. The player is told, and the journal notes it.
 
 ## Blight
 
-A territorial spirit slowly fouls the land around its anchor: grass turns to coarse dirt, flowers to dead bushes. At first it reaches 6 blocks. Over 3 days it grows to the spirit's full radius of 48 blocks. A territorial spirit angrier than 0.7 stops spreading evenly: its blight grows as a narrow strip, about 5 blocks wide, toward the bed of the player who angered it, up to 64 blocks away. This works only while that player is online and their bed is in the same dimension; otherwise it spreads evenly again. The strip goes away with the spirit, like the rest of the blight. A spirit whose blight has reached 64 spots leaves an extra essence when banished. Blighted ground turns into the Blighted Land biome: grey fog, ash in the air and a low drone while you stand in it.
+A territorial spirit slowly fouls the land around its anchor: grass turns to coarse dirt, flowers to dead bushes. At first it reaches 6 blocks. Over 3 days it grows to the spirit's full radius of 48 blocks. A territorial spirit angrier than 0.7 stops spreading evenly: its blight grows as a narrow strip, about 5 blocks wide, toward the bed of the player who angered it, up to 64 blocks away. This works only while that player is online and their bed is in the same dimension; otherwise it spreads evenly again. The strip goes away with the spirit, like the rest of the blight. A spirit whose blight has reached 64 spots leaves an extra essence when banished. Blighted ground turns into the Blighted Land biome: grey fog, ash in the air and a low drone while the player stands in it.
 
 ## Traits
 
-Each spirit has a name, a story and **3 or 4 habits and 1 or 2 conditions**, and **one desire and one fear or hate**, rolled when it is born; one in four also has a [veil](#veils). Habits come from the spirit's nature, except one that comes from another nature. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what you learn about a spirit, see [Tools](/en/items/tools).
+Each spirit has a name, a story and **3 or 4 habits and 1 or 2 conditions**, and **one desire and one fear or hate**, rolled when it is born; one in four also has a [veil](#veils). Habits come from the spirit's nature, except one that comes from another nature. A trait pushes the weight of some kinds of events up or down on top of the type, and decides what the spirit hates or fears. Wards, salt and offerings work against them. The journal records what the player learns about a spirit, see [Tools](/en/items/tools).
 
 ### Habits
 
@@ -105,7 +105,7 @@ A habit decides what the spirit does. The favored kinds of events are multiplied
 |---|---|---|
 | Restless hands | It reaches for things left lying around. | items ×2, doors ×1.5 |
 | Door slammer | It slams doors. | doors ×2.5 |
-| Meddler | It meddles with the world around you. | blocks ×2.5, mobs ×1.5 |
+| Meddler | It meddles with the world around it. | blocks ×2.5, mobs ×1.5 |
 | Thrower | It throws what it finds. | items ×2.5, blocks ×1.2 |
 | Stacker | It stacks things in neat piles. | blocks ×2, items ×1.5 |
 | Knocker | It knocks on walls and doors. | doors ×2, sounds ×1.5 |
@@ -115,7 +115,7 @@ A habit decides what the spirit does. The favored kinds of events are multiplied
 | Trait | What it does | Favors |
 |---|---|---|
 | Light eater | It feeds on light. | lights ×2.5 |
-| Cold touch | It chills the air around you. | afflictions ×2 |
+| Cold touch | It chills the air around it. | afflictions ×2 |
 | Shadow caster | It casts shadows where there are none. | presence ×2, lights ×1.3 |
 | Blinder | It takes away sight. | afflictions ×2, lights ×1.3 |
 | Hearth killer | It puts out hearths and fires. | lights ×2, blocks ×1.3 |
@@ -201,15 +201,15 @@ The material a spirit is weak to holds it back outside the altar too. A stopped 
 
 - **Objects** (iron): its door and item events do not run within 6 blocks of an iron door or a container under iron bars.
 - **Darkness** (glowstone): its light events do not run within 4 blocks of glowstone.
-- **Malice** (holy water): holy water poured at your feet (use it while looking down) ends the events of this spirit that are still running.
-- **Deceit** (mirror): a mirror in your hand shows a fake block or a double of this spirit for what it is.
+- **Malice** (holy water): holy water poured at the player's feet (when used while looking down) ends the events of this spirit that are still running.
+- **Deceit** (mirror): a mirror in hand shows a fake block or a double of this spirit for what it is.
 
 ## The calendar
 
 Days are counted from the start of the world, and three of them stand apart:
 
 - **Full moon**, every 8th day (the vanilla full moon): every spirit's power is 0.2 higher, up to 1.
-- **Blood night**, every 7th day: each event a ward stops wears it twice (salt rings, door charms, scarecrows). At dusk you are warned in chat.
+- **Blood night**, every 7th day: each event a ward stops wears it twice (salt rings, door charms, scarecrows). At dusk a warning appears in chat.
 - **Day of the dead**, the last day of every 28-day season: spirits run no harmful events, and no tool lies. A blood night that falls on it does not happen.
 
 At the first dusk of any of them the journal opens its *Calendar* chapter. The [spirit candle](/en/items/tools#spirit-candle) shows the date by its flame.

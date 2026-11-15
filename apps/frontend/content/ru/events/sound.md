@@ -1,520 +1,518 @@
 ---
-title: Sound
+title: Звуки
 ---
 
-# Sound
+# Звуки
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-85 events.
+Событий: 85.
 
 ## `footsteps`
 
-A step sound 2 blocks behind the player. A faint dark haze hangs where the step falls.
+Звук шага в 2 блоках позади игрока. Там, где раздаётся шаг, висит слабая тёмная дымка.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `creeper_hiss`
 
-Creeper fuse hiss nearby
+Рядом слышно шипение фитиля крипера.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `three_knocks`
 
-Three knocks, on the nearest wooden door within 12 or else from nowhere nearby
+Три стука в ближайшую деревянную дверь в пределах 12, а если такой двери нет, то из ниоткуда рядом.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `crying_child`
 
-High-pitched villager hurt sound
+Высокий звук боли жителя.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `block_breaking`
 
-Stone / wood / glass / gravel break sound nearby
+Рядом слышен звук ломающегося камня, дерева, стекла или гравия.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `eating_behind_wall`
 
-Eating sound 3 blocks away
+Звук еды в 3 блоках от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `enderman_hiss`
 
-Enderman stare sound
+Звук, который издаёт эндермен, когда на него смотрят.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `chest_opens`
 
-Chest open sound nearby
+Рядом слышен звук открывающегося сундука.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `breathing`
 
-Five breaths 1 block from the player, each louder. A faint dark haze hangs there, thicker with each breath.
+Пять вдохов в 1 блоке от игрока, каждый громче предыдущего. Там висит слабая тёмная дымка, с каждым вдохом всё гуще.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `distant_bell`
 
-Loud bell from ~40 blocks away
+Громкий звон колокола примерно в 40 блоках от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `phantom_jukebox`
 
-Music disc 11 from a point nearby, no jukebox
+Пластинка 11 играет из точки рядом, хотя проигрывателя там нет.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `music_cut`
 
-Stops the game's background music for the player; it resumes on its usual schedule
+Фоновая музыка игры для игрока прекращается и возобновляется в обычное время.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `whisper`
 
-Chat line `<???> <player name>`, only to the player
+Строка чата `<???> <player name>`, которую видит только игрок.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `echo`
 
-That sound plays again 3 s later from where it was made, quieter and lower. Recorded through the loader's sound hook, `Restless.onPlaySound`; only sounds in the player category within 2 blocks of the player count
+Этот звук повторяется через 3 с там, где он прозвучал, тише и ниже. Звук записывается через перехватчик звуков загрузчика, `Restless.onPlaySound`; учитываются только звуки категории игрока в пределах 2 блоков от него.
 
-Runs when: The player made a sound (step, splash, bite) in the last 5 s
+Когда срабатывает: Игрок издал звук (шаг, всплеск, укус) за последние 5 с
 
 ## `death_cry`
 
-A scream (custom sound) nearby
+Рядом раздаётся крик (собственный звук мода).
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `dripping`
 
-Water drip nearby
+Рядом капает вода.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `distant_mob`
 
-A zombie, skeleton, spider, enderman, witch, husk, drowned, pillager or ghostly moan sound 2–40 blocks away; louder the farther, so it carries
+Звук зомби, скелета, паука, эндермена, ведьмы, кадавра, утопленника или налётчика либо призрачный стон в 2–40 блоках от игрока; чем дальше, тем громче, поэтому звук разносится далеко.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `hostile_animal`
 
-A zombie, creeper, skeleton or witch sound bound to it, sent to this player only
+К животному привязывается звук зомби, крипера, скелета или ведьмы, который слышит только этот игрок.
 
-Runs when: An animal within 16
+Когда срабатывает: Животное в пределах 16
 
 ## `approaching_steps`
 
-Twelve step sounds of the block underfoot, closing from 14 to 3 blocks on a random bearing. A faint dark haze walks in with the steps, smoothly, one step ahead of each sound.
+Двенадцать звуков шагов по блоку под ногами приближаются с 14 до 3 блоков с произвольной стороны. Слабая тёмная дымка идёт вместе с шагами плавно, на шаг впереди каждого звука.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `distant_mining`
 
-Six stone hits and a break sound 8 blocks below the surface
+Шесть ударов по камню и звук слома в 8 блоках под поверхностью.
 
-Runs when: Open sky above the player
+Когда срабатывает: Над игроком открытое небо
 
 ## `many_breaks`
 
-Up to eight of them sound as if they break in turn; under hardcore they do break, with no drops
+До восьми таких блоков звучат так, словно ломаются по очереди; в хардкоре они действительно ломаются, без выпадения предметов.
 
-Runs when: Six or more glass or stone blocks within 14
+Когда срабатывает: Шесть или больше блоков стекла или камня в пределах 14
 
 ## `ladder_steps`
 
-Step sounds climbing a real ladder within 16, or rising from the spirit's point when there is none
+Звуки шагов поднимаются по настоящей лестнице в пределах 16, а если лестницы нет, то из точки духа.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `spider_overhead`
 
-A spider sound, then five steps crawling across the ceiling
+Звук паука, затем пять шагов, ползущих по потолку.
 
-Runs when: A solid block 2–3 above the head with air below it
+Когда срабатывает: Сплошной блок в 2–3 блоках над головой, а под ним воздух
 
 ## `cracking_floor`
 
-**Harmful.**
-Break particles and sound of the block underfoot; it stays
+**Вредящее событие.**
+Частицы и звук разрушения блока под ногами игрока; блок остаётся на месте.
 
-Runs when: Standing on a block
+Когда срабатывает: Игрок стоит на блоке
 
 ## `bottle_shatter`
 
-A splash potion shatters 4 blocks away (sound and coloured particles)
+В 4 блоках от игрока разбивается взрывное зелье (звук и цветные частицы).
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `shrieker`
 
-It shrieks. No player is given to it, so nobody is warned and no warden is called
+Скалковый крикун издаёт крик. Игрок ему не передаётся, поэтому никто не получает предупреждения и хранитель не призывается.
 
-Runs when: A sculk shrieker within 16
+Когда срабатывает: Скалковый крикун в пределах 16
 
 ## `fake_subtitle`
 
-A sound with no audio that shows the subtitle "Something breathes behind you" from 3 blocks behind the player. Only seen with subtitles on
+Беззвучный звук, который показывает субтитр «Что-то дышит за спиной» в 3 блоках позади игрока. Виден только при включённых субтитрах.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `phantom_heartbeat`
 
-Eight warden heartbeats at the player, one every 0.9 s
+Восемь ударов сердца хранителя рядом с игроком, по одному каждые 0.9 с.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `note_block_voice`
 
-It plays a villager or player hurt, ghast scream, zombie villager, vex or ghostly moan sound, with a note particle
+Нотный блок издаёт звук боли жителя или игрока, крик гаста, стон зомби-жителя, векса или призрачный стон, с частицей ноты.
 
-Runs when: A note block within 16
+Когда срабатывает: Нотный блок в пределах 16
 
 ## `ghost_laugh`
 
-A ghostly laugh (custom sound) 9 blocks away
+Призрачный смех (собственный звук мода) в 9 блоках от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `ghost_breath`
 
-A cold breath (custom sound) 0.8 blocks behind the player
+Холодное дыхание (собственный звук мода) в 0.8 блока позади игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `close_whispers`
 
-Three whispers (custom sound) 1.5 blocks away at the player's ears, left and right in turn, one every 2.5 s
+Три шёпота (собственный звук мода) в 1.5 блока от игрока, у его ушей, то слева, то справа, по одному каждые 2.5 с.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `circling_moan`
 
-Four moans (custom sound) 6 blocks away, each 90° further round the player than the last, one every 2.25 s. A faint dark haze circles with the moans, smoothly, round the player rather than across.
+Четыре стона (собственный звук мода) в 6 блоках от игрока, каждый на 90° дальше вокруг него, чем предыдущий, по одному каждые 2.25 с. Слабая тёмная дымка кружит вместе со стонами плавно, вокруг игрока, а не поперёк.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `cut_off_scream`
 
-A pre-cut scream (custom sound) 12 blocks away
+Заранее обрезанный крик (собственный звук мода) в 12 блоках от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `long_scream`
 
-A sustained scream (custom sound) 12 blocks away
+Протяжный крик (собственный звук мода) в 12 блоках от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `banshee`
 
-A 14 s shriek (custom sound) from 30 blocks away and 12 above, loud enough to carry
+Визг длиной 14 с (собственный звук мода) с расстояния 30 блоков и высоты 12, достаточно громкий, чтобы разноситься далеко.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `own_voice`
 
-A chat line `<name> ...` from `lines`, sent only to the player
+Строка чата `<name> ...` из списка `lines`, отправленная только игроку.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `distant_warden`
 
-A warden roar, then a sonic boom 2 s later, from 40 blocks away; loud enough to carry
+Рёв хранителя, а через 2 с звуковой удар, с расстояния 40 блоков; достаточно громкие, чтобы разноситься далеко.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `sky_dragon`
 
-An ender dragon growl from 30 blocks away and 25 above, loud enough to carry
+Рычание дракона Края с расстояния 30 блоков и высоты 25, достаточно громкое, чтобы разноситься далеко.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `distant_wither`
 
-A wither spawn sound from 45 blocks away, loud enough to carry
+Звук рождения иссушителя с расстояния 45 блоков, достаточно громкий, чтобы разноситься далеко.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `end_portal_open`
 
-An end portal opening sound from 30 blocks away
+Звук открывающегося портала Края с расстояния 30 блоков.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `sky_ghast`
 
-A ghast scream from 20 blocks away and 14 above
+Крик гаста с расстояния 20 блоков и высоты 14.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `fox_screech`
 
-A fox screech 12 blocks away
+Визг лисы в 12 блоках от игрока.
 
-Runs when: Not bright outside (night or storm)
+Когда срабатывает: Снаружи не светло (ночь или гроза)
 
 ## `rabbit_death`
 
-A rabbit death sound 4 blocks away
+Звук гибели кролика в 4 блоках от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `phantom_hurt`
 
-The player hurt sound at the player; no damage
+Звук боли игрока рядом с ним; урона нет.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `phantom_tool_break`
 
-The item break sound at the player; nothing is damaged
+Звук поломки предмета рядом с игроком; ничего не повреждается.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `elytra_overhead`
 
-Twelve elytra wind sounds sweeping 45 blocks each way across a line 10 blocks up
+Двенадцать звуков ветра элитр проносятся на 45 блоков в каждую сторону вдоль линии на высоте 10 блоков.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `nether_ambience`
 
-Six mood and additions sounds of a soul sand valley or basalt deltas, 2 s apart, at the player
+Шесть звуков настроения и дополнений долины песка душ или базальтовых дельт, с интервалом 2 с, рядом с игроком.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `equip_behind`
 
-Four equip sounds of one armor material, 0.3 s apart, 1.5 blocks behind the player
+Четыре звука надевания брони из одного материала, с интервалом 0.3 с, в 1.5 блока позади игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `phantom_fishing`
 
-Bobber throw, splash and retrieve sounds 1.2 s apart, 6 blocks away
+Звуки броска поплавка, всплеска и подсечки с интервалом 1.2 с, в 6 блоках от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `zombie_at_door`
 
-Four door-battering sounds and a break sound at a wooden door within 12. A faint dark haze hangs at the door while it is battered.
+Четыре звука ударов в дверь и звук выламывания у деревянной двери в пределах 12. Пока в дверь бьют, у неё висит слабая тёмная дымка.
 
-Runs when: A wooden door within 12
+Когда срабатывает: Деревянная дверь в пределах 12
 
 ## `phantom_anchor`
 
-A respawn anchor charge or deplete sound 5 blocks away
+Звук зарядки или разрядки якоря возрождения в 5 блоках от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `bucket_spill`
 
-A bucket empty sound 3 blocks away
+Звук выливаемого ведра в 3 блоках от игрока.
 
-Runs when: No open sky above the player
+Когда срабатывает: Над игроком нет открытого неба
 
 ## `lost_villager`
 
-A villager idle sound 4 blocks behind the player
+Звук жителя в простое в 4 блоках позади игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `phantom_arrow`
 
-An arrow hit sound at a one-block-thick wall in front of the player
+Звук попадания стрелы в стену толщиной в один блок перед игроком.
 
-Runs when: A wall in front of the player
+Когда срабатывает: Стена перед игроком
 
 ## `phantom_glass`
 
-Break particles and sound of a glass block or pane within 12; it stays
+Частицы и звук разрушения стеклянного блока или панели в пределах 12; блок остаётся на месте.
 
-Runs when: Glass within 12
+Когда срабатывает: Стекло в пределах 12
 
 ## `pen_cries`
 
-A sheep, piglet or cow death sound at an animal within 16
+Звук гибели овцы, поросёнка или коровы у животного в пределах 16.
 
-Runs when: An animal within 16
+Когда срабатывает: Животное в пределах 16
 
 ## `sniffing_behind`
 
-A sniffer sniff 1 block behind the player
+Принюхивание нюхача в 1 блоке позади игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `distant_goat_horn`
 
-A random goat horn call from 40 blocks away, loud enough to carry
+Случайный сигнал козлиного рога с расстояния 40 блоков, достаточно громкий, чтобы разноситься далеко.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `false_raid_horn`
 
-A raid horn from 35 blocks away
+Рог набега с расстояния 35 блоков.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `heavy_splash`
 
-A low splash at water within 16
+Низкий всплеск у воды в пределах 16.
 
-Runs when: Water within 16
+Когда срабатывает: Вода в пределах 16
 
 ## `distant_ravager`
 
-A ravager roar from 30 blocks away, loud enough to carry
+Рёв разорителя с расстояния 30 блоков, достаточно громкий, чтобы разноситься далеко.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `golem_circling`
 
-Fourteen golem steps on a point circling 7 blocks out at ground level
+Четырнадцать шагов голема по точке, которая кружит в 7 блоках от игрока на уровне земли.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `burp_behind`
 
-A player burp 1.5 blocks behind the player
+Звук отрыжки игрока в 1.5 блока позади игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `bubble_columns`
 
-Six bubble column sounds, 0.5 s apart, 1 block from the player
+Шесть звуков столба пузырей с интервалом 0.5 с в 1 блоке от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `lava_pops`
 
-A lava ambient sound and three pops, 0.7 s apart, 2 blocks away
+Фоновый звук лавы и три хлопка с интервалом 0.7 с в 2 блоках от игрока.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `chain_rattle`
 
-Twelve chain step sounds on a point circling 4 blocks out at ground level
+Двенадцать звуков шагов по цепи на точке, которая кружит в 4 блоках от игрока на уровне земли.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `phantom_break`
 
-The player is marked; the next block they break plays its break sound a second time 0.4 s later, 5 blocks away. The mark lapses after 1 min. Heard through the loader's block break hook, `Restless.onBreakBlock`
+Игрок помечается; следующий сломанный им блок воспроизводит звук слома во второй раз, через 0.4 с, в 5 блоках от игрока. Метка снимается через 1 мин. Слом блока перехватывается хуком загрузчика, `Restless.onBreakBlock`.
 
-Runs when: The player is not marked already
+Когда срабатывает: Игрок ещё не помечен
 
 ## `dragged_chains`
 
-A chain rattle recording (`haunt.chain_rattle`, three cuts) 10 blocks away, out of sight
+Запись лязга цепей (`haunt.chain_rattle`, три фрагмента) в 10 блоках от игрока, вне поля зрения.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `creature_rattle`
 
-A dry creature rattle recording (`haunt.creature_rattle`, three cuts) 8 blocks away, from no creature
+Запись сухого стрекота существа (`haunt.creature_rattle`, три фрагмента) в 8 блоках от игрока, хотя никакого существа нет.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `dead_silence`
 
-A stop-all-sounds packet every tick for 5 s, so nothing plays
+Пакет остановки всех звуков отправляется каждый тик в течение 5 с, так что ничего не играет.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `desert_plate_click`
 
-A stone pressure plate click 5 blocks away
+Щелчок каменной нажимной плиты в 5 блоках от игрока.
 
-Runs when: In a desert
+Когда срабатывает: В пустыне
 
 ## `mountain_avalanche`
 
-A rumble that carries and a cloud of snow falling 25 blocks down at a point 50 blocks away, over 24 steps 0.2 s apart
+Грохот, который разносится далеко, и облако снега, падающее на 25 блоков вниз в точке в 50 блоках от игрока, за 24 шага с интервалом 0.2 с.
 
-Runs when: In a mountain biome
+Когда срабатывает: В горном биоме
 
 ## `ocean_ship_bell`
 
-Three bell tolls 2 s apart, 40 blocks away; loud enough to carry
+Три удара колокола с интервалом 2 с в 40 блоках от игрока; достаточно громкие, чтобы разноситься далеко.
 
-Runs when: In an ocean biome
+Когда срабатывает: В океаническом биоме
 
 ## `creaking_heart_call`
 
-A creaking heart sounds 3 times, 2 s apart, from one point 14 blocks away at a random bearing (or the spirit's point)
+Сердце скрипуна звучит 3 раза с интервалом 2 с из одной точки в 14 блоках от игрока в произвольном направлении (или из точки духа).
 
-Runs when: In a forest, flower forest, birch forest or old growth birch forest
+Когда срабатывает: В лесу, цветочном лесу, берёзовом лесу или старом берёзовом лесу
 
 ## `note_tune`
 
-One of 4 fixed tunes, one note per 0.3 s, each on the next note block nearest first, with the note particle. The blocks keep their own notes
+Одна из 4 заданных мелодий, по одной ноте каждые 0.3 с, каждая на следующем нотном блоке, начиная с ближайшего, с частицей ноты. Блоки сохраняют свои собственные ноты.
 
-Runs when: A note block with a tunable instrument within 12 (air above it unless the instrument sounds from above)
+Когда срабатывает: Нотный блок с подходящим для мелодии инструментом в пределах 12 (над ним воздух, если инструмент не звучит сверху)
 
 ## `jukebox_quiet`
 
-The disc is taken out of the jukebox, so the music stops, and put into a free slot of a chest. The move stays
+Пластинка вынимается из проигрывателя, так что музыка замолкает, и кладётся в свободный слот сундука. Перемещение остаётся.
 
-Runs when: A playing jukebox within 12 and a chest with a free slot
+Когда срабатывает: Играющий проигрыватель в пределах 12 и сундук со свободным слотом
 
 ## `chat_repeats`
 
-2 to 12 s later `<???> <the line>` appears as a grey italic system message; the line is used once
+Через 2–12 с в чате появляется `<???> <the line>` серым курсивным системным сообщением; каждая фраза используется один раз.
 
-Runs when: The player said a line of at most 100 characters between 10 s and 10 min ago
+Когда срабатывает: Игрок сказал фразу не длиннее 100 символов от 10 с до 10 мин назад
 
 ## `spirit_song`
 
-A jukebox with no disc starts a song nobody put in; the disc is taken out after 30 s if still there
+Проигрыватель без пластинки заводит песню, которую никто не ставил; через 30 с пластинка вынимается, если она ещё на месте.
 
-Runs when: A jukebox with no disc within 16
+Когда срабатывает: Проигрыватель без пластинки в пределах 16
 
 ## `spirit_horn`
 
-A low horn call from far away. Nothing changes
+Низкий сигнал рога издалека. Ничего не меняется.
 
-Runs when: In the overworld
+Когда срабатывает: В верхнем мире
 
 ## `counting_children`
 
-Children count to ten in the dark, then small steps close in, a door opens and someone laughs. Nothing changes
+Дети считают до десяти в темноте, затем мелкие шаги приближаются, открывается дверь и кто-то смеётся. Ничего не меняется.
 
-Runs when: Under a roof
+Когда срабатывает: Под крышей
 
 ## `wall_scratching`
 
-Scratching inside a wall, creeping along it. Nothing changes
+Царапанье внутри стены, ползущее вдоль неё. Ничего не меняется.
 
-Runs when: Under a roof
+Когда срабатывает: Под крышей
 
 ## `chest_knocks`
 
-Four muffled knocks from inside a chest or barrel. Nothing changes
+Четыре приглушённых стука изнутри сундука или бочки. Ничего не меняется.
 
-Runs when: A chest, trapped chest or barrel within 12
+Когда срабатывает: Сундук, сундук-ловушка или бочка в пределах 12
 
 ## `bedroom_lullaby`
 
-A lullaby is hummed on a flute where a bed stands. Nothing changes
+Колыбельная, напеваемая на флейте, звучит там, где стоит кровать. Ничего не меняется.
 
-Runs when: A bed within 14
+Когда срабатывает: Кровать в пределах 14
 
 ## `music_box`
 
-An open music box appears and plays a 14-15 note tune on vanilla chime sounds, then shuts; gone 10 s later
+Появляется открытая музыкальная шкатулка и играет мелодию из 14–15 нот на ванильных звуках колокольчиков, затем закрывается; через 10 с исчезает.
 
-Runs when: A spot of free floor under a roof within 10, 3+ away and outside 55° of where the player looks
+Когда срабатывает: Свободное место на полу под крышей в пределах 10, не ближе 3 блоков и вне 55° от направления взгляда игрока

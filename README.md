@@ -52,7 +52,6 @@ Haunt sounds in `assets/restless/sounds/haunt` are CC0 recordings from [OpenGame
 | `breath` | [Ghost breath](https://opengameart.org/content/ghost-breath) | qubodup |
 | `laugh` | [Ghostly cackle laugh 1](https://opengameart.org/content/ghostly-cackle-laugh-1) | nocturnalvanguard (AuraVoice) |
 | `screech` | [Scary high pitched ghost](https://opengameart.org/content/scary-high-pitched-ghost) | fupi |
-| `whisper_*` | [Voices of Madness](https://opengameart.org/content/voices-of-madness) | eugeneloza |
 | `horn_*` | [War Horns](https://opengameart.org/node/153572) | Eldritch Grim |
 | `chair_creak_*` | [100 CC0 metal and wood SFX](https://opengameart.org/content/100-cc0-metal-and-wood-sfx) | rubberduck |
 | `claw_scratch_*` | [Scrapes](https://opengameart.org/content/scrapes) | AntumDeluge |

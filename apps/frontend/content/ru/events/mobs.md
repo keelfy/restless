@@ -1,646 +1,644 @@
 ---
-title: Mobs
+title: Мобы
 ---
 
-# Mobs
+# Мобы
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-103 events.
+Событий: 103.
 
 ## `double`
 
-**Harmful.**
-A vanilla mannequin with the player's skin, armor and held item (invulnerable, silent) walks up at 0.2 blocks/tick, slower than a sprint, jumping up one-block steps, falling off ledges up to 3 deep and turning up to 80° off to go round what is in its way. Within 1.8 blocks it hits every 0.5 s for up to 3 hearts, never below 3 hearts; it vanishes in smoke after 4 hits, 30 s, 40 blocked strides, or when the player is at 3 hearts
+**Вредящее событие.**
+Обычный манекен с обликом игрока (его скин, броня и предмет в руке; неуязвимый и беззвучный) приближается со скоростью 0.2 блока/тик, то есть медленнее бега, запрыгивая на ступени высотой в один блок, спрыгивая с уступов глубиной до 3 блоков и отклоняясь до 80° от прямого пути, чтобы обойти препятствия. В пределах 1.8 блока он бьёт каждые 0.5 с, нанося до 3 сердец урона, но не опуская здоровье игрока ниже 3 сердец. Он исчезает в клубах дыма после 4 ударов, через 30 с, после 40 заблокированных шагов или когда у игрока остаётся 3 сердца.
 
-Runs when: Not peaceful, no double already after the player, health > 7 hearts, standing room 12–18 blocks away
+Когда срабатывает: Не мирная сложность, за игроком не идёт другой двойник, здоровье больше 7 сердец, есть место, где можно встать, в 12–18 блоках
 
 ## `hallucination`
 
-Only this player's client is told of a mob from a list (iron golem, villager, wandering trader, witch, enderman) standing there facing them, with an id no server entity has, so attacks on it do nothing. Gone when the player comes within 10 blocks, or after 30 s. Nothing on the server
+Клиенту только этого игрока сообщают о мобе из списка (железный голем, житель, странствующий торговец, ведьма, Странник Края), который стоит там и смотрит на игрока. У него идентификатор, которого нет ни у одной серверной сущности, поэтому удары по нему ничего не делают. Моб исчезает, когда игрок подходит ближе чем на 10 блоков, или через 30 с. На сервере ничего не появляется.
 
-Runs when: Standing room 20 blocks away within 40° of where the player looks (up to 16 bearings tried)
+Когда срабатывает: Есть место, где можно встать, в 20 блоках в пределах 40° от направления взгляда игрока (пробуется до 16 направлений)
 
 ## `disguise`
 
-One of them is hidden from this player's client (only its invisible flag is sent) and an entity of another kind (cow→sheep, sheep→pig, pig→cow, chicken→wolf, horse→cow; `looks`) is shown in its place, following it about for 30 s, when the real one is shown again. Sounds and hitbox stay the real animal's; the head turn and limb poses of the copy are the client's own. Under hardcore the animal is really converted into the other kind
+Одно из животных скрывается от клиента этого игрока (отправляется только флаг невидимости), а вместо него показывается существо другого вида (корова→овца, овца→свинья, свинья→корова, курица→волк, лошадь→корова; список `looks`), которое повсюду следует за ним 30 с, после чего снова показывается настоящее животное. Звуки и хитбокс остаются от настоящего животного, а поворот головы и позы конечностей копии определяет сам клиент. В режиме хардкор животное на самом деле превращается в другой вид.
 
-Runs when: A cow, sheep, pig, chicken or horse within 24 blocks
+Когда срабатывает: Корова, овца, свинья, курица или лошадь в пределах 24 блоков
 
 ## `animals_stare`
 
-They stop and face the player for 3 s
+Животные останавливаются и на 3 с поворачиваются к игроку.
 
-Runs when: Two animals within 16
+Когда срабатывает: Два животных в пределах 16 блоков
 
 ## `pen_corner`
 
-They walk to a random inside corner and, within 2.5 blocks of it, stand facing into it; let go after 15 s
+Животные идут в случайный внутренний угол загона и, подойдя к нему ближе чем на 2.5 блока, встают мордой в угол. Через 15 с их отпускают.
 
-Runs when: Two farm animals (not tamable, not leashed) within 16 in a pen fenced on four sides, up to 16 across each way
+Когда срабатывает: Два сельскохозяйственных животных (не приручаемых и не на поводке) в пределах 16 блоков в загоне, огороженном с четырёх сторон, не больше 16 блоков в каждую сторону
 
 ## `cat_hiss`
 
-The cat hisses
+Кошка шипит.
 
-Runs when: A cat within 16
+Когда срабатывает: Кошка в пределах 16 блоков
 
 ## `cat_flee`
 
-The cats run 8 blocks away from the spirit's point for 5 s; one hisses
+Кошки на 5 с убегают на 8 блоков от точки духа, и одна из них шипит.
 
-Runs when: A standing cat within 16
+Когда срабатывает: Стоящая кошка в пределах 16 блоков
 
 ## `dog_barks`
 
-Turns away and makes its ambient sound
+Волк отворачивается и издаёт свой обычный звук.
 
-Runs when: A wolf within 16
+Когда срабатывает: Волк в пределах 16 блоков
 
 ## `villager_stares`
 
-One villager stops and faces the player for 5 s
+Один из жителей останавливается и на 5 с поворачивается к игроку.
 
-Runs when: A villager within 16
+Когда срабатывает: Житель в пределах 16 блоков
 
 ## `villager_refuses`
 
-The villager shakes its head for 2 s with the "no" sound
+Житель качает головой 2 с, и раздаётся звук «нет».
 
-Runs when: A villager within 16
+Когда срабатывает: Житель в пределах 16 блоков
 
 ## `bats`
 
-Five bats appear
+Появляются пять летучих мышей.
 
-Runs when: Free air 4 blocks away
+Когда срабатывает: Свободный воздух в 4 блоках
 
 ## `open_pen`
 
-**Harmful.**
-Opens the gate
+**Вредящее событие.**
+Калитка открывается.
 
-Runs when: A closed gate with an animal within 5 of it
+Когда срабатывает: Закрытая калитка, возле которой (в пределах 5 блоков) есть животное
 
 ## `wild_pet`
 
-**Harmful.**
-Loses its owner and targets the player
+**Вредящее событие.**
+Питомец теряет хозяина и нападает на игрока.
 
-Runs when: A tamed pet of the player within 32
+Когда срабатывает: Прирученный питомец игрока в пределах 32 блоков
 
 ## `copycat`
 
-**Harmful.**
-A zombie in a copy of the player's armor, targeting them
+**Вредящее событие.**
+Появляется зомби в копии брони игрока и нападает на него.
 
-Runs when: Not peaceful, standing room 3 blocks behind
+Когда срабатывает: Не мирная сложность, есть место, где можно встать, в 3 блоках позади
 
 ## `golem_flower`
 
-It holds out its poppy for 15 s, to nobody
+Железный голем 15 с протягивает свой мак никому.
 
-Runs when: An iron golem within 24 with no target
+Когда срабатывает: Железный голем без цели в пределах 24 блоков
 
 ## `golem_rage`
 
-**Harmful.**
-The nearest idle iron golem within 24 blocks puts away any flower and turns on the player, with vanilla persistent anger. A golem the player built stays friendly
+**Вредящее событие.**
+Ближайший бездействующий железный голем в пределах 24 блоков убирает цветок, если держал его, и нападает на игрока с обычным для игры устойчивым гневом. Голем, построенный игроком, остаётся дружелюбным.
 
-Runs when: Not creative, spectator or peaceful; an iron golem within 24 with no target that can attack the player
+Когда срабатывает: Не творческий режим, не режим наблюдателя и не мирная сложность; железный голем без цели в пределах 24 блоков, способный напасть на игрока
 
 ## `wolf_rage`
 
-**Harmful.**
-Every idle wild wolf within 16 blocks turns on the player, with vanilla persistent anger. Tamed wolves stay friendly
+**Вредящее событие.**
+Каждый бездействующий дикий волк в пределах 16 блоков нападает на игрока с обычным для игры устойчивым гневом. Прирученные волки остаются дружелюбными.
 
-Runs when: Not creative, spectator or peaceful; an untamed wolf within 16 with no target that can attack the player
+Когда срабатывает: Не творческий режим, не режим наблюдателя и не мирная сложность; неприрученный волк без цели в пределах 16 блоков, способный напасть на игрока
 
 ## `dog_growls`
 
-It sits, looks at the empty space 2 blocks from the player and growls for 6 s, then stands
+Волк садится, смотрит в пустоту в 2 блоках от игрока и рычит 6 с, а затем встаёт.
 
-Runs when: A tamed standing wolf within 16
+Когда срабатывает: Прирученный стоящий волк в пределах 16 блоков
 
 ## `angry_bees`
 
-**Harmful.**
-The bees come out angry at the player, as if it had been broken
+**Вредящее событие.**
+Пчёлы вылетают разъярёнными на игрока, как будто гнездо разрушили.
 
-Runs when: A bee nest or hive within 16 with bees in it
+Когда срабатывает: Пчелиное гнездо или улей в пределах 16 блоков, в котором есть пчёлы
 
 ## `leash_snaps`
 
-**Harmful.**
-The leash comes loose with a snap and drops as an item
+**Вредящее событие.**
+Поводок со щелчком слетает и выпадает предметом.
 
-Runs when: A mob tied to a fence post within 16
+Когда срабатывает: Моб, привязанный к столбу ограды, в пределах 16 блоков
 
 ## `goat_rams`
 
-**Harmful.**
-The goat's ram memory is set to the player's position, so it charges and knocks them back
+**Вредящее событие.**
+В памяти козла о таране записывается позиция игрока, поэтому козёл бросается на него и отбрасывает.
 
-Runs when: An adult goat 4 to 14 blocks away
+Когда срабатывает: Взрослый козёл в 4–14 блоках
 
 ## `minecart_rolls`
 
-A steady push toward the player for 5 seconds; the rail steers it
+Вагонетку 5 секунд равномерно толкает к игроку, а направление ей задают рельсы.
 
-Runs when: An empty minecart on a rail within 24
+Когда срабатывает: Пустая вагонетка на рельсах в пределах 24 блоков
 
 ## `enderman_takes`
 
-**Harmful.**
-The block turns to air and the enderman holds it; after 60 seconds the block is back and the enderman's hands are empty
+**Вредящее событие.**
+Блок превращается в воздух, а Странник Края держит его. Через 60 секунд блок возвращается, а руки Странника Края пусты.
 
-Runs when: An enderman with empty hands and a placed block (planks, wool, stone bricks, bricks, bookshelf) with an open face, both within 16
+Когда срабатывает: Странник Края с пустыми руками и поставленный блок (доски, шерсть, каменные кирпичи, кирпичи, книжный шкаф) с открытой гранью, оба в пределах 16 блоков
 
 ## `parrot_echo`
 
-A sound (a whisper, or the player's own hurt sound) is bound to a nearby parrot, so it seems to repeat it; only this player hears it
+Звук (шёпот или собственный звук боли игрока) привязывается к попугаю поблизости, из-за чего кажется, что тот его повторяет. Слышит его только этот игрок.
 
-Runs when: A parrot within 16
+Когда срабатывает: Попугай в пределах 16 блоков
 
 ## `allay_bone`
 
-An allay with an empty hand gets a bone put in it, flies to the player and drops it within 3 blocks; the bone is taken back after 30 s if it never arrives
+Аллею с пустой рукой вкладывают кость. Он подлетает к игроку и роняет её в пределах 3 блоков от него. Если кость так и не долетела, её забирают обратно через 30 с.
 
-Runs when: An allay with an empty hand within 24
+Когда срабатывает: Аллей с пустой рукой в пределах 24 блоков
 
 ## `fox_snatch`
 
-**Harmful.**
-The fox runs at the player and, within 1.8 blocks, takes the held stack into its mouth; 30 s later it drops the stack
+**Вредящее событие.**
+Лиса подбегает к игроку и, оказавшись в пределах 1.8 блока, берёт в пасть стак из его руки. Через 30 с она роняет этот стак.
 
-Runs when: Dark outside, an item in the player's hand, an adult awake fox with an empty mouth within 16
+Когда срабатывает: На улице темно, в руке игрока есть предмет, взрослая бодрствующая лиса с пустой пастью в пределах 16 блоков
 
 ## `armadillo_curls`
 
-The armadillo nearest the spirit's point rolls up and stays rolled for 20 s, a clue to where the spirit is
+Броненосец, ближайший к точке духа, сворачивается в шар и остаётся свёрнутым 20 с. Это подсказка, где находится дух.
 
-Runs when: An adult armadillo that is not already rolled up within 24
+Когда срабатывает: Взрослый броненосец, ещё не свёрнутый, в пределах 24 блоков
 
 ## `sheep_blacken`
 
-Up to 8 sheep turn black, one every 2 s; 30 s later each gets its colour back. Under hardcore they stay black
+До 8 овец становятся чёрными, по одной каждые 2 с. Через 30 с каждой возвращается прежний цвет. В режиме хардкор овцы остаются чёрными.
 
-Runs when: Two sheep that are not black within 16
+Когда срабатывает: Две нечёрные овцы в пределах 16 блоков
 
 ## `horse_bolts`
 
-**Harmful.**
-The rider is thrown off, the horse rears and then runs toward the spirit's point for 10 s
+**Вредящее событие.**
+Всадника сбрасывает, лошадь встаёт на дыбы, а затем 10 с бежит к точке духа.
 
-Runs when: The player is riding a horse, donkey or mule
+Когда срабатывает: Игрок едет на лошади, осле или муле
 
 ## `axolotl_plays_dead`
 
-The axolotl lies still, playing dead, for 10 s with no danger near
+Аксолотль 10 с лежит неподвижно, притворяясь мёртвым, хотя опасности рядом нет.
 
-Runs when: An axolotl in water within 16
+Когда срабатывает: Аксолотль в воде в пределах 16 блоков
 
 ## `cat_gift`
 
-The cat meows and leaves a bone at its feet
+Кошка мяукает и оставляет у своих лап кость.
 
-Runs when: Bright outside, a cat within 16
+Когда срабатывает: На улице светло, кошка в пределах 16 блоков
 
 ## `chickens_look_up`
 
-They stop and look straight up for 5 s
+Куры останавливаются и 5 с смотрят прямо вверх.
 
-Runs when: Two chickens within 16
+Когда срабатывает: Две курицы в пределах 16 блоков
 
 ## `cows_face_anchor`
 
-They stop and face the spirit's point for 10 s, a clue to where the spirit is
+Коровы останавливаются и 10 с стоят мордой к точке духа. Это подсказка, где находится дух.
 
-Runs when: Dark outside, two cows within 16
+Когда срабатывает: На улице темно, две коровы в пределах 16 блоков
 
 ## `villager_nitwit`
 
-The villager becomes a nitwit; 1 min later its profession and trades are put back. Under hardcore its trades are lost
+Житель становится дурачком, а через 1 мин его профессия и сделки возвращаются. В режиме хардкор сделки пропадают.
 
-Runs when: An adult villager with a profession within 16
+Когда срабатывает: Взрослый житель с профессией в пределах 16 блоков
 
 ## `villager_prices`
 
-Every villager nearby gets a minor negative gossip about the player, which raises its prices until it fades on its own
+Каждый житель поблизости получает небольшой отрицательный слух об игроке, из-за чего поднимает цены, пока слух не угаснет сам.
 
-Runs when: A villager within 16
+Когда срабатывает: Житель в пределах 16 блоков
 
 ## `bees_stay_out`
 
-**Harmful.**
-The bees come out of the hive (not angry) and cannot go back into a hive for 1 min
+**Вредящее событие.**
+Пчёлы вылетают из улья (не разъярённые) и 1 мин не могут вернуться ни в один улей.
 
-Runs when: A beehive with bees in it within 16
+Когда срабатывает: Улей с пчёлами в пределах 16 блоков
 
 ## `fish_face`
 
-They stop and face the player for 5 s
+Рыбы останавливаются и на 5 с поворачиваются к игроку.
 
-Runs when: Two fish within 16
+Когда срабатывает: Две рыбы в пределах 16 блоков
 
 ## `snowman_melts`
 
-**Harmful.**
-Water drips off the snow golem and it takes 1 point of fire damage every second until it is gone, for up to 10 s
+**Вредящее событие.**
+Со снежного голема капает вода, и он получает 1 единицу урона от огня каждую секунду, пока не исчезнет, но не дольше 10 с.
 
-Runs when: A snow golem within 16
+Когда срабатывает: Снежный голем в пределах 16 блоков
 
 ## `frogs_croak`
 
-Up to 8 frogs croak 0.3 s apart, then are silenced for 10 s
+До 8 лягушек квакают с промежутком 0.3 с, а затем умолкают на 10 с.
 
-Runs when: Two quiet frogs within 16
+Когда срабатывает: Две лягушки, которые молчат, в пределах 16 блоков
 
 ## `ink_cloud`
 
-Squid ink particles rise from a random block of deep water, 4 puffs 0.4 s apart
+Частицы чернил кальмара поднимаются от случайного блока глубокой воды: 4 облачка с промежутком 0.4 с.
 
-Runs when: Water with water above and below within 14
+Когда срабатывает: Вода с водой сверху и снизу в пределах 14 блоков
 
 ## `rabbits_stream`
 
-The rabbits run 10 blocks away from the player, re-aimed every 0.5 s for 4 s
+Кролики убегают на 10 блоков от игрока, и направление бега обновляется каждые 0.5 с в течение 4 с.
 
-Runs when: A rabbit within 16
+Когда срабатывает: Кролик в пределах 16 блоков
 
 ## `witch_giggles`
 
-**Harmful.**
-The witch's laugh from where it stands; 1.5 s later witch particles and a splash sound at the player and Darkness for 6 s
+**Вредящее событие.**
+Смех ведьмы раздаётся оттуда, где она стоит. Через 1.5 с у игрока появляются частицы ведьмы, раздаётся звук всплеска и накладывается Тьма на 6 с.
 
-Runs when: A witch 6 to 24 blocks away and out of sight
+Когда срабатывает: Ведьма в 6–24 блоках вне поля зрения
 
 ## `hostiles_retreat`
 
-They drop their target and run 10 blocks away from the player, re-aimed every 0.5 s for 4 s
+Враждебные мобы бросают цель и убегают на 10 блоков от игрока, а направление бега обновляется каждые 0.5 с в течение 4 с.
 
-Runs when: A hostile mob (with AI) within 16
+Когда срабатывает: Враждебный моб (с ИИ) в пределах 16 блоков
 
 ## `creeper_calms`
 
-The nearest creeper loses its target, deflates and walks 10 blocks away for 4 s
+Ближайший крипер теряет цель, сдувается и 4 с идёт прочь на 10 блоков.
 
-Runs when: A creeper (with AI) within 8
+Когда срабатывает: Крипер (с ИИ) в пределах 8 блоков
 
 ## `endermen_stare`
 
-They face the player and are kept from getting angry for 10 s; one the player looks at steps 6 to 12 blocks away with a teleport sound
+Странники Края поворачиваются к игроку, и в течение 10 с их нельзя разозлить. Тот, на кого игрок смотрит, отходит на 6–12 блоков со звуком телепортации.
 
-Runs when: An enderman within 24 with no target
+Когда срабатывает: Странник Края без цели в пределах 24 блоков
 
 ## `llama_spits`
 
-It spits once in a direction at least 90° off the player
+Лама один раз плюёт в направлении, отклонённом от игрока не менее чем на 90°.
 
-Runs when: A llama within 16
+Когда срабатывает: Лама в пределах 16 блоков
 
 ## `goat_screams`
 
-A screaming goat sound 40 blocks away, loud enough to carry
+Крик козла раздаётся в 40 блоках, достаточно громкий, чтобы разноситься далеко.
 
-Runs when: Overworld, not bright outside, player at Y 100 or above
+Когда срабатывает: Верхний мир, снаружи не светло, игрок на высоте Y 100 или выше
 
 ## `bats_hang`
 
-Up to 4 bats spawn resting under a ceiling; removed after 5 min
+До 4 летучих мышей появляются висящими под потолком и исчезают через 5 мин.
 
-Runs when: A free block under a solid one, light 4 or less, no sky, 3 to 10 blocks away
+Когда срабатывает: Свободный блок под сплошным, освещённость 4 или меньше, нет неба, в 3–10 блоках
 
 ## `sniffer_digs_up`
 
-A drop-seed sound and the player's head or a bone appears in front of it; removed after 1 min if not taken
+Раздаётся звук выпадения семени, а перед нюхачом появляется голова игрока или кость. Если их не взяли, они исчезают через 1 мин.
 
-Runs when: An adult sniffer within 20
+Когда срабатывает: Взрослый нюхач в пределах 20 блоков
 
 ## `cat_at_anchor`
 
-**Harmful.**
-The cat is teleported to standing room at the spirit's point (or 8 to 16 blocks from the player) and left sitting
+**Вредящее событие.**
+Кошку телепортируют на место, где можно встать, в точке духа (или в 8–16 блоках от игрока) и оставляют сидеть.
 
-Runs when: One of the player's untied cats within 32
+Когда срабатывает: Непривязанная кошка игрока в пределах 32 блоков
 
 ## `wind_burst`
 
-A gust burst with its sound 2 blocks away; loose items within 5 are shoved away and up
+Порыв ветра со звуком возникает в 2 блоках от игрока, а лежащие предметы в пределах 5 блоков отбрасывает в сторону и вверх.
 
-Runs when: No sky above the player
+Когда срабатывает: Над игроком нет неба
 
 ## `mobs_go_still`
 
-**Harmful.**
-Every such mob loses AI and sound for 10 s, then gets both back
+**Вредящее событие.**
+Каждый подходящий моб на 10 с теряет ИИ и звук, а затем получает их обратно.
 
-Runs when: A mob within 16 that has AI, is not silent, rides nothing and carries nobody
+Когда срабатывает: Моб в пределах 16 блоков, у которого есть ИИ, который не беззвучен, ни на ком не едет и никого не везёт
 
 ## `creeper_behind`
 
-Only this player's client is told of a creeper standing there facing them, with an id no server entity has. Gone after 4 checks (every tick) with it within 35° of where they look, or after 10 s. Nothing on the server
+Клиенту только этого игрока сообщают о крипере, который стоит там и смотрит на игрока, с идентификатором, которого нет ни у одной серверной сущности. Крипер исчезает после 4 проверок (по одной каждый тик), в которых он оказался в пределах 35° от направления взгляда игрока, или через 10 с. На сервере ничего не появляется.
 
-Runs when: Standing room 3 blocks away, 140–180° from where the player looks (up to 16 bearings tried)
+Когда срабатывает: Есть место, где можно встать, в 3 блоках под углом 140–180° к направлению взгляда игрока (пробуется до 16 направлений)
 
 ## `drowned_rises`
 
-Only this player's client is told of a drowned that rises from 2.2 blocks down to chest height in the pond over 2 s, then sinks again, facing them. Nothing on the server
+Клиенту только этого игрока сообщают об утопленнике, который за 2 с поднимается с глубины 2.2 блока до уровня груди в пруду, а затем снова тонет, глядя на игрока. На сервере ничего не появляется.
 
-Runs when: Source water at least 3 deep with air above it, 4 to 16 blocks away
+Когда срабатывает: Источник воды глубиной не менее 3 блоков с воздухом над ним в 4–16 блоках
 
 ## `ghost_horse`
 
-Only this player's client is told of a riderless horse that crosses from one side to the other in 2.5 s (about 0.8 blocks/tick), following the ground. Nothing on the server
+Клиенту только этого игрока сообщают о лошади без всадника, которая за 2.5 с пересекает местность с одной стороны на другую (около 0.8 блока/тик), следуя рельефу. На сервере ничего не появляется.
 
-Runs when: Ground 16 blocks away at 60° to either side of where the player looks
+Когда срабатывает: Земля в 16 блоках под углом до 60° в любую сторону от направления взгляда игрока
 
 ## `bed_cat`
 
-Only this player's client is told of a cat sitting on the head of the bed, facing the headboard (the wall). Gone when the player comes within 2.5 blocks, or after 30 s. Nothing on the server
+Клиенту только этого игрока сообщают о кошке, которая сидит в изголовье кровати мордой к изголовью (к стене). Кошка исчезает, когда игрок подходит ближе чем на 2.5 блока, или через 30 с. На сервере ничего не появляется.
 
-Runs when: A bed within 12 blocks, at least 3 away
+Когда срабатывает: Кровать в пределах 12 блоков, не ближе 3 блоков
 
 ## `child_runs`
 
-Only this player's client is told of a baby villager that runs across from one side to the other in 1.5 s, following the ground and ignoring walls. Nothing on the server
+Клиенту только этого игрока сообщают о ребёнке-жителе, который за 1.5 с перебегает с одной стороны на другую, следуя рельефу и не замечая стен. На сервере ничего не появляется.
 
-Runs when: Under a roof (no sky above), ground 5 blocks away at 70° to either side of where the player looks
+Когда срабатывает: Под крышей (над игроком нет неба), земля в 5 блоках под углом до 70° в любую сторону от направления взгляда игрока
 
 ## `doorway_enderman`
 
-Only this player's client is told of an enderman standing in the doorway, facing them. When it has been within 30° of where they look for 3 checks (every tick) it is gone with the teleport sound; otherwise after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о Страннике Края, который стоит в дверном проёме и смотрит на игрока. Когда он побывал в пределах 30° от направления взгляда игрока в течение 3 проверок (по одной каждый тик), он исчезает со звуком телепортации, а иначе исчезает через 20 с. На сервере ничего не появляется.
 
-Runs when: A door within 14 blocks, at least 4 away
+Когда срабатывает: Дверь в пределах 14 блоков, не ближе 4 блоков
 
 ## `forest_wolves`
 
-Only this player's client is told of 2–4 wolves standing there, all facing them. Gone when the player comes within 10 blocks, or after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о 2–4 волках, которые стоят там и смотрят на игрока. Волки исчезают, когда игрок подходит ближе чем на 10 блоков, или через 20 с. На сервере ничего не появляется.
 
-Runs when: Forest biome; standing room for at least 2 of 4 wolves 22–28 blocks away within 45° of where the player looks
+Когда срабатывает: Лесной биом; есть место, где можно встать, как минимум для 2 из 4 волков, в 22–28 блоках в пределах 45° от направления взгляда игрока
 
 ## `ceiling_spider`
 
-Only this player's client is told of a spider hanging upside down under the ceiling (given the name Dinnerbone, not shown, which makes the client flip it). Gone when the player comes within 3 blocks, or after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о пауке, который висит вниз головой под потолком (ему даётся имя `Dinnerbone`, не показываемое, из-за чего клиент переворачивает паука). Паук исчезает, когда игрок подходит ближе чем на 3 блока, или через 20 с. На сервере ничего не появляется.
 
-Runs when: Standing room 3–8 blocks away with a solid ceiling within 5 blocks above it
+Когда срабатывает: Есть место, где можно встать, в 3–8 блоках, над которым в пределах 5 блоков есть сплошной потолок
 
 ## `bat_swarm`
 
-Only this player's client is told of 6 bats that cross a 30-block line through the player at a random bearing and head height, a little apart, in 2 s, walls or not. Nothing on the server
+Клиенту только этого игрока сообщают о 6 летучих мышах, которые за 2 с пролетают линию длиной 30 блоков через игрока в случайном направлении и на высоте головы, на небольшом расстоянии друг от друга, не обращая внимания на стены. На сервере ничего не появляется.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `window_zombie`
 
-Only this player's client is told of a zombie standing outside it, facing in. Gone when the player comes within 1.5 blocks of it, or after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о зомби, который стоит снаружи у окна и смотрит внутрь. Зомби исчезает, когда игрок подходит к нему ближе чем на 1.5 блока, или через 20 с. На сервере ничего не появляется.
 
-Runs when: A glass block or pane within 10 blocks, at least 3 away, with the player on one side and standing room on the other
+Когда срабатывает: Стеклянный блок или панель в пределах 10 блоков, не ближе 3 блоков, с игроком по одну сторону и местом, где можно встать, по другую
 
 ## `ghast_drift`
 
-Only this player's client is told of a ghast drifting a straight 160-block line 45 blocks above them, up to 40 to one side, at a random bearing, in 30 s, with its ambient cry at the middle of the line. Nothing on the server
+Клиенту только этого игрока сообщают о гасте, который за 30 с проплывает по прямой линии длиной 160 блоков на высоте 45 блоков над игроком, смещённой в сторону не больше чем на 40 блоков, в случайном направлении, а в середине линии издаёт свой обычный крик. На сервере ничего не появляется.
 
-Runs when: Overworld, sky visible, forest biome
+Когда срабатывает: Верхний мир, видно небо, лесной биом
 
 ## `vex_through_wall`
 
-Only this player's client is told of a vex flying a straight line 24 blocks long at eye height, centred 12 blocks away, in 3 s, through whatever stands on it, with an id no server entity has. The line must start and end in the open and pass through a wall. Nothing on the server
+Клиенту только этого игрока сообщают о вредине, которая за 3 с летит по прямой длиной 24 блока на высоте глаз с центром в 12 блоках от игрока, проходя сквозь всё, что стоит на этой линии, с идентификатором, которого нет ни у одной серверной сущности. Линия должна начинаться и заканчиваться на открытом месте и проходить сквозь стену. На сервере ничего не появляется.
 
-Runs when: A straight 24-block line at eye height, centred 12 blocks away at a random bearing (up to 16 tried), that starts and ends in the open and passes through 3 to 16 solid samples (half a block each)
+Когда срабатывает: Прямая линия длиной 24 блока на высоте глаз с центром в 12 блоках в случайном направлении (пробуется до 16), которая начинается и заканчивается на открытом месте и проходит через 3–16 сплошных отсчётов (по полблока каждый)
 
 ## `phantom_swoop`
 
-Only this player's client is told of a phantom 24 blocks away and 14 up, at a random bearing, with its swoop screech; it flies at 1 block/tick straight at the player's eyes, as they move, and is gone within 1.5 blocks or after 5 s. Nothing on the server
+Клиенту только этого игрока сообщают о фантоме в 24 блоках от игрока и на 14 блоков выше, в случайном направлении, с визгом пикирования. Он летит со скоростью 1 блок/тик прямо в глаза игроку, следуя за его движением, и исчезает в пределах 1.5 блока или через 5 с. На сервере ничего не появляется.
 
-Runs when: Sky visible
+Когда срабатывает: Видно небо
 
 ## `dead_on_path`
 
-Only this player's client is told of a cow, sheep, pig, chicken or villager there and then of its death, so it lies on its side (its death sound plays). Gone when the player comes within 4 blocks, or after 30 s. Nothing on the server
+Клиенту только этого игрока сообщают о корове, овце, свинье, курице или жителе, которые стоят там, а затем о его смерти, так что существо лежит на боку (звучит звук смерти). Оно исчезает, когда игрок подходит ближе чем на 4 блока, или через 30 с. На сервере ничего не появляется.
 
-Runs when: Standing room 12 blocks away within 35° of where the player looks (up to 16 bearings tried)
+Когда срабатывает: Есть место, где можно встать, в 12 блоках в пределах 35° от направления взгляда игрока (пробуется до 16 направлений)
 
 ## `llama_caravan`
 
-Only this player's client is told of 4 trader llamas, 2.5 blocks apart, walking a 40-block line at right angles to where the player looks, centred on that spot, at 0.15 blocks/tick and following the ground up 2 and down 4. Each is gone at the end of the line. Nothing on the server
+Клиенту только этого игрока сообщают о 4 ламах торговца, которые идут на расстоянии 2.5 блока друг от друга по линии длиной 40 блоков под прямым углом к направлению взгляда игрока, с центром в том месте, со скоростью 0.15 блока/тик, следуя рельефу вверх на 2 и вниз на 4 блока. Каждая лама исчезает в конце линии. На сервере ничего не появляется.
 
-Runs when: Standing room 16 blocks away within 25° of where the player looks (up to 16 bearings tried)
+Когда срабатывает: Есть место, где можно встать, в 16 блоках в пределах 25° от направления взгляда игрока (пробуется до 16 направлений)
 
 ## `giant_slime`
 
-Only this player's client is told of a size 8 slime there, hopping on the spot once a second and facing the player. Gone when the player comes within 14 blocks, or after 30 s. Nothing on the server
+Клиенту только этого игрока сообщают о слизне размера 8, который прыгает на месте раз в секунду и смотрит на игрока. Слизень исчезает, когда игрок подходит ближе чем на 14 блоков, или через 30 с. На сервере ничего не появляется.
 
-Runs when: Standing room 32 blocks away within 40° of where the player looks (up to 16 bearings tried)
+Когда срабатывает: Есть место, где можно встать, в 32 блоках в пределах 40° от направления взгляда игрока (пробуется до 16 направлений)
 
 ## `piglins_stare`
 
-Each piglin loses its AI, faces the player (re-aimed every 0.25 s) for 8 s, then gets its AI back
+Каждый пиглин теряет ИИ, на 8 с поворачивается к игроку (направление обновляется каждые 0.25 с), а затем получает ИИ обратно.
 
-Runs when: Nether, a piglin or brute within 24
+Когда срабатывает: Незер, пиглин или пиглин-брут в пределах 24 блоков
 
 ## `piglin_barter`
 
-It plays its admiring sound; 2 s later a player head (the player's own) or a bone is thrown from it toward the player, and is gone after 30 s
+Пиглин издаёт звук восхищения. Через 2 с он бросает в сторону игрока голову игрока (его собственную) или кость, и бросок исчезает через 30 с.
 
-Runs when: Nether, an adult piglin within 16
+Когда срабатывает: Незер, взрослый пиглин в пределах 16 блоков
 
 ## `ghast_cry`
 
-A ghast's scream 40 blocks away (the spirit's point if one sent it), 2.5 s later its fireball shot, 1.25 s after that an explosion from the same spot
+Крик гаста раздаётся в 40 блоках (в точке духа, если его послал дух). Через 2.5 с слышен звук выстрела его огненного шара, а ещё через 1.25 с в том же месте происходит взрыв.
 
-Runs when: Nether
+Когда срабатывает: Незер
 
 ## `lava_figure`
 
-A vanilla mannequin in a stranger's skin (invulnerable, silent) stands on that lava, facing the player; gone when the player is within 8 blocks, or after 30 s
+Обычный манекен в скине незнакомца (неуязвимый, беззвучный) стоит на этой лаве и смотрит на игрока. Он исчезает, когда игрок подходит ближе чем на 8 блоков, или через 30 с.
 
-Runs when: Nether, a lava source with two free blocks above it within 24, at least 10 away
+Когда срабатывает: Незер, источник лавы с двумя свободными блоками над ним в пределах 24 блоков, не ближе 10 блоков
 
 ## `strider_shiver`
 
-Only this player's client is told the striders are cold (the shiver) for 8 s, then the real state again. Nothing changes on the server
+Клиенту только этого игрока сообщают, что страйдеры замёрзли (дрожат), на 8 с, а затем снова показывают настоящее состояние. На сервере ничего не меняется.
 
-Runs when: Nether, a strider within 24 that is not already cold
+Когда срабатывает: Незер, страйдер в пределах 24 блоков, который ещё не замёрз
 
 ## `soul_fire_lean`
 
-Up to 6 soul fires send soul fire flame particles streaming horizontally toward the player, 2 per pulse every 0.2 s, 30 pulses
+До 6 огней душ посылают к игроку частицы пламени огня душ, текущие горизонтально, по 2 за импульс каждые 0.2 с, всего 30 импульсов.
 
-Runs when: Nether, soul fire within 16
+Когда срабатывает: Незер, огонь душ в пределах 16 блоков
 
 ## `still_blaze`
 
-Only this player's client is told of a blaze there, facing the player and not moving. Gone when the player comes within 5 blocks, or after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о блейзе, который стоит там, смотрит на игрока и не двигается. Блейз исчезает, когда игрок подходит ближе чем на 5 блоков, или через 20 с. На сервере ничего не появляется.
 
-Runs when: Nether, standing room 10 blocks away within 40° of where the player looks
+Когда срабатывает: Незер, есть место, где можно встать, в 10 блоках в пределах 40° от направления взгляда игрока
 
 ## `magma_hop`
 
-All of them jump at once, with their jump sound
+Все магмовые кубы подпрыгивают одновременно, со звуком прыжка.
 
-Runs when: Nether, a magma cube on the ground within 16
+Когда срабатывает: Незер, магмовый куб на земле в пределах 16 блоков
 
 ## `steady_compass`
 
-Only this player's client is shown the compasses locked on that spirit's anchor for 30 s, then the real stacks again
+Клиенту только этого игрока показывают компасы, нацеленные на якорь этого духа, на 30 с, а затем снова настоящие стаки.
 
-Runs when: Nether, a plain compass in the inventory, and a territorial spirit whose reach holds the player
+Когда срабатывает: Незер, в инвентаре обычный компас и территориальный дух, в зоне действия которого находится игрок
 
 ## `soul_sand_drag`
 
-**Harmful.**
-Slowness II for 5 s and a whisper 2 blocks away
+**Вредящее событие.**
+Замедление II на 5 с и шёпот в 2 блоках от игрока.
 
-Runs when: Nether, standing on soul sand or soil, not slowed
+Когда срабатывает: Незер, игрок стоит на песке душ или почве душ и не замедлен
 
 ## `piglins_angered`
 
-**Harmful.**
-Idle piglins within 16 turn on the player as if they wore no gold (vanilla anger, 30 s)
+**Вредящее событие.**
+Бездействующие пиглины в пределах 16 блоков нападают на игрока, как будто на нём нет золота (обычный гнев, 30 с).
 
-Runs when: Nether, the player wears gold armor (not creative), a piglin within 16
+Когда срабатывает: Незер, игрок в золотой броне (не творческий режим), пиглин в пределах 16 блоков
 
 ## `endermen_turn`
 
-Each such enderman faces the player and has its target cleared and its path stopped every tick, for 10 s. They stay calm however long the player looks back. Nothing to revert
+Каждый такой Странник Края поворачивается к игроку, а его цель сбрасывается и путь останавливается каждый тик в течение 10 с. Странники Края остаются спокойными, сколько бы игрок ни смотрел в ответ. Откатывать нечего.
 
-Runs when: End, an enderman with no target within 32 blocks
+Когда срабатывает: Край, Странник Края без цели в пределах 32 блоков
 
 ## `shulker_peeks`
 
-One shulker opens its shell fully with the open sound, and shuts it with the close sound 3 s later (put back at shutdown too)
+Один шалкер полностью открывает панцирь со звуком открытия и закрывает его со звуком закрытия через 3 с (при остановке сервера его тоже возвращают в исходное состояние).
 
-Runs when: End, a shulker with no target within 24 blocks
+Когда срабатывает: Край, шалкер без цели в пределах 24 блоков
 
 ## `empty_pillar_crystal`
 
-Only this player's client is told of an end crystal on it, with an id no server entity has. Gone when the player comes within 12 blocks, or after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о кристалле Края на вершине столба, с идентификатором, которого нет ни у одной серверной сущности. Кристалл исчезает, когда игрок подходит ближе чем на 12 блоков, или через 20 с. На сервере ничего не появляется.
 
-Runs when: End, a pillar top (bedrock on obsidian, free air above, no crystal on it) 8 or more blocks away in the 48-block square
+Когда срабатывает: Край, вершина столба (бедрок на обсидиане, над ней свободный воздух, без кристалла) в 8 или более блоках в квадрате 48 блоков
 
 ## `enderman_home_block`
 
-Only this player's client is told of an enderman standing there, facing them, holding one of the blocks they carry. Gone with the teleport sound once it has been within 30° of where they look for 3 checks (every tick), or silently within 6 blocks or after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о Страннике Края, который стоит там, смотрит на игрока и держит один из блоков, которые игрок носит с собой. Он исчезает со звуком телепортации, как только побывал в пределах 30° от направления взгляда игрока в течение 3 проверок (по одной каждый тик), или беззвучно, когда игрок подходит ближе чем на 6 блоков или проходит 20 с. На сервере ничего не появляется.
 
-Runs when: End, the player carries a block item (not one with a block entity) and has standing room 18 blocks away within 50° of where they look
+Когда срабатывает: Край, игрок носит предмет-блок (не имеющий блок-сущности) и есть место, где можно встать, в 18 блоках в пределах 50° от направления взгляда игрока
 
 ## `desert_husk_haze`
 
-Only this player's client is told of a husk standing 28 blocks away within 40° of where they look, facing them, with an id no server entity has. Gone when the player comes within 14 blocks, or after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о кадавре, который стоит в 28 блоках в пределах 40° от направления взгляда игрока и смотрит на игрока, с идентификатором, которого нет ни у одной серверной сущности. Кадавр исчезает, когда игрок подходит ближе чем на 14 блоков, или через 20 с. На сервере ничего не появляется.
 
-Runs when: In a desert, with standing room 28 blocks away within 40° of where the player looks
+Когда срабатывает: В пустыне, есть место, где можно встать, в 28 блоках в пределах 40° от направления взгляда игрока
 
 ## `boat_grabbed`
 
-For 8 s the boat's motion is set to zero every tick and the client is told, so it will not move; drowned groans sound under it every 1.5 s
+В течение 8 с скорость лодки каждый тик обнуляется, и клиенту об этом сообщают, поэтому лодка не движется. Под ней каждые 1.5 с раздаются стоны утопленников.
 
-Runs when: In an ocean biome, riding a boat that floats in water
+Когда срабатывает: В океаническом биоме, игрок плывёт в лодке, которая держится на воде
 
 ## `parrots_scatter`
 
-Every such parrot is thrown up if it is on the ground and sent toward a point 24 blocks away from the player and 10 up, again every 0.5 s for 8 s; a wing beat sounds
+Каждого такого попугая подбрасывает вверх, если он на земле, и направляет к точке в 24 блоках от игрока и на 10 блоков выше, и так снова каждые 0.5 с в течение 8 с. Слышен взмах крыльев.
 
-Runs when: In a jungle biome, a parrot with no owner within 24
+Когда срабатывает: В биоме джунглей, попугай без хозяина в пределах 24 блоков
 
 ## `mooshroom_brown`
 
-Up to 8 of them turn brown; 30 s later each is red again. Under hardcore they stay brown
+До 8 грибных коров становятся бурыми, а через 30 с каждая снова красная. В режиме хардкор они остаются бурыми.
 
-Runs when: In the mushroom fields, a red mooshroom within 24
+Когда срабатывает: На грибных полях, красная грибная корова в пределах 24 блоков
 
 ## `roof_skeleton`
 
-Only this player's client is told of a skeleton standing on a roof with its bow drawn and no arrow, facing the player. Gone when looked at for a moment, approached within 6 blocks, or after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о скелете, который стоит на крыше с натянутым луком без стрелы и смотрит на игрока. Скелет исчезает, если на него недолго посмотреть, подойти к нему ближе чем на 6 блоков, или через 20 с. На сервере ничего не появляется.
 
-Runs when: A stair or slab within 16 blocks, at least 8 away and 2 above the player, with open sky and two free blocks over it
+Когда срабатывает: Ступени или плита в пределах 16 блоков, не ближе 8 блоков и на 2 блока выше игрока, с открытым небом и двумя свободными блоками над ними
 
 ## `far_warden`
 
-Only this player's client is told of a warden 30 to 42 blocks away that rises with its emerge animation and sound, stands a few seconds, and digs back in with the dig sound. Nothing on the server
+Клиенту только этого игрока сообщают о хранителе в 30–42 блоках от игрока, который поднимается с анимацией и звуком появления, стоит несколько секунд и зарывается обратно со звуком копания. На сервере ничего не появляется.
 
-Runs when: Overworld, standing room 30 to 42 blocks away
+Когда срабатывает: Верхний мир, есть место, где можно встать, в 30–42 блоках
 
 ## `swamp_witch`
 
-Only this player's client is told of a witch standing behind a window, facing the player. Gone when looked at, approached within 2.5 blocks, or after 20 s. Nothing on the server
+Клиенту только этого игрока сообщают о ведьме, которая стоит за окном и смотрит на игрока. Ведьма исчезает, если на неё посмотреть, подойти к ней ближе чем на 2.5 блока, или через 20 с. На сервере ничего не появляется.
 
-Runs when: Swamp or mangrove swamp; a glass block or pane, or a one-block gap over a plank sill, within 12 blocks and at least 4 away, with the player outside and standing room inside
+Когда срабатывает: Болото или мангровое болото; стеклянный блок или панель, либо промежуток в один блок над досчатым подоконником, в пределах 12 блоков и не ближе 4 блоков, игрок снаружи, а место, где можно встать, внутри
 
 ## `wall_shulker`
 
-Only this player's client is told of a shulker on the wall of a room; it opens its shell fully with the open sound, shuts it with the close sound 3 s later, and is gone. Nothing on the server
+Клиенту только этого игрока сообщают о шалкере на стене комнаты. Он полностью открывает панцирь со звуком открытия, закрывает его со звуком закрытия через 3 с и исчезает. На сервере ничего не появляется.
 
-Runs when: A free floored block under cover against a solid wall block within 8 blocks, at least 3 away and within 2 of the player's height
+Когда срабатывает: Свободный блок с полом под крышей у сплошного блока стены в пределах 8 блоков, не ближе 3 блоков и в пределах 2 блоков по высоте от игрока
 
 ## `forest_creaking`
 
-Only this player's client is told of a creaking that walks to the player at 0.175 blocks/tick, following the ground, but only while they are not looking at it. Gone within 3 blocks, after 60 s, or when stuck. Nothing on the server
+Клиенту только этого игрока сообщают о скрипуне, который идёт к игроку со скоростью 0.175 блока/тик, следуя рельефу, но только пока игрок на него не смотрит. Скрипун исчезает в пределах 3 блоков, через 60 с или когда застрянет. На сервере ничего не появляется.
 
-Runs when: Forest biome, standing room 24 to 36 blocks away
+Когда срабатывает: Лесной биом, есть место, где можно встать, в 24–36 блоках
 
 ## `cow_herd_blink`
 
-Only this player's client is told of a herd of cows in a field. When the player has looked at it for a moment the view blinks once and the herd is gone at the darkest point; otherwise it goes when approached within 8 blocks or after 30 s. Nothing on the server
+Клиенту только этого игрока сообщают о стаде коров в поле. Когда игрок некоторое время смотрел на стадо, картинка один раз моргает, и в самый тёмный момент стадо исчезает. Иначе оно исчезает, когда игрок подходит ближе чем на 8 блоков, или через 30 с. На сервере ничего не появляется.
 
-Runs when: The mod is on the client, and there is grass under open sky for at least 3 cows 20 to 26 blocks ahead
+Когда срабатывает: Мод установлен на клиенте, и впереди в 20–26 блоках есть трава под открытым небом не менее чем для 3 коров
 
 ## `golem_wrong_chest`
 
-One stack moves from the copper chest to the other chest, with the golem's get and drop animations and chest sounds, 1 s apart. The move stays
+Один стак перемещается из медного сундука в другой сундук, с анимациями голема (взять и положить) и звуками сундуков, с промежутком 1 с. Перемещение остаётся.
 
-Runs when: A copper golem within 12, a copper chest with an item and another, non-adjacent chest with a free slot
+Когда срабатывает: Медный голем в пределах 12 блоков, медный сундук с предметом и другой, не соседний сундук со свободной ячейкой
 
 ## `villagers_at_windows`
 
-Up to 3 villagers wake, walk (up to 20 s) to the nearest unclaimed window, then lose their AI and face the player for 30 s; the AI comes back after
+До 3 жителей просыпаются, идут (до 20 с) к ближайшему незанятому окну, затем теряют ИИ и 30 с смотрят на игрока. После этого ИИ возвращается.
 
-Runs when: Overworld at night, a villager within 20 and a window (glass or pane with open air on both sides) within 12 with a roofed floor cell at its foot
+Когда срабатывает: Верхний мир ночью, житель в пределах 20 блоков и окно (стекло или панель с открытым воздухом с обеих сторон) в пределах 12 блоков с крытой ячейкой пола у его основания
 
 ## `strange_trader`
 
-A real wandering trader (no AI, facing the player) with offers from `offers` (a bone for the player's head, essence for echo shards, ...), 1 use each. Gone once the player has seen it and looks away (unless trading), or after 2 min
+Настоящий странствующий торговец (без ИИ, смотрит на игрока) с предложениями из списка `offers` (кость за голову игрока, эссенция за осколки эха и так далее), по 1 использованию каждое. Он исчезает, как только игрок увидел его и отвёл взгляд (если не торгует), или через 2 мин.
 
-Runs when: Overworld at night, standing room 12 blocks away within 40° of where the player looks
+Когда срабатывает: Верхний мир ночью, есть место, где можно встать, в 12 блоках в пределах 40° от направления взгляда игрока
 
 ## `golem_in_corner`
 
-The golem walks there (up to 30 s), loses its AI and faces the corner for 30 s; the AI comes back after
+Голем идёт туда (до 30 с), теряет ИИ и 30 с стоит лицом к углу. После этого ИИ возвращается.
 
-Runs when: An idle iron golem within 40, and a roofed floor cell in a corner (two walls) within 6 of the player, at least 2 away
+Когда срабатывает: Бездействующий железный голем в пределах 40 блоков и крытая ячейка пола в углу (две стены) в пределах 6 блоков от игрока, не ближе 2 блоков
 
 ## `dolphins_lead`
 
-Up to 3 dolphins swim 16 blocks at a time toward the spirit's point (60 blocks away at random if none sent it), calling now and then; one more than 12 blocks from the player stops and faces them. 30 pulses of 1 s
+До 3 дельфинов плывут по 16 блоков за раз к точке духа (в 60 блоках в случайном направлении, если её не задал дух), время от времени подавая голос. Дельфин дальше 12 блоков от игрока останавливается и поворачивается к нему. Всего 30 импульсов по 1 с.
 
-Runs when: The player in water, a dolphin in water within 32
+Когда срабатывает: Игрок в воде, дельфин в воде в пределах 32 блоков
 
 ## `spiders_at_window`
 
-Up to 5 spiders walk to the ground at the foot of that window, lose their AI and face it for 30 s; the AI comes back after
+До 5 пауков идут к земле у основания этого окна, теряют ИИ и 30 с смотрят на окно. После этого ИИ возвращается.
 
-Runs when: At least 2 idle spiders within 24, and a window within 12 with open ground under it outside (up to 3 below)
+Когда срабатывает: Не менее 2 бездействующих пауков в пределах 24 блоков и окно в пределах 12 блоков с открытой землёй под ним снаружи (до 3 блоков вниз)
 
 ## `squid_goes_dark`
 
-Each such squid has its dark ticks set to 60 s (the glow is off, then returns by itself)
+У каждого такого кальмара счётчик тёмных тиков выставляется на 60 с (свечение выключается, а затем возвращается само).
 
-Runs when: A glow squid within 32 that is glowing
+Когда срабатывает: Светящийся кальмар в пределах 32 блоков, который светится
 
 ## `hoglins_charge`
 
-Each is set on the player for up to 5 s; one that comes within 3.2 blocks loses its AI and faces the player for 4 s, then gets it back and is told to avoid the player for 10 s
+Каждого хоглина натравливают на игрока на срок до 5 с. Тот, кто подошёл ближе чем на 3.2 блока, теряет ИИ и 4 с смотрит на игрока, затем получает ИИ обратно и получает приказ избегать игрока в течение 10 с.
 
-Runs when: Nether, at least 2 adult hoglins within 24, farther than 3.2 blocks from the player
+Когда срабатывает: Незер, не менее 2 взрослых хоглинов в пределах 24 блоков, дальше 3.2 блока от игрока
 
 ## `pale_pet`
 
-One of your tame wolves or cats turns pale until dawn (stays under hardcore)
+Один из прирученных игроком волков или кошек бледнеет до рассвета (в режиме хардкор остаётся бледным).
 
-Runs when: Night, and your tame wolf or cat within 24
+Когда срабатывает: Ночь, и прирученный волк или кошка игрока в пределах 24 блоков
 
 ## `pale_herd`
 
-Up to four cows, pigs or chickens turn pale for 2 min (stays under hardcore)
+До четырёх коров, свиней или куриц бледнеют на 2 мин (в режиме хардкор остаются бледными).
 
-Runs when: A cow, pig or chicken within 24
+Когда срабатывает: Корова, свинья или курица в пределах 24 блоков

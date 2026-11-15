@@ -179,7 +179,7 @@
     },
     "minecraft:blindness": {
       "name": "Слепота",
-      "description": "Слепота на шесть секунд и тихий звук пещеры."
+      "description": "Слепота на шесть секунд и призрачный стон."
     },
     "minecraft:sanity_crash": {
       "name": "Сломленный рассудок",

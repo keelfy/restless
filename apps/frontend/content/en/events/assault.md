@@ -7,7 +7,7 @@ title: Assault
 65 events.
 
 Events come in three bands. A **threat** event never takes the player below `assaults.safe_health` (3 hearts). A **brink** event
-may leave half a heart, needs power 0.6, sets your heart pounding and is followed by a quiet spell. A **lethal** event can kill, and runs only for an
+may leave half a heart, needs power 0.6, sets the player's heart pounding and is followed by a quiet spell. A **lethal** event can kill, and runs only for an
 evolved spirit on its list, at power 0.9, at most once per 3 days and only after a brink event. See the `assaults` settings to
 turn lethal events off. A player killed this way lowers the spirit's anger. Every one gives a warning and a way out.
 
@@ -119,140 +119,140 @@ Runs when: In a mountain biome, health above the safe floor + 2 hearts, and the 
 ## `hurled_block`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A loose block nearby shivers and lifts in a cloud of dust, then flies at you. Step aside.
+A loose block nearby shivers and lifts in a cloud of dust, then flies at the player. The way out is to step aside.
 
 Runs when: Not peaceful, health above 5 hearts, a loose block (gravel, cobblestone and the like) within reach
 
 ## `flung_tools`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A chest nearby rattles and opens, and the tools inside fly at you one by one. Dodge them or empty the chest.
+A chest nearby rattles and opens, and the tools inside fly at the player one by one. The way out is to dodge them or empty the chest.
 
 Runs when: Not peaceful, health above 5 hearts, a chest with tools in it nearby
 
 ## `volley`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A skeleton rattles somewhere in the dark, then a few arrows come from that one direction. Take cover.
+A skeleton rattles somewhere in the dark, then a few arrows come from that one direction. The way out is to take cover.
 
 Runs when: Not peaceful, health above 5 hearts, light level below `dark_below`
 
 ## `cave_in`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-Dust and creaking overhead, then gravel falls on the spot where you stand. Step out from under it.
+Dust and creaking overhead, then gravel falls on the spot where the player stands. The way out is to step out from under it.
 
 Runs when: Not peaceful, health above 5 hearts, a solid roof overhead
 
 ## `dripstone_rain`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-Pointed dripstone breaks off the ceiling around you, wave after wave. Keep moving.
+Pointed dripstone breaks off the ceiling around the player, wave after wave. The way out is to keep moving.
 
 Runs when: Not peaceful, health above 5 hearts, a solid roof overhead
 
 ## `possessed_mob`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A hostile mob nearby is lit by spirit fire, then turns fast and strong and comes for you. Kill it. A faint dark haze gathers around the mob, thicker as the turn nears.
+A hostile mob nearby is lit by spirit fire, then turns fast and strong and comes for the player. The way out is to kill it. A faint dark haze gathers around the mob, thicker as the turn nears.
 
 Runs when: Not peaceful, health above 5 hearts, a hostile mob nearby
 
 ## `frenzy`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-Every hostile mob nearby is seized by spirit fire, then turns fast and strong. Fall back.
+Every hostile mob nearby is seized by spirit fire, then turns fast and strong. The way out is to fall back.
 
 Runs when: Not peaceful, health above 5 hearts, at least `min_mobs` hostile mobs nearby
 
 ## `turned_pets`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-Your tamed wolves and cats stand and growl, then go for you for a while. Walk away.
+The player's tamed wolves and cats stand and growl, then go for the player for a while. The way out is to walk away.
 
 Runs when: Not peaceful, health above 5 hearts, the player has a tamed wolf or cat nearby
 
 ## `vex_swarm`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A cold wail, then a few short-lived vexes named "?" come out of the air. Fight back.
+A cold wail, then a few short-lived vexes named "?" come out of the air. The way out is to fight back.
 
 Runs when: Not peaceful, health above 5 hearts
 
 ## `ghost_creeper`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A hiss behind you, then a small blast there that breaks no blocks. Run on the hiss.
+A hiss behind the player, then a small blast there that breaks no blocks. The way out is to run as soon as the hiss sounds.
 
 Runs when: Not peaceful, health above 5 hearts
 
 ## `stalker`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A figure appears far off and stands watching, then runs at you, hits once and is gone. Outrun it. A faint dark haze trails it as it runs and stays where it falls for 2 s.
+A figure appears far off and stands watching, then runs at the player, hits once and is gone. The way out is to outrun it. A faint dark haze trails it as it runs and stays where it falls for 2 s.
 
 Runs when: Not peaceful, health above 5 hearts, standing room for the figure in line of sight
 
 ## `hail_of_bones`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-Rattling in the night sky, then blocks of bone fall around you. Take cover under a roof.
+Rattling in the night sky, then blocks of bone fall around the player. The way out is to take cover under a roof.
 
 Runs when: Not peaceful, health above 5 hearts, overworld, night, open sky
 
 ## `rake`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-Three scratches in the dark, then three blows. Moving between them is enough to be missed.
+Three scratches in the dark, then three blows. Moving between them is enough for the player to be missed.
 
 Runs when: Health above 5 hearts
 
 ## `teeth_in_dark`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A growl where the light is gone, then a bite every few seconds. Find light. A faint dark haze hangs just off to one side, where the jaws are.
+A growl where the light is gone, then a bite every few seconds. The way out is to find light. A faint dark haze hangs just off to one side, where the jaws are.
 
 Runs when: Health above 5 hearts, light level 0
 
 ## `searing_armor`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-The chestplate glows and burns every second. Take it off or jump into water.
+The chestplate glows and burns every second. The way out is to take it off or jump into water.
 
 Runs when: Health above 5 hearts, a non-leather chestplate worn, dry, not fire resistant
 
 ## `frost_grip`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A cold like powder snow on dry land, and it bites. Get to fire or a light.
+A cold like powder snow on dry land, and it bites. The way out is to get to fire or a light.
 
 Runs when: Health above 5 hearts, can freeze, not warm (no fire or lava nearby, not in water)
 
 ## `pinned`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-Heavy limbs, and every hostile nearby turns on you. Fight or wait it out.
+Heavy limbs, and every hostile nearby turns on the player. The way out is to fight or wait it out.
 
 Runs when: Health above 5 hearts, not slowed, a hostile mob nearby
 
 ## `throat`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-Air drains on dry land and a whisper says hush. Crouch and wait, or drink milk.
+Air drains on dry land and a whisper says hush. The way out is to crouch and wait, or drink milk.
 
 Runs when: Health above 5 hearts, not in water, no bad luck effect
 
 ## `undertow_dry`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-Something drags you back while you sprint. Stop running.
+Something drags the player back while sprinting. The way out is to stop running.
 
 Runs when: Health above 5 hearts, sprinting
 
 ## `lantern_burst`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A torch or lantern sputters, then bursts into fire. Stay away from the lights.
+A torch or lantern sputters, then bursts into fire. The way out is to stay away from the lights.
 
 Runs when: Health above 5 hearts, a torch or lantern within reach
 
@@ -266,49 +266,49 @@ Runs when: Health above 5 hearts, no nausea
 ## `wrong_step`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-The ground ahead crumbles into a hole, a fall of one to three blocks. Watch where you step.
+The ground ahead crumbles into a hole, a fall of one to three blocks. The way out is to watch each step.
 
 Runs when: On the ground, standing room 1 block ahead
 
 ## `ash_storm`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A wind of soul fire in the Nether. Take shelter behind a wall.
+A wind of soul fire in the Nether. The way out is to take shelter behind a wall.
 
 Runs when: Health above 5 hearts, in the Nether
 
 ## `hand_below`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A circle of souls under your feet. Stay on it and a hand takes hold. Step off. A faint dark haze rises from the ring, thicker the longer you stay.
+A circle of souls under the player's feet. If the player stays on it, a hand takes hold; the way out is to step off. A faint dark haze rises from the ring, thicker the longer the player stays.
 
 Runs when: Health above 5 hearts, on the ground
 
 ## `blade_behind`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A sweep sounds at your back. Turn to face it before it lands.
+A sweep sounds at the player's back. The way out is to turn to face it before it lands.
 
 Runs when: Health above 5 hearts
 
 ## `door_bite`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A door swings open by itself and slams on whoever passes. Use another way.
+A door swings open by itself and slams on whoever passes. The way out is to use another way.
 
 Runs when: Health above 5 hearts, a door in the player's path
 
 ## `night_terror`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-A heartbeat in your sleep, then you are thrown awake screaming. Wards hold it off. A faint dark haze gathers at the bedside while you sleep and is still there when you wake.
+A heartbeat in the player's sleep, then the player is thrown awake screaming. Wards hold it off. A faint dark haze gathers at the bedside while the player sleeps and is still there on waking.
 
 Runs when: Health above 5 hearts, the player is asleep with at least a second of the night left
 
 ## `stone_fists`
 
 **Harmful, threat band: leaves at least 3 hearts.**
-The wall you lean on rumbles and strikes. Step away from it.
+The wall the player leans on rumbles and strikes. The way out is to step away from it.
 
 Runs when: Health above 5 hearts, leaning on a wall
 
@@ -322,14 +322,14 @@ Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, health above `min
 ## `the_hanging`
 
 **Harmful, brink band: can leave half a heart.**
-You are lifted high into the air, then let go. Slow falling, water, or a block under you softens the drop.
+The player is lifted high into the air, then let go. Slow falling, water, or a block underneath softens the drop.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, on the ground, not in water, no slow falling
 
 ## `held_under`
 
 **Harmful, brink band: can leave half a heart.**
-In deep water something pushes you down until your breath is gone. Swim sideways out of the column.
+In deep water something pushes the player down until the breath is gone. The way out is to swim sideways out of the column.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, under water, no water breathing
 
@@ -350,63 +350,63 @@ Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, no wither effect
 ## `count`
 
 **Harmful, brink band: can leave half a heart.**
-A countdown on the screen: three, two, one. Reach light or holy ground before it ends.
+A countdown on the screen: three, two, one. The way out is to reach light or holy ground before it ends.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, not in light
 
 ## `the_hollow`
 
 **Harmful, brink band: can leave half a heart.**
-A named creature of the spirit hunts you, and its blows cannot kill. Kill it and the spirit calms.
+A named creature of the spirit hunts the player, and its blows cannot kill. Killing it calms the spirit.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, standing room for a hostile
 
 ## `ledge_push`
 
 **Harmful, brink band: can leave half a heart.**
-A strong shove at the edge of a drop. Crouch when the warning comes.
+A strong shove at the edge of a drop. The way out is to crouch when the warning comes.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, at the edge of a drop
 
 ## `circle_of_knives`
 
 **Harmful, brink band: can leave half a heart.**
-Arrows hang in a ring around you, then close in. Break out of the ring.
+Arrows hang in a ring around the player, then close in. The way out is to break out of the ring.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts
 
 ## `smother_brink`
 
 **Harmful, brink band: can leave half a heart.**
-The air is taken from you in the dark, past the safe point. Find light.
+The air is taken from the player in the dark, past the safe point. The way out is to find light.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, not in water, light level below `dark_below`
 
 ## `embrace_brink`
 
 **Harmful, brink band: can leave half a heart.**
-Cold hands close around you, harder each time, past the safe point. Get ten blocks away.
+Cold hands close around the player, harder each time, past the safe point. The way out is to get ten blocks away.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts
 
 ## `red_room`
 
 **Harmful, brink band: can leave half a heart.**
-Darkness, a heartbeat, and a figure in sight that strikes every second you look at it. Look away.
+Darkness, a heartbeat, and a figure in sight that strikes every second the player looks at it. The way out is to look away.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, standing room for a figure
 
 ## `drain`
 
 **Harmful, brink band: can leave half a heart.**
-Your health drains a heart a second and your hunger bar empties. Eat.
+The player's health drains a heart a second and the hunger bar empties. The way out is to eat.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts
 
 ## `bound`
 
 **Harmful, brink band: can leave half a heart.**
-You are held in place while a hostile is dragged to you. Kill it.
+The player is held in place while a hostile is dragged to them. The way out is to kill it.
 
 Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, standing room for a hostile
 

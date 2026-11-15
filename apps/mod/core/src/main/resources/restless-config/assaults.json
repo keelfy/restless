@@ -165,7 +165,7 @@
       },
       "beat_sound": {
         "volume": 0.8,
-        "pitch": 0.8
+        "pitch": 1.0
       },
       "touch_sound": {
         "volume": 1.0,

@@ -158,7 +158,7 @@ Runs when: Indoors, a bed or chest within 10 on the player's level, reachable ov
 ## `locked_door`
 
 **Harmful.**
-Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back. A faint dark haze hangs at the door while it is locked.
+Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so an attempt to open it is refused locally (locked-chest sound), with no open-and-snap-back. A faint dark haze hangs at the door while it is locked.
 
 Runs when: A wooden door within 12
 
@@ -218,7 +218,7 @@ Runs when: An empty decorated pot within 12
 
 ## `piston_twitch`
 
-A piston twitches out and back, only on your screen, and pushes nothing
+A piston twitches out and back, only on the player's screen, and pushes nothing
 
 Runs when: A piston within 12 with air in front
 
@@ -230,7 +230,7 @@ Runs when: A hopper within 12 with a dropped item near it
 
 ## `sculk_chain`
 
-Sculk sensors click one after another, the farthest first, toward you
+Sculk sensors click one after another, the farthest first, toward the player
 
 Runs when: Two or more sculk sensors within 16
 
@@ -242,13 +242,13 @@ Runs when: An observer within 12
 
 ## `bed_missing`
 
-"Your home bed was missing or obstructed", while the spawn point stays as it is
+The vanilla message that the home bed was missing or obstructed, while the spawn point stays as it is
 
-Runs when: You have a respawn point
+Runs when: The player has a respawn point
 
 ## `ender_note`
 
-A note you never wrote shows in an empty slot of the open ender chest, gone at the first click
+A note the player never wrote shows in an empty slot of the open ender chest, gone at the first action in its inventory
 
 Runs when: An ender chest is open with an empty slot
 

@@ -1,612 +1,610 @@
 ---
-title: Presence
+title: Присутствие
 ---
 
-# Presence
+# Присутствие
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-100 events.
+Событий: 100.
 
 ## `dragon_flyover`
 
-Only this player's client is told of an ender dragon flying a straight 240-block line 40 blocks above them, up to 30 to one side, at a random bearing, in 10 s, with its growl at the start (its wing flaps are the client's own). Nothing on the server
+Только клиенту этого игрока сообщают о драконе Края, который летит по прямой длиной 240 блоков на высоте 40 блоков над игроком, смещённой в сторону не более чем на 30, в случайном направлении и за 10 с; в начале слышен его рёв (взмахи крыльев воспроизводит сам клиент). На сервере ничего не происходит.
 
-Runs when: Overworld, sky visible
+Когда срабатывает: Верхний мир, небо видно
 
 ## `edge_figure`
 
-A silent, unhurtable mannequin with the player's own skin stands there facing them. Gone, with no sound or particles, when the player looks within 25° of it with a clear line, or after 30 s
+Беззвучный неуязвимый манекен с собственным скином игрока стоит там, повернувшись к нему лицом. Исчезает без звука и частиц, когда игрок смотрит в его сторону в пределах 25° при прямой видимости, или через 30 с.
 
-Runs when: No such figure already, standing room 16 blocks away, 45–65° to a side of where the player looks
+Когда срабатывает: Такой фигуры ещё нет, в 16 блоках есть место, где можно встать, под углом 45–65° в сторону от направления взгляда игрока
 
 ## `fog_silhouette`
 
-A mannequin in the default skin stands far off. Gone, silently, when the player comes within 24 blocks, or after 60 s
+Манекен в стандартном скине стоит далеко. Исчезает без звука, когда игрок подходит ближе чем на 24 блока, или через 60 с.
 
-Runs when: Open sky and rain or darkness outside, standing room 40 blocks away within 25° of where the player looks
+Когда срабатывает: Открытое небо, снаружи дождь или темнота, в 40 блоках в пределах 25° от направления взгляда игрока есть место, где можно встать
 
 ## `distant_player`
 
-A silent, unhurtable mannequin in a random default skin (Steve, Alex and the rest) stands there facing them. Gone, silently, when the player comes within 35 blocks, or after 60 s
+Беззвучный неуязвимый манекен в случайном стандартном скине (Стив, Алекс и остальные) стоит там, повернувшись к игроку лицом. Исчезает без звука, когда игрок подходит ближе чем на 35 блоков, или через 60 с.
 
-Runs when: Standing room 60 blocks away within 40° of where the player looks (up to 16 bearings tried; grass and flowers count as room)
+Когда срабатывает: В 60 блоках в пределах 40° от направления взгляда игрока есть место, где можно встать (пробуется до 16 направлений; трава и цветы считаются свободным местом)
 
 ## `friend_double`
 
-A silent, unhurtable mannequin with the skin and name of another player who stands near (within 16 blocks, same dimension, not a spectator; one at random) stands 50 blocks away facing the player, its name shown over its head. Gone, silently, when the player comes within 30 blocks, or after 60 s
+Беззвучный неуязвимый манекен со скином и именем другого игрока, который находится рядом (в пределах 16 блоков, в том же измерении, не наблюдатель; выбирается случайный), стоит в 50 блоках, повернувшись к игроку лицом; его имя показано над головой. Исчезает без звука, когда игрок подходит ближе чем на 30 блоков, или через 60 с.
 
-Runs when: No such figure already, another such player near, standing room 50 blocks away within 40° of where the player looks (up to 16 bearings tried)
+Когда срабатывает: Такой фигуры ещё нет, рядом есть такой другой игрок, в 50 блоках в пределах 40° от направления взгляда игрока есть место, где можно встать (пробуется до 16 направлений)
 
 ## `distant_walker`
 
-A silent, unhurtable mannequin in a random default skin walks across the player's view at walking pace, or (40%) sprints at 0.28 blocks/tick and jumps now and then; it jumps up one-block steps, falls off ledges up to 2 deep, goes through grass and flowers, and turns up to 80° off to go round what is in its way. Gone, silently, when the player comes within 25 blocks, when no way on is left, or after 30 s
+Беззвучный неуязвимый манекен в случайном стандартном скине идёт через поле зрения игрока шагом или (в 40% случаев) бежит со скоростью 0.28 блоков/тик и время от времени прыгает; он запрыгивает на ступени высотой в один блок, спрыгивает с уступов глубиной до 2, проходит сквозь траву и цветы и отклоняется до 80°, чтобы обойти препятствие. Исчезает без звука, когда игрок подходит ближе чем на 25 блоков, когда дальше пути нет, или через 30 с.
 
-Runs when: Standing room 45 blocks away within 40° of where the player looks (up to 16 bearings tried; grass and flowers count as room)
+Когда срабатывает: В 45 блоках в пределах 40° от направления взгляда игрока есть место, где можно встать (пробуется до 16 направлений; трава и цветы считаются свободным местом)
 
 ## `nametag`
 
-A nameplate (text display, seen through walls) with a made-up nickname (as spirits get, at most 16 characters) floats 3 blocks under the player's feet or at head height over that standing room, with nobody under it. Gone after 10 s
+Табличка с именем (текстовый дисплей, виден сквозь стены) с выдуманным ником (какие получают духи, не длиннее 16 символов) висит на 3 блока ниже ног игрока или на уровне головы над тем местом, где можно встать, причём под ней никого нет. Исчезает через 10 с.
 
-Runs when: Half the time standing room 30 blocks away within 40° of where the player looks; otherwise none
+Когда срабатывает: В половине случаев: в 30 блоках в пределах 40° от направления взгляда игрока есть место, где можно встать; иначе нет
 
 ## `pillar`
 
-A silent, unhurtable mannequin in a random default skin, a block in hand (cobblestone, stone, dirt or any planks), every 0.5 s looks down at its feet and jumps (a player's jump arc), puts that block (its place sound) where its feet were once above it, swings its arm and lands on it, 8 times; at the top it faces the player. It waits at the top and is gone 7 s after it appeared; sooner if the player comes within 10 blocks or the way up is blocked. Each block goes back to air after 2 min if still that block; under hardcore the pillar stays
+Беззвучный неуязвимый манекен в случайном стандартном скине держит в руке блок (булыжник, камень, землю или любые доски). Каждые 0.5 с он смотрит вниз, на свои ноги, и прыгает (по дуге прыжка игрока), ставит этот блок (со звуком установки) туда, где только что стояли его ноги, взмахивает рукой и приземляется на него, и так 8 раз; наверху он поворачивается лицом к игроку. Наверху он ждёт и исчезает через 7 с после появления, а раньше, если игрок подходит ближе чем на 10 блоков или путь наверх закрыт. Каждый блок через 2 мин снова становится воздухом, если на его месте всё ещё этот блок; в хардкоре столб остаётся.
 
-Runs when: Standing room 24 blocks away within 40° of where the player looks, open for 8 blocks above
+Когда срабатывает: В 24 блоках в пределах 40° от направления взгляда игрока есть место, где можно встать, а над ним 8 блоков открытого пространства
 
 ## `harvest`
 
-A silent, unhurtable mannequin in a random default skin stands there and every 0.4 s turns to the nearest ripe crop within 4 blocks, swings and breaks it (particles and sound, no drops). Gone when none is left, when the player comes within 5 blocks, or after 10 s. Each crop comes back at its age after 2 min if its spot is still empty; under hardcore they stay gone
+Беззвучный неуязвимый манекен в случайном стандартном скине стоит там и каждые 0.4 с поворачивается к ближайшей спелой культуре в пределах 4 блоков, взмахивает рукой и ломает её (с частицами и звуком, без выпадения предметов). Исчезает, когда культур не остаётся, когда игрок подходит ближе чем на 5 блоков, или через 10 с. Каждая культура через 2 мин возвращается на своё место в той же стадии роста, если оно всё ещё пусто; в хардкоре они остаются сломанными.
 
-Runs when: A ripe crop within 16 blocks with standing room within 4 blocks of it, at least 8 blocks from the player
+Когда срабатывает: Спелая культура в пределах 16 блоков от игрока, а в пределах 4 блоков от неё есть место, где можно встать, не ближе 8 блоков к игроку
 
 ## `footprints`
 
-For 6 s, puffs of the ground and a step sound appear where the player stood a second ago. Particles only, nothing is placed
+В течение 6 с на том месте, где игрок стоял секунду назад, поднимаются облачка пыли и раздаётся звук шага. Только частицы, ничего не ставится.
 
-Runs when: Standing on or in sand or snow
+Когда срабатывает: Игрок стоит на песке или снеге либо в нём
 
 ## `cold_breath`
 
-A breath puff at the face
+Облачко дыхания перед лицом игрока.
 
-Runs when: Warm biome
+Когда срабатывает: Тёплый биом
 
 ## `local_rain`
 
-Rain particles and sound over the player for 6 s
+Частицы и звук дождя над игроком в течение 6 с.
 
-Runs when: Sky visible, not raining
+Когда срабатывает: Небо видно, дождя нет
 
 ## `lost_time`
 
-**Harmful.**
-The overworld clock jumps 1000 ticks (affects everyone)
+**Вредящее событие.**
+Часы Верхнего мира перескакивают на 1000 тиков вперёд (это касается всех).
 
-Runs when: Night
+Когда срабатывает: Ночь
 
 ## `guardian_face`
 
-The elder guardian face and sound, client only
+Лицо и звук древнего стража, только на клиенте.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `false_totem`
 
-The totem of undying animation (a plain totem if none is carried)
+Анимация тотема бессмертия (обычный тотем, если игрок его не носит).
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `subliminal_title`
 
-A dark red title from `texts` for 3 ticks with no fade; fade times reset after
+Тёмно-красный заголовок из списка `texts` на 3 тика, без появления и затухания; после этого время появления и затухания сбрасывается.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `red_vignette`
 
-The client draws a red tint at the screen's edges, peaking at 80%, fading in and out over 5 s (`RedVignette`).
+Клиент рисует красный оттенок по краям экрана с пиком в 80%, который плавно нарастает и угасает за 5 с (`RedVignette`).
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `false_death`
 
-Their own "was slain by ???" death message, sent only to them
+Собственное сообщение о смерти игрока «был убит ???», которое видит только он.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `private_rain`
 
-Rain for this client only, a storm 30% of the time, for 20 s; then the real weather
+Дождь только для этого клиента, в 30% случаев гроза, на 20 с; затем возвращается настоящая погода.
 
-Runs when: Weather dimension, not raining, sky visible
+Когда срабатывает: Измерение с погодой, дождя нет, небо видно
 
 ## `silent_lightning`
 
-A visual-only bolt 24 blocks away
+Только визуальная молния в 24 блоках от игрока.
 
-Runs when: Weather dimension, sky visible
+Когда срабатывает: Измерение с погодой, небо видно
 
 ## `false_night`
 
-Only this player's client is told it is midnight, with the clock stopped. 15 s later it gets the real time back. Nothing on the server
+Только клиенту этого игрока сообщают, что наступила полночь, а часы остановлены. Через 15 с он снова получает настоящее время. На сервере ничего не происходит.
 
-Runs when: Overworld, daytime
+Когда срабатывает: Верхний мир, день
 
 ## `false_slot`
 
-Only this player's client is told that slot holds an item from a list of 25 (skulls and heads, bones, rotten flesh, spider eyes, a totem, disc 11 and more; a player head is their own). 20 s later, or at any click, the real slot comes back. Nothing on the server
+Только клиенту этого игрока сообщают, что в этом слоте лежит предмет из списка в 25 (черепа и головы, кости, куски гнили, паучьи глаза, тотем, пластинка «11» и другие; голова игрока — его собственная). Через 20 с или как только игрок взаимодействует с инвентарём, настоящий слот возвращается. На сервере ничего не происходит.
 
-Runs when: An empty inventory or hotbar slot
+Когда срабатывает: Пустой слот инвентаря или панели быстрого доступа
 
 ## `false_advancement`
 
-Grants a hidden advancement (`restless:whisper/*`, an impossible criterion, no chat line) so the toast shows, and revokes it 2 ticks later
+Выдаёт скрытое достижение (`restless:whisper/*`, невыполнимое условие, без строки в чате), чтобы появилось уведомление, и отзывает его через 2 тика.
 
-Runs when: None
+Когда срабатывает: Условий нет
 
 ## `turned_head`
 
-**Harmful.**
-A step sound of the ground at the spirit's position (or 6 blocks away at a random bearing), then the camera turns toward it, up or down as well, over 30 ticks, eased, a little every frame on the client (`TurnPayload`, `HeadTurn`); the mouse still works meanwhile
+**Вредящее событие.**
+Звук шага по земле раздаётся на месте духа (или в 6 блоках от игрока в случайном направлении), затем камера поворачивается к нему, в том числе вверх или вниз, за 30 тиков, плавно, понемногу в каждом кадре на клиенте (`TurnPayload`, `HeadTurn`); мышь при этом продолжает работать.
 
-Runs when: None
+Когда срабатывает: Условий нет
 
 ## `stranger_joins`
 
-Only this player gets "\<name> joined the game" and a player list entry for a made-up nickname (as spirits get, at most 16 characters), in a default skin. 40 s later the entry goes and "\<name> left the game" follows. Nothing on the server
+Только этот игрок получает сообщение «\<имя> присоединился к игре» и запись в списке игроков для выдуманного ника (какие получают духи, не длиннее 16 символов) в стандартном скине. Через 40 с запись пропадает и следует сообщение «\<имя> покинул игру». На сервере ничего не происходит.
 
-Runs when: None
+Когда срабатывает: Условий нет
 
 ## `stranger_death`
 
-Only this player gets a vanilla death message (fell, drowned, suffocated, fell out of the world, died) for a made-up nickname
+Только этот игрок получает обычное сообщение о смерти (упал, утонул, задохнулся, вывалился из мира, умер) для выдуманного ника.
 
-Runs when: None
+Когда срабатывает: Условий нет
 
 ## `false_whisper`
 
-A gray italic "X whispers to you" line from a real online player; off by default since it impersonates a real person
+Серая курсивная строка «X шепчет вам» от настоящего игрока из числа тех, кто в сети; по умолчанию выключено, поскольку выдаёт себя за реального человека.
 
-Runs when: Another player online
+Когда срабатывает: В сети есть другой игрок
 
 ## `pumpkin_head`
 
-Only this player's client is told the head slot holds a carved pumpkin, so the pumpkin blur covers the screen. 4 s later the real slot comes back. Nothing on the server. In hardcore, a real pumpkin is put on an empty head slot and taken off again
+Только клиенту этого игрока сообщают, что в слоте головы лежит резная тыква, поэтому тыквенное затемнение закрывает экран. Через 4 с настоящий слот возвращается. На сервере ничего не происходит. В хардкоре настоящая тыква надевается на пустой слот головы и снова снимается.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `xp_drain`
 
-The client is told the experience bar and level are zero for 3 s, then the real values
+Клиенту сообщают, что полоса опыта и уровень равны нулю, на 3 с, затем возвращаются настоящие значения.
 
-Runs when: Has experience points or levels
+Когда срабатывает: Есть очки опыта или уровни
 
 ## `phantom_flames`
 
-The client is told the player is on fire for 3 s, so the fire shows on screen. Nothing burns; the real flags come back after. In hardcore, the player is set on fire for 1 s
+Клиенту сообщают, что игрок горит, на 3 с, поэтому на экране виден огонь. Ничего не горит; после этого настоящие флаги возвращаются. В хардкоре игрок загорается по-настоящему на 1 с.
 
-Runs when: Not on fire, not in water
+Когда срабатывает: Игрок не горит и не в воде
 
 ## `phantom_drowning`
 
-The client is told the air supply drains from full to 20% over 4 s, so bubbles show on land; then the real value
+Клиенту сообщают, что запас воздуха убывает от полного до 20% за 4 с, поэтому пузырьки видны и на суше; затем возвращается настоящее значение.
 
-Runs when: Full air
+Когда срабатывает: Полный запас воздуха
 
 ## `phantom_frost`
 
-The client is told the frozen ticks rise to full over 2.5 s, so frost creeps over the screen, held until 5 s; then the real value. In hardcore, the player really freezes
+Клиенту сообщают, что тики заморозки растут до полного значения за 2.5 с, поэтому иней расползается по экрану и держится до 5 с; затем возвращается настоящее значение. В хардкоре игрок замерзает по-настоящему.
 
-Runs when: Not freezing
+Когда срабатывает: Игрок не замерзает
 
 ## `moon_phase`
 
-Only this player's client is shown the clock moved a random 1 to 7 whole days on, so the moon has another phase and the time of day is the same. 20 s later it gets the real time back. Nothing on the server
+Только клиенту этого игрока показывают часы, сдвинутые вперёд на случайное число целых суток от 1 до 7, так что у луны другая фаза, а время суток то же самое. Через 20 с он снова получает настоящее время. На сервере ничего не происходит.
 
-Runs when: Overworld, night
+Когда срабатывает: Верхний мир, ночь
 
 ## `false_boss_bar`
 
-A purple boss bar with a name from `names` is sent to this player only. It fills over 3 s, empties over 2 s and is removed. No boss exists
+Только этому игроку отправляется фиолетовая полоса босса с названием из списка `names`. Она наполняется за 3 с, опустошается за 2 с и убирается. Никакого босса нет.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `action_bar_whisper`
 
-A dark red line from `lines` ("Don't turn around" and others) on the action bar, cleared after 2 s
+Тёмно-красная строка из списка `lines` («Don't turn around» и другие) на панели действий, которая убирается через 2 с.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `false_absorption`
 
-The client is told the player has 8 absorption (4 golden hearts), draining to 0 over 4 s; then the real value
+Клиенту сообщают, что у игрока 8 единиц поглощения (4 золотых сердца), которые убывают до 0 за 4 с; затем возвращается настоящее значение.
 
-Runs when: No absorption
+Когда срабатывает: Поглощения нет
 
 ## `empty_armor_bar`
 
-The client is told the armor attribute is 0 for 4 s, so the armor bar vanishes; then the real attribute
+Клиенту сообщают, что показатель брони равен 0, на 4 с, поэтому полоса брони исчезает; затем возвращается настоящий показатель.
 
-Runs when: Wearing armor
+Когда срабатывает: Игрок носит броню
 
 ## `hurt_tilt`
 
-The hurt animation (screen tilt) from a random side, with no damage
+Анимация получения урона (наклон экрана) с случайной стороны, без урона.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `own_hand_swings`
 
-The player's own main hand swings twice, 14 ticks apart
+Основная рука игрока взмахивает дважды, с промежутком в 14 тиков.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `night_eyes`
 
-The client is told of 1.5 s of night vision, then 4 s of darkness; then the real effects. No effect exists on the server
+Клиенту сообщают о 1.5 с ночного зрения, а затем о 4 с тьмы; затем возвращаются настоящие эффекты. На сервере таких эффектов нет.
 
-Runs when: No night vision or darkness
+Когда срабатывает: Нет ночного зрения и тьмы
 
 ## `all_on_cooldown`
 
-Every item on the hotbar and in the hands is shown on a 2 s cooldown. The client counts it down by itself
+Все предметы на панели быстрого доступа и в руках показываются на перезарядке в 2 с. Отсчёт ведёт сам клиент.
 
-Runs when: An item on the hotbar or in the hands
+Когда срабатывает: Предмет на панели быстрого доступа или в руках
 
 ## `noon_moon`
 
-Only this player's client is told it is midnight under a full moon, with the clock stopped. 10 s later it gets the real time back. Nothing on the server
+Только клиенту этого игрока сообщают, что наступила полночь при полной луне, а часы остановлены. Через 10 с он снова получает настоящее время. На сервере ничего не происходит.
 
-Runs when: Overworld, daytime
+Когда срабатывает: Верхний мир, день
 
 ## `black_petals`
 
-For 10 s ash particles fall in a cloud above and around the player, like petals
+В течение 10 с частицы пепла падают облаком над игроком и вокруг него, как лепестки.
 
-Runs when: In the cherry grove
+Когда срабатывает: В вишнёвой роще
 
 ## `roof_figure`
 
-A silent, unhurtable mannequin in a random default skin crouches on top of a roof block, facing the player. Gone, silently, when the player comes within 10 blocks or after 30 s. Where it stood a faint dark haze stays for 3 s.
+Беззвучный неуязвимый манекен в случайном стандартном скине сидит на корточках на кровельном блоке, повернувшись к игроку лицом. Исчезает без звука, когда игрок подходит ближе чем на 10 блоков, или через 30 с. На месте, где он стоял, ещё 3 с держится слабая тёмная дымка.
 
-Runs when: A stair, slab or planks block open to the sky within 20 blocks, at least 12 blocks from the player
+Когда срабатывает: Ступени, плита или доски, открытые небу, в пределах 20 блоков, не ближе 12 блоков к игроку
 
 ## `hill_waver`
 
-A silent, unhurtable mannequin in a random default skin stands on a hilltop facing the player and swings its arm every 0.4 s. Gone, silently, when the player comes within 20 blocks or after 20 s. Where it stood a faint dark haze stays for 3 s.
+Беззвучный неуязвимый манекен в случайном стандартном скине стоит на вершине холма, повернувшись к игроку лицом, и каждые 0.4 с взмахивает рукой. Исчезает без звука, когда игрок подходит ближе чем на 20 блоков, или через 20 с. На месте, где он стоял, ещё 3 с держится слабая тёмная дымка.
 
-Runs when: Standing room open to the sky 45 blocks away within 40° of where the player looks, at least 6 blocks above the player
+Когда срабатывает: В 45 блоках в пределах 40° от направления взгляда игрока есть место, где можно встать, открытое небу, не менее чем на 6 блоков выше игрока
 
 ## `wall_miner`
 
-A silent, unhurtable mannequin in a random default skin stands behind a wall and every 0.4 s swings at it: cracks run up the block over 10 steps, only on this player's client, with its digging sound, then clear. The wall is never broken. Gone when it is done, when the player comes within 2.5 blocks, or after 10 s
+Беззвучный неуязвимый манекен в случайном стандартном скине стоит за стеной и каждые 0.4 с бьёт по ней: трещины ползут по блоку за 10 шагов, только на клиенте этого игрока, со звуком копания, а затем исчезают. Стена никогда не ломается. Исчезает, когда закончит, когда игрок подходит ближе чем на 2.5 блока, или через 10 с.
 
-Runs when: A one-block-thick wall two blocks high in front of the player, with standing room behind it
+Когда срабатывает: Перед игроком стена толщиной в один блок и высотой в два, а за ней есть место, где можно встать
 
 ## `table_figure`
 
-A silent, unhurtable mannequin in a random default skin stands at a crafting table looking down at it. Gone, silently, when the table is gone, when the player comes within 4 blocks, or after 15 s
+Беззвучный неуязвимый манекен в случайном стандартном скине стоит у верстака и смотрит на него сверху вниз. Исчезает без звука, когда верстака не станет, когда игрок подходит ближе чем на 4 блока, или через 15 с.
 
-Runs when: A crafting table within 16 blocks with standing room within 2 blocks of it, at least 6 blocks from the player
+Когда срабатывает: Верстак в пределах 16 блоков, а в пределах 2 блоков от него есть место, где можно встать, не ближе 6 блоков к игроку
 
 ## `cave_torches`
 
-Only this player's client is told that a line of floor spots along a dark tunnel holds torches. 1 min later it gets the real blocks back
+Только клиенту этого игрока сообщают, что цепочка мест на полу вдоль тёмного туннеля занята факелами. Через 1 мин он снова получает настоящие блоки.
 
-Runs when: Under a roof, and a bearing with at least 3 dark floor spots 6 to 28 blocks off, out of the sky
+Когда срабатывает: Игрок под крышей, и есть направление как минимум с 3 тёмными местами на полу в 6–28 блоках, вне поля зрения неба
 
 ## `own_walker`
 
-A silent, unhurtable mannequin in the player's own skin walks across their view, jumping up one-block steps, dropping off ledges up to 2 deep and going round what is in its way. Gone, silently, when the player comes within 25 blocks, when no way on is left, or after 30 s
+Беззвучный неуязвимый манекен с собственным скином игрока идёт через его поле зрения, запрыгивая на ступени высотой в один блок, спрыгивая с уступов глубиной до 2 и обходя препятствия. Исчезает без звука, когда игрок подходит ближе чем на 25 блоков, когда дальше пути нет, или через 30 с.
 
-Runs when: Standing room 45 blocks away within 40° of where the player looks
+Когда срабатывает: В 45 блоках в пределах 40° от направления взгляда игрока есть место, где можно встать
 
 ## `night_runner`
 
-A silent, unhurtable mannequin in a random default skin sprints across the view at 0.36 blocks/tick, jumping now and then. Gone, silently, when the player comes within 7 blocks, when no way on is left, or after 15 s
+Беззвучный неуязвимый манекен в случайном стандартном скине бежит через поле зрения со скоростью 0.36 блоков/тик и время от времени прыгает. Исчезает без звука, когда игрок подходит ближе чем на 7 блоков, когда дальше пути нет, или через 15 с.
 
-Runs when: Light at the player 4 or less, and standing room 22 blocks away within 35° of where the player looks
+Когда срабатывает: Освещённость у игрока не больше 4, а в 22 блоках в пределах 35° от направления взгляда игрока есть место, где можно встать
 
 ## `bed_sleeper`
 
-A silent, unhurtable mannequin in a random default skin lies asleep in a free bed; the bed is not marked taken. Gone, silently, when the player comes within 6 blocks or after 20 s
+Беззвучный неуязвимый манекен в случайном стандартном скине спит на свободной кровати; кровать при этом не считается занятой. Исчезает без звука, когда игрок подходит ближе чем на 6 блоков, или через 20 с.
 
-Runs when: A free bed within 24 blocks with room above it, at least 8 blocks from the player
+Когда срабатывает: Свободная кровать в пределах 24 блоков, над которой есть место, не ближе 8 блоков к игроку
 
 ## `shrieker_figure`
 
-A silent, unhurtable mannequin in a random default skin crouches by a sculk shrieker looking at it. Gone, silently, when the shrieker shrieks, when the player comes within 6 blocks, or after 20 s
+Беззвучный неуязвимый манекен в случайном стандартном скине сидит на корточках у скалк-крикуна и смотрит на него. Исчезает без звука, когда крикун издаёт крик, когда игрок подходит ближе чем на 6 блоков, или через 20 с.
 
-Runs when: Deep dark biome, and a sculk shrieker within 24 blocks with standing room beside it, at least 8 blocks from the player
+Когда срабатывает: Биом глубокой тьмы и скалк-крикун в пределах 24 блоков, рядом с которым есть место, где можно встать, не ближе 8 блоков к игроку
 
 ## `hello_chat`
 
-Only this player gets a chat line `<name> hello?` (from `lines`) under a made-up nickname
+Только этот игрок получает строку в чате `<name> hello?` (из списка `lines`) от выдуманного ника.
 
-Runs when: A line is left that the spirit has not said
+Когда срабатывает: Осталась строка, которую дух ещё не произносил
 
 ## `ghost_teleport`
 
-Only this player gets the command feedback `Teleported ??? to <player>`. Nobody is moved
+Только этот игрок получает ответ команды `Teleported ??? to <player>`. Никого не перемещает.
 
-Runs when: A name is left that the spirit has not said
+Когда срабатывает: Осталось имя, которое дух ещё не произносил
 
 ## `stranger_advancement`
 
-Only this player gets the chat line `<name> has made the advancement [Who's There?]` under a made-up nickname
+Только этот игрок получает строку в чате `<name> has made the advancement [Who's There?]` от выдуманного ника.
 
-Runs when: A title is left that the spirit has not said
+Когда срабатывает: Остался заголовок, которого дух ещё не использовал
 
 ## `grave_figure`
 
-A silent, unhurtable mannequin in a random default skin stands where the player last died, facing them. Gone, silently, when the player comes within 12 blocks or after 20 s. Where it stood a faint dark haze stays for 3 s.
+Беззвучный неуязвимый манекен в случайном стандартном скине стоит там, где игрок умер в последний раз, повернувшись к нему лицом. Исчезает без звука, когда игрок подходит ближе чем на 12 блоков, или через 20 с. На месте, где он стоял, ещё 3 с держится слабая тёмная дымка.
 
-Runs when: The last death was in this dimension, 20 to 60 blocks away, in a loaded chunk with standing room
+Когда срабатывает: Последняя смерть была в этом измерении, в 20–60 блоках от игрока, в загруженном чанке, где есть место, где можно встать
 
 ## `bedside_figure`
 
-Waits up to 20 min for the player to sleep and wake. Then a silent, unhurtable mannequin in a random default skin stands next to the bed for 1.25 s, facing the player. Where it stood a faint dark haze stays for 3 s.
+Ждёт до 20 мин, пока игрок уснёт и проснётся. Затем беззвучный неуязвимый манекен в случайном стандартном скине стоит у кровати 1.25 с, повернувшись к игроку лицом. На месте, где он стоял, ещё 3 с держится слабая тёмная дымка.
 
-Runs when: No such wait already
+Когда срабатывает: Такого ожидания ещё нет
 
 ## `black_ash`
 
-Dark ash falls around the player from 2 blocks up, 24 bursts 0.25 s apart
+Тёмный пепел падает вокруг игрока с высоты 2 блоков, 24 порции с промежутком в 0.25 с.
 
-Runs when: Indoors
+Когда срабатывает: В помещении
 
 ## `border_closes`
 
-Only this player's client is shown a world border centered on them, shrinking from 80 to 40 blocks wide over 4 s and held 2 s; then the real border. Nothing on the server
+Только клиенту этого игрока показывают границу мира с центром на игроке, которая сужается с 80 до 40 блоков в ширину за 4 с и держится 2 с; затем возвращается настоящая граница. На сервере ничего не происходит.
 
-Runs when: No real border within 80 blocks
+Когда срабатывает: В пределах 80 блоков нет настоящей границы
 
 ## `false_recipe`
 
-Only this player's client gets a "recipe unlocked" toast for a made-up bone and skull recipe (the result is a skull, bone block, soul lantern or wither rose); 10 s later it is removed from the recipe book. No recipe exists
+Только клиент этого игрока получает всплывающее уведомление о новом рецепте для выдуманного рецепта из костей и черепов (результат: череп, костяной блок, фонарь душ или роза-иссушитель); через 10 с он убирается из книги рецептов. Никакого рецепта нет.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `view_narrows`
 
-The client is told the movement speed attribute is 0.02 for 1 s, so the field of view pinches; then the real attribute
+Клиенту сообщают, что показатель скорости передвижения равен 0.02, на 1 с, поэтому поле зрения сужается; затем возвращается настоящий показатель.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `mob_eyes`
 
-Only this player's client is sent to see through a spider, cave spider, creeper or enderman within 24 blocks for 2.5 s, with the vanilla shader of that mob; then back. The view also ends early if the mob dies or vanishes, the player is hurt or changes dimension; death, logout and server stop reset it too. Nothing changes on the server
+Только клиент этого игрока на 2.5 с переключается на вид глазами паука, пещерного паука, крипера или эндермена в пределах 24 блоков, с ванильным шейдером этого моба; затем возвращается обратно. Вид также прерывается раньше, если моб погибает или исчезает, игрок получает урон или меняет измерение; смерть, выход из игры и остановка сервера тоже сбрасывают его. На сервере ничего не меняется.
 
-Runs when: Player on the ground, not in a fluid, and one of those mobs within 24 blocks
+Когда срабатывает: Игрок стоит на земле, не в жидкости, и один из этих мобов в пределах 24 блоков
 
 ## `out_of_body`
 
-The view moves to a packet-only entity 3.5 blocks behind the player (nearer if blocked) and 0.6 above their eyes, looking at the back of their head, for 3 s; then back and the entity is removed. Same early resets as `mob_eyes`
+На 3 с вид переносится на сущность, существующую только в пакетах, в 3.5 блоках позади игрока (ближе, если мешает препятствие) и на 0.6 выше его глаз, и она смотрит ему в затылок; затем вид возвращается, а сущность убирается. Прерывается раньше при тех же условиях, что и `mob_eyes`.
 
-Runs when: Player on the ground, not in a fluid
+Когда срабатывает: Игрок стоит на земле, не в жидкости
 
 ## `spirit_sight`
 
-The view moves for 1 s to the spirit's point (10 blocks away at a random bearing when no spirit sent it), looking at the player; does nothing if that point is over 40 blocks away or not loaded. Same early resets as `mob_eyes`
+На 1 с вид переносится в точку духа (в 10 блоков от игрока в случайном направлении, если дух его не посылал), и оттуда смотрит на игрока; ничего не делает, если эта точка дальше 40 блоков или не загружена. Прерывается раньше при тех же условиях, что и `mob_eyes`.
 
-Runs when: Player on the ground, not in a fluid
+Когда срабатывает: Игрок стоит на земле, не в жидкости
 
 ## `lake_fisher`
 
-A silent, unhurtable mannequin in a random default skin stands on the bank with a fishing rod, facing the water, casts, and every 4th second swings and splashes (fishing particles and sounds). No bobber is drawn. Gone, silently, when the player comes within 6 blocks or after 30 s
+Беззвучный неуязвимый манекен в случайном стандартном скине стоит на берегу с удочкой, повернувшись лицом к воде, забрасывает её, а каждую 4-ю секунду взмахивает ею, и вода всплёскивает (с частицами и звуками рыбалки). Поплавок не рисуется. Исчезает без звука, когда игрок подходит ближе чем на 6 блоков, или через 30 с.
 
-Runs when: A lake (a water source with water on three sides for 3 blocks) within 16 blocks, with standing room on its bank at least 8 blocks from the player
+Когда срабатывает: Озеро (источник воды, окружённый водой с трёх сторон на 3 блока) в пределах 16 блоков, а на его берегу есть место, где можно встать, не ближе 8 блоков к игроку
 
 ## `window_figure`
 
-A silent, unhurtable mannequin in a random default skin stands behind the glass facing the player. Gone, silently, when the player comes within 3 blocks or after 20 s
+Беззвучный неуязвимый манекен в случайном стандартном скине стоит за стеклом, повернувшись к игроку лицом. Исчезает без звука, когда игрок подходит ближе чем на 3 блока, или через 20 с.
 
-Runs when: The player is under open sky; a glass block or glass pane within 14 blocks has a roofed room behind it (standing room one block below or level with it, at least 4 blocks from the player) and open air on the player's side
+Когда срабатывает: Игрок под открытым небом; за стеклянным блоком или стеклянной панелью в пределах 14 блоков есть помещение с крышей (место, где можно встать, на один блок ниже или вровень, не ближе 4 блоков к игроку), а со стороны игрока открытый воздух
 
 ## `trailing_figure`
 
-A silent, unhurtable mannequin in a random default skin faces the player and steps toward them by as far as the player moved each 0.1 s (up to 1 block), so it keeps its distance while they walk and stops when they stop; it sprints when they do. Gone, silently, when the player looks within 12° of it, comes within 8 blocks, or after 60 s
+Беззвучный неуязвимый манекен в случайном стандартном скине смотрит на игрока и каждые 0.1 с приближается на то расстояние, на какое сдвинулся игрок (не более чем на 1 блок), так что сохраняет дистанцию, пока игрок идёт, и останавливается, когда тот останавливается; когда игрок бежит, он тоже бежит. Исчезает без звука, когда игрок смотрит на него в пределах 12°, подходит ближе чем на 8 блоков, или через 60 с.
 
-Runs when: Standing room 30 blocks behind the player (150-180° from where they look)
+Когда срабатывает: В 30 блоках позади игрока (150–180° от направления взгляда) есть место, где можно встать
 
 ## `deep_swimmer`
 
-A silent, unhurtable mannequin in a random default skin lies in the swimming pose in the water there and swims across the view at 2.4 blocks/s, trailing bubbles. Gone, silently, when the water ends, when the player comes within 2 blocks, or after 15 s
+Беззвучный неуязвимый манекен в случайном стандартном скине лежит в плавательной позе в воде на этом месте и плывёт через поле зрения со скоростью 2.4 блоков/с, оставляя за собой пузырьки. Исчезает без звука, когда вода кончается, когда игрок подходит ближе чем на 2 блока, или через 15 с.
 
-Runs when: The player's head is underwater, with water 8 blocks away within 15-60° of where they look (12 bearings tried)
+Когда срабатывает: Голова игрока под водой, а в 8 блоках в пределах 15–60° от направления его взгляда есть вода (пробуется 12 направлений)
 
 ## `note_dropper`
 
-A silent, unhurtable mannequin in a random default skin faces the player for 1.6 s, then drops a torch or (half the time) paper named with a short note, and sprints away from the player. The item is real and stays. Gone, silently, when the player comes within 2 blocks, when no way on is left, or after 20 s
+Беззвучный неуязвимый манекен в случайном стандартном скине смотрит на игрока 1.6 с, затем роняет факел или (в половине случаев) бумагу с короткой запиской в названии и убегает от игрока. Предмет настоящий и остаётся. Исчезает без звука, когда игрок подходит ближе чем на 2 блока, когда дальше пути нет, или через 20 с.
 
-Runs when: Standing room 14 blocks away within 30° of where the player looks
+Когда срабатывает: В 14 блоках в пределах 30° от направления взгляда игрока есть место, где можно встать
 
 ## `horizon_choir`
 
-Six silent, unhurtable mannequins in random default skins stand there, all facing the player. All gone at once, silently, when the player looks within 10° of any of them, comes within 20 blocks of any, or after 30 s
+Шесть беззвучных неуязвимых манекенов в случайных стандартных скинах стоят там, все повернувшись к игроку лицом. Все исчезают разом и без звука, когда игрок смотрит на любого из них в пределах 10°, подходит к любому ближе чем на 20 блоков, или через 30 с.
 
-Runs when: The player is under open sky and standing room is found at the surface for at least 4 of 6 points 45-51 blocks away spread over 60° of where they look
+Когда срабатывает: Игрок под открытым небом, и на поверхности найдено место, где можно встать, как минимум для 4 из 6 точек в 45–51 блоках, разнесённых на 60° от направления его взгляда
 
 ## `blade_stalker`
 
-A silent, unhurtable mannequin in a random default skin crouches with an iron sword and creeps toward the player at 1.3 blocks/s, facing them. It does not move while the player looks within 25° of it, and is gone after 2 s of being looked at in all, or when it comes within 3 blocks, or after 30 s
+Беззвучный неуязвимый манекен в случайном стандартном скине крадётся с железным мечом и подбирается к игроку со скоростью 1.3 блоков/с, повернувшись к нему лицом. Он не двигается, пока игрок смотрит на него в пределах 25°, и исчезает, когда на него в сумме смотрели 2 с, когда он подходит ближе чем на 3 блока, или через 30 с.
 
-Runs when: Standing room 16 blocks behind the player (140-180° from where they look)
+Когда срабатывает: В 16 блоках позади игрока (140–180° от направления взгляда) есть место, где можно встать
 
 ## `cliff_faller`
 
-A silent, unhurtable mannequin in a random default skin sprints along that line off the edge and falls; after 5 blocks of falling it makes the player death sound and is gone, silently, with no body. Gone too if the player comes within 6 blocks or after 15 s
+Беззвучный неуязвимый манекен в случайном стандартном скине бежит по этой линии за край и падает; пролетев 5 блоков, он издаёт звук смерти игрока и исчезает без звука и без тела. Исчезает и тогда, когда игрок подходит ближе чем на 6 блоков, или через 15 с.
 
-Runs when: Standing room 12-22 blocks away with flat ground within 6 blocks in some direction ending in an 8-40 block drop onto solid ground (24 tries)
+Когда срабатывает: В 12–22 блоках есть место, где можно встать, а в 6 блоках от него в каком-то направлении ровная земля, которая кончается обрывом в 8–40 блоков на твёрдую землю (24 попытки)
 
 ## `lake_ferry`
 
-A silent, unhurtable mannequin in a random default skin sits in an invulnerable, silent oak boat there (real entities, removed with the figure) and sails across the player's view along the longer stretch of open water at 2.4 blocks/s, with paddle sounds. Gone, with the boat, when the player comes within 6 blocks, when the water ends, or after 30 s
+Беззвучный неуязвимый манекен в случайном стандартном скине сидит на этом месте в неуязвимой беззвучной дубовой лодке (настоящие сущности, убираются вместе с фигурой) и плывёт через поле зрения игрока по более длинному участку открытой воды со скоростью 2.4 блоков/с, со звуками вёсел. Исчезает вместе с лодкой, когда игрок подходит ближе чем на 6 блоков, когда вода кончается, или через 30 с.
 
-Runs when: A lake (as for `lake_fisher`) within 16 blocks, with a surface point at least 10 blocks from the player
+Когда срабатывает: Озеро (как для `lake_fisher`) в пределах 16 блоков, с точкой на поверхности не ближе 10 блоков к игроку
 
 ## `cave_cart`
 
-A silent, unhurtable mannequin in a random default skin sits in an invulnerable, silent minecart (real entities, no rails needed) that rolls along the ground across the view at 6 blocks/s, going round or up and down small obstacles, with rolling sounds. Gone, with the cart, when the player comes within 5 blocks, when no way on is left, or after 20 s
+Беззвучный неуязвимый манекен в случайном стандартном скине сидит в неуязвимой беззвучной вагонетке (настоящие сущности, рельсы не нужны), которая катится по земле через поле зрения со скоростью 6 блоков/с, обходя небольшие препятствия или поднимаясь и опускаясь по ним, с шумом качения. Исчезает вместе с вагонеткой, когда игрок подходит ближе чем на 5 блоков, когда дальше пути нет, или через 20 с.
 
-Runs when: The player is below y 50 with no open sky above, and cave standing room 14 blocks away within 10-40° of where they look
+Когда срабатывает: Игрок ниже y 50, над ним нет открытого неба, а в 14 блоках в пределах 10–40° от направления его взгляда есть пещерное место, где можно встать
 
 ## `spyglass_figure`
 
-Waits up to 2 min for the player to raise a spyglass, then tells their client of a villager 48 blocks away along where they look. It is removed as soon as the spyglass is lowered, or after 1 min. Nothing on the server
+Ждёт до 2 мин, пока игрок поднимет подзорную трубу, затем сообщает его клиенту о жителе в 48 блоках в том направлении, куда он смотрит. Убирается, как только труба опущена, или через 1 мин. На сервере ничего не происходит.
 
-Runs when: The player carries a spyglass
+Когда срабатывает: У игрока есть подзорная труба
 
 ## `flash_figure`
 
-Four visual-only lightning bolts, 2 to 4.5 s apart; at each, only this player's client is told of a wither skeleton standing on one bearing for 4 ticks, 34 blocks away at the first flash and 7 blocks closer each time, with the bolt striking beyond it. Nothing on the server
+Четыре только визуальные молнии с промежутками от 2 до 4.5 с; при каждой только клиенту этого игрока сообщают о скелете-иссушителе, который стоит в одном направлении 4 тика, в 34 блоках при первой вспышке и на 7 блоков ближе при каждой следующей, а молния бьёт за ним. На сервере ничего не происходит.
 
-Runs when: Overworld, raining, sky visible
+Когда срабатывает: Верхний мир, идёт дождь, небо видно
 
 ## `jolt_behind`
 
-A loud bang 1.6 blocks behind the player, at 150–180° from where they look, and only this player's client is told of a black figure of no known kind standing there, one of ten wrong shapes (tall and thin with arms to the knees; low and wide on all fours; a head hung on one shoulder; a small child with arms up; many thin arms; a stooped giant; bent double with its head held up; a tall one and a small one joined by the hands; a body on a very long neck; hung off the ground with its head dropped on a shoulder). It is not shown until the player looks at it; 12 ticks after they first do it is gone (or after 6 s if they never turn). Nothing on the server. The figure twitches in sudden small jerks, its head sways, and its two pale eyes glow in the dark. A jump scare: after one runs for a player (this or any other jump scare), none rolls for them again for 10 min
+Громкий хлопок в 1.6 блоках позади игрока, под углом 150–180° от направления его взгляда, и только клиенту этого игрока сообщают о чёрной фигуре неизвестного вида, которая стоит там, в одном из десяти неправильных обликов (высокая и тонкая, с руками до колен; низкая и широкая, на четвереньках; с головой, свисающей на одно плечо; маленький ребёнок с поднятыми руками; со множеством тонких рук; сутулый великан; согнутая пополам, но с поднятой головой; высокая и маленькая, сцепленные руками; тело на очень длинной шее; подвешенная над землёй, с головой, упавшей на плечо). Она не показывается, пока игрок не посмотрит на неё; через 12 тиков после того, как он впервые это сделал, она исчезает (или через 6 с, если он так и не обернулся). На сервере ничего не происходит. Фигура дёргается резкими мелкими рывками, её голова покачивается, а два бледных глаза светятся в темноте. Резкий испуг: после того как он сработал для игрока (этот или любой другой), следующие 10 мин для него никакой резкий испуг не выбирается.
 
-Runs when: Standing room 1.6 blocks behind
+Когда срабатывает: В 1.6 блоках позади есть место, где можно встать
 
 ## `jolt_side`
 
-A loud bang 1.8 blocks away at 60–100° to one side, with a black figure of one of the ten shapes there for this player's client only, unseen until the player looks at it, and gone 10 ticks after (or after 5 s unseen). Nothing on the server
+Громкий хлопок в 1.8 блоках от игрока, под углом 60–100° в сторону, и чёрная фигура одного из десяти обликов на том месте, видимая только клиенту этого игрока, незаметная, пока игрок не посмотрит на неё, и исчезающая через 10 тиков после этого (или через 5 с, если её так и не заметили). На сервере ничего не происходит.
 
-Runs when: Standing room 1.8 blocks to the side
+Когда срабатывает: В 1.8 блоках сбоку есть место, где можно встать
 
 ## `jolt_dark`
 
-A black figure of one of the ten shapes 2 blocks ahead, within 20° of the player's view, in a spot no brighter than light level 4, shown only to this player's client at the same instant as a loud bang. Gone 8 ticks later. Nothing on the server
+Чёрная фигура одного из десяти обликов в 2 блоках впереди, в пределах 20° от направления взгляда игрока, в месте не ярче уровня освещённости 4, видимая только клиенту этого игрока в тот же миг, что и громкий хлопок. Исчезает через 8 тиков. На сервере ничего не происходит.
 
-Runs when: A dark standing spot 2 blocks ahead
+Когда срабатывает: В 2 блоках впереди тёмное место, где можно встать
 
 ## `jolt_lunge`
 
-Out of sight, 8–12 blocks away, in a spot no brighter than light level 6 behind a wall or a corner, a faint rustle sounds every 2 s for up to 30 s. If the player comes within 4.5 blocks of the spot, a black figure of one of the ten shapes stands there for this player's client only and is at their face (0.7 blocks ahead) 3 ticks later, with a loud bang as it arrives. Gone 6 ticks after that. If nobody comes near, it just stops. Nothing on the server. A jump scare, so it shares the 10 min pause with the other jump scares
+Вне поля зрения, в 8–12 блоках от игрока, в месте не ярче уровня освещённости 6 за стеной или углом, каждые 2 с раздаётся слабый шорох, до 30 с. Если игрок подходит к этому месту ближе чем на 4.5 блока, чёрная фигура одного из десяти обликов встаёт там, видимая только клиенту этого игрока, и через 3 тика оказывается у самого его лица (в 0.7 блока впереди), а в момент появления раздаётся громкий хлопок. Исчезает ещё через 6 тиков. Если никто не подходит, всё просто прекращается. На сервере ничего не происходит. Резкий испуг, поэтому пауза в 10 мин у него общая с остальными резкими испугами.
 
-Runs when: A dark standing spot 8–12 blocks away that the player cannot see
+Когда срабатывает: В 8–12 блоках есть тёмное место, где можно встать и которого игрок не видит
 
 ## `mined_face`
 
-The next time the player breaks a block at eye level in a wall (underground, within 6 blocks, with rock two blocks deep behind it), the rock behind the hole shows as open space for 8 ticks, and a bare black face with pale eyes looks out of it, with a loud bang. Only this player's client is told. A jump scare, so it shares the 10 min pause with the other jump scares. If they break no such block within 5 min, it lapses
+В следующий раз, когда игрок ломает блок на уровне глаз в стене (под землёй, в пределах 6 блоков, с камнем толщиной в два блока позади него), камень за проёмом на 8 тиков выглядит как открытое пространство, и из него выглядывает голое чёрное лицо с бледными глазами, с громким хлопком. Об этом сообщают только клиенту этого игрока. Резкий испуг, поэтому пауза в 10 мин у него общая с остальными резкими испугами. Если игрок не сломает такой блок за 5 мин, испуг сгорает.
 
-Runs when: Underground, and no other waiting scare marked for the player
+Когда срабатывает: Под землёй, и для игрока не отмечено другого ожидающего испуга
 
 ## `dig_down`
 
-The next time the player breaks a floor block beside them (1–4.5 blocks off, not the one under their feet, with rock two blocks deep under it), the rock below shows as open for 8 ticks, and a black figure lies in the hole on its back, face up, with a loud bang. Only this player's client is told. A jump scare. Lapses after 5 min
+В следующий раз, когда игрок ломает блок пола рядом с собой (в 1–4.5 блоках, но не тот, что под ногами, с камнем толщиной в два блока под ним), камень внизу на 8 тиков выглядит открытым, и в яме на спине лицом вверх лежит чёрная фигура, с громким хлопком. Об этом сообщают только клиенту этого игрока. Резкий испуг. Сгорает через 5 мин.
 
-Runs when: Underground, and no other waiting scare marked for the player
+Когда срабатывает: Под землёй, и для игрока не отмечено другого ожидающего испуга
 
 ## `eating`
 
-The next meal the player finishes ends with a loud bang and a black figure 1.3 blocks ahead of them for 10 ticks. Only this player's client is told. A jump scare. Lapses after 5 min
+Следующая еда, которую игрок доедает, заканчивается громким хлопком и чёрной фигурой в 1.3 блоках перед ним на 10 тиков. Об этом сообщают только клиенту этого игрока. Резкий испуг. Сгорает через 5 мин.
 
-Runs when: No other waiting scare marked for the player
+Когда срабатывает: Для игрока не отмечено другого ожидающего испуга
 
 ## `container_close`
 
-The player has a chest, barrel, furnace or crafting table within 6 blocks. Whatever container they open and keep open for 3 s, when they close it a black figure stands 1.3 blocks ahead for 10 ticks, with a loud bang. Only this player's client is told. A jump scare. Watches for 5 min
+У игрока в пределах 6 блоков есть сундук, бочка, печь или верстак. Какой бы контейнер он ни открыл и ни держал открытым 3 с, когда он его закрывает, в 1.3 блоках перед ним на 10 тиков появляется чёрная фигура и раздаётся громкий хлопок. Об этом сообщают только клиенту этого игрока. Резкий испуг. Выжидает 5 мин.
 
-Runs when: A chest, barrel, furnace or crafting table within 6 blocks
+Когда срабатывает: Сундук, бочка, печь или верстак в пределах 6 блоков
 
 ## `slow_turn`
 
-A black figure stands 24 blocks ahead with its back turned. Each time the player looks at it and then away, it has turned 45° more. After four turns it faces them; the next time they look away it is gone from there and stands 1.6 blocks behind them, with a loud bang, unseen until they turn. Gone if they walk within 8 blocks of it or after 60 s. Only this player's client is told. A jump scare
+Чёрная фигура стоит в 24 блоках впереди, отвернувшись спиной. Каждый раз, когда игрок смотрит на неё, а затем отводит взгляд, она оказывается повёрнута ещё на 45°. После четырёх поворотов она обращена к нему лицом; в следующий раз, когда он отведёт взгляд, она исчезает с этого места и встаёт в 1.6 блоках позади него, с громким хлопком, и остаётся незамеченной, пока он не обернётся. Исчезает, если игрок подходит к ней ближе чем на 8 блоков, или через 60 с. Об этом сообщают только клиенту этого игрока. Резкий испуг.
 
-Runs when: Standing room 24 blocks ahead
+Когда срабатывает: В 24 блоках впереди есть место, где можно встать
 
 ## `echo_answer`
 
-In a cave (no sky overhead), each block the player breaks is answered 1.5 s later by the same break sound, from 20 blocks away, then 12, then 6; the fourth comes from 1.5 blocks right behind them. Lapses after 5 min
+В пещере (над головой нет неба) на каждый блок, который игрок ломает, через 1.5 с отвечает тот же звук разрушения: сначала из 20 блоков, затем из 12, затем из 6; четвёртый раздаётся в 1.5 блоках прямо позади него. Сгорает через 5 мин.
 
-Runs when: Underground, and no other waiting scare marked for the player
+Когда срабатывает: Под землёй, и для игрока не отмечено другого ожидающего испуга
 
 ## `name_left_right`
 
-A whisper 2 blocks to one side, every 1.5 s. Once the player has turned 45° toward it, a black figure stands 1.5 blocks away on the other side for 8 ticks, with a loud bang. Only this player's client is told. A jump scare. Gives up after 20 s
+Шёпот в 2 блоках сбоку раздаётся каждые 1.5 с. Как только игрок повернулся на 45° к нему, чёрная фигура встаёт в 1.5 блоках с другой стороны на 8 тиков, с громким хлопком. Об этом сообщают только клиенту этого игрока. Резкий испуг. Сдаётся через 20 с.
 
-Runs when: Always
+Когда срабатывает: Всегда
 
 ## `door_slam_face`
 
-The player has a door within 4 blocks. When a door that was open shuts while they are within 3.5 blocks of it, it shows open again for 10 ticks with a black figure standing in it, and a loud bang. Only this player's client is told. A jump scare. Watches for 5 min
+У игрока в пределах 4 блоков есть дверь. Когда открытая дверь захлопывается, пока игрок находится ближе чем в 3.5 блоках от неё, она на 10 тиков снова показывается открытой, и в проёме стоит чёрная фигура, с громким хлопком. Об этом сообщают только клиенту этого игрока. Резкий испуг. Выжидает 5 мин.
 
-Runs when: A door within 4 blocks
+Когда срабатывает: Дверь в пределах 4 блоков
 
 ## `first_light`
 
-The next torch the player puts up in a dark cave (light level 3 or less at their feet, no sky) lights a black figure standing within 6 blocks ahead of them for 4 ticks, with no sound. Only this player's client is told. A jump scare. Lapses after 5 min
+Следующий факел, который игрок ставит в тёмной пещере (уровень освещённости 3 или меньше у его ног, неба нет), на 4 тика освещает чёрную фигуру, которая стоит не дальше 6 блоков перед ним, без звука. Об этом сообщают только клиенту этого игрока. Резкий испуг. Сгорает через 5 мин.
 
-Runs when: Underground, and no other waiting scare marked for the player
+Когда срабатывает: Под землёй, и для игрока не отмечено другого ожидающего испуга
 
 ## `hide`
 
-The action bar says "Hide" and a heartbeat sounds every second for 10 s. If the player moves more than 1 block, a black figure that was out of sight is at their face in 4 ticks with a loud bang and hits for 4 (it never takes them below the safe floor of the threat band). If they keep still, four heavy steps pass outside. A harmful event, so a lit omen candle warns of it
+Над панелью предметов появляется надпись «Замри», и в течение 10 с каждую секунду слышно биение сердца. Если игрок сдвигается больше чем на 1 блок, чёрная фигура, до того скрытая от глаз, через 4 тика оказывается у самого его лица, с громким хлопком, и бьёт на 4 (здоровье игрока при этом не опускается ниже безопасного порога полосы угрозы). Если игрок стоит неподвижно, снаружи проходят четыре тяжёлых шага. Вредное событие, поэтому о нём предупреждает зажжённая свеча предвестия.
 
-Runs when: Underground, health above the safe floor and a margin, and standing room 5 blocks away
+Когда срабатывает: Под землёй, здоровье выше безопасного порога с запасом, и в 5 блоках есть место, где можно встать
 
 ## `overnight_shrine`
 
-A row of bone blocks with two skulls and lit candles on top and a sign with a few words in front. Phantom: only this player's client is told of it, the server keeps open ground, a click shows the real air; gone after 10 min (with the swaps setting `REAL` or under hardcore the bone, skulls and candles are real blocks, put back after the time or never under hardcore)
+Ряд костяных блоков с двумя черепами и зажжёнными свечами сверху и табличка с несколькими словами перед ним. Призрачный вариант: о нём сообщают только клиенту этого игрока, сервер оставляет открытую землю, а взаимодействие с ним показывает настоящий воздух; пропадает через 10 мин (при настройке подмен `REAL` или в хардкоре кость, черепа и свечи — настоящие блоки, которые убираются по истечении времени, а в хардкоре не убираются никогда).
 
-Runs when: Overworld; open ground for a 3×3 shrine 6–14 away; a sign text the spirit has not used
+Когда срабатывает: Верхний мир; в 6–14 блоках открытая земля под святилище 3×3; текст таблички, которым дух ещё не пользовался
 
 ## `ash_sign`
 
-Ash laid as a ring of radius 3 or as the initial of the spirit's name, readable from the player's side (cells on bare floor only, at least 70%); swept away after 5 min, stays under hardcore
+Пепел выложен кольцом радиусом 3 или как первая буква имени духа, так что читается со стороны игрока (клетки только на голом полу, не меньше 70%); смывается через 5 мин, в хардкоре остаётся.
 
-Runs when: Under a roof; bare floor ahead (3 away, within 25° of the view) for the shape
+Когда срабатывает: Под крышей; впереди есть голый пол для фигуры (в 3 блоках, в пределах 25° от направления взгляда)
 
 ## `screen_handprint`
 
-A pale handprint over the player's view for 3.5 s (peak 80%), quick in and slow out; client-side overlay under the HUD
+Бледный отпечаток ладони поверх поля зрения игрока на 3.5 с (пик 80%), быстро появляется и медленно исчезает; оверлей на стороне клиента, под интерфейсом.
 
-Runs when: The client has the mod
+Когда срабатывает: У клиента есть мод
 
 ## `screen_frost`
 
-Frost along the screen's edges for 8 s (peak 70%), in over 2.4 s and out over 4 s; client-side overlay
+Иней по краям экрана на 8 с (пик 70%), нарастает за 2.4 с и сходит за 4 с; оверлей на стороне клиента.
 
-Runs when: The client has the mod
+Когда срабатывает: У клиента есть мод
 
 ## `screen_face`
 
-A pale face over the view for 2 ticks (90%); weight 0, so it never runs until a player raises it
+Бледное лицо поверх поля зрения на 2 тика (90%); вес 0, поэтому оно никогда не срабатывает само, пока его не вызовет игрок.
 
-Runs when: The client has the mod
+Когда срабатывает: У клиента есть мод
 
 ## `eyes_in_dark`
 
-A pair of eyes hangs 1.5 blocks above a dark spot for 2–3 s, blinks once and goes out; a client-only particle, fully lit
+Пара глаз висит в 1.5 блоках над тёмным местом 2–3 с, моргает один раз и гаснет; частица только на клиенте, полностью освещённая.
 
-Runs when: Standing room 7–14 blocks ahead (within 60°) with light level at most 3
+Когда срабатывает: В 7–14 блоках впереди (в пределах 60°) есть место, где можно встать, с уровнем освещённости не выше 3
 
 ## `frost_prints`
 
-Up to 3 frost handprints appear one by one, 1.5 s apart, on the outer face of the glass, each with a tap on glass. Each is removed after 2 min; under hardcore they stay
+До 3 ледяных отпечатков ладоней появляются один за другим, с промежутком в 1.5 с, на внешней стороне стекла, каждый со стуком по стеклу. Каждый убирается через 2 мин; в хардкоре они остаются.
 
-Runs when: Indoors, glass or a glass pane within 8 with a free block on its far side from the player
+Когда срабатывает: В помещении, в 8 блоках есть стекло или стеклянная панель, с дальней от игрока стороны которой свободный блок
 
 ## `frost_writing`
 
-A phrase (`let me in`, `cold`, `help`, `open`) forms word by word, 2 s apart, one word per window, read left to right from the player's side. Each word is removed after 2 min; under hardcore they stay
+Фраза (`let me in`, `cold`, `help`, `open`) складывается слово за словом, с промежутком в 2 с, по одному слову на окно, читается слева направо со стороны игрока. Каждое слово убирается через 2 мин; в хардкоре они остаются.
 
-Runs when: Indoors, a run of glass within 8 with free blocks on the player's side, long enough for a phrase
+Когда срабатывает: В помещении, в 8 блоках есть ряд стёкол со свободными блоками со стороны игрока, достаточно длинный для фразы
 
 ## `doll`
 
-A doll appears and, whenever it is not watched, turns to face the player and hops to another spot up to 4 times. It keeps still while watched. Gone after 2 min or when broken
+Появляется кукла и, всякий раз когда на неё не смотрят, поворачивается к игроку лицом и перепрыгивает на другое место, до 4 раз. Пока на неё смотрят, она не двигается. Исчезает через 2 мин или когда её ломают.
 
-Runs when: A spot of free floor under a roof within 10, 4+ away and outside 55° of where the player looks
+Когда срабатывает: Свободное место на полу под крышей в пределах 10 блоков, не ближе 4 и вне 55° от направления взгляда игрока
 
 ## `armor_stand`
 
-**Harmful.**
-A real armor stand with arms, in one of four poses (reaching, arms raised, head lolling, lunging), stands facing the player. Every 0.2 s it steps up to 0.6 blocks toward them (climbing 1, dropping up to 3), but only while they are over 2 blocks off and not looking within 50° of it with a clear line; one move in four strikes a new pose. It breaks at the first blow and drops nothing. After 2 min it falls apart with plank particles (under hardcore it stays where it ended up)
+**Вредящее событие.**
+Настоящая стойка для брони с руками, в одной из четырёх поз (тянется вперёд, руки подняты, голова свесилась, выпад), стоит, повернувшись к игроку лицом. Каждые 0.2 с она приближается к нему на шаг до 0.6 блока (поднимаясь на 1, спускаясь до 3), но только пока он дальше чем на 2 блока и не смотрит на неё в пределах 50° при прямой видимости; каждый четвёртый ход меняет позу. Ломается от первого удара и ничего не роняет. Через 2 мин она рассыпается с частицами досок (в хардкоре остаётся там, где остановилась).
 
-Runs when: No such stand already, standing room 8 blocks away at 150–180° to either side of where the player looks, which is behind them (up to 16 bearings tried)
+Когда срабатывает: Такой стойки ещё нет, в 8 блоках под углом 150–180° в любую сторону от направления взгляда игрока, то есть позади него, есть место, где можно встать (пробуется до 16 направлений)

@@ -86,7 +86,7 @@ A spirit can roll a scenario only once its power reaches the scenario's **min po
 | Achievement Get | 0.4 | none | Scenario: a false advancement pops up, a title flashes for three ticks, then a chat line appears in the player's own name. |
 | Starving | 0.4 | none | Scenario: the hunger bar flashes empty, someone eats behind the wall, then ravenous hunger sets in. |
 | What's in My Pocket | 0.4 | none | Scenario: an empty slot shows an item that is not there, two inventory slots trade places, then the selected hotbar slot changes on its own. |
-| Silence | 0.4 | none | Scenario: the music cuts out, a subtitle says something breathes behind you, then five breaths sound beside the player, each louder than the last. |
+| Silence | 0.4 | none | Scenario: the music cuts out, a subtitle says something breathes behind the player, then five breaths sound beside the player, each louder than the last. |
 | Seeing Red | 0.7 | none | Scenario: the screen's edges go red, a warden's heartbeat sounds with no warden, then wrath strikes for magic damage. |
 | The Sky Lies | 0.4 | none | Scenario: the ender dragon flies high overhead, lightning strikes nearby without fire, then a monster sound comes from afar. |
 | Mind Slipping | 0.8 | none | Scenario: the view blinks dark several times, sanity drains, nearby blocks look like others of their kind, then sanity shatters. |

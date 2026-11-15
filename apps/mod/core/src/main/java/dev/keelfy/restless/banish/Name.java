@@ -1,6 +1,7 @@
 package dev.keelfy.restless.banish;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.state.HauntData;
 import java.util.Locale;
@@ -31,7 +32,7 @@ public final class Name {
         if (!plain(line).equals(plain(Story.of(circle.spirit.haunting().seed()).name()))) {
             HauntData.get(circle.level.getServer())
                     .change(circle.spirit.haunting().uuid(), h -> h.angered(config.num("name_anger")));
-            circle.level.playSound(null, circle.altar, SoundEvents.WITHER_AMBIENT, SoundSource.HOSTILE, 0.6f, 1.4f);
+            circle.level.playSound(null, circle.altar, HauntSounds.MOAN, SoundSource.HOSTILE, 0.6f, 1.0f);
             circle.player.sendSystemMessage(Component.translatable("message.restless.name_wrong"), true);
             return;
         }

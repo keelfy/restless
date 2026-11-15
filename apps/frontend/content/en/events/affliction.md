@@ -8,7 +8,7 @@ title: Affliction
 
 ## `blindness`
 
-Blindness for 6 s and a low cave ambient sound
+Blindness for 6 s and a ghostly moan
 
 Runs when: Player is not already blind
 

@@ -1,6 +1,7 @@
 package dev.keelfy.restless.content.block;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scan;
 import java.util.List;
 import java.util.Map;
@@ -196,7 +197,7 @@ public final class OmenCandle extends AbstractCandleBlock {
             return false;
         }
         level.scheduleTick(found[0], level.getBlockState(found[0]).getBlock(), config.integer("omen_warn_ticks"));
-        level.playSound(null, found[0], SoundEvents.GHAST_SCREAM, SoundSource.BLOCKS, 1.5f, 0.7f);
+        level.playSound(null, found[0], HauntSounds.MOAN, SoundSource.BLOCKS, 1.5f, 1.0f);
         level.sendParticles(
                 ParticleTypes.SOUL_FIRE_FLAME,
                 found[0].getX() + 0.5,

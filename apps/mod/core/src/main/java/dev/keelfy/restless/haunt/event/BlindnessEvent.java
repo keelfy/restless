@@ -1,11 +1,11 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Ticks;
 import java.util.Set;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -42,7 +42,7 @@ public final class BlindnessEvent implements HauntEvent {
                         player.getX(),
                         player.getY(),
                         player.getZ(),
-                        SoundEvents.AMBIENT_CAVE.value(),
+                        HauntSounds.MOAN,
                         SoundSource.AMBIENT,
                         tone.volume(),
                         tone.pitch());

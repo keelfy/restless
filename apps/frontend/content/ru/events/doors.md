@@ -1,285 +1,283 @@
 ---
-title: Doors
+title: Двери
 ---
 
-# Doors
+# Двери
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-45 events.
+Событий: 45.
 
 ## `door`
 
-Opens a closed door or slams an open one
+Открывает закрытую дверь или захлопывает открытую.
 
-Runs when: A wooden door is within 12 blocks
+Когда срабатывает: Деревянная дверь в пределах 12 блоков
 
 ## `breathing_door`
 
-Toggles once a second, six times, ending as it began. A faint dark haze puffs at the door each time it moves.
+Переключается раз в секунду шесть раз и в конце возвращается в исходное положение. При каждом движении у двери вспыхивает слабое тёмное облачко.
 
-Runs when: A wooden door within 12
+Когда срабатывает: Деревянная дверь в пределах 12 блоков
 
 ## `trapdoor`
 
-Toggles it with a slam
+Переключает его с хлопком.
 
-Runs when: A wooden trapdoor within 12
+Когда срабатывает: Деревянный люк в пределах 12 блоков
 
 ## `fence_gate`
 
-Toggles it
+Переключает её.
 
-Runs when: A fence gate within 12
+Когда срабатывает: Калитка в пределах 12 блоков
 
 ## `button`
 
-Presses it
+Нажимает кнопку.
 
-Runs when: An unpressed button within 12
+Когда срабатывает: Ненажатая кнопка в пределах 12 блоков
 
 ## `lever`
 
-Flips it
+Переключает рычаг.
 
-Runs when: A lever within 12
+Когда срабатывает: Рычаг в пределах 12 блоков
 
 ## `pressure_plate`
 
-Triggers it for a second
+Нажимает плиту на секунду.
 
-Runs when: An unpressed pressure plate within 12
+Когда срабатывает: Ненажатая нажимная плита в пределах 12 блоков
 
 ## `iron_door`
 
-Toggles it, no redstone
+Переключает её без красного камня.
 
-Runs when: An iron door within 12
+Когда срабатывает: Железная дверь в пределах 12 блоков
 
 ## `open_house`
 
-**Harmful.**
-Opens every such door. A faint dark haze puffs at every door it opens.
+**Вредящее событие.**
+Открывает все такие двери. У каждой открытой двери вспыхивает слабое тёмное облачко.
 
-Runs when: Night, and a closed wooden door within 20
+Когда срабатывает: Ночью, если закрытая деревянная дверь в пределах 20 блоков
 
 ## `chest_lid`
 
-Lid opens and closes with sound, contents untouched
+Крышка открывается и закрывается со звуком, содержимое остаётся нетронутым.
 
-Runs when: A chest or trapped chest within 10
+Когда срабатывает: Сундук или сундук-ловушка в пределах 10 блоков
 
 ## `barrel_opens`
 
-Opens for 1.5 s, then closes
+Открывается на 1.5 с, затем закрывается.
 
-Runs when: A closed barrel within 10
+Когда срабатывает: Закрытая бочка в пределах 10 блоков
 
 ## `jukebox_pop`
 
-The music cuts out and the disc pops out of it
+Музыка обрывается, и диск выскакивает из проигрывателя.
 
-Runs when: A jukebox within 20 is playing a disc
+Когда срабатывает: Проигрыватель в пределах 20 блоков играет пластинку
 
 ## `lectern_pages`
 
-The book turns to another page with a page-turn sound, through the lectern's own menu so a comparator sees the change
+Книга переворачивается на другую страницу с шорохом листа, через меню самой кафедры, так что компаратор замечает перемену.
 
-Runs when: A lectern within 12 holds a book of more than one page
+Когда срабатывает: Кафедра в пределах 12 блоков, на которой лежит книга больше чем в одну страницу
 
 ## `pot_wobble`
 
-It wobbles as if an item were refused
+Горшок раскачивается, как будто отвергает предмет.
 
-Runs when: A decorated pot within 12
+Когда срабатывает: Узорчатый горшок в пределах 12 блоков
 
 ## `bell_swing`
 
-It swings and rings toward a random side
+Колокол раскачивается и звонит в случайную сторону.
 
-Runs when: A bell within 20
+Когда срабатывает: Колокол в пределах 20 блоков
 
 ## `redstone_drift`
 
-**Harmful.**
-A repeater gets another delay, a comparator the other mode, with no update. Set back after 2 min if unchanged; under hardcore it stays
+**Вредящее событие.**
+У повторителя меняется задержка, у компаратора режим, без обновления блока. Через 2 мин возвращается, если ничего не менялось; при хардкоре остаётся.
 
-Runs when: A repeater or comparator within 12
+Когда срабатывает: Повторитель или компаратор в пределах 12 блоков
 
 ## `occupied_bed`
 
-Both halves read as occupied for 1 min, so the vanilla "This bed is occupied" shows. Always put back, hardcore or not. A faint dark haze hangs over the bed for as long as it reads as occupied.
+Обе половины кровати на 1 мин считаются занятыми, так что показывается обычное сообщение игры о том, что кровать занята. Всегда возвращается обратно, при хардкоре тоже. Пока кровать считается занятой, над ней висит слабое тёмное облачко.
 
-Runs when: An unoccupied bed within 12
+Когда срабатывает: Свободная кровать в пределах 12 блоков
 
 ## `shuffled_books`
 
-The books take other slots. Put back after 2 min if untouched; under hardcore they stay
+Книги занимают другие ячейки. Через 2 мин возвращаются, если их не трогали; при хардкоре остаются.
 
-Runs when: A chiseled bookshelf within 12 with a book
+Когда срабатывает: Резной книжный шкаф с книгой в пределах 12 блоков
 
 ## `dispenser_shot`
 
-**Harmful.**
-It clicks as if empty, then after 1 s an arrow leaves its face toward the player. Takes nothing from its contents, the arrow cannot be picked up
+**Вредящее событие.**
+Раздатчик щёлкает, как пустой, а через 1 с из его грани вылетает стрела в сторону игрока. Ничего из его содержимого не берётся, стрелу нельзя подобрать.
 
-Runs when: A dispenser within 12
+Когда срабатывает: Раздатчик в пределах 12 блоков
 
 ## `chest_blast`
 
-**Harmful.**
-A creeper hiss from the chest, then after 1 s an explosion of power 1 that breaks no blocks
+**Вредящее событие.**
+Из сундука раздаётся шипение крипера, а через 1 с происходит взрыв силой 1, не ломающий блоков.
 
-Runs when: A chest within 10, health above 10
+Когда срабатывает: Сундук в пределах 10 блоков, здоровье выше 10
 
 ## `wrong_smelt`
 
-The output becomes charcoal or rotten flesh of the same count; put back after 2 min unless taken or changed (stays under hardcore)
+Результат плавки превращается в древесный уголь или кусок гнили в том же количестве; через 2 мин возвращается, если его не забрали и не изменили (при хардкоре остаётся).
 
-Runs when: A furnace within 10 with something in its output
+Когда срабатывает: Печь в пределах 10 блоков, в выходной ячейке которой что-то лежит
 
 ## `furniture_moves`
 
-**Harmful.**
-It stands 2 to 5 blocks away on free floor, block entity and contents carried through its save format, a bed both halves. Moved back after 5 min if both spots are unchanged; under hardcore it stays
+**Вредящее событие.**
+Предмет мебели встаёт в 2–5 блоках от прежнего места на свободный пол; блок-сущность и содержимое переносятся через формат сохранения, кровать переносится обеими половинами. Через 5 мин возвращается на место, если оба места не менялись; при хардкоре остаётся.
 
-Runs when: A single chest, crafting table, furnace or empty bed within 12
+Когда срабатывает: Одиночный сундук, верстак, печь или свободная кровать в пределах 12 блоков
 
 ## `doorstep_gift`
 
-A poppy, dandelion, bone or raw rabbit lies outside, on the side away from the player; a real item
+Мак, одуванчик, кость или сырой кролик лежит снаружи, с той стороны двери, что дальше от игрока; предмет настоящий.
 
-Runs when: A door within 12 with free floor on its far side
+Когда срабатывает: Дверь в пределах 12 блоков, за которой с дальней стороны есть свободный пол
 
 ## `muddy_footprints`
 
-Pairs of muddy prints appear one by one on every first or second block from the player to it, each with a mud step. Each is wiped after 2 min if still there; under hardcore they stay
+Пары грязных следов появляются один за другим на каждом первом или втором блоке от игрока до цели, каждый со звуком шага по грязи. Каждый след стирается через 2 мин, если ещё на месте; при хардкоре остаются.
 
-Runs when: Indoors, a bed or chest within 10 on the player's level, reachable over free floor
+Когда срабатывает: В помещении, если кровать или сундук в пределах 10 блоков на уровне игрока и до них можно дойти по свободному полу
 
 ## `locked_door`
 
-**Harmful.**
-Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back. A faint dark haze hangs at the door while it is locked.
+**Вредящее событие.**
+Захлопывается с глухим стуком и не открывается 10 с. Сервер сообщает об этом клиентам в пределах 64 блоков, так что попытка открыть дверь отклоняется на месте (со звуком запертого сундука), без открытия и обратного щелчка. Пока дверь заперта, возле неё висит слабое тёмное облачко.
 
-Runs when: A wooden door within 12
+Когда срабатывает: Деревянная дверь в пределах 12 блоков
 
 ## `hook_click`
 
-The hook clicks on, then off a moment later, with no string to trip it
+Крючок щёлкает, включаясь, и через мгновение щёлкает, выключаясь, хотя нити, которая могла бы его задеть, нет.
 
-Runs when: A tripwire hook within 12
+Когда срабатывает: Крючок растяжки в пределах 12 блоков
 
 ## `daylight_flip`
 
-It turns inverted, so lamps on it light at noon and go dark at night; set back after a minute
+Датчик переключается в инвертированный режим, так что подключённые к нему лампы горят в полдень и гаснут ночью; через минуту возвращается обратно.
 
-Runs when: A daylight detector within 12
+Когда срабатывает: Датчик дневного света в пределах 12 блоков
 
 ## `rod_sparks`
 
-It is powered for a moment and throws sparks, with no storm
+Громоотвод ненадолго получает сигнал и рассыпает искры, хотя грозы нет.
 
-Runs when: An unpowered lightning rod within 16
+Когда срабатывает: Громоотвод без сигнала в пределах 16 блоков
 
 ## `torch_burnout`
 
-It burns out with the vanilla smoke and fizz and lights again after 8 s, or sooner on any update beside it
+Факел гаснет с обычным дымом и шипением и загорается снова через 8 с или раньше, при любом обновлении рядом с ним.
 
-Runs when: A lit redstone torch within 12
+Когда срабатывает: Горящий факел красного камня в пределах 12 блоков
 
 ## `chests_open`
 
-Every lid in the room opens at once and shuts 2 s later, contents untouched
+Все крышки в комнате разом открываются и закрываются через 2 с, содержимое остаётся нетронутым.
 
-Runs when: Indoors, and two or more chests within 10
+Когда срабатывает: В помещении, если два или больше сундуков в пределах 10 блоков
 
 ## `anvil_lands`
 
-The sound of an anvil landing; under hardcore the anvil also gains one damage stage
+Звучит удар приземлившейся наковальни; при хардкоре наковальня ещё и получает одну стадию повреждения.
 
-Runs when: Night, and an anvil within 16
+Когда срабатывает: Ночью, если наковальня в пределах 16 блоков
 
 ## `cake_bite`
 
-One more slice is gone with an eating sound; it comes back after a minute
+Ещё один кусок торта исчезает со звуком еды; через минуту он возвращается.
 
-Runs when: A cake within 12 with a slice left
+Когда срабатывает: Торт в пределах 12 блоков, от которого остался кусок
 
 ## `tnt_hiss`
 
-The primed-TNT hiss comes from it, with nothing lit
+От блока раздаётся шипение зажжённого динамита, хотя ничего не подожжено.
 
-Runs when: A block of TNT, or a chest holding TNT, within 12
+Когда срабатывает: Блок динамита или сундук с динамитом в пределах 12 блоков
 
 ## `pot_holds`
 
-A bone, a skull sherd or an echo shard sits in it with a wobble; taken out again after two minutes
+В горшке с покачиванием появляется кость, черепок с черепом или осколок эха; через две минуты предмет снова вынимается.
 
-Runs when: An empty decorated pot within 12
+Когда срабатывает: Пустой узорчатый горшок в пределах 12 блоков
 
 ## `piston_twitch`
 
-A piston twitches out and back, only on your screen, and pushes nothing
+Поршень дёргается вперёд и назад, но только на экране игрока, и ничего не двигает.
 
-Runs when: A piston within 12 with air in front
+Когда срабатывает: Поршень в пределах 12 блоков, перед которым воздух
 
 ## `hopper_swallows`
 
-An item lying near a hopper slides over it and the hopper takes it
+Предмет, лежащий рядом с воронкой, скользит к ней, и воронка его забирает.
 
-Runs when: A hopper within 12 with a dropped item near it
+Когда срабатывает: Воронка в пределах 12 блоков, рядом с которой лежит выброшенный предмет
 
 ## `sculk_chain`
 
-Sculk sensors click one after another, the farthest first, toward you
+Датчики скалка щёлкают один за другим, начиная с самого дальнего, по направлению к игроку.
 
-Runs when: Two or more sculk sensors within 16
+Когда срабатывает: Два или больше датчиков скалка в пределах 16 блоков
 
 ## `observer_pulse`
 
-An observer pulses a few times and runs whatever it is wired to
+Наблюдатель несколько раз подаёт импульс и запускает всё, к чему подключён.
 
-Runs when: An observer within 12
+Когда срабатывает: Наблюдатель в пределах 12 блоков
 
 ## `bed_missing`
 
-"Your home bed was missing or obstructed", while the spawn point stays as it is
+Приходит обычное сообщение игры о том, что кровать дома отсутствует или заблокирована, а точка возрождения остаётся прежней.
 
-Runs when: You have a respawn point
+Когда срабатывает: У игрока есть точка возрождения
 
 ## `ender_note`
 
-A note you never wrote shows in an empty slot of the open ender chest, gone at the first click
+В пустой ячейке открытого сундука Края появляется записка, которую игрок не писал; она исчезает при первом же действии в этом инвентаре.
 
-Runs when: An ender chest is open with an empty slot
+Когда срабатывает: Сундук Края открыт, и в нём есть пустая ячейка
 
 ## `brewing_swap`
 
-One bottle becomes another potion (water, awkward, night vision, swiftness, healing, harming, poison, weakness, slowness or invisibility); put back after 5 min if untouched (stays under hardcore)
+Один флакон превращается в другое зелье (воду, невнятное, ночное зрение, скорость, лечение, урон, яд, слабость, замедление или невидимость); через 5 мин возвращается, если его не трогали (при хардкоре остаётся).
 
-Runs when: A brewing stand with a potion bottle within 10
+Когда срабатывает: Варочная стойка с флаконом зелья в пределах 10 блоков
 
 ## `brewing_bubbles`
 
-The brewing sound and bubbles above it, 6 times, 0.4 s apart. Nothing changes
+Над стойкой звучит варка и поднимаются пузырьки, 6 раз с промежутком 0.4 с. Ничего не меняется.
 
-Runs when: A brewing stand with nothing in any slot within 10
+Когда срабатывает: Варочная стойка, в ячейках которой ничего нет, в пределах 10 блоков
 
 ## `statue_pose`
 
-Its pose becomes another one while the player is not looking; set back after 2 min (stays under hardcore)
+Поза статуи меняется на другую, пока игрок не смотрит; через 2 мин возвращается (при хардкоре остаётся).
 
-Runs when: A copper golem statue within 12, outside 60° of where the player looks
+Когда срабатывает: Статуя медного голема в пределах 12 блоков, вне 60° от направления взгляда игрока
 
 ## `open_door_view`
 
-The view moves for 3 s into the doorway of the nearest open door, looking in toward the player; then back. Same early resets as `mob_eyes`
+Вид на 3 с переносится в проём ближайшей открытой двери, откуда он направлен на игрока; затем возвращается обратно. Те же ранние сбросы, что у `mob_eyes`.
 
-Runs when: Player on the ground, not in a fluid, and an open door 3 to 12 blocks away
+Когда срабатывает: Игрок стоит на земле, не в жидкости, а открытая дверь в 3–12 блоках от него
 
 ## `claw_marks`
 
-Claw marks appear on the player's side of both halves of the door with a scrape. Removed after 3 min; under hardcore they stay
+На стороне игрока, на обеих половинах двери, появляются следы когтей с царапающим звуком. Через 3 мин убираются; при хардкоре остаются.
 
-Runs when: Indoors, a closed door within 8 with free blocks on the player's side
+Когда срабатывает: В помещении, если закрытая дверь в пределах 8 блоков и со стороны игрока перед ней свободные блоки

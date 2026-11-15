@@ -179,7 +179,7 @@
     },
     "minecraft:blindness": {
       "name": "Blindness",
-      "description": "Blindness for six seconds, with a low cave sound."
+      "description": "Blindness for six seconds, with a ghostly moan."
     },
     "minecraft:sanity_crash": {
       "name": "Shattered Sanity",

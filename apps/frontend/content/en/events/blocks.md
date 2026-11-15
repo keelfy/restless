@@ -44,7 +44,7 @@ Runs when: Standing room 12 blocks away within 40° of where the player looks (u
 
 ## `moving_tree`
 
-Takes a log standing on dirt, the logs joined to it and the non-persistent leaves that grew from them (a leaf no nearer to these logs than its own distance to a log, so touching crowns stay; up to 300 blocks, with a crown), and moves them 2 to 4 blocks in a random direction if every spot is open (air, grass, flowers) and the foot stands on dirt; a rustle sounds. 30 s later it moves back, and the grass and flowers it stood in come back, unless it was cut or built on meanwhile. Under hardcore it stays
+Takes a log standing on dirt, the logs joined to it and the non-persistent leaves that grew from them (a leaf no farther from these logs than its own distance to its nearest log, so touching crowns stay; up to 300 blocks, with a crown), and moves them 2 to 4 blocks in a random direction if every spot is open (air, grass, flowers) and the foot stands on dirt; a rustle sounds. 30 s later it moves back, and the grass and flowers it stood in come back, unless it was cut or built on meanwhile. Under hardcore it stays
 
 Runs when: A log on dirt within 16 blocks
 
@@ -241,7 +241,7 @@ Runs when: Outdoors at night under open sky, or under leaves with a log within 8
 
 ## `fake_ore`
 
-Only this player's client is told that one such block is a diamond ore (deepslate diamond ore in deepslate). A click on it shows the stone. After 1 min it gets the real block back. Nothing on the server
+Only this player's client is told that one such block is a diamond ore (deepslate diamond ore in deepslate). Starting to break it shows the stone. After 1 min it gets the real block back. Nothing on the server
 
 Runs when: No sky overhead, and stone or deepslate touching air within 8
 
@@ -271,7 +271,7 @@ Runs when: A source of water with open air above within 12
 
 ## `lava_as_water`
 
-A sizzle sounds at the lava, and only this player's client is told that the 300 nearest lava blocks are water. They show as lava again when the player comes within 8 blocks, or after 30 s, or at once on a click. Always an illusion, never real, in any swaps mode
+A sizzle sounds at the lava, and only this player's client is told that the 300 nearest lava blocks are water. They show as lava again when the player comes within 8 blocks, or after 30 s, or at once when the player starts to break one. Always an illusion, never real, in any swaps mode
 
 Runs when: Health > 5 hearts, at least 6 lava blocks within 16 and none within 9
 
@@ -361,9 +361,9 @@ Runs when: A banner within 12 with room for another pattern
 
 ## `stairs_flip`
 
-A few stairs behind your back turn upside down, then right again after a minute
+A few stairs behind the player's back turn upside down, then right again after a minute
 
-Runs when: Stairs within 12 behind where you are looking
+Runs when: Stairs within 12 behind where the player is looking
 
 ## `lectern_swap`
 
@@ -409,7 +409,7 @@ Runs when: End, a chorus plant or flower within 12 blocks with free air beside i
 
 ## `phantom_egg`
 
-Only this player's client is told of a dragon egg standing there. A click shows the truth. After 10 s it gets the real block back. Nothing on the server
+Only this player's client is told of a dragon egg standing there. Starting to break it shows the truth. After 10 s it gets the real block back. Nothing on the server
 
 Runs when: End, standing room 4–12 blocks away
 
@@ -421,7 +421,7 @@ Runs when: End
 
 ## `nowhere_portal`
 
-Only this player's client is told of a lit nether portal in a frame of obsidian (no corners) there, facing them, with the portal ambient sound. A click shows air. After 15 s it gets the real blocks back. Nothing on the server
+Only this player's client is told of a lit nether portal in a frame of obsidian (no corners) there, facing them, with the portal ambient sound. Starting to break it shows air. After 15 s it gets the real blocks back. Nothing on the server
 
 Runs when: Overworld, a 4×5 empty space on solid ground 14 blocks away within 40° of where the player looks
 
@@ -489,7 +489,7 @@ Runs when: Glow berries within 14, in any biome
 
 A scarecrow stands a step closer than it did, then goes back after a minute
 
-Runs when: A scarecrow within 14, at least 4 away, with room to step toward you
+Runs when: A scarecrow within 14, at least 4 away, with room to step toward the player
 
 ## `ouija_hi`
 
@@ -511,7 +511,7 @@ Runs when: At least 4 salt cells within 8
 
 ## `grave_name`
 
-A gravestone reads your own name
+A gravestone reads the player's own name
 
 Runs when: A gravestone within 16
 
@@ -519,7 +519,7 @@ Runs when: A gravestone within 16
 
 One journal entry is gone for a few minutes, then back in its place
 
-Runs when: You carry a journal with at least 3 entries
+Runs when: The player carries a journal with at least 3 entries
 
 ## `dreamcatcher_fails`
 
@@ -610,7 +610,7 @@ Runs when: At least 8 floor blocks 3 to 10 behind the player (1 to either side) 
 
 Only this player's client is told that the tallest such tree (logs and leaves) is air. It gets the real blocks back when the player comes within 12 of it, or after 60 s. Nothing on the server
 
-Runs when: The player's bed is in this dimension; a tree of at most 250 blocks and 8 leaves within 24 of it, 18 to 64 from the player
+Runs when: The player's bed is in this dimension; a tree of at most 250 blocks and at least 8 leaves within 24 of it, 18 to 64 from the player
 
 ## `tunnel_filled`
 

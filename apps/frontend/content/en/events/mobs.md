@@ -633,9 +633,9 @@ Runs when: Nether, at least 2 adult hoglins within 24, farther than 3.2 blocks f
 
 ## `pale_pet`
 
-One of your tame wolves or cats turns pale until dawn (stays under hardcore)
+One of the player's tame wolves or cats turns pale until dawn (stays under hardcore)
 
-Runs when: Night, and your tame wolf or cat within 24
+Runs when: Night, and the player's tame wolf or cat within 24
 
 ## `pale_herd`
 

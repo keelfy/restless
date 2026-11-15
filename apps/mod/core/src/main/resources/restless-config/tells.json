@@ -120,7 +120,7 @@
       "harsh": "minecraft:wrath",
       "sound": {
         "volume": 0.5,
-        "pitch": 0.6
+        "pitch": 1.0
       }
     },
     "restless:tell_hunter": {

@@ -4,9 +4,9 @@ title: Tells
 
 # Tells
 
-24 small signs, one per habit, that only a spirit with that habit gives. Each is a light event with low impact and never harms. Whatever the player sees, the journal notes it ("Seen: ...") against that spirit, so watching is a way to learn which habits it has.
+I know 24 small signs, one per habit, that only a spirit with that habit gives. Each is a light event with low impact and never harms. Whatever the player sees, the journal notes it ("Seen: ...") against that spirit, so watching is a way to learn which habits it has.
 
-Above anger 0.7, four of them turn harsh and run a harmful event instead: `tell_door_slammer` locks a door (`locked_door`), `tell_cold_touch` brings frostbite (`frostbite`), `tell_vengeful` strikes (`wrath`), `tell_whisperer` drains sanity (`sanity_drain`). See [Anger](/en/how-it-works#anger).
+Above anger 0.7, four of them turn harsh and run a harmful event instead: `tell_door_slammer` locks a door (`locked_door`), `tell_cold_touch` brings frostbite (`frostbite`), `tell_vengeful` strikes (`wrath`), `tell_whisperer` drains sanity (`sanity_drain`). Described in [Anger](/en/how-it-works#anger).
 
 ## `tell_cold_touch`
 

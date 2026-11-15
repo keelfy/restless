@@ -1,469 +1,464 @@
 ---
-title: Assault
+title: Нападения
 ---
 
-# Assault
+# Нападения
 
-> Эта страница пока на английском: ивенты ещё не переведены.
+Событий: 65.
 
-65 events.
-
-Events come in three bands. A **threat** event never takes the player below `assaults.safe_health` (3 hearts). A **brink** event
-may leave half a heart, needs power 0.6, sets your heart pounding and is followed by a quiet spell. A **lethal** event can kill, and runs only for an
-evolved spirit on its list, at power 0.9, at most once per 3 days and only after a brink event. See the `assaults` settings to
-turn lethal events off. A player killed this way lowers the spirit's anger. Every one gives a warning and a way out.
+События делятся на три уровня. Событие уровня **угроза** никогда не опускает игрока ниже `assaults.safe_health` (3 сердца). Событие уровня **грань** может оставить половину сердца, требует силы 0.6, заставляет сердце игрока колотиться, и за ним следует тихая пора. Событие уровня **смерть** может убить; оно срабатывает только у выросшего духа, у которого оно есть в списке, при силе 0.9, не чаще раза в 3 дня и только после события уровня «грань». Смертельные события отключаются в настройках `assaults`. Игрок, убитый так, снижает злость духа. Каждое событие даёт предупреждение и путь к спасению.
 
 ## `cold_touch`
 
-**Harmful.**
-1–2 hearts of magic damage (2–4 HP), never lethal (leaves at least 0.5 heart), freezing sound
+**Вредящее событие.**
+Наносит от 1 до 2 сердец магического урона (2–4 ед. здоровья), но никогда не убивает (оставляет не менее 0.5 сердца), сопровождается ледяным звуком
 
-Runs when: Player health > 1 heart
+Когда срабатывает: Здоровье игрока выше 1 сердца
 
 ## `trip`
 
-**Harmful.**
-Stops dead for 1 s
+**Вредящее событие.**
+Игрок замирает на месте на 1 с
 
-Runs when: Not slowed
+Когда срабатывает: Игрок не замедлен
 
 ## `scorch`
 
-**Harmful.**
-On fire for 1 s
+**Вредящее событие.**
+Игрок горит 1 с
 
-Runs when: Health > 3 hearts, dry, not burning
+Когда срабатывает: Здоровье выше 3 сердец, игрок сухой и не горит
 
 ## `wrath`
 
-**Harmful.**
-2–3.5 hearts of magic damage, never lethal
+**Вредящее событие.**
+Наносит от 2 до 3.5 сердец магического урона, но никогда не убивает
 
-Runs when: Health > 4 hearts
+Когда срабатывает: Здоровье выше 4 сердец
 
 ## `snatch`
 
-**Harmful.**
-The item is thrown ~5 blocks away
+**Вредящее событие.**
+Предмет отбрасывает примерно на 5 блоков
 
-Runs when: Item in main hand
+Когда срабатывает: В основной руке есть предмет
 
 ## `shove`
 
-**Harmful.**
-Pushes the player toward the drop (a fall of 1–4 HP). Runs only at a ledge
+**Вредящее событие.**
+Игрока толкает к обрыву (падение стоит 1–4 ед. здоровья). Срабатывает только на уступе
 
-Runs when: Health > 5 hearts, on the ground at the edge of a 4–7 block drop onto solid ground
+Когда срабатывает: Здоровье выше 5 сердец, игрок стоит на земле у края обрыва глубиной 4–7 блоков, под которым твёрдая земля
 
 ## `toss`
 
-**Harmful.**
-Thrown straight up about 5 blocks; the landing costs a couple of HP
+**Вредящее событие.**
+Игрока подбрасывает прямо вверх примерно на 5 блоков; приземление стоит нескольких ед. здоровья
 
-Runs when: Health > 5 hearts, on the ground, not in water or lava
+Когда срабатывает: Здоровье выше 5 сердец, игрок стоит на земле, не в воде и не в лаве
 
 ## `suffocation`
 
-**Harmful.**
-Heartbeat, 2 s later the air bar drains (about 7 s to empty), then 1 HP a second. Stops in light, in water, at 3 hearts, or after 15 s
+**Вредящее событие.**
+Слышно сердцебиение, через 2 с шкала воздуха пустеет (примерно за 7 с), затем игрок теряет по 1 ед. здоровья в секунду. Прекращается на свету, в воде, при 3 сердцах или через 15 с
 
-Runs when: Health > 4 hearts, not in water, light level \< 8
+Когда срабатывает: Здоровье выше 4 сердец, игрок не в воде, уровень освещённости \< 8
 
 ## `thunder_knocks`
 
-**Harmful.**
-Three knocks; 3 s later a bolt strikes nearby; 2 s after that a second bolt hits the player if they have moved less than 2 blocks since (6 HP, never lethal). Bolts set nothing on fire
+**Вредящее событие.**
+Раздаются три стука; через 3 с рядом бьёт молния; ещё через 2 с вторая молния попадает в игрока, если он с тех пор сдвинулся меньше чем на 2 блока (6 ед. здоровья, но никогда не убивает). Молнии ничего не поджигают
 
-Runs when: Health > 5 hearts
+Когда срабатывает: Здоровье выше 5 сердец
 
 ## `embrace`
 
-**Harmful.**
-Growing damage once a second (0.5, 1, 1.5 HP…) until the player is 10 blocks from where it began. Stops at 3 hearts or after 20 hits
+**Вредящее событие.**
+Урон нарастает раз в секунду (0.5, 1, 1.5 ед. здоровья…), пока игрок не отойдёт на 10 блоков от места, где всё началось. Прекращается при 3 сердцах или после 20 ударов
 
-Runs when: Health > 5 hearts
+Когда срабатывает: Здоровье выше 5 сердец
 
 ## `the_call`
 
-**Harmful.**
-A warden moan, then after 2 s the player on the ground is drawn toward the lava (or void) at about 1.5 blocks/s, felt as a velocity nudge every 0.1 s, with soul particles at the feet. Walking 6 blocks further away than the start breaks it; it also ends on arrival, in lava, at 3 hearts, or after 30 s. Lava itself is not capped
+**Вредящее событие.**
+Раздаётся стон стража, затем через 2 с игрока на земле тянет к лаве (или в пустоту) со скоростью около 1.5 блока/с: это ощущается как толчок скорости каждые 0.1 с, а у его ног вьются частицы душ. Зов обрывается, если игрок уйдёт на 6 блоков дальше от места начала; он также заканчивается по прибытии, в лаве, при 3 сердцах или через 30 с. Урон самой лавы не ограничен
 
-Runs when: Night in the overworld (any time elsewhere), health > 5 hearts, lava within 12 blocks or a bottomless column 10 blocks away
+Когда срабатывает: В Верхнем мире ночью (в других измерениях в любое время), здоровье выше 5 сердец, лава в пределах 12 блоков или бездонный столб в 10 блоках
 
 ## `shadow`
 
-**Harmful.**
-A wither skeleton with no AI and no gear (invulnerable, silent) stands there. Every 0.1 s it takes a 0.3-block stride toward the player, but only while the player is not looking at it (within 45° and in line of sight). Warden heartbeat once a second. A touch (1.2 blocks) deals up to 7 hearts but never below 3 hearts, then it vanishes in smoke; it also vanishes after 60 s or after 40 blocked strides
+**Вредящее событие.**
+Стоит скелет-иссушитель без ИИ и без снаряжения (неуязвимый и беззвучный). Каждые 0.1 с он делает шаг в 0.3 блока к игроку, но только пока игрок не смотрит на него (в пределах 45° и в прямой видимости). Раз в секунду слышно сердцебиение стража. Касание (1.2 блока) наносит до 7 сердец урона, но не опускает игрока ниже 3 сердец, после чего скелет исчезает в дыму; он исчезает и через 60 с или после 40 заблокированных шагов
 
-Runs when: Not peaceful, no shadow already following the player, health > 7 hearts, standing room 14–20 blocks away
+Когда срабатывает: Сложность не «Мирная», за игроком ещё не идёт другая тень, здоровье выше 7 сердец, есть место, где можно встать, в 14–20 блоках
 
 ## `snow_snowball`
 
-**Harmful.**
-A snowball thrown from a point 10 blocks away at the player's eyes at 1.2 blocks/tick; it does no damage
+**Вредящее событие.**
+Снежок летит в глаза игрока из точки в 10 блоках со скоростью 1.2 блока/тик; урона он не наносит
 
-Runs when: In a snowy biome
+Когда срабатывает: Игрок в заснеженном биоме
 
 ## `snow_powder_path`
 
-**Harmful.**
-The block under standing room 5 blocks ahead within 30° of where the player looks becomes powder snow, one block deep; restored after 1 min (stays under hardcore)
+**Вредящее событие.**
+Блок под местом, где можно встать, в 5 блоках впереди в пределах 30° от направления взгляда игрока превращается в рыхлый снег глубиной в один блок; через 1 мин всё возвращается на место (при хардкоре остаётся)
 
-Runs when: In a snowy biome, health above the safe floor + 2 hearts, and standing room 5 blocks ahead with solid ground two blocks under it
+Когда срабатывает: Игрок в заснеженном биоме, здоровье выше безопасного порога плюс 2 сердца, в 5 блоках впереди есть место, где можно встать, а двумя блоками ниже него твёрдая земля
 
 ## `mountain_wind_push`
 
-**Harmful.**
-Three wind howls 0.5 s apart, then a push of 0.3 toward the edge the player stands at
+**Вредящее событие.**
+Ветер трижды воет с интервалом 0.5 с, затем толкает игрока с силой 0.3 к краю, у которого тот стоит
 
-Runs when: In a mountain biome, health above the safe floor + 2 hearts, and the player at the edge of a drop
+Когда срабатывает: Игрок в горном биоме, здоровье выше безопасного порога плюс 2 сердца, игрок стоит на краю обрыва
 
 ## `hurled_block`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A loose block nearby shivers and lifts in a cloud of dust, then flies at you. Step aside.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Рыхлый блок рядом дрожит и поднимается в облаке пыли, затем летит в игрока. Чтобы спастись, нужно отойти в сторону.
 
-Runs when: Not peaceful, health above 5 hearts, a loose block (gravel, cobblestone and the like) within reach
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, рядом достаточно близко лежит рыхлый блок (гравий, булыжник и подобное)
 
 ## `flung_tools`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A chest nearby rattles and opens, and the tools inside fly at you one by one. Dodge them or empty the chest.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Сундук рядом гремит и открывается, и инструменты из него по одному летят в игрока. Чтобы спастись, нужно увернуться или опустошить сундук.
 
-Runs when: Not peaceful, health above 5 hearts, a chest with tools in it nearby
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, рядом есть сундук с инструментами
 
 ## `volley`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A skeleton rattles somewhere in the dark, then a few arrows come from that one direction. Take cover.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Где-то в темноте гремит скелет, затем с одной стороны прилетает несколько стрел. Чтобы спастись, нужно укрыться.
 
-Runs when: Not peaceful, health above 5 hearts, light level below `dark_below`
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, уровень освещённости ниже `dark_below`
 
 ## `cave_in`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-Dust and creaking overhead, then gravel falls on the spot where you stand. Step out from under it.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Пыль и скрип над головой, затем гравий падает туда, где стоит игрок. Чтобы спастись, нужно выйти из-под него.
 
-Runs when: Not peaceful, health above 5 hearts, a solid roof overhead
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, над игроком сплошной потолок
 
 ## `dripstone_rain`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-Pointed dripstone breaks off the ceiling around you, wave after wave. Keep moving.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Остроконечный капельник обламывается с потолка вокруг игрока, волна за волной. Чтобы спастись, нужно двигаться.
 
-Runs when: Not peaceful, health above 5 hearts, a solid roof overhead
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, над игроком сплошной потолок
 
 ## `possessed_mob`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A hostile mob nearby is lit by spirit fire, then turns fast and strong and comes for you. Kill it. A faint dark haze gathers around the mob, thicker as the turn nears.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Враждебный моб рядом вспыхивает огнём духа, затем становится быстрым и сильным и идёт на игрока. Чтобы спастись, нужно убить его. Лёгкая тёмная дымка собирается вокруг моба и густеет по мере приближения превращения.
 
-Runs when: Not peaceful, health above 5 hearts, a hostile mob nearby
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, рядом есть враждебный моб
 
 ## `frenzy`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-Every hostile mob nearby is seized by spirit fire, then turns fast and strong. Fall back.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Все враждебные мобы рядом охвачены огнём духа, затем становятся быстрыми и сильными. Чтобы спастись, нужно отступить.
 
-Runs when: Not peaceful, health above 5 hearts, at least `min_mobs` hostile mobs nearby
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, рядом не меньше `min_mobs` враждебных мобов
 
 ## `turned_pets`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-Your tamed wolves and cats stand and growl, then go for you for a while. Walk away.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Ручные волки и коты игрока замирают и рычат, затем какое-то время бросаются на него. Чтобы спастись, нужно уйти от них.
 
-Runs when: Not peaceful, health above 5 hearts, the player has a tamed wolf or cat nearby
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, рядом есть ручной волк или кот игрока
 
 ## `vex_swarm`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A cold wail, then a few short-lived vexes named "?" come out of the air. Fight back.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Холодный вой, затем из воздуха выходит несколько недолговечных вексов с именем «?». Чтобы спастись, нужно отбиваться.
 
-Runs when: Not peaceful, health above 5 hearts
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец
 
 ## `ghost_creeper`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A hiss behind you, then a small blast there that breaks no blocks. Run on the hiss.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Шипение за спиной игрока, затем небольшой взрыв на этом месте, не ломающий блоки. Чтобы спастись, нужно бежать, как только раздастся шипение.
 
-Runs when: Not peaceful, health above 5 hearts
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец
 
 ## `stalker`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A figure appears far off and stands watching, then runs at you, hits once and is gone. Outrun it. A faint dark haze trails it as it runs and stays where it falls for 2 s.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Вдалеке появляется фигура и стоит, наблюдая, затем бежит на игрока, бьёт один раз и исчезает. Чтобы спастись, нужно убежать от неё. Лёгкая тёмная дымка тянется за ней во время бега и остаётся на месте, где она упала, ещё 2 с.
 
-Runs when: Not peaceful, health above 5 hearts, standing room for the figure in line of sight
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, есть место для фигуры в прямой видимости
 
 ## `hail_of_bones`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-Rattling in the night sky, then blocks of bone fall around you. Take cover under a roof.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Грохот в ночном небе, затем вокруг игрока падают костяные блоки. Чтобы спастись, нужно укрыться под крышей.
 
-Runs when: Not peaceful, health above 5 hearts, overworld, night, open sky
+Когда срабатывает: Сложность не «Мирная», здоровье выше 5 сердец, Верхний мир, ночь, открытое небо
 
 ## `rake`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-Three scratches in the dark, then three blows. Moving between them is enough to be missed.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Три царапины в темноте, затем три удара. Если двигаться между ними, удар уйдёт мимо.
 
-Runs when: Health above 5 hearts
+Когда срабатывает: Здоровье выше 5 сердец
 
 ## `teeth_in_dark`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A growl where the light is gone, then a bite every few seconds. Find light. A faint dark haze hangs just off to one side, where the jaws are.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Рык там, где погас свет, затем укус каждые несколько секунд. Чтобы спастись, нужно найти свет. Лёгкая тёмная дымка висит чуть в стороне, там, где челюсти.
 
-Runs when: Health above 5 hearts, light level 0
+Когда срабатывает: Здоровье выше 5 сердец, уровень освещённости 0
 
 ## `searing_armor`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-The chestplate glows and burns every second. Take it off or jump into water.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Нагрудник раскаляется и жжёт каждую секунду. Чтобы спастись, нужно снять его или прыгнуть в воду.
 
-Runs when: Health above 5 hearts, a non-leather chestplate worn, dry, not fire resistant
+Когда срабатывает: Здоровье выше 5 сердец, надет нагрудник не из кожи, игрок сухой, у него нет защиты от огня
 
 ## `frost_grip`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A cold like powder snow on dry land, and it bites. Get to fire or a light.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Холод, как от рыхлого снега, на сухой земле, и он кусает. Чтобы спастись, нужно добраться до огня или света.
 
-Runs when: Health above 5 hearts, can freeze, not warm (no fire or lava nearby, not in water)
+Когда срабатывает: Здоровье выше 5 сердец, игрок может замёрзнуть и ему не тепло (рядом нет огня или лавы, он не в воде)
 
 ## `pinned`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-Heavy limbs, and every hostile nearby turns on you. Fight or wait it out.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Конечности тяжелеют, а все враждебные существа рядом бросаются на игрока. Чтобы спастись, нужно сражаться или переждать.
 
-Runs when: Health above 5 hearts, not slowed, a hostile mob nearby
+Когда срабатывает: Здоровье выше 5 сердец, игрок не замедлен, рядом есть враждебный моб
 
 ## `throat`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-Air drains on dry land and a whisper says hush. Crouch and wait, or drink milk.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Воздух уходит на суше, а шёпот просит замолчать. Чтобы спастись, нужно присесть и ждать или выпить молока.
 
-Runs when: Health above 5 hearts, not in water, no bad luck effect
+Когда срабатывает: Здоровье выше 5 сердец, игрок не в воде, на нём нет эффекта «невезение»
 
 ## `undertow_dry`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-Something drags you back while you sprint. Stop running.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Что-то тянет игрока назад, пока он бежит. Чтобы спастись, нужно перестать бежать.
 
-Runs when: Health above 5 hearts, sprinting
+Когда срабатывает: Здоровье выше 5 сердец, игрок бежит
 
 ## `lantern_burst`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A torch or lantern sputters, then bursts into fire. Stay away from the lights.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Факел или фонарь трещит, затем вспыхивает огнём. Чтобы спастись, нужно держаться подальше от светильников.
 
-Runs when: Health above 5 hearts, a torch or lantern within reach
+Когда срабатывает: Здоровье выше 5 сердец, рядом есть факел или фонарь
 
 ## `blood_cough`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A wet cough every few seconds, five in all. Milk ends it.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Влажный кашель каждые несколько секунд, пять раз подряд. Молоко прекращает его.
 
-Runs when: Health above 5 hearts, no nausea
+Когда срабатывает: Здоровье выше 5 сердец, у игрока нет тошноты
 
 ## `wrong_step`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-The ground ahead crumbles into a hole, a fall of one to three blocks. Watch where you step.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Земля впереди осыпается ямой, падение на один-три блока. Чтобы спастись, нужно смотреть под ноги.
 
-Runs when: On the ground, standing room 1 block ahead
+Когда срабатывает: Игрок на земле, в 1 блоке впереди есть место, где можно встать
 
 ## `ash_storm`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A wind of soul fire in the Nether. Take shelter behind a wall.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Ветер из огня душ в Незере. Чтобы спастись, нужно укрыться за стеной.
 
-Runs when: Health above 5 hearts, in the Nether
+Когда срабатывает: Здоровье выше 5 сердец, игрок в Незере
 
 ## `hand_below`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A circle of souls under your feet. Stay on it and a hand takes hold. Step off. A faint dark haze rises from the ring, thicker the longer you stay.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Круг душ под ногами игрока. Если игрок остаётся на нём, рука хватает его; чтобы спастись, нужно сойти с круга. Лёгкая тёмная дымка поднимается от кольца и густеет, чем дольше игрок стоит.
 
-Runs when: Health above 5 hearts, on the ground
+Когда срабатывает: Здоровье выше 5 сердец, игрок на земле
 
 ## `blade_behind`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A sweep sounds at your back. Turn to face it before it lands.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+За спиной игрока свистит взмах. Чтобы спастись, нужно повернуться к нему лицом, пока он не упал.
 
-Runs when: Health above 5 hearts
+Когда срабатывает: Здоровье выше 5 сердец
 
 ## `door_bite`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A door swings open by itself and slams on whoever passes. Use another way.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Дверь сама распахивается и захлопывается на том, кто проходит. Чтобы спастись, нужно пойти другим путём.
 
-Runs when: Health above 5 hearts, a door in the player's path
+Когда срабатывает: Здоровье выше 5 сердец, на пути игрока есть дверь
 
 ## `night_terror`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-A heartbeat in your sleep, then you are thrown awake screaming. Wards hold it off. A faint dark haze gathers at the bedside while you sleep and is still there when you wake.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Стук сердца во сне, затем игрока с криком выбрасывает из постели. Обереги не пускают его. Лёгкая тёмная дымка собирается у кровати, пока игрок спит, и остаётся там, когда он просыпается.
 
-Runs when: Health above 5 hearts, the player is asleep with at least a second of the night left
+Когда срабатывает: Здоровье выше 5 сердец, игрок спит, и до конца ночи осталось не меньше секунды
 
 ## `stone_fists`
 
-**Harmful, threat band: leaves at least 3 hearts.**
-The wall you lean on rumbles and strikes. Step away from it.
+**Вредящее, уровень «угроза»: оставляет не менее 3 сердец.**
+Стена, к которой прислонился игрок, гудит и бьёт. Чтобы спастись, нужно отойти от неё.
 
-Runs when: Health above 5 hearts, leaning on a wall
+Когда срабатывает: Здоровье выше 5 сердец, игрок прислонился к стене
 
 ## `final_blow`
 
-**Harmful, brink band: can leave half a heart.**
-A roar and a ring of souls. Whoever is still inside it when it ends is struck down to half a heart.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Рёв и кольцо душ. Кто остаётся внутри, когда оно сомкнётся, падает до половины сердца.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, health above `min_health`
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, здоровье выше `min_health`
 
 ## `the_hanging`
 
-**Harmful, brink band: can leave half a heart.**
-You are lifted high into the air, then let go. Slow falling, water, or a block under you softens the drop.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Игрока поднимает высоко в воздух, а затем отпускает. Падение смягчают медленное падение, вода или блок под ногами.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, on the ground, not in water, no slow falling
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, игрок на земле, не в воде, без медленного падения
 
 ## `held_under`
 
-**Harmful, brink band: can leave half a heart.**
-In deep water something pushes you down until your breath is gone. Swim sideways out of the column.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+В глубокой воде что-то давит игрока вниз, пока не кончится дыхание. Чтобы спастись, нужно выплыть вбок из столба воды.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, under water, no water breathing
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, игрок под водой, без подводного дыхания
 
 ## `pyre`
 
-**Harmful, brink band: can leave half a heart.**
-A fire that will not go out, and fire resistance fails. Water puts it out.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Огонь, который не гаснет, а защита от огня перестаёт действовать. Вода его тушит.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, not in water, not fire immune
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, игрок не в воде и не невосприимчив к огню
 
 ## `withering`
 
-**Harmful, brink band: can leave half a heart.**
-A wither that goes on and on. Milk ends it.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Иссушение, которое не отпускает. Молоко прекращает его.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, no wither effect
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, на игроке нет эффекта иссушения
 
 ## `count`
 
-**Harmful, brink band: can leave half a heart.**
-A countdown on the screen: three, two, one. Reach light or holy ground before it ends.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+На экране отсчёт: три, два, один. Чтобы спастись, нужно выйти на свет или на святую землю до его конца.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, not in light
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, игрок не на свету
 
 ## `the_hollow`
 
-**Harmful, brink band: can leave half a heart.**
-A named creature of the spirit hunts you, and its blows cannot kill. Kill it and the spirit calms.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Именное существо духа охотится на игрока, но его удары не могут убить. Если убить его, дух успокаивается.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, standing room for a hostile
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, есть место для враждебного существа
 
 ## `ledge_push`
 
-**Harmful, brink band: can leave half a heart.**
-A strong shove at the edge of a drop. Crouch when the warning comes.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Сильный толчок на краю обрыва. Чтобы спастись, нужно присесть, когда прозвучит предупреждение.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, at the edge of a drop
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, игрок на краю обрыва
 
 ## `circle_of_knives`
 
-**Harmful, brink band: can leave half a heart.**
-Arrows hang in a ring around you, then close in. Break out of the ring.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Стрелы висят кольцом вокруг игрока, затем смыкаются. Чтобы спастись, нужно вырваться из кольца.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец
 
 ## `smother_brink`
 
-**Harmful, brink band: can leave half a heart.**
-The air is taken from you in the dark, past the safe point. Find light.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+В темноте у игрока отнимают воздух дальше безопасной черты. Чтобы спастись, нужно найти свет.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, not in water, light level below `dark_below`
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, игрок не в воде, уровень освещённости ниже `dark_below`
 
 ## `embrace_brink`
 
-**Harmful, brink band: can leave half a heart.**
-Cold hands close around you, harder each time, past the safe point. Get ten blocks away.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Холодные руки смыкаются вокруг игрока, с каждым разом всё сильнее, дальше безопасной черты. Чтобы спастись, нужно отойти на десять блоков.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец
 
 ## `red_room`
 
-**Harmful, brink band: can leave half a heart.**
-Darkness, a heartbeat, and a figure in sight that strikes every second you look at it. Look away.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Тьма, сердцебиение и фигура в поле зрения, которая бьёт каждую секунду, пока игрок на неё смотрит. Чтобы спастись, нужно отвернуться.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, standing room for a figure
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, есть место для фигуры
 
 ## `drain`
 
-**Harmful, brink band: can leave half a heart.**
-Your health drains a heart a second and your hunger bar empties. Eat.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Здоровье игрока уходит по сердцу в секунду, а шкала голода пустеет. Чтобы спастись, нужно поесть.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец
 
 ## `bound`
 
-**Harmful, brink band: can leave half a heart.**
-You are held in place while a hostile is dragged to you. Kill it.
+**Вредящее, уровень «грань»: может оставить половину сердца.**
+Игрока держат на месте, пока к нему тащат врага. Чтобы спастись, нужно убить его.
 
-Runs when: Power ≥ 0.6, not peaceful, health above 2 hearts, standing room for a hostile
+Когда срабатывает: Сила ≥ 0.6, сложность не «Мирная», здоровье выше 2 сердец, есть место для враждебного существа
 
 ## `judgement`
 
-**Harmful, lethal band: can kill.**
-Three knocks, a bolt that misses, then a bolt that kills whoever has not moved.
+**Вредящее, уровень «смерть»: может убить.**
+Три стука, молния мимо, затем молния, которая убивает того, кто не сдвинулся с места.
 
-Runs when: Evolved `demon` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown
+Когда срабатывает: Выросший `demon` при силе ≥ 0.9, сложность не «Мирная», смертельные события разрешены настройкой, игрок предупреждён событием уровня «грань», перерыв прошёл
 
 ## `reaping`
 
-**Harmful, lethal band: can kill.**
-A shadow stands far off and walks closer whenever the player looks away. If it reaches them, its touch kills. It freezes while watched.
+**Вредящее, уровень «смерть»: может убить.**
+Вдалеке стоит тень и подходит ближе, стоит игроку отвести взгляд. Если она добирается до него, её касание убивает. Пока на неё смотрят, она замирает.
 
-Runs when: Evolved `shade`/`wraith` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, standing room for the shadow
+Когда срабатывает: Выросший `shade`/`wraith` при силе ≥ 0.9, сложность не «Мирная», смертельные события разрешены настройкой, игрок предупреждён событием уровня «грань», перерыв прошёл, есть место для тени
 
 ## `last_call`
 
-**Harmful, lethal band: can kill.**
-A moan, then a voice draws the player toward lava or the void and does not stop at any floor. Walking far enough away breaks it.
+**Вредящее, уровень «смерть»: может убить.**
+Стон, затем голос тянет игрока к лаве или в пустоту и не останавливается ни на каком полу. Если уйти достаточно далеко, зов обрывается.
 
-Runs when: Evolved `lost_one` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, night, lava or a bottomless column near
+Когда срабатывает: Выросший `lost_one` при силе ≥ 0.9, сложность не «Мирная», смертельные события разрешены настройкой, игрок предупреждён событием уровня «грань», перерыв прошёл, ночь, рядом лава или бездонный столб
 
 ## `drowner`
 
-**Harmful, lethal band: can kill.**
-In water, bubbles and a gurgle, then the player is held under until the water takes them. Leaving the water in time, or breathing under it, saves them.
+**Вредящее, уровень «смерть»: может убить.**
+В воде пузыри и бульканье, затем игрока держат под водой, пока вода не заберёт его. Спасает своевременный выход из воды или дыхание под водой.
 
-Runs when: Evolved `nix` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, in water
+Когда срабатывает: Выросший `nix` при силе ≥ 0.9, сложность не «Мирная», смертельные события разрешены настройкой, игрок предупреждён событием уровня «грань», перерыв прошёл, игрок в воде
 
 ## `the_avenger`
 
-**Harmful, lethal band: can kill.**
-After a killing spree, a named avenger rises and hunts the player to the death. Beating it spends the spirit's anger.
+**Вредящее, уровень «смерть»: может убить.**
+После череды убийств встаёт именной мститель и охотится на игрока насмерть. Победа над ним гасит злость духа.
 
-Runs when: Evolved `revenant` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, a killing spree: `min_kills` fresh mob kills, and standing room for it
+Когда срабатывает: Выросший `revenant` при силе ≥ 0.9, сложность не «Мирная», смертельные события разрешены настройкой, игрок предупреждён событием уровня «грань», перерыв прошёл, череда убийств: `min_kills` недавних убийств мобов, и есть место для мстителя
 
 ## `hellring`
 
-**Harmful, lethal band: can kill.**
-A roar and a ring of fire that closes in over ten seconds. Whoever is still inside when it shuts burns to death.
+**Вредящее, уровень «смерть»: может убить.**
+Рёв и кольцо огня, которое смыкается десять секунд. Кто остаётся внутри, когда оно сомкнётся, сгорает заживо.
 
-Runs when: Evolved `demon` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown
+Когда срабатывает: Выросший `demon` при силе ≥ 0.9, сложность не «Мирная», смертельные события разрешены настройкой, игрок предупреждён событием уровня «грань», перерыв прошёл
 
 ## `the_double`
 
-**Harmful, lethal band: can kill.**
-A copy of the player walks up and kills with one touch. Three blows from the player drive it away.
+**Вредящее, уровень «смерть»: может убить.**
+Копия игрока подходит и убивает одним касанием. Три удара игрока прогоняют её.
 
-Runs when: Evolved `phantom` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown, standing room for the double
+Когда срабатывает: Выросший `phantom` при силе ≥ 0.9, сложность не «Мирная», смертельные события разрешены настройкой, игрок предупреждён событием уровня «грань», перерыв прошёл, есть место для двойника
 
 ## `foretold`
 
-**Harmful, lethal band: can kill.**
-A bell and a true omen in the journal: at dusk the spirit takes the player, unless they are in a bed or inside a ward by then.
+**Вредящее, уровень «смерть»: может убить.**
+Колокол и правдивое знамение в журнале: на закате дух заберёт игрока, если тот к этому времени не будет в постели или внутри оберега.
 
-Runs when: Evolved `banshee` at power ≥ 0.9, not peaceful, lethal setting allows it, warned by a brink event, off cooldown
+Когда срабатывает: Выросший `banshee` при силе ≥ 0.9, сложность не «Мирная», смертельные события разрешены настройкой, игрок предупреждён событием уровня «грань», перерыв прошёл

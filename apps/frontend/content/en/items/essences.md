@@ -4,7 +4,7 @@ title: Essences
 
 # Essences
 
-Each of the fifteen spirit types leaves one kind of essence, named for it: poltergeist, shade, nix, phantom, mimic, wraith, mara, banshee, revenant, lost one, domovoi, hoarder, demon, trickster and boggart.
+Each of the fifteen spirit types I know of leaves one kind of essence, named for it: poltergeist, shade, nix, phantom, mimic, wraith, mara, banshee, revenant, lost one, domovoi, hoarder, demon, trickster and boggart.
 
 ## Where they come from
 
@@ -20,14 +20,14 @@ The banishing is the altar ritual: an altar inside a closed salt loop, at least 
 
 ## Calling a type on purpose
 
-Some types are hard to meet by chance. Two ways to meet them:
+Some types are hard to meet by chance. There are two ways to meet them.
 
 ### The effigy
 
 A scarecrow stuffed with one essence, lit with flint and steel or a fire charge. It burns for half a night (12000 ticks) and then calls a spirit of that type.
 
 - **Craft:** scarecrow + candle + hallowed wax, shapeless. The scarecrow is carved pumpkin + hay block + 2 salt + stick, see [Scarecrow](/en/items/tools#scarecrow).
-- **Stuff it:** use an essence on it. Breaking it before it is lit gives the essence back.
+- **Stuffing:** an essence used on the effigy stuffs it. Breaking it before it is lit gives the essence back.
 - **Personal type:** born on the nearest player within 24 blocks of the effigy.
 - **Territorial type:** anchored where the effigy stood.
 - **It will not light** when the call could not be answered: the newest spirit is too young, the player already has all they can carry, or another territorial spirit is close. No essence is wasted.
@@ -41,11 +41,11 @@ A spirit is born when a deed is done or a structure is found, by chance and afte
 | Spirit | The deed | Chance |
 | --- | --- | --- |
 | Revenant | a slaughter: 24 points of kills within three minutes (a villager is worth 5) | 0.3 |
-| Revenant | killing your own tamed pet | 0.5 |
-| Lost one | dying 256 or more blocks from your spawn | 0.5 |
+| Revenant | killing the player's own tamed pet | 0.5 |
+| Lost one | dying 256 or more blocks from the spawn point | 0.5 |
 | Lost one | two days awake: no bed slept in | 0.3 |
-| Banshee | a tamed pet dying away from you | 0.5 |
-| Banshee | a villager or tamed animal dying within 16 blocks, not by your hand | 0.2 |
+| Banshee | a tamed pet dying away from the player | 0.5 |
+| Banshee | a villager or tamed animal dying within 16 blocks, not by the player's hand | 0.2 |
 
 **Territorial, by structure**
 
@@ -60,7 +60,7 @@ A spirit is born when a deed is done or a structure is found, by chance and afte
 | Hoarder | igloo, desert pyramid, jungle pyramid | 0.3 |
 | Domovoi | village | 0.1 |
 
-The journal's page for a type says where it is met once you have identified one.
+The journal's page for a type says where it is met once one has been identified.
 
 ## What to spend them on
 

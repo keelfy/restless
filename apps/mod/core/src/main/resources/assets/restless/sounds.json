@@ -53,16 +53,8 @@
     "subtitle": "subtitles.restless.whisper",
     "sounds": [
       {
-        "name": "restless:haunt/whisper_1"
-      },
-      {
-        "name": "restless:haunt/whisper_2"
-      },
-      {
-        "name": "restless:haunt/whisper_3"
-      },
-      {
-        "name": "restless:haunt/whisper_4"
+        "name": "restless:haunt.breath",
+        "type": "event"
       }
     ]
   },

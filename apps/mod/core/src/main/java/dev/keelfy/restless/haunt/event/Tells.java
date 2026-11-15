@@ -271,7 +271,7 @@ final class Tells {
                     particles(player, new DustParticleOptions(0xAA0000, 1.0f), base.add(0.0, dot * 0.1, 0.0), 0.0, 1);
                 }
             }
-            soundAt(player, SoundEvents.WITHER_AMBIENT, centre, id);
+            soundAt(player, HauntSounds.MOAN, centre, id);
         });
     }
 

@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.event.kit.Figure;
@@ -664,7 +665,7 @@ final class Ambushes {
     private static void vexSwarm(ServerPlayer player) {
         Config.Section config = Config.event(VEXES);
         ServerLevel level = player.level();
-        Nearby.sound(player, SoundEvents.VEX_CHARGE, player.position(), config.tone("sound"));
+        Nearby.sound(player, HauntSounds.MOAN, player.position(), config.tone("sound"));
         int pulse = config.integer("pulse_ticks");
         Scheduler.repeat(player, 0, pulse, (p, n) -> {
             if (n * pulse < config.integer("warn_ticks")) {

@@ -135,7 +135,7 @@ Runs when: Overworld, daytime
 
 ## `false_slot`
 
-Only this player's client is told that slot holds an item from a list of 25 (skulls and heads, bones, rotten flesh, spider eyes, a totem, disc 11 and more; a player head is their own). 20 s later, or at any click, the real slot comes back. Nothing on the server
+Only this player's client is told that slot holds an item from a list of 25 (skulls and heads, bones, rotten flesh, spider eyes, a totem, disc 11 and more; a player head is their own). 20 s later, or as soon as the player interacts with the inventory, the real slot comes back. Nothing on the server
 
 Runs when: An empty inventory or hotbar slot
 
@@ -550,7 +550,7 @@ Runs when: Underground, health above the safe floor and a margin, and standing r
 
 ## `overnight_shrine`
 
-A row of bone blocks with two skulls and lit candles on top and a sign with a few words in front. Phantom: only this player's client is told of it, the server keeps open ground, a click shows the real air; gone after 10 min (with the swaps setting `REAL` or under hardcore the bone, skulls and candles are real blocks, put back after the time or never under hardcore)
+A row of bone blocks with two skulls and lit candles on top and a sign with a few words in front. Phantom: only this player's client is told of it, the server keeps open ground, interacting with it shows the real air; gone after 10 min (with the swaps setting `REAL` or under hardcore the bone, skulls and candles are real blocks, put back after the time or never under hardcore)
 
 Runs when: Overworld; open ground for a 3×3 shrine 6–14 away; a sign text the spirit has not used
 

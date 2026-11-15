@@ -20,6 +20,7 @@ committed; `apps/voice/haunt_pack.py` cuts it and synthesises the generated note
 |---|---|---|---|---|---|---|
 | `haunt.song` | `song` (1, a 2nd as an alternative) | exactly 12 s | `spirit_song`: empty jukebox | Wordless humming, thin, a little off-key, as if from another room. Reads as music. | `haunt.moan` | OpenGameArt: no CC0 humming voice. **The owner supplies it** |
 | `haunt.lullaby` | `lullaby_note` (1) | 0.5–0.8 s, fade-out | `bedroom_lullaby` | One hummed "mm" or "la", soft and breathy, adult female. **Record at the melody's highest note** (it is played at 1.0×). The lowest notes are pitched an octave down, so the sample must survive that. | flute | OpenGameArt: no CC0 humming voice. **The owner supplies it** |
+| `haunt.whisper` | `whisper_1..4` | 1–3 s | `close_whispers`, `name_left_right`, `soul_sand_drag`, `counting_children`, `parrot_echo`, `restless:tell_whisperer` | Whispering too low to make out, one voice, close and dry (no reverb: it plays 1–3 blocks from the ear). `counting_children` pitches it up step by step, so it must survive that. | `haunt.breath` | The old `whisper_1..4` (Voices of Madness, eugeneloza) were removed on 2026-11-15. **The owner supplies it** |
 | `haunt.mirror_crack` | `mirror_crack_1..3` | 0.5–1.5 s | `restless:cracked_mirror` | A hairline crack slowly running across glass. No shatter. | glass hit | Only shatters found: `bfh1_glass_breaking_*` in [75 CC0 breaking / falling / hit sfx](https://opengameart.org/content/75-cc0-breaking-falling-hit-sfx) (rubberduck), and `Glass Shatter` in the owner's pack. Neither is a slow crack. **The owner supplies it** |
 
 ## Wired, not yet heard
@@ -64,6 +65,11 @@ moves the event back to the table above.
 - `spirit_horn`: `use_duration` in `data/restless/instrument/spirit_horn.json` is 6.0, the length of the horn files.
 - Config pitches that were tuned for the stand-ins are now 1.0 (`spirit_horn`, `claw_marks`, `rocking_chair`,
   `cracked_mirror`, `mirror_names`). Re-tune them by ear once the files are approved.
+- `haunt.heartbeat` (1.6 s) now also beats in `held_under`, `red_room`, `drain`, `suffocation`, `shadow`, `reaping`,
+  `night_terror` and the debt charm, where the warden heartbeat stood in. In `red_room`, `drain`, `shadow` and `reaping`
+  it repeats about once a second, so each beat overlaps the next: listen, and lengthen the beat interval if it is muddy.
+- Pitches of the other sounds swapped in on 2026-11-15 (`haunt.moan`, `haunt.screech`, `haunt.chain_rattle`,
+  `haunt.sting_roar` in place of wither, ghast, warden, vex and chain sounds) are 1.0. Re-tune by ear.
 - `cliff_faller` reuses the existing `haunt.cut_off_scream`, so it needs no new file.
 
 ## Optional, still vanilla

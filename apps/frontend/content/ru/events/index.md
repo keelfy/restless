@@ -1,23 +1,21 @@
 ---
-title: Events
+title: События
 ---
 
-# Events
+# События
 
-> Эта страница пока на английском: ивенты ещё не переведены.
+По моему счёту, дух способен на 782 поступка по отношению к игроку: 678 событий и 104 сценария (сценарий — короткая цепочка других событий, разыгрываемая как одно наваждение). Лёгкие события в большинстве своём лишь пугают; вредящие причиняют боль и становятся вероятнее по мере того, как дух взрослеет и злится.
 
-779 things a spirit can do to you: 678 events and 104 scenarios (a scenario is a short script of other events, played as one haunt). Light events are mostly a scare; harmful events hurt, and become more likely as a spirit grows older and angrier.
-
-- [Lights](/ru/events/lights) (19)
-- [Doors](/ru/events/doors) (45)
-- [Affliction](/ru/events/affliction) (26)
-- [Assault](/ru/events/assault) (65)
-- [Sound](/ru/events/sound) (85)
-- [Water](/ru/events/water) (8)
-- [Mobs](/ru/events/mobs) (103)
-- [Items](/ru/events/items) (42)
-- [Blocks](/ru/events/blocks) (115)
-- [Presence](/ru/events/presence) (99)
-- [Scenarios](/ru/events/scenarios) (104)
-- [Signatures](/ru/events/signatures) (46)
-- [Tells](/ru/events/tells) (24)
+- [Свет](/ru/events/lights) (19)
+- [Двери](/ru/events/doors) (45)
+- [Недуги](/ru/events/affliction) (26)
+- [Нападения](/ru/events/assault) (65)
+- [Звуки](/ru/events/sound) (85)
+- [Вода](/ru/events/water) (8)
+- [Мобы](/ru/events/mobs) (103)
+- [Предметы](/ru/events/items) (42)
+- [Блоки](/ru/events/blocks) (115)
+- [Присутствие](/ru/events/presence) (100)
+- [Сценарии](/ru/events/scenarios) (104)
+- [Знаковые](/ru/events/signatures) (46)
+- [Приметы](/ru/events/tells) (24)

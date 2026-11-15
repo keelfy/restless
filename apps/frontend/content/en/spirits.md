@@ -4,11 +4,11 @@ title: Spirits
 
 # Spirits
 
-Every player is haunted by personal spirits. A spirit's type decides which events it favors most, so watching the events tells you who is near you. Besides personal spirits, there are territorial ones, bound to a place.
+As I came to learn, every player is haunted by personal spirits. A spirit's type decides which events it favors most, so the events show who is near. Besides personal spirits, there are territorial ones, bound to a place.
 
-How age, anger and power make a spirit act, see [How it works](/en/how-it-works).
+How age, anger and power make a spirit act is described in [How it works](/en/how-it-works).
 
-To tell which one is near you, keep it off or banish it, see [Tools](/en/items/tools).
+How to tell which one is near, keep it off or banish it is described in [Tools](/en/items/tools).
 
 ## Personal
 
@@ -22,7 +22,7 @@ Quiet and oppressive. Snuffs lights, whispers and afflicts, turns violent as its
 - Avoids: doors ×0.3, items ×0.5
 - Activity: 0.8
 - Nature: usually Darkness (60%), each of the other three 13%
-- Signature events: `shade_gathered`, `shade_glance`, `shade_room`, see [Signatures](/en/events/signatures).
+- Signature events: `shade_gathered`, `shade_glance`, `shade_room`, described in [Signatures](/en/events/signatures).
 
 ### Phantom
 
@@ -32,7 +32,7 @@ Likes to be seen, as other players: far-off strangers, a name in the player list
 - Avoids: doors ×0.5, lights ×0.5, afflictions ×0.5, items ×0.5, assaults ×0.3
 - Activity: 1.0
 - Nature: usually Deceit (60%), each of the other three 13%
-- Signature events: `phantom_self_join`, `phantom_rerun`, `phantom_home`, see [Signatures](/en/events/signatures).
+- Signature events: `phantom_self_join`, `phantom_rerun`, `phantom_home`, described in [Signatures](/en/events/signatures).
 
 ### Mimic
 
@@ -42,7 +42,7 @@ Fakes things: blocks that are not there, strangers, mobs that vanish.
 - Avoids: lights ×0.5, doors ×0.5, assaults ×0.5
 - Activity: 1.0
 - Nature: usually Deceit (60%), each of the other three 13%
-- Signature events: `mimic_voice`, `mimic_parrot`, `mimic_chest`, see [Signatures](/en/events/signatures).
+- Signature events: `mimic_voice`, `mimic_parrot`, `mimic_chest`, described in [Signatures](/en/events/signatures).
 
 ### Wraith
 
@@ -52,7 +52,7 @@ Hunts in the dark: snuffs lights and hurts.
 - Avoids: doors ×0.5, blocks ×0.5, items ×0.3
 - Activity: 2.0 in the dark (`when: dark`), 1 elsewhere
 - Nature: usually Darkness (60%), each of the other three 13%
-- Signature events: `wraith_taken`, `wraith_steps`, `wraith_edge`, see [Signatures](/en/events/signatures).
+- Signature events: `wraith_taken`, `wraith_steps`, `wraith_edge`, described in [Signatures](/en/events/signatures).
 
 ### Mara
 
@@ -62,7 +62,7 @@ Rides the sleeper: afflictions and presence at night, may act when the player us
 - Avoids: doors ×0.5, items ×0.3, blocks ×0.3
 - Activity: 1.8 at night (`when: night`), 1 by day
 - Nature: usually Deceit (60%), each of the other three 13%
-- Signature events: `mara_dream`, `mara_stolen_rest`, `mara_weight`, see [Signatures](/en/events/signatures).
+- Signature events: `mara_dream`, `mara_stolen_rest`, `mara_weight`, described in [Signatures](/en/events/signatures).
 
 ### Banshee
 
@@ -72,7 +72,7 @@ A voice: mostly sounds, rarely touches anything.
 - Avoids: doors ×0.5, items ×0.3, blocks ×0.3, assaults ×0.3
 - Activity: 0.9
 - Nature: usually Malice (60%), each of the other three 13%
-- Signature events: `banshee_letter`, `banshee_gift`, `banshee_serenade`, `banshee_jealous`, see [Signatures](/en/events/signatures).
+- Signature events: `banshee_letter`, `banshee_gift`, `banshee_serenade`, `banshee_jealous`, described in [Signatures](/en/events/signatures).
 
 ### Revenant
 
@@ -82,7 +82,7 @@ Vengeful: hurts and sends mobs, may act after the player kills a mob (`reacts: k
 - Avoids: lights ×0.5, doors ×0.3, items ×0.3
 - Activity: 1.0
 - Nature: usually Malice (60%), each of the other three 13%
-- Signature events: `revenant_ledger`, `revenant_tally`, `revenant_rises`, see [Signatures](/en/events/signatures).
+- Signature events: `revenant_ledger`, `revenant_tally`, `revenant_rises`, described in [Signatures](/en/events/signatures).
 
 ### Lost one
 
@@ -92,17 +92,17 @@ Wanders: figures, strangers and steps, may act when the player goes below y 0 (`
 - Avoids: blocks ×0.5, items ×0.5, assaults ×0.2
 - Activity: 0.9
 - Nature: usually Darkness (60%), each of the other three 13%
-- Signature events: `lost_one_sign`, `lost_one_wanderer`, `lost_one_death_path`, see [Signatures](/en/events/signatures).
+- Signature events: `lost_one_sign`, `lost_one_wanderer`, `lost_one_death_path`, described in [Signatures](/en/events/signatures).
 
 ### Boggart
 
-Illusions that disgust: swarms of tiny spiders and silverfish that only you see, running at you.
+Illusions that disgust: swarms of tiny spiders and silverfish that only the player sees, running straight at them.
 
 - Favors: mobs ×3, presence ×3, sounds ×2, blocks ×1.5, lights ×1
 - Avoids: afflictions ×0.5, assaults ×0.3, doors ×0.3, items ×0.3
 - Activity: 1.1
 - Nature: usually Darkness (60%), each of the other three 13%
-- Signature events: `boggart_spiders`, `boggart_crawl`, `boggart_silverfish`, see [Signatures](/en/events/signatures).
+- Signature events: `boggart_spiders`, `boggart_crawl`, `boggart_silverfish`, described in [Signatures](/en/events/signatures).
 
 ## Territorial
 
@@ -116,17 +116,17 @@ Noisy and physical. Mostly messes with doors and belongings; rarely hurts at fir
 - Avoids: afflictions ×0.5, assaults ×0.5, sounds ×0.5, presence ×0.5
 - Activity: 1.3
 - Nature: usually Objects (60%), each of the other three 13%
-- Signature events: `poltergeist_toss`, `poltergeist_play`, `poltergeist_tantrum`, see [Signatures](/en/events/signatures).
+- Signature events: `poltergeist_toss`, `poltergeist_play`, `poltergeist_tantrum`, described in [Signatures](/en/events/signatures).
 
 ### Nix
 
-Territorial, bound to water. Keeps swimmers under, calls players to the water, kills fish and breaks boats. Place it by a lake or the sea with `/haunt spirit add nix` while standing there.
+Territorial, bound to water. Keeps swimmers under, calls players to the water, kills fish and breaks boats. It can be placed by a lake or the sea with `/haunt spirit add nix` while standing there.
 
 - Favors: water ×8
 - Avoids: assaults ×0.5, sounds ×0.5, blocks ×0.3, presence ×0.3
 - Activity: 1.0
 - Nature: usually Malice (60%), each of the other three 13%
-- Signature events: `nix_catch`, `nix_call`, `nix_returns`, see [Signatures](/en/events/signatures).
+- Signature events: `nix_catch`, `nix_call`, `nix_returns`, described in [Signatures](/en/events/signatures).
 
 ### Domovoi
 
@@ -136,7 +136,7 @@ Territorial house spirit: doors, belongings and household noises, hardly harmful
 - Avoids: mobs ×0.5, afflictions ×0.3, assaults ×0.2
 - Activity: 0.7
 - Nature: usually Objects (60%), each of the other three 13%
-- Signature events: `domovoi_supper`, `domovoi_hearth`, `domovoi_tidy`, see [Signatures](/en/events/signatures).
+- Signature events: `domovoi_supper`, `domovoi_hearth`, `domovoi_tidy`, described in [Signatures](/en/events/signatures).
 
 ### Hoarder
 
@@ -146,7 +146,7 @@ Territorial: takes and moves items.
 - Avoids: lights ×0.5, presence ×0.5, assaults ×0.3
 - Activity: 1.2
 - Nature: usually Objects (60%), each of the other three 13%
-- Signature events: `hoarder_payment`, `hoarder_shiny`, `hoarder_nest`, see [Signatures](/en/events/signatures).
+- Signature events: `hoarder_payment`, `hoarder_shiny`, `hoarder_nest`, described in [Signatures](/en/events/signatures).
 
 ### Demon
 
@@ -156,7 +156,7 @@ Territorial and dangerous: assaults, afflictions and mobs.
 - Avoids: doors ×0.5, items ×0.5
 - Activity: 1.1
 - Nature: usually Malice (60%), each of the other three 13%
-- Signature events: `demon_offer`, `demon_trail`, `demon_contract`, see [Signatures](/en/events/signatures).
+- Signature events: `demon_offer`, `demon_trail`, `demon_contract`, described in [Signatures](/en/events/signatures).
 
 ### Trickster
 
@@ -166,15 +166,15 @@ Territorial prankster: changes blocks and items, shows things.
 - Avoids: assaults ×0.2
 - Activity: 1.2
 - Nature: usually Deceit (60%), each of the other three 13%
-- Signature events: `trickster_gift`, `trickster_dig`, `trickster_dud`, see [Signatures](/en/events/signatures).
+- Signature events: `trickster_gift`, `trickster_dig`, `trickster_dud`, described in [Signatures](/en/events/signatures).
 
 ## Meeting a type
 
-Each type shows up in its own way, and the journal's bestiary page says how once you have a photograph of one. A banshee comes when a villager or a pet dies before you, a lost one when you die far from home or go two days awake, a revenant after a slaughter or the killing of your own pet. Territorial spirits are born with structures.
+Each type shows up in its own way, and the journal's bestiary page says how once the player has a photograph of one. A banshee comes when a villager or a pet dies before the player's eyes, a lost one when the player dies far from home or goes two days awake, a revenant after a slaughter or the killing of the player's own pet. Territorial spirits are born with structures.
 
-An old thing from a ruin may bring something home. Now and then a structure chest holds an ordinary-looking item (a clock, spyglass, bell, lantern, amethyst shard or gold nugget) that carries a personal spirit. Nothing marks it. The first time you hold it, a random personal type binds to you, as after a deed: the usual cooldown and the limit of three personal spirits apply, and if they refuse, nothing is born and the item is plain from then on.
+An old thing from a ruin may bring something home. Now and then a structure chest holds an ordinary-looking item (a clock, spyglass, bell, lantern, amethyst shard or gold nugget) that carries a personal spirit. Nothing marks it. The first time the player holds it, a random personal type binds to them, as after a deed: the usual cooldown and the limit of three personal spirits apply, and if they refuse, nothing is born and the item is plain from then on.
 
-An **effigy** calls any type on purpose: stuff it with one essence of that type and light it. See [Essences](/en/items/essences#the-effigy).
+An **effigy** calls any type on purpose: it is stuffed with one essence of that type and lit. Described in [Essences](/en/items/essences#the-effigy).
 
 ## Rewards
 
@@ -197,6 +197,6 @@ Banishing a spirit at an altar leaves one of its essence, and one more if it had
 | Demon | [Bargain](/en/items/charms#demon-bargain) | [Infernal Contract](/en/items/consumables#demon-infernal-contract) |
 | Trickster | [Trickster's Coin](/en/items/charms#trickster-tricksters-coin) | [Changeling Dust](/en/items/consumables#trickster-changeling-dust) |
 
-Collect one essence of every type in a [Reliquary](/en/items/requiem#the-reliquary) and sing the [Requiem](/en/items/requiem): the last reward releases you from your personal spirits for good, and the Requiem Bell can give it back.
+Once one essence of every type is collected in a [Reliquary](/en/items/requiem#the-reliquary) and the [Requiem](/en/items/requiem) is sung, the last reward releases the player from personal spirits for good, and the Requiem Bell can give it back.
 
-See [Items](/en/items) for how they work, [Advanced charms](/en/items/advanced) for what two essences make, [Relics](/en/items/relics) for what three make, and [Essences](/en/items/essences) for where each type is met.
+How they work is described in [Items](/en/items), what two essences make in [Advanced charms](/en/items/advanced), what three make in [Relics](/en/items/relics), and where each type is met in [Essences](/en/items/essences).

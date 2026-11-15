@@ -204,7 +204,7 @@ Runs when: An experience orb within 8
 
 ## `hand_drop`
 
-The item in the main hand falls out of it, as if the drop key was pressed
+The item in the main hand falls out of it, as if the player had dropped it
 
 Runs when: Something in the main hand
 
@@ -254,15 +254,15 @@ Runs when: An ender pearl in the inventory
 
 ## `whispering_item`
 
-The item in your hand gains the Curse of the Restless and whispers now and then while held; the curse is lifted after 3 min (stays under hardcore)
+The item in the player's hand gains the Curse of the Restless and whispers now and then while held; the curse is lifted after 3 min (stays under hardcore)
 
-Runs when: You hold an item without the curse
+Runs when: The player holds an item without the curse
 
 ## `hollow_trim`
 
 A worn piece of armor shows a hollow trim for 2 min (stays under hardcore)
 
-Runs when: You wear trimmable armor with no trim
+Runs when: The player wears trimmable armor with no trim
 
 ## `photo_figure`
 
