@@ -1,176 +1,174 @@
 ---
-title: Affliction
+title: Недуги
 ---
 
-# Affliction
+# Недуги
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-26 events.
+Событий: 26.
 
 ## `blindness`
 
-Blindness for 6 s and a low cave ambient sound
+Игрок слепнет на 6 с, и слышится призрачный стон.
 
-Runs when: Player is not already blind
+Когда срабатывает: игрок ещё не ослеплён.
 
 ## `nausea`
 
-Nausea 5 s
+Игрока тошнит в течение 5 с.
 
-Runs when: No nausea
+Когда срабатывает: у игрока нет тошноты.
 
 ## `heaviness`
 
-Slowness II 8 s
+На игрока накладывается Замедление II на 8 с.
 
-Runs when: No slowness
+Когда срабатывает: у игрока нет замедления.
 
 ## `fatigue`
 
-Mining fatigue II 10 s
+На игрока накладывается Утомление II на 10 с.
 
-Runs when: No mining fatigue
+Когда срабатывает: у игрока нет утомления.
 
 ## `hunger_pang`
 
-−3 food points
+Игрок теряет 3 единицы сытости.
 
-Runs when: Food > 3 bars
+Когда срабатывает: сытость игрока больше 3 делений.
 
 ## `darkness`
 
-Darkness 6 s
+На игрока накладывается Тьма на 6 с.
 
-Runs when: No darkness
+Когда срабатывает: у игрока нет тьмы.
 
 ## `shudder`
 
-Small random shove
+Игрока слегка толкает в случайную сторону.
 
-Runs when: Always
+Когда срабатывает: в любой момент.
 
 ## `poison`
 
-**Harmful.**
-Poison 5 s (cannot kill)
+**Вредящее событие.**
+Игрок отравлен на 5 с, но убить это отравление не может.
 
-Runs when: Not poisoned
+Когда срабатывает: игрок не отравлен.
 
 ## `weakness`
 
-**Harmful.**
-Weakness 30 s
+**Вредящее событие.**
+На игрока накладывается Слабость на 30 с.
 
-Runs when: No weakness
+Когда срабатывает: у игрока нет слабости.
 
 ## `levitation`
 
-**Harmful.**
-Levitation 2 s, then the fall
+**Вредящее событие.**
+Игрок левитирует 2 с, а затем падает.
 
-Runs when: No levitation
+Когда срабатывает: у игрока нет левитации.
 
 ## `frostbite`
 
-**Harmful.**
-Powder-snow freeze for about 3 s
+**Вредящее событие.**
+Игрок замерзает, как от рыхлого снега, примерно 3 с.
 
-Runs when: Health > 3 hearts, not freezing
+Когда срабатывает: здоровье игрока больше 3 сердец, и он не замерзает.
 
 ## `drained`
 
-**Harmful.**
-Loses 5–14 XP points
+**Вредящее событие.**
+Игрок теряет 5–14 очков опыта.
 
-Runs when: Player has XP
+Когда срабатывает: у игрока есть опыт.
 
 ## `bad_luck`
 
-**Harmful.**
-Bad luck 5 min
+**Вредящее событие.**
+На игрока накладывается Невезение на 5 мин.
 
-Runs when: No bad luck
+Когда срабатывает: у игрока нет невезения.
 
 ## `sanity_crash`
 
-**Harmful.**
-Takes 90 points off the sanity bar (of 100), never below 0, on top of the 4 points every event costs. Creative and spectator players are untouched
+**Вредящее событие.**
+Событие снимает 90 очков со шкалы рассудка (из 100), но не ниже 0, сверх 4 очков, которые стоит каждое событие. Игроков в творческом режиме и режиме наблюдателя это не затрагивает.
 
-Runs when: Not creative or spectator, and sanity above 0
+Когда срабатывает: игрок не в творческом режиме и не в режиме наблюдателя, а его рассудок выше 0.
 
 ## `sanity_drain`
 
-**Harmful.**
-Takes a random 10 to 25 points off the sanity bar (of 100), never below 0, on top of the 4 points every event costs. Creative and spectator players are untouched
+**Вредящее событие.**
+Событие снимает случайные 10–25 очков со шкалы рассудка (из 100), но не ниже 0, сверх 4 очков, которые стоит каждое событие. Игроков в творческом режиме и режиме наблюдателя это не затрагивает.
 
-Runs when: Not creative or spectator, and sanity above 0
+Когда срабатывает: игрок не в творческом режиме и не в режиме наблюдателя, а его рассудок выше 0.
 
 ## `insomnia`
 
-**Harmful.**
-The player's "time since rest" is set to 144000 (past three days), so phantoms come the next night; sleeping resets it
+**Вредящее событие.**
+Значение «времени с последнего отдыха» игрока устанавливается в 144000 (больше трёх суток), поэтому фантомы прилетают следующей ночью. Сон сбрасывает это значение.
 
-Runs when: Not peaceful, fewer than 144000 ticks since rest
+Когда срабатывает: сложность не мирная, а с последнего отдыха игрока прошло меньше 144000 тиков.
 
 ## `dream`
 
-On the next waking (within 1 h) a line in chat and the journal: a nearby spirit's story ("who drowned in a flooded cave") or one of its traits
+При следующем пробуждении (в течение 1 ч) в чате и в журнале появляется строка с историей находящегося рядом духа («который утонул в затопленной пещере») или с одной из его черт.
 
-Runs when: A spirit senses the player, and no dream is waiting
+Когда срабатывает: дух чувствует игрока, и никакой сон не ожидается.
 
 ## `sleepwalk`
 
-**Harmful.**
-On the next waking after at least 5 s in bed (within 1 h) the player is moved to standing room 4–20 blocks away (solid floor, not magma, no lava next to it), outdoors if one of 4 tries finds sky
+**Вредящее событие.**
+При следующем пробуждении (в течение 1 ч), если игрок пролежал в постели не меньше 5 с, его перемещает на место, где можно встать, в 4–20 блоках (твёрдый пол, не магма, рядом нет лавы). Место окажется на открытом воздухе, если одна из 4 попыток найдёт небо.
 
-Runs when: No walk is waiting
+Когда срабатывает: никакая прогулка не ожидается.
 
 ## `ravenous`
 
-Hunger II for 20 s
+На игрока накладывается Голод II на 20 с.
 
-Runs when: No hunger effect
+Когда срабатывает: у игрока нет эффекта голода.
 
 ## `infested`
 
-**Harmful.**
-Infested for 30 s: silverfish come out when the player is hurt
+**Вредящее событие.**
+Игрок заражён на 30 с, и каждый раз, когда он получает урон, выползают чешуйницы.
 
-Runs when: No infested effect
+Когда срабатывает: у игрока нет эффекта заражения.
 
 ## `oozing`
 
-Oozing for 30 s: slimes spill out if the player dies
+На игрока действует Слизь в течение 30 с, и если он умирает, растекаются слизни.
 
-Runs when: No oozing effect
+Когда срабатывает: у игрока нет эффекта слизи.
 
 ## `weaving`
 
-Weaving for 30 s: cobwebs form if the player dies
+На игрока действует Плетение в течение 30 с, и если он умирает, образуется паутина.
 
-Runs when: No weaving effect
+Когда срабатывает: у игрока нет эффекта плетения.
 
 ## `drift`
 
-For 3 s a small push each tick in one random direction, as by a current
+В течение 3 с игрока каждый тик слегка подталкивает в одном случайном направлении, как течением.
 
-Runs when: On the ground
+Когда срабатывает: игрок стоит на земле.
 
 ## `false_wound`
 
-The client is told health is 4 hearts lower (never below 1 heart) for 1.5 s, then the real value
+Клиенту сообщают, что здоровье на 4 сердца меньше (но не ниже 1 сердца), на 1.5 с, а затем снова показывают настоящее значение.
 
-Runs when: Health above 1 heart
+Когда срабатывает: здоровье игрока выше 1 сердца.
 
 ## `false_hearts`
 
-The client shows wither or poison for 5 s; the server has no effect
+Клиент показывает иссушение или отравление на 5 с, а на сервере эффекта нет.
 
-Runs when: No wither or poison
+Когда срабатывает: у игрока нет иссушения и отравления.
 
 ## `false_hunger`
 
-The client is told the food bar is empty for 2 s
+Клиенту сообщают, что шкала сытости пуста, на 2 с.
 
-Runs when: Always
+Когда срабатывает: в любой момент.

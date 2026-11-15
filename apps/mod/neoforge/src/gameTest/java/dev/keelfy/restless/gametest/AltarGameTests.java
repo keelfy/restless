@@ -45,13 +45,34 @@ public final class AltarGameTests {
 
     public AltarGameTests(IEventBus bus) {
         AshGameTests.register(TESTS);
+        CalendarGameTests.register(TESTS);
         DreamcatcherGameTests.register(TESTS);
+        WeaknessGameTests.register(TESTS);
+        LeaningGameTests.register(TESTS);
+        TellGameTests.register(TESTS);
+        VeilGameTests.register(TESTS);
+        ToolGameTests.register(TESTS);
+        AppeaseGameTests.register(TESTS);
+        FormGameTests.register(TESTS);
+        InterrogationGameTests.register(TESTS);
+        MergeGameTests.register(TESTS);
+        HiddenGameTests.register(TESTS);
+        HarshGameTests.register(TESTS);
         LanternGameTests.register(TESTS);
         HeldLightGameTests.register(TESTS);
         HauntEventGameTests.register(TESTS);
         HardcoreGameTests.register(TESTS);
         JournalGameTests.register(TESTS);
         RitualGameTests.register(TESTS);
+        RitualGameTests.registerPhases(TESTS);
+        RitualGameTests.registerRing(TESTS);
+        RitualGameTests.registerName(TESTS);
+        RitualGameTests.registerHallow(TESTS);
+        RitualGameTests.registerSecond(TESTS);
+        RitualGameTests.registerTwofold(TESTS);
+        RitualGameTests.registerGaze(TESTS);
+        RitualGameTests.registerNatures(TESTS);
+        EchoGameTests.register(TESTS);
         CharmGameTests.register(TESTS);
         CharmGameTests.registerRebalance(TESTS);
         AdvancedCharmGameTests.register(TESTS);
@@ -64,11 +85,18 @@ public final class AltarGameTests {
         ScenarioGameTests.register(TESTS);
         SignatureGameTests.register(TESTS);
         FaultGameTests.register(TESTS);
+        TelemetryGameTests.register(TESTS);
+        UndoLogGameTests.register(TESTS);
+        TerrainRollGameTests.register(TESTS);
         ScaleGameTests.register(TESTS);
         SettingsGameTests.register(TESTS);
         TagGameTests.register(TESTS);
         ScareGameTests.register(TESTS);
         SpiritBoxGameTests.register(TESTS);
+        SaltGameTests.register(TESTS);
+        BlessingGameTests.register(TESTS);
+        GraveGameTests.register(TESTS);
+        BodyGameTests.register(TESTS);
         TESTS.put("placement", helper -> {
             place(helper);
             check(
@@ -280,6 +308,10 @@ public final class AltarGameTests {
             // Hardcore is one switch for the whole server, so the tests that need it run in a batch of their own.
             var hardcore = event.registerEnvironment(id("hardcore"));
             var smoke = event.registerEnvironment(id("smoke"));
+            // Tests that time themselves on the wall clock run alone: a batch's other tests keep the light and chunk
+            // threads busy, and those take the CPU from the server thread.
+            var timing = event.registerEnvironment(id("timing"));
+            var timed = java.util.Set.of(ScaleGameTests.MANY, TerrainRollGameTests.TIMED);
             TESTS.forEach((name, test) -> event.registerTest(
                     id(name),
                     new FunctionGameTestInstance(
@@ -287,7 +319,9 @@ public final class AltarGameTests {
                             new TestData<>(
                                     HardcoreGameTests.BATCH.contains(name)
                                             ? hardcore
-                                            : FaultGameTests.BATCH.contains(name) ? smoke : environment,
+                                            : FaultGameTests.BATCH.contains(name)
+                                                    ? smoke
+                                                    : timed.contains(name) ? timing : environment,
                                     net.minecraft.world.level.Level.OVERWORLD,
                                     id("empty"),
                                     HauntEventGameTests.TIMEOUT.getOrDefault(name, 40),

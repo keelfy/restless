@@ -2,18 +2,22 @@ package dev.keelfy.restless.haunt;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.state.HauntData;
 import dev.keelfy.restless.state.Session;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Puts back what a haunt event changed. Entries live in memory: they run when due, and all at once when the server
- * stops, so a clean shutdown never leaves a changed world behind. After a crash the changes stay.
+ * stops, so a clean shutdown never leaves a changed world behind. Block swaps are also saved in {@link HauntData}, so
+ * after a crash they are put back on the next start; other cleanup (figures, doubles) is lost in a crash.
  */
 public final class Restore {
     /** Undoes one change. */
@@ -28,6 +32,9 @@ public final class Restore {
     private static final class Entry {
         final Undo undo;
         final HauntContext context = HauntContext.capture();
+        /** The saved record of a block undo; null for one that lives in memory only. */
+        HauntData.@Nullable Undo saved;
+
         long due;
 
         Entry(Undo undo, long due) {
@@ -43,6 +50,8 @@ public final class Restore {
     }
 
     private static final List<Entry> PENDING = Session.SERVER.keep(new ArrayList<>());
+    /** One element once the saved undos have been picked up for this server session. */
+    private static final List<Boolean> RESUMED = Session.SERVER.keep(new ArrayList<>());
 
     private Restore() {}
 
@@ -74,22 +83,75 @@ public final class Restore {
      * meanwhile.
      */
     public static void swap(ServerLevel level, BlockPos pos, BlockState to, int delay) {
+        if (Hardcore.on(level)) {
+            quiet(level, pos, to);
+            return;
+        }
         BlockPos at = pos.immutable();
         BlockState from = level.getBlockState(at);
         quiet(level, at, to);
-        revert(level, delay, force -> {
-            if (!force && !level.isLoaded(at)) {
-                return false;
+        MinecraftServer server = level.getServer();
+        HauntData data = HauntData.get(server);
+        var undo = new HauntData.Undo(
+                GlobalPos.of(level.dimension(), at),
+                from,
+                to,
+                server.overworld().getGameTime() + delay);
+        data.addUndo(undo);
+        schedule(server, data, undo, delay);
+    }
+
+    /** Queues the undo of a saved block change; it leaves the saved list when it has run. */
+    private static void schedule(MinecraftServer server, HauntData data, HauntData.Undo undo, long delay) {
+        Entry entry = new Entry(
+                force -> {
+                    ServerLevel level = server.getLevel(undo.at().dimension());
+                    BlockPos at = undo.at().pos();
+                    if (level != null) {
+                        if (!force && !level.isLoaded(at)) {
+                            return false;
+                        }
+                        if (level.getBlockState(at) == undo.to()) {
+                            quiet(level, at, undo.from());
+                        }
+                    }
+                    data.removeUndo(undo);
+                    return true;
+                },
+                server.getTickCount() + delay);
+        entry.saved = undo;
+        PENDING.add(entry);
+    }
+
+    /**
+     * Picks up the block undos saved by an earlier session (once per session): a due one runs on the next tick, the
+     * rest wait out what is left. Saved as game time, since the tick count starts again at every start.
+     */
+    private static void resume(MinecraftServer server) {
+        if (RESUMED.isEmpty()) {
+            RESUMED.add(true);
+            resume(server, HauntData.get(server));
+        }
+    }
+
+    /** Queues every saved undo of {@code data} that no live entry already holds. */
+    public static void resume(MinecraftServer server, HauntData data) {
+        long now = server.overworld().getGameTime();
+        for (HauntData.Undo undo : data.undos()) {
+            if (PENDING.stream().noneMatch(e -> e.saved == undo)) {
+                schedule(server, data, undo, Math.max(0L, undo.due() - now));
             }
-            if (level.getBlockState(at) == to) {
-                quiet(level, at, from);
-            }
-            return true;
-        });
+        }
+    }
+
+    /** For tests: loses the pending entry of {@code undo} as a crash would, without undoing it. */
+    public static void lose(HauntData.Undo undo) {
+        PENDING.removeIf(e -> e.saved == undo);
     }
 
     /** Call once per server tick. */
     public static void tick(MinecraftServer server) {
+        resume(server);
         if (PENDING.isEmpty()) {
             return;
         }

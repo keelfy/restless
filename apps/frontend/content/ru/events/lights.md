@@ -1,125 +1,123 @@
 ---
-title: Lights
+title: Свет
 ---
 
-# Lights
+# Свет
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-19 events.
+Событий: 19.
 
 ## `extinguish_light`
 
-Snuffs a lit candle; a torch is knocked off and drops as an item
+Зажжённая свеча гаснет, а факел сбивается и выпадает предметом.
 
-Runs when: A lit candle or a torch / soul torch (floor or wall) is within 10 blocks
+Когда срабатывает: в пределах 10 блоков есть зажжённая свеча либо факел или факел душ (на полу или на стене).
 
 ## `held_light_out`
 
-The torch or lantern stack in one hand goes out: the whole stack becomes its unlit item, with a fire hiss (volume 0.6, pitch 1.4). One hand at random if both hold one
+Стак факелов или фонарей в одной руке гаснет: весь стак превращается в свой незажжённый вариант, с шипением огня (громкость 0.6, высота тона 1.4). Если такой стак лежит в обеих руках, выбирается одна случайная.
 
-Runs when: A torch or lantern in either hand that can be snuffed
+Когда срабатывает: в любой руке есть факел или фонарь, который можно погасить.
 
 ## `candles_out`
 
-Every lit candle within 10 blocks goes out. A faint dark haze hangs for 2 s where each candle was.
+Каждая зажжённая свеча в пределах 10 блоков гаснет. На 2 с на месте каждой свечи повисает слабая тёмная дымка.
 
-Runs when: A lit candle within 10 blocks
+Когда срабатывает: в пределах 10 блоков есть зажжённая свеча.
 
 ## `torch_chain`
 
-Up to 8 torches knock off one by one, every 0.3 s, nearest to the player last
+До 8 факелов сбиваются один за другим, каждые 0.3 с, причём ближайший к игроку сбивается последним.
 
-Runs when: A torch within 10
+Когда срабатывает: в пределах 10 блоков есть факел.
 
 ## `torches_behind`
 
-Up to 8 torches behind the player's facing turn unlit one by one, every 0.75 s, farthest first; relit after 2 min unless changed (hardcore: stay out)
+До 8 факелов позади игрока (относительно направления его взгляда) гаснут один за другим, каждые 0.75 с, начиная с самого дальнего. Через 2 мин они снова загораются, если их тем временем не изменили (в режиме хардкор остаются погасшими).
 
-Runs when: Underground, a torch within 16 behind the player
+Когда срабатывает: игрок находится под землёй, а в пределах 16 блоков позади него есть факел.
 
 ## `lamp_off`
 
-Switches it off for 1 s, back on if still powered
+Лампа выключается на 1 с и снова включается, если на неё всё ещё подаётся сигнал.
 
-Runs when: A lit redstone lamp within 10
+Когда срабатывает: в пределах 10 блоков есть горящая редстоуновая лампа.
 
 ## `lantern_flicker`
 
-Out and back on three times in 1.2 s, ends in place (stays out in hardcore)
+Фонарь трижды гаснет и загорается за 1.2 с, а потом остаётся на месте (в режиме хардкор остаётся погасшим).
 
-Runs when: A lantern or soul lantern within 10
+Когда срабатывает: в пределах 10 блоков есть фонарь или фонарь душ.
 
 ## `campfire_out`
 
-Snuffs one campfire
+Один костёр гаснет.
 
-Runs when: A lit campfire within 10
+Когда срабатывает: в пределах 10 блоков есть горящий костёр.
 
 ## `furnace_dies`
 
-The fire goes out and the fuel is taken out for 5 s, then returned (dropped if the slot was filled meanwhile or the furnace is gone)
+Огонь гаснет, а топливо убирается на 5 с, после чего возвращается (или выпадает, если слот тем временем заполнили или печи уже нет).
 
-Runs when: A burning furnace, blast furnace or smoker within 10 with fuel in the fuel slot
+Когда срабатывает: в пределах 10 блоков есть горящая печь, плавильная печь или коптильня с топливом в слоте топлива.
 
 ## `dimming`
 
-The player's view fades toward black over 9 s (peak 80%) and back over 6 s; client-side overlay under the HUD, no block or light level changes
+Поле зрения игрока темнеет почти до чёрного за 9 с (пик 80%) и возвращается за 6 с. Это накладка на стороне клиента под интерфейсом; блоки и освещённость не меняются.
 
-Runs when: Always
+Когда срабатывает: в любой момент.
 
 ## `blinking`
 
-The dimming overlay, 3–6 quick cycles (0.15 s down, 0.2 s held at 95%, 0.25 s up)
+Та же накладка затемнения, но в виде 3–6 быстрых циклов: затемнение за 0.15 с, удержание на 95% в течение 0.2 с и возвращение за 0.25 с.
 
-Runs when: Always
+Когда срабатывает: в любой момент.
 
 ## `candles_light`
 
-Lights one candle
+Одна свеча зажигается.
 
-Runs when: An unlit candle within 10
+Когда срабатывает: в пределах 10 блоков есть незажжённая свеча.
 
 ## `new_face`
 
-Turns it to face another way
+Светильник Джека поворачивается в другую сторону.
 
-Runs when: A jack o'lantern within 10
+Когда срабатывает: в пределах 10 блоков есть светильник Джека.
 
 ## `blackout`
 
-**Harmful.**
-Torches break, candles, campfires and lit lamps within 16 go out; 0.75 s later a zombie or skeleton appears 5–9 blocks away and targets the player. A faint dark haze puffs where each light was.
+**Вредящее событие.**
+Факелы ломаются, а свечи, костры и горящие лампы в пределах 16 блоков гаснут. Через 0.75 с в 5–9 блоках от игрока появляется зомби или скелет и нападает на него. На месте каждого источника света вспыхивает слабая тёмная дымка.
 
-Runs when: Not peaceful, not daylight under open sky, a light within 16, standing room 5–9 blocks away
+Когда срабатывает: сложность не мирная, сейчас не дневное время под открытым небом, в пределах 16 блоков есть источник света, а в 5–9 блоках от игрока есть место, где можно встать.
 
 ## `burning_hand`
 
-**Harmful.**
-The item drops out of the hand
+**Вредящее событие.**
+Предмет выпадает из руки игрока.
 
-Runs when: Torch or lantern in main hand
+Когда срабатывает: в основной руке лежит факел или фонарь.
 
 ## `torch_swap`
 
-Becomes another kind (torch, soul, copper; lantern, soul lantern), facing kept; swapped back after 60 seconds
+Блок становится другим видом (факел, факел душ, медный факел; фонарь, фонарь душ) с сохранением направления, а через 60 секунд меняется обратно.
 
-Runs when: A torch, wall torch or lantern within 10
+Когда срабатывает: в пределах 10 блоков есть факел, настенный факел или фонарь.
 
 ## `spirit_candle_out`
 
-The candle's flame, lean and blue warning stop for 30 s, with the extinguish sound and a puff of smoke
+Пламя свечи, её наклон и синее предупреждение пропадают на 30 с, со звуком гашения и облачком дыма.
 
-Runs when: The spirit candle in a hand, not already out
+Когда срабатывает: в руке лежит свеча духа, которая ещё не погашена.
 
 ## `far_house`
 
-The 9×9×5 volume round the player is shown as fake blocks on open ground far off, with a lantern lit on the floor; only this player's client, put back after 30 s
+Объём 9×9×5 вокруг игрока показывается в виде ненастоящих блоков на открытой земле далеко отсюда, с зажжённым фонарём на полу. Это видит только клиент этого игрока, а через 30 с всё возвращается на место.
 
-Runs when: Overworld at night, under a roof; open ground 28–44 away
+Когда срабатывает: в Верхнем мире ночью, когда игрок находится под крышей, а в 28–44 блоках от него есть открытая земля.
 
 ## `black_candle`
 
-The candle turns black and lights itself (or a lit black candle is set down), with soul fire flames for 20 s. Put back after 2 min (stays under hardcore)
+Свеча становится чёрной и сама зажигается (или ставится зажжённая чёрная свеча), горя пламенем огня душ 20 с. Через 2 мин всё возвращается на место (в режиме хардкор остаётся).
 
-Runs when: Indoors, an unlit candle within 10, or free floor to set one on
+Когда срабатывает: игрок находится в помещении, и либо в пределах 10 блоков есть незажжённая свеча, либо есть свободный пол, куда её можно поставить.

@@ -33,7 +33,7 @@
       "damage": 1.5,
       "sound": {
         "volume": 1.0,
-        "pitch": 0.8
+        "pitch": 1.0
       },
       "bite_sound": {
         "volume": 1.0,
@@ -94,7 +94,7 @@
       "fatigue_amplifier": 2,
       "sound": {
         "volume": 1.0,
-        "pitch": 0.6
+        "pitch": 1.0
       },
       "particles": {
         "count": 12,
@@ -329,11 +329,11 @@
       "vignette_ticks": 30,
       "sound": {
         "volume": 1.0,
-        "pitch": 0.7
+        "pitch": 1.0
       },
       "scream_sound": {
         "volume": 1.0,
-        "pitch": 0.6
+        "pitch": 1.0
       }
     },
     "restless:stone_fists": {

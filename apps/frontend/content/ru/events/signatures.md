@@ -1,296 +1,294 @@
 ---
-title: Signatures
+title: Знаковые
 ---
 
-# Signatures
+# Знаковые
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-46 events that only one type of spirit can roll, so that one of them tells you what you are dealing with. They are likelier than most events. Each type has three or four: the banshee, poltergeist, shade, phantom, nix, mimic, wraith, mara, revenant, lost one, domovoi, hoarder, demon, trickster and boggart.
+Знаковых событий: 46. Каждое из них выпадает только у духа одного типа, поэтому по такому событию видно, какой дух действует. Они выпадают чаще большинства событий. У каждого типа их три или четыре: банши, полтергейст, тень, фантом, никс, мимик, призрак, мара, ревенант, потерянный, домовой, скопидом, демон, трикстер и боггарт.
 
 ## `banshee_letter`
 
-A written book "To \<player>" lies on a bed nearby, from the banshee, with a page that is shy, devoted or possessive. It is a real item. Only a banshee rolls it.
+На кровати рядом лежит исписанная книга «\<игроку>» от банши, со страницей стеснительного, преданного или собственнического содержания. Это настоящий предмет. Выпадает только у банши.
 
-Runs when: Night, a free bed within 16
+Когда срабатывает: наступила ночь, а в пределах 16 блоков есть свободная кровать.
 
 ## `banshee_gift`
 
-A named item with a line of lore lies on a bed nearby: a wither rose "For you", a gold nugget "Ring", a phantom membrane "Veil", a skeleton skull "Mine" or a poppy. It is a real item. Only a banshee rolls it.
+На кровати рядом лежит предмет с названием и строкой описания: роза иссушения «Тебе», золотой самородок «Кольцо», мембрана фантома «Вуаль», череп скелета «Моё» или мак. Это настоящий предмет. Выпадает только у банши.
 
-Runs when: A free bed within 16
+Когда срабатывает: в пределах 16 блоков есть свободная кровать.
 
 ## `banshee_serenade`
 
-A soft, low moan comes from just outside a glass window nearby. Only a banshee rolls it.
+Тихий низкий стон доносится прямо из-за стеклянного окна рядом. Выпадает только у банши.
 
-Runs when: Night, glass or a glass pane within 12
+Когда срабатывает: наступила ночь, а в пределах 12 блоков есть стекло или стеклянная панель.
 
 ## `banshee_jealous`
 
-A villager, wolf, cat or parrot near you shakes with frost for a few seconds, as in powder snow: a villager shakes its head, a cat hisses, a wolf growls. It is not hurt. Only a banshee rolls it.
+Житель, волк, кошка или попугай рядом с игроком несколько секунд трясётся от мороза, как в рыхлом снеге: житель качает головой, кошка шипит, а волк рычит. Урона животное при этом не получает. Выпадает только у банши.
 
-Runs when: An adult villager, wolf, cat or parrot within 8
+Когда срабатывает: в пределах 8 блоков есть взрослый житель, волк, кошка или попугай.
 
 ## `poltergeist_toss`
 
-A chest nearby opens and tosses three stacks out toward you, one a second, and shuts with a giggle. The items stay on the floor. Only a poltergeist rolls it.
+Сундук рядом открывается и выбрасывает три стопки в сторону игрока, по одной в секунду, а затем с хихиканьем закрывается. Предметы остаются на полу. Выпадает только у полтергейста.
 
-Runs when: A chest with something in it within 10
+Когда срабатывает: в пределах 10 блоков есть сундук, в котором что-нибудь лежит.
 
 ## `poltergeist_play`
 
-Every note block and bell nearby is struck in turn, fast, nearest first, like a child running along. Only a poltergeist rolls it.
+Нотные блоки и колокола рядом звучат один за другим, начиная с ближайшего, и делают это быстро, словно вдоль них бежит ребёнок. Выпадает только у полтергейста.
 
-Runs when: 2 or more note blocks or bells within 12
+Когда срабатывает: в пределах 12 блоков есть 2 или больше нотных блоков или колоколов.
 
 ## `poltergeist_tantrum`
 
-**Harmful.**
-Every wooden door, trapdoor and fence gate nearby flies open in the same moment and then slams, and up to eight flower pots pop off, pot and plant on the floor. Only a poltergeist rolls it.
+**Вредящее событие.**
+Все деревянные двери, люки и калитки рядом одновременно распахиваются, а затем захлопываются, и до восьми цветочных горшков слетают с мест, так что горшок и растение остаются лежать на полу. Выпадает только у полтергейста.
 
-Runs when: 3 or more wooden doors, trapdoors or fence gates within 12
+Когда срабатывает: в пределах 12 блоков есть 3 или больше деревянных дверей, люков или калиток.
 
 ## `shade_gathered`
 
-The torches nearby go out one by one and every one of them lies in a single pile in a dark spot. Nothing is lost. Only a shade rolls it.
+Факелы рядом гаснут один за другим, и все они оказываются сложены в одну кучу в тёмном месте. Ничего не теряется. Выпадает только у тени.
 
-Runs when: 3 or more torches within 12 and a dark spot 3 to 16 blocks away
+Когда срабатывает: в пределах 12 блоков есть 3 или больше факелов, а в 3–16 блоках есть тёмное место.
 
 ## `shade_glance`
 
-For 20 seconds every torch or lantern you look at goes out, up to five. They light again after two minutes. Only a shade rolls it.
+В течение 20 секунд гаснет каждый факел или фонарь, на который смотрит игрок, но не больше пяти. Через две минуты они зажигаются снова. Выпадает только у тени.
 
-Runs when: 3 or more torches or lanterns within 16
+Когда срабатывает: в пределах 16 блоков есть 3 или больше факелов или фонарей.
 
 ## `shade_room`
 
-**Harmful.**
-Every torch and lantern in the closed room you are in goes out, and while you stay the edges of your view darken. They light again when you leave, after three minutes at the latest. Only a shade rolls it.
+**Вредящее событие.**
+Все факелы и фонари в закрытой комнате, где находится игрок, гаснут, а края его поля зрения темнеют, пока он остаётся в ней. Когда игрок уходит, они зажигаются снова, самое позднее через три минуты. Выпадает только у тени.
 
-Runs when: You are in a room shut off from the sky, with a torch or lantern in it
+Когда срабатывает: игрок находится в комнате, отрезанной от неба, и в ней есть факел или фонарь.
 
 ## `phantom_self_join`
 
-Only this player gets "\<name> joined the game" and a player list entry with their own name and skin. 40 s later the entry goes and "\<name> left the game" follows. Nothing on the server. Only a phantom rolls it.
+Только этот игрок видит сообщение «\<имя> присоединился к игре» и запись в списке игроков с собственным именем и скином. Через 40 секунд запись исчезает, а следом приходит сообщение «\<имя> покинул игру». На самом сервере ничего этого нет. Выпадает только у фантома.
 
-Runs when: None
+Когда срабатывает: условий нет.
 
 ## `phantom_rerun`
 
-A copy of you, in your skin, walks the path you took in the last half minute. It is gone when you look at it or come near. Only a phantom rolls it.
+Копия игрока в его скине проходит путь, который игрок прошёл за последние полминуты. Она исчезает, как только игрок посмотрит на неё или подойдёт к ней. Выпадает только у фантома.
 
-Runs when: You walked 20 or more blocks in the last 30 seconds
+Когда срабатывает: игрок прошёл 20 или больше блоков за последние 30 секунд.
 
 ## `phantom_home`
 
-A copy of you, in your skin, stands by your bed when you are 12 to 32 blocks from it, and is gone when you come close. Only a phantom rolls it.
+Копия игрока в его скине стоит у его кровати, когда игрок находится в 12–32 блоках от неё, и исчезает, как только он подходит близко. Выпадает только у фантома.
 
-Runs when: Your respawn bed is 12 to 32 blocks away
+Когда срабатывает: кровать возрождения игрока находится в 12–32 блоках.
 
 ## `nix_catch`
 
-3 to 5 raw cod and salmon lie in a row on the bank, with a splash. They are real items. Only a nix rolls it.
+От 3 до 5 штук сырой трески и сырого лосося лежат в ряд на берегу, и слышен всплеск. Это настоящие предметы. Выпадает только у никса.
 
-Runs when: Water within 16 with a bank of 3 free cells beside it
+Когда срабатывает: в пределах 16 блоков есть вода, рядом с которой есть берег из 3 свободных клеток.
 
 ## `nix_call`
 
-A line of bubbles runs through the water toward the player and a conduit sound plays at its end. Only a nix rolls it.
+Цепочка пузырей бежит по воде к игроку, а в её конце звучит морской источник. Выпадает только у никса.
 
-Runs when: The player is out of water, with water 3 to 12 blocks away that runs 3 or more cells toward them
+Когда срабатывает: игрок находится вне воды, а в 3–12 блоках от него есть вода, которая тянется на 3 или больше клеток в его сторону.
 
 ## `nix_returns`
 
-An item lying in the water nearby is carried through it toward you, dripping, as far as the shore. Only a nix rolls it.
+Предмет, лежащий рядом в воде, плывёт по ней к игроку, роняя капли, и доходит до самого берега. Выпадает только у никса.
 
-Runs when: An item in water within 16
+Когда срабатывает: в пределах 16 блоков в воде лежит предмет.
 
 ## `mimic_voice`
 
-An animal makes another mob's sound three times, a second apart: a cow says the villager's "hmm", a sheep groans like a zombie, a chicken mews. Only a mimic rolls it.
+Животное три раза с интервалом в секунду издаёт звук другого моба: корова произносит «хм» жителя, овца стонет как зомби, а курица мяукает. Выпадает только у мимика.
 
-Runs when: An adult animal within 12
+Когда срабатывает: в пределах 12 блоков есть взрослое животное.
 
 ## `mimic_parrot`
 
-A line you said in chat comes back a few seconds later under your own name, with one word changed. It shows in chat only. Only a mimic rolls it.
+Фраза, которую игрок сказал в чате, через несколько секунд возвращается под его собственным именем, с одним изменённым словом. Она видна только в чате. Выпадает только у мимика.
 
-Runs when: You said something in chat in the last 10 minutes
+Когда срабатывает: игрок что-то сказал в чате за последние 10 минут.
 
 ## `mimic_chest`
 
-**Harmful.**
-A second chest appears beside one of yours. Opening it, the lid snaps shut with the sound of fangs and 2 damage, and the chest is gone. Left alone it is gone after two minutes. Only a mimic rolls it.
+**Вредящее событие.**
+Рядом с одним из сундуков игрока появляется второй сундук. Когда игрок открывает его, крышка захлопывается со звуком клыков и наносит 2 урона, а сундук исчезает. Если его не трогать, он исчезает через две минуты. Выпадает только у мимика.
 
-Runs when: A chest within 10 with a free cell beside it
+Когда срабатывает: в пределах 10 блоков есть сундук со свободной клеткой рядом.
 
 ## `wraith_taken`
 
-**Harmful.**
-A wild animal is gone in a puff of smoke, with no sound and no drops. Lost for good. Named, tamed and leashed animals are left alone. Only a wraith rolls it.
+**Вредящее событие.**
+Дикое животное исчезает в облачке дыма, без звука и без выпадения предметов, и потеряно навсегда. Животных с именем, прирученных и на поводке это не затрагивает. Выпадает только у призрака.
 
-Runs when: Light level under 4 at the player, a wild animal within 16
+Когда срабатывает: уровень освещённости у игрока ниже 4, а в пределах 16 блоков есть дикое животное.
 
 ## `wraith_steps`
 
-In the dark, footsteps follow you for 30 seconds, and stop the moment you stop. Only a wraith rolls it.
+В темноте шаги идут за игроком 30 секунд и стихают в тот миг, когда он останавливается. Выпадает только у призрака.
 
-Runs when: Light level under 4 at the player
+Когда срабатывает: уровень освещённости у игрока ниже 4.
 
 ## `wraith_edge`
 
-A figure stands where the dark begins, facing you. It is gone when you look straight at it or come near. Only a wraith rolls it.
+Фигура стоит там, где начинается тьма, лицом к игроку. Она исчезает, как только игрок посмотрит прямо на неё или подойдёт к ней. Выпадает только у призрака.
 
-Runs when: You stand in light, with dark floor 4 to 6 blocks away
+Когда срабатывает: игрок стоит на свету, а тёмный пол находится в 4–6 блоках.
 
 ## `mara_dream`
 
-A written book "A dream" turns up in your inventory after waking, about the biome you were in and the last mob you killed. It is a real item. Only a mara rolls it.
+После пробуждения в инвентаре игрока оказывается исписанная книга «Сон» о биоме, в котором он был, и о последнем убитом им мобе. Это настоящий предмет. Выпадает только у мары.
 
-Runs when: You woke in the last two minutes, with a free inventory slot
+Когда срабатывает: игрок проснулся за последние две минуты, и в его инвентаре есть свободный слот.
 
 ## `mara_stolen_rest`
 
-**Harmful.**
-After waking, your sleep does not count: phantoms come as if you had not slept for three days. Only a mara rolls it.
+**Вредящее событие.**
+После пробуждения сон игрока не засчитывается, и фантомы приходят так, словно он не спал три дня. Выпадает только у мары.
 
-Runs when: You woke in the last two minutes, not on peaceful
+Когда срабатывает: игрок проснулся за последние две минуты, а сложность не мирная.
 
 ## `mara_weight`
 
-**Harmful.**
-After waking, slowness and mining fatigue for a minute, and the sound of something heavy getting off the bed. Only a mara rolls it.
+**Вредящее событие.**
+После пробуждения на минуту накладываются замедление и утомление, и слышно, как с кровати слезает что-то тяжёлое. Выпадает только у мары.
 
-Runs when: You woke in the last two minutes
+Когда срабатывает: игрок проснулся за последние две минуты.
 
 ## `revenant_ledger`
 
-A written book on a lectern nearby lists every kind of passive animal you killed today and how many, "Cow: 14". The lectern's own book comes back after two minutes. Only a revenant rolls it.
+Исписанная книга на аналое рядом перечисляет все виды пассивных животных, убитых игроком за день, и сколько их: «Корова: 14». Собственная книга аналоя возвращается через две минуты. Выпадает только у ревенанта.
 
-Runs when: A lectern within 12, 5 or more passive animals killed today
+Когда срабатывает: в пределах 12 блоков есть аналой, а игрок за день убил 5 или больше пассивных животных.
 
 ## `revenant_tally`
 
-**Harmful.**
-A zombie named after the animal you killed most today and the count, "Cow 14", comes for you. Only a revenant rolls it.
+**Вредящее событие.**
+Зомби, названный по животному, которого игрок убил за день чаще всего, и по числу убитых, «Корова 14», идёт на игрока. Выпадает только у ревенанта.
 
-Runs when: Night, not peaceful, a passive animal killed today
+Когда срабатывает: наступила ночь, сложность не мирная, а игрок за день убил пассивное животное.
 
 ## `revenant_rises`
 
-**Harmful.**
-A skeleton climbs out of the ground, dirt flying, where you last killed a mob (a skeleton horse for a horse, donkey or mule), and comes for you. Only a revenant rolls it.
+**Вредящее событие.**
+Скелет вылезает из земли, разбрасывая комья, там, где игрок в последний раз убил моба (скелет-лошадь для лошади, осла или мула), и идёт на игрока. Выпадает только у ревенанта.
 
-Runs when: Not peaceful, you killed a mob within 32 blocks in the last 10 minutes
+Когда срабатывает: сложность не мирная, а игрок убил моба в пределах 32 блоков за последние 10 минут.
 
 ## `lost_one_sign`
 
-A sign nearby asks the way ("which way is home?") and is gone after five minutes. Only a lost one rolls it.
+Табличка рядом спрашивает дорогу («где здесь дорога домой?») и исчезает через пять минут. Выпадает только у потерянного.
 
-Runs when: Standing room 3 to 8 blocks away
+Когда срабатывает: в 3–8 блоках есть место, где можно встать.
 
 ## `lost_one_wanderer`
 
-A figure in a default skin walks a slow circle 20 to 30 blocks away. When you come near it asks the way in chat and is gone. Only a lost one rolls it.
+Фигура в стандартном скине медленно ходит по кругу в 20–30 блоках от игрока. Когда игрок подходит, она спрашивает дорогу в чате и исчезает. Выпадает только у потерянного.
 
-Runs when: Standing room 20 to 30 blocks away
+Когда срабатывает: в 20–30 блоках есть место, где можно встать.
 
 ## `lost_one_death_path`
 
-Footprints appear one by one from the direction of the place you last died, leading toward you, and are wiped after three minutes. Only a lost one rolls it.
+Следы появляются один за другим со стороны места, где игрок умер в последний раз, и ведут к игроку, а через три минуты стираются. Выпадает только у потерянного.
 
-Runs when: Your last death was 16 to 64 blocks away in this dimension
+Когда срабатывает: последняя смерть игрока была в 16–64 блоках от него в этом измерении.
 
 ## `domovoi_supper`
 
-One thing to eat is gone from a chest, with an eating sound: a bread or cookie, a milk bucket that turns into an empty bucket, a stew that turns into a bowl. Only a domovoi rolls it.
+Из сундука пропадает что-нибудь съестное, и слышен звук еды: хлеб или печенье, ведро молока, которое становится пустым ведром, или рагу, которое становится миской. Выпадает только у домового.
 
-Runs when: A chest within 12 holding bread, a cookie, a milk bucket or a stew
+Когда срабатывает: в пределах 12 блоков есть сундук с хлебом, печеньем, ведром молока или рагу.
 
 ## `domovoi_hearth`
 
-A cold campfire is lit, or one coal goes into a furnace that has something to smelt and no fuel. Only a domovoi rolls it.
+Холодный костёр разжигается, или один уголь кладётся в печь, где есть что плавить, но нет топлива. Выпадает только у домового.
 
-Runs when: A cold campfire within 12, or a furnace, smoker or blast furnace with input and no fuel
+Когда срабатывает: в пределах 12 блоков есть холодный костёр либо печь, коптильня или плавильная печь с предметом для переработки и без топлива.
 
 ## `domovoi_tidy`
 
-One chest nearby is sorted by item with like stacks merged, and the open doors, trapdoors and gates nearby shut. Only a domovoi rolls it.
+Один сундук рядом сортируется по предметам, и одинаковые стопки в нём сливаются, а открытые двери, люки и калитки рядом закрываются. Выпадает только у домового.
 
-Runs when: A chest within 12 that is not tidy, or an open wooden door, trapdoor or gate within 12
+Когда срабатывает: в пределах 12 блоков есть неприбранный сундук либо в пределах 12 блоков есть открытая деревянная дверь, люк или калитка.
 
 ## `hoarder_payment`
 
-**Harmful.**
-One stack in a chest turns into junk of the same size: dirt, sticks, rotten flesh or string. The hoarder keeps the stack for its nest. Only a hoarder rolls it.
+**Вредящее событие.**
+Одна стопка в сундуке превращается в хлам того же размера: землю, палки, куски гнили или нить. Скопидом забирает стопку для своего гнезда. Выпадает только у скопидома.
 
-Runs when: A chest within 10 holding something that is not junk
+Когда срабатывает: в пределах 10 блоков есть сундук, в котором лежит что-нибудь, что не является хламом.
 
 ## `hoarder_shiny`
 
-**Harmful.**
-Gold, diamonds, emeralds and netherite in a chest move to another chest nearby. Nothing else does. Only a hoarder rolls it.
+**Вредящее событие.**
+Золото, алмазы, изумруды и незерит из сундука переезжают в другой сундук рядом, а больше ничего не переносится. Выпадает только у скопидома.
 
-Runs when: Something shiny in a chest within 10, and another chest with a free slot
+Когда срабатывает: в сундуке в пределах 10 блоков лежит что-то блестящее, а рядом есть другой сундук со свободным слотом.
 
 ## `hoarder_nest`
 
-After the hoarder has taken five stacks, a barrel appears out of your sight, 14 to 30 blocks away, with all of them in it. The items are real, and yours to find. It is forgotten when the server restarts. Only a hoarder rolls it.
+После того как скопидом забрал пять стопок, вне поля зрения игрока, в 14–30 блоках от него, появляется бочка, в которой лежат все они. Предметы настоящие, и игрок может их найти, но при перезапуске сервера гнездо забывается. Выпадает только у скопидома.
 
-Runs when: The hoarder has taken 5 or more stacks
+Когда срабатывает: скопидом забрал 5 или больше стопок.
 
 ## `demon_offer`
 
-A crimson sign with an offer ("a diamond for your bed") stands nearby for five minutes. Nothing more happens. Only a demon rolls it.
+Багровая табличка с предложением («алмаз за твою кровать») стоит рядом пять минут, и больше ничего не происходит. Выпадает только у демона.
 
-Runs when: Standing room 3 to 8 blocks away
+Когда срабатывает: в 3–8 блоках есть место, где можно встать.
 
 ## `demon_trail`
 
-For 15 seconds the block under each of your steps looks like netherrack, then soul soil, then goes back. Only you see it, unless the swaps setting is real. Only a demon rolls it.
+В течение 15 секунд блок под каждым шагом игрока выглядит как адский камень, затем как песок душ, а затем возвращается прежним. Это видит только игрок, если подмена не настроена на настоящую. Выпадает только у демона.
 
-Runs when: You stand on the ground
+Когда срабатывает: игрок стоит на земле.
 
 ## `demon_contract`
 
-**Harmful.**
-A written book "Contract" with your name at the bottom turns up in your inventory, and your maximum health drops by two hearts until dawn. Only a demon rolls it.
+**Вредящее событие.**
+В инвентаре игрока оказывается исписанная книга «Договор» с его именем внизу, а максимум здоровья игрока падает на два сердца до рассвета. Выпадает только у демона.
 
-Runs when: A free inventory slot
+Когда срабатывает: в инвентаре игрока есть свободный слот.
 
 ## `trickster_gift`
 
-A chest of what looks like diamonds, gold and emeralds stands nearby. Whatever you take out turns to plain dirt in your inventory, with a laugh. The chest is gone after three minutes. Only a trickster rolls it.
+Рядом стоит сундук с тем, что выглядит как алмазы, золото и изумруды. Всё, что игрок вынет, превращается в его инвентаре в обычную землю, и слышен смех, а через три минуты сундук исчезает. Выпадает только у трикстера.
 
-Runs when: Standing room 3 to 8 blocks away
+Когда срабатывает: в 3–8 блоках есть место, где можно встать.
 
 ## `trickster_dig`
 
-Sand or gravel nearby turns suspicious; brushing it gives a joke: a pufferfish, a poisonous potato, a stick named "Treasure". It is put back after ten minutes. Only a trickster rolls it.
+Песок или гравий рядом становится подозрительным, а если его расчистить кистью, внутри оказывается шутка: иглобрюх, ядовитый картофель или палка с названием «Сокровище». Через десять минут всё возвращается на место. Выпадает только у трикстера.
 
-Runs when: Sand, red sand or gravel with air above, within 12
+Когда срабатывает: в пределах 12 блоков есть песок, красный песок или гравий с воздухом сверху.
 
 ## `trickster_dud`
 
-A lit TNT that only you see hisses a few blocks away, then pops into firework sparks with a laugh. Only a trickster rolls it.
+Горящий динамит, который видит только игрок, шипит в нескольких блоках от него, а затем лопается фейерверочными искрами, и слышен смех. Выпадает только у трикстера.
 
-Runs when: Standing room 3 to 6 blocks away
+Когда срабатывает: в 3–6 блоках есть место, где можно встать.
 
 ## `boggart_spiders`
 
-Forty tiny spiders that only you see run out of the dark from every side, swarm to your feet and circle you for a few seconds, then scatter. Nothing is really there. Only a boggart rolls it.
+Сорок крошечных пауков, которых видит только игрок, выбегают из темноты со всех сторон, сбегаются к его ногам и несколько секунд кружат вокруг него, а затем разбегаются. На самом деле там никого нет. Выпадает только у боггарта.
 
-Runs when: Not in water
+Когда срабатывает: игрок не в воде.
 
 ## `boggart_crawl`
 
-Two dozen tinier spiders that only you see run up close and climb in circles up your body to your face, then drop and scatter. Nothing is really there. Only a boggart rolls it.
+Два десятка ещё более мелких пауков, которых видит только игрок, подбегают вплотную и кругами ползут вверх по его телу к лицу, а затем падают и разбегаются. На самом деле там никого нет. Выпадает только у боггарта.
 
-Runs when: Not in water
+Когда срабатывает: игрок не в воде.
 
 ## `boggart_silverfish`
 
-Forty silverfish that only you see pour across the floor, circle round your feet and scatter. Nothing is really there. Only a boggart rolls it.
+Сорок чешуйниц, которых видит только игрок, растекаются по полу, кружат вокруг его ног и разбегаются. На самом деле там никого нет. Выпадает только у боггарта.
 
-Runs when: Not in water
+Когда срабатывает: игрок не в воде.

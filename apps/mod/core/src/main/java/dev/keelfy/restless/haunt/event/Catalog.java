@@ -53,7 +53,8 @@ public final class Catalog {
                         Machines.all(),
                         Relics.all(),
                         Fittings.all(),
-                        Signatures.all())
+                        Signatures.all(),
+                        Tells.all())
                 .flatMap(List::stream)
                 .toList();
     }

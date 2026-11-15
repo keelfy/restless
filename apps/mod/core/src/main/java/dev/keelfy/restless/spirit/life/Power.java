@@ -30,6 +30,26 @@ public final class Power {
         return evolved ? Math.max(Config.section("evolution").num("power_floor"), power) : power;
     }
 
+    /**
+     * As {@link #of(long, double, boolean)}; a {@code personal} spirit also starts with {@code power.start_maturity} of
+     * its maturity, so it is not harmless from its first hour. A territorial one starts at 0.
+     */
+    public static double of(long ageTicks, double anger, boolean evolved, boolean personal) {
+        if (!personal) {
+            return of(ageTicks, anger, evolved);
+        }
+        Config.Section config = Config.section("power");
+        double maturity =
+                Math.min(config.num("start_maturity") + ageTicks / (config.num("maturity_days") * Ticks.DAY), 1.0);
+        double power = Math.min(1.0, config.num("maturity_share") * maturity + config.num("anger_share") * anger);
+        return evolved ? Math.max(Config.section("evolution").num("power_floor"), power) : power;
+    }
+
+    /** A full moon lifts every spirit's power by {@code calendar.moon_power}, up to 1. */
+    public static double moonlit(double power, boolean fullMoon) {
+        return fullMoon ? Math.min(1.0, power + Config.section("calendar").num("moon_power")) : power;
+    }
+
     /** Whether a spirit this old has been left alone long enough to grow up. */
     public static boolean grown(long ageTicks) {
         return ageTicks >= Config.section("evolution").num("days") * Ticks.DAY;

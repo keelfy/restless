@@ -1,8 +1,10 @@
 package dev.keelfy.restless.state;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.haunt.Tally;
 import dev.keelfy.restless.haunt.harm.Menace;
 import dev.keelfy.restless.haunt.recall.Said;
 import dev.keelfy.restless.journal.Notebook;
@@ -71,7 +73,7 @@ public final class HauntData extends SavedData {
             boolean evolved,
             int notice,
             long waryUntil) {
-        static final Codec<Haunting> CODEC = RecordCodecBuilder.create(i -> i.group(
+        public static final Codec<Haunting> CODEC = RecordCodecBuilder.create(i -> i.group(
                         UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(h -> Optional.of(h.uuid)),
                         Codec.STRING.fieldOf("spirit").forGetter(Haunting::spirit),
                         Codec.LONG.optionalFieldOf("seed").forGetter(h -> Optional.of(h.seed)),
@@ -100,7 +102,8 @@ public final class HauntData extends SavedData {
 
         public static Haunting born(String spirit, long now, RandomSource random) {
             long seed = random.nextLong();
-            return new Haunting(UUID.randomUUID(), spirit, seed, Traits.roll(seed), now, 0.0, now, false, 0, 0L);
+            return new Haunting(
+                    UUID.randomUUID(), spirit, seed, Traits.roll(seed, spirit), now, 0.0, now, false, 0, 0L);
         }
 
         public Haunting rescheduled(long nextEventAt) {
@@ -147,20 +150,31 @@ public final class HauntData extends SavedData {
      *
      * @param radius blocks
      */
-    public record Territorial(Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius) {
+    public record Territorial(
+            Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius, Optional<UUID> angeredBy) {
         static final Codec<Territorial> CODEC = RecordCodecBuilder.create(i -> i.group(
                         Haunting.CODEC.fieldOf("haunting").forGetter(Territorial::haunting),
                         Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(Territorial::dimension),
                         BlockPos.CODEC.fieldOf("anchor").forGetter(Territorial::anchor),
-                        Codec.INT.fieldOf("radius").forGetter(Territorial::radius))
+                        Codec.INT.fieldOf("radius").forGetter(Territorial::radius),
+                        UUIDUtil.CODEC.optionalFieldOf("angered_by").forGetter(Territorial::angeredBy))
                 .apply(i, Territorial::new));
 
+        public Territorial(Haunting haunting, ResourceKey<Level> dimension, BlockPos anchor, int radius) {
+            this(haunting, dimension, anchor, radius, Optional.empty());
+        }
+
+        /** The same spirit, angered by this player: its blight walks toward that player's bed. */
+        public Territorial angeredBy(UUID player) {
+            return new Territorial(haunting, dimension, anchor, radius, Optional.of(player));
+        }
+
         public Territorial rescheduled(long nextEventAt) {
-            return new Territorial(haunting.rescheduled(nextEventAt), dimension, anchor, radius);
+            return new Territorial(haunting.rescheduled(nextEventAt), dimension, anchor, radius, angeredBy);
         }
 
         public Territorial angered(double by) {
-            return new Territorial(haunting.angered(by), dimension, anchor, radius);
+            return new Territorial(haunting.angered(by), dimension, anchor, radius, angeredBy);
         }
 
         /**
@@ -182,12 +196,24 @@ public final class HauntData extends SavedData {
      * built.
      *
      * @param built whether the block was ever placed; a built grave that has gone is put back where the ground now is
+     * @param stage how far its unfinished business has gone, see {@code spirit.land.Quest}: 0 unread, 1 begun, 2 done
+     * @param mark what the business is tied to, if anything: the named killer's entity or the spirit to be gone first
      */
-    public record Grave(BlockPos pos, boolean built) {
+    public record Grave(BlockPos pos, boolean built, int stage, Optional<UUID> mark) {
         static final Codec<Grave> CODEC = RecordCodecBuilder.create(i -> i.group(
                         BlockPos.CODEC.fieldOf("pos").forGetter(Grave::pos),
-                        Codec.BOOL.fieldOf("built").forGetter(Grave::built))
+                        Codec.BOOL.fieldOf("built").forGetter(Grave::built),
+                        Codec.INT.optionalFieldOf("stage", 0).forGetter(Grave::stage),
+                        UUIDUtil.STRING_CODEC.optionalFieldOf("mark").forGetter(Grave::mark))
                 .apply(i, Grave::new));
+
+        public Grave(BlockPos pos, boolean built) {
+            this(pos, built, 0, Optional.empty());
+        }
+
+        public Grave staged(int stage, Optional<UUID> mark) {
+            return new Grave(pos, built, stage, mark);
+        }
     }
 
     /**
@@ -241,11 +267,74 @@ public final class HauntData extends SavedData {
                 .apply(i, Spoken::new));
     }
 
+    /**
+     * A block a haunt event changed and has not yet put back.
+     *
+     * @param at the block, with its dimension
+     * @param from what stood there before
+     * @param to what the event put there; the block goes back only while it still is this
+     * @param due overworld game time to put it back
+     */
+    public record Undo(GlobalPos at, BlockState from, BlockState to, long due) {
+        static final Codec<Undo> CODEC = RecordCodecBuilder.create(i -> i.group(
+                        GlobalPos.CODEC.fieldOf("at").forGetter(Undo::at),
+                        BlockState.CODEC.fieldOf("from").forGetter(Undo::from),
+                        BlockState.CODEC.fieldOf("to").forGetter(Undo::to),
+                        Codec.LONG.fieldOf("due").forGetter(Undo::due))
+                .apply(i, Undo::new));
+    }
+
     private static final Codec<Menace> MENACE = RecordCodecBuilder.create(i -> i.group(
                     Codec.LONG.optionalFieldOf("last_lethal_at", -1L).forGetter(Menace::lastLethalAt),
                     Codec.BOOL.optionalFieldOf("warned", false).forGetter(Menace::warned),
                     Codec.LONG.optionalFieldOf("mercy_until", 0L).forGetter(Menace::mercyUntil))
             .apply(i, Menace::new));
+
+    private static final Codec<Tally.Counts> COUNTS = RecordCodecBuilder.create(i -> i.group(
+                    Codec.INT.optionalFieldOf("rolled", 0).forGetter(Tally.Counts::rolled),
+                    Codec.INT.optionalFieldOf("ran", 0).forGetter(Tally.Counts::ran),
+                    Codec.INT.optionalFieldOf("warded", 0).forGetter(Tally.Counts::warded),
+                    Codec.INT.optionalFieldOf("failed", 0).forGetter(Tally.Counts::failed))
+            .apply(i, Tally.Counts::new));
+
+    /**
+     * A player who lost their last personal spirit gets another: {@code dueAt} is the overworld game time it is bound
+     * (-1 until the player is next seen, which fixes it), {@code gone} the types that left, which it must not repeat.
+     */
+    public record Successor(long dueAt, List<String> gone) {
+        public static final Codec<Successor> CODEC = RecordCodecBuilder.create(i -> i.group(
+                        Codec.LONG.optionalFieldOf("due_at", -1L).forGetter(Successor::dueAt),
+                        Codec.STRING.listOf().optionalFieldOf("gone", List.of()).forGetter(Successor::gone))
+                .apply(i, Successor::new));
+    }
+
+    /** The last saved fields, nested so the record codec stays within 16 fields. */
+    private record Later(
+            Map<UUID, Long> requiemWary,
+            Map<UUID, Successor> successors,
+            Map<String, Tally.Counts> tally,
+            List<Undo> undos,
+            Map<UUID, Long> echoes,
+            Map<UUID, Marks> marks) {}
+
+    private static final MapCodec<Later> LATER = RecordCodecBuilder.mapCodec(i -> i.group(
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
+                            .optionalFieldOf("requiem_wary", Map.of())
+                            .forGetter(Later::requiemWary),
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Successor.CODEC)
+                            .optionalFieldOf("successors", Map.of())
+                            .forGetter(Later::successors),
+                    Codec.unboundedMap(Codec.STRING, COUNTS)
+                            .optionalFieldOf("tally", Map.of())
+                            .forGetter(Later::tally),
+                    Undo.CODEC.listOf().optionalFieldOf("undos", List.of()).forGetter(Later::undos),
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
+                            .optionalFieldOf("echoes", Map.of())
+                            .forGetter(Later::echoes),
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Marks.CODEC)
+                            .optionalFieldOf("marks", Map.of())
+                            .forGetter(Later::marks))
+            .apply(i, Later::new));
 
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL =
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, Haunting.CODEC.listOf());
@@ -298,9 +387,13 @@ public final class HauntData extends SavedData {
                                     .listOf()
                                     .optionalFieldOf("released", List.of())
                                     .forGetter(data -> List.copyOf(data.released)),
-                            Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
-                                    .optionalFieldOf("requiem_wary", Map.of())
-                                    .forGetter(data -> data.requiemWary))
+                            LATER.forGetter(data -> new Later(
+                                    data.requiemWary,
+                                    data.successors,
+                                    data.tally.all(),
+                                    List.copyOf(data.undos),
+                                    data.echoes,
+                                    data.marks)))
                     .apply(
                             i,
                             (players,
@@ -318,7 +411,7 @@ public final class HauntData extends SavedData {
                                     cradles,
                                     lost,
                                     released,
-                                    requiemWary) -> {
+                                    later) -> {
                                 HauntData data = new HauntData(players, territorial, graves, sanity, notebooks, blight);
                                 journal.forEach((player, entries) -> {
                                     List<Notebook.Note> notes = new ArrayList<>();
@@ -341,7 +434,12 @@ public final class HauntData extends SavedData {
                                 data.cradles.putAll(cradles);
                                 data.lost.putAll(lost);
                                 data.released.addAll(released);
-                                data.requiemWary.putAll(requiemWary);
+                                data.requiemWary.putAll(later.requiemWary());
+                                data.successors.putAll(later.successors());
+                                data.tally.load(later.tally());
+                                data.undos.addAll(later.undos());
+                                data.echoes.putAll(later.echoes());
+                                data.marks.putAll(later.marks());
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -351,6 +449,11 @@ public final class HauntData extends SavedData {
     // No vanilla data fixer for mod data; NeoForge skips fixing when this is null.
     private static final SavedDataType<HauntData> TYPE = new SavedDataType<>(
             Identifier.fromNamespaceAndPath(Restless.MOD_ID, "hauntings"), HauntData::new, CODEC, null);
+
+    /** The save format, for a test to write a world out and read it back. */
+    public static Codec<HauntData> codec() {
+        return CODEC;
+    }
 
     private static final int CELL_SHIFT = 6;
 
@@ -385,10 +488,21 @@ public final class HauntData extends SavedData {
     private final Map<UUID, GlobalPos> cradles = new HashMap<>();
     /** The cradle a player's spawn point stood on when it was broken, until the spawn has used it once. */
     private final Map<UUID, GlobalPos> lost = new HashMap<>();
+
+    private final Map<UUID, Successor> successors = new HashMap<>();
+    /** The echoes an altar left behind, keyed by spirit: the overworld game time each leaves by itself. */
+    private final Map<UUID, Long> echoes = new HashMap<>();
+
+    /** What each spirit carries beside its record; a spirit with none has {@link Marks#NONE}. */
+    private final Map<UUID, Marks> marks = new HashMap<>();
     /** The players the Requiem released: no spirit is born on them or acts on them. */
     private final Set<UUID> released = new HashSet<>();
     /** The game time until which the altar refuses a player a Requiem, after a failed one. Keyed by player. */
     private final Map<UUID, Long> requiemWary = new HashMap<>();
+    /** Block undos not yet done, so a crash does not leave the changes in the world. */
+    private final List<Undo> undos = new ArrayList<>();
+    /** How often each event was rolled, ran, was warded off or failed, since the world began. */
+    private final Tally tally = new Tally();
     /**
      * Decided the first time anyone asks and never again, so changing the config later does not flip a world; null
      * until then.
@@ -424,6 +538,53 @@ public final class HauntData extends SavedData {
         return hauntings.get(player);
     }
 
+    /** @return null unless the player has no personal spirit and is waiting for another */
+    public @Nullable Successor successor(UUID player) {
+        return successors.get(player);
+    }
+
+    public void putSuccessor(UUID player, @Nullable Successor successor) {
+        if (successor == null) {
+            successors.remove(player);
+        } else {
+            successors.put(player, successor);
+        }
+        setDirty();
+    }
+
+    /** 0 unless the spirit is an echo; then the overworld game time it leaves. */
+    public long echo(UUID spirit) {
+        return echoes.getOrDefault(spirit, 0L);
+    }
+
+    /** Every echo and the time it leaves. */
+    public Map<UUID, Long> echoes() {
+        return Collections.unmodifiableMap(echoes);
+    }
+
+    /** Marks the spirit an echo that leaves at {@code leaveAt}; 0 unmarks it. */
+    public void putEcho(UUID spirit, long leaveAt) {
+        if (leaveAt == 0L) {
+            echoes.remove(spirit);
+        } else {
+            echoes.put(spirit, leaveAt);
+        }
+        setDirty();
+    }
+
+    public Marks marks(UUID spirit) {
+        return marks.getOrDefault(spirit, Marks.NONE);
+    }
+
+    public void putMarks(UUID spirit, Marks marked) {
+        if (marked.equals(Marks.NONE)) {
+            marks.remove(spirit);
+        } else {
+            marks.put(spirit, marked);
+        }
+        setDirty();
+    }
+
     public boolean released(UUID player) {
         return released.contains(player);
     }
@@ -441,6 +602,30 @@ public final class HauntData extends SavedData {
 
     public void putRequiemWary(UUID player, long until) {
         requiemWary.put(player, until);
+        setDirty();
+    }
+
+    public List<Undo> undos() {
+        return List.copyOf(undos);
+    }
+
+    public void addUndo(Undo undo) {
+        undos.add(undo);
+        setDirty();
+    }
+
+    public void removeUndo(Undo undo) {
+        if (undos.remove(undo)) {
+            setDirty();
+        }
+    }
+
+    public Tally tally() {
+        return tally;
+    }
+
+    public void count(String event, Tally.Kind kind) {
+        tally.add(event, kind);
         setDirty();
     }
 
@@ -599,6 +784,19 @@ public final class HauntData extends SavedData {
 
     public void put(UUID player, List<Haunting> spirits) {
         List<Haunting> old = hauntings.put(player, List.copyOf(spirits));
+        // An echo neither cancels a successor nor starts one when it leaves.
+        if (spirits.stream().anyMatch(h -> !echoes.containsKey(h.uuid()))) {
+            successors.remove(player);
+        } else if (old != null && old.stream().anyMatch(h -> !echoes.containsKey(h.uuid()))) {
+            successors.put(
+                    player,
+                    new Successor(
+                            -1L,
+                            old.stream()
+                                    .filter(h -> !echoes.containsKey(h.uuid()))
+                                    .map(Haunting::spirit)
+                                    .toList()));
+        }
         if (old != null) {
             old.forEach(h -> owners.remove(h.uuid()));
         }
@@ -632,7 +830,7 @@ public final class HauntData extends SavedData {
             if (kept == null) {
                 removeTerritorial(spirit);
             } else {
-                putTerritorial(new Territorial(kept, t.dimension(), t.anchor(), t.radius()));
+                putTerritorial(new Territorial(kept, t.dimension(), t.anchor(), t.radius(), t.angeredBy()));
             }
         }
     }

@@ -32,9 +32,11 @@ import dev.keelfy.restless.content.entity.AshFootprint;
 import dev.keelfy.restless.content.entity.RagEntity;
 import dev.keelfy.restless.content.entity.SightingMark;
 import dev.keelfy.restless.content.entity.Silhouette;
+import dev.keelfy.restless.content.entity.SpiritBody;
 import dev.keelfy.restless.content.item.CameraObscura;
 import dev.keelfy.restless.content.item.DiaryPage;
 import dev.keelfy.restless.content.item.Essences;
+import dev.keelfy.restless.content.item.HolyWater;
 import dev.keelfy.restless.content.item.JournalBook;
 import dev.keelfy.restless.content.item.Photo;
 import dev.keelfy.restless.content.item.Relics;
@@ -160,6 +162,19 @@ public final class Content {
                             .noSave()
                             .build(key));
 
+    public static final Supplier<EntityType<?>> SPIRIT_BODY = Platform.get()
+            .register(
+                    BuiltInRegistries.ENTITY_TYPE,
+                    "spirit_body",
+                    key -> EntityType.Builder.<SpiritBody>of(SpiritBody::new, MobCategory.MISC)
+                            .sized(.6f, 2.2f)
+                            .clientTrackingRange(8)
+                            .noUpdateInterval()
+                            .fireImmune()
+                            .noLootTable()
+                            .noSave()
+                            .build(key));
+
     public static final Supplier<EntityType<?>> ASH_FOOTPRINT = Platform.get()
             .register(
                     BuiltInRegistries.ENTITY_TYPE,
@@ -226,7 +241,7 @@ public final class Content {
     /** The seal in mid-tier tools and every base charm, see docs/crafting-economy.md. */
     public static final Supplier<Item> HALLOWED_WAX = item("hallowed_wax", p -> new Item(p));
 
-    public static final Supplier<Item> HOLY_WATER = item("holy_water", p -> new Item(p.stacksTo(16)));
+    public static final Supplier<Item> HOLY_WATER = item("holy_water", p -> new HolyWater(p.stacksTo(16)));
     public static final Supplier<Item> MIRROR = item("mirror", p -> new Item(p.stacksTo(16)));
     /** A banished spirit drops the essence named after its type: {@code <type>_essence}. Keyed by spirit id. */
     public static final Map<String, Supplier<Item>> ESSENCE = essences(

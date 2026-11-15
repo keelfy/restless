@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.event.kit.Nearby;
 import dev.keelfy.restless.haunt.event.kit.Place;
@@ -239,7 +240,7 @@ final class Assaults {
                         player.getX(),
                         player.getY(),
                         player.getZ(),
-                        SoundEvents.WARDEN_HEARTBEAT,
+                        HauntSounds.HEARTBEAT,
                         SoundSource.HOSTILE,
                         start.volume(),
                         start.pitch());
@@ -255,7 +256,7 @@ final class Assaults {
                                 p.getX(),
                                 p.getY(),
                                 p.getZ(),
-                                SoundEvents.WARDEN_HEARTBEAT,
+                                HauntSounds.HEARTBEAT,
                                 SoundSource.HOSTILE,
                                 pulse.volume(),
                                 pulse.pitch());

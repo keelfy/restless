@@ -1,59 +1,57 @@
 ---
-title: Water
+title: Вода
 ---
 
-# Water
+# Вода
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-8 events.
+Событий: 8.
 
 ## `undertow`
 
-**Harmful.**
-Every 0.1 s the player is pushed down (a 0.12 downward velocity nudge, so at the surface they are kept from coming up). Ends out of the water, at 3 hearts, or after 10 s. Drowning itself is vanilla's and is not capped
+**Вредящее событие.**
+Каждые 0.1 с игрока толкает вниз скоростью 0.12, поэтому у поверхности он не может всплыть. Событие заканчивается, когда игрок выходит из воды, при 3 сердцах или через 10 с. Утопление происходит по правилам ванильной игры и ничем не ограничено.
 
-Runs when: Health > 5 hearts, the player in water
+Когда срабатывает: здоровье игрока больше 5 сердец, и он находится в воде.
 
 ## `water_call`
 
-**Harmful.**
-An underwater swell, then after 2 s the player on the ground is drawn toward the nearest water at about 1.5 blocks/s, with splash particles at the feet. Ends on arrival, in water, at 3 hearts, or after 20 s
+**Вредящее событие.**
+Раздаётся подводный гул, а через 2 с игрока на земле начинает тянуть к ближайшей воде со скоростью около 1.5 блока/с, и у его ног вспыхивают брызги. Событие заканчивается, когда игрок доходит до воды или оказывается в ней, при 3 сердцах или через 20 с.
 
-Runs when: Health > 5 hearts, the player out of water, water within 12 blocks
+Когда срабатывает: здоровье игрока больше 5 сердец, он находится вне воды, а вода есть в пределах 12 блоков.
 
 ## `drowned_fish`
 
-An elder guardian's curse sounds, and up to 12 squid and fish within 24 blocks die with a puff of ink. They are lost for good (no drops)
+Звучит проклятие древнего стража, и до 12 кальмаров и рыб в пределах 24 блоков гибнут в облачке чернил. Они пропадают насовсем и ничего не роняют.
 
-Runs when: A squid or fish within 24 blocks
+Когда срабатывает: в пределах 24 блоков есть кальмар или рыба.
 
 ## `broken_boat`
 
-A splintering sound and one of them breaks as if hit hard, dropping its item. A boat with anyone aboard is left alone
+Раздаётся треск дерева, и одна из лодок разбивается, будто по ней сильно ударили, и роняет свой предмет. Лодку, в которой кто-нибудь сидит, событие не трогает.
 
-Runs when: An empty boat or raft within 24 blocks
+Когда срабатывает: в пределах 24 блоков есть пустая лодка или плот.
 
 ## `boat_drifts`
 
-A steady push away from the player for 10 seconds
+Пустую лодку 10 секунд ровно относит прочь от игрока.
 
-Runs when: An empty boat floating within 24
+Когда срабатывает: в пределах 24 блоков на воде есть пустая лодка.
 
 ## `swamp_lily_drift`
 
-A lily pad within 10 steps one block toward the player every second, 6 times at most, stopping 2.5 blocks away; restored after 1 min (stays under hardcore)
+Кувшинка в пределах 10 шагов каждую секунду сдвигается на один блок к игроку, но не больше 6 раз, и останавливается в 2.5 блоках от него. Через 1 мин всё возвращается на место (при хардкоре кувшинка остаётся сдвинутой).
 
-Runs when: In a swamp or mangrove swamp, with a lily pad within 10 that has a free water block toward the player
+Когда срабатывает: игрок находится в болоте или мангровом болоте, а у кувшинки в пределах 10 блоков со стороны игрока есть свободный блок воды.
 
 ## `water_guardian`
 
-Only this player's client is told of a guardian 2 blocks under the water of a pond, with its beam set on the player and its attack sound, for 4 s. Nothing on the server
+Только клиенту этого игрока показывают стража на глубине 2 блоков под водой пруда: его луч направлен на игрока, а слышен звук атаки. Так длится 4 с, а на сервере ничего не происходит.
 
-Runs when: Source water at least 4 deep with air above it, within 20 blocks and at least 6 away
+Когда срабатывает: в пределах 20 блоков от игрока, но не ближе 6, есть источник воды глубиной не меньше 4 блоков, над которым находится воздух.
 
 ## `sea_lights`
 
-Only this player's client is told of a sea lantern that moves along the run, one block every 0.2 s, 2 lit at a time, each put back behind it. Nothing on the server
+Только клиенту этого игрока показывают морской фонарь, который движется вдоль прямого участка воды, перемещаясь на блок за 0.2 с. Одновременно горят 2 фонаря, а каждый оставленный позади возвращается на место. На сервере ничего не происходит.
 
-Runs when: In an ocean biome, a straight run of at least 8 water blocks 3 under the surface, starting 6 to 18 away
+Когда срабатывает: игрок находится в океане, а в 6–18 блоках от него начинается прямой участок воды длиной не меньше 8 блоков, расположенный на 3 блока ниже поверхности.

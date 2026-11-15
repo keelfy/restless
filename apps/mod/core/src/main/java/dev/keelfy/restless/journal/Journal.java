@@ -1,5 +1,6 @@
 package dev.keelfy.restless.journal;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.config.Settings;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.journal.Notebook.Chapter;
@@ -8,9 +9,12 @@ import dev.keelfy.restless.photo.Picture;
 import dev.keelfy.restless.spirit.SpiritType;
 import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.state.HauntData;
+import dev.keelfy.restless.state.Session;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
@@ -30,6 +34,9 @@ import org.jspecify.annotations.Nullable;
  * into.
  */
 public final class Journal {
+    /** The server tick each player's last request for the pages was answered, see {@link #read}. */
+    private static final Map<UUID, Integer> ANSWERED = Session.SERVER.keep(new HashMap<>());
+
     private Journal() {}
 
     /**
@@ -88,6 +95,19 @@ public final class Journal {
         }
         for (Chapter chapter : chapters(kind)) {
             unlock(player, chapter);
+        }
+        // The altar writes BANISHED only when its offering fitted the spirit's nature and the ritual was finished.
+        switch (kind) {
+            case FOOTPRINTS, VOICE, PLANCHETTE -> Milestones.award(player, "clue");
+            case PHOTO -> {
+                Milestones.award(player, "clue");
+                Milestones.award(player, "photo");
+            }
+            case BANISHED -> {
+                Milestones.award(player, "nature");
+                Milestones.award(player, "banished");
+            }
+            default -> {}
         }
     }
 
@@ -173,6 +193,36 @@ public final class Journal {
         }
     }
 
+    /**
+     * The client asked for the pages ({@link ReadPayload}). Every answer carries the whole journal with its photos, so
+     * a player gets one per {@code journal_pages.read_gap_ticks}; asks in between are dropped.
+     *
+     * @return whether the pages were sent
+     */
+    public static boolean read(ServerPlayer player) {
+        int now = player.level().getServer().getTickCount();
+        Integer last = ANSWERED.get(player.getUUID());
+        if (last != null && now - last < Config.section("journal_pages").integer("read_gap_ticks")) {
+            return false;
+        }
+        ANSWERED.put(player.getUUID(), now);
+        sync(player);
+        return true;
+    }
+
+    /**
+     * The player moved a guess on a dossier's case sheet on to its next value. The journal keeps it as written and
+     * never says whether it is right.
+     */
+    public static void mark(ServerPlayer player, MarkPayload payload) {
+        HauntData data = HauntData.get(player.level().getServer());
+        Notebook marked = data.notebook(player.getUUID()).cycled(payload.dossier(), payload.field());
+        if (marked != null) {
+            data.putNotebook(player.getUUID(), marked);
+            sync(player);
+        }
+    }
+
     /** Sends the pages for the book in the player's hands, which is read without opening a screen. */
     public static void sync(ServerPlayer player) {
         show(player, false);
@@ -188,9 +238,9 @@ public final class Journal {
     private static List<Chapter> chapters(Kind kind) {
         return switch (kind) {
             case PHOTO -> List.of(Chapter.CLUES, Chapter.WEAKNESS);
-            case FOOTPRINTS, VOICE, PLANCHETTE -> List.of(Chapter.CLUES);
+            case FOOTPRINTS, VOICE, PLANCHETTE, TELL, SILENCE, ANSWER -> List.of(Chapter.CLUES);
             case GRAVE, GRAVE_WHISPER -> List.of(Chapter.GRAVES);
-            case EVOLVED -> List.of(Chapter.EVOLUTION);
+            case EVOLVED, MERGED -> List.of(Chapter.EVOLUTION);
             case RESTED, BANISHED -> List.of(Chapter.ESSENCE);
             case DREAM, OLD, LAID -> List.of();
         };

@@ -4,7 +4,8 @@ import dev.keelfy.restless.journal.Notebook.Chapter;
 import dev.keelfy.restless.journal.Notebook.Kind;
 import dev.keelfy.restless.journal.Notebook.Note;
 import dev.keelfy.restless.photo.Picture;
-import dev.keelfy.restless.spirit.Spirits;
+import dev.keelfy.restless.spirit.Trait;
+import dev.keelfy.restless.spirit.Traits;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -27,8 +28,19 @@ import net.minecraft.world.item.ItemStack;
 public final class JournalPages {
     private static final String EVOLVED = Notebook.EVOLVED;
 
-    /** What clicking an entry asks for: file banishment note {@code record} under the {@code dossier}th met spirit. */
-    public record Filing(int record, int dossier) {}
+    /**
+     * What clicking an entry asks for: file banishment note {@code record} under the {@code dossier}th met spirit, or,
+     * when {@code field} is not empty and {@code record} is -1, move that field of the dossier's case sheet on.
+     */
+    public record Filing(int record, int dossier, String field) {
+        public Filing(int record, int dossier) {
+            this(record, dossier, "");
+        }
+
+        public boolean marks() {
+            return !field.isEmpty();
+        }
+    }
 
     /**
      * One thing written on a card; {@code kind} tells what showed it, when a note did, {@code filing} makes it
@@ -136,6 +148,7 @@ public final class JournalPages {
             boolean typeKnown = last(notes, Kind.PHOTO).isPresent();
             notes.stream().map(n -> entry(n, typeKnown)).forEach(entries::add);
             if (gone == null) {
+                entries.addAll(caseSheet(notebook, i));
                 for (int record = 0; record < notebook.notes().size(); record++) {
                     if (notebook.fits(record, i)) {
                         entries.add(new Entry(
@@ -152,6 +165,45 @@ public final class JournalPages {
             }
         }
         return cards;
+    }
+
+    /** The player's own guesses on a dossier: what they marked, or that nothing is marked yet. */
+    private static List<Entry> caseSheet(Notebook notebook, int dossier) {
+        List<Entry> sheet = new ArrayList<>();
+        sheet.add(Entry.plain(
+                Component.translatable("journal.restless.mark.intro").withStyle(ChatFormatting.ITALIC)));
+        for (String field : List.of(Notebook.NATURE, Notebook.FORM)) {
+            String value = notebook.mark(dossier, field);
+            sheet.add(mark(
+                    dossier,
+                    field,
+                    Component.translatable(
+                            "journal.restless.mark." + field,
+                            value.isEmpty()
+                                    ? Component.translatable("journal.restless.mark.none")
+                                    : Component.translatable("journal.restless.mark." + field + "." + value))));
+        }
+        for (Trait trait : Traits.all()) {
+            if (trait.kind() != Trait.Kind.HABIT) {
+                continue;
+            }
+            String field = Notebook.HABIT + trait.id();
+            sheet.add(mark(
+                    dossier,
+                    field,
+                    Component.translatable(
+                            "journal.restless.mark.habit",
+                            Component.translatable("trait.restless." + trait.id() + ".hint"),
+                            Component.translatable(
+                                    notebook.mark(dossier, field).isEmpty()
+                                            ? "journal.restless.mark.none"
+                                            : "journal.restless.mark.seen"))));
+        }
+        return sheet;
+    }
+
+    private static Entry mark(int dossier, String field, Component text) {
+        return new Entry(Optional.empty(), text, Optional.of(new Filing(-1, dossier, field)));
     }
 
     /**
@@ -210,9 +262,7 @@ public final class JournalPages {
         kinds.forEach((kind, grown) -> {
             List<Entry> entries = new ArrayList<>();
             entries.add(Entry.plain(Component.translatable("journal.restless.bestiary." + kind)));
-            Spirits.byId(kind)
-                    .ifPresent(type -> entries.add(Entry.plain(Component.translatable(
-                            "journal.restless.form." + type.form().name().toLowerCase(Locale.ROOT)))));
+            // The form comes from how the spirit died, which only its grave tells, so a photo of its kind names none.
             entries.add(Entry.plain(Component.translatable("journal.restless.met." + kind)));
             if (grown) {
                 entries.add(Entry.plain(Component.translatable(
@@ -253,7 +303,11 @@ public final class JournalPages {
             return Component.translatable("journal.restless.note.evolved_unknown");
         }
         MutableComponent line = Component.translatable(
-                "journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT),
+                "journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT)
+                        + note.tag()
+                                .filter(t -> note.kind() == Kind.GRAVE)
+                                .map(t -> "." + t)
+                                .orElse(""),
                 note.args().toArray());
         return note.kind().reliable
                 ? line

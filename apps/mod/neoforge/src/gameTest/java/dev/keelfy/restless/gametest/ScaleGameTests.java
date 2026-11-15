@@ -45,6 +45,8 @@ final class ScaleGameTests {
             var player = HauntEventGameTests.connected(helper);
             RandomSource random = RandomSource.create(3);
             BlockPos here = player.blockPosition();
+            // On the block's corner, so the spirit 48 blocks away stands right on the radius.
+            player.setPos(here.getX(), here.getY(), here.getZ());
             HauntData.Territorial near = spirit(level, here.offset(10, 0, 0), random);
             HauntData.Territorial edge = spirit(level, here.offset(-48, 0, 0), random);
             HauntData.Territorial far = spirit(level, here.offset(0, 0, 49), random);

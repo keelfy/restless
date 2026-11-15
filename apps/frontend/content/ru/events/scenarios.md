@@ -1,122 +1,120 @@
 ---
-title: Scenarios
+title: Сценарии
 ---
 
-# Scenarios
+# Сценарии
 
-> Эта страница пока на английском: ивенты ещё не переведены.
+Сценариев: 104.
 
-104 scenarios.
+Сценарий — это событие, составленное из других событий и разыгранное как одно явление: короткая сцена из шагов с промежутками в несколько секунд, например гаснет свет, звучит шёпот, а затем следует холодное прикосновение. Первый шаг срабатывает сразу и всегда лёгкий, так что вред заранее даёт о себе знать. Остальные идут следом, от того же духа и из той же точки. Шаг, которому не на что действовать, пропускается, а смерть игрока или выход из игры отбрасывают все оставшиеся.
 
-A scenario is an event made of other events, played as one haunt: a short script of beats a few seconds apart, such as a light going out, a whisper, then a cold touch. The first beat runs at once and is always light, so harm is announced. The rest follow, as the same spirit and from the same point. A later beat with nothing to act on is skipped, and death or logging out drops the rest.
+Сценарий выбирается как любое другое событие, считается один раз и для паузы между событиями, и для того, что дух только что сделал, и вредит, если вредит любой из его шагов. Вес сценария 0.06 (вдвое меньше, если первый шаг может сработать где угодно).
 
-A scenario is rolled like any other event, counts once for the cooldown and for what a spirit just did, and is harmful if any beat is. Its weight is 0.06 (halved when the opening beat can run anywhere).
+Дух может выбрать сценарий, только когда его сила достигает **мин. силы** сценария (0 у новорождённого спокойного духа, 1 у зрелого злого). Сценарию с пометкой **выросший** нужен выросший дух. Сценарий, в котором назван дух, — **фирменный** сценарий этого духа: выросший дух такого типа выбирает его в 3 раза чаще. Уровни **на грани** и **смертельный** — те же условия, что и у [нападений](/ru/events/assault).
 
-A spirit can roll a scenario only once its power reaches the scenario's **min power** (0 for a newborn calm spirit, 1 for a mature, angry one). A scenario marked **evolved** needs an evolved spirit. A scenario that names a spirit is that spirit's **signature**: an evolved spirit of that type rolls it 3 times as often. The **brink** and **lethal** bands are the same gates the [assault events](/ru/events/assault) use.
-
-| Scenario | Min power | Gate | What happens |
+| Сценарий | Мин. сила | Условие | Что происходит |
 | --- | --- | --- | --- |
-| Lights Out, One by One | 0.7 | none | Scenario: a lantern flickers, the torches go out one by one, something breathes beside the player, then the dark fills with monsters. |
-| Playing with Candles | 0.4 | none | Scenario: the candles go out, light again, go out once more, and something laughs. |
-| Behind You | 0.7 | none | Scenario: underground, the torches behind the player go out one by one, steps follow, a cold breath touches the neck, then the player's head turns by itself. |
-| The Hearth Dies | 0.7 | none | Scenario: the furnace and the campfire die together, a cold breath follows, then frost bites. |
-| Between Blinks | 0.4 | none | Scenario: the light slowly drains out of the world, the view blinks dark several times, and a figure stands at the edge of vision. |
-| Lamp Code | 0.4 | none | Scenario: a redstone lamp goes out three times, three knocks answer, then a lever flips. |
-| Soul Fire | 0.6 | none | Scenario: a torch or lantern turns into another kind, a lantern flickers three times, "BEHIND YOU" flashes for an instant, then sanity drains. |
-| Pocket Dark | 0.7 | none | Scenario: the torch or lantern in the player's hand goes out, darkness falls, whispers come close at both ears, then a cold touch hurts. |
-| The Path of Lights | 0.4 | none | Scenario: a line of torches leads away through the dark, the music cuts out, then a pale silhouette appears in the fog. |
-| Jack o'Lanterns | 0.4 | none | Scenario: three jack o'lanterns slowly turn to face another way, then a stranger walks past in the distance. |
-| Knock, Knock | 0.4 | none | Scenario: three knocks on the nearest door, the door opens or slams by itself, footsteps close in, then something breathes right beside the player. |
-| Open House | 0.7 | none | Scenario: a door opens and closes as if breathing, every closed wooden door nearby swings open at night, then a monster sounds far off. |
-| Locked In | 0.7 | none | Scenario: three knocks sound, a door slams and will not open, something breathes close by, the candles go out, then a cold touch lands. |
-| Rearranged | 0.7 | none | Scenario: a decorated pot wobbles, the books on a shelf change places, a painting turns into another, furniture moves, and something laughs. |
-| Midnight Kitchen | 0.4 | none | Scenario: a chest lid opens and shuts, someone eats behind the wall, the furnace output turns to charcoal or rotten flesh, then a hunger pang strikes. |
-| A Visitor | 0.4 | none | Scenario: a gift appears outside the door, muddy footprints cross the room, three knocks sound, then a door opens or slams by itself. |
-| Trap Room | 0.7 | none | Scenario: a pressure plate triggers with nobody on it, a dispenser shoots an arrow at the player, and a ghostly laugh follows. |
-| Ticking Chest | 0.7 | none | Scenario: a chest opens nearby, a lid opens and closes by itself, then the chest the player opened hisses and blasts without breaking blocks. |
-| Nothing Works | 0.7 | none | Scenario: a lever flips, a button presses itself, an iron door moves without redstone, a repeater drifts, and a jukebox spits out its disc. |
-| Last Song | 0.4 | none | Scenario: music disc 11 plays where there is no jukebox, a real jukebox cuts its music and spits out the disc, then a child cries nearby. |
-| Company | 0.4 | none | Scenario: a stranger joins the game, a lone player stands far off watching, then builds a pillar, and finally a chat message reports the stranger's death. |
-| Someone at My Crops | 0.4 | none | Scenario: someone joins the game, a stranger harvests the ripe crops at the edge of the field, and one plant is back to a seedling. |
-| Closing In | 0.6 | none | Scenario: a distant stranger walks past, footsteps close in on the player, then a figure appears at the edge of their vision. |
-| A Name Below | 0.4 | none | Scenario: a nameplate floats below the floor with nobody under it, someone joins the game, then "???" whispers the player's name in chat. |
-| The Other Builder | 0.4 | none | Scenario: a distant player pillars up, blocks nearby break one after another, then a sign with a warning appears on a tunnel wall. |
-| Died Out There | 0.7 | none | Scenario: a stranger walks by far away, a scream is cut off, chat reports another player's death, then a gravestone with the player's name appears. |
-| The Dead Party | 0.8 | none | Scenario: three strangers join the game, one stands far away watching, a pale figure shows in the fog, then death messages for the strangers follow. |
-| Friend Far Off | 0.6 | none | Scenario: a nearby player is also seen far away, watching, then "???" whispers in chat and a subtitle says something breathes behind the player. |
-| Statue Game | 0.7 | none | Scenario: an armor stand appears behind the player and creeps closer whenever they look away, steps sound, and the player's head turns toward the spirit. |
-| Your Armor Fits It | 0.7 | none | Scenario: a cold breath touches the player's neck, worn armor comes off, something laughs, then a zombie in a copy of the armor attacks from behind. |
-| Who Said That | 0.4 | none | Scenario: a chat line appears in the player's own name, their last sound echoes back, another line follows, then a title flashes for an instant. |
-| Your Grave | 0.7 | none | Scenario: a gravestone with the player's name appears nearby, a figure stands at the edge of vision, then a death message reads "slain by ???". |
-| Behind the Glass | 0.6 | none | Scenario: the windows nearby vanish for this player alone, a wall turns to glass with a husk standing behind it, then a figure like the player lurks at the edge of sight. |
-| Same Steps | 0.4 | none | Scenario: footprints appear where the player just stood, a subtitle says something breathes behind, then a figure stands at the edge of vision. |
-| Someone in My Bed | 0.6 | none | Scenario: something breathes beside the player, a bed reads as occupied, heaviness slows them, then a warden heartbeat sounds with no warden. |
-| No Rest | 0.7 | none | Scenario: a warden's heartbeat sounds with no warden, the player counts as three days without sleep, a whisper follows, then a bed reads as occupied. |
-| Shattered Sleep | 0.7 | none | Scenario: a warden heartbeat sounds with no warden, the nearby bed breaks, and a ghostly laugh follows. |
-| Night at Noon | 0.4 | none | Scenario: night falls in the middle of the day, a moan circles the player, silent lightning strikes nearby, and a monster sounds in the distance. |
-| Lost Hour | 0.7 | none | Scenario: the view blinks dark, the clock jumps an hour ahead at night, a whisper speaks the player's name, then sanity drains. |
-| Sleep Paralysis | 0.7 | none | Scenario: darkness falls, the player stops dead for a second, a cold breath touches the neck, then a title flashes "BEHIND YOU". |
-| The Other Miner | 0.4 | none | Scenario: rhythmic mining sounds from below, blocks nearby break one after another, then a sign with a warning appears in the tunnel. |
-| Overhead | 0.7 | none | Scenario: a spider crawls across the ceiling right above the player, a block overhead cracks as if mined, then the floor underfoot cracks and holds. |
-| Floor Gives Way | 0.7 | none | Scenario: blocks break nearby unharmed, the floor underfoot seems to crack, it shifts into another material, then the player is shoved toward the drop. |
-| Deep Calling | 0.8 | none | Scenario: someone climbs a ladder nearby, a whisper follows, then a voice draws the player toward lava or a drop into the void. |
-| Nest | 0.7 | none | Scenario: stone, wood and gravel break out of sight, the stone the player looks at turns infested, and then the player is infested too. |
-| Lava Tears | 0.7 | none | Scenario: lava drips from the ceiling, the player is set on fire for a second, then the torch in hand is dropped as if it burned. |
-| No Way Back | 0.7 | none | Scenario: the torches behind the player go out one by one, footsteps close in, then the tunnel behind them is sealed with stone. |
-| Buried Alive | 0.8 | none | Scenario: a warning sign appears on the tunnel wall, stone closes around the player on every side, then the air runs out. |
-| Ancient City | 0.4 | none | Scenario: a sculk shrieker shrieks for nothing, a warden heartbeat sounds with no warden, then darkness falls. |
-| Hole in the Wall | 0.7 | none | Scenario: the block the player looks at breaks and comes back, two blocks of a thin wall vanish, and a monster sounds in the distance. |
-| Dead Lake | 0.7 | none | Scenario: fish and squid die around the swimmer in puffs of ink, the elder guardian's face appears, then an undertow drags them down. |
-| Adrift | 0.4 | none | Scenario: an empty boat slides away from the player, rain falls over the player alone, then a nearby boat comes apart. |
-| Voice from the Water | 0.7 | none | Scenario: water drips nearby, whispers sound at the player's ears, then the player is drawn along the ground toward the nearest water. |
-| Frozen Pond | 0.7 | none | Scenario: nearby water freezes over, a cold breath touches the player's face, then frost bites. |
-| Leaky Roof | 0.4 | none | Scenario: water drips from the ceiling, drips again nearby, then a water cauldron is emptied. |
-| Into the Corner | 0.7 | none | Scenario: animals stop and stare at the player, the animals in a pen crowd into one corner, then a closed gate swings open. |
-| The Dog Sees It | 0.7 | none | Scenario: a tamed dog stares at empty space and growls, a step sounds behind the player, then a freezing touch lands. |
-| Cats Know | 0.4 | none | Scenario: nearby cats run away, one hisses at nothing, then a figure stands at the edge of vision. |
-| Not My Dog | 0.8 | none | Scenario: a wolf barks at nothing, a tamed dog growls at empty space beside the player, then a pet turns on its owner. |
-| Swarm | 0.7 | none | Scenario: five bats appear close to the player, a spider crawls across the ceiling overhead, then the bees of a nearby hive pour out angry. |
-| Wrong Herd | 0.4 | none | Scenario: a nearby animal looks like another kind, the animals stop and stare at the player, then one of them groans or hisses. |
-| The Golem Mourns | 0.4 | none | Scenario: an iron golem holds a poppy out to empty air, a bell tolls from afar, and a villager stares at the player. |
-| The Golem Turns | 0.8 | none | Scenario: a villager shakes its head at nobody, an iron golem offers a poppy to empty air, then the nearest idle golem turns on the player. |
-| Stolen Block | 0.7 | none | Scenario: an enderman hisses, picks up a block from the player's build, then two blocks of a thin wall vanish. |
-| Runaway Cart | 0.7 | none | Scenario: mining sounds echo from below, an empty minecart rolls along the rail toward the player, then the player stops dead for a second. |
-| Pack | 0.8 | none | Scenario: a moan circles the player, then idle wild wolves nearby turn on them in rage. |
-| Billy Goat | 0.7 | none | Scenario: nearby animals stop and stare, a leash snaps and the animal runs free, then a goat charges at the player. |
-| You Died | 0.7 | none | Scenario: the health bar shows four hearts less, wither or poison hearts appear, then a death message reads "slain by ???". |
-| Saved by Nothing | 0.4 | none | Scenario: the health bar drops by four hearts without real damage, a totem animation plays with no totem, and a ghostly laugh follows. |
-| Achievement Get | 0.4 | none | Scenario: a false advancement pops up, a title flashes for three ticks, then a chat line appears in the player's own name. |
-| Starving | 0.4 | none | Scenario: the hunger bar flashes empty, someone eats behind the wall, then ravenous hunger sets in. |
-| What's in My Pocket | 0.4 | none | Scenario: an empty slot shows an item that is not there, two inventory slots trade places, then the selected hotbar slot changes on its own. |
-| Silence | 0.4 | none | Scenario: the music cuts out, a subtitle says something breathes behind you, then five breaths sound beside the player, each louder than the last. |
-| Seeing Red | 0.7 | none | Scenario: the screen's edges go red, a warden's heartbeat sounds with no warden, then wrath strikes for magic damage. |
-| The Sky Lies | 0.4 | none | Scenario: the ender dragon flies high overhead, lightning strikes nearby without fire, then a monster sound comes from afar. |
-| Mind Slipping | 0.8 | none | Scenario: the view blinks dark several times, sanity drains, nearby blocks look like others of their kind, then sanity shatters. |
-| Hoard | 0.7 | none | Scenario: the contents of a nearby chest are shuffled, a stack moves to another chest, then a chest opens by itself nearby. |
-| Butterfingers | 0.7 | none | Scenario: the selected hotbar slot changes by itself, the item in hand is thrown about five blocks away, and something laughs. |
-| X Marks the Spot | 0.7 | none | Scenario: a red X appears on the map, the compass points at a false spot, then a trail of bones leads to a sign with a note. |
-| The Journal | 0.4 | none | Scenario: a creepy page is added to the player's book, a book on a lectern turns its page by itself, then whispers come close. |
-| Blight | 0.7 | none | Scenario: grass under the player turns to dirt, nearby crops lose a growth stage, then a stack of food in the inventory rots. |
-| Funeral | 0.4 | none | Scenario: potted flowers wilt into dead bushes, a cross of bone blocks stands on the ground, then a scream sounds nearby. |
-| Walking Woods | 0.4 | none | Scenario: a ghost tree stands where there was none, a nearby tree shifts aside, then a step sounds right behind the player. |
-| Tantrum | 0.7 | evolved, signature of the poltergeist | Scenario of an evolved spirit: a door breathes, every wooden door swings open, furniture moves away, the held item is thrown off, then the opened chest blasts. |
-| Supper | 0.7 | evolved, signature of the shade | Scenario of an evolved spirit: a nearby light is snuffed, someone eats behind a wall, torches go dark in a chain, the eating sounds again, then the lights break and a monster attacks. |
-| Replacement | 0.7 | evolved, signature of the phantom | Scenario of an evolved spirit: footprints appear, the player's own voice speaks in chat, a figure stands at the edge of vision, the death message "slain by ???" shows, then a double attacks. |
-| Wearing Faces | 0.7 | evolved, signature of the mimic | Scenario of an evolved spirit: an animal looks like another kind, it groans or hisses, a phantom mob stares, armor comes off, then a zombie in the player's armor attacks. |
-| Lights at Your Back | 0.7 | evolved, signature of the wraith | Scenario of an evolved spirit: the torches behind the player go out, the light in hand dies, footsteps close in, then a dark figure appears far off. |
-| Rider | 0.7 | evolved, signature of the mara | Scenario of an evolved spirit: a bed reads as occupied, breathing sounds beside the player, slowness sets in, darkness falls, then a growing pressure hurts the player until they get away. |
-| Foretold | 0.7 | evolved, signature of the banshee | Scenario of an evolved spirit: a bell tolls, a banshee shrieks, a scream is cut off, the death message "slain by ???" shows, then a gravestone with the player's name appears. |
-| Blood for Blood | 0.7 | evolved, signature of the revenant | Scenario of an evolved spirit: a scream sounds, the screen reddens, a zombie in the player's armor attacks, a pet turns on them, then wrath strikes. |
-| The Way They Went | 0.7 | evolved, signature of the lost one | Scenario of an evolved spirit: muddy footprints and a trail of bones lead to a note, a line of torches leads off, a death message appears, then time jumps forward. |
-| House Rules | 0.7 | evolved, signature of the domovoi | Scenario of an evolved spirit: a door, a trapdoor, a fence gate, a button and a lever all move by themselves, a door slams shut and locks, then the books on a shelf change places. |
-| Feast | 0.7 | evolved, signature of the hoarder | Scenario of an evolved spirit: the hunger bar flashes empty, someone eats behind the wall, food rots, a furnace yields charcoal, then a stack moves between chests. |
-| Gone in the Fog | 0.4 | none | Scenario: a pale stranger stands in the fog; once it is gone, steps follow and a breath comes from behind. |
-| Walking in Sleep | 0.7 | none | Scenario: whispers close in, then the player is made to sleepwalk; on waking, muddy footprints and a sign in a cave are found. |
-| Bad Dream | 0.4 | none | Scenario: a dream waits for sleep; on waking the night turns false and whispers close in. |
-| Taken Under | 0.7 | evolved, signature of the nix | Scenario of an evolved spirit: whispers, a pull toward the water, and once in it the undertow drags the player down while the fish die. |
-| The Debt | 0.7 | evolved, signature of the demon | Scenario of an evolved spirit: the screen reddens, the lights die, wrath strikes, then a voice draws the player toward lava or the void. |
-| Punchline | 0.7 | evolved, signature of the trickster | Scenario of an evolved spirit: a false advancement and a false totem appear, a chest lid opens, the chest hisses and blasts, then a ghostly laugh rings out. |
-| The Hunt | 0.8 | brink band | Footsteps, then arrows from the dark, a stalker that runs the player down, and a final blow that leaves half a heart. |
-| The Last Night | 0.9 | evolved, lethal band (shade, wraith) | Scenario of an evolved spirit: a heartbeat, then ten seconds later a shadow that kills with a touch. |
-| Debt | 0.9 | evolved, lethal band (revenant) | Scenario of an evolved spirit: a breath, a possessed mob, a final blow, and then an avenger that fights to the death. |
-| Drowning Season | 0.9 | evolved, lethal band (nix) | Scenario of an evolved spirit: dripping water, an undertow, and then a drowner that holds the player under. |
+| Свет гаснет по одному | 0.7 | нет | Мерцает фонарь, а факелы гаснут один за другим. Рядом с игроком кто-то дышит, после чего тьма наполняется монстрами. |
+| Игра со свечами | 0.4 | нет | Свечи гаснут, загораются снова и гаснут ещё раз, а затем кто-то смеётся. |
+| Позади тебя | 0.7 | нет | Под землёй факелы за спиной игрока гаснут один за другим, и следом слышны шаги. Холодное дыхание касается шеи, а затем голова игрока сама поворачивается. |
+| Очаг умирает | 0.7 | нет | Печь и костёр гаснут вместе. Следом касается холодное дыхание, а затем кусает мороз. |
+| Между морганиями | 0.4 | нет | Свет медленно утекает из мира, и в глазах несколько раз темнеет. После этого на краю зрения стоит фигура. |
+| Код лампы | 0.4 | нет | Лампа красного камня трижды гаснет, и в ответ раздаются три стука, а затем щёлкает рычаг. |
+| Душевный огонь | 0.6 | нет | Факел или фонарь превращается в другой, а фонарь трижды мерцает. На миг вспыхивает надпись «BEHIND YOU», после чего рассудок убывает. |
+| Тьма в кармане | 0.7 | нет | Факел или фонарь в руке игрока гаснет, и наступает тьма. У обоих ушей раздаётся шёпот, а затем ледяное прикосновение причиняет боль. |
+| Дорожка из огней | 0.4 | нет | Цепочка факелов уводит прочь сквозь темноту, и музыка обрывается. Затем в тумане появляется бледный силуэт. |
+| Тыквенные фонари | 0.4 | нет | Три светильника Джека медленно поворачиваются в другую сторону, а затем вдалеке проходит чужак. |
+| Тук-тук | 0.4 | нет | Раздаются три стука в ближайшую дверь, и дверь сама открывается или захлопывается. Шаги приближаются, а затем рядом с игроком кто-то дышит. |
+| Дом нараспашку | 0.7 | нет | Дверь открывается и закрывается, словно дышит, а ночью все закрытые деревянные двери поблизости распахиваются. Затем вдалеке раздаётся звук монстра. |
+| Взаперти | 0.7 | нет | Раздаются три стука, а дверь захлопывается и не открывается. Рядом кто-то дышит и гаснут свечи, а затем следует холодное прикосновение. |
+| Всё переставлено | 0.7 | нет | Дрожит узорчатый горшок, книги на полке меняются местами, а одна картина превращается в другую. Затем переезжает мебель, и кто-то смеётся. |
+| Полночная кухня | 0.4 | нет | Крышка сундука открывается и закрывается, а за стеной кто-то ест. Результат в печи превращается в древесный уголь или кусок гнили, а затем накатывает приступ голода. |
+| Гость | 0.4 | нет | У двери появляется подарок, а по комнате проходят грязные следы. Раздаются три стука, а затем дверь сама открывается или захлопывается. |
+| Комната-ловушка | 0.7 | нет | Нажимная плита срабатывает без нагрузки, а раздатчик стреляет в игрока стрелой. Затем звучит призрачный смех. |
+| Тикающий сундук | 0.7 | нет | Рядом открывается сундук, а крышка сама поднимается и опускается. Затем сундук, открытый игроком, шипит и взрывается, не ломая блоков. |
+| Ничего не работает | 0.7 | нет | Сам переключается рычаг, сама нажимается кнопка, а железная дверь движется без красного камня. Повторитель сбивается, а проигрыватель выплёвывает диск. |
+| Последняя песня | 0.4 | нет | Пластинка 11 играет там, где нет проигрывателя, а настоящий проигрыватель обрывает музыку и выплёвывает диск. Затем рядом плачет ребёнок. |
+| Компания | 0.4 | нет | В игру заходит незнакомец, а вдалеке стоит одинокий игрок и наблюдает, после чего строит столб. В конце сообщение в чате извещает о смерти незнакомца. |
+| Кто-то на моих грядках | 0.4 | нет | В игру заходит кто-то чужой, а на краю поля незнакомец собирает спелый урожай. После этого одно растение снова становится ростком. |
+| Всё ближе | 0.6 | нет | Вдали проходит незнакомец, а шаги приближаются к игроку. Затем на краю его зрения появляется фигура. |
+| Имя внизу | 0.4 | нет | Под полом парит ник, за которым никого нет, и кто-то заходит в игру. Затем «???» шепчет в чате имя игрока. |
+| Другой строитель | 0.4 | нет | Вдалеке игрок строит столб, а рядом один за другим ломаются блоки. Затем на стене тоннеля появляется табличка с предостережением. |
+| Он погиб там | 0.7 | нет | Вдали проходит незнакомец, и крик обрывается. В чате сообщают о смерти другого игрока, а затем появляется надгробие с именем игрока. |
+| Мёртвая компания | 0.8 | нет | В игру заходят трое незнакомцев, и один из них стоит далеко и наблюдает. В тумане виден бледный силуэт, а затем следуют сообщения о смерти незнакомцев. |
+| Друг вдалеке | 0.6 | нет | Стоящий рядом игрок виден ещё и вдалеке, где он наблюдает. Затем «???» шепчет в чате, а субтитр сообщает, что кто-то дышит за спиной игрока. |
+| Игра в статую | 0.7 | нет | За спиной игрока появляется стойка для брони и подкрадывается ближе, стоит ему отвернуться. Слышны шаги, а голова игрока поворачивается к духу. |
+| Ваша броня ему впору | 0.7 | нет | Холодное дыхание касается шеи игрока, а надетая броня слетает. Кто-то смеётся, а затем сзади нападает зомби в копии этой брони. |
+| Кто это сказал | 0.4 | нет | В чате появляется строка от имени самого игрока, а эхом повторяется его последний звук. Затем появляется ещё одна строка, а на миг вспыхивает надпись. |
+| Твоя могила | 0.7 | нет | Рядом появляется надгробие с именем игрока, а на краю зрения стоит фигура. Затем сообщение о смерти гласит «был убит ???». |
+| За стеклом | 0.6 | нет | Окна поблизости пропадают только для этого игрока, а стена становится стеклом, за которым стоит кадавр. Затем на краю зрения подстерегает фигура, похожая на игрока. |
+| Те же шаги | 0.4 | нет | На месте, где игрок только что стоял, появляются следы, а субтитр сообщает, что кто-то дышит позади. Затем на краю зрения стоит фигура. |
+| Кто-то в моей кровати | 0.6 | нет | Рядом с игроком кто-то дышит, а кровать оказывается занятой. Тяжесть замедляет игрока, а затем слышно сердцебиение хранителя, которого нет. |
+| Нет покоя | 0.7 | нет | Слышно сердцебиение хранителя, которого нет, а игрок считается не спавшим три дня. Следует шёпот, а затем кровать оказывается занятой. |
+| Разбитый сон | 0.7 | нет | Слышно сердцебиение хранителя, которого нет, и ближайшая кровать ломается. Затем раздаётся призрачный смех. |
+| Ночь в полдень | 0.4 | нет | Посреди дня наступает ночь, а вокруг игрока кружит стон. Поблизости бьёт беззвучная молния, а вдали слышен звук монстра. |
+| Потерянный час | 0.7 | нет | В глазах темнеет, а ночью часы скачком уходят на час вперёд. Шёпот называет игрока по имени, а затем рассудок убывает. |
+| Сонный паралич | 0.7 | нет | Наступает тьма, и игрок на секунду замирает. Холодное дыхание касается шеи, а затем на миг вспыхивает надпись «BEHIND YOU». |
+| Другой шахтёр | 0.4 | нет | Снизу слышны ритмичные звуки добычи, а рядом один за другим ломаются блоки. Затем в тоннеле появляется табличка с предостережением. |
+| Над головой | 0.7 | нет | Прямо над игроком по потолку ползёт паук, а блок над головой трескается, словно его копают. Затем под ногами трескается пол, но выдерживает. |
+| Пол уходит из-под ног | 0.7 | нет | Рядом ломаются блоки, не причиняя вреда, а пол под ногами будто трескается и превращается в другой материал. Затем игрока толкает к обрыву. |
+| Зов глубины | 0.8 | нет | Рядом кто-то поднимается по лестнице, и следом звучит шёпот. Затем голос тянет игрока к лаве или к обрыву в пустоту. |
+| Гнездо | 0.7 | нет | Камень, дерево и гравий ломаются вне поля зрения, а камень, на который смотрит игрок, оказывается заражённым. Затем заражается и сам игрок. |
+| Лавовые слёзы | 0.7 | нет | С потолка капает лава, и игрок на секунду загорается. Затем факел в руке падает, будто обжёг. |
+| Пути назад нет | 0.7 | нет | Факелы за спиной игрока гаснут один за другим, а шаги приближаются. Затем тоннель позади запечатывается камнем. |
+| Погребённый заживо | 0.8 | нет | На стене тоннеля появляется предупреждающая табличка, а камень смыкается вокруг игрока со всех сторон. Затем кончается воздух. |
+| Древний город | 0.4 | нет | Скалковый крикун кричит без причины, а слышно сердцебиение хранителя, которого нет. Затем наступает тьма. |
+| Дыра в стене | 0.7 | нет | Блок, на который смотрит игрок, ломается и возвращается, а два блока тонкой стены исчезают. Вдали слышен звук монстра. |
+| Мёртвое озеро | 0.7 | нет | Рыбы и кальмары вокруг пловца гибнут в облачках чернил, а появляется лицо древнего стража. Затем подводное течение утягивает игрока вниз. |
+| Унесённые течением | 0.4 | нет | Пустая лодка медленно уплывает от игрока, а дождь идёт только над ним одним. Затем ближайшая лодка разваливается. |
+| Голос из воды | 0.7 | нет | Рядом капает вода, а у ушей игрока звучит шёпот. Затем игрока тянет по земле к ближайшей воде. |
+| Замёрзший пруд | 0.7 | нет | Вода поблизости покрывается льдом, а холодное дыхание касается лица игрока. Затем кусает мороз. |
+| Течёт крыша | 0.4 | нет | С потолка капает вода, а потом капает снова поблизости. Затем опустошается котёл с водой. |
+| В угол | 0.7 | нет | Животные замирают и смотрят на игрока, а животные в загоне сбиваются в один угол. Затем закрытая калитка распахивается. |
+| Собака это видит | 0.7 | нет | Прирученная собака смотрит в пустоту и рычит, а за спиной игрока раздаётся шаг. Затем следует ледяное прикосновение. |
+| Кошки знают | 0.4 | нет | Ближайшие кошки убегают, а одна шипит на пустоту. Затем на краю зрения стоит фигура. |
+| Не моя собака | 0.8 | нет | Волк лает на пустоту, а прирученная собака рычит на пустое место рядом с игроком. Затем питомец оборачивается против хозяина. |
+| Рой | 0.7 | нет | Рядом с игроком появляются пять летучих мышей, а над головой по потолку ползёт паук. Затем пчёлы из ближайшего улья вылетают разъярёнными. |
+| Неправильное стадо | 0.4 | нет | Животное рядом выглядит как другое, а животные замирают и смотрят на игрока. Затем одно из них стонет или шипит. |
+| Голем скорбит | 0.4 | нет | Железный голем протягивает мак пустоте, а издалека звонит колокол. Житель при этом смотрит на игрока. |
+| Голем оборачивается | 0.8 | нет | Житель качает головой, глядя в никуда, а железный голем протягивает мак пустоте. Затем ближайший бездействующий голем нападает на игрока. |
+| Украденный блок | 0.7 | нет | Странник Края шипит и берёт блок из постройки игрока. Затем два блока тонкой стены исчезают. |
+| Беглая вагонетка | 0.7 | нет | Снизу доносятся звуки добычи, а пустая вагонетка катится по рельсам к игроку. Затем игрок на секунду замирает. |
+| Стая | 0.8 | нет | Вокруг игрока кружит стон, а затем бездействующие дикие волки поблизости набрасываются на него в ярости. |
+| Козёл | 0.7 | нет | Животные поблизости замирают и смотрят на игрока, а поводок рвётся, и зверь убегает. Затем козёл бросается на игрока. |
+| Ты погиб | 0.7 | нет | Полоска здоровья показывает на четыре сердца меньше, а появляются сердца иссушения или отравления. Затем сообщение о смерти гласит «был убит ???». |
+| Спасён пустотой | 0.4 | нет | Полоска здоровья падает на четыре сердца без настоящего урона, а проигрывается анимация тотема, хотя тотема нет. После этого звучит призрачный смех. |
+| Достижение получено | 0.4 | нет | Всплывает ложное достижение, а на три тика мелькает надпись. Затем в чате появляется строка от имени самого игрока. |
+| Голод | 0.4 | нет | Шкала голода на миг пустеет, а за стеной кто-то ест. Затем наваливается лютый голод. |
+| Что в моём кармане | 0.4 | нет | В пустом слоте виден предмет, которого там нет, а два слота инвентаря меняются местами. Затем выбранная ячейка панели быстрого доступа сама меняется. |
+| Тишина | 0.4 | нет | Музыка обрывается, а субтитр сообщает, что кто-то дышит за спиной игрока. Затем рядом звучат пять вдохов, каждый громче предыдущего. |
+| Красная пелена | 0.7 | нет | Края экрана краснеют, а слышно сердцебиение хранителя, которого нет. Затем гнев бьёт магическим уроном. |
+| Небо лжёт | 0.4 | нет | Высоко над головой пролетает дракон Края, а поблизости бьёт молния без пожара. Затем издалека доносится звук монстра. |
+| Разум ускользает | 0.8 | нет | В глазах несколько раз темнеет, а рассудок убывает. Ближайшие блоки выглядят как другие того же вида, а затем рассудок рушится. |
+| Сокровищница | 0.7 | нет | Содержимое ближайшего сундука перемешивается, а стопка предметов переезжает в другой сундук. Затем рядом сам собой открывается сундук. |
+| Растяпа | 0.7 | нет | Выбранная ячейка панели быстрого доступа меняется сама, а предмет из руки отлетает блоков на пять. Затем кто-то смеётся. |
+| Крестик на карте | 0.7 | нет | На карте появляется красный крестик, а компас указывает на ложное место. Затем дорожка из костей ведёт к табличке с запиской. |
+| Дневник | 0.4 | нет | В книгу игрока добавляется жуткая страница, а книга на кафедре сама переворачивает страницу. Затем вплотную раздаётся шёпот. |
+| Порча | 0.7 | нет | Трава под игроком превращается в землю, а посевы поблизости теряют одну стадию роста. Затем стопка еды в инвентаре гниёт. |
+| Похороны | 0.4 | нет | Цветы в горшках вянут и превращаются в мёртвые кусты, а на земле встаёт крест из костяных блоков. Затем рядом раздаётся крик. |
+| Бродячий лес | 0.4 | нет | Там, где не было дерева, встаёт призрачное дерево, а ближайшее дерево сдвигается в сторону. Затем прямо за спиной игрока слышен шаг. |
+| Истерика | 0.7 | выросший, фирменный: полтергейст | Дверь дышит, а все деревянные двери распахиваются. Мебель отъезжает, а предмет в руке отлетает, после чего открытый сундук взрывается. |
+| Ужин | 0.7 | выросший, фирменный: тень | Ближайший источник света гаснет, а за стеной кто-то ест. Факелы гаснут цепочкой, и снова слышны звуки еды, а затем свет разбивается и нападает монстр. |
+| Подмена | 0.7 | выросший, фирменный: фантом | Появляются следы, а в чате звучит собственный голос игрока. На краю зрения стоит фигура, показывается сообщение о смерти «был убит ???», а затем нападает двойник. |
+| Чужие лица | 0.7 | выросший, фирменный: мимик | Животное выглядит как другое и стонет или шипит, а моб-фантом смотрит на игрока. Броня слетает, а затем нападает зомби в броне игрока. |
+| Свет за спиной | 0.7 | выросший, фирменный: призрак | Факелы за спиной игрока гаснут, а свет в руке умирает. Шаги приближаются, а затем вдалеке появляется тёмная фигура. |
+| Наездник | 0.7 | выросший, фирменный: мара | Кровать оказывается занятой, а рядом с игроком раздаётся дыхание. Наваливается замедление и наступает тьма, а затем растущее давление терзает игрока, пока тот не уйдёт подальше. |
+| Предсказание смерти | 0.7 | выросший, фирменный: банши | Звонит колокол, кричит банши, и крик обрывается. Показывается сообщение о смерти «был убит ???», а затем появляется надгробие с именем игрока. |
+| Кровь за кровь | 0.7 | выросший, фирменный: ревенант | Раздаётся крик, а экран краснеет. Нападает зомби в броне игрока, питомец оборачивается против него, а затем бьёт гнев. |
+| Путь, которым они ушли | 0.7 | выросший, фирменный: потерянный | Грязные следы и дорожка из костей ведут к записке, а цепочка факелов уводит вдаль. Появляется сообщение о смерти, а затем время скачком уходит вперёд. |
+| Правила дома | 0.7 | выросший, фирменный: домовой | Дверь, люк, калитка, кнопка и рычаг двигаются сами по себе. Дверь захлопывается и запирается, а затем книги на полке меняются местами. |
+| Пир | 0.7 | выросший, фирменный: скопидом | Шкала голода на миг пустеет, а за стеной кто-то ест. Еда гниёт, а печь выдаёт древесный уголь, после чего стопка предметов переезжает из сундука в сундук. |
+| Пропавший в тумане | 0.4 | нет | В тумане стоит бледный незнакомец. Когда он исчезает, следом раздаются шаги, а дыхание слышится сзади. |
+| Хождение во сне | 0.7 | нет | Шёпот приближается, а затем игрок начинает ходить во сне. Проснувшись, он находит грязные следы и табличку в пещере. |
+| Дурной сон | 0.4 | нет | Сон ждёт, пока игрок уснёт. После пробуждения ночь оказывается ложной, а шёпот приближается. |
+| Унесённый под воду | 0.7 | выросший, фирменный: никс | Звучит шёпот, а игрока тянет к воде. Когда он оказывается в воде, подводное течение утягивает его вниз, пока рыбы гибнут. |
+| Долг | 0.7 | выросший, фирменный: демон | Экран краснеет, а свет гаснет. Бьёт гнев, а затем голос тянет игрока к лаве или в пустоту. |
+| Коронная шутка | 0.7 | выросший, фирменный: трикстер | Появляются ложное достижение и ложный тотем, а крышка сундука открывается. Сундук шипит и взрывается, а затем раздаётся призрачный смех. |
+| Охота | 0.8 | на грани | Сначала слышны шаги, затем из темноты летят стрелы, преследователь настигает игрока, и последний удар оставляет ему полсердца. |
+| Последняя ночь | 0.9 | выросший, смертельный уровень (тень, призрак) | Слышно сердцебиение, а через десять секунд появляется тень, которая убивает прикосновением. |
+| Расплата | 0.9 | выросший, смертельный уровень (ревенант) | Раздаётся дыхание, затем появляются одержимый моб и последний удар, а следом мститель, который бьётся насмерть. |
+| Сезон утопленников | 0.9 | выросший, смертельный уровень (никс) | Капает вода, затем возникает подводное течение, а следом утопитель, который держит игрока под водой. |

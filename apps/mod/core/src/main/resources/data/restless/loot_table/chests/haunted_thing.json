@@ -1,0 +1,74 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.06
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:clock",
+          "modifier": {
+            "type": "minecraft:set_custom_data",
+            "tag": {
+              "restless_haunted": true
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:spyglass",
+          "modifier": {
+            "type": "minecraft:set_custom_data",
+            "tag": {
+              "restless_haunted": true
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bell",
+          "modifier": {
+            "type": "minecraft:set_custom_data",
+            "tag": {
+              "restless_haunted": true
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:lantern",
+          "modifier": {
+            "type": "minecraft:set_custom_data",
+            "tag": {
+              "restless_haunted": true
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:amethyst_shard",
+          "modifier": {
+            "type": "minecraft:set_custom_data",
+            "tag": {
+              "restless_haunted": true
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_nugget",
+          "modifier": {
+            "type": "minecraft:set_custom_data",
+            "tag": {
+              "restless_haunted": true
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

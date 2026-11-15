@@ -2,6 +2,7 @@ package dev.keelfy.restless.divine;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.haunt.Calendar;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.state.HauntData;
 import dev.keelfy.restless.state.Session;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,6 +44,7 @@ public final class Candle {
             return;
         }
         long now = server.overworld().getGameTime();
+        Calendar.Date date = Calendar.today(server);
         HauntData data = null;
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (!holds(player)) {
@@ -63,7 +66,7 @@ public final class Candle {
                     .orElse(Vec3.ZERO);
             player.level()
                     .sendParticles(
-                            warning ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
+                            warning ? ParticleTypes.SOUL_FIRE_FLAME : flame(date),
                             hand.x,
                             hand.y,
                             hand.z,
@@ -73,6 +76,17 @@ public final class Candle {
                             lean.z * config.num("lean"),
                             0.03);
         }
+    }
+
+    /** The flame shows the date: pale on a full moon, red on a blood night, green on the day of the dead. */
+    private static ParticleOptions flame(Calendar.Date date) {
+        if (date.dayOfTheDead()) {
+            return ParticleTypes.HAPPY_VILLAGER;
+        }
+        if (date.bloodNight()) {
+            return ParticleTypes.CRIMSON_SPORE;
+        }
+        return date.fullMoon() ? ParticleTypes.END_ROD : ParticleTypes.FLAME;
     }
 
     public static boolean holds(ServerPlayer player) {

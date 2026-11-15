@@ -8,167 +8,167 @@ title: Affliction
 
 ## `blindness`
 
-Blindness for 6 s and a low cave ambient sound
+The player is struck with Blindness for 6 s, and a ghostly moan is heard.
 
-Runs when: Player is not already blind
+Runs when: the player is not already blind.
 
 ## `nausea`
 
-Nausea 5 s
+The player is given Nausea for 5 s.
 
-Runs when: No nausea
+Runs when: the player has no nausea.
 
 ## `heaviness`
 
-Slowness II 8 s
+The player is given Slowness II for 8 s.
 
-Runs when: No slowness
+Runs when: the player has no slowness.
 
 ## `fatigue`
 
-Mining fatigue II 10 s
+The player is given Mining Fatigue II for 10 s.
 
-Runs when: No mining fatigue
+Runs when: the player has no mining fatigue.
 
 ## `hunger_pang`
 
-−3 food points
+The player loses 3 food points.
 
-Runs when: Food > 3 bars
+Runs when: the player's food level is above 3 bars.
 
 ## `darkness`
 
-Darkness 6 s
+The player is given Darkness for 6 s.
 
-Runs when: No darkness
+Runs when: the player has no darkness.
 
 ## `shudder`
 
-Small random shove
+The player is given a small random shove.
 
-Runs when: Always
+Runs when: at any time.
 
 ## `poison`
 
 **Harmful.**
-Poison 5 s (cannot kill)
+The player is poisoned for 5 s, though the poison cannot kill.
 
-Runs when: Not poisoned
+Runs when: the player is not poisoned.
 
 ## `weakness`
 
 **Harmful.**
-Weakness 30 s
+The player is given Weakness for 30 s.
 
-Runs when: No weakness
+Runs when: the player has no weakness.
 
 ## `levitation`
 
 **Harmful.**
-Levitation 2 s, then the fall
+The player levitates for 2 s and then falls.
 
-Runs when: No levitation
+Runs when: the player has no levitation.
 
 ## `frostbite`
 
 **Harmful.**
-Powder-snow freeze for about 3 s
+The player is frozen as if standing in powder snow for about 3 s.
 
-Runs when: Health > 3 hearts, not freezing
+Runs when: the player's health is above 3 hearts and the player is not freezing.
 
 ## `drained`
 
 **Harmful.**
-Loses 5–14 XP points
+The player loses 5–14 XP points.
 
-Runs when: Player has XP
+Runs when: the player has XP.
 
 ## `bad_luck`
 
 **Harmful.**
-Bad luck 5 min
+The player is given Bad Luck for 5 min.
 
-Runs when: No bad luck
+Runs when: the player has no bad luck.
 
 ## `sanity_crash`
 
 **Harmful.**
-Takes 90 points off the sanity bar (of 100), never below 0, on top of the 4 points every event costs. Creative and spectator players are untouched
+This takes 90 points off the sanity bar (of 100), never below 0, on top of the 4 points every event costs. Creative and spectator players are untouched.
 
-Runs when: Not creative or spectator, and sanity above 0
+Runs when: the player is not in creative or spectator mode and their sanity is above 0.
 
 ## `sanity_drain`
 
 **Harmful.**
-Takes a random 10 to 25 points off the sanity bar (of 100), never below 0, on top of the 4 points every event costs. Creative and spectator players are untouched
+This takes a random 10 to 25 points off the sanity bar (of 100), never below 0, on top of the 4 points every event costs. Creative and spectator players are untouched.
 
-Runs when: Not creative or spectator, and sanity above 0
+Runs when: the player is not in creative or spectator mode and their sanity is above 0.
 
 ## `insomnia`
 
 **Harmful.**
-The player's "time since rest" is set to 144000 (past three days), so phantoms come the next night; sleeping resets it
+The player's "time since rest" is set to 144000 (past three days), so phantoms come the next night. Sleeping resets it.
 
-Runs when: Not peaceful, fewer than 144000 ticks since rest
+Runs when: the world is not on peaceful difficulty and fewer than 144000 ticks have passed since the player last rested.
 
 ## `dream`
 
-On the next waking (within 1 h) a line in chat and the journal: a nearby spirit's story ("who drowned in a flooded cave") or one of its traits
+On the next waking (within 1 h) a line appears in the chat and the journal, giving either the story of a nearby spirit ("who drowned in a flooded cave") or one of its traits.
 
-Runs when: A spirit senses the player, and no dream is waiting
+Runs when: a spirit senses the player and no dream is waiting.
 
 ## `sleepwalk`
 
 **Harmful.**
-On the next waking after at least 5 s in bed (within 1 h) the player is moved to standing room 4–20 blocks away (solid floor, not magma, no lava next to it), outdoors if one of 4 tries finds sky
+On the next waking (within 1 h), provided the player has spent at least 5 s in bed, the player is moved to standing room 4–20 blocks away (solid floor, not magma, no lava next to it). The destination is outdoors if one of 4 tries finds sky.
 
-Runs when: No walk is waiting
+Runs when: no walk is waiting.
 
 ## `ravenous`
 
-Hunger II for 20 s
+The player is given Hunger II for 20 s.
 
-Runs when: No hunger effect
+Runs when: the player has no hunger effect.
 
 ## `infested`
 
 **Harmful.**
-Infested for 30 s: silverfish come out when the player is hurt
+The player is infested for 30 s, and silverfish come out whenever the player is hurt.
 
-Runs when: No infested effect
+Runs when: the player has no infested effect.
 
 ## `oozing`
 
-Oozing for 30 s: slimes spill out if the player dies
+The player is oozing for 30 s, and slimes spill out if the player dies.
 
-Runs when: No oozing effect
+Runs when: the player has no oozing effect.
 
 ## `weaving`
 
-Weaving for 30 s: cobwebs form if the player dies
+The player is weaving for 30 s, and cobwebs form if the player dies.
 
-Runs when: No weaving effect
+Runs when: the player has no weaving effect.
 
 ## `drift`
 
-For 3 s a small push each tick in one random direction, as by a current
+For 3 s the player gets a small push every tick in one random direction, as by a current.
 
-Runs when: On the ground
+Runs when: the player is on the ground.
 
 ## `false_wound`
 
-The client is told health is 4 hearts lower (never below 1 heart) for 1.5 s, then the real value
+The client is told that health is 4 hearts lower (never below 1 heart) for 1.5 s, after which it shows the real value again.
 
-Runs when: Health above 1 heart
+Runs when: the player's health is above 1 heart.
 
 ## `false_hearts`
 
-The client shows wither or poison for 5 s; the server has no effect
+The client shows wither or poison for 5 s, but the server applies no effect.
 
-Runs when: No wither or poison
+Runs when: the player has neither wither nor poison.
 
 ## `false_hunger`
 
-The client is told the food bar is empty for 2 s
+The client is told that the food bar is empty for 2 s.
 
-Runs when: Always
+Runs when: at any time.

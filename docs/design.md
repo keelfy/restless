@@ -1,8 +1,8 @@
 # Design roadmap
 
 Where the mod goes after the event backlog. Today a spirit acts and the player endures; the mod has no goal and no
-reason to keep playing. This roadmap turns it into a loop with long-term goals. Nothing here is built yet; current
-behavior is in [spirits.md](spirits.md), event ideas in [event-ideas.md](event-ideas.md).
+reason to keep playing. This roadmap turns it into a loop with long-term goals. Stages 0 to 3 are built, stages 4 and 5 partly, stages 6 and 7 not at all (each stage below starts with its
+status); current behavior is in [spirits.md](spirits.md), event ideas in [event-ideas.md](event-ideas.md).
 
 ## Core loop
 
@@ -46,7 +46,7 @@ Types by kind (current and planned):
 - Personal: `shade`, mimic, wraith, mara, banshee, revenant, lost one.
 - Territorial: `poltergeist` (the classic haunted house), domovoi, hoarder, demon, trickster.
 
-So a poltergeist stops following the player and stays at its anchor. Today's binding of 3 random spirits on first join
+So a poltergeist stops following the player and stays at its anchor. First-join binding (`director.default_spirits`, 1 spirit)
 draws from personal types only.
 
 ## Power instead of danger
@@ -90,11 +90,14 @@ the journal, not a full cooldown.
 
 ## Stage 0: Foundation
 
+Status: built (`content/Content.java`, `state/HauntData.java` `Haunting`, `haunt/Location.java`, `spirit/life/Power.java`;
+`Danger.java` is gone).
+
 Nothing playable, but every later stage needs it.
 
 - **Content registration.** Blocks, items, block entities, entities, sounds and the creative tab are declared in `core`
   and registered by the loader through `Platform` (NeoForge `DeferredRegister`). Recipes, loot tables, models and
-  textures are plain resources in `core`. Today `core` registers only commands and payloads.
+  textures are plain resources in `core`. Built: `content/Content.java` registers them all.
 - **Spirit identity.** `HauntData.Haunting` grows from `(spirit, nextEventAt)` to an instance: `uuid`, `type`, `seed`,
   `name`, `traits`, `anger`, `bornAt`. Old saves get a seed rolled on load (optional codec fields with defaults).
 - **Two kinds.** `HauntData` keeps personal spirits per player (as today) and territorial spirits per dimension with
@@ -112,6 +115,8 @@ kind and power, and a territorial spirit placed with `/haunt` acts only on playe
 
 ## Stage 1: Procedural spirits
 
+Status: built (`spirit/Traits.java`, `spirit/Story.java`, `haunt/Reactions.java`, `spirit/life/Anger.java`).
+
 A spirit is a **type** (base behavior, as today) plus **3–5 traits** rolled from its seed.
 
 - A trait is data in config: event tag affinities, activity modifiers (weather, light, time, noise), the clue it
@@ -122,7 +127,7 @@ A spirit is a **type** (base behavior, as today) plus **3–5 traits** rolled fr
   lengthens it. Fed by `Echoes`.
 - **Reactive triggers** (a trait property): small chance to fire an event right after the player opens a chest, lies
   down, goes below y 0 or kills a mob. Hooked into `onUseBlock` and loader events.
-- **Name and story**: seed → name, year and cause of death. Shown nowhere yet; stage 4 uses it.
+- **Name and story**: seed → name, year and cause of death. Built: graves and the journal show it.
 - **Anger** 0..1 per spirit. Raised by the player's actions (killing a cat, breaking a grave, burning a forest), lowered
   by offerings later. Feeds `power`. For a territorial spirit, actions in its area count (breaking its anchor
   structure, cutting the grove it lives in).
@@ -131,6 +136,9 @@ Done when: two spirits of the same type behave measurably differently (debug scr
 a saved spirit keeps its traits across restarts.
 
 ## Stage 2: Detection and protection
+
+Status: built, except salt from a cauldron (salt is sand and dried kelp) and anger from the lantern and the bell, which
+are not built. Every item and block below is in `content/Content.java`; there are four clue kinds, not about 7.
 
 First items. The player can learn what haunts them and defend a base.
 
@@ -162,6 +170,10 @@ salt loop around a room stops events from inside it.
 
 ## Stage 3: Banishing and rewards
 
+Status: built (`banish/Ritual.java`, `content/block/Altar.java`, `content/item/charm`, `content/block/Effigy.java`), except
+thrown holy water and calming offerings, which are not built. The altar is a 3×3 platform with 4 candles around it, and
+every type has an essence with charms (see [crafting-economy.md](crafting-economy.md)).
+
 - **Altar**: a multiblock of a center block, 4 candles and a salt ring. The center takes an **offering**: its category
   is the spirit's weakness, set by its nature (from its traits: objects, darkness, malice, deceit; weak to iron, glowstone, holy water, mirror), its form (whole, bit, crafted) is set
   by the type. A form the type does not take only lengthens the ritual.
@@ -179,6 +191,10 @@ Done when: a spirit can be identified from clues and banished in survival, wrong
 its artifact.
 
 ## Stage 4: Unfinished business, sanity, journal
+
+Status: partly built. Built: graves with the return-an-item quest (`spirit/land/Graves.java`), sanity and its overlay
+(`sanity/Sanity.java`), the journal and diary pages. Not built: the other quest kinds, portraits in chests,
+hallucinations at very low sanity, and research (the journal unlocks no recipes).
 
 This is the main time sink and it is generated, so it does not run out.
 
@@ -208,6 +224,9 @@ and low sanity shows a clue that is otherwise hidden.
 
 ## Stage 5: Spread and evolution
 
+Status: partly built. Built: corruption (`spirit/land/Corruption.java`), world-born spirits (`spirit/life/Births.java`,
+`Deeds.java`), evolution (`spirit/life/Evolution.java`). Not built: merging and the calendar.
+
 The world gets worse unless the player acts.
 
 - **Corruption** (territorial only): a spirit left alone corrupts chunks around its anchor. Grass greys, fog, crops stop growing, mobs are
@@ -227,6 +246,8 @@ area.
 
 ## Stage 6: Binding and servants
 
+Status: not built (no vessel, servant or ectoplasm in the code; the reliquary only holds essences for the Requiem).
+
 Spirits stop being only a threat and become a resource.
 
 - **Binding**: a ritual variant that locks a spirit into a **vessel** (doll, lantern, jar) instead of banishing it.
@@ -239,6 +260,8 @@ Spirits stop being only a threat and become a resource.
 Done when: a bound poltergeist moves items between two chests, ectoplasm accumulates, and a neglected vessel breaks.
 
 ## Stage 7: The Other Side
+
+Status: not built (no dimension, only the `restless:blighted` biome).
 
 The endgame.
 
@@ -253,12 +276,15 @@ Done when: a player can enter and leave, find a structure, and beat one boss.
 
 ## Side tracks
 
-Can go in any time after the stage they depend on.
+Can go in any time after the stage they depend on. Status: haunted structures partly built (generated structures get a
+territorial spirit, `births.structures`; the 5× rate and the distance scaling are not built); new spirit types built
+(all 15 exist, gimmicks remain, see [spirits.md](spirits.md)); visible spirit entity, possession (only the
+`possessed_mob` event) and multiplayer not built.
 
 | Track | Needs | Content |
 |---|---|---|
 | Haunted structures | 1, 3 | Generated houses, lighthouses, asylums with one strong spirit; events 5× as often inside; harder farther from spawn |
-| New spirit types | 1 (+ the stage of their gimmick) | All ten exist as types on the existing events (see [spirits.md](spirits.md)); the gimmicks remain: mimic (fake blocks, fake chat), wraith (stronger in the dark), demon (pacts), mara (sleep, nightmare room), hoarder (nest you can raid), banshee (honest warnings), revenant (born from killing), lost one (replays a death path), trickster (fake gifts) |
+| New spirit types | 1 (+ the stage of their gimmick) | All 15 exist as types on the existing events (see [spirits.md](spirits.md)); the gimmicks remain: mimic (fake blocks, fake chat), wraith (stronger in the dark), demon (pacts), mara (sleep, nightmare room), hoarder (nest you can raid), banshee (honest warnings), revenant (born from killing), lost one (replays a death path), trickster (fake gifts) |
 | Visible spirit entity | 0 | Translucent model per type, visible through the camera or the candle; a spirit's position gets a body |
 | Possession | entity | A mob or a player is possessed for 1–2 min; killing a possessed mob stuns the spirit |
 | Multiplayer | 2, 4 | Roles (medium, exorcist, scholar), spirits hopping between players, playing as a ghost for 5 min after death |
@@ -285,7 +311,7 @@ Stages 1–3 give a complete loop (a few hours). Stages 4–5 make it last (tens
   the spirit box or the journal to break ties)?
 - **Territorial radius and overlap.** Two anchors near each other: do their areas stack, and does corruption from one
   feed the other?
-- **Fresh personal spirits.** At power 0 the three first-join spirits are harmless for about a month of in-game days.
+- **Fresh personal spirits.** At power 0 the first-join spirit is harmless for about a month of in-game days.
   Is that the intended onboarding, or should a personal spirit start with some maturity?
 - **Fabric.** Registration through `Platform` keeps the port possible; stage 7 (a dimension) is where the loaders
   differ most.

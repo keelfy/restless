@@ -4,10 +4,13 @@ import dev.keelfy.restless.haunt.event.EventTag;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A quirk that sets two spirits of one type apart.
  *
+ * @param kind which of the three axes the trait belongs to; a spirit rolls each axis on its own (see
+ *     {@link Traits#roll})
  * @param affinity weight multiplier per event tag; missing tags count as 1
  * @param activity how much more often the spirit acts while {@code when} holds; 2 means twice as often
  * @param noise ticks the next event comes sooner for every sound its player makes; 0 for a spirit that ignores noise
@@ -17,10 +20,17 @@ import java.util.Set;
  * @param planchette ids of what the planchette may spell for this trait, in the lang file as
  *     {@code planchette.restless.<id>}
  * @param lies a spirit with this trait often names a trait it does not have, through the spirit box and the ouija board
- * @param weakness the focus this trait votes for; the spirit is weak to the focus most of its traits name
+ * @param weakness the focus this habit votes for; the spirit is weak to the focus most of its habits name. A condition
+ *     or leaning carries one only if it was a voting trait before the axes existed: it then breaks ties and decides for
+ *     a saved spirit with no habit, never for a spirit rolled now. {@code null} for the rest
+ * @param leans what a leaning is: a fear, a desire or a hate; {@code null} for habits and conditions
+ * @param things registry ids a leaning is about: the blocks or entities a fear shuns, the items a desire takes, the
+ *     items or blocks whose use a hate takes offence at; see {@link dev.keelfy.restless.spirit.life.Leanings}
+ * @param foils the clue a veil hides: the tool that reads it finds nothing of this spirit; {@code null} for the rest
  */
 public record Trait(
         String id,
+        Kind kind,
         Map<EventTag, Double> affinity,
         double activity,
         Condition when,
@@ -30,13 +40,74 @@ public record Trait(
         List<String> words,
         List<String> planchette,
         boolean lies,
-        Focus weakness) {
+        @Nullable Focus weakness,
+        @Nullable Lean leans,
+        List<String> things,
+        @Nullable Clue foils) {
+    /** A habit or condition: no leaning, nothing it is about. */
+    public Trait(
+            String id,
+            Kind kind,
+            Map<EventTag, Double> affinity,
+            double activity,
+            Condition when,
+            double noise,
+            List<Trigger> reacts,
+            Set<Clue> clues,
+            List<String> words,
+            List<String> planchette,
+            boolean lies,
+            @Nullable Focus weakness) {
+        this(
+                id,
+                kind,
+                affinity,
+                activity,
+                when,
+                noise,
+                reacts,
+                clues,
+                words,
+                planchette,
+                lies,
+                weakness,
+                null,
+                List.of(),
+                null);
+    }
+
+    /** The axis of a trait. */
+    public enum Kind {
+        /** What the spirit does; only habits name the nature. */
+        HABIT,
+        /** When the spirit acts, or what it reacts to. */
+        CONDITION,
+        /** What the spirit fears or wants. */
+        LEANING,
+        /** A tool the spirit cannot be read by; a spirit has at most one. */
+        VEIL
+    }
+
+    /** What a leaning is. */
+    public enum Lean {
+        /** The spirit's events do not run on a player beside the feared thing. */
+        FEAR,
+        /** Left out near its player, the wanted thing is taken and the spirit calms down. */
+        DESIRE,
+        /** Using the hated thing angers the spirit. */
+        HATE
+    }
+
     /** What the spirit's surroundings must be like for its activity modifier to apply. */
     public enum Condition {
         ANY,
         RAIN,
         NIGHT,
-        DARK
+        DARK,
+        /** Below {@code director.underground_below} with no sky overhead. */
+        UNDERGROUND,
+        /** In water. */
+        WATER
     }
 
     /** A player action a spirit can react to. */

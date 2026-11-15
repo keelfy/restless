@@ -2,6 +2,7 @@ package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.event.kit.PacketEntity;
@@ -278,7 +279,7 @@ final class Brinks {
         double escape = config.num("escape_blocks");
         int interval = config.integer("interval_ticks");
         int begin = config.integer("warn_ticks") / interval;
-        play(player, SoundEvents.WARDEN_HEARTBEAT, config.tone("sound"));
+        play(player, HauntSounds.HEARTBEAT, config.tone("sound"));
         Scheduler.repeat(player, 0, interval, (p, n) -> {
             double dx = p.getX() - origin.x;
             double dz = p.getZ() - origin.z;
@@ -336,7 +337,7 @@ final class Brinks {
         Config.Section config = Config.event(WITHERING);
         int interval = config.integer("interval_ticks");
         int begin = config.integer("warn_ticks") / interval;
-        play(player, SoundEvents.WITHER_AMBIENT, config.tone("sound"));
+        play(player, HauntSounds.MOAN, config.tone("sound"));
         Scheduler.repeat(player, 0, interval, (p, n) -> {
             if (n < begin) {
                 burst(p, ParticleTypes.SMOKE, config.burst("particles"));
@@ -547,7 +548,7 @@ final class Brinks {
                 return false;
             }
             if (elapsed % config.integer("beat_ticks") == 0) {
-                play(p, SoundEvents.WARDEN_HEARTBEAT, config.tone("sound"));
+                play(p, HauntSounds.HEARTBEAT, config.tone("sound"));
             }
             Vec3 toFigure = at.add(0.0, p.getEyeHeight(), 0.0)
                     .subtract(p.getEyePosition())
@@ -569,7 +570,7 @@ final class Brinks {
         int begin = config.integer("warn_ticks") / interval;
         Scheduler.repeat(player, 0, interval, (p, n) -> {
             if (n < begin) {
-                play(p, SoundEvents.WARDEN_HEARTBEAT, config.tone("sound"));
+                play(p, HauntSounds.HEARTBEAT, config.tone("sound"));
                 return true;
             }
             if (n == begin) {
@@ -594,7 +595,7 @@ final class Brinks {
         Config.Section config = Config.event(BOUND);
         int interval = config.integer("interval_ticks");
         int begin = config.integer("warn_ticks") / interval;
-        play(player, SoundEvents.CHAIN_BREAK, config.tone("sound"));
+        play(player, HauntSounds.CHAIN_RATTLE, config.tone("sound"));
         Mob[] hostile = new Mob[1];
         Scheduler.repeat(player, 0, interval, (p, n) -> {
             if (n < begin) {
@@ -640,7 +641,7 @@ final class Brinks {
                         origin.x,
                         origin.y,
                         origin.z,
-                        SoundEvents.WARDEN_ROAR,
+                        HauntSounds.byId("haunt.sting_roar"),
                         SoundSource.HOSTILE,
                         roar.volume(),
                         roar.pitch());

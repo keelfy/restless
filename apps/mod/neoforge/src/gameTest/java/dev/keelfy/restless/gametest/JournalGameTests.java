@@ -6,11 +6,15 @@ import dev.keelfy.restless.journal.Codex;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.JournalPages;
 import dev.keelfy.restless.journal.JournalPayload;
+import dev.keelfy.restless.journal.MarkPayload;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.photo.DevelopPayload;
 import dev.keelfy.restless.photo.Picture;
+import dev.keelfy.restless.spirit.land.Graves;
+import dev.keelfy.restless.spirit.land.Quest;
 import dev.keelfy.restless.state.HauntData;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.embedded.EmbeddedChannel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +28,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -43,7 +48,25 @@ final class JournalGameTests {
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         registerArchive(tests);
+        registerCaseSheet(tests);
         registerDiary(tests);
+        registerPath(tests);
+        tests.put("journal_read_answers_once_per_gap", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            EmbeddedChannel channel =
+                    (EmbeddedChannel) player.connection.getConnection().channel();
+            channel.outboundMessages().clear();
+            for (int i = 0; i < 10; i++) {
+                Journal.read(player);
+            }
+            long answers = channel.outboundMessages().stream()
+                    .filter(m -> m instanceof ClientboundCustomPayloadPacket packet
+                            && packet.payload() instanceof JournalPayload)
+                    .count();
+            check(helper, answers == 1, "ten requests in one tick must get one answer, got " + answers);
+            player.discard();
+            helper.succeed();
+        });
         tests.put("photo_develops_once", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             ItemStack photo = new ItemStack(Content.PHOTO.get());
@@ -234,6 +257,65 @@ final class JournalGameTests {
                     data.notebook(player.getUUID()).notes().size() == notes,
                     "the same note must not be written twice");
             data.putNotebook(player.getUUID(), Notebook.EMPTY);
+            helper.succeed();
+        });
+    }
+
+    private static void registerCaseSheet(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("journal_keeps_case_sheet_guesses", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            HauntData data = HauntData.get(helper.getLevel().getServer());
+            HauntData.Haunting met = HauntData.Haunting.born(
+                    "shade", helper.getLevel().getGameTime(), helper.getLevel().getRandom());
+            Journal.tagged(player, Notebook.Kind.PHOTO, met, "shade", Component.translatable("spirit.restless.shade"));
+            String habit = Notebook.HABIT + "light_eater";
+
+            Journal.mark(player, new MarkPayload(0, Notebook.NATURE));
+            Journal.mark(player, new MarkPayload(0, Notebook.FORM));
+            Journal.mark(player, new MarkPayload(0, Notebook.FORM));
+            Journal.mark(player, new MarkPayload(0, habit));
+            Journal.mark(player, new MarkPayload(0, "nonsense"));
+            Journal.mark(player, new MarkPayload(5, Notebook.NATURE));
+            Notebook book = data.notebook(player.getUUID());
+            check(helper, book.mark(0, Notebook.NATURE).equals("iron"), "a click must make the first guess");
+            check(helper, book.mark(0, Notebook.FORM).equals("bit"), "a second click must move the guess on");
+            check(helper, book.mark(0, habit).equals(Notebook.SEEN), "a habit must be markable");
+            check(helper, book.marks().get(met.uuid()).size() == 3, "bad clicks must write nothing");
+
+            Notebook reloaded = Notebook.CODEC
+                    .parse(
+                            net.minecraft.nbt.NbtOps.INSTANCE,
+                            Notebook.CODEC
+                                    .encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, book)
+                                    .getOrThrow())
+                    .getOrThrow();
+            check(helper, reloaded.equals(book), "the guesses must survive saving");
+            check(
+                    helper,
+                    Notebook.CODEC
+                            .parse(net.minecraft.nbt.NbtOps.INSTANCE, new net.minecraft.nbt.CompoundTag())
+                            .getOrThrow()
+                            .marks()
+                            .isEmpty(),
+                    "a save from before case sheets must load with no guesses");
+
+            List<String> texts = new ArrayList<>();
+            JournalPages.sections(reloaded).stream()
+                    .filter(section -> section.key().equals("spirits"))
+                    .forEach(section -> texts(section, texts));
+            check(
+                    helper,
+                    texts.contains("journal.restless.mark.nature.iron")
+                            && texts.contains("journal.restless.mark.form.bit"),
+                    "the dossier must show the guesses as marked");
+
+            for (int i = 0; i < 4; i++) {
+                Journal.mark(player, new MarkPayload(0, Notebook.NATURE));
+            }
+            check(
+                    helper,
+                    data.notebook(player.getUUID()).mark(0, Notebook.NATURE).isEmpty(),
+                    "guesses must cycle through every nature and back to none");
             helper.succeed();
         });
     }
@@ -451,5 +533,85 @@ final class JournalGameTests {
 
     private static void check(GameTestHelper helper, boolean condition, String message) {
         HauntEventGameTests.check(helper, condition, message);
+    }
+
+    /** The advancement chain: every file loads, and the code and data triggers grant their step. */
+    private static void registerPath(Map<String, Consumer<GameTestHelper>> tests) {
+        List<String> chain =
+                new ArrayList<>(List.of("root", "clue", "photo", "nature", "banished", "rested", "requiem"));
+        Content.ESSENCE.keySet().forEach(type -> chain.add("essence/" + type));
+        tests.put("advancement_path_loads", helper -> {
+            for (String path : chain) {
+                check(helper, advancement(helper, path) != null, "advancement " + path + " must load");
+            }
+            helper.succeed();
+        });
+        tests.put("advancement_path_code_triggers", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            check(helper, !done(helper, player, "photo"), "no photo advancement before a photograph");
+            Journal.tagged(player, Notebook.Kind.PHOTO, null, "shade", Component.literal("Shade"));
+            check(
+                    helper,
+                    done(helper, player, "clue") && done(helper, player, "photo"),
+                    "a photo must grant clue and photo");
+            check(helper, !done(helper, player, "banished"), "a photo must not grant the banishing");
+            Journal.tagged(player, Notebook.Kind.BANISHED, null, "shade", Component.literal("Shade"));
+            check(
+                    helper,
+                    done(helper, player, "nature") && done(helper, player, "banished"),
+                    "a banishing must grant its steps");
+
+            ServerLevel level = helper.getLevel();
+            HauntData data = HauntData.get(level.getServer());
+            var spirit = new HauntData.Haunting(
+                    java.util.UUID.randomUUID(),
+                    "shade",
+                    GraveGameTests.spirit(Quest.ITEM).seed(),
+                    List.of(),
+                    0L,
+                    1.0,
+                    0L,
+                    false,
+                    0,
+                    0L);
+            data.putTerritorial(new HauntData.Territorial(spirit, level.dimension(), player.blockPosition(), 48));
+            BlockPos grave = helper.absolutePos(new BlockPos(1, 2, 1));
+            data.putGrave(spirit.uuid(), new HauntData.Grave(grave, true));
+            check(helper, !done(helper, player, "rested"), "no grave advancement before a grave is visited");
+            check(
+                    helper,
+                    Graves.visit(player, grave, new ItemStack(Graves.wanted(spirit.seed()))),
+                    "the grave must take what the spirit wanted");
+            check(helper, done(helper, player, "rested"), "laying a spirit to rest must grant its advancement");
+            data.removeTerritorial(spirit.uuid());
+            player.discard();
+            helper.succeed();
+        });
+        tests.put("advancement_path_essence_trigger", helper -> {
+            ServerPlayer player = HauntEventGameTests.connected(helper);
+            String path = "essence/shade";
+            check(helper, !done(helper, player, path), "no essence advancement without the essence");
+            // A mock player never loaded its advancements, so nothing listens for triggers yet.
+            player.getAdvancements().reload(helper.getLevel().getServer().getAdvancements());
+            ItemStack essence = new ItemStack(Content.ESSENCE.get("shade").get());
+            player.getInventory().add(essence.copy());
+            // A mock player has no menu listener: fire the trigger the way the real one does on a slot change.
+            net.minecraft.advancements.triggers.CriteriaTriggers.INVENTORY_CHANGED.trigger(
+                    player, player.getInventory(), essence);
+            check(helper, done(helper, player, path), "holding an essence must grant its advancement");
+            check(helper, !done(helper, player, "essence/nix"), "another essence must stay ungranted");
+            player.discard();
+            helper.succeed();
+        });
+    }
+
+    private static net.minecraft.advancements.AdvancementHolder advancement(GameTestHelper helper, String path) {
+        return helper.getLevel().getServer().getAdvancements().get(Identifier.fromNamespaceAndPath("restless", path));
+    }
+
+    private static boolean done(GameTestHelper helper, ServerPlayer player, String path) {
+        return player.getAdvancements()
+                .getOrStartProgress(advancement(helper, path))
+                .isDone();
     }
 }

@@ -51,16 +51,49 @@ Each spirit has an identity: `uuid`, `seed`, `bornAt` (game time it appeared) an
 
 ### Traits
 
-Besides its type, every spirit has 3–5 traits (`director.traits_min`/`traits_max`) drawn from the `traits` catalog in
-`spirits.json` by its seed: the same seed gives the same traits, and the ids are saved with the spirit. A save from before
-traits gets them from its seed on load. Ids the catalog no longer has are skipped. So two spirits of one type differ in
-what they pick and when they act. A trait has any of:
+Besides its type, every spirit has traits drawn from the `traits` catalog in `spirits.json` by its seed: the same seed
+gives the same traits, and the ids are saved with the spirit. A save from before traits gets them from its seed on load.
+Ids the catalog no longer has are skipped. So two spirits of one type differ in what they pick and when they act.
 
-- `affinity`: tag multipliers, multiplied into the weight with the type's. `light_eater` (lights ×2.5), `door_slammer`,
-  `restless_hands`, `whisperer`, `cold_touch`, `vengeful`, `meddler`.
-- `activity` + `when` (`rain`, `night`, `dark`; light level below `director.dark_light_level`): the spirit acts that many
+Every trait has a `kind`, one of three axes rolled on their own:
+
+- `habit`: what the spirit does (the affinity traits and `liar`). There are 24, six per nature: objects (`restless_hands`,
+  `door_slammer`, `meddler`, `thrower`, `stacker`, `knocker`), darkness (`light_eater`, `cold_touch`, `shadow_caster`,
+  `blinder`, `hearth_killer`, `corner_lurker`), malice (`vengeful`, `hunter`, `scratcher`, `beast_caller`, `drowner`,
+  `snarler`) and deceit (`whisperer`, `liar`, `face_thief`, `illusionist`, `false_friend`, `lure`). Only a habit needs a
+  `weakness`, and only habits vote for the nature. The roll picks the nature evenly, then `director.habits_min`–`habits_max`
+  habits: all but one from the nature, one from another, and that foreign one only beside at least two of the nature's
+  own, so the nature is always the strict majority.
+- `condition`: when it acts or what it reacts to (there are 10: `rain_walker`, `night_stalker`, `dark_dweller`,
+  `cave_haunter`, `water_lurker`, `noise_feeder`, `chest_watcher`, `sleep_thief`, `deep_caller`, `grudge`); `director.conditions_min`–`conditions_max` of them. Their
+  `weakness` is the vote they had before the axes existed: it breaks a habit tie and decides for a saved spirit with no
+  habit, so an old spirit keeps its nature wherever its habits allow. A new condition leaves it out.
+- `leaning`: a desire or a fear or hate (10: fears `fears_fire`, `fears_cats`, `fears_bells`, `fears_running_water`;
+  desires `wants_milk`, `wants_bread`, `wants_sweets`; hates `hates_lanterns`, `hates_bells`, `hates_music`). Every spirit
+  born now rolls `director.desires` desire and `director.leanings` fear or hate; spirits born before have none. Each has
+  `leans` (`fear`, `desire`, `hate`) and `things` (registry ids). Rules in `spirit/life/Leanings.java`, numbers in the
+  `leanings` group of `haunt.json`: a fear stops the spirit's events on a player within `fear_radius` (4) of the thing
+  (water only while it flows; same ash and chime as a ward); a desire takes one wanted item lying within `desire_radius`
+  (3) of the player and lowers anger by `desire_calm` (0.25), once per `desire_cooldown_ticks`; a hate raises anger by
+  `hate_anger` (0.1) when the player uses the hated block or uses a block holding the hated item, once per
+  `hate_cooldown_ticks`. A territorial spirit whose radius reaches the player counts too.
+- `veil`: hides the spirit from one tool (3: `unseen` foils the camera, `light_footed` ash, `voiceless` the spirit box;
+  key `foils`, a `Clue`). Rolled last, with the chance `director.veil_chance` (0.25), so a spirit has at most one.
+  `Clues.reveal` gives nothing for a foiled clue; `Divination.silent` and `AshBlock` note a `SILENCE` in the journal.
+- Hidden habit: `Traits.hidden(seed, traits)` picks one of two or more habits by the seed; `Divination.known` leaves
+  it out of every tool's reading until `Sanity.shaken` (`sanity.reveal_below`) or the spirit has evolved. Evolving
+  (`Evolution.grow`) also adds `Traits.grown(seed, traits)`, a habit of its own nature it lacked, saved in its trait list.
+
+`Traits.weakness` counts habit votes, breaks a tie by the votes of every trait carrying a `weakness`, and then by the
+order of `Focus`. Adding a trait is a config and lang change only.
+
+A trait has any of:
+
+- `affinity`: tag multipliers, multiplied into the weight with the type's. Every habit (for example `light_eater`: lights ×2.5) and some conditions.
+- `activity` + `when` (`rain`, `night`, `dark`: light level below `director.dark_light_level`; `underground`: below y
+  `director.underground_below` (40) with no sky overhead; `water`: the player is in water): the spirit acts that many
   times as often while the condition holds at the moment it schedules its next event. `rain_walker`, `night_stalker`,
-  `dark_dweller`.
+  `dark_dweller`, `cave_haunter`, `water_lurker`.
 - `noise`: ticks the next event comes sooner for every sound the player makes (`noise_feeder`: 6 per sound, so sprinting
   hastens it most). Sneaking instead delays it by `director.sneak_delay_ticks` per check. Sounds are the ones `Echoes` hears.
 - `reacts`: after the player opens a chest or barrel (`chest`), uses a bed (`bed`), goes below y 0 (`deep`) or kills a mob
@@ -155,18 +188,26 @@ stands on, with walls closing the gaps, through four-way neighbours only (a diag
 may not exceed `salt.max_cells`. Walls alone do not ward a room; at least one salt tile has to border it. The first
 ward found decides; the lantern, then the dreamcatcher, the door charm and the scarecrow.
 
-Not built yet: salt from a cauldron, and the traits that hate a ward (the lantern raising anger of light-hating
-traits, the bell of noise-hating ones). The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
+A spirit's nature also works outside the altar (`ward/Weakness`, `weakness.*` in `haunt.json`): iron (an iron door, or a
+container under iron bars, within `iron_radius`) stops its door and item events, glowstone within `glow_radius` its light
+events, holy water poured at the feet (pitch past `pour_pitch`) drops its running scheduler steps, a mirror in the hand
+unmasks the blocks it showed and its double. The spirit comes from `Said.current()`, so only events run through `Director`
+honour it; every event tagged `DOORS`, `ITEMS` or `LIGHTS` does, with no per-event code.
+
+Not built yet: salt from a cauldron. The salt, the charm and the scarecrow have no wall-hanging form; place them on a floor.
 
 ## Banishing
 
-Every trait names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror, four traits
-each. A spirit has a **nature**, named after what it does and not after its weakness: objects (iron), darkness
-(glowstone), malice (holy water) and deceit (mirror). Players see only these names; code and config keep the
-weakness (`Focus`). The nature is picked from its seed evenly among the four: all its traits but one come from that
-nature's group and one is foreign, so it is weak to the nature (`Traits.weakness` counts votes; a spirit from before
-natures keeps its old vote, ties to the first in that order). Nothing shows the nature directly: the player reads the
-traits (ouija board, spirit box, ash) and finds the group two of them share.
+Every habit names a **weakness** (`weakness` in `spirits.json`): iron, glowstone, holy water or a mirror. A spirit has
+a **nature**, named after what it does and not after its weakness: objects (iron), darkness (glowstone), malice (holy
+water) and deceit (mirror). Players see only these names; code and config keep the weakness (`Focus`). The nature is
+drawn from the seed by the type's weights (`spirits.<type>.natures`, keyed by `Focus` name; a missing one weighs 1):
+each type has 4.5 on one nature and 1 on the others, so 60% of its spirits share that nature. All its habits but one
+come from that nature's group and one is foreign, so it is weak to the nature (`Traits.weakness` counts habit votes,
+see [Traits](#traits)). Traits are saved at birth, so a spirit born before the weights keeps its nature; a save without
+traits rolls them with even weights (`Traits.roll(seed)`), a spirit born now with its type's (`Traits.roll(seed,
+type)`). Nothing shows the nature directly: the player reads the habits (ouija board, spirit box) and finds the group
+two of them share.
 
 The type adds a **form** (`form` in `spirits.json`): `whole`, `bit` or `crafted`. The bestiary card, which a photo
 opens, names it. The offering is the nature's category in a form:
@@ -212,13 +253,16 @@ Altars with nothing to answer, or missing candles or salt, refuse the offering. 
 
 | Essence | Artifact | Use |
 |---|---|---|
-| Poltergeist | **Telekinesis amulet** (essence, gold ingot, string) | Pulls every dropped item within `artifacts.amulet_radius` to you. |
-| Shade | **Dark eye** (essence, eye of ender) | Night vision, and every living thing within `artifacts.eye_radius` glows, for `artifacts.eye_ticks`. |
+| Poltergeist | **Telekinesis amulet** (2 gold ingots, hallowed wax, essence) | Pulls every dropped item and experience orb within `artifacts.amulet_radius` to you. |
+| Shade | **Dark eye** (2 tinted glass, eye of ender, hallowed wax, essence) | Night vision, and every living thing within `artifacts.eye_radius` glows, for `artifacts.eye_ticks`. |
 
-Only the poltergeist and the shade have an essence; every other type drops nothing (graves give no essence for it either).
+Every one of the 15 types has an essence (`Content.ESSENCE`); banishing and graves drop it for every type. Each essence
+also crafts a base charm and a consumable, and three of different types a relic; [crafting-economy.md](crafting-economy.md)
+has every recipe. The two above are the poltergeist's and shade's base charms. The **effigy** (scarecrow, candle,
+hallowed wax) burned with an essence of a type calls that spirit: a personal one to the nearest player (`Births.lure`), a territorial one to the effigy (`Births.place`).
 
-Not built yet: offerings, throwing holy water to end a running event, the essence lure, and the pact enchantment and
-mimic mask (there are no spirit types for them yet). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
+Not built yet: offerings that calm a spirit (the altar's offering only starts the ritual), and throwing holy water to end
+a running event (holy water is only made and used on the altar). A ritual that its player leaves by dying, logging out or a restart simply stops; the focus stays on the altar.
 
 ## Unfinished business, sanity, journal
 
@@ -288,7 +332,7 @@ The journal opens a dedicated parchment screen with section bookmarks. Only disc
 reader. Text wraps and splits into additional pages at the current GUI size and font; wheel and Page Up/Page Down
 turn pages, Tab navigates controls, and Escape closes it. The screen supports narration.
 
-Not built yet: illustrated photos and footprint stamps, portraits in chests,
+Not built yet: portraits in chests,
 the other quest kinds (bury remains, a letter to a descendant, a named killer mob, a killer spirit), hallucinations at
 very low sanity, and research: the journal unlocks no recipes.
 
@@ -313,6 +357,12 @@ A territorial spirit fouls the land around its anchor while the anchor's chunk i
 the spirit's own radius over `grow_days` (3) in-game days of its age, and turns the top block of a loaded column as
 `corruption.blocks` says: grass to coarse dirt, grass, ferns and flowers to dead bushes. It stops at `max_blocks` (1500).
 Each spot keeps what stood there, saved with the world.
+
+A spirit with anger above `corruption.walk_anger` (0.7) grows its blight as a strip instead of a disc: each try picks a
+point along the line from the anchor toward the bed of the player who angered it (`Territorial.angeredBy`, set by
+`Anger` whenever a player raises its anger), no further than `walk_reach` (64) or the bed, and within `walk_width` (5)
+across (`Strip.offset`). If that player is offline or the bed is in another dimension, it spreads evenly. The spots go
+in the same blight, so they heal with the rest.
 
 Each try also turns that column's biome to `restless:blighted` (`data/restless/worldgen/biome/blighted.json`): grey-brown
 grass and leaves, murky water, a thick grey haze like the basalt deltas' (fog from 4 to 40 blocks, sky and clouds
@@ -340,9 +390,9 @@ territorial one tries `corruption.evolved_factor` (3) times as many columns. The
 those in its radius) hear a heartbeat, are told, and it goes in their journal; from then on it goes by its grown name.
 A personal spirit grows only while its player is online.
 
-Not built yet: world-born spirits (death spots, blood moon), merging, the calendar (full
-moon, blood night, day of the dead), possessed mobs in corrupted land, crops stopping, and new events or clues
-for evolved spirits.
+Not built yet: merging, the calendar (full
+moon, blood night, day of the dead), possessed mobs in corrupted land, crops stopping, and new clues
+for evolved spirits (evolved spirits do get their own events, such as `judgement` and `reaping`).
 
 ## Spirits
 
@@ -366,10 +416,10 @@ for evolved spirits.
 
 Affinity is a weight multiplier per event tag. Activity 1.3 means 1.3× as often.
 
-Besides their signature events (below), the ten types after `nix` only pick from the existing events. Their own gimmicks from [design.md](design.md) are not built:
-a fake chat with a name of its own (mimic), the nightmare room (mara), honest warnings (banshee), birth from killing
-(revenant), winning a domovoi with offerings, a hoarder's nest that banishing empties, pacts with a real term (demon)
-and fake gifts beyond the one chest (trickster). None has an essence or artifact.
+Besides their signature events (below), the eleven types after `nix` only pick from the existing events. Their own gimmicks from [design.md](design.md) are not built:
+a fake chat with a name of its own (mimic), the nightmare room (mara), honest warnings (banshee),
+winning a domovoi with offerings, a hoarder's nest that banishing empties
+and fake gifts beyond the one chest (trickster). A revenant is born from killing (`slaughter` deed, `spirit/life/Deeds.java`), and every type has an essence and charms.
 
 ## Events
 

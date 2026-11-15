@@ -17,10 +17,12 @@ import dev.keelfy.restless.content.client.MistParticle;
 import dev.keelfy.restless.content.client.PresenceParticle;
 import dev.keelfy.restless.content.client.SightingMarkHud;
 import dev.keelfy.restless.content.client.SilhouetteRenderer;
+import dev.keelfy.restless.content.client.SpiritBodyRenderer;
 import dev.keelfy.restless.content.entity.AshFootprint;
 import dev.keelfy.restless.content.entity.RagEntity;
 import dev.keelfy.restless.content.entity.SightingMark;
 import dev.keelfy.restless.content.entity.Silhouette;
+import dev.keelfy.restless.content.entity.SpiritBody;
 import dev.keelfy.restless.divine.client.SpiritBoxVoice;
 import dev.keelfy.restless.haunt.effect.client.Dimming;
 import dev.keelfy.restless.haunt.effect.client.HeadTurn;
@@ -29,6 +31,7 @@ import dev.keelfy.restless.haunt.effect.client.ScreenOverlay;
 import dev.keelfy.restless.photo.Picture;
 import dev.keelfy.restless.photo.client.Darkroom;
 import dev.keelfy.restless.photo.client.PhotoTooltip;
+import dev.keelfy.restless.sanity.client.SanityBed;
 import dev.keelfy.restless.sanity.client.SanityOverlay;
 import java.util.List;
 import net.minecraft.client.color.block.BlockTintSources;
@@ -66,6 +69,7 @@ public final class RestlessNeoForgeClient {
     @SubscribeEvent
     public static void tick(ClientTickEvent.Post event) {
         SpiritBoxVoice.tick();
+        SanityBed.tick();
     }
 
     @SubscribeEvent
@@ -133,6 +137,7 @@ public final class RestlessNeoForgeClient {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer((EntityType<AshFootprint>) Content.ASH_FOOTPRINT.get(), AshFootprintRenderer::new);
         event.registerEntityRenderer((EntityType<Silhouette>) Content.SILHOUETTE.get(), SilhouetteRenderer::new);
+        event.registerEntityRenderer((EntityType<SpiritBody>) Content.SPIRIT_BODY.get(), SpiritBodyRenderer::new);
         event.registerBlockEntityRenderer(
                 (BlockEntityType<AltarEntity>) Content.ALTAR_ENTITY.get(), AltarRenderer::new);
         event.registerBlockEntityRenderer(

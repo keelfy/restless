@@ -4,9 +4,12 @@ import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.state.Session;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Delayed and repeating per-player tasks for multi-step events. Tasks live in memory only: they are dropped when the
@@ -24,6 +27,9 @@ public final class Scheduler {
         final ServerPlayer player;
         final int interval;
         final Step step;
+
+        @Nullable UUID spirit;
+
         long due;
         int n;
         boolean done;
@@ -45,11 +51,13 @@ public final class Scheduler {
      */
     public static void repeat(ServerPlayer player, int delay, int interval, Step step) {
         HauntContext context = HauntContext.capture();
-        TASKS.add(new Task(player, now(player) + delay, Math.max(1, interval), (p, n) -> {
+        Task task = new Task(player, now(player) + delay, Math.max(1, interval), (p, n) -> {
             boolean[] again = {false};
             context.during(() -> again[0] = step.run(p, n));
             return again[0];
-        }));
+        });
+        task.spirit = context.spirit();
+        TASKS.add(task);
     }
 
     public static void later(ServerPlayer player, int delay, Consumer<ServerPlayer> action) {
@@ -57,6 +65,23 @@ public final class Scheduler {
             action.accept(p);
             return false;
         });
+    }
+
+    /**
+     * Drops the player's pending and repeating steps that a spirit {@code by} accepts started: the event ends where it
+     * stands.
+     *
+     * @return how many were dropped
+     */
+    public static int end(ServerPlayer player, Predicate<UUID> by) {
+        int ended = 0;
+        for (Task task : TASKS) {
+            if (!task.done && task.player == player && task.spirit != null && by.test(task.spirit)) {
+                task.done = true;
+                ended++;
+            }
+        }
+        return ended;
     }
 
     /** Call once per server tick. */

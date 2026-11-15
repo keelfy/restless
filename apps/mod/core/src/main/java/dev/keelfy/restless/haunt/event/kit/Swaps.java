@@ -4,9 +4,14 @@ import dev.keelfy.restless.config.Settings;
 import dev.keelfy.restless.haunt.Hardcore;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.recall.Said;
+import dev.keelfy.restless.state.Session;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +27,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * never changed for real, since its contents would have nowhere to go: it is only shown.
  */
 public final class Swaps {
+    /** Shown blocks by player: where, and the spirit whose event shows it (for {@link #unmask}). */
+    private static final Map<UUID, Map<BlockPos, UUID>> SHOWN = Session.SERVER.keep(new ConcurrentHashMap<>());
+
     private Swaps() {}
 
     /** Whether swaps are made in the world rather than shown: the config says so, or the world is hardcore. */
@@ -75,11 +83,42 @@ public final class Swaps {
         shown.forEach((pos, state) -> player.connection.send(new ClientboundBlockUpdatePacket(pos, state)));
         ServerLevel level = player.level();
         List<BlockPos> where = List.copyOf(shown.keySet());
+        UUID spirit = Said.current();
+        if (spirit != null) {
+            where.forEach(pos -> SHOWN.computeIfAbsent(player.getUUID(), id -> new ConcurrentHashMap<>())
+                    .put(pos, spirit));
+        }
         // Elsewhere the client has dropped these chunks, and gets the real blocks when it is sent them again.
         Scheduler.later(player, ticks, p -> {
+            Map<BlockPos, UUID> mine = SHOWN.get(p.getUUID());
+            if (mine != null) {
+                where.forEach(mine::remove);
+            }
             if (p.level() == level) {
                 where.forEach(pos -> p.connection.send(new ClientboundBlockUpdatePacket(level, pos)));
             }
         });
+    }
+
+    /**
+     * Tells the player the real block at every shown one that a spirit {@code by} accepts made.
+     *
+     * @return how many were shown
+     */
+    public static int unmask(ServerPlayer player, Predicate<UUID> by) {
+        Map<BlockPos, UUID> mine = SHOWN.get(player.getUUID());
+        if (mine == null) {
+            return 0;
+        }
+        int[] count = {0};
+        mine.entrySet().removeIf(e -> {
+            if (!by.test(e.getValue())) {
+                return false;
+            }
+            reveal(player, e.getKey());
+            count[0]++;
+            return true;
+        });
+        return count[0];
     }
 }

@@ -33,10 +33,16 @@ gives its spirit type and chance, so which spirit a deed makes is data, not code
    `bornAt`, so nothing new is saved and a restart cannot reset it. The first-join spirit counts, so a new
    player's first birth waits three days.
 4. **Cap**: no birth at `max_personal` (3, configurable) spirits.
-5. Otherwise `Director.add` with a head start of `angered(start_anger)` (0.5, about power 0.2), so a born spirit begins
-   above harmless. It answers the open question in design.md about fresh spirits for this path only; the first-join
-   one stays at 0. Aging it instead would move `bornAt` and break the cooldown above.
-6. **No telegraph**: no sound and no message on birth, the player learns of it from the events. The first event waits
+5. Otherwise `Director.add` with a head start of `angered(start_anger)` (0.5), so a born spirit begins
+   above harmless. Every personal spirit also starts with `power.start_maturity` (0.15, owner decision D1) of its
+   maturity (`Power.of` with `personal`). The first-join one (`Director.hauntings`) also gets `start_anger`, so every
+   new personal spirit starts at power 0.29 and a harmful event can come in the first days (`PowerTest`). Aging it instead would move `bornAt` and break the cooldown above.
+6. **Successor**: when `HauntData.put` leaves a player with no personal spirit it saves `successors[player]` (the types
+   that left, due time unset). The next director check fixes the due time at `successor_min_days` to
+   `successor_max_days` (2 to 4) days; when due, `Births.successor` binds a random personal type that is not one that
+   left, through the same `bind` as a deed (start anger, grace, cap). Another spirit arriving, a released, creative
+   or spectator player cancels or delays it.
+7. **No telegraph**: no sound and no message on birth, the player learns of it from the events. The first event waits
    `grace_ticks` (2400). Instead, the new spirit starts with `notice` set to a random 1..`notice_within` (5); every event
    it runs counts it down, and on the last one the journal gets a `DREAM` line, "Something unknown is near me", with no
    spirit behind it. The count is saved with the spirit (`notice`, absent means 0).

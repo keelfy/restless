@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.effect.VignettePayload;
 import dev.keelfy.restless.haunt.event.kit.Haze;
@@ -233,7 +234,7 @@ final class Torments {
     // teeth_in_dark: a growl, then a bite every few seconds for as long as the player stays in the dark
     private static void teeth(ServerPlayer player) {
         Config.Section config = Config.event(TEETH);
-        sound(player, SoundEvents.WARDEN_ANGRY, config.tone("sound"));
+        sound(player, HauntSounds.MOAN, config.tone("sound"));
         // the jaws hang just off to one side, wherever the player goes
         double side = player.getRandom().nextDouble() * Nearby.FULL_TURN;
         Haze.linger(
@@ -309,7 +310,7 @@ final class Torments {
     // pinned: heavy limbs, and every hostile close by turns on the player (marked, so its blows stop at the floor)
     private static void pinned(ServerPlayer player) {
         Config.Section config = Config.event(PINNED);
-        sound(player, SoundEvents.CHAIN_HIT, config.tone("sound"));
+        sound(player, HauntSounds.CHAIN_RATTLE, config.tone("sound"));
         particles(player, ParticleTypes.SOUL, player.getX(), player.getY(), player.getZ(), config.burst("particles"));
         int ticks = config.integer("ticks");
         player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, ticks, config.integer("slow_amplifier")), null);
@@ -611,7 +612,7 @@ final class Torments {
     // wait is cut to what is left of the sleep, so the scream always comes before the night is over.
     private static void terror(ServerPlayer player) {
         Config.Section config = Config.event(TERROR);
-        sound(player, SoundEvents.WARDEN_HEARTBEAT, config.tone("sound"));
+        sound(player, HauntSounds.HEARTBEAT, config.tone("sound"));
         int wait = Math.min(config.integer("warn_ticks"), sleepLeft(player) - config.integer("scream_lead_ticks"));
         // it gathers at the bedside while they sleep, and is still there when they wake
         Haze.linger(
@@ -623,7 +624,7 @@ final class Torments {
                 return;
             }
             p.stopSleepInBed(true, true);
-            sound(p, SoundEvents.GHAST_SCREAM, config.tone("scream_sound"));
+            sound(p, HauntSounds.SCREECH, config.tone("scream_sound"));
             vignette(p, config);
             hurt(p, config.num("damage"));
         });

@@ -10,8 +10,9 @@
 - **Wiki**: keep the player wiki (`apps/frontend/content/{en,ru}`) current. Every code change that alters player-visible
   behavior (events, items, spirits, mechanics, numbers) updates the matching wiki pages in both languages, including
   counts in index pages, in the same change.
-- **Player text**: item tooltips and journal text follow the `player-text` skill (`.claude/skills/player-text`).
-  Never write them in the caveman register; tell subagents writing such text to use `player-text`, not `caveman`.
+- **Player text**: item tooltips, journal text and the player wiki (`apps/frontend/content`) follow the `player-text`
+  skill (`.claude/skills/player-text`). Never write them in the caveman register; tell subagents writing such text to
+  use `player-text`, not `caveman`.
 - **Images**: image generation (item art, textures, icons) is delegated to the `chatgpt-6.1-sol` harness, never drawn
   by hand or by other tools.
 
@@ -71,6 +72,21 @@ to the feature that sends it.
 | `banish` | Altar ritual and the Requiem (`requiem` holds its movements and candles) |
 | `content` | Registration (`Content`); `block`, `entity`, `item` (`charm`, `consumable`), `recipe`, `client` |
 | `config`, `command`, `debug`, `platform` | Tunables and lang, `/haunt`, debug menu, loader bridge |
+
+## GameTests
+
+Tests run side by side in one world, about 15 blocks apart. A test that leaks state makes other tests fail at random.
+
+- Get players from `HauntEventGameTests.connected(helper)`: it stands the player in the test's own spot and removes it
+  when the test ends. Never leave a player at the world origin.
+- A test that spawns monsters for its player adds the player to the level, or a far player of another test despawns them.
+- Padding is at least the reach of the event or item under test (`radius`, `rag_radius`…).
+- Never unforce chunks; use `forceChunks(helper, centre, reach)`. The runner unforces at batch end.
+- Do not wait a tick count for light; use `settleLight`.
+- A mob that must not pick its own target gets `setNoAi(true)`; removing its goals is not enough.
+- Do not replace global `HauntData` lists (`putTerritorial`…) while other tests run.
+- Wall-clock assertions go in the `timing` environment.
+- Kill a stuck test server by PID, never `pkill` by name: other worktrees run the same command.
 
 ## Commands
 

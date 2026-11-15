@@ -4,7 +4,7 @@ title: Sanity
 
 # Sanity
 
-Sanity is your grip, a number from 0 to 1 (some pages write it as 0 to 100). It is checked once a second and drifts up or down by what is around you. It does not run in creative or spectator.
+I have always counted sanity as the player's grip, a number from 0 to 1 (some pages write it as 0 to 100). It is checked once a second and drifts up or down by what is around the player. It does not run in creative or spectator.
 
 ## What moves it
 
@@ -20,19 +20,20 @@ Sanity is your grip, a number from 0 to 1 (some pages write it as 0 to 100). It 
 
 Light levels 4 to 9 move nothing. Rows add up: standing in the dark inside a spirit's radius costs 0.004 a second, and a full bar is gone in about four minutes.
 
-**Every event costs 0.04** the moment it runs on you, so a busy spirit wears you down even in a lit house. Some [events](/en/events/affliction) take far more, and some charms and relics spend it on purpose; the cost is on each item.
+**Every event costs 0.04** the moment it runs on the player, so a busy spirit wears the player down even in a lit house. Some [events](/en/events/affliction) take far more, and some charms and relics spend it on purpose; the cost is on each item. An [interrogation](/en/items/tools#interrogation) at the altar costs 0.2.
 
-## What it does to you
+## What it does to the player
 
-- **Below 0.6** darkness closes in from the edges of the screen, deeper the lower it falls. The journal opens its sanity chapter the first time.
-- **Below 0.35** you are **shaken**: you see what is hidden from the calm. The [Spirit Box](/en/items/tools#spirit-box) says more, and it tells where the spirit's bones lie.
-- **At 0** nothing more can be taken. The events that drain sanity stop running on you, but the other spirits' events do not.
+- **Below 0.6** darkness closes in from the edges of the screen, deeper the lower it falls, and a low drone rises with it. The journal opens its sanity chapter the first time.
+- **Below 0.2** the player hears their own heartbeat.
+- **Below 0.35** the player is **shaken** and sees what is hidden from the calm. The [Spirit Box](/en/items/tools#spirit-box) says more, and it tells where the spirit's bones lie.
+- **At 0** nothing more can be taken. The events that drain sanity stop running on the player, but the other spirits' events do not.
 
 ## Getting it back
 
 - Sleep: asleep in a bed, the bar fills in under a minute.
-- Light a room, and eat.
-- Eat sweets, and the gain is instant: sweet berries +0.01, a cookie +0.02, a slice of cake +0.03, a honey bottle +0.04, a pumpkin pie +0.05. You must be hungry enough to eat them.
-- Close a salt ring around where you stand: it also stops spirits' events on you.
-- [Borrowed Dream](/en/items/charms#mara-borrowed-dream) and [Hearth Dream](/en/items/advanced#hearth-dream) refill it at once (the first angers your spirits). The [Dreamless Draught](/en/items/consumables#mara-dreamless-draught) gives 0.3. [Mara's Cradle](/en/items/relics) wakes you with all of it.
+- A lit room and food.
+- Sweets give an instant gain: sweet berries +0.01, a cookie +0.02, a slice of cake +0.03, a honey bottle +0.04, a pumpkin pie +0.05. They can be eaten only when the player is hungry enough.
+- A salt ring closed around where the player stands: it also stops spirits' events on them.
+- [Borrowed Dream](/en/items/charms#mara-borrowed-dream) and [Hearth Dream](/en/items/advanced#hearth-dream) refill it at once (the first angers the player's spirits). The [Dreamless Draught](/en/items/consumables#mara-dreamless-draught) gives 0.3. [Mara's Cradle](/en/items/relics) wakes the player with all of it.
 - The [Requiem](/en/items/requiem) holds it at full, for good.

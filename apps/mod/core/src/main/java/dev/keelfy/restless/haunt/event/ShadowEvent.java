@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.event.kit.Place;
@@ -169,7 +170,7 @@ public final class ShadowEvent implements HauntEvent {
                 return false;
             }
             if (n % config.integer("beat_steps") == 0) {
-                play(player, SoundEvents.WARDEN_HEARTBEAT, config.tone("beat_sound"));
+                play(player, HauntSounds.HEARTBEAT, config.tone("beat_sound"));
             }
             double touch = config.num("touch_distance");
             if (player.distanceToSqr(shadow) <= touch * touch) {

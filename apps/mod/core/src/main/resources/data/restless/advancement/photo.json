@@ -1,0 +1,22 @@
+{
+  "parent": "restless:clue",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "restless:camera_obscura"
+    },
+    "title": {
+      "translate": "advancements.restless.photo.title"
+    },
+    "description": {
+      "translate": "advancements.restless.photo.description"
+    },
+    "frame": "task",
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}

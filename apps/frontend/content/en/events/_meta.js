@@ -12,4 +12,5 @@ export default {
   presence: 'Presence',
   scenarios: 'Scenarios',
   signatures: 'Signatures',
+  tells: 'Tells',
 }

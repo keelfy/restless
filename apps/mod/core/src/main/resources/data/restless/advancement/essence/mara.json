@@ -1,0 +1,34 @@
+{
+  "parent": "restless:rested",
+  "criteria": {
+    "held": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "restless:mara_essence"
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "restless:mara_essence"
+    },
+    "title": {
+      "translate": "item.restless.mara_essence"
+    },
+    "description": {
+      "translate": "advancements.restless.essence.description",
+      "with": [
+        {
+          "translate": "item.restless.mara_essence"
+        }
+      ]
+    },
+    "frame": "task",
+    "announce_to_chat": true,
+    "hidden": false
+  }
+}

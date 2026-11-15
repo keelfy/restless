@@ -33,7 +33,7 @@ import org.jspecify.annotations.Nullable;
  * by weight. The figure is a {@link Silhouette} sent as a {@link PacketEntity}, so only this player's client is told of
  * it and nothing is left on the server.
  */
-final class Jolts {
+public final class Jolts {
     private Jolts() {}
 
     static List<HauntEvent> all() {
@@ -103,7 +103,7 @@ final class Jolts {
         Vec3 at = Vec3.atBottomCenterOf(spot);
         Nearby.sound(
                 player,
-                HauntSounds.JOLT,
+                HauntSounds.byId(config.text("sound_id")),
                 at.add(0, Config.section("place").num("sound_height"), 0),
                 config.tone("sound"));
         PacketEntity figure =
@@ -184,7 +184,11 @@ final class Jolts {
             if (t <= lunge) {
                 figure[0].move(p, home.lerp(face, (double) t / lunge), PacketEntity.yawToward(face, p.position()));
                 if (t == lunge) {
-                    Nearby.sound(p, HauntSounds.JOLT, face.add(0, p.getEyeHeight(), 0), config.tone("bang"));
+                    Nearby.sound(
+                            p,
+                            HauntSounds.byId(config.text("bang_id")),
+                            face.add(0, p.getEyeHeight(), 0),
+                            config.tone("bang"));
                 }
             }
             boolean over = t >= lunge + config.integer("hold_ticks");
@@ -199,7 +203,7 @@ final class Jolts {
      * A random one of the first silhouette shapes, or the given one: the client is sent the entity data of a model that
      * is never added. The registry is typed {@code EntityType<?>}; this one is built for Silhouette.
      */
-    static void shape(ServerPlayer player, PacketEntity figure) {
+    public static void shape(ServerPlayer player, PacketEntity figure) {
         shape(player, figure, player.getRandom().nextInt(SilhouetteRenderer.ANY));
     }
 
@@ -214,7 +218,7 @@ final class Jolts {
     }
 
     /** Whether {@code at} is within {@code degrees} of where the player looks, with nothing solid between. */
-    static boolean watched(ServerPlayer player, Vec3 at, double degrees) {
+    public static boolean watched(ServerPlayer player, Vec3 at, double degrees) {
         Vec3 eye = player.getEyePosition();
         return player.getLookAngle().dot(at.subtract(eye).normalize()) >= Math.cos(Math.toRadians(degrees))
                 && clear(player, at);

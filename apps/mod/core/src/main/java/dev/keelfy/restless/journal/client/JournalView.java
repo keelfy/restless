@@ -4,6 +4,7 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.journal.FilePayload;
 import dev.keelfy.restless.journal.JournalPages;
 import dev.keelfy.restless.journal.JournalPayload;
+import dev.keelfy.restless.journal.MarkPayload;
 import dev.keelfy.restless.journal.Notebook.Kind;
 import dev.keelfy.restless.photo.Picture;
 import dev.keelfy.restless.photo.client.PhotoTooltip;
@@ -638,8 +639,14 @@ public final class JournalView {
             if (x >= hit.x() && x < hit.x() + hit.width() && y >= hit.y() && y < hit.y() + hit.height()) {
                 Minecraft.getInstance()
                         .getConnection()
-                        .send(new ServerboundCustomPayloadPacket(new FilePayload(
-                                hit.filing().record(), hit.filing().dossier())));
+                        .send(new ServerboundCustomPayloadPacket(
+                                hit.filing().marks()
+                                        ? new MarkPayload(
+                                                hit.filing().dossier(),
+                                                hit.filing().field())
+                                        : new FilePayload(
+                                                hit.filing().record(),
+                                                hit.filing().dossier())));
                 return true;
             }
         }

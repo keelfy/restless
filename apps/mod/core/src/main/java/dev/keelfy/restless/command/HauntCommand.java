@@ -9,12 +9,14 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import dev.keelfy.restless.banish.Requiem;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.debug.DebugMenu;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Faults;
 import dev.keelfy.restless.haunt.History;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Scheduler;
+import dev.keelfy.restless.haunt.Tally;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.haunt.event.HauntEvent;
 import dev.keelfy.restless.haunt.event.HauntEvents;
@@ -29,6 +31,9 @@ import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.spirit.life.BirthRules;
 import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.state.HauntData;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,11 +50,12 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Debug/admin command: /haunt opens the debug screen; info|force (optionally after a delay in
+ * Debug/admin command: /haunt opens the debug screen; info|stats [file]|force (optionally after a delay in
  * seconds)|act|history|sanity|journal|birth [structure]|spirit add|age|remove [player] work from chat.
  */
 public final class HauntCommand {
@@ -113,6 +119,9 @@ public final class HauntCommand {
                         .executes(c -> history(c.getSource(), null))
                         .then(Commands.argument("player", EntityArgument.player())
                                 .executes(c -> history(c.getSource(), EntityArgument.getPlayer(c, "player")))))
+                .then(Commands.literal("stats")
+                        .executes(c -> stats(c.getSource(), false))
+                        .then(Commands.literal("file").executes(c -> stats(c.getSource(), true))))
                 .then(Commands.literal("sanity")
                         .then(Commands.argument("value", DoubleArgumentType.doubleArg(0, 1))
                                 .executes(c -> sanity(c, c.getSource().getPlayerOrException()))
@@ -208,11 +217,9 @@ public final class HauntCommand {
                         grave.pos().getY(),
                         grave.pos().getZ(),
                         grave.built() ? "" : "(unbuilt)",
-                        BuiltInRegistries.ITEM.getKey(Graves.wanted(h.seed())));
+                        BuiltInRegistries.ITEM.getKey(Graves.wanted(HauntData.get(source.getServer()), h)));
         String blight = Corruption.size(HauntData.get(source.getServer()), h.uuid());
-        String form = Spirits.byId(h.spirit())
-                .map(type -> type.form().name().toLowerCase(Locale.ROOT))
-                .orElse("?");
+        String form = Spirits.form(HauntData.get(source.getServer()), h).name().toLowerCase(Locale.ROOT);
         extra += " nature=" + Traits.weakness(Traits.of(h.traits())).name().toLowerCase(Locale.ROOT)
                 + " form=" + form
                 + (h.waryUntil() > now ? " wary=" + (h.waryUntil() - now) / Ticks.SECOND + "s" : "")
@@ -335,6 +342,49 @@ public final class HauntCommand {
         }
         source.sendSuccess(() -> Component.literal(text.toString()), false);
         return entries.size();
+    }
+
+    /**
+     * How often each event ran: the most and the least run, and the ones that never did; or the whole table in a file.
+     */
+    private static int stats(CommandSourceStack source, boolean file) {
+        Tally tally = HauntData.get(source.getServer()).tally();
+        List<String> ids =
+                HauntEvents.all().stream().map(e -> e.id().toString()).toList();
+        if (file) {
+            Path path = source.getServer().getWorldPath(LevelResource.ROOT).resolve("restless-event-stats.csv");
+            try {
+                Files.writeString(path, tally.csv(ids));
+            } catch (IOException e) {
+                source.sendFailure(Component.literal("Could not write " + path + ": " + e.getMessage()));
+                return 0;
+            }
+            source.sendSuccess(() -> Component.literal("Event stats written to " + path), false);
+            return ids.size();
+        }
+        int rows = Config.section("director").integer("stats_rows");
+        List<String> ranked = tally.ranked(ids);
+        List<String> ran = ranked.stream().filter(id -> tally.of(id).ran() > 0).toList();
+        StringBuilder text = new StringBuilder("Most run:");
+        ran.stream().limit(rows).forEach(id -> text.append(line(tally, id)));
+        text.append("\nLeast run:");
+        ran.reversed().stream().limit(rows).forEach(id -> text.append(line(tally, id)));
+        List<String> never = tally.never(ids);
+        text.append("\nNever ran (").append(never.size()).append("): ").append(String.join(", ", never));
+        source.sendSuccess(() -> Component.literal(text.toString()), false);
+        return ran.size();
+    }
+
+    private static String line(Tally tally, String id) {
+        Tally.Counts c = tally.of(id);
+        return String.format(
+                Locale.ROOT,
+                "\n  %s ran %d, rolled %d, warded %d, failed %d",
+                id,
+                c.ran(),
+                c.rolled(),
+                c.warded(),
+                c.failed());
     }
 
     private static int journal(CommandSourceStack source, ServerPlayer player) {

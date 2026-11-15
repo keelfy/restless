@@ -1,7 +1,10 @@
 package dev.keelfy.restless.gametest;
 
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.content.block.AshBlock;
 import dev.keelfy.restless.content.entity.AshFootprint;
+import dev.keelfy.restless.state.HauntData;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -93,6 +96,71 @@ final class AshGameTests {
             helper.assertBlockPresent(Content.ASH_LINE.get(), CENTER);
             helper.succeed();
         });
+        tests.put("ash_veil_light_footed_leaves_no_trail", helper -> {
+            patch(helper);
+            var data = HauntData.get(helper.getLevel().getServer());
+            var block = helper.getLevel().getBlockState(helper.absolutePos(CENTER));
+            shapeLeftBy(helper, data, block, List.of("restless_hands"));
+            trail(helper).forEach(AshFootprint::discard);
+            var veiled = new HauntData.Haunting(
+                    java.util.UUID.randomUUID(),
+                    "poltergeist",
+                    7L,
+                    List.of("restless_hands", "light_footed"),
+                    0L,
+                    0.0,
+                    Long.MAX_VALUE / 2,
+                    false,
+                    0,
+                    0L);
+            data.putTerritorial(List.of(
+                    new HauntData.Territorial(veiled, helper.getLevel().dimension(), helper.absolutePos(CENTER), 16)));
+            for (int i = 0; i < 40; i++) {
+                block.tick(
+                        helper.getLevel(),
+                        helper.absolutePos(CENTER),
+                        helper.getLevel().getRandom());
+            }
+            check(helper, trail(helper).isEmpty(), "A light-footed spirit must leave no trail in ash");
+            data.putTerritorial(List.of());
+            helper.succeed();
+        });
+        tests.put("ash_print_follows_type_not_nature", helper -> {
+            patch(helper);
+            var data = HauntData.get(helper.getLevel().getServer());
+            var block = helper.getLevel().getBlockState(helper.absolutePos(CENTER));
+            // Same type, opposite natures: iron (Objects) against holy water (Malice).
+            int objects = shapeLeftBy(helper, data, block, List.of("restless_hands"));
+            int malice = shapeLeftBy(helper, data, block, List.of("vengeful"));
+            check(helper, objects == malice, "Two spirits of one type must leave the same print");
+            check(helper, objects == AshBlock.print("poltergeist"), "The print must be the one of the type");
+            int wet = shapeLeftBy(helper, data, block, List.of("restless_hands", "rain_walker"));
+            check(helper, wet == objects, "A condition must not change the print");
+            check(helper, trail(helper).stream().allMatch(AshFootprint::wet), "A rain walker must leave damp prints");
+            data.putTerritorial(List.of());
+            for (String type : List.of(
+                    "shade",
+                    "phantom",
+                    "mimic",
+                    "wraith",
+                    "mara",
+                    "banshee",
+                    "revenant",
+                    "lost_one",
+                    "poltergeist",
+                    "nix",
+                    "domovoi",
+                    "hoarder",
+                    "demon",
+                    "trickster",
+                    "boggart")) {
+                check(
+                        helper,
+                        Config.section("ash").lines("prints").stream().anyMatch(row -> row.contains(type)),
+                        "Every type needs a print: " + type);
+            }
+            helper.succeed();
+        });
         tests.put("ash_requires_powder", helper -> {
             helper.setBlock(CENTER.below(), Blocks.STONE);
             check(
@@ -102,6 +170,27 @@ final class AshGameTests {
             check(helper, trail(helper).isEmpty(), "Rejected trails must leave no entities");
             helper.succeed();
         });
+    }
+
+    private static int shapeLeftBy(
+            GameTestHelper helper,
+            HauntData data,
+            net.minecraft.world.level.block.state.BlockState block,
+            List<String> traits) {
+        trail(helper).forEach(AshFootprint::discard);
+        var spirit = new HauntData.Haunting(
+                java.util.UUID.randomUUID(), "poltergeist", 7L, traits, 0L, 0.0, Long.MAX_VALUE / 2, false, 0, 0L);
+        data.putTerritorial(List.of(
+                new HauntData.Territorial(spirit, helper.getLevel().dimension(), helper.absolutePos(CENTER), 16)));
+        for (int i = 0; i < 40 && trail(helper).isEmpty(); i++) {
+            block.tick(
+                    helper.getLevel(),
+                    helper.absolutePos(CENTER),
+                    helper.getLevel().getRandom());
+        }
+        List<AshFootprint> made = trail(helper);
+        check(helper, !made.isEmpty(), "A spirit near ash must leave a trail");
+        return made.get(0).shape();
     }
 
     private static void patch(GameTestHelper helper) {

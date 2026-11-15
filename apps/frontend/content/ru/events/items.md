@@ -1,273 +1,271 @@
 ---
-title: Items
+title: Предметы
 ---
 
-# Items
+# Предметы
 
-> Эта страница пока на английском: ивенты ещё не переведены.
-
-42 events.
+Событий: 42.
 
 ## `swap_slots`
 
-Two inventory slots swap
+Два слота инвентаря меняются местами.
 
-Runs when: Inventory not empty
+Когда срабатывает: инвентарь не пуст.
 
 ## `hotbar_shift`
 
-Selected hotbar slot changes
+Выбранный слот быстрой панели меняется.
 
-Runs when: Always
+Когда срабатывает: в любой момент.
 
 ## `book_page`
 
-One creepy page is appended (nothing is erased)
+К книге добавляется одна жуткая страница, а ничего из написанного не стирается.
 
-Runs when: A book and quill or a written book
+Когда срабатывает: у игрока есть книга с пером или подписанная книга.
 
 ## `shuffle_chest`
 
-Its contents are shuffled
+Содержимое сундука перемешивается.
 
-Runs when: A non-empty chest within 10
+Когда срабатывает: в пределах 10 блоков есть непустой сундук.
 
 ## `wear`
 
-**Harmful.**
-Loses 10% durability, never breaks
+**Вредящее событие.**
+Предмет теряет 10% прочности, но не ломается.
 
-Runs when: A damageable tool with durability to spare
+Когда срабатывает: у игрока есть инструмент с запасом прочности.
 
 ## `rot`
 
-**Harmful.**
-One food stack becomes rotten flesh
+**Вредящее событие.**
+Одна стопка еды превращается в гнилую плоть.
 
-Runs when: Food in the inventory
+Когда срабатывает: в инвентаре есть еда.
 
 ## `tool_look`
 
-Drawn as another such tool for 5 min (it still works the same); under hardcore or real swaps it becomes that tool
+Инструмент на 5 мин выглядит как другой такой же инструмент, хотя действует по-прежнему. При хардкоре или настоящих подменах он становится этим инструментом на самом деле.
 
-Runs when: A wooden, stone, iron or diamond tool in the inventory
+Когда срабатывает: в инвентаре есть деревянный, каменный, железный или алмазный инструмент.
 
 ## `armor_off`
 
-**Harmful.**
-1–4 random worn pieces come off (a random set, so sometimes all of it). Each goes to the inventory, or to the floor at the player's feet if it is full; nothing is lost
+**Вредящее событие.**
+С игрока слетают от 1 до 4 случайных надетых частей брони. Набор случайный, так что иногда слетает вся броня. Каждая часть попадает в инвентарь, а если он полон, падает на пол у ног игрока; ничего не пропадает.
 
-Runs when: Any armor worn
+Когда срабатывает: на игроке надета любая броня.
 
 ## `vanishing_item`
 
-**Harmful.**
-One stack moves to the other chest
+**Вредящее событие.**
+Одна стопка переходит в другой сундук.
 
-Runs when: Two chests (not halves of one) within 10, one non-empty, one with space
+Когда срабатывает: в пределах 10 блоков есть два сундука (не половины одного): один непустой, а в другом есть место.
 
 ## `false_compass`
 
-**Harmful.**
-Points at a spot 30–60 blocks away (stays that way)
+**Вредящее событие.**
+Компас указывает на точку в 30–60 блоках и так и остаётся.
 
-Runs when: A plain compass in the inventory
+Когда срабатывает: в инвентаре есть обычный компас.
 
 ## `map_marker`
 
-A red X appears on it somewhere in its area. Permanent: the marker is stored in the map item
+На карте где-то в её пределах появляется красный крестик. Метка постоянная, потому что хранится в самом предмете карты.
 
-Runs when: A filled map in the inventory without a marker of this event
+Когда срабатывает: в инвентаре есть заполненная карта без метки этого события.
 
 ## `elytra_flicker`
 
-Worn elytra look almost broken for 2 s (only shown to the player); under hardcore they are worn down for real
+Надетые элитры на 2 с выглядят почти сломанными, и видит это только игрок. При хардкоре они изнашиваются по-настоящему.
 
-Runs when: Elytra worn with durability to spare, 12 or more blocks above the ground
+Когда срабатывает: на игроке надеты элитры с запасом прочности, а сам он находится в 12 или более блоках над землёй.
 
 ## `stew_bowl`
 
-**Harmful.**
-One stew becomes an empty bowl
+**Вредящее событие.**
+Одна порция похлёбки превращается в пустую миску.
 
-Runs when: Mushroom, beetroot, rabbit or suspicious stew in the inventory
+Когда срабатывает: в инвентаре есть грибная, свекольная, кроличья или подозрительная похлёбка.
 
 ## `bucket_pufferfish`
 
-A water bucket looks like a pufferfish bucket for 5 s (only shown to the player); under hardcore it is swapped for real
+Ведро с водой на 5 с выглядит как ведро с иглобрюхом, и видит это только игрок. При хардкоре оно подменяется по-настоящему.
 
-Runs when: A water bucket in the inventory
+Когда срабатывает: в инвентаре есть ведро воды.
 
 ## `torch_burn`
 
-**Harmful.**
-Half of a stack of torches is gone, at least one is left
+**Вредящее событие.**
+Половина стопки факелов пропадает, но хотя бы один факел остаётся.
 
-Runs when: A stack of 2 or more torches or soul torches
+Когда срабатывает: в инвентаре есть стопка из 2 или более факелов или факелов душ.
 
 ## `bundle_bone`
 
-A bone is added to a bundle's contents (nothing is taken out)
+В содержимое узелка добавляется кость, а ничего не забирается.
 
-Runs when: A bundle with room for a bone
+Когда срабатывает: у игрока есть узелок, в котором есть место для кости.
 
 ## `shield_ghost`
 
-The sound of a shield blocking a hit, with nothing there
+Раздаётся звук щита, отразившего удар, хотя рядом никого нет.
 
-Runs when: A shield in either hand
+Когда срабатывает: щит лежит в любой руке.
 
 ## `item_throwback`
 
-A dropped item is thrown at the player, slowly enough to dodge
+Выброшенный предмет летит в игрока, но достаточно медленно, чтобы можно было увернуться.
 
-Runs when: A dropped item 3–12 blocks away
+Когда срабатывает: выброшенный предмет лежит в 3–12 блоках от игрока.
 
 ## `phantom_horn`
 
-The goat horn's own tune sounds at the player
+Рядом с игроком звучит собственная мелодия козьего рога.
 
-Runs when: A goat horn with a tune in the inventory
+Когда срабатывает: в инвентаре есть козий рог с мелодией.
 
 ## `armor_dye`
 
-A piece of leather armor is dyed black, and its old colour returns after 5 min; under hardcore it stays black
+Часть кожаной брони окрашивается в чёрный, а прежний цвет возвращается через 5 мин. При хардкоре броня остаётся чёрной.
 
-Runs when: A leather armor piece, worn or carried, that is not black
+Когда срабатывает: у игрока есть часть кожаной брони, надетая или в инвентаре, и она не чёрного цвета.
 
 ## `item_glint`
 
-An item glints as if enchanted for 10 s
+Предмет на 10 с начинает блестеть, как зачарованный.
 
-Runs when: An item that does not glint
+Когда срабатывает: у игрока есть предмет, который ещё не блестит.
 
 ## `item_lore`
 
-A lore line such as "it remembers you" is added and removed after 5 min; under hardcore it stays
+К предмету добавляется строка описания вроде "it remembers you", которая убирается через 5 мин. При хардкоре она остаётся.
 
-Runs when: Any item in the inventory or worn
+Когда срабатывает: у игрока есть любой предмет в инвентаре или надетый.
 
 ## `tool_mirage`
 
-**Harmful.**
-A tool shows full durability, then almost broken, then the truth (only shown to the player); under hardcore it is worn down for real
+**Вредящее событие.**
+Инструмент показывает полную прочность, затем почти сломанный вид, а затем правду, и видит это только игрок. При хардкоре он изнашивается по-настоящему.
 
-Runs when: A damageable tool with durability to spare
+Когда срабатывает: у игрока есть инструмент с запасом прочности.
 
 ## `lodestone_lure`
 
-A lodestone compass points at the anchor of the spirit nearby for 5 min; under hardcore it stays that way
+Компас с магнетитом на 5 мин указывает на якорь ближайшего духа. При хардкоре он остаётся таким.
 
-Runs when: A compass with a lodestone target in the inventory, with a territorial spirit's reach around the player
+Когда срабатывает: в инвентаре есть компас, привязанный к магнетиту, а игрок находится в пределах досягаемости территориального духа.
 
 ## `ghost_author`
 
-A written book signed with the player's own name turns up, with one creepy page
+Появляется подписанная книга с именем самого игрока и одной жуткой страницей.
 
-Runs when: A free inventory slot and no book signed by the player yet
+Когда срабатывает: в инвентаре есть свободный слот, а книги со своей подписью игрок ещё не получал.
 
 ## `potion_swap`
 
-A potion becomes another one for 5 min; under hardcore it stays
+Зелье на 5 мин превращается в другое. При хардкоре оно остаётся таким.
 
-Runs when: A potion, splash or lingering potion with a base potion and no custom effects
+Когда срабатывает: у игрока есть обычное, взрывное или туманное зелье, у которого есть базовое зелье и нет особых эффектов.
 
 ## `vanishing_arrows`
 
-**Harmful.**
-Up to 6 arrows leave the inventory one by one and come back after 3 min; under hardcore they stay gone
+**Вредящее событие.**
+До 6 стрел по одной пропадают из инвентаря и возвращаются через 3 мин. При хардкоре они пропадают насовсем.
 
-Runs when: An arrow in the inventory
+Когда срабатывает: в инвентаре есть стрела.
 
 ## `crossbow_misfire`
 
-**Harmful.**
-A loaded crossbow fires straight up with reduced power
+**Вредящее событие.**
+Заряженный арбалет стреляет строго вверх с уменьшенной силой.
 
-Runs when: A loaded crossbow in either hand
+Когда срабатывает: заряженный арбалет находится в любой руке.
 
 ## `map_elsewhere`
 
-The map in the hand shows the area around the anchor of the spirit nearby for 5 min; under hardcore it stays
+Карта в руке на 5 мин показывает местность вокруг якоря ближайшего духа. При хардкоре она остаётся такой.
 
-Runs when: A map in either hand, with a territorial spirit's reach around the player
+Когда срабатывает: карта находится в любой руке, а игрок в пределах досягаемости территориального духа.
 
 ## `shy_item`
 
-One dropped item slides away from the player
+Один выброшенный предмет отползает от игрока.
 
-Runs when: A dropped item within 5
+Когда срабатывает: выброшенный предмет лежит в пределах 5 блоков.
 
 ## `orb_scatter`
 
-Experience orbs fly away from the player
+Шарики опыта разлетаются от игрока.
 
-Runs when: An experience orb within 8
+Когда срабатывает: в пределах 8 блоков есть шарик опыта.
 
 ## `hand_drop`
 
-The item in the main hand falls out of it, as if the drop key was pressed
+Предмет из основной руки выпадает, как будто игрок сам его выбросил.
 
-Runs when: Something in the main hand
+Когда срабатывает: в основной руке что-то лежит.
 
 ## `inventory_drop`
 
-A stack from the inventory, not the one in hand, falls out of it
+Стопка из инвентаря, но не та, что в руке, выпадает из него.
 
-Runs when: Something in the inventory besides the held item
+Когда срабатывает: в инвентаре есть что-то, кроме предмета в руке.
 
 ## `line_pulls`
 
-**Harmful.**
-A shove toward the bobber, with a splash there
+**Вредящее событие.**
+Игрока толкает к поплавку, и там вспыхивают брызги.
 
-Runs when: The player's bobber floats in water
+Когда срабатывает: поплавок игрока плавает в воде.
 
 ## `odd_catch`
 
-A player head in their own likeness, a bone, a skeleton skull or rotten flesh is thrown out of the water at the player, as a real catch is. It vanishes after 1 min if not picked up
+Голова в облике самого игрока, кость, череп скелета или гнилая плоть вылетает из воды в игрока, как настоящий улов. Если её не подобрать, она исчезает через 1 мин.
 
-Runs when: The player's bobber floats in water
+Когда срабатывает: поплавок игрока плавает в воде.
 
 ## `allay_thief`
 
-Only this player's client is told of an allay by their side holding a copy of one of their stacks, which flies 45 blocks straight away and is gone. Nothing is taken and nothing is on the server
+Только клиент этого игрока узнаёт об алле, который появляется рядом и держит копию одной из его стопок. Он улетает на 45 блоков по прямой и исчезает. Ничего не забирается, а на сервере ничего нет.
 
-Runs when: The player carries anything
+Когда срабатывает: у игрока есть хоть какой-нибудь предмет.
 
 ## `holy_water_cloudy`
 
-**Harmful.**
-Every holy water stack gets a "cloudy" mark and a lore line; the altar refuses it until the next dawn, then the mark is removed. Stays
+**Вредящее событие.**
+Каждая стопка святой воды получает отметку «Мутная до рассвета» и строку описания. Алтарь отказывается принимать такую воду до следующего рассвета, когда отметка снимается, и больше ничто это изменение не отменяет.
 
-Runs when: Clear holy water in the inventory
+Когда срабатывает: в инвентаре есть чистая святая вода.
 
 ## `mirror_names`
 
-A soft chime marks the mirror. The next time a mirror is placed on the altar, the name of a spirit around the player is shown in chat, once. The mark lapses after 30 min
+Тихий звон отмечает зеркало. В следующий раз, когда зеркало положат на алтарь, в чате один раз показывается имя духа, который рядом с игроком. Отметка пропадает через 30 мин.
 
-Runs when: A mirror in the inventory, a spirit that senses the player, none already marked
+Когда срабатывает: в инвентаре есть зеркало, игрока чувствует дух, а зеркало ещё не отмечено.
 
 ## `pearl_strays`
 
-For 5 min the first pearl the player throws is moved above standing room 8 to 24 blocks away and dropped, so the player lands there (with the usual 5 damage)
+В течение 5 мин первая брошенная игроком жемчужина Предела переносится в точку над местом, где можно встать, в 8–24 блоках и падает оттуда, так что игрок приземляется там (с обычным уроном 5).
 
-Runs when: An ender pearl in the inventory
+Когда срабатывает: в инвентаре есть жемчужина Предела.
 
 ## `whispering_item`
 
-The item in your hand gains the Curse of the Restless and whispers now and then while held; the curse is lifted after 3 min (stays under hardcore)
+Предмет в руке игрока получает Проклятие неупокоенных и время от времени шепчет, пока его держат. Через 3 мин проклятие снимается (при хардкоре остаётся).
 
-Runs when: You hold an item without the curse
+Когда срабатывает: игрок держит предмет без этого проклятия.
 
 ## `hollow_trim`
 
-A worn piece of armor shows a hollow trim for 2 min (stays under hardcore)
+Надетая часть брони на 2 мин получает пустую отделку (при хардкоре остаётся).
 
-Runs when: You wear trimmable armor with no trim
+Когда срабатывает: на игроке надета броня, на которую можно нанести отделку, и на ней её нет.
 
 ## `photo_figure`
 
-A pale hollow-eyed figure 34–60 px tall is painted into one developed photo's picture; the change is kept
+На один проявленный снимок дорисовывается бледная фигура с пустыми глазами высотой 34–60 пикс., и это изменение сохраняется.
 
-Runs when: A developed photo in the inventory
+Когда срабатывает: в инвентаре есть проявленный снимок.

@@ -21,7 +21,9 @@ import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
+import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.spirit.life.Births;
+import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.spirit.life.Power;
 import dev.keelfy.restless.state.HauntData;
 import dev.keelfy.restless.ward.Wards;
@@ -31,11 +33,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -53,8 +57,10 @@ public final class Director {
         }
         long now = server.overworld().getGameTime();
         HauntData data = HauntData.get(server);
+        Echoes.tick(data, now);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             Reactions.watch(player, now);
+            Births.successor(player, data, now);
             List<HauntData.Haunting> spirits = new ArrayList<>(hauntings(player, data, now));
             boolean changed = false;
             int sounds = Reactions.takeSounds(player.getUUID());
@@ -75,13 +81,14 @@ public final class Director {
                 spirits.set(
                         i,
                         acted.rescheduled(now
-                                + next(
-                                        turn,
-                                        player.level(),
-                                        player.blockPosition(),
-                                        haunting,
-                                        now,
-                                        player.getRandom())));
+                                + (long) (next(
+                                                turn,
+                                                player.level(),
+                                                player.blockPosition(),
+                                                haunting,
+                                                now,
+                                                player.getRandom())
+                                        * Graves.pace(player, haunting))));
                 changed = true;
             }
             if (changed) {
@@ -136,6 +143,7 @@ public final class Director {
 
     /** Rolls an event for the spirit on the player, and runs it unless a ward stops it. */
     private static Turn roll(ServerPlayer player, HauntData.Haunting haunting, Vec3 at, long now) {
+        ServerLevel level = player.level();
         Turn[] turn = {new Turn(Outcome.NOTHING, 0.0)};
         Said.during(
                 haunting.uuid(),
@@ -143,10 +151,13 @@ public final class Director {
                                 player,
                                 spirit(haunting),
                                 Traits.of(haunting.traits()),
-                                power(haunting, now),
+                                power(haunting, now, level),
                                 haunting.evolved(),
                                 null)
-                        .ifPresent(event -> turn[0] = new Turn(fireUnlessWarded(player, event, at), event.impact())));
+                        .ifPresent(event -> {
+                            count(player, event, Tally.Kind.ROLLED);
+                            turn[0] = new Turn(fireUnlessWarded(player, event, at), event.impact());
+                        }));
         return turn[0];
     }
 
@@ -181,8 +192,10 @@ public final class Director {
             List<SpiritType> pool = new ArrayList<>(Spirits.personal());
             List<HauntData.Haunting> rolled = new ArrayList<>();
             for (int i = 0, n = Config.section("director").integer("default_spirits"); i < n && !pool.isEmpty(); i++) {
-                // Nothing has happened yet: the first turn comes soon, not after a full cooldown.
+                // Nothing has happened yet: the first turn comes soon, not after a full cooldown. It starts as angry
+                // as a born spirit, so the first session can bring a harmful event.
                 rolled.add(bind(player, pool.remove(player.getRandom().nextInt(pool.size())), now)
+                        .angered(Config.section("births").num("start_anger"))
                         .rescheduled(now + Config.section("director").integer("first_event_ticks")));
             }
             data.put(player.getUUID(), rolled);
@@ -226,6 +239,7 @@ public final class Director {
             return same.get();
         }
         HauntData.Haunting bound = bind(player, spirit, now);
+        data.putMarks(bound.uuid(), data.marks(bound.uuid()).withDeathForm());
         spirits.add(bound);
         data.put(player.getUUID(), spirits);
         return bound;
@@ -234,6 +248,7 @@ public final class Director {
     /** Places a territorial spirit of the given type at {@code anchor} with the configured radius. */
     public static void anchor(HauntData data, SpiritType spirit, ServerLevel level, BlockPos anchor, long now) {
         HauntData.Haunting born = HauntData.Haunting.born(spirit.id(), now, level.getRandom());
+        data.putMarks(born.uuid(), data.marks(born.uuid()).withDeathForm());
         int radius = Config.section("director").integer("territorial_radius");
         data.putTerritorial(new HauntData.Territorial(
                 born.rescheduled(now + cooldown(level, anchor, born, now, level.getRandom(), 1.0)),
@@ -286,6 +301,7 @@ public final class Director {
     public static Optional<HauntEvent> act(
             ServerPlayer player, HauntData.Haunting haunting, @Nullable Vec3 at, @Nullable HauntTier tier) {
         long now = player.level().getServer().overworld().getGameTime();
+        ServerLevel level = player.level();
         HauntEvent[] acted = new HauntEvent[1];
         Said.during(
                 haunting.uuid(),
@@ -293,10 +309,11 @@ public final class Director {
                                 player,
                                 spirit(haunting),
                                 Traits.of(haunting.traits()),
-                                power(haunting, now),
+                                power(haunting, now, level),
                                 haunting.evolved(),
                                 tier)
                         .ifPresent(event -> {
+                            count(player, event, Tally.Kind.ROLLED);
                             fire(player, event, at);
                             Journal.unlock(player, Notebook.Chapter.HAUNTED);
                             acted[0] = event;
@@ -308,6 +325,7 @@ public final class Director {
     public static Outcome fireUnlessWarded(ServerPlayer player, HauntEvent event, Vec3 at) {
         if (Wards.stops(player, event)) {
             Wards.blocked(player);
+            count(player, event, Tally.Kind.WARDED);
             return Outcome.WARDED;
         }
         boolean keened = event.tags().contains(EventTag.ASSAULT) && Charms.warn(player, at);
@@ -319,6 +337,7 @@ public final class Director {
             Scheduler.later(player, warning, p -> {
                 if (Wards.stops(p, event)) {
                     Wards.blocked(p);
+                    count(p, event, Tally.Kind.WARDED);
                 } else if (fire(p, event, at)) {
                     Journal.unlock(p, Notebook.Chapter.HAUNTED);
                 }
@@ -368,6 +387,7 @@ public final class Director {
         if (ran[0] && !event.waits()) {
             felt(player, event);
         }
+        count(player, event, ran[0] ? Tally.Kind.RAN : Tally.Kind.FAILED);
         return ran[0];
     }
 
@@ -382,6 +402,10 @@ public final class Director {
             note(player, event, spirit);
             felt(player, event);
         });
+    }
+
+    private static void count(ServerPlayer player, HauntEvent event, Tally.Kind kind) {
+        HauntData.get(player.level().getServer()).count(event.id().toString(), kind);
     }
 
     /** The event ran for the player: for the jump scare gap and /haunt history. */
@@ -416,7 +440,17 @@ public final class Director {
 
     /** How harmful and how frequent the spirit is right now; depends only on the spirit. */
     public static double power(HauntData.Haunting haunting, long now) {
-        return Power.of(now - haunting.bornAt(), haunting.anger(), haunting.evolved());
+        return Power.of(
+                now - haunting.bornAt(),
+                haunting.anger(),
+                haunting.evolved(),
+                spirit(haunting).kind() == SpiritType.Kind.PERSONAL);
+    }
+
+    /** As {@link #power(HauntData.Haunting, long)}, lifted on a full moon (see {@link Calendar}). */
+    public static double power(HauntData.Haunting haunting, long now, ServerLevel level) {
+        return Power.moonlit(
+                power(haunting, now), Calendar.today(level.getServer()).fullMoon());
     }
 
     private static long cooldown(
@@ -429,7 +463,7 @@ public final class Director {
         double quiet = Power.daylightFactor(level.isBrightOutside(), level.canSeeSky(at), !level.isThundering());
         Set<Trait.Condition> around = conditions(level, at);
         double activity = spirit(haunting).activity(around) * Traits.activity(Traits.of(haunting.traits()), around);
-        return Power.cooldownTicks(power(haunting, now), activity, random.nextDouble(), quiet, impactFactor);
+        return Power.cooldownTicks(power(haunting, now, level), activity, random.nextDouble(), quiet, impactFactor);
     }
 
     private static Set<Trait.Condition> conditions(ServerLevel level, BlockPos at) {
@@ -442,6 +476,16 @@ public final class Director {
         }
         if (level.getMaxLocalRawBrightness(at) < Config.section("director").integer("dark_light_level")) {
             now.add(Trait.Condition.DARK);
+        }
+        // Never load a chunk for this: a structure's anchor may lie in one that is not.
+        if (!level.isLoaded(at)) {
+            return now;
+        }
+        if (at.getY() < Config.section("director").integer("underground_below") && !level.canSeeSky(at)) {
+            now.add(Trait.Condition.UNDERGROUND);
+        }
+        if (level.getFluidState(at).is(FluidTags.WATER)) {
+            now.add(Trait.Condition.WATER);
         }
         return now;
     }
@@ -481,14 +525,25 @@ public final class Director {
      */
     private static double weight(
             HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power, boolean evolved) {
-        return ready
+        return ready && (event.habit() == null || traits.stream().anyMatch(t -> t.id().equals(event.habit())))
                 ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power)
                         * Rarity.boost(event.id().toString())
                         * event.signature(spirit, evolved)
                 : 0.0;
     }
 
-    /** Events the player went through lately ({@link Recent}) are left out, unless they are all that can run. */
+    /** The event a due spirit's roll would choose on the player now, without running it; for measuring the roll. */
+    public static Optional<HauntEvent> choose(ServerPlayer player, HauntData.Haunting haunting, long now) {
+        return pick(
+                player, spirit(haunting), Traits.of(haunting.traits()), power(haunting, now), haunting.evolved(), null);
+    }
+
+    /**
+     * Events the player went through lately ({@link Recent}) are left out, unless they are all that can run. Drawn on
+     * weight first and {@link HauntEvent#canRun} asked of the drawn one only ({@link Draw}): the odds are those of a
+     * draw among the events that can run, without looking around the player for every one. {@link Rarity} learns from
+     * the events asked.
+     */
     private static Optional<HauntEvent> pick(
             ServerPlayer player,
             SpiritType spirit,
@@ -496,46 +551,34 @@ public final class Director {
             double power,
             boolean evolved,
             @Nullable HauntTier tier) {
-        List<HauntEvent> candidates = new ArrayList<>();
-        List<Double> weights = new ArrayList<>();
-        List<Boolean> stale = new ArrayList<>();
-        boolean anyFresh = false;
+        List<HauntEvent> fresh = new ArrayList<>();
+        List<Double> freshWeights = new ArrayList<>();
+        List<HauntEvent> stale = new ArrayList<>();
+        List<Double> staleWeights = new ArrayList<>();
+        // The day of the dead is quiet; only a ritual that names a tier overrides it.
+        boolean quiet =
+                tier == null && Calendar.today(player.level().getServer()).dayOfTheDead();
         for (HauntEvent event : HauntEvents.all()) {
-            if (tier != null && event.tier() != tier) {
+            if (tier != null && event.tier() != tier || quiet && event.tier() == HauntTier.HARMFUL) {
                 continue;
             }
             if (!open(event, player, spirit, power, evolved)) {
                 continue;
             }
-            String id = event.id().toString();
-            boolean ready = Faults.canRun(event, player);
-            Rarity.observe(id, ready);
-            double weight = weight(event, ready, spirit, traits, power, evolved);
+            double weight = weight(event, true, spirit, traits, power, evolved);
             if (weight > 0) {
-                boolean repeat = Recent.blocks(player.getUUID(), id);
-                candidates.add(event);
-                weights.add(weight);
-                stale.add(repeat);
-                anyFresh |= !repeat;
-            }
-        }
-        double total = 0;
-        for (int i = candidates.size() - 1; i >= 0; i--) {
-            if (anyFresh && stale.get(i)) {
-                candidates.remove(i);
-                weights.remove(i);
-            } else {
-                total += weights.get(i);
+                boolean repeat = Recent.blocks(player.getUUID(), event.id().toString());
+                (repeat ? stale : fresh).add(event);
+                (repeat ? staleWeights : freshWeights).add(weight);
             }
         }
         RandomSource random = player.getRandom();
-        double roll = random.nextDouble() * total;
-        for (int i = 0; i < candidates.size(); i++) {
-            roll -= weights.get(i);
-            if (roll < 0) {
-                return Optional.of(candidates.get(i));
-            }
-        }
-        return Optional.empty();
+        Predicate<HauntEvent> ready = event -> {
+            boolean can = Faults.canRun(event, player);
+            Rarity.observe(event.id().toString(), can);
+            return can;
+        };
+        Optional<HauntEvent> picked = Draw.first(fresh, freshWeights, ready, random::nextDouble);
+        return picked.isPresent() ? picked : Draw.first(stale, staleWeights, ready, random::nextDouble);
     }
 }

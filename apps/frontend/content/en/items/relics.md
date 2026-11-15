@@ -4,7 +4,7 @@ title: Relics
 
 # Relics
 
-The rarest things in the mod. A relic is made of the essences of **three different types** that share a theme, and of one rare find from the late game. They are crafted in a crafting grid, in a shape, and each is one of a kind: the world has no second recipe for it, and nothing here is spent.
+These are the rarest things I know of. A relic is made of the essences of **three different types** that share a theme, and of one rare find from the late game. They are crafted in a crafting grid, in a shape, and each is one of a kind: the world has no second recipe for it, and nothing here is spent.
 
 | Relic | Essences | Rare finds |
 | --- | --- | --- |
@@ -26,9 +26,9 @@ E L E
 ```
 
 - **Ward:** like the [Hallowed Lantern](/en/items/tools#hallowed-lantern), no spirit's event runs on a player within **24 blocks**, four times the reach of the old one. The event is lost, not put off.
-- **Clue:** each event it stops writes one trait of a spirit near you into the journal, in the words the ouija board uses. Protection that teaches.
+- **Clue:** each event it stops writes one habit of a spirit nearby into the journal, in the words the ouija board uses. Protection that teaches.
 - **One to a chunk.** A second one cannot be placed in the same chunk.
-- It does not add to a Hallowed Lantern's ward: near both, you are warded once, and the hollow one still leaves its clue.
+- It does not add to a Hallowed Lantern's ward: near both, a player is warded once, and the hollow one still leaves its clue.
 
 ## Ferryman's Coin
 
@@ -40,10 +40,10 @@ L N T
 . G .
 ```
 
-Wear it in the **charm slot** with Curios, or carry it in the **off hand** without. When a blow would kill you, you **fade** instead:
+The coin is worn in the **charm slot** with Curios, or carried in the **off hand** without. When a blow would kill the wearer, they **fade** instead:
 
-- You come back at half your health, with all the effects on you gone and the fire put out, and your sanity falls to 0 at once.
-- For 10 seconds you are faded: invisible, nothing can hurt you, you can hurt nothing, you cannot use blocks, and hostile mobs lose track of you. You are not moved: you fade where you fell, with all your things.
+- They come back at half their health, with all the effects on them gone and the fire put out, and their sanity falls to 0 at once.
+- For 10 seconds the wearer is faded: invisible, nothing can hurt them, they can hurt nothing, they cannot use blocks, and hostile mobs lose track of them. They are not moved: they fade where they fell, with all their things.
 - The coin then **rests for 3 days**. The rest is saved with it, so a relog does not skip it.
 - A totem of undying is used first. The void and `/kill` are not turned.
 
@@ -57,17 +57,17 @@ C L C
 . B .
 ```
 
-Carry it in the **off hand** when you offer at an [altar](/en/items/tools#altar). The ritual changes:
+When the censer is held in the **off hand** as a player offers at an [altar](/en/items/tools#altar), the ritual changes:
 
-- It runs **8 waves** instead of 12. A spirit that has evolved still adds its 4, and a form it does not take still adds 6.
+- The fury runs **2 waves** instead of 6, so the ritual takes 8 waves instead of 12. A spirit that has evolved still adds its 4, and a form it does not take still adds 6.
 - The spirit cannot snuff the candles.
 - The spirit's fury in the ritual is made of harmful events only.
 - The banished spirit leaves **one more essence**.
-- The spirit's anger rises by 0.1 each time you use it.
+- The spirit's anger rises by 0.1 each time it is used.
 
 ## Hoarder's Hollow
 
-A block that is a chest, and looks like a plain one until you give it a face.
+A block that is a chest, and looks like a plain one until it is given a face.
 
 - **Craft:** hoarder essence (H), poltergeist essence (P), mimic essence (M), ender chest (C), shulker shell (S):
 
@@ -77,10 +77,10 @@ H P M
 . S .
 ```
 
-- **Store:** use it to open a store of 27 slots. It is **one store for you**, the same in every hollow you have, like an ender chest. It is kept in the saved data and not dropped when the block is broken, so you lose nothing by moving it.
-- **Disguise:** sneak and use [Mimic Clay](/en/items/consumables#mimic-mimic-clay) that has taken a look on it: it draws as that block from then on. Breaking it gives the clay back, still pressed.
+- **Store:** when used, it opens a store of 27 slots. It is **one store per player**, the same in every hollow they have, like an ender chest. It is kept in the saved data and not dropped when the block is broken, so nothing is lost by moving it.
+- **Disguise:** when [Mimic Clay](/en/items/consumables#mimic-mimic-clay) that has taken a look is used on it sneaking, it draws as that block from then on. Breaking it gives the clay back, still pressed.
 - The [Dark Lens](/en/items/charms#shade-dark-lens) shows it as it is.
-- **Theft:** when a hoarder's event on your belongings runs, there is a 1 in 5 chance that it also takes one stack from your hollows.
+- **Theft:** when a hoarder's event on a player's belongings runs, there is a 1 in 5 chance that it also takes one stack from their hollows.
 
 ## Mara's Cradle
 
@@ -92,9 +92,9 @@ M P L
 . H .
 ```
 
-A bed of two blocks, set like a bed and slept in like one (it asks for the same dark and the same quiet). It also sets your spawn point.
+A bed of two blocks, set like a bed and slept in like one (it asks for the same dark and the same quiet). It also sets the sleeper's spawn point.
 
-- You wake with **all your sanity**.
-- **The night does not pass** when everyone asleep is in a cradle. You wake in the same night, rested, and the world has not moved. If anyone sleeps in an ordinary bed, the night goes as it does with any bed.
-- Mara may come: if one haunts you, once in four times she acts on you a few seconds after you lie down, with a light event.
-- **The spawn holds once.** If the cradle is broken, the next time you come back from death you return where it stood, and not to the world's spawn. Then it is gone.
+- The sleeper wakes with **all their sanity**.
+- **The night does not pass** when everyone asleep is in a cradle. The sleeper wakes in the same night, rested, and the world has not moved. If anyone sleeps in an ordinary bed, the night goes as it does with any bed.
+- Mara may come: if one haunts the sleeper, once in four times she acts on them a few seconds after they lie down, with a light event.
+- **The spawn holds once.** If the cradle is broken, the next time the player comes back from death they return where it stood, and not to the world's spawn. Then it is gone.

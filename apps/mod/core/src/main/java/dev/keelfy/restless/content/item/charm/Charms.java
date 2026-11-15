@@ -4,6 +4,7 @@ import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.item.Relics;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.event.EventTag;
 import dev.keelfy.restless.haunt.event.HauntEvent;
 import dev.keelfy.restless.state.HauntData;
@@ -190,12 +191,7 @@ public final class Charms {
                 }
                 attacker.level()
                         .playSound(
-                                null,
-                                attacker.blockPosition(),
-                                SoundEvents.WARDEN_HEARTBEAT,
-                                SoundSource.PLAYERS,
-                                1.5f,
-                                0.6f);
+                                null, attacker.blockPosition(), HauntSounds.HEARTBEAT, SoundSource.PLAYERS, 1.5f, 1.0f);
             }
         }
         if (victim instanceof ServerPlayer holder
@@ -257,8 +253,7 @@ public final class Charms {
             return false;
         }
         Vec3 from = at == null ? player.position() : at;
-        player.level()
-                .playSound(null, from.x, from.y, from.z, SoundEvents.GHAST_SCREAM, SoundSource.HOSTILE, 2.0f, 0.5f);
+        player.level().playSound(null, from.x, from.y, from.z, HauntSounds.SCREECH, SoundSource.HOSTILE, 2.0f, 1.0f);
         return true;
     }
 

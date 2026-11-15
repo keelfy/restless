@@ -1,6 +1,7 @@
 package dev.keelfy.restless.haunt.event;
 
 import dev.keelfy.restless.config.Config;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Restore;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.haunt.Ticks;
@@ -191,7 +192,7 @@ final class Lethals {
         Config.Section config = Config.event(HELLRING);
         Vec3 origin = player.position();
         double radius = config.num("ring_radius");
-        Nearby.sound(player, SoundEvents.GHAST_WARN, origin, config.tone("sound"));
+        Nearby.sound(player, HauntSounds.byId("haunt.sting_roar"), origin, config.tone("sound"));
         int interval = config.integer("interval_ticks");
         int points = config.integer("ring_points");
         Scheduler.repeat(player, 0, interval, (p, n) -> {

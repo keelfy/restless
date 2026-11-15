@@ -6,6 +6,22 @@ task below is sized for one agent, names its seams, and says what proves it done
 The review was done by reading, not by playing. Anything about how the mod feels in play is a hypothesis until phase 6
 checks it.
 
+## Status (2026-11-15)
+
+Built on branch `depth-plan` by agent leads, one merge per lead. 43 of 46 tasks are done.
+
+| Tasks | State |
+|---|---|
+| G1–G5, T1–T12, I1–I3, R1–R10, M1–M9, S3, S4, C2 | Done, each with the tests its lead named |
+| C3 | Done, but no tag was pushed, so the release job has never run in CI |
+| S1 | Partly: `haunt.jolt`, `haunt.music_box`, `haunt.mirror_ring` are wired; `haunt.song`, `haunt.lullaby`, `haunt.mirror_crack` wait for the owner. No wired sound has been heard yet ([sounds-todo.md](sounds-todo.md)) |
+| S2, C1 | Not started: both need event counts from real play (`/haunt stats`) |
+
+Known gaps the leads reported: the spirit body (S3) has no texture of its own and no screenshot; the mirror (T5) does
+not unmask `PacketEntity` fakes; holy water (T5) does not end `Restore` timers; destroyed grave bones (I3) are not laid
+again; the haunted loot chance (M4) is in the loot table, not a config key. Leftovers are listed in
+[ideas.md](ideas.md). The numbers in "Why this plan" below describe the mod before this work.
+
 ## Why this plan
 
 The mod is wide and shallow. It has 652 events and 104 scenarios on a solid engine, a closed loop (clues, altar or
@@ -48,7 +64,7 @@ Agents use the default and do not wait. Change a default here before the wave th
 |---|---|---|---|
 | D1 | Is a spirit's first hour meant to be harmless (power 0 for the first days)? | Personal spirits start at maturity 0.15 | M10 |
 | D2 | May the altar leave an "echo" spirit behind, making the grave the cleaner way out? | Yes | M2 |
-| D3 | Where do new recordings come from, and under what licence? | The owner's pack (see S1) first, CC0 sources for what it lacks. The pack's licence is not confirmed: no file from it ships until the owner names its source for the `README.md` credits | S1, S2, S4 |
+| D3 | Where do new recordings come from, and under what licence? | The owner's pack (see S1) first, CC0 sources for what it lacks. Settled 2026-11-14: the owner checked the pack, every file is from an open source and royalty free, so its files may ship. `README.md` credits it as the owner's royalty-free pack until the owner lists the sources | S1, S2, S4 |
 | D4 | Does the visible spirit get a model per type or one model with a shape per type? | One model, shapes from `photo/Apparition` | S3 |
 | D5 | Is a public alpha wanted, and where? | Not decided; C3 only prepares the build | C3 |
 | D6 | Does salt wear out? It changes the "home is safe" rule. | Yes, only from events it stops | M7 |
@@ -356,6 +372,11 @@ Players see natures by name: objects, darkness, malice, deceit.
 - **Done when:** a GameTest from the stuffed effigy to the bound spirit, or a note in this file that it is already
   built.
 - **Size:** S.
+- **Status (2026-11-14): already built.** `content/block/Effigy` calls `Births.lure` when a stuffed effigy burns down:
+  a personal essence binds that type to the nearest player within `effigy.radius` (or feeds the one they have), a
+  territorial essence anchors a spirit where the effigy stood. Proved by `economy_effigy_calls_personal`,
+  `economy_effigy_respects_the_cap`, `economy_effigy_anchors_territorial` and `economy_effigy_covers_every_essence` in
+  `EconomyGameTests`.
 
 ### M4. A haunted thing
 

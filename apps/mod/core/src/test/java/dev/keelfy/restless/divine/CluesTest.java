@@ -18,6 +18,7 @@ class CluesTest {
     private static Trait trait(String id, boolean lies, Clue... clues) {
         return new Trait(
                 id,
+                Trait.Kind.HABIT,
                 Map.of(),
                 1.0,
                 Trait.Condition.ANY,
@@ -36,8 +37,67 @@ class CluesTest {
         List<Trait> catalog = List.of(cold, trait("other", false, Clue.VOICE));
         assertEquals(
                 cold,
-                Clues.reveal(List.of(cold), catalog, Clue.VOICE, new Random(1)).orElseThrow());
-        assertTrue(Clues.reveal(List.of(), catalog, Clue.VOICE, new Random(1)).isEmpty());
+                Clues.reveal(List.of(cold), catalog, Clue.PLANCHETTE, new Random(1))
+                        .orElseThrow());
+        assertTrue(
+                Clues.reveal(List.of(), catalog, Clue.PLANCHETTE, new Random(1)).isEmpty());
+    }
+
+    @Test
+    void eachToolDrawsFromItsOwnAxis() {
+        Trait habit = trait("habit", false, Clue.VOICE);
+        Trait condition = of("condition", Trait.Kind.CONDITION);
+        Trait desire = of("desire", Trait.Kind.LEANING);
+        List<Trait> owned = List.of(habit, condition, desire);
+        for (int i = 0; i < 100; i++) {
+            assertEquals(
+                    habit,
+                    Clues.reveal(owned, owned, Clue.PLANCHETTE, new Random(i)).orElseThrow());
+            assertEquals(
+                    condition,
+                    Clues.reveal(owned, owned, Clue.FOOTPRINTS, new Random(i)).orElseThrow());
+            assertEquals(
+                    desire,
+                    Clues.reveal(owned, owned, Clue.VOICE, new Random(i)).orElseThrow());
+        }
+        assertTrue(
+                Clues.reveal(List.of(habit), owned, Clue.VOICE, new Random(1)).isEmpty());
+        assertTrue(Clues.reveal(List.of(habit), owned, Clue.FOOTPRINTS, new Random(1))
+                .isEmpty());
+        assertTrue(Clues.reveal(List.of(desire), owned, Clue.SILHOUETTE, new Random(1))
+                .isPresent());
+    }
+
+    @Test
+    void aLieStaysOnTheToolsAxis() {
+        Trait liar = trait("liar", true, Clue.PLANCHETTE);
+        Trait condition = of("condition", Trait.Kind.CONDITION);
+        Trait habit = trait("habit", false, Clue.PLANCHETTE);
+        List<Trait> catalog = List.of(liar, condition, habit);
+        for (int i = 0; i < 200; i++) {
+            Trait shown = Clues.reveal(List.of(liar), catalog, Clue.PLANCHETTE, new Random(i))
+                    .orElseThrow();
+            assertTrue(shown == liar || shown == habit, shown.id());
+        }
+    }
+
+    private static Trait of(String id, Trait.Kind kind) {
+        return new Trait(
+                id,
+                kind,
+                Map.of(),
+                1.0,
+                Trait.Condition.ANY,
+                0.0,
+                List.of(),
+                Set.of(Clue.VOICE),
+                List.of("word"),
+                List.of("phrase"),
+                false,
+                null,
+                kind == Trait.Kind.LEANING ? Trait.Lean.DESIRE : null,
+                List.of(),
+                null);
     }
 
     @Test
@@ -60,8 +120,9 @@ class CluesTest {
         List<Trait> catalog = List.of(liar, other);
         Random random = new Random(3);
         long lies = java.util.stream.IntStream.range(0, 200)
-                .filter(i ->
-                        Clues.reveal(List.of(liar), catalog, Clue.VOICE, random).orElseThrow() == other)
+                .filter(i -> Clues.reveal(List.of(liar), catalog, Clue.PLANCHETTE, random)
+                                .orElseThrow()
+                        == other)
                 .count();
         assertTrue(lies > 50 && lies < 150, "lies: " + lies);
     }
@@ -83,5 +144,29 @@ class CluesTest {
         for (Trait trait : Traits.all()) {
             assertFalse(trait.clues().isEmpty(), trait.id());
         }
+    }
+
+    @Test
+    void aVeilSilencesOnlyTheToolItFoils() {
+        Trait cold = trait("cold", false, Clue.SILHOUETTE);
+        Trait veil = new Trait(
+                "veil",
+                Trait.Kind.VEIL,
+                Map.of(),
+                1.0,
+                Trait.Condition.ANY,
+                0.0,
+                List.of(),
+                Set.of(Clue.VOICE),
+                List.of("word"),
+                List.of("phrase"),
+                false,
+                null,
+                null,
+                List.of(),
+                Clue.SILHOUETTE);
+        List<Trait> owned = List.of(cold, veil);
+        assertTrue(Clues.reveal(owned, owned, Clue.SILHOUETTE, new Random(1)).isEmpty());
+        assertTrue(Clues.reveal(owned, owned, Clue.PLANCHETTE, new Random(1)).isPresent());
     }
 }

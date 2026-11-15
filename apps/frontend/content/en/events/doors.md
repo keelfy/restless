@@ -8,276 +8,276 @@ title: Doors
 
 ## `door`
 
-Opens a closed door or slams an open one
+A closed door opens, or an open one slams shut.
 
-Runs when: A wooden door is within 12 blocks
+Runs when: a wooden door is within 12 blocks.
 
 ## `breathing_door`
 
-Toggles once a second, six times, ending as it began. A faint dark haze puffs at the door each time it moves.
+The door toggles once a second, six times, and ends as it began. A faint dark haze puffs at the door each time it moves.
 
-Runs when: A wooden door within 12
+Runs when: a wooden door is within 12 blocks.
 
 ## `trapdoor`
 
-Toggles it with a slam
+The trapdoor toggles with a slam.
 
-Runs when: A wooden trapdoor within 12
+Runs when: a wooden trapdoor is within 12 blocks.
 
 ## `fence_gate`
 
-Toggles it
+The fence gate toggles.
 
-Runs when: A fence gate within 12
+Runs when: a fence gate is within 12 blocks.
 
 ## `button`
 
-Presses it
+The button is pressed.
 
-Runs when: An unpressed button within 12
+Runs when: an unpressed button is within 12 blocks.
 
 ## `lever`
 
-Flips it
+The lever is flipped.
 
-Runs when: A lever within 12
+Runs when: a lever is within 12 blocks.
 
 ## `pressure_plate`
 
-Triggers it for a second
+The pressure plate is triggered for a second.
 
-Runs when: An unpressed pressure plate within 12
+Runs when: an unpressed pressure plate is within 12 blocks.
 
 ## `iron_door`
 
-Toggles it, no redstone
+The iron door toggles without any redstone.
 
-Runs when: An iron door within 12
+Runs when: an iron door is within 12 blocks.
 
 ## `open_house`
 
 **Harmful.**
-Opens every such door. A faint dark haze puffs at every door it opens.
+Every such door opens. A faint dark haze puffs at each door that it opens.
 
-Runs when: Night, and a closed wooden door within 20
+Runs when: it is night and a closed wooden door is within 20 blocks.
 
 ## `chest_lid`
 
-Lid opens and closes with sound, contents untouched
+The lid opens and closes with sound, and the contents are left untouched.
 
-Runs when: A chest or trapped chest within 10
+Runs when: a chest or trapped chest is within 10 blocks.
 
 ## `barrel_opens`
 
-Opens for 1.5 s, then closes
+The barrel opens for 1.5 s and then closes.
 
-Runs when: A closed barrel within 10
+Runs when: a closed barrel is within 10 blocks.
 
 ## `jukebox_pop`
 
-The music cuts out and the disc pops out of it
+The music cuts out and the disc pops out of the jukebox.
 
-Runs when: A jukebox within 20 is playing a disc
+Runs when: a jukebox within 20 blocks is playing a disc.
 
 ## `lectern_pages`
 
-The book turns to another page with a page-turn sound, through the lectern's own menu so a comparator sees the change
+The book turns to another page with a page-turn sound. This goes through the lectern's own menu, so a comparator sees the change.
 
-Runs when: A lectern within 12 holds a book of more than one page
+Runs when: a lectern within 12 blocks holds a book of more than one page.
 
 ## `pot_wobble`
 
-It wobbles as if an item were refused
+The pot wobbles as if it had refused an item.
 
-Runs when: A decorated pot within 12
+Runs when: a decorated pot is within 12 blocks.
 
 ## `bell_swing`
 
-It swings and rings toward a random side
+The bell swings and rings toward a random side.
 
-Runs when: A bell within 20
+Runs when: a bell is within 20 blocks.
 
 ## `redstone_drift`
 
 **Harmful.**
-A repeater gets another delay, a comparator the other mode, with no update. Set back after 2 min if unchanged; under hardcore it stays
+A repeater gets another delay and a comparator the other mode, with no block update. After 2 min the change is set back if nothing touched it, and under hardcore it stays.
 
-Runs when: A repeater or comparator within 12
+Runs when: a repeater or comparator is within 12 blocks.
 
 ## `occupied_bed`
 
-Both halves read as occupied for 1 min, so the vanilla "This bed is occupied" shows. Always put back, hardcore or not. A faint dark haze hangs over the bed for as long as it reads as occupied.
+Both halves of the bed read as occupied for 1 min, so the vanilla "This bed is occupied" message shows. The change is always put back, hardcore or not. A faint dark haze hangs over the bed for as long as it reads as occupied.
 
-Runs when: An unoccupied bed within 12
+Runs when: an unoccupied bed is within 12 blocks.
 
 ## `shuffled_books`
 
-The books take other slots. Put back after 2 min if untouched; under hardcore they stay
+The books take other slots. After 2 min they are put back if untouched, and under hardcore they stay.
 
-Runs when: A chiseled bookshelf within 12 with a book
+Runs when: a chiseled bookshelf with a book in it is within 12 blocks.
 
 ## `dispenser_shot`
 
 **Harmful.**
-It clicks as if empty, then after 1 s an arrow leaves its face toward the player. Takes nothing from its contents, the arrow cannot be picked up
+The dispenser clicks as if it were empty, and after 1 s an arrow leaves its face toward the player. Nothing is taken from its contents, and the arrow cannot be picked up.
 
-Runs when: A dispenser within 12
+Runs when: a dispenser is within 12 blocks.
 
 ## `chest_blast`
 
 **Harmful.**
-A creeper hiss from the chest, then after 1 s an explosion of power 1 that breaks no blocks
+A creeper hiss comes from the chest, and after 1 s an explosion of power 1 follows that breaks no blocks.
 
-Runs when: A chest within 10, health above 10
+Runs when: a chest is within 10 blocks and the player's health is above 10.
 
 ## `wrong_smelt`
 
-The output becomes charcoal or rotten flesh of the same count; put back after 2 min unless taken or changed (stays under hardcore)
+The output becomes charcoal or rotten flesh of the same count. After 2 min it is put back unless it was taken or changed (under hardcore it stays).
 
-Runs when: A furnace within 10 with something in its output
+Runs when: a furnace within 10 blocks has something in its output.
 
 ## `furniture_moves`
 
 **Harmful.**
-It stands 2 to 5 blocks away on free floor, block entity and contents carried through its save format, a bed both halves. Moved back after 5 min if both spots are unchanged; under hardcore it stays
+The piece of furniture is moved to stand 2 to 5 blocks away on free floor, with its block entity and contents carried over through its save format and a bed moved with both halves. After 5 min it is moved back if both spots are unchanged, and under hardcore it stays.
 
-Runs when: A single chest, crafting table, furnace or empty bed within 12
+Runs when: a single chest, crafting table, furnace or empty bed is within 12 blocks.
 
 ## `doorstep_gift`
 
-A poppy, dandelion, bone or raw rabbit lies outside, on the side away from the player; a real item
+A poppy, dandelion, bone or raw rabbit lies outside the door, on the side away from the player, and it is a real item.
 
-Runs when: A door within 12 with free floor on its far side
+Runs when: a door within 12 blocks has free floor on its far side.
 
 ## `muddy_footprints`
 
-Pairs of muddy prints appear one by one on every first or second block from the player to it, each with a mud step. Each is wiped after 2 min if still there; under hardcore they stay
+Pairs of muddy prints appear one after another on every first or second block from the player to the bed or chest, each with a mud step sound. Each print is wiped after 2 min if it is still there, and under hardcore they stay.
 
-Runs when: Indoors, a bed or chest within 10 on the player's level, reachable over free floor
+Runs when: the player is indoors, and a bed or chest on the player's level within 10 blocks can be reached over free floor.
 
 ## `locked_door`
 
 **Harmful.**
-Slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so the click is refused locally (locked-chest sound) with no open-and-snap-back. A faint dark haze hangs at the door while it is locked.
+The door slams shut with a thud and cannot be opened for 10 s. The server tells clients within 64 blocks, so an attempt to open it is refused locally (with the locked-chest sound), with no opening and snapping back. A faint dark haze hangs at the door while it is locked.
 
-Runs when: A wooden door within 12
+Runs when: a wooden door is within 12 blocks.
 
 ## `hook_click`
 
-The hook clicks on, then off a moment later, with no string to trip it
+The hook clicks on and then off a moment later, with no string to trip it.
 
-Runs when: A tripwire hook within 12
+Runs when: a tripwire hook is within 12 blocks.
 
 ## `daylight_flip`
 
-It turns inverted, so lamps on it light at noon and go dark at night; set back after a minute
+The daylight detector turns inverted, so lamps on it light at noon and go dark at night. A minute later it is set back.
 
-Runs when: A daylight detector within 12
+Runs when: a daylight detector is within 12 blocks.
 
 ## `rod_sparks`
 
-It is powered for a moment and throws sparks, with no storm
+The lightning rod is powered for a moment and throws sparks, though there is no storm.
 
-Runs when: An unpowered lightning rod within 16
+Runs when: an unpowered lightning rod is within 16 blocks.
 
 ## `torch_burnout`
 
-It burns out with the vanilla smoke and fizz and lights again after 8 s, or sooner on any update beside it
+The torch burns out with the vanilla smoke and fizz and lights again after 8 s, or sooner on any update beside it.
 
-Runs when: A lit redstone torch within 12
+Runs when: a lit redstone torch is within 12 blocks.
 
 ## `chests_open`
 
-Every lid in the room opens at once and shuts 2 s later, contents untouched
+Every lid in the room opens at once and shuts 2 s later, with the contents untouched.
 
-Runs when: Indoors, and two or more chests within 10
+Runs when: the player is indoors and two or more chests are within 10 blocks.
 
 ## `anvil_lands`
 
-The sound of an anvil landing; under hardcore the anvil also gains one damage stage
+The sound of an anvil landing is heard. Under hardcore the anvil also gains one damage stage.
 
-Runs when: Night, and an anvil within 16
+Runs when: it is night and an anvil is within 16 blocks.
 
 ## `cake_bite`
 
-One more slice is gone with an eating sound; it comes back after a minute
+One more slice of the cake is gone, with an eating sound, and it comes back after a minute.
 
-Runs when: A cake within 12 with a slice left
+Runs when: a cake with a slice left is within 12 blocks.
 
 ## `tnt_hiss`
 
-The primed-TNT hiss comes from it, with nothing lit
+The primed-TNT hiss comes from the block, though nothing is lit.
 
-Runs when: A block of TNT, or a chest holding TNT, within 12
+Runs when: a block of TNT, or a chest holding TNT, is within 12 blocks.
 
 ## `pot_holds`
 
-A bone, a skull sherd or an echo shard sits in it with a wobble; taken out again after two minutes
+A bone, a skull sherd or an echo shard sits in the pot with a wobble, and it is taken out again after two minutes.
 
-Runs when: An empty decorated pot within 12
+Runs when: an empty decorated pot is within 12 blocks.
 
 ## `piston_twitch`
 
-A piston twitches out and back, only on your screen, and pushes nothing
+A piston twitches out and back, only on the player's screen, and pushes nothing.
 
-Runs when: A piston within 12 with air in front
+Runs when: a piston with air in front of it is within 12 blocks.
 
 ## `hopper_swallows`
 
-An item lying near a hopper slides over it and the hopper takes it
+An item lying near a hopper slides over it, and the hopper takes it.
 
-Runs when: A hopper within 12 with a dropped item near it
+Runs when: a hopper within 12 blocks has a dropped item near it.
 
 ## `sculk_chain`
 
-Sculk sensors click one after another, the farthest first, toward you
+Sculk sensors click one after another, with the farthest first, toward the player.
 
-Runs when: Two or more sculk sensors within 16
+Runs when: two or more sculk sensors are within 16 blocks.
 
 ## `observer_pulse`
 
-An observer pulses a few times and runs whatever it is wired to
+An observer pulses a few times and runs whatever it is wired to.
 
-Runs when: An observer within 12
+Runs when: an observer is within 12 blocks.
 
 ## `bed_missing`
 
-"Your home bed was missing or obstructed", while the spawn point stays as it is
+The player receives the vanilla message that the home bed was missing or obstructed, while the spawn point stays as it is.
 
-Runs when: You have a respawn point
+Runs when: the player has a respawn point.
 
 ## `ender_note`
 
-A note you never wrote shows in an empty slot of the open ender chest, gone at the first click
+A note the player never wrote shows in an empty slot of the open ender chest, and it is gone at the first action in that inventory.
 
-Runs when: An ender chest is open with an empty slot
+Runs when: an ender chest is open and has an empty slot.
 
 ## `brewing_swap`
 
-One bottle becomes another potion (water, awkward, night vision, swiftness, healing, harming, poison, weakness, slowness or invisibility); put back after 5 min if untouched (stays under hardcore)
+One bottle becomes another potion (water, awkward, night vision, swiftness, healing, harming, poison, weakness, slowness or invisibility). After 5 min it is put back if untouched, and under hardcore it stays.
 
-Runs when: A brewing stand with a potion bottle within 10
+Runs when: a brewing stand holding a potion bottle is within 10 blocks.
 
 ## `brewing_bubbles`
 
-The brewing sound and bubbles above it, 6 times, 0.4 s apart. Nothing changes
+The brewing sound and bubbles are played above the stand, 6 times, 0.4 s apart. Nothing changes.
 
-Runs when: A brewing stand with nothing in any slot within 10
+Runs when: a brewing stand with nothing in any slot is within 10 blocks.
 
 ## `statue_pose`
 
-Its pose becomes another one while the player is not looking; set back after 2 min (stays under hardcore)
+The statue's pose becomes another one while the player is not looking. After 2 min it is set back, and under hardcore it stays.
 
-Runs when: A copper golem statue within 12, outside 60° of where the player looks
+Runs when: a copper golem statue is within 12 blocks and lies outside 60° of where the player looks.
 
 ## `open_door_view`
 
-The view moves for 3 s into the doorway of the nearest open door, looking in toward the player; then back. Same early resets as `mob_eyes`
+The player's view moves for 3 s into the doorway of the nearest open door, looking in toward the player, and then moves back. It ends early in the same cases as `mob_eyes`.
 
-Runs when: Player on the ground, not in a fluid, and an open door 3 to 12 blocks away
+Runs when: the player is on the ground and not in a fluid, and an open door is 3 to 12 blocks away.
 
 ## `claw_marks`
 
-Claw marks appear on the player's side of both halves of the door with a scrape. Removed after 3 min; under hardcore they stay
+Claw marks appear with a scrape on the player's side of both halves of the door. They are removed after 3 min, and under hardcore they stay.
 
-Runs when: Indoors, a closed door within 8 with free blocks on the player's side
+Runs when: the player is indoors, and a closed door within 8 blocks has free blocks on the player's side.

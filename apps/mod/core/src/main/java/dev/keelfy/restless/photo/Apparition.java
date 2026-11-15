@@ -338,28 +338,41 @@ public record Apparition(
                 if (t < -0.15 || t > 1.05 || Math.abs(u) > 0.5) {
                     continue;
                 }
-                double head = soft(headR - Math.hypot(u, t - headY), 0.035);
-                double wave = ripple * Math.sin(t * rippleFreq + phase);
-                double width = half + flare * Math.max(0, t - bodyTop - 0.01) + wave;
-                double body = t < bodyTop ? 0 : soft(width - Math.abs(u), 0.06) * Math.pow(Math.max(0, 1 - t), fade);
-                double arms = 0;
-                for (Limb limb : limbs) {
-                    arms = Math.max(arms, limb(limb, Math.abs(u), t));
-                }
-                double glow = soft(0.22 - Math.hypot(u * 1.4, (t - 0.45) * 0.8), 0.2) * halo;
-                double eyes = soft(
-                        eyeR
-                                - Math.min(
-                                        Math.hypot(u - eyeGap, t - headY + 0.005),
-                                        Math.hypot(u + eyeGap, t - headY + 0.005)),
-                        0.012);
-                double mouth = mouthW <= 0 ? 0 : soft(1 - Math.hypot(u / mouthW, (t - headY - 0.045) / mouthH), 0.4);
-                double mist = Math.max(Math.max(head, body), arms * 0.8) * 0.72 + glow;
                 int i = x + y * Picture.WIDTH;
-                grey[i] += (238 - grey[i]) * Math.min(1, mist);
-                grey[i] *= 1 - 0.75 * Math.max(eyes, mouth) * head;
+                grey[i] += (238 - grey[i]) * Math.min(1, mist(u, t));
+                grey[i] *= 1 - 0.75 * dark(u, t);
             }
         }
+    }
+
+    /**
+     * How much pale mist covers the point ({@code u} across from the leaning centre line, {@code t} down from the top,
+     * in figure heights): 0 for none, 1 or a little more where the figure is solid.
+     */
+    public double mist(double u, double t) {
+        double head = head(u, t);
+        double wave = ripple * Math.sin(t * rippleFreq + phase);
+        double width = half + flare * Math.max(0, t - bodyTop - 0.01) + wave;
+        double body = t < bodyTop ? 0 : soft(width - Math.abs(u), 0.06) * Math.pow(Math.max(0, 1 - t), fade);
+        double arms = 0;
+        for (Limb limb : limbs) {
+            arms = Math.max(arms, limb(limb, Math.abs(u), t));
+        }
+        double glow = soft(0.22 - Math.hypot(u * 1.4, (t - 0.45) * 0.8), 0.2) * halo;
+        return Math.max(Math.max(head, body), arms * 0.8) * 0.72 + glow;
+    }
+
+    /** How dark the eyes and mouth make the point, 0 to 1; see {@link #mist} for the coordinates. */
+    public double dark(double u, double t) {
+        double eyes = soft(
+                eyeR - Math.min(Math.hypot(u - eyeGap, t - headY + 0.005), Math.hypot(u + eyeGap, t - headY + 0.005)),
+                0.012);
+        double mouth = mouthW <= 0 ? 0 : soft(1 - Math.hypot(u / mouthW, (t - headY - 0.045) / mouthH), 0.4);
+        return Math.max(eyes, mouth) * head(u, t);
+    }
+
+    private double head(double u, double t) {
+        return soft(headR - Math.hypot(u, t - headY), 0.035);
     }
 
     /** How much of a limb covers the point; it thins towards its tip. */

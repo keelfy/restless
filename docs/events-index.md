@@ -1,6 +1,6 @@
 # Events index
 
-Map of every haunt event id to the class that defines it: 652 events + 104 scenarios. Player-facing
+Map of every haunt event id to the class that defines it: 678 events + 104 scenarios. Player-facing
 descriptions live in the wiki (`apps/frontend/content/<lang>/events/*.md`); this file is for finding code.
 
 ## How an event is wired
@@ -19,6 +19,8 @@ Paths below are under `apps/mod/core/src/main/java/dev/keelfy/restless/haunt/` u
 | Picks which event runs | `Director.java` |
 | Damage bands: safe / threat / brink / lethal | `harm/Band.java`, `harm/Bands.java`, `docs/assaults.md` |
 | World changes undone later | `Restore.java`, `event/kit/Swaps.java` (client-only blocks), `event/kit/PacketEntity.java` (client-only mobs) |
+| Habit gate: an event with `habit` in its config only rolls for a spirit that has that habit (`HauntEvent.habit`, `Director.weight`); the tells use it | `event/HauntEvent.java`, `event/Tells.java` |
+| Harsh form: above `anger.harsh_above` (0.7) a tell with `harsh` in its config runs that event instead, where it can run | `event/Harsh.java`, `event/Tells.java` |
 | Tunables, `events.<namespace:id>` (`weight` + event keys) | `apps/mod/core/src/main/resources/restless-config/<group>.json`, read via `Config.event(id)` |
 | Scenarios: scripts of beats | `restless-config/scenarios.json` (`script`), loaded by `scenario/Scenarios.java`; `docs/scenarios.md` |
 | Wiki page per tag | `apps/frontend/content/{en,ru}/events/<tag>.md` |
@@ -34,11 +36,11 @@ use `restless:<id>`. Grep both `"<id>"` and `"restless:<id>"`.
 
 `[wiki tag]` is the wiki page the event is listed on.
 
-### `event/Sounds.java` (67)
+### `event/Sounds.java` (69)
 
 Sounds with no source; never touch the world. [sound]
 
-`footsteps`, `creeper_hiss`, `three_knocks`, `crying_child`, `block_breaking`, `eating_behind_wall`, `enderman_hiss`, `chest_opens`, `breathing`, `distant_bell`, `phantom_jukebox`, `music_cut`, `whisper`, `echo`, `death_cry`, `dripping`, `distant_mob`, `hostile_animal`, `approaching_steps`, `distant_mining`, `many_breaks`, `ladder_steps`, `spider_overhead`, `cracking_floor`, `bottle_shatter`, `shrieker`, `fake_subtitle`, `phantom_heartbeat`, `note_block_voice`, `ghost_laugh`, `ghost_breath`, `close_whispers`, `circling_moan`, `cut_off_scream`, `long_scream`, `banshee`, `distant_warden`, `sky_dragon`, `distant_wither`, `end_portal_open`, `sky_ghast`, `fox_screech`, `rabbit_death`, `phantom_hurt`, `phantom_tool_break`, `elytra_overhead`, `nether_ambience`, `equip_behind`, `phantom_fishing`, `zombie_at_door`, `phantom_anchor`, `bucket_spill`, `lost_villager`, `phantom_arrow`, `phantom_glass`, `pen_cries`, `sniffing_behind`, `distant_goat_horn`, `false_raid_horn`, `heavy_splash`, `distant_ravager`, `golem_circling`, `burp_behind`, `bubble_columns`, `lava_pops`, `chain_rattle`, `phantom_break`
+`footsteps`, `creeper_hiss`, `three_knocks`, `crying_child`, `block_breaking`, `eating_behind_wall`, `enderman_hiss`, `chest_opens`, `breathing`, `distant_bell`, `phantom_jukebox`, `music_cut`, `whisper`, `echo`, `death_cry`, `dripping`, `distant_mob`, `hostile_animal`, `approaching_steps`, `distant_mining`, `many_breaks`, `ladder_steps`, `spider_overhead`, `cracking_floor`, `bottle_shatter`, `shrieker`, `fake_subtitle`, `phantom_heartbeat`, `note_block_voice`, `ghost_laugh`, `ghost_breath`, `close_whispers`, `circling_moan`, `cut_off_scream`, `long_scream`, `banshee`, `distant_warden`, `sky_dragon`, `distant_wither`, `end_portal_open`, `sky_ghast`, `fox_screech`, `rabbit_death`, `phantom_hurt`, `phantom_tool_break`, `elytra_overhead`, `nether_ambience`, `equip_behind`, `phantom_fishing`, `zombie_at_door`, `phantom_anchor`, `bucket_spill`, `lost_villager`, `phantom_arrow`, `phantom_glass`, `pen_cries`, `sniffing_behind`, `distant_goat_horn`, `false_raid_horn`, `heavy_splash`, `distant_ravager`, `golem_circling`, `burp_behind`, `bubble_columns`, `lava_pops`, `chain_rattle`, `phantom_break`, `dragged_chains`, `creature_rattle`
 
 ### `event/MobEvents.java` (36)
 
@@ -413,6 +415,16 @@ The mara on waking (needs `Wakes`) and the revenant's tally of kills (needs `Kil
 What the territorial spirits do to a place. The hoarder's nest remembers what it took. [WATER, DOORS, ITEMS, BLOCKS, AFFLICTION]
 
 `nix_returns`, `domovoi_tidy`, `hoarder_shiny`, `hoarder_nest`, `demon_trail`, `demon_contract`
+
+### `event/Tells.java` (24)
+
+One small sign per habit that only a spirit with that habit gives (`habit` in the config), each noting what was seen in
+the journal as a `TELL`. All habits. [AFFLICTION, ITEMS, DOORS, BLOCKS, LIGHTS, PRESENCE, SOUND, MOBS, WATER, PLAYER]
+
+`tell_cold_touch`, `tell_restless_hands`, `tell_door_slammer`, `tell_meddler`, `tell_thrower`, `tell_stacker`,
+`tell_knocker`, `tell_light_eater`, `tell_shadow_caster`, `tell_blinder`, `tell_hearth_killer`, `tell_corner_lurker`,
+`tell_vengeful`, `tell_hunter`, `tell_scratcher`, `tell_beast_caller`, `tell_drowner`,
+`tell_snarler`, `tell_whisperer`, `tell_liar`, `tell_face_thief`, `tell_illusionist`, `tell_false_friend`, `tell_lure`
 
 ## Scenarios (`scenarios.json`, 104)
 

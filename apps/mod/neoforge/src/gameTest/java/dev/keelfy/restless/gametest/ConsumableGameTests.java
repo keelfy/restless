@@ -296,11 +296,16 @@ final class ConsumableGameTests {
             discard(player);
             helper.succeed();
         });
+        // Every mob of the smeared one's kind within the rag's reach (24 blocks) turns on it, and other tests' events
+        // calm the hostiles near their players: no other test's mobs or players may be in reach.
+        HauntEventGameTests.PADDING.put("bloodied_rag_turns_a_mobs_kin_on_it", 24);
         tests.put("bloodied_rag_turns_a_mobs_kin_on_it", helper -> {
             ServerPlayer player = fresh(helper);
             ServerLevel level = helper.getLevel();
             Zombie victim = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 5, 1, 2);
             Zombie kin = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 5, 1, 6);
+            // No free will clears its goals but not its target goals: it would go for a player in reach by itself.
+            kin.setNoAi(true);
             RagEntity rag = new RagEntity(level, player, new ItemStack(Content.BLOODIED_RAG.get()));
             rag.setPos(
                     Vec3.atCenterOf(helper.absolutePos(new BlockPos(1, 1, 2))).add(0, 0.5, 0));

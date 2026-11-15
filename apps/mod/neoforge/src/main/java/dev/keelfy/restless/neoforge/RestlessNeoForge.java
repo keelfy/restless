@@ -2,7 +2,9 @@ package dev.keelfy.restless.neoforge;
 
 import dev.keelfy.restless.Restless;
 import dev.keelfy.restless.banish.RequiemPayload;
+import dev.keelfy.restless.banish.RitualPayload;
 import dev.keelfy.restless.banish.client.RequiemScreen;
+import dev.keelfy.restless.banish.client.RitualCue;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.EyesType;
 import dev.keelfy.restless.content.Presence;
@@ -26,6 +28,7 @@ import dev.keelfy.restless.haunt.effect.client.ScreenOverlay;
 import dev.keelfy.restless.journal.FilePayload;
 import dev.keelfy.restless.journal.Journal;
 import dev.keelfy.restless.journal.JournalPayload;
+import dev.keelfy.restless.journal.MarkPayload;
 import dev.keelfy.restless.journal.ReadPayload;
 import dev.keelfy.restless.journal.client.JournalScreen;
 import dev.keelfy.restless.neoforge.compat.VoiceAddon;
@@ -105,6 +108,7 @@ public final class RestlessNeoForge {
                 .playToClient(
                         JournalPayload.TYPE, JournalPayload.CODEC, (payload, context) -> JournalScreen.receive(payload))
                 .playToClient(RequiemPayload.TYPE, RequiemPayload.CODEC, (payload, context) -> RequiemScreen.open())
+                .playToClient(RitualPayload.TYPE, RitualPayload.CODEC, (payload, context) -> RitualCue.receive(payload))
                 .playToClient(DebugPayload.TYPE, DebugPayload.CODEC, (payload, context) -> DebugScreen.open(payload))
                 .playToClient(
                         ShutterPayload.TYPE, ShutterPayload.CODEC, (payload, context) -> Darkroom.shutter(payload))
@@ -119,11 +123,15 @@ public final class RestlessNeoForge {
                 .playToServer(
                         ReadPayload.TYPE,
                         ReadPayload.CODEC,
-                        (payload, context) -> Journal.sync((ServerPlayer) context.player()))
+                        (payload, context) -> Journal.read((ServerPlayer) context.player()))
                 .playToServer(
                         FilePayload.TYPE,
                         FilePayload.CODEC,
                         (payload, context) -> Journal.file((ServerPlayer) context.player(), payload))
+                .playToServer(
+                        MarkPayload.TYPE,
+                        MarkPayload.CODEC,
+                        (payload, context) -> Journal.mark((ServerPlayer) context.player(), payload))
                 .playToServer(
                         FirePayload.TYPE,
                         FirePayload.CODEC,

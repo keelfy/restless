@@ -4,9 +4,15 @@
     "check_interval_ticks": 20,
     "default_spirits": 1,
     "territorial_radius": 48,
-    "traits_min": 3,
-    "traits_max": 5,
+    "habits_min": 3,
+    "habits_max": 4,
+    "conditions_min": 1,
+    "conditions_max": 2,
+    "desires": 1,
+    "leanings": 1,
+    "veil_chance": 0.25,
     "dark_light_level": 8,
+    "underground_below": 40,
     "react_chance": 0.25,
     "sneak_delay_ticks": 10,
     "rarity_memory": 0.05,
@@ -15,10 +21,12 @@
     "startle_gap_ticks": 12000,
     "sure_start_factor": 0.5,
     "retry_ticks": 600,
-    "first_event_ticks": 1800
+    "first_event_ticks": 1800,
+    "stats_rows": 10
   },
   "power": {
     "maturity_days": 30,
+    "start_maturity": 0.15,
     "maturity_share": 0.6,
     "anger_share": 0.4,
     "light_penalty": 0.7,
@@ -38,6 +46,7 @@
     "contract": 0.3,
     "devil": 0.1,
     "break_anchor": 0.3,
+    "harsh_above": 0.7,
     "anchor_reach": 3,
     "graves": [
       "minecraft:skeleton_skull",
@@ -52,6 +61,11 @@
     "notice_within": 5,
     "repeat_anger": 0.15,
     "start_anger": 0.5,
+    "successor_min_days": 2,
+    "successor_max_days": 4,
+    "echo_days": 7,
+    "echo_grace_ticks": 2400,
+    "haunted_check_ticks": 20,
     "grace_ticks": 2400,
     "structure_spacing": 96,
     "witness_radius": 16,
@@ -196,7 +210,8 @@
     "radius": 24
   },
   "salt": {
-    "max_cells": 400
+    "max_cells": 400,
+    "wear_stops": 12
   },
   "wards": {
     "lantern_radius": 6,
@@ -204,16 +219,60 @@
     "charm_radius": 8,
     "scarecrow_radius": 16
   },
+  "weakness": {
+    "iron_radius": 6,
+    "glow_radius": 4,
+    "pour_pitch": 70
+  },
+  "leanings": {
+    "fear_radius": 4,
+    "desire_radius": 3,
+    "desire_period_ticks": 20,
+    "desire_cooldown_ticks": 6000,
+    "desire_calm": 0.1,
+    "appease_anger": 0.3,
+    "appease_cost": 1,
+    "hate_cooldown_ticks": 1200,
+    "hate_anger": 0.1
+  },
   "bell": {
     "radius": 24,
     "delay_ticks": 1200
   },
   "ash": {
     "reveal_ticks": 600,
-    "reach": 16
+    "reach": 16,
+    "prints": [
+      [
+        "mimic",
+        "lost_one",
+        "domovoi",
+        "nix",
+        "trickster"
+      ],
+      [
+        "mara",
+        "hoarder",
+        "boggart",
+        "poltergeist"
+      ],
+      [
+        "demon",
+        "revenant"
+      ],
+      [
+        "shade",
+        "phantom",
+        "wraith",
+        "banshee"
+      ]
+    ]
   },
   "camera": {
     "cooldown_ticks": 600
+  },
+  "journal_pages": {
+    "read_gap_ticks": 20
   },
   "spirit_box": {
     "radius": 6,
@@ -221,6 +280,7 @@
     "answer_chance": 0.6,
     "echo_chance": 0.3,
     "glitch_chance": 0.35,
+    "story_chance": 0.4,
     "questions": {
       "count": {
         "heard": [
@@ -372,20 +432,99 @@
     "lie_chance": 0.5,
     "preferred_weight": 3
   },
+  "merging": {
+    "days": 15,
+    "check_ticks": 1200
+  },
+  "interrogation": {
+    "sanity_cost": 0.2,
+    "questions": {
+      "habit": [
+        "do",
+        "does",
+        "doing",
+        "habit*",
+        "делаешь",
+        "делает",
+        "повадк*"
+      ],
+      "desire": [
+        "want",
+        "wants",
+        "desire*",
+        "wish",
+        "хочешь",
+        "хочет",
+        "желаешь",
+        "желани*"
+      ],
+      "grave": [
+        "grave",
+        "buried",
+        "bones",
+        "могил*",
+        "похорон*",
+        "кост*"
+      ]
+    }
+  },
   "ritual": {
     "candles": 4,
     "candle_radius": 3,
     "radius": 16,
     "wave_ticks": 100,
-    "waves": 12,
+    "call_waves": 2,
+    "bargain_waves": 2,
+    "fury_waves": 6,
+    "leaving_waves": 2,
+    "bargain_anger": 0.3,
+    "gift_radius": 1.5,
+    "phase_sound": {
+      "volume": 0.8,
+      "pitch": 1.0
+    },
+    "fury_bed_volume": 0.7,
+    "wrong_sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
     "snuff_chance": 0.25,
     "fury_chance": 0.5,
+    "nature_chance": 0.35,
+    "throw_distance": 2.0,
+    "darkness_radius": 12,
+    "darkness_ticks": 600,
+    "malice_damage": 3.0,
+    "deceit_candles": 2,
+    "deceit_ticks": 60,
+    "ring_radius": 8,
+    "name_waves": 4,
+    "name_anger": 0.1,
+    "hallowed_grave_radius": 8.0,
+    "midnight_from": 17000,
+    "midnight_to": 19000,
+    "hallowed_fury_waves": 2,
+    "second_radius": 3.0,
+    "second_fury_waves": 2,
     "fail_anger": 0.3,
+    "gaze_ticks": 40,
+    "gaze_angle": 20.0,
+    "gaze_ring_radius": 2.5,
+    "gaze_walk_degrees": 3.0,
     "off_form_waves": 6,
     "wary_ticks": 24000,
     "wrong_age_ticks": 24000,
     "bless_ticks": 12000,
     "blight_reward_spots": 64
+  },
+  "blessing": {
+    "candles": 8,
+    "waves": 12,
+    "snuff_chance": 0.25,
+    "ticks": 168000,
+    "radius": 16,
+    "return_anger": 0.2,
+    "check_ticks": 20
   },
   "charms": {
     "face_ticks": 500,
@@ -435,6 +574,37 @@
     "max_distance": 400,
     "essence": 2,
     "experience": 30,
+    "remains_min_distance": 50,
+    "remains_max_distance": 150,
+    "remains_hint_round": 10,
+    "remains_pace": 0.5,
+    "letter_radius": 4,
+    "killer_radius": 8,
+    "killer_default": "minecraft:zombie",
+    "killer_mobs": {
+      "was_shot_by_a_skeleton": "minecraft:skeleton",
+      "was_slain_by_a_zombie_horde": "minecraft:zombie",
+      "was_blown_up_by_a_creeper": "minecraft:creeper"
+    },
+    "quests": {
+      "item": 4,
+      "remains": 2,
+      "letter": 2,
+      "killer": 1,
+      "rival": 1
+    },
+    "cause_chance": 0.6,
+    "cause_quests": {
+      "starved_in_a_deep_mine": "remains",
+      "drowned_in_a_flooded_cave": "remains",
+      "suffocated_in_a_collapsed_tunnel": "remains",
+      "was_lost_in_the_nether": "letter",
+      "never_found_the_way_back_to_bed": "letter",
+      "was_shot_by_a_skeleton": "killer",
+      "was_slain_by_a_zombie_horde": "killer",
+      "was_blown_up_by_a_creeper": "killer",
+      "was_pushed_off_by_a_friend": "rival"
+    },
     "wants": [
       "minecraft:golden_apple",
       "minecraft:diamond",
@@ -472,7 +642,11 @@
     },
     "reveal_below": 0.35,
     "overlay_below": 0.6,
-    "overlay_peak": 0.9
+    "overlay_peak": 0.9,
+    "bed_volume": 0.6,
+    "heartbeat_below": 0.2,
+    "heartbeat_gap_ticks": 30,
+    "heartbeat_volume": 0.8
   },
   "corruption": {
     "check_ticks": 100,
@@ -481,6 +655,9 @@
     "start_reach": 6,
     "grow_days": 3,
     "max_blocks": 1500,
+    "walk_anger": 0.7,
+    "walk_width": 5,
+    "walk_reach": 64,
     "recede": 48,
     "biome_depth": 2,
     "biome_height": 8,
@@ -500,12 +677,27 @@
     "days": 10,
     "power_floor": 0.7,
     "extra_waves": 4,
-    "signature_boost": 3.0
+    "signature_boost": 3.0,
+    "sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    }
   },
   "candle": {
     "step_ticks": 4,
     "warning_ticks": 60,
     "lean": 0.5
+  },
+  "body": {
+    "step_ticks": 4,
+    "radius": 32
+  },
+  "calendar": {
+    "moon_power": 0.2,
+    "blood_night_days": 7,
+    "blood_wear_factor": 2,
+    "season_days": 28,
+    "dusk_tick": 13000
   },
   "restore": {
     "retry_ticks": 20
@@ -561,13 +753,21 @@
     "ferry_fade_ticks": 200,
     "ferry_rest_ticks": 72000,
     "ferry_health": 0.5,
-    "censer_waves": 8,
+    "censer_fury_waves": 2,
     "censer_anger": 0.1,
     "hollow_theft_chance": 0.2,
     "cradle_mara_chance": 0.25,
     "cradle_wake_delay_ticks": 100
   },
   "requiem": {
+    "begin_sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
+    "rest_sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
     "bell_ticks": 100,
     "bell_spirits": 3,
     "poem_line_ticks": 30,

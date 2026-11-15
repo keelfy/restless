@@ -11,8 +11,10 @@ import dev.keelfy.restless.content.item.Essences;
 import dev.keelfy.restless.content.item.Reliquary;
 import dev.keelfy.restless.content.item.RequiemBell;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Scan;
 import dev.keelfy.restless.journal.Journal;
+import dev.keelfy.restless.journal.Milestones;
 import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.sanity.Sanity;
 import dev.keelfy.restless.spirit.SpiritType;
@@ -28,12 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,7 +60,6 @@ import org.jspecify.annotations.Nullable;
  * and the call to {@link #release} that ends it well, belong to {@link #begin}.
  */
 public final class Requiem {
-    private static final String ADVANCEMENT_CRITERION = "impossible";
     /** The rite each singing player has under way. Memory only, like every rite: a stopping server ends them. */
     private static final Map<UUID, Rite> RITES = Session.SERVER.keep(new ConcurrentHashMap<>());
 
@@ -116,6 +115,8 @@ public final class Requiem {
         Rite rite = new Rite(player, level, altar, ticks, held.held(), candles.subList(0, config.integer("candles")));
         RITES.put(player.getUUID(), rite);
         level.playSound(null, altar, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0f, 0.5f);
+        Config.Tone sting = config.tone("begin_sound");
+        level.playSound(null, altar, HauntSounds.REQUIEM, SoundSource.HOSTILE, sting.volume(), sting.pitch());
         player.sendSystemMessage(Component.translatable("message.restless.requiem_begins"));
         return true;
     }
@@ -364,11 +365,7 @@ public final class Requiem {
         Sanity.set(player, 1.0);
         RequiemBell.replaceReliquary(player);
         Journal.unlock(player, Notebook.Chapter.REQUIEM);
-        AdvancementHolder advancement =
-                server.getAdvancements().get(Identifier.fromNamespaceAndPath(Restless.MOD_ID, "requiem"));
-        if (advancement != null) {
-            player.getAdvancements().award(advancement, ADVANCEMENT_CRITERION);
-        }
+        Milestones.award(player, "requiem");
         player.connection.send(new ClientboundCustomPayloadPacket(new RequiemPayload()));
     }
 
@@ -411,6 +408,8 @@ public final class Requiem {
                 BlockPos.containing(
                         player.getX() + Math.cos(angle) * 3, player.getY(), player.getZ() + Math.sin(angle) * 3));
         level.setBlock(stone, Content.GRAVESTONE.get().defaultBlockState(), 3);
+        Config.Tone rest = Config.section("requiem").tone("rest_sound");
+        level.playSound(null, stone, HauntSounds.LAID_TO_REST, SoundSource.HOSTILE, rest.volume(), rest.pitch());
         Direction toward = Direction.getApproximateNearest(
                 player.getX() - stone.getX() - 0.5, 0, player.getZ() - stone.getZ() - 0.5);
         BlockPos signPos = surface(level, stone.relative(toward));

@@ -70,6 +70,7 @@ public final class Config {
             "relics",
             "fittings",
             "signatures",
+            "tells",
             "ambushes",
             "torments",
             "brinks",

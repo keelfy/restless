@@ -45,7 +45,7 @@
       },
       "beat_sound": {
         "volume": 0.9,
-        "pitch": 0.7
+        "pitch": 1.0
       },
       "touch_sound": {
         "volume": 1.0,
@@ -177,7 +177,7 @@
       "damage": 1000.0,
       "sound": {
         "volume": 1.0,
-        "pitch": 0.6
+        "pitch": 1.0
       },
       "pulse_sound": {
         "volume": 0.8,
