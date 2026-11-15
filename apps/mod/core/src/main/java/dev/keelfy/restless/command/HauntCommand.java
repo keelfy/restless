@@ -217,11 +217,9 @@ public final class HauntCommand {
                         grave.pos().getY(),
                         grave.pos().getZ(),
                         grave.built() ? "" : "(unbuilt)",
-                        BuiltInRegistries.ITEM.getKey(Graves.wanted(h.seed())));
+                        BuiltInRegistries.ITEM.getKey(Graves.wanted(HauntData.get(source.getServer()), h)));
         String blight = Corruption.size(HauntData.get(source.getServer()), h.uuid());
-        String form = Spirits.byId(h.spirit())
-                .map(type -> type.form().name().toLowerCase(Locale.ROOT))
-                .orElse("?");
+        String form = Spirits.form(HauntData.get(source.getServer()), h).name().toLowerCase(Locale.ROOT);
         extra += " nature=" + Traits.weakness(Traits.of(h.traits())).name().toLowerCase(Locale.ROOT)
                 + " form=" + form
                 + (h.waryUntil() > now ? " wary=" + (h.waryUntil() - now) / Ticks.SECOND + "s" : "")

@@ -26,7 +26,7 @@ E L E
 ```
 
 - **Ward:** like the [Hallowed Lantern](/en/items/tools#hallowed-lantern), no spirit's event runs on a player within **24 blocks**, four times the reach of the old one. The event is lost, not put off.
-- **Clue:** each event it stops writes one trait of a spirit near you into the journal, in the words the ouija board uses. Protection that teaches.
+- **Clue:** each event it stops writes one habit of a spirit near you into the journal, in the words the ouija board uses. Protection that teaches.
 - **One to a chunk.** A second one cannot be placed in the same chunk.
 - It does not add to a Hallowed Lantern's ward: near both, you are warded once, and the hollow one still leaves its clue.
 

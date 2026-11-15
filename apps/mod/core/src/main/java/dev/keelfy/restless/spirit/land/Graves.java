@@ -120,6 +120,21 @@ public final class Graves {
         return BuiltInRegistries.ITEM.getOptional(Identifier.parse(id)).orElse(Items.BONE);
     }
 
+    /**
+     * What this spirit wants back: for a spirit whose form comes from its death
+     * ({@link dev.keelfy.restless.state.Marks#deathForm}) one thing of the family its cause names
+     * ({@link Story#wants}), for an older one {@link #wanted(long)}.
+     */
+    @SuppressWarnings("java:S2245") // Seeded so the wish is reproducible; not security-sensitive.
+    public static Item wanted(HauntData data, HauntData.Haunting spirit) {
+        if (!data.marks(spirit.uuid()).deathForm()) {
+            return wanted(spirit.seed());
+        }
+        List<String> wants = Story.of(spirit.seed()).wants();
+        String id = wants.get(new Random(spirit.seed() ^ SALT).nextInt(wants.size()));
+        return BuiltInRegistries.ITEM.getOptional(Identifier.parse(id)).orElse(Items.BONE);
+    }
+
     /** The spirit buried here, if it still haunts anyone. */
     public static Optional<HauntData.Haunting> at(HauntData data, BlockPos pos) {
         return data.graves().entrySet().stream()
@@ -149,7 +164,7 @@ public final class Graves {
         Story story = Story.of(spirit.seed());
         Quest quest = Quest.of(spirit.seed());
         boolean took = switch (quest) {
-            case ITEM -> held.is(wanted(spirit.seed()));
+            case ITEM -> held.is(wanted(data, spirit));
             case REMAINS -> Remains.is(held, spirit.uuid());
             case LETTER, KILLER, RIVAL -> false;
         };
@@ -158,7 +173,7 @@ public final class Graves {
             return took;
         }
         Component want = switch (quest) {
-            case ITEM -> wanted(spirit.seed()).getDefaultInstance().getHoverName();
+            case ITEM -> wanted(data, spirit).getDefaultInstance().getHoverName();
             case RIVAL -> Rival.read(player, data, spirit, grave);
             case REMAINS -> Remains.read(player, data, spirit, grave);
             case LETTER -> Letter.read(player, data, spirit, grave);

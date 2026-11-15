@@ -290,4 +290,18 @@ class TraitsTest {
         Traits.all().stream().filter(t -> t.kind() == Trait.Kind.HABIT).forEach(t -> named.add(t.weakness()));
         assertEquals(EnumSet.allOf(Focus.class), named);
     }
+
+    @Test
+    void theForeignHabitNamesASecondNatureOnlyBesideTwoOwn() {
+        assertEquals(
+                java.util.Optional.of(Focus.GLOWSTONE),
+                Traits.foreign(Traits.of(List.of("door_slammer", "meddler", "light_eater"))));
+        assertTrue(Traits.foreign(Traits.of(List.of("door_slammer", "light_eater")))
+                .isEmpty());
+        assertTrue(Traits.foreign(Traits.of(List.of("door_slammer", "meddler"))).isEmpty());
+        for (long seed = 0; seed < 300; seed++) {
+            List<Trait> rolled = Traits.of(Traits.roll(seed));
+            Traits.foreign(rolled).ifPresent(f -> assertTrue(f != Traits.weakness(rolled)));
+        }
+    }
 }

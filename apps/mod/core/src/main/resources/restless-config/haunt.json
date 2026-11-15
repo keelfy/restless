@@ -229,7 +229,9 @@
     "desire_radius": 3,
     "desire_period_ticks": 20,
     "desire_cooldown_ticks": 6000,
-    "desire_calm": 0.25,
+    "desire_calm": 0.1,
+    "appease_anger": 0.3,
+    "appease_cost": 1,
     "hate_cooldown_ticks": 1200,
     "hate_anger": 0.1
   },
@@ -278,6 +280,7 @@
     "answer_chance": 0.6,
     "echo_chance": 0.3,
     "glitch_chance": 0.35,
+    "story_chance": 0.4,
     "questions": {
       "count": {
         "heard": [
@@ -428,6 +431,42 @@
   "clues": {
     "lie_chance": 0.5,
     "preferred_weight": 3
+  },
+  "merging": {
+    "days": 15,
+    "check_ticks": 1200
+  },
+  "interrogation": {
+    "sanity_cost": 0.2,
+    "questions": {
+      "habit": [
+        "do",
+        "does",
+        "doing",
+        "habit*",
+        "делаешь",
+        "делает",
+        "повадк*"
+      ],
+      "desire": [
+        "want",
+        "wants",
+        "desire*",
+        "wish",
+        "хочешь",
+        "хочет",
+        "желаешь",
+        "желани*"
+      ],
+      "grave": [
+        "grave",
+        "buried",
+        "bones",
+        "могил*",
+        "похорон*",
+        "кост*"
+      ]
+    }
   },
   "ritual": {
     "candles": 4,

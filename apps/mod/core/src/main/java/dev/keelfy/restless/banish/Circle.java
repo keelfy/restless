@@ -44,6 +44,8 @@ public final class Circle {
     boolean hallowed;
     /** A second player has already cut the fury short, see {@link Second}. */
     boolean seconded;
+    /** The offering of the spirit's second nature was taken in the bargain, see {@link Twofold}. */
+    boolean twofold;
 
     private final Gaze gaze = new Gaze(this);
     final Ring ring = new Ring(this);
@@ -167,6 +169,11 @@ public final class Circle {
         }
         Phase now = plan.at(wave);
         if (now != phase) {
+            if (now == Phase.FURY && !Twofold.paid(this)) {
+                end();
+                Ritual.fail(player, level, altar, spirit);
+                return false;
+            }
             phase = now;
             enter(now);
         }

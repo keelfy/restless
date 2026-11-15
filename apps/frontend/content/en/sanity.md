@@ -20,7 +20,7 @@ Sanity is your grip, a number from 0 to 1 (some pages write it as 0 to 100). It 
 
 Light levels 4 to 9 move nothing. Rows add up: standing in the dark inside a spirit's radius costs 0.004 a second, and a full bar is gone in about four minutes.
 
-**Every event costs 0.04** the moment it runs on you, so a busy spirit wears you down even in a lit house. Some [events](/en/events/affliction) take far more, and some charms and relics spend it on purpose; the cost is on each item.
+**Every event costs 0.04** the moment it runs on you, so a busy spirit wears you down even in a lit house. Some [events](/en/events/affliction) take far more, and some charms and relics spend it on purpose; the cost is on each item. An [interrogation](/en/items/tools#interrogation) at the altar costs 0.2.
 
 ## What it does to you
 

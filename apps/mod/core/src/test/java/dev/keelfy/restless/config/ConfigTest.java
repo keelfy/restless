@@ -223,6 +223,13 @@ class ConfigTest {
         literals.addAll(grave.getAsJsonObject("quests").keySet());
         literals.addAll(grave.getAsJsonObject("cause_quests").keySet());
         literals.addAll(grave.getAsJsonObject("killer_mobs").keySet());
+        // Story words, forms and wants are keyed by the cause of death, looked up from the story's roll.
+        for (String byCause : List.of("words", "forms", "wants")) {
+            literals.addAll(Config.defaults()
+                    .getAsJsonObject("story")
+                    .getAsJsonObject(byCause)
+                    .keySet());
+        }
         for (String key : defined) {
             assertTrue(literals.contains(key), "default never read by code: " + key);
         }

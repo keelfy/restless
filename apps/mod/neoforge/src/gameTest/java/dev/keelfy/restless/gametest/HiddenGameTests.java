@@ -74,7 +74,7 @@ final class HiddenGameTests {
         for (int i = 0; i < 300; i++) {
             for (Clue clue : List.of(Clue.SILHOUETTE, Clue.VOICE, Clue.PLANCHETTE)) {
                 if (Divination.read(player, clue)
-                        .filter(r -> r.trait().equals(trait))
+                        .filter(r -> trait.equals(r.trait()))
                         .isPresent()) {
                     return true;
                 }

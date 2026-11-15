@@ -2,6 +2,7 @@ package dev.keelfy.restless.spirit;
 
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.haunt.event.EventTag;
+import dev.keelfy.restless.state.HauntData;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +56,17 @@ public final class Spirits {
 
     public static Optional<SpiritType> byId(String id) {
         return ALL.stream().filter(s -> s.id().equals(id)).findFirst();
+    }
+
+    /**
+     * The form of offering the spirit takes: from how it died for a spirit born since forms came from the death
+     * ({@link dev.keelfy.restless.state.Marks#deathForm}), from its type for an older one.
+     */
+    public static Form form(HauntData data, HauntData.Haunting spirit) {
+        if (data.marks(spirit.uuid()).deathForm()) {
+            return Story.of(spirit.seed()).form();
+        }
+        return byId(spirit.spirit()).map(SpiritType::form).orElse(Form.WHOLE);
     }
 
     /** Kind, affinities, activity, reactions and form come from the {@code spirits.<id>} config section. */

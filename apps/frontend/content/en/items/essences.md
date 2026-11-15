@@ -16,7 +16,7 @@ Each of the fifteen spirit types leaves one kind of essence, named for it: polte
 | Banishing in a **hallowed** ritual: near the spirit's gravestone or begun around midnight | +1 (its fury is 2 waves longer) |
 | Putting a grave right | 2 |
 
-The banishing is the altar ritual: an altar inside a closed salt loop, at least 4 lit candles within 3 blocks, and an offering the spirit is weak to. The ritual runs 12 waves of 5 seconds in four phases (the call, the bargain, the fury, the leaving); a form the spirit's type does not take adds 6 waves to the fury. In the fury the spirit fights back and snuffs candles; see [the ritual](/en/items/tools#the-ritual). If every candle is lit at the end, it is banished.
+The banishing is the altar ritual: an altar inside a closed salt loop, at least 4 lit candles within 3 blocks, and an offering the spirit is weak to. The ritual runs 12 waves of 5 seconds in four phases (the call, the bargain, the fury, the leaving); a form the spirit does not take adds 6 waves to the fury. In the fury the spirit fights back and snuffs candles; see [the ritual](/en/items/tools#the-ritual). If every candle is lit at the end, it is banished.
 
 ## Calling a type on purpose
 

@@ -314,7 +314,8 @@ public final class HauntData extends SavedData {
             Map<UUID, Successor> successors,
             Map<String, Tally.Counts> tally,
             List<Undo> undos,
-            Map<UUID, Long> echoes) {}
+            Map<UUID, Long> echoes,
+            Map<UUID, Marks> marks) {}
 
     private static final MapCodec<Later> LATER = RecordCodecBuilder.mapCodec(i -> i.group(
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
@@ -329,7 +330,10 @@ public final class HauntData extends SavedData {
                     Undo.CODEC.listOf().optionalFieldOf("undos", List.of()).forGetter(Later::undos),
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG)
                             .optionalFieldOf("echoes", Map.of())
-                            .forGetter(Later::echoes))
+                            .forGetter(Later::echoes),
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Marks.CODEC)
+                            .optionalFieldOf("marks", Map.of())
+                            .forGetter(Later::marks))
             .apply(i, Later::new));
 
     private static final Codec<Map<UUID, List<Haunting>>> PERSONAL =
@@ -388,7 +392,8 @@ public final class HauntData extends SavedData {
                                     data.successors,
                                     data.tally.all(),
                                     List.copyOf(data.undos),
-                                    data.echoes)))
+                                    data.echoes,
+                                    data.marks)))
                     .apply(
                             i,
                             (players,
@@ -434,6 +439,7 @@ public final class HauntData extends SavedData {
                                 data.tally.load(later.tally());
                                 data.undos.addAll(later.undos());
                                 data.echoes.putAll(later.echoes());
+                                data.marks.putAll(later.marks());
                                 return data;
                             })),
             PERSONAL.xmap(
@@ -486,6 +492,9 @@ public final class HauntData extends SavedData {
     private final Map<UUID, Successor> successors = new HashMap<>();
     /** The echoes an altar left behind, keyed by spirit: the overworld game time each leaves by itself. */
     private final Map<UUID, Long> echoes = new HashMap<>();
+
+    /** What each spirit carries beside its record; a spirit with none has {@link Marks#NONE}. */
+    private final Map<UUID, Marks> marks = new HashMap<>();
     /** The players the Requiem released: no spirit is born on them or acts on them. */
     private final Set<UUID> released = new HashSet<>();
     /** The game time until which the altar refuses a player a Requiem, after a failed one. Keyed by player. */
@@ -559,6 +568,19 @@ public final class HauntData extends SavedData {
             echoes.remove(spirit);
         } else {
             echoes.put(spirit, leaveAt);
+        }
+        setDirty();
+    }
+
+    public Marks marks(UUID spirit) {
+        return marks.getOrDefault(spirit, Marks.NONE);
+    }
+
+    public void putMarks(UUID spirit, Marks marked) {
+        if (marked.equals(Marks.NONE)) {
+            marks.remove(spirit);
+        } else {
+            marks.put(spirit, marked);
         }
         setDirty();
     }

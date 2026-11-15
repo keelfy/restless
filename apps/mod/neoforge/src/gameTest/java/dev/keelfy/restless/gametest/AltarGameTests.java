@@ -51,6 +51,11 @@ public final class AltarGameTests {
         LeaningGameTests.register(TESTS);
         TellGameTests.register(TESTS);
         VeilGameTests.register(TESTS);
+        ToolGameTests.register(TESTS);
+        AppeaseGameTests.register(TESTS);
+        FormGameTests.register(TESTS);
+        InterrogationGameTests.register(TESTS);
+        MergeGameTests.register(TESTS);
         HiddenGameTests.register(TESTS);
         HarshGameTests.register(TESTS);
         LanternGameTests.register(TESTS);
@@ -64,6 +69,7 @@ public final class AltarGameTests {
         RitualGameTests.registerName(TESTS);
         RitualGameTests.registerHallow(TESTS);
         RitualGameTests.registerSecond(TESTS);
+        RitualGameTests.registerTwofold(TESTS);
         RitualGameTests.registerGaze(TESTS);
         RitualGameTests.registerNatures(TESTS);
         EchoGameTests.register(TESTS);

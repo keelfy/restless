@@ -106,6 +106,10 @@ public record Notebook(
         TELL(true),
         /** A tool found nothing of a spirit that a veil hides from it. Args: what stayed silent. */
         SILENCE(true),
+        /** A spirit's true answer at an interrogation. Args: the answer. */
+        ANSWER(true),
+        /** In the dossier of the elder of two spirits that merged. Args: its name, the swallowed one's name. */
+        MERGED(true),
         /** An entry from before the journal had kinds. Args: its text. */
         OLD(true);
 
@@ -148,15 +152,15 @@ public record Notebook(
         /** The first event a spirit runs on the player: the signs and the tools. */
         HAUNTED(3),
         /** The first clue: reading clues, and that some lie. */
-        CLUES(3),
+        CLUES(4),
         /** The first photo, which names a type: natures, forms, the altar and the ritual. */
-        WEAKNESS(5),
+        WEAKNESS(7),
         /** The first grave or word of one: unfinished business. */
         GRAVES(3),
         /** The first time the edges darken. */
         SANITY(2),
         /** The first spirit that grew up. */
-        EVOLUTION(2),
+        EVOLUTION(3),
         /** The first spirit gone for good: essences. */
         ESSENCE(2),
         /** The first dusk of a full moon, a blood night or the day of the dead. */

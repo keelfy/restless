@@ -1,6 +1,8 @@
 package dev.keelfy.restless.content.block;
 
+import dev.keelfy.restless.banish.Appease;
 import dev.keelfy.restless.banish.Circle;
+import dev.keelfy.restless.banish.Interrogation;
 import dev.keelfy.restless.banish.Requiem;
 import dev.keelfy.restless.banish.Ritual;
 import dev.keelfy.restless.config.Config;
@@ -143,7 +145,7 @@ public final class Altar extends Block implements EntityBlock {
             };
         }
 
-        static @Nullable Held from(ItemStack stack) {
+        public static @Nullable Held from(ItemStack stack) {
             PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
             if (stack.is(Items.POTION) && potion != null && potion.is(Potions.WATER)) {
                 return WATER;
@@ -342,6 +344,20 @@ public final class Altar extends Block implements EntityBlock {
         }
         Held held = Held.from(stack);
         boolean vessel = stack.getItem() instanceof Reliquary;
+        // What a spirit desires appeases it on a whole altar, with no candles or ring.
+        if (held == null
+                && !vessel
+                && state.getValue(HELD) == Held.EMPTY
+                && level instanceof ServerLevel server
+                && player instanceof ServerPlayer caster
+                && !Requiem.running(pos)
+                && Circle.at(pos).isEmpty()
+                && isComplete(level, pos)
+                && (stack.is(Items.BOOK)
+                        ? Interrogation.begin(caster, server, pos)
+                        : Appease.offer(caster, server, pos, stack))) {
+            return InteractionResult.SUCCESS_SERVER;
+        }
         if ((held == null && !vessel) || state.getValue(HELD) != Held.EMPTY) {
             return InteractionResult.TRY_WITH_EMPTY_HAND;
         }

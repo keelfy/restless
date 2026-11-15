@@ -15,6 +15,19 @@ public record Story(String name, int daysDead, String cause) {
         return "story.restless.cause." + cause;
     }
 
+    /**
+     * The form of offering a spirit that died this way takes, from {@code story.forms}; only spirits marked
+     * {@link dev.keelfy.restless.state.Marks#deathForm} use it, see {@link Spirits#form}.
+     */
+    public Form form() {
+        return Form.valueOf(Config.section("story").section("forms").text(cause).toUpperCase(java.util.Locale.ROOT));
+    }
+
+    /** The things a spirit that died this way may want back at its grave, from {@code story.wants}. */
+    public List<String> wants() {
+        return Config.section("story").section("wants").texts(cause);
+    }
+
     // Keeps the story's rolls apart from the trait roll, which also starts from the bare seed.
     private static final long SALT = 0x5DEECE66DL;
 

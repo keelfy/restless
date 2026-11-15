@@ -80,36 +80,38 @@ public final class AshBlock extends CarpetBlock {
                         .forEach(p -> Divination.silent(p, haunting, Clue.FOOTPRINTS));
                 continue;
             }
+            // The print tells the build; a condition, when ash reads one, leaves a sign beside it.
             Optional<Trait> shown = Clues.reveal(
                     Traits.of(haunting.traits()), Traits.all(), Clue.FOOTPRINTS, new Random(random.nextLong()));
-            if (shown.isPresent()) {
-                int print = print(haunting.spirit());
-                double angle = spirit.at() == null
-                        ? new Random(haunting.seed()).nextDouble() * Math.PI * 2
-                        : Math.atan2(spirit.at().z - pos.getZ() - .5, spirit.at().x - pos.getX() - .5);
-                if (!AshFootprint.leaveTrail(
-                        level, pos, print, angle, haunting.traits().contains("rain_walker"))) {
-                    continue;
-                }
-                int reach = Config.section("ash").integer("reach");
-                List<ServerPlayer> near = level.players().stream()
-                        .filter(p -> p.blockPosition().distSqr(pos) <= (double) reach * reach)
-                        .toList();
-                // A personal spirit's prints go only to whoever it haunts; a territorial one's to all who stand near.
-                List<ServerPlayer> owners = near.stream()
-                        .filter(p -> Optional.ofNullable(data.get(p.getUUID()))
-                                .filter(own ->
-                                        own.stream().anyMatch(h -> h.uuid().equals(haunting.uuid())))
-                                .isPresent())
-                        .toList();
-                (owners.isEmpty() ? near : owners)
-                        .forEach(p -> Journal.note(
-                                p,
-                                Notebook.Kind.FOOTPRINTS,
-                                haunting,
-                                Component.translatable("journal.restless.print." + print)));
-                return;
+            int print = print(haunting.spirit());
+            double angle = spirit.at() == null
+                    ? new Random(haunting.seed()).nextDouble() * Math.PI * 2
+                    : Math.atan2(spirit.at().z - pos.getZ() - .5, spirit.at().x - pos.getX() - .5);
+            if (!AshFootprint.leaveTrail(
+                    level, pos, print, angle, haunting.traits().contains("rain_walker"))) {
+                continue;
             }
+            int reach = Config.section("ash").integer("reach");
+            List<ServerPlayer> near = level.players().stream()
+                    .filter(p -> p.blockPosition().distSqr(pos) <= (double) reach * reach)
+                    .toList();
+            // A personal spirit's prints go only to whoever it haunts; a territorial one's to all who stand near.
+            List<ServerPlayer> owners = near.stream()
+                    .filter(p -> Optional.ofNullable(data.get(p.getUUID()))
+                            .filter(own -> own.stream().anyMatch(h -> h.uuid().equals(haunting.uuid())))
+                            .isPresent())
+                    .toList();
+            (owners.isEmpty() ? near : owners)
+                    .forEach(p -> Journal.note(
+                            p,
+                            Notebook.Kind.FOOTPRINTS,
+                            haunting,
+                            shown.<Component>map(t -> Component.translatable(
+                                            "journal.restless.print.marked",
+                                            Component.translatable("journal.restless.print." + print),
+                                            Divination.hint(t)))
+                                    .orElse(Component.translatable("journal.restless.print." + print))));
+            return;
         }
     }
 }

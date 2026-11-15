@@ -55,7 +55,7 @@ A spirit's anger rises when you do something spirits hate:
 
 Your personal spirits take offence at everything you do, wherever you are. A territorial spirit takes it only when it happens inside its radius (48 blocks), and also when its anchor is broken (+0.3, within 3 blocks of it).
 
-Nothing wears anger down with time. It falls when a spirit's anger is spent: you beat an avenger, or a lethal event takes a player. A spirit's [desire](#leanings) left near you also calms it, and its hate angers it. A gift in the [bargain of a ritual](/en/items/tools#the-ritual) lowers it by 0.3.
+Nothing wears anger down with time. It falls when a spirit's anger is spent: you beat an avenger, or a lethal event takes a player. A spirit's [desire](#leanings) left near you also calms it, and its hate angers it. A gift in the [bargain of a ritual](/en/items/tools#the-ritual) lowers it by 0.3, and so does its desire laid on an altar ([appeasement](/en/items/tools#appeasement)).
 
 Above anger 0.7 some [tells](/en/events/tells) turn harsh: the door slammer locks a door near you (`locked_door`), the cold touch brings frostbite (`frostbite`), the vengeful strikes (`wrath`) and the whisperer drains sanity (`sanity_drain`). Where the harsh form has nothing to act on, the mild tell runs.
 
@@ -70,9 +70,22 @@ An evolved spirit:
 - no longer hides its [hidden habit](#hidden-habit);
 - rolls its signature events 3 times as often, see [Signatures](/en/events/signatures);
 - asks for 4 more waves in the [banishing ritual](/en/items/tools#the-ritual);
+- has a **second nature** if it carries the one habit from another nature beside two or more of its own: its ritual then asks for an offering of that nature too, see [the bargain](/en/items/tools#the-ritual);
 - if territorial, fouls its land 3 times faster.
 
 A wrong offering at the altar ages the spirit by a day toward evolving.
+
+## Merging
+
+A player who has two or more personal spirits older than **15 days** (echoes do not count) will see the eldest swallow the next eldest; this is checked every minute while they are online. The merged spirit:
+
+- keeps the elder's type, name, story, conditions and leanings;
+- adds the younger's habits;
+- takes the higher anger and the longer wary time;
+- is [evolved](#evolving) if either was;
+- has the nature that most of its habits belong to. The other nature becomes a **second nature**, so the [ritual](/en/items/tools#the-ritual) asks for two offerings. If both natures were the same, there is no second nature.
+
+The elder's grave stays. If it had none, the younger's grave passes to it, and the other grave is dropped. You are told, and the journal notes it.
 
 ## Blight
 
@@ -152,7 +165,7 @@ A condition decides when the spirit acts or what it reacts to. Activity ×n mean
 Every spirit born now also has one desire and one fear or hate. Spirits born before this change have none.
 
 - **Fear.** The spirit's events do not run on a player within 4 blocks of the feared block or creature. Water counts only while it flows, never a still source. A stopped event shows the same ash and chime as a ward. A territorial spirit whose radius reaches the player counts too.
-- **Desire.** One of the wanted items lying on the ground within 3 blocks of the player is taken, with a puff of soul smoke and a sound, and the spirit's anger drops by 0.25. This happens at most once every 5 minutes.
+- **Desire.** One of the wanted items lying on the ground within 3 blocks of the player is taken, with a puff of soul smoke and a sound, and the spirit's anger drops by 0.1. This happens at most once every 5 minutes. Laid on an altar it does more, see [Appeasement](/en/items/tools#appeasement).
 - **Hate.** When the player uses the hated block, or uses a block while holding the hated item, the spirit's anger rises by 0.1. This happens at most once a minute. Placing a lantern, ringing a bell and playing a note block or jukebox all count.
 
 | Trait | Kind | What it is about |
@@ -170,7 +183,7 @@ Every spirit born now also has one desire and one fear or hate. Spirits born bef
 
 ### Hidden habit
 
-A spirit with two or more habits keeps one of them hidden: no camera, spirit box or ouija board names it while the player's sanity is above 35%. A shaken player, below 35% sanity, can learn it; so can anyone once the spirit has evolved.
+A spirit with two or more habits keeps one of them hidden: no camera or ouija board names it while the player's sanity is above 35%. A shaken player, below 35% sanity, can learn it; so can anyone once the spirit has evolved.
 
 ### Veils
 

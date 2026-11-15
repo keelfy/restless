@@ -212,6 +212,22 @@ public final class Traits {
         return pool.isEmpty() ? null : pool.get(new Random(seed ^ GROWN).nextInt(pool.size()));
     }
 
+    /**
+     * The nature of the one foreign habit {@link #roll} gives beside two or more habits of the spirit's own nature;
+     * empty for a spirit without exactly that. It is a second nature only once the spirit has evolved.
+     */
+    public static Optional<Focus> foreign(List<Trait> traits) {
+        Focus nature = weakness(traits);
+        List<Trait> habits = traits.stream()
+                .filter(t -> t.kind() == Trait.Kind.HABIT && t.weakness() != null)
+                .toList();
+        List<Trait> foreign =
+                habits.stream().filter(t -> t.weakness() != nature).toList();
+        return foreign.size() == 1 && habits.size() - 1 >= 2
+                ? Optional.of(foreign.getFirst().weakness())
+                : Optional.empty();
+    }
+
     /** The spirit's fear, if it has one: its events do not run beside the feared thing. */
     public static Optional<Trait> fear(List<Trait> traits) {
         return leaning(traits, Trait.Lean.FEAR);

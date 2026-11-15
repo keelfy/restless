@@ -38,6 +38,10 @@ final class RitualGameTests {
     /** Iron by nature: two iron traits and one glowstone. */
     private static final List<String> IRON_TRAITS = List.of("door_slammer", "meddler", "light_eater");
 
+    /** Two merged spirits: four iron habits and three glowstone ones. */
+    private static final List<String> MERGED =
+            List.of("door_slammer", "meddler", "thrower", "knocker", "cold_touch", "blinder", "shadow_caster");
+
     private static final UUID SPIRIT = UUID.fromString("00000000-0000-0000-0000-000000000042");
     private static final List<BlockPos> CANDLES = List.of(
             AltarGameTests.CENTER.offset(-3, 1, -3),
@@ -52,11 +56,18 @@ final class RitualGameTests {
             ServerPlayer player = ready(helper);
             HauntData.Haunting spirit = spirit(player);
             // a poltergeist takes iron whole
-            check(helper, Ritual.waves(spirit, Altar.Held.IRON) == 12, "the form it takes keeps the usual length");
-            check(helper, Ritual.waves(spirit, Altar.Held.IRON_NUGGET) == 18, "another form must add six waves");
             check(
                     helper,
-                    Ritual.waves(spirit.evolve(), Altar.Held.IRON_CHAIN) == 22,
+                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, Altar.Held.IRON) == 12,
+                    "the form it takes keeps the usual length");
+            check(
+                    helper,
+                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit, Altar.Held.IRON_NUGGET) == 18,
+                    "another form must add six waves");
+            check(
+                    helper,
+                    Ritual.waves(HauntData.get(helper.getLevel().getServer()), spirit.evolve(), Altar.Held.IRON_CHAIN)
+                            == 22,
                     "grown and off form must add both");
             check(
                     helper,
@@ -448,6 +459,68 @@ final class RitualGameTests {
         });
     }
 
+    /** A second nature: an evolved spirit's foreign habit asks for a second offering in the bargain. */
+    static void registerTwofold(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("ritual_twofold_banished_with_both_offerings", helper -> {
+            Circle circle = twofold(helper);
+            drop(helper, new ItemStack(Items.GLOWSTONE_DUST));
+            steps(helper, circle, circle.plan().total() - circle.wave() - 1);
+            check(helper, circle.phase().orElseThrow() == Phase.LEAVING, "the ritual must reach the leaving");
+            check(helper, !circle.step(), "the last wave ends the ritual");
+            check(helper, essences(helper) >= 1, "both offerings banish the spirit");
+            helper.succeed();
+        });
+        tests.put("ritual_twofold_fails_with_one_offering", helper -> {
+            Circle circle = twofold(helper);
+            steps(helper, circle, circle.plan().bargain() - 1);
+            check(helper, !circle.step(), "without the second offering the fury never begins");
+            check(helper, circle.over(), "the ritual is over");
+            check(helper, essences(helper) == 0, "no essence");
+            check(helper, Math.abs(spirit(circle.player()).anger() - 0.3) < 1e-9, "a failed ritual angers it");
+            helper.succeed();
+        });
+        for (boolean both : new boolean[] {true, false}) {
+            tests.put("ritual_merged_spirit_" + (both ? "falls_to_both_offerings" : "breaks_with_one"), helper -> {
+                ServerPlayer player = ready(helper, MERGED);
+                HauntData data = HauntData.get(helper.getLevel().getServer());
+                data.putMarks(SPIRIT, data.marks(SPIRIT).mergedWith(dev.keelfy.restless.spirit.Focus.GLOWSTONE));
+                try {
+                    Circle circle = started(helper, player);
+                    steps(helper, circle, circle.plan().call() + 1);
+                    if (both) {
+                        drop(helper, new ItemStack(Items.GLOWSTONE_DUST));
+                        steps(helper, circle, circle.plan().total() - circle.wave() - 1);
+                        check(helper, !circle.step(), "the last wave ends the ritual");
+                        check(helper, essences(helper) >= 1, "a merged spirit falls to both offerings");
+                    } else {
+                        steps(helper, circle, circle.plan().bargain() - 1);
+                        check(helper, !circle.step(), "a merged spirit with one offering breaks the ritual");
+                        check(helper, essences(helper) == 0, "no essence");
+                    }
+                } finally {
+                    data.putMarks(SPIRIT, dev.keelfy.restless.state.Marks.NONE);
+                }
+                helper.succeed();
+            });
+        }
+        tests.put("ritual_twofold_only_once_evolved", helper -> {
+            Circle circle = started(helper, ready(helper));
+            steps(helper, circle, circle.plan().call() + circle.plan().bargain() + 1);
+            check(helper, circle.phase().orElseThrow() == Phase.FURY, "a young spirit asks for one offering only");
+            helper.succeed();
+        });
+    }
+
+    /** An evolved spirit of iron with one glowstone habit, its ritual stepped into the bargain. */
+    private static Circle twofold(GameTestHelper helper) {
+        ServerPlayer player = ready(helper);
+        HauntData.get(helper.getLevel().getServer()).change(SPIRIT, HauntData.Haunting::evolve);
+        Circle circle = started(helper, player);
+        steps(helper, circle, circle.plan().call() + 1);
+        check(helper, circle.phase().orElseThrow() == Phase.BARGAIN, "the bargain follows the call");
+        return circle;
+    }
+
     /** The test spirit's name, as its gravestone gives it. */
     private static String name() {
         return dev.keelfy.restless.spirit.Story.of(7L).name();
@@ -494,6 +567,23 @@ final class RitualGameTests {
         BlockPos altar = helper.absolutePos(AltarGameTests.CENTER);
         check(helper, Ritual.begin(player, helper.getLevel(), altar, held), "the ritual must start");
         return Circle.at(altar).orElseThrow();
+    }
+
+    /** The salt ring and the four lit candles around the altar. */
+    static void ringAndCandles(GameTestHelper helper) {
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
+                if (Math.abs(x) == 2 || Math.abs(z) == 2) {
+                    helper.setBlock(AltarGameTests.CENTER.offset(x, 0, z), Content.SALT_LINE.get());
+                }
+            }
+        }
+        relight(helper);
+    }
+
+    /** {@link #steps}, for other test classes. */
+    static void calmSteps(GameTestHelper helper, Circle circle, int n) {
+        steps(helper, circle, n);
     }
 
     /** Runs {@code n} waves that go on, with a calm spirit: neither a snuff nor a strike. */
@@ -557,14 +647,7 @@ final class RitualGameTests {
 
     private static ServerPlayer ready(GameTestHelper helper, List<String> traits) {
         AltarGameTests.place(helper);
-        for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
-                if (Math.abs(x) == 2 || Math.abs(z) == 2) {
-                    helper.setBlock(AltarGameTests.CENTER.offset(x, 0, z), Content.SALT_LINE.get());
-                }
-            }
-        }
-        relight(helper);
+        ringAndCandles(helper);
         ServerPlayer player = HauntEventGameTests.connected(helper);
         ChannelAttributes.getOrCreateCommonChannels(player.connection.getConnection(), ConnectionProtocol.PLAY)
                 .add(SanityPayload.TYPE.id());
