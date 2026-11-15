@@ -21,6 +21,7 @@ import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
+import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.spirit.life.Power;
@@ -80,13 +81,14 @@ public final class Director {
                 spirits.set(
                         i,
                         acted.rescheduled(now
-                                + next(
-                                        turn,
-                                        player.level(),
-                                        player.blockPosition(),
-                                        haunting,
-                                        now,
-                                        player.getRandom())));
+                                + (long) (next(
+                                                turn,
+                                                player.level(),
+                                                player.blockPosition(),
+                                                haunting,
+                                                now,
+                                                player.getRandom())
+                                        * Graves.pace(player, haunting))));
                 changed = true;
             }
             if (changed) {

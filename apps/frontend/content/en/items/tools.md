@@ -63,7 +63,7 @@ C A C
 C C C
 ```
 
-Use it: a flash, and a **Photograph** of one spirit you can sense, chosen at random if there are several. The photo names its **type** and nothing more ("A silhouette of a Shade"); an evolved spirit shows under its grown name. With nothing to sense, the photo shows nothing. Rest: 30 seconds, spent either way.
+Use it: a flash, and a **Photograph** of one spirit you can sense, chosen at random if there are several. The photo names its **type** and nothing more ("A silhouette of a Shade"); an evolved spirit shows under its grown name. With nothing to sense, the photo shows nothing. Rest: 30 seconds, spent either way. While held, it shows spirits' bodies the way the [spirit candle](#spirit-candle) does.
 
 - The picture itself is painted on your client and shows in the photo's tooltip. It is also pasted into the spirit's page in the [journal](#journal).
 - A developed photo can go in an item frame, where it shows the picture itself, flat on the wall like a map, with the frame itself hidden. Without the mod on the client the frame shows the plain card.
@@ -140,11 +140,13 @@ What to do with it:
 - A spirit has 1 to 4 habits, at most one of them foreign to its nature, and 1 or 2 conditions. Its nature is the one most of its habits point to; conditions never change it.
 - One note decides nothing. Gather several: true traits repeat, false ones are scattered over the rest.
 - Prints show the type of spirit, not its nature. Read the nature from habits before putting an offering on the [altar](#altar): the wrong nature is costly.
-- If the nature will not add up, there is another way: the [gravestone](#gravestone) names the thing the spirit wants back, and no guessing is needed.
+- If the nature will not add up, there is another way: the [gravestone](#gravestone) names the spirit's unfinished business, and no guessing is needed.
 
 ## Spirit Candle
 
 Candle + hallowed wax + soul sand, shapeless. Hold it in either hand. Its flame leans toward the spirit you sense that acts next, and burns blue for the last **3 seconds** before that event: the warning is exact, it reads the same timer the spirits run on. A spirit may snuff it for 30 seconds. Its flame also shows the [date](/en/how-it-works#the-calendar): pale on a full moon, red on a blood night, green on the day of the dead.
+
+While it burns in your hand, it also shows the **body** of every spirit you sense within 32 blocks, standing at the spirit's point: pale and see-through, shaped by its type as on a photograph, so two spirits of one type look alike but never the same. Only you see it, and only while you hold the lit candle or the camera obscura.
 
 ## Journal
 
@@ -186,6 +188,12 @@ Placing it builds a 3 by 3 platform and needs a clear 3 by 3 on solid ground. Th
 
 Lay a **water bottle** in the bowl. It needs only the finished platform, not the ring or the candles. After **12000 ticks** it turns into holy water; take it with an empty hand. Taken earlier, it is the bottle again. Holy water stacks to 16. A spirit may cloud it until dawn, and the altar will not take it then. Used while looking down (pitch 70° or more), one bottle is poured at your feet and ends every pending event of a Malice spirit on you, with the same falling ash and chime as a ward. See [Weakness](/en/how-it-works#weakness).
 
+### Blessing a house
+
+A water bottle laid in the bowl of an altar that stands inside a closed ring of salt, with **8** lit candles around it, begins a **blessing** instead of making holy water. Fewer candles or no ring, and it is holy water as before. The blessing runs **12 waves** of 100 ticks. If the player has spirits, each wave one of them may put out one of the 8 candles (25%), and it must be lit again. It fails, and the water is lost, if at the end of a wave the altar is broken, the ring is open or the player is more than 16 blocks away, or if a candle is out at the end of the last wave. Nothing else is lost.
+
+When it succeeds, no haunt event runs within **16 blocks** of the altar for **7 days** (168000 ticks). This does not wear salt, wards or charms. When the week ends, every spirit of the player who blessed the house returns with its anger raised by **0.2**.
+
 ### The offering
 
 Use an offering on the altar. It is of one **nature**, which decides which spirit it calls (the one whose traits mostly belong to that nature), and in one **form**, which decides whether that spirit takes it gladly.
@@ -219,13 +227,13 @@ Needs, when the offering goes down:
 Then it runs in waves of 5 seconds, through four phases:
 
 1. **The call**, 2 waves. The spirit comes in and does nothing yet.
-2. **The bargain**, 2 waves. The spirit names what it wants: the thing its [grave](#gravestone) asks for. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
+2. **The bargain**, 2 waves. The spirit names what it wants: the thing it lost, the one its [grave](#gravestone) asks for when its business is a lost thing. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
 3. **The fury**, 6 waves. A form the type does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
    - 25%: it snuffs one candle. Relight it before the next wave.
    - 50%: it runs one of its events on you.
    - 35%: it acts by its nature, whatever the censer does. Objects: it flings the offering off the altar; use the same offering on the altar again before the next wave, or the ritual fails. Darkness: it puts out every torch and lantern within 12 blocks for 30 seconds (the ritual's candles stay lit). Malice: it strikes you for a heart and a half of damage, never leaving you below the safe health. Deceit: it shows two of your candles as dark, but only to you; they still burn, so do not relight them.
    - Once per ritual it wipes one tile of the salt ring. Lay salt on that tile again before the next wave, or the ritual fails.
-   - It also shows itself: a dark figure walks the salt ring, and its nature sets a rule of gaze. Darkness and malice: do not look at it for more than 2 seconds. Objects and deceit: do not look away from it for more than 2 seconds. Break the rule and it snuffs a candle (the ritual goes on; relight it before the next wave).
+   - It also shows itself: its pale body walks the salt ring, and its nature sets a rule of gaze. Darkness and malice: do not look at it for more than 2 seconds. Objects and deceit: do not look away from it for more than 2 seconds. Break the rule and it snuffs a candle (the ritual goes on; relight it before the next wave).
 4. **The leaving**, 2 waves. The spirit lets go, but still walks the ring under the same rule of gaze; keep the candles lit to the end.
 
 **Place and hour.** A ritual held within 8 blocks of the spirit's [gravestone](#gravestone), or begun around midnight (day time 17000 to 19000), is hallowed: the fury runs 2 waves longer and the banished spirit leaves one more essence.
@@ -287,9 +295,17 @@ A spirit's fear works like a ward: its events do not run on a player standing ne
 
 ## Gravestone
 
-Not crafted. Every spirit you can sense gets a grave in the overworld, 100 to 400 blocks from you, built when its chunk first loads. Use the stone to read it: the name, days dead, the cause, and what the spirit **wants back**. Use it holding that item and the spirit is laid to rest: **2 essences** and 30 experience, no anger, and the spirit is gone. The item is spent. If someone else lays your personal spirit to rest, your journal notes it, even while you are away.
+Not crafted. Every spirit you can sense gets a grave in the overworld, 100 to 400 blocks from you, built when its chunk first loads. Use the stone to read it: the name, days dead, the cause, and the spirit's **unfinished business**. Settle the business and use the stone again: the spirit is laid to rest, **2 essences** and 30 experience, no anger, and the spirit is gone. If someone else lays your personal spirit to rest, your journal notes it, even while you are away. Breaking a gravestone angers your spirits (0.2).
 
-What a spirit wants is fixed for its life, and is one of: golden apple, diamond, compass, clock, name tag, jukebox, poppy, cake, iron pickaxe, lantern, emerald, spyglass. Breaking a gravestone angers your spirits (0.2).
+The business is fixed for the spirit's life. How it died decides it 6 times in 10 when the cause has a business of its own; otherwise it is drawn by weight (lost thing 4, bones 2, letter 2, killer 1, rival 1):
+
+| Business | What the stone asks | How it is settled | Causes that lean to it |
+|---|---|---|---|
+| **Lost thing** | an item it wants back: golden apple, diamond, compass, clock, name tag, jukebox, poppy, cake, iron pickaxe, lantern, emerald or spyglass | use the stone holding that item; it is spent | — |
+| **Bones** | its bones were never buried; the stone gives where they lie, rounded to 10 blocks | the bones (a named bone) lie on the ground 50 to 150 blocks from the grave once their chunk loads; bring them and use the stone holding them. While anyone carries them, that spirit acts **twice as often** | starved in a deep mine, drowned in a flooded cave, suffocated in a collapsed tunnel |
+| **Letter** | a last letter for a descendant, given to the reader (a lost one is given again on the next reading) | carry the letter within 4 blocks of any villager, then use the stone | lost in the Nether, never found the way back to bed |
+| **Killer** | the mob that killed it stands within 8 blocks of the grave, named | kill it yourself, then use the stone. If it dies any other way (sun, lava) or is gone, the next reading calls it up again | shot by a skeleton (a skeleton), slain by a zombie horde (a zombie), blown up by a creeper (a creeper); otherwise a zombie |
+| **Rival** | another of the owner's spirits killed it; the stone names it | that spirit must be gone (banished, laid to rest); with no other spirit, the killer is already gone | pushed off by a friend |
 
 ## Torn Page
 

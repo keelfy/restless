@@ -9,6 +9,7 @@ import dev.keelfy.restless.content.item.Reliquary;
 import dev.keelfy.restless.haunt.event.Machines;
 import dev.keelfy.restless.spirit.Focus;
 import dev.keelfy.restless.spirit.Form;
+import dev.keelfy.restless.ward.Blessing;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -368,7 +369,11 @@ public final class Altar extends Block implements EntityBlock {
             caster.sendSystemMessage(Component.translatable("message.restless.holy_water_cloudy"), true);
             return InteractionResult.FAIL;
         }
-        if (held == Held.WATER) {
+        if (held == Held.WATER && Blessing.ready(server, pos)) {
+            if (!Blessing.begin(caster, server, pos)) {
+                return InteractionResult.FAIL;
+            }
+        } else if (held == Held.WATER) {
             server.setBlock(pos, state.setValue(HELD, Held.WATER), 3);
             server.scheduleTick(pos, this, Config.section("ritual").integer("bless_ticks"));
         } else if (!Ritual.begin(caster, server, pos, held)) {

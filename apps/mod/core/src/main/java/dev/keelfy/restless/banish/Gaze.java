@@ -1,7 +1,7 @@
 package dev.keelfy.restless.banish;
 
 import dev.keelfy.restless.config.Config;
-import dev.keelfy.restless.content.Content;
+import dev.keelfy.restless.divine.Body;
 import dev.keelfy.restless.haunt.event.Jolts;
 import dev.keelfy.restless.haunt.event.kit.PacketEntity;
 import dev.keelfy.restless.spirit.Focus;
@@ -12,10 +12,10 @@ import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The spirit shows itself in the fury and the leaving: a silhouette walks the salt ring around the altar, and the
- * player must keep a rule of gaze set by its nature. Darkness and malice: never look at it longer than the limit.
- * Objects and deceit: never look away from it longer than the limit. Breaking the rule snuffs a candle, not the ritual,
- * and the count starts over.
+ * The spirit shows itself in the fury and the leaving: its body (see {@link Body}) walks the salt ring around the
+ * altar, and the player must keep a rule of gaze set by its nature. Darkness and malice: never look at it longer than
+ * the limit. Objects and deceit: never look away from it longer than the limit. Breaking the rule snuffs a candle, not
+ * the ritual, and the count starts over.
  */
 public final class Gaze {
     private final Circle circle;
@@ -76,8 +76,7 @@ public final class Gaze {
         // faces the way it walks
         float yaw = PacketEntity.yawToward(at, at.add(-Math.sin(angle), 0, Math.cos(angle)));
         if (figure == null) {
-            figure = PacketEntity.show(circle.player, Content.SILHOUETTE.get(), at, yaw);
-            Jolts.shape(circle.player, figure);
+            figure = Body.show(circle.player, circle.spirit.haunting(), at, yaw);
         } else {
             figure.move(circle.player, at, yaw);
         }

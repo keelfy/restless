@@ -11,6 +11,7 @@ import dev.keelfy.restless.journal.Notebook;
 import dev.keelfy.restless.photo.DevelopPayload;
 import dev.keelfy.restless.photo.Picture;
 import dev.keelfy.restless.spirit.land.Graves;
+import dev.keelfy.restless.spirit.land.Quest;
 import dev.keelfy.restless.state.HauntData;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -563,7 +564,16 @@ final class JournalGameTests {
             ServerLevel level = helper.getLevel();
             HauntData data = HauntData.get(level.getServer());
             var spirit = new HauntData.Haunting(
-                    java.util.UUID.randomUUID(), "shade", 0x5EED5L, List.of(), 0L, 1.0, 0L, false, 0, 0L);
+                    java.util.UUID.randomUUID(),
+                    "shade",
+                    GraveGameTests.spirit(Quest.ITEM).seed(),
+                    List.of(),
+                    0L,
+                    1.0,
+                    0L,
+                    false,
+                    0,
+                    0L);
             data.putTerritorial(new HauntData.Territorial(spirit, level.dimension(), player.blockPosition(), 48));
             BlockPos grave = helper.absolutePos(new BlockPos(1, 2, 1));
             data.putGrave(spirit.uuid(), new HauntData.Grave(grave, true));

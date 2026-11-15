@@ -18,3 +18,6 @@ Backlog of ideas, added by hand. Move an idea out (or delete it) once it is impl
   - Holy water (T5) ends only `Scheduler` steps of a malice spirit, not `Restore` timers or spawned entities.
   - GameTests are order/placement flaky: `telekinesis_amulet_pulls_experience`, `signature_revenant_tally` and
     `signature_revenant_rises` fail on some runs and pass on others.
+  - Grave bones (I3) are laid once: if the bones item is destroyed, a REMAINS grave stays at stage 2 for good. A
+    reading could lay them again when no copy is found in the world.
+  - A grave's letter (I3) goes to any villager, not one in the nearest village.

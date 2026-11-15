@@ -196,12 +196,24 @@ public final class HauntData extends SavedData {
      * built.
      *
      * @param built whether the block was ever placed; a built grave that has gone is put back where the ground now is
+     * @param stage how far its unfinished business has gone, see {@code spirit.land.Quest}: 0 unread, 1 begun, 2 done
+     * @param mark what the business is tied to, if anything: the named killer's entity or the spirit to be gone first
      */
-    public record Grave(BlockPos pos, boolean built) {
+    public record Grave(BlockPos pos, boolean built, int stage, Optional<UUID> mark) {
         static final Codec<Grave> CODEC = RecordCodecBuilder.create(i -> i.group(
                         BlockPos.CODEC.fieldOf("pos").forGetter(Grave::pos),
-                        Codec.BOOL.fieldOf("built").forGetter(Grave::built))
+                        Codec.BOOL.fieldOf("built").forGetter(Grave::built),
+                        Codec.INT.optionalFieldOf("stage", 0).forGetter(Grave::stage),
+                        UUIDUtil.STRING_CODEC.optionalFieldOf("mark").forGetter(Grave::mark))
                 .apply(i, Grave::new));
+
+        public Grave(BlockPos pos, boolean built) {
+            this(pos, built, 0, Optional.empty());
+        }
+
+        public Grave staged(int stage, Optional<UUID> mark) {
+            return new Grave(pos, built, stage, mark);
+        }
     }
 
     /**
