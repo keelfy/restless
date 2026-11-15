@@ -106,6 +106,8 @@
   "message.restless.ritual_wary": "The spirit lies low and turns the altar away.",
   "message.restless.ritual_bargain": "The spirit whispers what it wants: %s. Throw it onto the altar and it will go quiet.",
   "message.restless.ritual_bargained": "The spirit takes the gift and falls quiet. It is still here.",
+  "message.restless.ritual_twofold": "Something else in it stirs as well. It will not be fought without %s on the altar too.",
+  "message.restless.ritual_twofold_taken": "The second offering is taken. Both halves of the spirit answer the call.",
   "message.restless.appeased": "The spirit takes what it wanted and grows calmer. It is still here.",
   "message.restless.appease_more": "The spirit wants more this time: %s of %s.",
   "message.restless.ritual_fury": "No gift came. The spirit is enraged!",

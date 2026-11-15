@@ -268,7 +268,7 @@ Needs, when the offering goes down:
 Then it runs in waves of 5 seconds, through four phases:
 
 1. **The call**, 2 waves. The spirit comes in and does nothing yet.
-2. **The bargain**, 2 waves. The spirit names what it wants: one of the things it [desires](/en/how-it-works#leanings), any of which it takes, or for a spirit with no desire the thing its [grave](#gravestone) asks for. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
+2. **The bargain**, 2 waves. The spirit names what it wants: one of the things it [desires](/en/how-it-works#leanings), any of which it takes, or for a spirit with no desire the thing its [grave](#gravestone) asks for. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence. An evolved spirit with a [second nature](/en/how-it-works#evolving) also asks for an offering of that nature, any form: throw it onto the altar during the bargain, or the ritual fails when the fury would begin.
 3. **The fury**, 6 waves. A form the spirit does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
    - 25%: it snuffs one candle. Relight it before the next wave.
    - 50%: it runs one of its events on you.

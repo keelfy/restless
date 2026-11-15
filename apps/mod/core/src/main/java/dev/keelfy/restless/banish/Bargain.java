@@ -50,10 +50,12 @@ final class Bargain {
                         gift.getDefaultInstance().getHoverName()),
                 true);
         circle.level.playSound(null, circle.altar, SoundEvents.SOUL_ESCAPE.value(), SoundSource.HOSTILE, 1.0f, 1.2f);
+        Twofold.enter(circle);
     }
 
     /** @return whether the ritual goes on: false once the gift is taken */
     static boolean wave(Circle circle) {
+        Twofold.wave(circle);
         List<Item> gifts = gifts(circle);
         double reach = Config.section("ritual").num("gift_radius");
         List<ItemEntity> given = circle.level.getEntitiesOfClass(

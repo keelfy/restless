@@ -67,6 +67,7 @@ public final class AltarGameTests {
         RitualGameTests.registerName(TESTS);
         RitualGameTests.registerHallow(TESTS);
         RitualGameTests.registerSecond(TESTS);
+        RitualGameTests.registerTwofold(TESTS);
         RitualGameTests.registerGaze(TESTS);
         RitualGameTests.registerNatures(TESTS);
         EchoGameTests.register(TESTS);

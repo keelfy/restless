@@ -448,6 +448,44 @@ final class RitualGameTests {
         });
     }
 
+    /** A second nature: an evolved spirit's foreign habit asks for a second offering in the bargain. */
+    static void registerTwofold(Map<String, Consumer<GameTestHelper>> tests) {
+        tests.put("ritual_twofold_banished_with_both_offerings", helper -> {
+            Circle circle = twofold(helper);
+            drop(helper, new ItemStack(Items.GLOWSTONE_DUST));
+            steps(helper, circle, circle.plan().total() - circle.wave() - 1);
+            check(helper, circle.phase().orElseThrow() == Phase.LEAVING, "the ritual must reach the leaving");
+            check(helper, !circle.step(), "the last wave ends the ritual");
+            check(helper, essences(helper) >= 1, "both offerings banish the spirit");
+            helper.succeed();
+        });
+        tests.put("ritual_twofold_fails_with_one_offering", helper -> {
+            Circle circle = twofold(helper);
+            steps(helper, circle, circle.plan().bargain() - 1);
+            check(helper, !circle.step(), "without the second offering the fury never begins");
+            check(helper, circle.over(), "the ritual is over");
+            check(helper, essences(helper) == 0, "no essence");
+            check(helper, Math.abs(spirit(circle.player()).anger() - 0.3) < 1e-9, "a failed ritual angers it");
+            helper.succeed();
+        });
+        tests.put("ritual_twofold_only_once_evolved", helper -> {
+            Circle circle = started(helper, ready(helper));
+            steps(helper, circle, circle.plan().call() + circle.plan().bargain() + 1);
+            check(helper, circle.phase().orElseThrow() == Phase.FURY, "a young spirit asks for one offering only");
+            helper.succeed();
+        });
+    }
+
+    /** An evolved spirit of iron with one glowstone habit, its ritual stepped into the bargain. */
+    private static Circle twofold(GameTestHelper helper) {
+        ServerPlayer player = ready(helper);
+        HauntData.get(helper.getLevel().getServer()).change(SPIRIT, HauntData.Haunting::evolve);
+        Circle circle = started(helper, player);
+        steps(helper, circle, circle.plan().call() + 1);
+        check(helper, circle.phase().orElseThrow() == Phase.BARGAIN, "the bargain follows the call");
+        return circle;
+    }
+
     /** The test spirit's name, as its gravestone gives it. */
     private static String name() {
         return dev.keelfy.restless.spirit.Story.of(7L).name();

@@ -143,7 +143,7 @@ public final class Altar extends Block implements EntityBlock {
             };
         }
 
-        static @Nullable Held from(ItemStack stack) {
+        public static @Nullable Held from(ItemStack stack) {
             PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
             if (stack.is(Items.POTION) && potion != null && potion.is(Potions.WATER)) {
                 return WATER;

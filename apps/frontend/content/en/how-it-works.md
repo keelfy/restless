@@ -70,6 +70,7 @@ An evolved spirit:
 - no longer hides its [hidden habit](#hidden-habit);
 - rolls its signature events 3 times as often, see [Signatures](/en/events/signatures);
 - asks for 4 more waves in the [banishing ritual](/en/items/tools#the-ritual);
+- has a **second nature** if it carries the one habit from another nature beside two or more of its own: its ritual then asks for an offering of that nature too, see [the bargain](/en/items/tools#the-ritual);
 - if territorial, fouls its land 3 times faster.
 
 A wrong offering at the altar ages the spirit by a day toward evolving.
