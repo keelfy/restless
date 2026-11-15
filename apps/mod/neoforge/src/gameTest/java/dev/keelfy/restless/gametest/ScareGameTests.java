@@ -1,13 +1,16 @@
 package dev.keelfy.restless.gametest;
 
 import dev.keelfy.restless.Restless;
+import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.haunt.History;
 import dev.keelfy.restless.haunt.event.HauntEvent;
 import dev.keelfy.restless.haunt.event.HauntEvents;
 import dev.keelfy.restless.haunt.event.Scares;
 import io.netty.channel.embedded.EmbeddedChannel;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
@@ -24,6 +27,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.PlayLevelSoundEvent;
 
 /** The scares the player sets off: each is armed or started, the habit is acted out, and the figure is sent. */
 final class ScareGameTests {
@@ -33,6 +39,21 @@ final class ScareGameTests {
     private static final int LIGHT_SLACK = 100;
 
     private static final int LIGHT_WAIT = LIGHT_SLACK / LIGHT_TICKS;
+    /** How near the player a sting must be played to count as theirs. */
+    private static final double HEARD_RADIUS = 4.0;
+
+    /** Sounds played in any level during the tests, from the level's sound hook. */
+    private record Played(String sound, Vec3 at) {}
+
+    private static final List<Played> PLAYED = new CopyOnWriteArrayList<>();
+
+    static {
+        NeoForge.EVENT_BUS.addListener((PlayLevelSoundEvent.AtPosition e) -> {
+            if (e.getSound() != null) {
+                PLAYED.add(new Played(e.getSound().value().location().toString(), e.getPosition()));
+            }
+        });
+    }
 
     static void register(Map<String, Consumer<GameTestHelper>> tests) {
         HauntEventGameTests.PADDING.put("scare_slow_turn", 40);
@@ -49,6 +70,15 @@ final class ScareGameTests {
                     set(helper, wall, Blocks.AIR.defaultBlockState());
                     helper.runAfterDelay(6, () -> {
                         check(helper, scene.figures() == 1, "mined_face must show one figure");
+                        check(
+                                helper,
+                                scene.heard(Config.event("mined_face").text("sound_id")),
+                                "mined_face must play its own sting");
+                        check(
+                                helper,
+                                !"restless:haunt.jolt"
+                                        .equals(Config.event("mined_face").text("sound_id")),
+                                "mined_face must not use the plain jolt");
                         check(helper, scene.blockUpdates() >= 2, "mined_face must open the rock behind the hole");
                         scene.end(helper);
                     });
@@ -63,6 +93,10 @@ final class ScareGameTests {
                     Restless.onBreakBlock(scene.player, Blocks.STONE.defaultBlockState(), hole);
                     helper.runAfterDelay(6, () -> {
                         check(helper, scene.figures() == 1, "dig_down must show one figure");
+                        check(
+                                helper,
+                                scene.heard(Config.event("dig_down").text("sound_id")),
+                                "dig_down must play its own sting");
                         check(helper, scene.blockUpdates() >= 2, "dig_down must open the rock under the hole");
                         scene.end(helper);
                     });
@@ -131,6 +165,10 @@ final class ScareGameTests {
                                     helper,
                                     scene.figures() == 1,
                                     "a door shut near the player must fly open on a figure");
+                            check(
+                                    helper,
+                                    scene.heard(Config.event("door_slam_face").text("sound_id")),
+                                    "door_slam_face must play its own sting");
                             scene.end(helper);
                         });
                     }));
@@ -172,6 +210,10 @@ final class ScareGameTests {
                                     scene.player.getHealth() < scene.player.getMaxHealth(),
                                     "the figure must hit, health=" + scene.player.getHealth() + " figures="
                                             + scene.figures());
+                            check(
+                                    helper,
+                                    scene.heard(Config.event("hide").text("sound_id")),
+                                    "hide must play its own sting");
                             check(helper, scene.player.isAlive(), "hide must not kill");
                             scene.end(helper);
                         });
@@ -286,6 +328,15 @@ final class ScareGameTests {
             return channel.outboundMessages().stream()
                     .filter(m -> m instanceof ClientboundBlockUpdatePacket)
                     .count();
+        }
+
+        /**
+         * Whether the sound was played within {@code HEARD_RADIUS} of the player. A mock player is not in the player
+         * list, so no sound packet reaches it; the level's sound hook sees every sound played.
+         */
+        boolean heard(String sound) {
+            return PLAYED.stream()
+                    .anyMatch(p -> p.sound().equals(sound) && p.at().distanceTo(player.position()) <= HEARD_RADIUS);
         }
 
         void end(GameTestHelper helper) {

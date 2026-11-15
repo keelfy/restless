@@ -3,7 +3,12 @@ package dev.keelfy.restless.journal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.keelfy.restless.photo.Picture;
+import dev.keelfy.restless.spirit.Focus;
+import dev.keelfy.restless.spirit.Form;
+import dev.keelfy.restless.spirit.Trait;
+import dev.keelfy.restless.spirit.Traits;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,12 +30,32 @@ import org.jspecify.annotations.Nullable;
  * @param chapters ids of the {@link Chapter}s the player has opened
  * @param pictures the latest developed photograph of each spirit, pasted in
  * @param filed for a banished spirit, the dossier the player filed it under: their own conclusion, right or wrong
+ * @param marks per dossier, the player's own guesses on its case sheet (see {@link #cycled}): never checked, never
+ *     corrected
  */
-public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture> pictures, Map<UUID, UUID> filed) {
+public record Notebook(
+        List<Note> notes,
+        Set<String> chapters,
+        Map<UUID, Picture> pictures,
+        Map<UUID, UUID> filed,
+        Map<UUID, Map<String, String>> marks) {
     /** Ends a type tag of a grown spirit. */
     static final String EVOLVED = "_evolved";
 
-    public static final Notebook EMPTY = new Notebook(List.of(), Set.of(), Map.of(), Map.of());
+    public static final Notebook EMPTY = new Notebook(List.of(), Set.of(), Map.of(), Map.of(), Map.of());
+
+    /** Marks field of the nature guess; its values are {@link Focus} names in lower case. */
+    public static final String NATURE = "nature";
+    /** Marks field of the form guess; its values are {@link Form} names in lower case. */
+    public static final String FORM = "form";
+    /** Marks field prefix of a habit seen, followed by the trait id; its only value is {@link #SEEN}. */
+    public static final String HABIT = "habit.";
+
+    public static final String SEEN = "seen";
+
+    public Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture> pictures, Map<UUID, UUID> filed) {
+        this(notes, chapters, pictures, filed, Map.of());
+    }
 
     public static final Codec<Notebook> CODEC = RecordCodecBuilder.create(i -> i.group(
                     Note.CODEC.listOf().optionalFieldOf("notes", List.of()).forGetter(Notebook::notes),
@@ -44,7 +69,10 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
                             .forGetter(Notebook::pictures),
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, UUIDUtil.STRING_CODEC)
                             .optionalFieldOf("filed", Map.of())
-                            .forGetter(Notebook::filed))
+                            .forGetter(Notebook::filed),
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.unboundedMap(Codec.STRING, Codec.STRING))
+                            .optionalFieldOf("marks", Map.of())
+                            .forGetter(Notebook::marks))
             .apply(i, Notebook::new));
 
     /** What kind of thing was seen; decides where it goes in the journal. */
@@ -74,6 +102,10 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         EVOLVED(true),
         /** A spirit laid to rest at the Requiem: the last line of its dossier. Args: name, type. */
         LAID(true),
+        /** A habit's tell was seen. Args: what was seen. */
+        TELL(true),
+        /** A tool found nothing of a spirit that a veil hides from it. Args: what stayed silent. */
+        SILENCE(true),
         /** An entry from before the journal had kinds. Args: its text. */
         OLD(true);
 
@@ -127,6 +159,8 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         EVOLUTION(2),
         /** The first spirit gone for good: essences. */
         ESSENCE(2),
+        /** The first dusk of a full moon, a blood night or the day of the dead. */
+        CALENDAR(3),
         /** The Requiem was sung: the closing chapter. */
         REQUIEM(2);
 
@@ -149,7 +183,7 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         }
         List<Note> grown = new ArrayList<>(notes);
         grown.add(note);
-        return new Notebook(List.copyOf(grown), chapters, pictures, filed);
+        return new Notebook(List.copyOf(grown), chapters, pictures, filed, marks);
     }
 
     /** @return null when the chapter is already open */
@@ -159,19 +193,19 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         }
         Set<String> grown = new HashSet<>(chapters);
         grown.add(chapter.id());
-        return new Notebook(notes, Set.copyOf(grown), pictures, filed);
+        return new Notebook(notes, Set.copyOf(grown), pictures, filed, marks);
     }
 
     /** The spirit's photograph, replacing an older one: a notebook keeps one picture per spirit. */
     public Notebook pasted(UUID spirit, Picture picture) {
         Map<UUID, Picture> grown = new HashMap<>(pictures);
         grown.put(spirit, picture);
-        return new Notebook(notes, chapters, Map.copyOf(grown), filed);
+        return new Notebook(notes, chapters, Map.copyOf(grown), filed, marks);
     }
 
     /** The notes replaced, everything else kept. */
     public Notebook withNotes(List<Note> replaced) {
-        return new Notebook(List.copyOf(replaced), chapters, pictures, filed);
+        return new Notebook(List.copyOf(replaced), chapters, pictures, filed, marks);
     }
 
     /**
@@ -208,7 +242,63 @@ public record Notebook(List<Note> notes, Set<String> chapters, Map<UUID, Picture
         }
         Map<UUID, UUID> grown = new HashMap<>(filed);
         grown.put(notes.get(record).spirit().get(), met().get(dossier));
-        return new Notebook(notes, chapters, pictures, Map.copyOf(grown));
+        return new Notebook(notes, chapters, pictures, Map.copyOf(grown), marks);
+    }
+
+    /** The values a case sheet field can take, in the order a click cycles through them, none ({@code ""}) first. */
+    public static List<String> options(String field) {
+        List<String> values = new ArrayList<>(List.of(""));
+        if (field.equals(NATURE)) {
+            Arrays.stream(Focus.values())
+                    .map(f -> f.name().toLowerCase(Locale.ROOT))
+                    .forEach(values::add);
+        } else if (field.equals(FORM)) {
+            Arrays.stream(Form.values())
+                    .map(f -> f.name().toLowerCase(Locale.ROOT))
+                    .forEach(values::add);
+        } else if (field.startsWith(HABIT)
+                && Traits.all().stream()
+                        .anyMatch(t -> t.kind() == Trait.Kind.HABIT && (HABIT + t.id()).equals(field))) {
+            values.add(SEEN);
+        } else {
+            return List.of();
+        }
+        return values;
+    }
+
+    /** The guess on the {@code dossier}th met spirit's case sheet in this field; empty when none. */
+    public String mark(int dossier, String field) {
+        List<UUID> met = met();
+        return dossier < 0 || dossier >= met.size()
+                ? ""
+                : marks.getOrDefault(met.get(dossier), Map.of()).getOrDefault(field, "");
+    }
+
+    /**
+     * The guess in this field moved on to its next value, none after the last. No spirit's truth is consulted.
+     *
+     * @return null when there is no such dossier or field
+     */
+    public @Nullable Notebook cycled(int dossier, String field) {
+        List<UUID> met = met();
+        List<String> options = options(field);
+        if (dossier < 0 || dossier >= met.size() || options.isEmpty()) {
+            return null;
+        }
+        String next = options.get((options.indexOf(mark(dossier, field)) + 1) % options.size());
+        Map<String, String> sheet = new HashMap<>(marks.getOrDefault(met.get(dossier), Map.of()));
+        if (next.isEmpty()) {
+            sheet.remove(field);
+        } else {
+            sheet.put(field, next);
+        }
+        Map<UUID, Map<String, String>> grown = new HashMap<>(marks);
+        if (sheet.isEmpty()) {
+            grown.remove(met.get(dossier));
+        } else {
+            grown.put(met.get(dossier), Map.copyOf(sheet));
+        }
+        return new Notebook(notes, chapters, pictures, filed, Map.copyOf(grown));
     }
 
     /** Whether a photograph named a spirit of this type: it has been met, and the journal can name it. */

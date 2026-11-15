@@ -680,6 +680,746 @@
       ],
       "lies": 1,
       "weakness": "mirror"
+    },
+    "thrower": {
+      "kind": "habit",
+      "affinity": {
+        "ITEMS": 2.5,
+        "BLOCKS": 1.2
+      },
+      "clues": [
+        "footprints",
+        "planchette"
+      ],
+      "words": [
+        "throw",
+        "catch",
+        "mine"
+      ],
+      "planchette": [
+        "thrower_catch",
+        "thrower_throw",
+        "thrower_fly",
+        "thrower_drop",
+        "thrower_mine"
+      ],
+      "weakness": "iron"
+    },
+    "stacker": {
+      "kind": "habit",
+      "affinity": {
+        "BLOCKS": 2.0,
+        "ITEMS": 1.5
+      },
+      "clues": [
+        "footprints",
+        "silhouette"
+      ],
+      "words": [
+        "order",
+        "stack",
+        "move"
+      ],
+      "planchette": [
+        "stacker_order",
+        "stacker_stack",
+        "stacker_place",
+        "stacker_neat",
+        "stacker_wrong"
+      ],
+      "weakness": "iron"
+    },
+    "knocker": {
+      "kind": "habit",
+      "affinity": {
+        "DOORS": 2.0,
+        "SOUND": 1.5
+      },
+      "clues": [
+        "footprints",
+        "voice"
+      ],
+      "words": [
+        "knock",
+        "open",
+        "wall"
+      ],
+      "planchette": [
+        "knocker_knock",
+        "knocker_open",
+        "knocker_in",
+        "knocker_wall",
+        "knocker_three"
+      ],
+      "weakness": "iron"
+    },
+    "shadow_caster": {
+      "kind": "habit",
+      "affinity": {
+        "PRESENCE": 2.0,
+        "LIGHTS": 1.3
+      },
+      "clues": [
+        "silhouette",
+        "planchette"
+      ],
+      "words": [
+        "shadow",
+        "behind",
+        "dark"
+      ],
+      "planchette": [
+        "shadow_shadow",
+        "shadow_behind",
+        "shadow_long",
+        "shadow_yours",
+        "shadow_wall"
+      ],
+      "weakness": "glowstone"
+    },
+    "blinder": {
+      "kind": "habit",
+      "affinity": {
+        "AFFLICTION": 2.0,
+        "LIGHTS": 1.3
+      },
+      "clues": [
+        "silhouette",
+        "voice"
+      ],
+      "words": [
+        "blind",
+        "eyes",
+        "dark"
+      ],
+      "planchette": [
+        "blinder_eyes",
+        "blinder_blind",
+        "blinder_see",
+        "blinder_close",
+        "blinder_grey"
+      ],
+      "weakness": "glowstone"
+    },
+    "hearth_killer": {
+      "kind": "habit",
+      "affinity": {
+        "LIGHTS": 2.0,
+        "BLOCKS": 1.3
+      },
+      "clues": [
+        "footprints",
+        "silhouette"
+      ],
+      "words": [
+        "ash",
+        "cold",
+        "out"
+      ],
+      "planchette": [
+        "hearth_ash",
+        "hearth_out",
+        "hearth_fire",
+        "hearth_cold",
+        "hearth_ember"
+      ],
+      "weakness": "glowstone"
+    },
+    "corner_lurker": {
+      "kind": "habit",
+      "affinity": {
+        "PRESENCE": 1.5,
+        "MOBS": 1.5
+      },
+      "clues": [
+        "silhouette",
+        "planchette"
+      ],
+      "words": [
+        "corner",
+        "wait",
+        "black"
+      ],
+      "planchette": [
+        "corner_corner",
+        "corner_wait",
+        "corner_here",
+        "corner_dark",
+        "corner_look"
+      ],
+      "weakness": "glowstone"
+    },
+    "hunter": {
+      "kind": "habit",
+      "affinity": {
+        "PRESENCE": 2.0,
+        "ASSAULT": 1.3
+      },
+      "clues": [
+        "footprints",
+        "silhouette"
+      ],
+      "words": [
+        "run",
+        "found",
+        "you"
+      ],
+      "planchette": [
+        "hunter_run",
+        "hunter_found",
+        "hunter_smell",
+        "hunter_near",
+        "hunter_prey"
+      ],
+      "weakness": "holy_water"
+    },
+    "scratcher": {
+      "kind": "habit",
+      "affinity": {
+        "AFFLICTION": 2.0,
+        "ASSAULT": 1.3
+      },
+      "clues": [
+        "footprints",
+        "planchette"
+      ],
+      "words": [
+        "claw",
+        "hurt",
+        "blood"
+      ],
+      "planchette": [
+        "scratch_claw",
+        "scratch_hurt",
+        "scratch_skin",
+        "scratch_mark",
+        "scratch_bleed"
+      ],
+      "weakness": "holy_water"
+    },
+    "beast_caller": {
+      "kind": "habit",
+      "affinity": {
+        "MOBS": 2.5
+      },
+      "clues": [
+        "voice",
+        "silhouette"
+      ],
+      "words": [
+        "come",
+        "teeth",
+        "feed"
+      ],
+      "planchette": [
+        "beast_come",
+        "beast_teeth",
+        "beast_feed",
+        "beast_pack",
+        "beast_hungry"
+      ],
+      "weakness": "holy_water"
+    },
+    "drowner": {
+      "kind": "habit",
+      "affinity": {
+        "WATER": 2.5,
+        "ASSAULT": 1.2
+      },
+      "clues": [
+        "voice",
+        "footprints"
+      ],
+      "words": [
+        "drown",
+        "under",
+        "breathe"
+      ],
+      "planchette": [
+        "drown_drown",
+        "drown_under",
+        "drown_breathe",
+        "drown_stay",
+        "drown_water"
+      ],
+      "weakness": "holy_water"
+    },
+    "snarler": {
+      "kind": "habit",
+      "affinity": {
+        "SOUND": 2.0,
+        "ASSAULT": 1.3
+      },
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "die",
+        "hate",
+        "you"
+      ],
+      "planchette": [
+        "snarl_die",
+        "snarl_hate",
+        "snarl_soon",
+        "snarl_kill",
+        "snarl_mine"
+      ],
+      "weakness": "holy_water"
+    },
+    "face_thief": {
+      "kind": "habit",
+      "affinity": {
+        "PLAYER": 2.5
+      },
+      "clues": [
+        "silhouette",
+        "voice"
+      ],
+      "words": [
+        "friend",
+        "face",
+        "hello"
+      ],
+      "planchette": [
+        "face_friend",
+        "face_me",
+        "face_hello",
+        "face_yours",
+        "face_wear"
+      ],
+      "weakness": "mirror"
+    },
+    "illusionist": {
+      "kind": "habit",
+      "affinity": {
+        "BLOCKS": 2.0,
+        "PRESENCE": 1.3
+      },
+      "clues": [
+        "silhouette",
+        "planchette"
+      ],
+      "words": [
+        "look",
+        "there",
+        "real"
+      ],
+      "planchette": [
+        "illusion_look",
+        "illusion_there",
+        "illusion_real",
+        "illusion_not",
+        "illusion_see"
+      ],
+      "weakness": "mirror"
+    },
+    "false_friend": {
+      "kind": "habit",
+      "affinity": {
+        "MOBS": 2.0,
+        "PLAYER": 1.3
+      },
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "friend",
+        "safe",
+        "trust"
+      ],
+      "planchette": [
+        "false_friend",
+        "false_safe",
+        "false_stay",
+        "false_trust",
+        "false_pet"
+      ],
+      "weakness": "mirror"
+    },
+    "lure": {
+      "kind": "habit",
+      "affinity": {
+        "PRESENCE": 2.0,
+        "SOUND": 1.3
+      },
+      "clues": [
+        "voice",
+        "footprints"
+      ],
+      "words": [
+        "come",
+        "lost",
+        "follow"
+      ],
+      "planchette": [
+        "lure_come",
+        "lure_way",
+        "lure_follow",
+        "lure_lost",
+        "lure_light"
+      ],
+      "weakness": "mirror"
+    },
+    "cave_haunter": {
+      "kind": "condition",
+      "affinity": {},
+      "activity": 2.0,
+      "when": "underground",
+      "clues": [
+        "footprints",
+        "silhouette"
+      ],
+      "words": [
+        "stone",
+        "deep",
+        "walls"
+      ],
+      "planchette": [
+        "cave_stone",
+        "cave_walls",
+        "cave_buried",
+        "cave_tunnel",
+        "cave_down"
+      ]
+    },
+    "water_lurker": {
+      "kind": "condition",
+      "affinity": {
+        "WATER": 1.5
+      },
+      "activity": 2.0,
+      "when": "water",
+      "clues": [
+        "voice"
+      ],
+      "words": [
+        "water",
+        "cold",
+        "under"
+      ],
+      "planchette": [
+        "lurk_water",
+        "lurk_cold",
+        "lurk_swim",
+        "lurk_below",
+        "lurk_shore"
+      ]
+    },
+    "fears_fire": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "fear",
+      "things": [
+        "minecraft:fire",
+        "minecraft:soul_fire",
+        "minecraft:campfire",
+        "minecraft:soul_campfire",
+        "minecraft:lava"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "fire",
+        "burn",
+        "no"
+      ],
+      "planchette": [
+        "ffire_fire",
+        "ffire_burn",
+        "ffire_away",
+        "ffire_hot",
+        "ffire_put_out"
+      ]
+    },
+    "fears_cats": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "fear",
+      "things": [
+        "minecraft:cat",
+        "minecraft:ocelot"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "cat",
+        "eyes",
+        "no"
+      ],
+      "planchette": [
+        "fcat_cat",
+        "fcat_eyes",
+        "fcat_away",
+        "fcat_hiss",
+        "fcat_sees"
+      ]
+    },
+    "fears_bells": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "fear",
+      "things": [
+        "minecraft:bell"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "bell",
+        "hush",
+        "no"
+      ],
+      "planchette": [
+        "fbell_bell",
+        "fbell_ring",
+        "fbell_quiet",
+        "fbell_away",
+        "fbell_toll"
+      ]
+    },
+    "fears_running_water": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "fear",
+      "things": [
+        "minecraft:water"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "river",
+        "cross",
+        "no"
+      ],
+      "planchette": [
+        "fwater_cross",
+        "fwater_river",
+        "fwater_running",
+        "fwater_bank",
+        "fwater_other_side"
+      ]
+    },
+    "wants_milk": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "desire",
+      "things": [
+        "minecraft:milk_bucket"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "milk",
+        "thirsty",
+        "give"
+      ],
+      "planchette": [
+        "wmilk_milk",
+        "wmilk_thirsty",
+        "wmilk_white",
+        "wmilk_give",
+        "wmilk_bowl"
+      ]
+    },
+    "wants_bread": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "desire",
+      "things": [
+        "minecraft:bread"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "bread",
+        "hungry",
+        "give"
+      ],
+      "planchette": [
+        "wbread_bread",
+        "wbread_hungry",
+        "wbread_crumbs",
+        "wbread_give",
+        "wbread_table"
+      ]
+    },
+    "wants_sweets": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "desire",
+      "things": [
+        "minecraft:cake",
+        "minecraft:cookie",
+        "minecraft:pumpkin_pie",
+        "minecraft:honey_bottle"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "sweet",
+        "give",
+        "honey"
+      ],
+      "planchette": [
+        "wsweet_sweet",
+        "wsweet_honey",
+        "wsweet_give",
+        "wsweet_more",
+        "wsweet_cake"
+      ]
+    },
+    "hates_lanterns": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "hate",
+      "things": [
+        "minecraft:lantern",
+        "minecraft:soul_lantern"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "lantern",
+        "hate",
+        "out"
+      ],
+      "planchette": [
+        "hlantern_lantern",
+        "hlantern_hate",
+        "hlantern_put_out",
+        "hlantern_glare",
+        "hlantern_too_bright"
+      ]
+    },
+    "hates_bells": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "hate",
+      "things": [
+        "minecraft:bell"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "bell",
+        "stop",
+        "hate"
+      ],
+      "planchette": [
+        "hbell_stop",
+        "hbell_ringing",
+        "hbell_hate",
+        "hbell_head",
+        "hbell_enough"
+      ]
+    },
+    "hates_music": {
+      "kind": "leaning",
+      "affinity": {},
+      "leans": "hate",
+      "things": [
+        "minecraft:note_block",
+        "minecraft:jukebox"
+      ],
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "music",
+        "stop",
+        "hate"
+      ],
+      "planchette": [
+        "hmusic_stop",
+        "hmusic_music",
+        "hmusic_noise",
+        "hmusic_hate",
+        "hmusic_silence"
+      ]
+    },
+    "unseen": {
+      "kind": "veil",
+      "affinity": {},
+      "foils": "silhouette",
+      "clues": [
+        "voice",
+        "planchette"
+      ],
+      "words": [
+        "shadow",
+        "there",
+        "look"
+      ],
+      "planchette": [
+        "unseen_no_picture",
+        "unseen_not_there",
+        "unseen_look",
+        "unseen_glass",
+        "unseen_nobody"
+      ]
+    },
+    "light_footed": {
+      "kind": "veil",
+      "affinity": {},
+      "foils": "footprints",
+      "clues": [
+        "voice",
+        "silhouette"
+      ],
+      "words": [
+        "wait",
+        "behind",
+        "follow"
+      ],
+      "planchette": [
+        "footed_no_steps",
+        "footed_light",
+        "footed_ash",
+        "footed_float",
+        "footed_clean"
+      ]
+    },
+    "voiceless": {
+      "kind": "veil",
+      "affinity": {},
+      "foils": "voice",
+      "clues": [
+        "planchette",
+        "silhouette"
+      ],
+      "words": [
+        "hush",
+        "listen",
+        "closer"
+      ],
+      "planchette": [
+        "voiceless_silent",
+        "voiceless_no_voice",
+        "voiceless_static",
+        "voiceless_mute",
+        "voiceless_mouth"
+      ]
     }
   },
   "story": {

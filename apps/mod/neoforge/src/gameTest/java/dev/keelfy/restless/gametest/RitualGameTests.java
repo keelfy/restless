@@ -12,6 +12,7 @@ import dev.keelfy.restless.content.block.Altar;
 import dev.keelfy.restless.content.block.UnlitLights;
 import dev.keelfy.restless.sanity.SanityPayload;
 import dev.keelfy.restless.spirit.land.Graves;
+import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.state.HauntData;
 import java.util.List;
 import java.util.Map;
@@ -137,6 +138,7 @@ final class RitualGameTests {
             check(helper, Math.abs(after.anger() - 0.2) < 1e-9, "the gift lowers anger by 0.3, got " + after.anger());
             check(helper, gifts(helper) == 1, "the spirit takes one gift and leaves the rest");
             check(helper, essences(helper) == 0, "a bargain leaves no essence");
+            check(helper, echoes(helper).isEmpty(), "a bargain leaves no echo");
             helper.assertBlockProperty(AltarGameTests.CENTER, Altar.HELD, Altar.Held.EMPTY);
             check(helper, lit(helper) == 4, "the candles still burn");
             helper.succeed();
@@ -176,8 +178,23 @@ final class RitualGameTests {
                     HauntData.get(helper.getLevel().getServer()).find(SPIRIT).isEmpty(),
                     "the spirit is banished");
             check(helper, essences(helper) == 1, "it leaves its essence");
+            check(helper, echoes(helper).size() == 1, "an altar banishing leaves an echo at the altar");
+            echoes(helper)
+                    .forEach(t -> Echoes.leave(
+                            HauntData.get(helper.getLevel().getServer()),
+                            t.haunting().uuid()));
             helper.succeed();
         });
+    }
+
+    /** The echoes of the test spirit standing at the altar (see M2). */
+    private static List<HauntData.Territorial> echoes(GameTestHelper helper) {
+        HauntData data = HauntData.get(helper.getLevel().getServer());
+        return data
+                .territorialWithin(helper.getLevel().dimension(), helper.absolutePos(AltarGameTests.CENTER), 0)
+                .stream()
+                .filter(t -> t.haunting().seed() == 7L && data.echo(t.haunting().uuid()) != 0L)
+                .toList();
     }
 
     /** The gaze: the figure walks the ring in the fury and the leaving, and a nature's rule costs a candle. */

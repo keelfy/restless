@@ -210,6 +210,19 @@ public final class Journal {
         return true;
     }
 
+    /**
+     * The player moved a guess on a dossier's case sheet on to its next value. The journal keeps it as written and
+     * never says whether it is right.
+     */
+    public static void mark(ServerPlayer player, MarkPayload payload) {
+        HauntData data = HauntData.get(player.level().getServer());
+        Notebook marked = data.notebook(player.getUUID()).cycled(payload.dossier(), payload.field());
+        if (marked != null) {
+            data.putNotebook(player.getUUID(), marked);
+            sync(player);
+        }
+    }
+
     /** Sends the pages for the book in the player's hands, which is read without opening a screen. */
     public static void sync(ServerPlayer player) {
         show(player, false);
@@ -225,7 +238,7 @@ public final class Journal {
     private static List<Chapter> chapters(Kind kind) {
         return switch (kind) {
             case PHOTO -> List.of(Chapter.CLUES, Chapter.WEAKNESS);
-            case FOOTPRINTS, VOICE, PLANCHETTE -> List.of(Chapter.CLUES);
+            case FOOTPRINTS, VOICE, PLANCHETTE, TELL, SILENCE -> List.of(Chapter.CLUES);
             case GRAVE, GRAVE_WHISPER -> List.of(Chapter.GRAVES);
             case EVOLVED -> List.of(Chapter.EVOLUTION);
             case RESTED, BANISHED -> List.of(Chapter.ESSENCE);

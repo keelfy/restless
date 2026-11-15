@@ -96,6 +96,35 @@ final class AshGameTests {
             helper.assertBlockPresent(Content.ASH_LINE.get(), CENTER);
             helper.succeed();
         });
+        tests.put("ash_veil_light_footed_leaves_no_trail", helper -> {
+            patch(helper);
+            var data = HauntData.get(helper.getLevel().getServer());
+            var block = helper.getLevel().getBlockState(helper.absolutePos(CENTER));
+            shapeLeftBy(helper, data, block, List.of("restless_hands"));
+            trail(helper).forEach(AshFootprint::discard);
+            var veiled = new HauntData.Haunting(
+                    java.util.UUID.randomUUID(),
+                    "poltergeist",
+                    7L,
+                    List.of("restless_hands", "light_footed"),
+                    0L,
+                    0.0,
+                    Long.MAX_VALUE / 2,
+                    false,
+                    0,
+                    0L);
+            data.putTerritorial(List.of(
+                    new HauntData.Territorial(veiled, helper.getLevel().dimension(), helper.absolutePos(CENTER), 16)));
+            for (int i = 0; i < 40; i++) {
+                block.tick(
+                        helper.getLevel(),
+                        helper.absolutePos(CENTER),
+                        helper.getLevel().getRandom());
+            }
+            check(helper, trail(helper).isEmpty(), "A light-footed spirit must leave no trail in ash");
+            data.putTerritorial(List.of());
+            helper.succeed();
+        });
         tests.put("ash_print_follows_type_not_nature", helper -> {
             patch(helper);
             var data = HauntData.get(helper.getLevel().getServer());

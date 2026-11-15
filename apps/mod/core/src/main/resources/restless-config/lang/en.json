@@ -1381,6 +1381,14 @@
       "name": "Phantom Break",
       "description": "The next block the player breaks sounds a second time, a few blocks away."
     },
+    "minecraft:dragged_chains": {
+      "name": "Dragged Chains",
+      "description": "Chains drag and clatter somewhere out of sight."
+    },
+    "minecraft:creature_rattle": {
+      "name": "Creature Rattle",
+      "description": "A dry rattling call from something that is not there."
+    },
     "minecraft:pumpkin_head": {
       "name": "Pumpkin Head",
       "description": "The blur of a carved pumpkin falls over the screen for a few seconds, though nothing is on the player's head."
@@ -3024,6 +3032,102 @@
     "minecraft:hide": {
       "name": "Hide",
       "description": "The action bar says \"Hide\" and a heartbeat sounds for ten seconds. Move, and something is at the player's face and hurts them, though it never leaves them at the safe floor. Keep still, and heavy steps pass outside."
+    },
+    "restless:tell_cold_touch": {
+      "name": "Frosted Breath",
+      "description": "Only a spirit with the cold touch habit: the player's breath frosts in front of their face, with a soft crunch of snow. The journal notes it."
+    },
+    "restless:tell_restless_hands": {
+      "name": "Empty Pickup",
+      "description": "Only a spirit with the restless hands habit: the sound of an item being picked up sounds beside the player, with a puff of dust and nothing taken. The journal notes it."
+    },
+    "restless:tell_door_slammer": {
+      "name": "Distant Slam",
+      "description": "Only a spirit with the door slammer habit: a door slams shut somewhere behind the player, out of sight. The journal notes it."
+    },
+    "restless:tell_meddler": {
+      "name": "Settled Ground",
+      "description": "Only a spirit with the meddler habit: the ground near the player settles with the sound and dust of a block being set down, though none was. The journal notes it."
+    },
+    "restless:tell_thrower": {
+      "name": "Passing Stone",
+      "description": "Only a spirit with the thrower habit: a few flecks of stone and a throwing whoosh pass behind the player, with no hand to be seen. The journal notes it."
+    },
+    "restless:tell_stacker": {
+      "name": "Neat Pair",
+      "description": "Only a spirit with the stacker habit: two stone bricks stand one on the other a few blocks ahead for three seconds, shown to this player only. The journal notes it."
+    },
+    "restless:tell_knocker": {
+      "name": "Three Knocks",
+      "description": "Only a spirit with the knocker habit: three slow knocks on wood come from inside a wall near the player. The journal notes it."
+    },
+    "restless:tell_light_eater": {
+      "name": "Flame Swallowed",
+      "description": "Only a spirit with the light eater habit: a torch within 6 blocks goes out in a curl of smoke and is lit again after 1.5 seconds, shown to this player only. The journal notes it."
+    },
+    "restless:tell_shadow_caster": {
+      "name": "Smoke Figure",
+      "description": "Only a spirit with the shadow caster habit: a tall, thin figure of smoke stands a few blocks off and thins away, with a faint sigh. The journal notes it."
+    },
+    "restless:tell_blinder": {
+      "name": "Brief Dark",
+      "description": "Only a spirit with the blinder habit: the player's view goes dark for about a second and returns. The journal notes it."
+    },
+    "restless:tell_hearth_killer": {
+      "name": "Guttering Hearth",
+      "description": "Only a spirit with the hearth killer habit: a lit campfire or furnace within 6 blocks goes out in a puff of smoke and burns again after 2 seconds, shown to this player only. The journal notes it."
+    },
+    "restless:tell_corner_lurker": {
+      "name": "Two Dark Points",
+      "description": "Only a spirit with the corner lurker habit: two dark points, a hand apart, hang at head height some blocks away in the dark and fade. The journal notes it."
+    },
+    "restless:tell_vengeful": {
+      "name": "Red Tally",
+      "description": "Only a spirit with the vengeful habit: four red marks hang in the air a few blocks ahead of the player, with a low moan. The journal notes it."
+    },
+    "restless:tell_hunter": {
+      "name": "Heavy Tread",
+      "description": "Only a spirit with the hunter habit: three heavy footsteps pass behind the player from one side to the other, half a second apart. The journal notes it."
+    },
+    "restless:tell_scratcher": {
+      "name": "Claws on Nothing",
+      "description": "Only a spirit with the scratcher habit: three scrapes and sparks sound in the air beside the player, as of claws on a wall. The journal notes it."
+    },
+    "restless:tell_beast_caller": {
+      "name": "Far Call",
+      "description": "Only a spirit with the beast caller habit: a wolf's cry sounds from far off, with no wolf near. The journal notes it."
+    },
+    "restless:tell_drowner": {
+      "name": "Dry Bubbles",
+      "description": "Only a spirit with the drowner habit: bubbles rise round the player's feet on dry land, with a gurgle. The journal notes it."
+    },
+    "restless:tell_snarler": {
+      "name": "Snarl at the Ear",
+      "description": "Only a spirit with the snarler habit: a low snarl sounds right beside the player's ear. The journal notes it."
+    },
+    "restless:tell_whisperer": {
+      "name": "Whisper Behind",
+      "description": "Only a spirit with the whisperer habit: a whisper, too low to make out, sounds close behind the player. The journal notes it."
+    },
+    "restless:tell_liar": {
+      "name": "Yes and No",
+      "description": "Only a spirit with the liar habit: a villager's yes sounds behind the player, and a villager's no follows it after 0.6 seconds, with no villager near. The journal notes it."
+    },
+    "restless:tell_face_thief": {
+      "name": "Borrowed Face",
+      "description": "Only a spirit with the face thief habit: a small cloud of the player's own head hangs at face height a few blocks ahead and thins away. The journal notes it."
+    },
+    "restless:tell_illusionist": {
+      "name": "Passing Table",
+      "description": "Only a spirit with the illusionist habit: a crafting table stands a few blocks ahead for three seconds, shown to this player only. The journal notes it."
+    },
+    "restless:tell_false_friend": {
+      "name": "Strange Dog",
+      "description": "Only a spirit with the false friend habit: a dog stands a few blocks off and watches the player for four seconds, shown to this player only. The journal notes it."
+    },
+    "restless:tell_lure": {
+      "name": "Drifting Light",
+      "description": "Only a spirit with the lure habit: a soft light drifts away ahead of the player a little at a time, with a faint chime. The journal notes it."
     }
   }
 }

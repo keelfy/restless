@@ -23,6 +23,7 @@ import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.spirit.land.Graves;
 import dev.keelfy.restless.spirit.life.Births;
+import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.spirit.life.Power;
 import dev.keelfy.restless.state.HauntData;
 import dev.keelfy.restless.ward.Wards;
@@ -38,6 +39,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -55,6 +57,7 @@ public final class Director {
         }
         long now = server.overworld().getGameTime();
         HauntData data = HauntData.get(server);
+        Echoes.tick(data, now);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             Reactions.watch(player, now);
             Births.successor(player, data, now);
@@ -140,6 +143,7 @@ public final class Director {
 
     /** Rolls an event for the spirit on the player, and runs it unless a ward stops it. */
     private static Turn roll(ServerPlayer player, HauntData.Haunting haunting, Vec3 at, long now) {
+        ServerLevel level = player.level();
         Turn[] turn = {new Turn(Outcome.NOTHING, 0.0)};
         Said.during(
                 haunting.uuid(),
@@ -147,7 +151,7 @@ public final class Director {
                                 player,
                                 spirit(haunting),
                                 Traits.of(haunting.traits()),
-                                power(haunting, now),
+                                power(haunting, now, level),
                                 haunting.evolved(),
                                 null)
                         .ifPresent(event -> {
@@ -295,6 +299,7 @@ public final class Director {
     public static Optional<HauntEvent> act(
             ServerPlayer player, HauntData.Haunting haunting, @Nullable Vec3 at, @Nullable HauntTier tier) {
         long now = player.level().getServer().overworld().getGameTime();
+        ServerLevel level = player.level();
         HauntEvent[] acted = new HauntEvent[1];
         Said.during(
                 haunting.uuid(),
@@ -302,7 +307,7 @@ public final class Director {
                                 player,
                                 spirit(haunting),
                                 Traits.of(haunting.traits()),
-                                power(haunting, now),
+                                power(haunting, now, level),
                                 haunting.evolved(),
                                 tier)
                         .ifPresent(event -> {
@@ -440,6 +445,12 @@ public final class Director {
                 spirit(haunting).kind() == SpiritType.Kind.PERSONAL);
     }
 
+    /** As {@link #power(HauntData.Haunting, long)}, lifted on a full moon (see {@link Calendar}). */
+    public static double power(HauntData.Haunting haunting, long now, ServerLevel level) {
+        return Power.moonlit(
+                power(haunting, now), Calendar.today(level.getServer()).fullMoon());
+    }
+
     private static long cooldown(
             ServerLevel level,
             BlockPos at,
@@ -450,7 +461,7 @@ public final class Director {
         double quiet = Power.daylightFactor(level.isBrightOutside(), level.canSeeSky(at), !level.isThundering());
         Set<Trait.Condition> around = conditions(level, at);
         double activity = spirit(haunting).activity(around) * Traits.activity(Traits.of(haunting.traits()), around);
-        return Power.cooldownTicks(power(haunting, now), activity, random.nextDouble(), quiet, impactFactor);
+        return Power.cooldownTicks(power(haunting, now, level), activity, random.nextDouble(), quiet, impactFactor);
     }
 
     private static Set<Trait.Condition> conditions(ServerLevel level, BlockPos at) {
@@ -463,6 +474,16 @@ public final class Director {
         }
         if (level.getMaxLocalRawBrightness(at) < Config.section("director").integer("dark_light_level")) {
             now.add(Trait.Condition.DARK);
+        }
+        // Never load a chunk for this: a structure's anchor may lie in one that is not.
+        if (!level.isLoaded(at)) {
+            return now;
+        }
+        if (at.getY() < Config.section("director").integer("underground_below") && !level.canSeeSky(at)) {
+            now.add(Trait.Condition.UNDERGROUND);
+        }
+        if (level.getFluidState(at).is(FluidTags.WATER)) {
+            now.add(Trait.Condition.WATER);
         }
         return now;
     }
@@ -502,7 +523,7 @@ public final class Director {
      */
     private static double weight(
             HauntEvent event, boolean ready, SpiritType spirit, List<Trait> traits, double power, boolean evolved) {
-        return ready
+        return ready && (event.habit() == null || traits.stream().anyMatch(t -> t.id().equals(event.habit())))
                 ? Power.weight(event.tier(), event.tags(), event.baseWeight(), spirit, traits, power)
                         * Rarity.boost(event.id().toString())
                         * event.signature(spirit, evolved)
@@ -532,8 +553,11 @@ public final class Director {
         List<Double> freshWeights = new ArrayList<>();
         List<HauntEvent> stale = new ArrayList<>();
         List<Double> staleWeights = new ArrayList<>();
+        // The day of the dead is quiet; only a ritual that names a tier overrides it.
+        boolean quiet =
+                tier == null && Calendar.today(player.level().getServer()).dayOfTheDead();
         for (HauntEvent event : HauntEvents.all()) {
-            if (tier != null && event.tier() != tier) {
+            if (tier != null && event.tier() != tier || quiet && event.tier() == HauntTier.HARMFUL) {
                 continue;
             }
             if (!open(event, player, spirit, power, evolved)) {

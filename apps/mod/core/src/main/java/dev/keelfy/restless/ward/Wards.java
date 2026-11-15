@@ -7,6 +7,7 @@ import dev.keelfy.restless.content.block.WardBlock;
 import dev.keelfy.restless.content.block.WornWard;
 import dev.keelfy.restless.content.item.charm.Charms;
 import dev.keelfy.restless.divine.Divination;
+import dev.keelfy.restless.haunt.Calendar;
 import dev.keelfy.restless.haunt.Scan;
 import dev.keelfy.restless.haunt.event.EventTag;
 import dev.keelfy.restless.haunt.event.HauntEvent;
@@ -42,7 +43,9 @@ public final class Wards {
         ServerLevel level = player.level();
         List<BlockPos> ring = ring(level, player.blockPosition());
         if (!ring.isEmpty()) {
-            SaltLineBlock.wear(level, ring);
+            for (int i = 0; i < wearSteps(level); i++) {
+                SaltLineBlock.wear(level, ring);
+            }
             return true;
         }
         if (Charms.spared(player, event) || Weakness.stops(player, event)) {
@@ -103,10 +106,19 @@ public final class Wards {
         };
     }
 
+    /** What one stopped event costs a ward: a blood night wears it {@code calendar.blood_wear_factor} times as fast. */
+    private static int wearSteps(ServerLevel level) {
+        return Calendar.today(level.getServer()).bloodNight()
+                ? Config.section("calendar").integer("blood_wear_factor")
+                : 1;
+    }
+
     private static void wear(ServerLevel level, BlockPos pos) {
-        BlockState state = level.getBlockState(pos);
-        if (state.getBlock() instanceof WornWard ward) {
-            ward.spend(level, pos, state);
+        for (int i = 0; i < wearSteps(level); i++) {
+            BlockState state = level.getBlockState(pos);
+            if (state.getBlock() instanceof WornWard ward) {
+                ward.spend(level, pos, state);
+            }
         }
     }
 

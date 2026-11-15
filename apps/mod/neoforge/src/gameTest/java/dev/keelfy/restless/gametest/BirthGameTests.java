@@ -11,6 +11,7 @@ import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.spirit.life.BirthRules.Verdict;
 import dev.keelfy.restless.spirit.life.Births;
+import dev.keelfy.restless.spirit.life.Haunted;
 import dev.keelfy.restless.state.HauntData;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -274,6 +277,54 @@ final class BirthGameTests {
             player.discard();
             helper.succeed();
         });
+        tests.put("haunted_thing_binds_once", helper -> {
+            var player = HauntEventGameTests.connected(helper);
+            var data = HauntData.get(helper.getLevel().getServer());
+            data.put(player.getUUID(), List.of());
+            player.getInventory().add(Haunted.mark(new ItemStack(Items.CLOCK)));
+            HauntEventGameTests.check(helper, data.get(player.getUUID()).isEmpty(), "Nothing binds before the check");
+            Haunted.check(player);
+            HauntEventGameTests.check(
+                    helper, data.get(player.getUUID()).size() == 1, "Holding a haunted thing must bind a spirit");
+            HauntEventGameTests.check(helper, !holdsMark(player), "The mark must be gone once it has bound");
+            Haunted.check(player);
+            HauntEventGameTests.check(
+                    helper, data.get(player.getUUID()).size() == 1, "A haunted thing must bind only once");
+            player.discard();
+            helper.succeed();
+        });
+
+        tests.put("haunted_thing_capped", helper -> {
+            var player = HauntEventGameTests.connected(helper);
+            var server = helper.getLevel().getServer();
+            var data = HauntData.get(server);
+            long now = server.overworld().getGameTime();
+            data.put(player.getUUID(), List.of());
+            var types = Spirits.personal();
+            int max = Config.section("births").integer("max_personal");
+            for (int i = 0; i < max; i++) {
+                Director.add(player, data, types.get(i), now - Ticks.DAY * 100L);
+            }
+            int before = data.get(player.getUUID()).size();
+            player.getInventory().add(Haunted.mark(new ItemStack(Items.BELL)));
+            Haunted.check(player);
+            HauntEventGameTests.check(
+                    helper,
+                    before == max && data.get(player.getUUID()).size() == max,
+                    "A player at the cap must get no new spirit");
+            HauntEventGameTests.check(helper, !holdsMark(player), "The mark must go even when nothing binds");
+            player.discard();
+            helper.succeed();
+        });
+    }
+
+    private static boolean holdsMark(net.minecraft.server.level.ServerPlayer player) {
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            if (Haunted.marked(player.getInventory().getItem(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** A structure start of the named vanilla kind with one piece at {@code pos}. */

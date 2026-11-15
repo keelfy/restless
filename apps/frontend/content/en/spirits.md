@@ -172,6 +172,8 @@ Territorial prankster: changes blocks and items, shows things.
 
 Each type shows up in its own way, and the journal's bestiary page says how once you have a photograph of one. A banshee comes when a villager or a pet dies before you, a lost one when you die far from home or go two days awake, a revenant after a slaughter or the killing of your own pet. Territorial spirits are born with structures.
 
+An old thing from a ruin may bring something home. Now and then a structure chest holds an ordinary-looking item (a clock, spyglass, bell, lantern, amethyst shard or gold nugget) that carries a personal spirit. Nothing marks it. The first time you hold it, a random personal type binds to you, as after a deed: the usual cooldown and the limit of three personal spirits apply, and if they refuse, nothing is born and the item is plain from then on.
+
 An **effigy** calls any type on purpose: stuff it with one essence of that type and light it. See [Essences](/en/items/essences#the-effigy).
 
 ## Rewards

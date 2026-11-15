@@ -8,8 +8,11 @@
     "habits_max": 4,
     "conditions_min": 1,
     "conditions_max": 2,
+    "desires": 1,
     "leanings": 1,
+    "veil_chance": 0.25,
     "dark_light_level": 8,
+    "underground_below": 40,
     "react_chance": 0.25,
     "sneak_delay_ticks": 10,
     "rarity_memory": 0.05,
@@ -43,6 +46,7 @@
     "contract": 0.3,
     "devil": 0.1,
     "break_anchor": 0.3,
+    "harsh_above": 0.7,
     "anchor_reach": 3,
     "graves": [
       "minecraft:skeleton_skull",
@@ -59,6 +63,9 @@
     "start_anger": 0.5,
     "successor_min_days": 2,
     "successor_max_days": 4,
+    "echo_days": 7,
+    "echo_grace_ticks": 2400,
+    "haunted_check_ticks": 20,
     "grace_ticks": 2400,
     "structure_spacing": 96,
     "witness_radius": 16,
@@ -216,6 +223,15 @@
     "iron_radius": 6,
     "glow_radius": 4,
     "pour_pitch": 70
+  },
+  "leanings": {
+    "fear_radius": 4,
+    "desire_radius": 3,
+    "desire_period_ticks": 20,
+    "desire_cooldown_ticks": 6000,
+    "desire_calm": 0.25,
+    "hate_cooldown_ticks": 1200,
+    "hate_anger": 0.1
   },
   "bell": {
     "radius": 24,
@@ -428,6 +444,11 @@
       "volume": 0.8,
       "pitch": 1.0
     },
+    "fury_bed_volume": 0.7,
+    "wrong_sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
     "snuff_chance": 0.25,
     "fury_chance": 0.5,
     "nature_chance": 0.35,
@@ -582,7 +603,11 @@
     },
     "reveal_below": 0.35,
     "overlay_below": 0.6,
-    "overlay_peak": 0.9
+    "overlay_peak": 0.9,
+    "bed_volume": 0.6,
+    "heartbeat_below": 0.2,
+    "heartbeat_gap_ticks": 30,
+    "heartbeat_volume": 0.8
   },
   "corruption": {
     "check_ticks": 100,
@@ -613,7 +638,11 @@
     "days": 10,
     "power_floor": 0.7,
     "extra_waves": 4,
-    "signature_boost": 3.0
+    "signature_boost": 3.0,
+    "sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    }
   },
   "candle": {
     "step_ticks": 4,
@@ -623,6 +652,13 @@
   "body": {
     "step_ticks": 4,
     "radius": 32
+  },
+  "calendar": {
+    "moon_power": 0.2,
+    "blood_night_days": 7,
+    "blood_wear_factor": 2,
+    "season_days": 28,
+    "dusk_tick": 13000
   },
   "restore": {
     "retry_ticks": 20
@@ -685,6 +721,14 @@
     "cradle_wake_delay_ticks": 100
   },
   "requiem": {
+    "begin_sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
+    "rest_sound": {
+      "volume": 1.0,
+      "pitch": 1.0
+    },
     "bell_ticks": 100,
     "bell_spirits": 3,
     "poem_line_ticks": 30,

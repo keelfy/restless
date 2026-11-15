@@ -625,6 +625,26 @@
         "volume": 0.8,
         "pitch": 1.0
       }
+    },
+    "minecraft:dragged_chains": {
+      "weight": 0.25,
+      "impact": 0.15,
+      "distance": 10.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      },
+      "sound_id": "restless:haunt.chain_rattle"
+    },
+    "minecraft:creature_rattle": {
+      "weight": 0.25,
+      "impact": 0.2,
+      "distance": 8.0,
+      "sound": {
+        "volume": 1.0,
+        "pitch": 1.0
+      },
+      "sound_id": "restless:haunt.creature_rattle"
     }
   }
 }

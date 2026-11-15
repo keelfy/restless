@@ -510,7 +510,11 @@ final class Sounds {
                 // 341: chains rattle round the player
                 orbit("chain_rattle", SoundEvents.CHAIN_STEP),
                 // 342: the next block the player breaks sounds a second time, from a little way off
-                SimpleEvent.light("phantom_break", EventTag.SOUND, Breaks::canMark, Breaks::mark));
+                SimpleEvent.light("phantom_break", EventTag.SOUND, Breaks::canMark, Breaks::mark),
+                // chains dragged somewhere out of sight
+                configured("dragged_chains"),
+                // a dry rattling call from no creature
+                configured("creature_rattle"));
     }
 
     /** On the nearest wooden door if there is one, otherwise out of thin air nearby. */
@@ -853,6 +857,18 @@ final class Sounds {
     /** One of the sounds, at a point {@code distance} blocks away. */
     private static HauntEvent at(String id, SoundEvent... sounds) {
         return atWhen(id, SimpleEvent.ALWAYS, sounds);
+    }
+
+    /** The config's {@code sound_id}, at a point {@code distance} blocks away. */
+    private static HauntEvent configured(String id) {
+        return sound(id, player -> {
+            Config.Section config = Config.event(id);
+            Nearby.sound(
+                    player,
+                    HauntSounds.byId(config.text("sound_id")),
+                    Nearby.source(player, config.num("distance")),
+                    config.tone("sound"));
+        });
     }
 
     private static HauntEvent atWhen(String id, Predicate<ServerPlayer> when, SoundEvent... sounds) {

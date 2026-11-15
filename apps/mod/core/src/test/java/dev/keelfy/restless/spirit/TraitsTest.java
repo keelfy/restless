@@ -33,8 +33,11 @@ class TraitsTest {
             long conditions = count(Traits.of(traits), Trait.Kind.CONDITION);
             assertTrue(habits >= 1 && habits <= 4, traits.toString());
             assertTrue(conditions >= 1 && conditions <= 2, traits.toString());
-            // the leaning axis is still empty: the roll skips it
-            assertEquals(0, count(Traits.of(traits), Trait.Kind.LEANING));
+            // one desire, then one fear or hate
+            assertEquals(2, count(Traits.of(traits), Trait.Kind.LEANING));
+            assertTrue(Traits.desire(Traits.of(traits)).isPresent(), traits.toString());
+            assertTrue(Traits.fear(Traits.of(traits)).isPresent()
+                    ^ Traits.hate(Traits.of(traits)).isPresent());
         }
     }
 
@@ -195,6 +198,90 @@ class TraitsTest {
 
     private static long count(List<Trait> traits, Trait.Kind kind) {
         return traits.stream().filter(t -> t.kind() == kind).count();
+    }
+
+    @Test
+    void theCatalogHasSixHabitsPerNatureAndTenConditions() {
+        for (Focus focus : Focus.values()) {
+            assertTrue(
+                    Traits.all().stream()
+                                    .filter(t -> t.kind() == Trait.Kind.HABIT && t.weakness() == focus)
+                                    .count()
+                            >= 6,
+                    focus.name());
+        }
+        assertTrue(
+                Traits.all().stream().filter(t -> t.kind() == Trait.Kind.HABIT).count() >= 24);
+        assertTrue(Traits.all().stream()
+                        .filter(t -> t.kind() == Trait.Kind.CONDITION)
+                        .count()
+                >= 10);
+    }
+
+    @Test
+    void everyLeaningIsAFearADesireOrAHateAboutSomething() {
+        Set<Trait.Lean> leans = EnumSet.noneOf(Trait.Lean.class);
+        for (Trait trait : Traits.all()) {
+            assertEquals(trait.kind() == Trait.Kind.LEANING, trait.leans() != null, trait.id());
+            assertEquals(trait.leans() != null, !trait.things().isEmpty(), trait.id());
+            if (trait.leans() != null) {
+                leans.add(trait.leans());
+                assertFalse(trait.clues().isEmpty(), trait.id());
+            }
+        }
+        assertEquals(EnumSet.allOf(Trait.Lean.class), leans);
+        assertTrue(Traits.all().stream()
+                        .filter(t -> t.kind() == Trait.Kind.LEANING)
+                        .count()
+                >= 10);
+    }
+
+    @Test
+    void leaningsDoNotChangeTheHabitsOrConditionsASeedRolls() {
+        for (long seed : LongStream.range(0, 100).toArray()) {
+            List<Trait> rolled = Traits.of(Traits.roll(seed));
+            List<Trait> early = rolled.stream()
+                    .filter(t -> t.kind() == Trait.Kind.HABIT || t.kind() == Trait.Kind.CONDITION)
+                    .toList();
+            assertEquals(early, rolled.subList(0, early.size()));
+        }
+    }
+
+    @Test
+    void aSpiritHasAtMostOneVeilAndEveryToolButTheBoardHasOne() {
+        Set<Clue> foiled = EnumSet.noneOf(Clue.class);
+        for (Trait trait : Traits.all()) {
+            assertEquals(trait.kind() == Trait.Kind.VEIL, trait.foils() != null, trait.id());
+            if (trait.foils() != null) {
+                foiled.add(trait.foils());
+            }
+        }
+        assertEquals(EnumSet.of(Clue.SILHOUETTE, Clue.FOOTPRINTS, Clue.VOICE), foiled);
+        int veiled = 0;
+        for (long seed : LongStream.range(0, 400).toArray()) {
+            long veils = count(Traits.of(Traits.roll(seed)), Trait.Kind.VEIL);
+            assertTrue(veils <= 1);
+            veiled += (int) veils;
+        }
+        assertTrue(veiled > 40 && veiled < 160, "veiled " + veiled);
+    }
+
+    @Test
+    void oneOfTwoOrMoreHabitsIsHiddenAndEvolvingAddsOneOfTheNature() {
+        for (long seed : LongStream.range(0, 200).toArray()) {
+            List<Trait> rolled = Traits.of(Traits.roll(seed));
+            Trait hidden = Traits.hidden(seed, rolled);
+            assertNotNull(hidden);
+            assertEquals(Trait.Kind.HABIT, hidden.kind());
+            assertEquals(hidden, Traits.hidden(seed, rolled));
+            String grown = Traits.grown(seed, rolled);
+            assertNotNull(grown);
+            assertFalse(rolled.stream().anyMatch(t -> t.id().equals(grown)));
+            List<Trait> after = new ArrayList<>(rolled);
+            after.addAll(Traits.of(List.of(grown)));
+            assertEquals(Traits.weakness(rolled), Traits.weakness(after));
+        }
+        assertEquals(null, Traits.hidden(1, Traits.of(List.of("vengeful", "grudge"))));
     }
 
     @Test

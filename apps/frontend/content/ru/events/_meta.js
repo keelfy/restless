@@ -12,4 +12,5 @@ export default {
   presence: 'Присутствие',
   scenarios: 'Сценарии',
   signatures: 'Знаковые',
+  tells: 'Приметы',
 }

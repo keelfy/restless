@@ -23,6 +23,10 @@ import org.jspecify.annotations.Nullable;
  * @param weakness the focus this habit votes for; the spirit is weak to the focus most of its habits name. A condition
  *     or leaning carries one only if it was a voting trait before the axes existed: it then breaks ties and decides for
  *     a saved spirit with no habit, never for a spirit rolled now. {@code null} for the rest
+ * @param leans what a leaning is: a fear, a desire or a hate; {@code null} for habits and conditions
+ * @param things registry ids a leaning is about: the blocks or entities a fear shuns, the items a desire takes, the
+ *     items or blocks whose use a hate takes offence at; see {@link dev.keelfy.restless.spirit.life.Leanings}
+ * @param foils the clue a veil hides: the tool that reads it finds nothing of this spirit; {@code null} for the rest
  */
 public record Trait(
         String id,
@@ -36,7 +40,42 @@ public record Trait(
         List<String> words,
         List<String> planchette,
         boolean lies,
-        @Nullable Focus weakness) {
+        @Nullable Focus weakness,
+        @Nullable Lean leans,
+        List<String> things,
+        @Nullable Clue foils) {
+    /** A habit or condition: no leaning, nothing it is about. */
+    public Trait(
+            String id,
+            Kind kind,
+            Map<EventTag, Double> affinity,
+            double activity,
+            Condition when,
+            double noise,
+            List<Trigger> reacts,
+            Set<Clue> clues,
+            List<String> words,
+            List<String> planchette,
+            boolean lies,
+            @Nullable Focus weakness) {
+        this(
+                id,
+                kind,
+                affinity,
+                activity,
+                when,
+                noise,
+                reacts,
+                clues,
+                words,
+                planchette,
+                lies,
+                weakness,
+                null,
+                List.of(),
+                null);
+    }
+
     /** The axis of a trait. */
     public enum Kind {
         /** What the spirit does; only habits name the nature. */
@@ -44,7 +83,19 @@ public record Trait(
         /** When the spirit acts, or what it reacts to. */
         CONDITION,
         /** What the spirit fears or wants. */
-        LEANING
+        LEANING,
+        /** A tool the spirit cannot be read by; a spirit has at most one. */
+        VEIL
+    }
+
+    /** What a leaning is. */
+    public enum Lean {
+        /** The spirit's events do not run on a player beside the feared thing. */
+        FEAR,
+        /** Left out near its player, the wanted thing is taken and the spirit calms down. */
+        DESIRE,
+        /** Using the hated thing angers the spirit. */
+        HATE
     }
 
     /** What the spirit's surroundings must be like for its activity modifier to apply. */
@@ -52,7 +103,11 @@ public record Trait(
         ANY,
         RAIN,
         NIGHT,
-        DARK
+        DARK,
+        /** Below {@code director.underground_below} with no sky overhead. */
+        UNDERGROUND,
+        /** In water. */
+        WATER
     }
 
     /** A player action a spirit can react to. */

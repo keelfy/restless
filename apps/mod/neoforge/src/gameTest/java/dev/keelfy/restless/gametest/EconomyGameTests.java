@@ -16,16 +16,20 @@ import java.util.UUID;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.attribute.AmbientSounds;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.cow.Cow;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.LevelData;
@@ -46,6 +50,22 @@ final class EconomyGameTests {
             check(helper, Ritual.essences(false, 63, 64) == 1, "a small blight earns nothing");
             check(helper, Ritual.essences(false, 64, 64) == 2, "a blight of 64 spots leaves one more");
             check(helper, Ritual.essences(true, 200, 64) == 3, "both rewards add up");
+            helper.succeed();
+        });
+        tests.put("economy_blight_bed", helper -> {
+            Biome blighted = helper.getLevel()
+                    .registryAccess()
+                    .lookupOrThrow(Registries.BIOME)
+                    .getValueOrThrow(Corruption.BLIGHTED);
+            String loop = blighted.getAttributes()
+                    .applyModifier(EnvironmentAttributes.AMBIENT_SOUNDS, AmbientSounds.EMPTY)
+                    .loop()
+                    .map(sound -> sound.value().location().toString())
+                    .orElse("none");
+            check(
+                    helper,
+                    loop.equals("restless:haunt.blight_bed"),
+                    "the blighted biome must loop its bed, got " + loop);
             helper.succeed();
         });
         tests.put("economy_witness_death_births_banshee", helper -> {

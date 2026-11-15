@@ -3,6 +3,7 @@ package dev.keelfy.restless.divine;
 import dev.keelfy.restless.config.Config;
 import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.item.charm.Advanced;
+import dev.keelfy.restless.haunt.Calendar;
 import dev.keelfy.restless.haunt.Scan;
 import dev.keelfy.restless.haunt.Scheduler;
 import dev.keelfy.restless.journal.Journal;
@@ -70,18 +71,50 @@ public final class Divination {
         Random random = new Random(player.getRandom().nextLong());
         Collections.shuffle(spirits, random);
         List<Trait> catalog = Traits.all();
+        HauntData.Haunting veiled = null;
         for (Sense.Spirit spirit : spirits) {
-            List<Trait> owned = Traits.of(spirit.haunting().traits());
+            List<Trait> owned = known(player, spirit.haunting());
+            if (Clues.foiled(owned, clue)) {
+                veiled = spirit.haunting();
+                continue;
+            }
             boolean honest = Advanced.truthful(player, clue) && owned.stream().anyMatch(Trait::lies);
-            Optional<Trait> trait = Clues.reveal(owned, catalog, clue, random, honest);
+            // On the day of the dead no tool lies, and the eye keeps its rest.
+            boolean quiet = Calendar.today(player.level().getServer()).dayOfTheDead();
+            Optional<Trait> trait = Clues.reveal(owned, catalog, clue, random, honest || quiet);
             if (trait.isPresent()) {
-                if (honest) {
+                if (honest && !quiet) {
                     Advanced.truthSpent(player);
                 }
                 return Optional.of(new Reading(spirit, trait.get(), random));
             }
         }
+        if (veiled != null) {
+            silent(player, veiled, clue);
+        }
         return Optional.empty();
+    }
+
+    /**
+     * The traits a tool may name: all but the hidden habit ({@link Traits#hidden}), which shows only to a shaken player
+     * or once the spirit has evolved.
+     */
+    public static List<Trait> known(ServerPlayer player, HauntData.Haunting spirit) {
+        List<Trait> owned = Traits.of(spirit.traits());
+        Trait hidden = Traits.hidden(spirit.seed(), owned);
+        if (hidden == null || spirit.evolved() || Sanity.shaken(player)) {
+            return owned;
+        }
+        return owned.stream().filter(t -> t != hidden).toList();
+    }
+
+    /** Notes that the tool behind {@code clue} found nothing of a spirit that a veil hides from it. */
+    public static void silent(ServerPlayer player, HauntData.Haunting spirit, Clue clue) {
+        Journal.note(
+                player,
+                Notebook.Kind.SILENCE,
+                spirit,
+                Component.translatable("journal.restless.silence." + clue.name().toLowerCase(java.util.Locale.ROOT)));
     }
 
     /**

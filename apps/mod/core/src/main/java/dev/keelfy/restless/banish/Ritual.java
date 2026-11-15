@@ -5,6 +5,7 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Altar;
 import dev.keelfy.restless.divine.Sense;
 import dev.keelfy.restless.haunt.Director;
+import dev.keelfy.restless.haunt.HauntSounds;
 import dev.keelfy.restless.haunt.Location;
 import dev.keelfy.restless.haunt.Scan;
 import dev.keelfy.restless.haunt.Scheduler;
@@ -17,6 +18,7 @@ import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.spirit.land.Corruption;
 import dev.keelfy.restless.spirit.land.Graves;
+import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.spirit.life.Evolution;
 import dev.keelfy.restless.state.HauntData;
 import dev.keelfy.restless.ward.Wards;
@@ -193,6 +195,7 @@ public final class Ritual {
                 + extra;
         data.change(spirit.haunting().uuid(), h -> null);
         Location.forget(spirit.haunting().uuid());
+        Echoes.banished(player, spirit.haunting(), altar);
         Supplier<Item> essence = Content.ESSENCE.get(spirit.haunting().spirit());
         if (essence != null) {
             level.addFreshEntity(new ItemEntity(
@@ -272,7 +275,9 @@ public final class Ritual {
                         h -> h.angered(1.0)
                                 .wary(now + config.integer("wary_ticks"))
                                 .aged(config.integer("wrong_age_ticks")));
-        level.playSound(null, altar, SoundEvents.WITHER_SPAWN, SoundSource.HOSTILE, 0.6f, 1.4f);
+        Config.Tone refused = config.tone("wrong_sound");
+        level.playSound(
+                null, altar, HauntSounds.OFFERING_REFUSED, SoundSource.HOSTILE, refused.volume(), refused.pitch());
         player.sendSystemMessage(Component.translatable("message.restless.wrong_focus"), true);
         Director.act(player, angered, spirit.at(), HauntTier.HARMFUL);
     }

@@ -16,6 +16,7 @@ import dev.keelfy.restless.divine.Body;
 import dev.keelfy.restless.divine.Candle;
 import dev.keelfy.restless.divine.Divination;
 import dev.keelfy.restless.divine.Heard;
+import dev.keelfy.restless.haunt.Calendar;
 import dev.keelfy.restless.haunt.Director;
 import dev.keelfy.restless.haunt.Earshot;
 import dev.keelfy.restless.haunt.Reactions;
@@ -42,6 +43,8 @@ import dev.keelfy.restless.spirit.life.Anger;
 import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.spirit.life.Deeds;
 import dev.keelfy.restless.spirit.life.Evolution;
+import dev.keelfy.restless.spirit.life.Haunted;
+import dev.keelfy.restless.spirit.life.Leanings;
 import dev.keelfy.restless.state.Session;
 import dev.keelfy.restless.ward.Blessing;
 import dev.keelfy.restless.ward.Wards;
@@ -102,16 +105,19 @@ public final class Restless {
         Director.tick(server);
         Candle.tick(server);
         Body.tick(server);
+        Calendar.tick(server);
         Graves.tick(server);
         Sanity.tick(server);
         Corruption.tick(server);
         Evolution.tick(server);
         Charms.tick(server);
         Deeds.tick(server);
+        Haunted.tick(server);
         Trail.tick(server);
         Consumables.tick(server);
         Weakness.tick(server);
         Blessing.tick(server);
+        Leanings.tick(server);
     }
 
     /**
@@ -273,6 +279,7 @@ public final class Restless {
         Level level = player.level();
         if (player instanceof ServerPlayer server && hand == InteractionHand.MAIN_HAND) {
             Reactions.used(server, level.getBlockState(pos));
+            Leanings.used(server, level.getBlockState(pos), server.getItemInHand(hand));
             Charms.used(server, pos);
             Scares.used(server);
             // Cake is eaten at the block, only by a hungry player whose hand does not take the click first.
