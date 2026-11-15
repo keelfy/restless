@@ -11,10 +11,10 @@ A spirit you **sense** is one of your own personal spirits, or a territorial spi
 | Tool | Does |
 | --- | --- |
 | [Hallowed Wax](#hallowed-wax) | the seal in every charm and in the mid-tier tools |
-| [Ash](#ash) | shows the build of a spirit's type as a print; never lies |
+| [Ash](#ash) | shows the build of a spirit's type as a print, and sometimes when it acts; never lies |
 | [Camera Obscura](#camera-obscura) | photographs a spirit: its type |
-| [Spirit Box](#spirit-box) | answers aloud what you ask around a clue word; may lie |
-| [Ouija Board](#ouija-board) | spells out a trait; may lie |
+| [Spirit Box](#spirit-box) | answers aloud around a word of what the spirit wants or fears, or of how it died; may lie |
+| [Ouija Board](#ouija-board) | spells out a habit; may lie |
 | [Spirit Candle](#spirit-candle) | its flame leans to the spirit that acts next |
 | [Journal](#journal) | writes down everything above |
 | [Altar](#altar) | banishes a spirit |
@@ -42,7 +42,7 @@ Honeycomb + salt + ash makes **2**, shapeless. Honeycomb comes from bees, so wax
 
 Cook 1 charcoal on a campfire: **4**. Place it like salt. Every 30 seconds each ash block asks the spirits within 16 blocks for a clue (your own, and any territorial one whose reach covers the spot). A spirit that answers leaves a trail of prints across the ash, one every 8 ticks, and the print goes into the journal: a personal spirit's only into the journal of the player it haunts, a territorial one's into that of everyone within 16 blocks. A print fades after 2 minutes. Ash with a print within 1.5 blocks stays quiet.
 
-The print is the build of the spirit's **type**, the same build its photograph shows, and says nothing about its nature: two spirits of one type leave the same print, whatever their traits. Ash never lies about the kind of spirit that walked:
+The print is the build of the spirit's **type**, the same build its photograph shows, and says nothing about its nature: two spirits of one type leave the same print, whatever their traits. Ash never lies about the kind of spirit that walked, nor about a condition it shows:
 
 | Print | Types |
 | --- | --- |
@@ -52,6 +52,8 @@ The print is the build of the spirit's **type**, the same build its photograph s
 | a drag mark | Shade, Phantom, Wraith, Banshee |
 
 A spirit with the Rain Walker trait leaves damp prints, drawn darker. Each print is noted in the [journal](#journal).
+
+Ash reads **conditions**. When the spirit has any, the ash may also show one of them beside the print, and the journal writes it after the print: "a bare foot; the ash beside it showed that it walks in the rain". The conditions and what the ash says of them are listed in [Reading the Clues](#reading-the-clues).
 
 ## Camera Obscura
 
@@ -82,9 +84,9 @@ C A C
 
 Place it: it faces you. It listens for a chat line, or a phrase said over Plasmo Voice if that mod is present, from a player within **6 blocks** of it.
 
-- **2 seconds** later it answers in chat, in your language, with one word of a trait of a spirit you sense, e.g. `<Spirit Box> dark`. With no spirit to sense it answers `...static...`.
+- **2 seconds** later it answers in chat, in your language, with one word of what a spirit you sense wants, fears or hates (a leaning), e.g. `<Spirit Box> bread`. About 4 times in 10 it answers a word of how the spirit died instead (see the table below), and a spirit with no leaning, such as one born before leanings existed, answers only with death words. With no spirit to sense it answers `...static...`.
 - **It speaks.** Only you hear the answer, from the box, one word after another in a whisper through a broken radio (English, or Russian if your game is in Russian), with static between. The chat line is its subtitle.
-- **It hears what you ask.** Up to 3 broken words come back around the trait word, e.g. `<Spirit Box> near... frost... frost` to "where are you?". The questions it knows, in English and Russian:
+- **It hears what you ask.** Up to 3 broken words come back around the clue word, e.g. `<Spirit Box> near... fire... fire` to "where are you?". The questions it knows, in English and Russian:
 
   | Ask | E.g. | Answers |
   |---|---|---|
@@ -96,10 +98,27 @@ Place it: it faces you. It listens for a chat line, or a phrase said over Plasmo
   | Go away | "leave us", "go away" | never, stay, not yet, ours |
   | Anyone there | "hello?", "anyone here?" | always, watching, with you, here |
 
-  An answer comes 6 times in 10. Sometimes it repeats the trait word, hisses `ksshh`, or echoes back a word of yours, cut or stuttered. A word you said over voice chat comes back in your own voice, slowed and distorted. **Only the trait word is a clue**, and only it goes into the journal; the answers never use a trait word.
-- **Voice:** over Plasmo Voice the server makes out your words with offline speech recognition (Vosk, English or Russian by your game language). The first phrase near a box makes the server download it once: about 25 MB plus 45 MB per language, into `restless/voice` in the game folder. Until then, and on machines Vosk does not run on (it runs on Linux x64, Windows x64 and macOS), the box hears that you spoke but not the words, and answers with the trait word alone.
+  An answer comes 6 times in 10. Sometimes it repeats the clue word, hisses `ksshh`, or echoes back a word of yours, cut or stuttered. A word you said over voice chat comes back in your own voice, slowed and distorted. **Only the clue word is a clue**, and only it goes into the journal; the answers never use a clue word.
+- **Voice:** over Plasmo Voice the server makes out your words with offline speech recognition (Vosk, English or Russian by your game language). The first phrase near a box makes the server download it once: about 25 MB plus 45 MB per language, into `restless/voice` in the game folder. Until then, and on machines Vosk does not run on (it runs on Linux x64, Windows x64 and macOS), the box hears that you spoke but not the words, and answers with the clue word alone.
 - **Shaken:** below 0.35 sanity (0 to 1) it says more, 2 seconds after the word: where the spirit's bones lie, rounded to 10 blocks. The grave still has to be looked for.
-- **It may lie.** A spirit with the Liar trait gives a word of a trait it does not have half of the time. The journal marks every spirit box note "may lie", because you cannot know ahead of time whether the spirit is a liar. For what a word means, see [Reading the Clues](#reading-the-clues).
+- **It may lie.** A spirit with the Liar trait gives a word of a wish or fear it does not have half of the time. A word of how the spirit died is always true, even from a liar. The journal marks every spirit box note "may lie", because you cannot know ahead of time whether the spirit is a liar. For what a word means, see [Reading the Clues](#reading-the-clues).
+
+**How it died.** Every spirit has a cause of death in its story. When the box speaks of it, it says one of two words for that cause:
+
+| Cause | Words |
+| --- | --- |
+| Fell into lava | `burn`, `down` |
+| Starved in a deep mine | `hungry`, `deep` |
+| Was blown up by a creeper | `loud`, `hurt` |
+| Drowned in a flooded cave | `drown`, `water` |
+| Was shot by a skeleton | `hurt`, `run` |
+| Fell from a high place | `down`, `die` |
+| Burned down with the house | `fire`, `burn` |
+| Was lost in the Nether | `lost`, `fire` |
+| Suffocated in a collapsed tunnel | `breathe`, `stone` |
+| Was slain by a zombie horde | `teeth`, `run` |
+| Never found the way back to bed | `bed`, `lost` |
+| Was pushed off by a friend | `friend`, `trust` |
 
 ## Ouija Board
 
@@ -110,36 +129,58 @@ D B D
 P P P
 ```
 
-Place it flat on the floor. Use it: after 1 second the planchette spells a phrase, one letter every 0.3 seconds on the action bar. Each trait has five phrases: a single word ("SHUT IT"), a half-sentence ("YOUR SLEEP IS MINE") or a hint ("DO NOT TURN AROUND"), and none of them says the trait outright. The spirit is not always listening: 30% of tries the board stays still, and after every try it trembles for 30 seconds and does not answer, so spamming gets nothing. One phrase rarely settles a trait; use the board several times. It may lie: a spirit with the Liar trait names a trait it does not have half of the time, and the note is marked "may lie", as is every board note. For what a line means, see [Reading the Clues](#reading-the-clues). With no spirit to sense, or when the spirit stays silent: "The planchette does not move." During the pause: "The planchette is still trembling."
+Place it flat on the floor. Use it: after 1 second the planchette spells a phrase, one letter every 0.3 seconds on the action bar. Each habit has five phrases: a single word ("SHUT IT"), a half-sentence ("YOUR SLEEP IS MINE") or a hint ("DO NOT TURN AROUND"), and none of them says the trait outright. The spirit is not always listening: 30% of tries the board stays still, and after every try it trembles for 30 seconds and does not answer, so spamming gets nothing. The board spells only habits, never a wish, a fear or a condition. One phrase rarely settles a habit; use the board several times. It may lie: a spirit with the Liar trait names a habit it does not have half of the time, and the note is marked "may lie", as is every board note. For what a line means, see [Reading the Clues](#reading-the-clues). With no spirit to sense, or when the spirit stays silent: "The planchette does not move." During the pause: "The planchette is still trembling."
 
 ## Reading the Clues
 
-Every ouija and spirit box clue belongs to one trait. Traits are of two kinds. A **habit** is what the spirit does, and it has a nature. A **condition** is when the spirit acts or what it reacts to, and it says nothing about the nature. A board phrase is a riddle; the table gives what each can mean. Objects: it touches things and slams doors. Darkness: it feeds on light and chills the air. Malice: it takes revenge. Deceit: it whispers and lies. Rain, night, dark, noise, chests, sleep, the deep and grudges point to no nature. The full list:
+Every clue belongs to one trait, and each tool reads only one kind. Traits are of three kinds. A **habit** is what the spirit does, and it has a nature; the ouija board spells habits. A **condition** is when the spirit acts or what it reacts to, and it says nothing about the nature; the ash shows conditions. A **leaning** is what the spirit wants, fears or hates, and it says nothing about the nature either; the spirit box speaks leanings (and how the spirit died). The camera shows only the type. A board phrase is a riddle; the first table gives what each can mean. Objects: it touches things and slams doors. Darkness: it feeds on light and chills the air. Malice: it takes revenge. Deceit: it whispers and lies.
 
-| Nature | Meaning | Ouija phrases | Spirit box words |
-| --- | --- | --- | --- |
-| Objects | It reaches for things left lying around | `do not drop it`, `hands`, `i will take it`, `lying unwatched`, `what is left is mine` | `fingers`, `mine`, `take` |
-| Objects | It slams doors | `shut it`, `slam`, `get out`, `creak and crash`, `the door is closed` | `leave`, `shut`, `slam` |
-| Objects | It meddles with the world around you | `i will move it`, `rearrange`, `not there`, `nothing is in its place`, `i will touch` | `move`, `change`, `mine` |
-| — | It guards what is in chests | `open it`, `lid`, `not yours`, `i guard`, `what lies inside` | `open`, `mine`, `lid` |
-| Darkness | It feeds on light | `put it out`, `hungry... light`, `darker`, `light tastes good`, `snuff the flame` | `dark`, `hungry`, `out` |
-| Darkness | It chills the air around you | `cold`, `your breath shows`, `frost`, `you will freeze`, `the air grows cold` | `cold`, `chill`, `frost` |
-| — | It stalks at night | `behind you`, `at night`, `i follow`, `do not turn around`, `watching` | `behind`, `night`, `follow` |
-| — | It lives in the dark | `below`, `black`, `deep`, `darkness is home`, `hiding` | `below`, `black`, `deep` |
-| Malice | It wants revenge | `you will pay`, `blood for blood`, `you`, `revenge`, `debt` | `pay`, `blood`, `you` |
-| — | It walks in the rain | `wet`, `drip drip`, `the storm comes`, `steps in puddles`, `the sky weeps` | `wet`, `drip`, `storm` |
-| — | It calls from below | `down`, `come here`, `under the earth`, `calling`, `dig` | `down`, `come`, `under` |
-| — | It holds a grudge | `i remember`, `why`, `you killed`, `never forgiven`, `old grudge` | `remember`, `kill`, `why` |
-| Deceit | It whispers | `listen`, `come closer`, `hush`, `in your ear`, `a secret` | `listen`, `closer`, `hush` |
-| — | It feeds on noise | `loud`, `louder`, `noise`, `make more noise`, `silence starves` | `loud`, `louder`, `noise` |
-| — | It steals your sleep | `wake up`, `dream`, `bed`, `do not sleep`, `your sleep is mine` | `wake`, `dream`, `bed` |
-| Deceit | It lies | `yes`, `no`, `maybe`, `it is true`, `do not believe` | `yes`, `no`, `maybe` |
+**Habits**, spelled by the ouija board:
+
+| Nature | Meaning | Ouija phrases |
+| --- | --- | --- |
+| Objects | It reaches for things left lying around | `do not drop it`, `hands`, `i will take it`, `lying unwatched`, `what is left is mine` |
+| Objects | It slams doors | `shut it`, `slam`, `get out`, `creak and crash`, `the door is closed` |
+| Objects | It meddles with the world around you | `i will move it`, `rearrange`, `not there`, `nothing is in its place`, `i will touch` |
+| Darkness | It feeds on light | `put it out`, `hungry... light`, `darker`, `light tastes good`, `snuff the flame` |
+| Darkness | It chills the air around you | `cold`, `your breath shows`, `frost`, `you will freeze`, `the air grows cold` |
+| Malice | It wants revenge | `you will pay`, `blood for blood`, `you`, `revenge`, `debt` |
+| Deceit | It whispers | `listen`, `come closer`, `hush`, `in your ear`, `a secret` |
+| Deceit | It lies | `yes`, `no`, `maybe`, `it is true`, `do not believe` |
+
+**Conditions**, shown by the ash beside a print, in these words (they point to no nature):
+
+- It walks in the rain.
+- It stalks at night.
+- It lives in the dark.
+- It feeds on noise.
+- It guards what is in chests.
+- It steals your sleep.
+- It calls from below.
+- It holds a grudge.
+- It haunts the deep places.
+- It lurks in the water.
+
+**Leanings**, spoken by the spirit box:
+
+| Kind | Meaning | Spirit box words |
+| --- | --- | --- |
+| Fear | It fears fire. | `fire`, `burn`, `no` |
+| Fear | It fears cats. | `cat`, `eyes`, `no` |
+| Fear | It fears bells. | `bell`, `hush`, `no` |
+| Fear | It fears running water. | `river`, `cross`, `no` |
+| Desire | It wants milk. | `milk`, `thirsty`, `give` |
+| Desire | It wants bread. | `bread`, `hungry`, `give` |
+| Desire | It wants sweets. | `sweet`, `give`, `honey` |
+| Hate | It hates lanterns. | `lantern`, `hate`, `out` |
+| Hate | It hates bells. | `bell`, `stop`, `hate` |
+| Hate | It hates music. | `music`, `stop`, `hate` |
 
 What to do with it:
 
-- A spirit has 1 to 4 habits, at most one of them foreign to its nature, and 1 or 2 conditions. Its nature is the one most of its habits point to; conditions never change it.
-- One note decides nothing. Gather several: true traits repeat, false ones are scattered over the rest.
-- Prints show the type of spirit, not its nature. Read the nature from habits before putting an offering on the [altar](#altar): the wrong nature is costly.
+- A spirit born now has 3 or 4 habits, at most one of them foreign to its nature, 1 or 2 conditions, one desire and one fear or hate. Its nature is the one most of its habits point to; conditions and leanings never change it.
+- One note decides nothing. Gather several: true traits repeat, false ones are scattered over the rest. A lie always stays within the tool's own kind.
+- Prints show the type of spirit, not its nature. Read the nature from the board's habits before putting an offering on the [altar](#altar): the wrong nature is costly.
 - If the nature will not add up, there is another way: the [gravestone](#gravestone) names the thing the spirit wants back, and no guessing is needed.
 
 ## Spirit Candle

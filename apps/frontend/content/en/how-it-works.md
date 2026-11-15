@@ -170,7 +170,7 @@ Every spirit born now also has one desire and one fear or hate. Spirits born bef
 
 ### Hidden habit
 
-A spirit with two or more habits keeps one of them hidden: no camera, spirit box or ouija board names it while the player's sanity is above 35%. A shaken player, below 35% sanity, can learn it; so can anyone once the spirit has evolved.
+A spirit with two or more habits keeps one of them hidden: no camera or ouija board names it while the player's sanity is above 35%. A shaken player, below 35% sanity, can learn it; so can anyone once the spirit has evolved.
 
 ### Veils
 
