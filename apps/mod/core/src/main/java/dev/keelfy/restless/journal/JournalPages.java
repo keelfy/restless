@@ -4,7 +4,6 @@ import dev.keelfy.restless.journal.Notebook.Chapter;
 import dev.keelfy.restless.journal.Notebook.Kind;
 import dev.keelfy.restless.journal.Notebook.Note;
 import dev.keelfy.restless.photo.Picture;
-import dev.keelfy.restless.spirit.Spirits;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
 import java.util.ArrayList;
@@ -263,9 +262,7 @@ public final class JournalPages {
         kinds.forEach((kind, grown) -> {
             List<Entry> entries = new ArrayList<>();
             entries.add(Entry.plain(Component.translatable("journal.restless.bestiary." + kind)));
-            Spirits.byId(kind)
-                    .ifPresent(type -> entries.add(Entry.plain(Component.translatable(
-                            "journal.restless.form." + type.form().name().toLowerCase(Locale.ROOT)))));
+            // The form comes from how the spirit died, which only its grave tells, so a photo of its kind names none.
             entries.add(Entry.plain(Component.translatable("journal.restless.met." + kind)));
             if (grown) {
                 entries.add(Entry.plain(Component.translatable(
@@ -306,7 +303,11 @@ public final class JournalPages {
             return Component.translatable("journal.restless.note.evolved_unknown");
         }
         MutableComponent line = Component.translatable(
-                "journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT),
+                "journal.restless.note." + note.kind().name().toLowerCase(Locale.ROOT)
+                        + note.tag()
+                                .filter(t -> note.kind() == Kind.GRAVE)
+                                .map(t -> "." + t)
+                                .orElse(""),
                 note.args().toArray());
         return note.kind().reliable
                 ? line

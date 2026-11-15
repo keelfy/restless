@@ -18,3 +18,12 @@ Backlog of ideas, added by hand. Move an idea out (or delete it) once it is impl
   - Holy water (T5) ends only `Scheduler` steps of a malice spirit, not `Restore` timers or spawned entities.
   - GameTests are order/placement flaky: `telekinesis_amulet_pulls_experience`, `signature_revenant_tally` and
     `signature_revenant_rises` fail on some runs and pass on others.
+  - Grave bones (I3) are laid once: if the bones item is destroyed, a REMAINS grave stays at stage 2 for good. A
+    reading could lay them again when no copy is found in the world.
+  - A grave's letter (I3) goes to any villager, not one in the nearest village.
+  - `HauntData` marks (`state/Marks`: appeasements, death form, merged nature) stay saved after their spirit is gone;
+    prune them with the spirit when it is banished, laid or removed.
+  - `LangTest` did not catch a lang file with a doubled key that broke the JSON (fixed in 50b6a1a); a strict parse
+    in the test would.
+  - Interrogation (R7) takes one question per call; a second question for more sanity, or a question about the
+    fear and the hate, would deepen it.

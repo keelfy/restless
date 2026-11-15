@@ -229,7 +229,9 @@
     "desire_radius": 3,
     "desire_period_ticks": 20,
     "desire_cooldown_ticks": 6000,
-    "desire_calm": 0.25,
+    "desire_calm": 0.1,
+    "appease_anger": 0.3,
+    "appease_cost": 1,
     "hate_cooldown_ticks": 1200,
     "hate_anger": 0.1
   },
@@ -278,6 +280,7 @@
     "answer_chance": 0.6,
     "echo_chance": 0.3,
     "glitch_chance": 0.35,
+    "story_chance": 0.4,
     "questions": {
       "count": {
         "heard": [
@@ -429,6 +432,42 @@
     "lie_chance": 0.5,
     "preferred_weight": 3
   },
+  "merging": {
+    "days": 15,
+    "check_ticks": 1200
+  },
+  "interrogation": {
+    "sanity_cost": 0.2,
+    "questions": {
+      "habit": [
+        "do",
+        "does",
+        "doing",
+        "habit*",
+        "делаешь",
+        "делает",
+        "повадк*"
+      ],
+      "desire": [
+        "want",
+        "wants",
+        "desire*",
+        "wish",
+        "хочешь",
+        "хочет",
+        "желаешь",
+        "желани*"
+      ],
+      "grave": [
+        "grave",
+        "buried",
+        "bones",
+        "могил*",
+        "похорон*",
+        "кост*"
+      ]
+    }
+  },
   "ritual": {
     "candles": 4,
     "candle_radius": 3,
@@ -478,6 +517,15 @@
     "bless_ticks": 12000,
     "blight_reward_spots": 64
   },
+  "blessing": {
+    "candles": 8,
+    "waves": 12,
+    "snuff_chance": 0.25,
+    "ticks": 168000,
+    "radius": 16,
+    "return_anger": 0.2,
+    "check_ticks": 20
+  },
   "charms": {
     "face_ticks": 500,
     "face_noise_radius": 6,
@@ -526,6 +574,37 @@
     "max_distance": 400,
     "essence": 2,
     "experience": 30,
+    "remains_min_distance": 50,
+    "remains_max_distance": 150,
+    "remains_hint_round": 10,
+    "remains_pace": 0.5,
+    "letter_radius": 4,
+    "killer_radius": 8,
+    "killer_default": "minecraft:zombie",
+    "killer_mobs": {
+      "was_shot_by_a_skeleton": "minecraft:skeleton",
+      "was_slain_by_a_zombie_horde": "minecraft:zombie",
+      "was_blown_up_by_a_creeper": "minecraft:creeper"
+    },
+    "quests": {
+      "item": 4,
+      "remains": 2,
+      "letter": 2,
+      "killer": 1,
+      "rival": 1
+    },
+    "cause_chance": 0.6,
+    "cause_quests": {
+      "starved_in_a_deep_mine": "remains",
+      "drowned_in_a_flooded_cave": "remains",
+      "suffocated_in_a_collapsed_tunnel": "remains",
+      "was_lost_in_the_nether": "letter",
+      "never_found_the_way_back_to_bed": "letter",
+      "was_shot_by_a_skeleton": "killer",
+      "was_slain_by_a_zombie_horde": "killer",
+      "was_blown_up_by_a_creeper": "killer",
+      "was_pushed_off_by_a_friend": "rival"
+    },
     "wants": [
       "minecraft:golden_apple",
       "minecraft:diamond",
@@ -608,6 +687,10 @@
     "step_ticks": 4,
     "warning_ticks": 60,
     "lean": 0.5
+  },
+  "body": {
+    "step_ticks": 4,
+    "radius": 32
   },
   "calendar": {
     "moon_power": 0.2,

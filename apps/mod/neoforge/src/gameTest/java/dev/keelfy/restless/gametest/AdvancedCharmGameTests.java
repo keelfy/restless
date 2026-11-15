@@ -313,7 +313,7 @@ final class AdvancedCharmGameTests {
             for (int i = 0; i < 300; i++) {
                 check(
                         helper,
-                        Clues.reveal(liar, Traits.all(), Clue.VOICE, new Random(i), true)
+                        Clues.reveal(liar, Traits.all(), Clue.PLANCHETTE, new Random(i), true)
                                 .map(liar::contains)
                                 .orElse(false),
                         "an honest reading must name the spirit's own trait");

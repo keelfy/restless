@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -30,13 +31,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Unfinished business. Every spirit a player in the overworld can sense gets a grave somewhere around them, built when
@@ -71,8 +76,12 @@ public final class Graves {
                 data.putGrave(entry.getKey(), null); // banished or removed: the stone stays, quiet
             } else {
                 build(overworld, data, entry.getKey(), entry.getValue());
+                Optional.ofNullable(data.graves().get(entry.getKey()))
+                        .ifPresent(grave -> data.find(entry.getKey())
+                                .ifPresent(spirit -> Remains.tick(overworld, data, spirit, grave)));
             }
         }
+        Letter.tick(overworld, data);
     }
 
     private static BlockPos column(BlockPos from, Config.Section config, RandomSource random) {
@@ -100,7 +109,7 @@ public final class Graves {
             return;
         }
         level.setBlock(top, Content.GRAVESTONE.get().defaultBlockState(), 3);
-        data.putGrave(spirit, new HauntData.Grave(top, true));
+        data.putGrave(spirit, new HauntData.Grave(top, true, grave.stage(), grave.mark()));
     }
 
     /** What the spirit wants back, the same for its whole life. */
@@ -108,6 +117,21 @@ public final class Graves {
     public static Item wanted(long seed) {
         List<String> wants = Config.section("grave").texts("wants");
         String id = wants.get(new Random(seed ^ SALT).nextInt(wants.size()));
+        return BuiltInRegistries.ITEM.getOptional(Identifier.parse(id)).orElse(Items.BONE);
+    }
+
+    /**
+     * What this spirit wants back: for a spirit whose form comes from its death
+     * ({@link dev.keelfy.restless.state.Marks#deathForm}) one thing of the family its cause names
+     * ({@link Story#wants}), for an older one {@link #wanted(long)}.
+     */
+    @SuppressWarnings("java:S2245") // Seeded so the wish is reproducible; not security-sensitive.
+    public static Item wanted(HauntData data, HauntData.Haunting spirit) {
+        if (!data.marks(spirit.uuid()).deathForm()) {
+            return wanted(spirit.seed());
+        }
+        List<String> wants = Story.of(spirit.seed()).wants();
+        String id = wants.get(new Random(spirit.seed() ^ SALT).nextInt(wants.size()));
         return BuiltInRegistries.ITEM.getOptional(Identifier.parse(id)).orElse(Items.BONE);
     }
 
@@ -125,8 +149,8 @@ public final class Graves {
     }
 
     /**
-     * A player at a grave holding {@code held}: the wanted thing lays the spirit to rest, anything else reads the
-     * stone. @return whether it took the item
+     * A player at a grave holding {@code held}: once its unfinished business ({@link Quest}) is done the spirit is laid
+     * to rest, otherwise the stone is read and the business begins. @return whether it took the item
      */
     public static boolean visit(ServerPlayer player, BlockPos pos, ItemStack held) {
         HauntData data = HauntData.get(player.level().getServer());
@@ -136,21 +160,75 @@ public final class Graves {
             return false;
         }
         HauntData.Haunting spirit = buried.get();
+        HauntData.Grave grave = data.graves().get(spirit.uuid());
         Story story = Story.of(spirit.seed());
-        Item wanted = wanted(spirit.seed());
-        if (held.is(wanted)) {
+        Quest quest = Quest.of(spirit.seed());
+        boolean took = switch (quest) {
+            case ITEM -> held.is(wanted(data, spirit));
+            case REMAINS -> Remains.is(held, spirit.uuid());
+            case LETTER, KILLER, RIVAL -> false;
+        };
+        if (took || done(data, quest, grave)) {
             rest(player, pos, spirit, story);
-            return true;
+            return took;
         }
-        Component thing = wanted.getDefaultInstance().getHoverName();
+        Component want = switch (quest) {
+            case ITEM -> wanted(data, spirit).getDefaultInstance().getHoverName();
+            case RIVAL -> Rival.read(player, data, spirit, grave);
+            case REMAINS -> Remains.read(player, data, spirit, grave);
+            case LETTER -> Letter.read(player, data, spirit, grave);
+            case KILLER -> Killer.read(player, data, spirit, grave);
+        };
         player.sendSystemMessage(Component.translatable(
-                "message.restless.epitaph",
+                quest == Quest.ITEM ? "message.restless.epitaph" : "message.restless.epitaph." + quest.id(),
                 story.name(),
                 story.daysDead(),
                 Component.translatable(story.causeKey()),
-                thing));
-        Journal.note(player, Notebook.Kind.GRAVE, spirit, story.name(), pos.getX(), pos.getZ(), thing);
+                want));
+        Journal.tagged(
+                player,
+                Notebook.Kind.GRAVE,
+                spirit,
+                quest == Quest.ITEM ? null : quest.id(),
+                story.name(),
+                pos.getX(),
+                pos.getZ(),
+                want);
         return false;
+    }
+
+    /** A named killer died, see {@link Killer}. */
+    public static void killed(@Nullable Entity killer, LivingEntity dead) {
+        if (dead.level() instanceof ServerLevel level) {
+            Killer.killed(HauntData.get(level.getServer()), killer, dead);
+        }
+    }
+
+    /** How fast the spirit acts for this player: faster while they carry its bones. */
+    public static double pace(ServerPlayer player, HauntData.Haunting spirit) {
+        return Remains.pace(player, spirit.uuid());
+    }
+
+    /** Marks a stack with the spirit it belongs to. */
+    static ItemStack tag(ItemStack stack, String key, UUID spirit) {
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.EMPTY.update(tag -> tag.putString(key, spirit.toString())));
+        return stack;
+    }
+
+    static boolean tagged(ItemStack stack, String key, UUID spirit) {
+        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+                .copyTag()
+                .getStringOr(key, "")
+                .equals(spirit.toString());
+    }
+
+    /** Whether the business is done and the next visit lays the spirit to rest. */
+    private static boolean done(HauntData data, Quest quest, HauntData.Grave grave) {
+        return switch (quest) {
+            case ITEM, REMAINS -> false; // brought to the grave in hand
+            case LETTER, KILLER -> grave.stage() >= 2;
+            case RIVAL -> Rival.gone(data, grave);
+        };
     }
 
     private static void rest(ServerPlayer player, BlockPos pos, HauntData.Haunting spirit, Story story) {

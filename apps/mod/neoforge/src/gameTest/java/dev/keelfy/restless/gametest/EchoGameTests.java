@@ -6,6 +6,7 @@ import dev.keelfy.restless.content.Content;
 import dev.keelfy.restless.content.block.Altar;
 import dev.keelfy.restless.haunt.Ticks;
 import dev.keelfy.restless.spirit.land.Graves;
+import dev.keelfy.restless.spirit.land.Quest;
 import dev.keelfy.restless.spirit.life.Births;
 import dev.keelfy.restless.spirit.life.Echoes;
 import dev.keelfy.restless.state.HauntData;
@@ -111,7 +112,18 @@ final class EchoGameTests {
         tests.put("echo_none_after_grave", helper -> {
             ServerPlayer player = HauntEventGameTests.connected(helper);
             HauntData data = HauntData.get(helper.getLevel().getServer());
-            HauntData.Haunting spirit = spirit(UUID.randomUUID(), "shade");
+            // A seed whose grave asks for its lost thing (see Quest).
+            HauntData.Haunting spirit = new HauntData.Haunting(
+                    UUID.randomUUID(),
+                    "shade",
+                    GraveGameTests.spirit(Quest.ITEM).seed(),
+                    IRON_TRAITS,
+                    0L,
+                    0.0,
+                    Long.MAX_VALUE / 2,
+                    false,
+                    0,
+                    0L);
             data.put(player.getUUID(), List.of(spirit));
             BlockPos grave = helper.absolutePos(new BlockPos(1, 2, 1));
             data.putGrave(spirit.uuid(), new HauntData.Grave(grave, true));

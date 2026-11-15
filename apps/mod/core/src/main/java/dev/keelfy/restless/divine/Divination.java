@@ -12,6 +12,7 @@ import dev.keelfy.restless.photo.DevelopPayload;
 import dev.keelfy.restless.photo.ShutterPayload;
 import dev.keelfy.restless.sanity.Sanity;
 import dev.keelfy.restless.spirit.Clue;
+import dev.keelfy.restless.spirit.Story;
 import dev.keelfy.restless.spirit.Trait;
 import dev.keelfy.restless.spirit.Traits;
 import dev.keelfy.restless.spirit.land.Graves;
@@ -39,6 +40,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Asking the spirits: the camera, the spirit box and the ouija board each read one clue off the spirits around the
@@ -59,9 +61,25 @@ public final class Divination {
     private static final Map<UUID, Long> ASKED = Session.SERVER.keep(new java.util.HashMap<>());
 
     /**
-     * What a clue showed: the spirit it came from and the trait it named, which for a liar may not be the spirit's own.
+     * What a clue showed: the spirit it came from and the trait it named, which for a liar may not be the spirit's own;
+     * {@code null} when the spirit box speaks of how the spirit died instead (see {@link #words}).
      */
-    public record Reading(Sense.Spirit spirit, Trait trait, Random random) {}
+    public record Reading(Sense.Spirit spirit, @Nullable Trait trait, Random random) {
+        /** What the spirit box may say of this reading: the trait's words, or the words of the spirit's death. */
+        public List<String> words() {
+            return trait != null
+                    ? trait.words()
+                    : Config.section("story")
+                            .section("words")
+                            .texts(Story.of(spirit.haunting().seed()).cause());
+        }
+
+        /** One of {@link #words}, picked by the reading's own random. */
+        public String word() {
+            List<String> words = words();
+            return words.get(random.nextInt(words.size()));
+        }
+    }
 
     private Divination() {}
 
@@ -82,6 +100,13 @@ public final class Divination {
             // On the day of the dead no tool lies, and the eye keeps its rest.
             boolean quiet = Calendar.today(player.level().getServer()).dayOfTheDead();
             Optional<Trait> trait = Clues.reveal(owned, catalog, clue, random, honest || quiet);
+            // The spirit box also tells how the spirit died, and only that of a spirit that wants and fears nothing.
+            if (clue == Clue.VOICE
+                    && (trait.isEmpty()
+                            || random.nextDouble()
+                                    < Config.section("spirit_box").num("story_chance"))) {
+                return Optional.of(new Reading(spirit, null, random));
+            }
             if (trait.isPresent()) {
                 if (honest && !quiet) {
                     Advanced.truthSpent(player);
@@ -235,8 +260,7 @@ public final class Divination {
             return;
         }
         Optional<Reading> reading = read(player, Clue.VOICE);
-        Optional<String> word = reading.map(
-                r -> r.trait().words().get(r.random().nextInt(r.trait().words().size())));
+        Optional<String> word = reading.map(Reading::word);
         Optional<Reply> reply = word.map(w -> Reply.of(heard, w, reading.get().random()));
         Component answer = reply.<Component>map(r -> Component.translatable("message.restless.spirit_box", r.text()))
                 .orElse(Component.translatable("message.restless.spirit_box_static"));

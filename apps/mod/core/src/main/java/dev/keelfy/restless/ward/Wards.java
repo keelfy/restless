@@ -37,6 +37,9 @@ public final class Wards {
     private Wards() {}
 
     public static boolean stops(ServerPlayer player, HauntEvent event) {
+        if (Blessing.quiet(player)) {
+            return true;
+        }
         ServerLevel level = player.level();
         List<BlockPos> ring = ring(level, player.blockPosition());
         if (!ring.isEmpty()) {
