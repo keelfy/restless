@@ -201,7 +201,7 @@ Sections show once they have something to say:
 | Spirits | a dossier per spirit you have met, in order: met means any clue came from it. Until photographed it is an *Unknown spirit*; the photo names its type, its grave its name. Notes under it, and the latest photo. When a spirit evolves, its dossier says so: it names the grown type if you have photographed the spirit, otherwise only that it most likely evolved |
 | Archive | spirits you banished and filed |
 | Loose notes | what was seen of nobody in particular, such as an omen dream |
-| Bestiary | a card per type you have photographed: what it does, the **form** it takes at the altar, where it is met |
+| Bestiary | a card per type you have photographed: what it does, where it is met |
 | Charms | a page per [charm](/en/items/charms) and [advanced charm](/en/items/advanced) you can read about: what it does and its recipe. It opens once the journal knows the spirit of every essence in the recipe (photographed or banished); an advanced charm also needs its base charm's page |
 | Relics | a page per [relic](/en/items/relics), opened the same way: when all three spirits it is made of are known |
 | Recipes | the recipes in your recipe book that make an item of the mod: the ones diary pages taught you |
@@ -240,7 +240,15 @@ Use an offering on the altar. It is of one **nature**, which decides which spiri
 
 Mirror: a glass pane between 2 iron nuggets, in one row. A spirit may mark it so the next time you lay it down it shows a spirit's name. Held in the hand, it shows the fake blocks and the doubles of a Deceit spirit for what they are, see [Weakness](/en/how-it-works#weakness).
 
-Each type takes one form, shown in its bestiary card:
+For a spirit born now, the form comes from the cause of its death, which its [gravestone](#gravestone) tells: four causes for each form. A wrong form still works, but the fury runs 6 waves longer.
+
+| Form | Causes |
+| --- | --- |
+| Whole | starved in a deep mine, drowned in a flooded cave, fell from a high place, never found the way back to bed |
+| Bit | fell into lava, was blown up by a creeper, burned down with the house, was slain by a zombie horde |
+| Crafted | was shot by a skeleton, was lost in the Nether, suffocated in a collapsed tunnel, was pushed off by a friend |
+
+A spirit born before this keeps the form of its type, as it always did (the bestiary card no longer names it):
 
 | Form | Types |
 | --- | --- |
@@ -261,7 +269,7 @@ Then it runs in waves of 5 seconds, through four phases:
 
 1. **The call**, 2 waves. The spirit comes in and does nothing yet.
 2. **The bargain**, 2 waves. The spirit names what it wants: one of the things it [desires](/en/how-it-works#leanings), any of which it takes, or for a spirit with no desire the thing its [grave](#gravestone) asks for. Throw it onto the altar before the bargain is over and the ritual ends: the spirit takes one of it and the offering, grows 0.3 calmer and **stays**. No essence.
-3. **The fury**, 6 waves. A form the type does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
+3. **The fury**, 6 waves. A form the spirit does not take adds 6 waves; a grown spirit adds 4. Each wave, the spirit fights back:
    - 25%: it snuffs one candle. Relight it before the next wave.
    - 50%: it runs one of its events on you.
    - 35%: it acts by its nature, whatever the censer does. Objects: it flings the offering off the altar; use the same offering on the altar again before the next wave, or the ritual fails. Darkness: it puts out every torch and lantern within 12 blocks for 30 seconds (the ritual's candles stay lit). Malice: it strikes you for a heart and a half of damage, never leaving you below the safe health. Deceit: it shows two of your candles as dark, but only to you; they still burn, so do not relight them.
@@ -332,9 +340,26 @@ A spirit's fear works like a ward: its events do not run on a player standing ne
 
 ## Gravestone
 
-Not crafted. Every spirit you can sense gets a grave in the overworld, 100 to 400 blocks from you, built when its chunk first loads. Use the stone to read it: the name, days dead, the cause, and what the spirit **wants back**. Use it holding that item and the spirit is laid to rest: **2 essences** and 30 experience, no anger, and the spirit is gone. The item is spent. If someone else lays your personal spirit to rest, your journal notes it, even while you are away.
+Not crafted. Every spirit you can sense gets a grave in the overworld, 100 to 400 blocks from you, built when its chunk first loads. Use the stone to read it: the name, days dead, the cause (its epitaph, which also gives the [form](#the-offering) of the offering), and what the spirit **wants back**. Use it holding that item and the spirit is laid to rest: **2 essences** and 30 experience, no anger, and the spirit is gone. The item is spent. If someone else lays your personal spirit to rest, your journal notes it, even while you are away.
 
-What a spirit wants is fixed for its life, and is one of: golden apple, diamond, compass, clock, name tag, jukebox, poppy, cake, iron pickaxe, lantern, emerald, spyglass. Breaking a gravestone angers your spirits (0.2).
+What a spirit wants is fixed for its life. For a spirit born now it is one thing from the family its cause names, picked by its seed; the cause also gives the form of its offering:
+
+| Cause | Form | Wants |
+| --- | --- | --- |
+| fell into lava | Bit | water bucket or obsidian |
+| starved in a deep mine | Whole | bread or cooked beef |
+| was blown up by a creeper | Bit | shield or gunpowder |
+| drowned in a flooded cave | Whole | oak boat or turtle helmet |
+| was shot by a skeleton | Crafted | shield or bow |
+| fell from a high place | Whole | feather or water bucket |
+| burned down with the house | Bit | oak door or water bucket |
+| was lost in the Nether | Crafted | compass or gold ingot |
+| suffocated in a collapsed tunnel | Crafted | iron pickaxe or torch |
+| was slain by a zombie horde | Bit | iron sword or golden apple |
+| never found the way back to bed | Whole | red bed or compass |
+| was pushed off by a friend | Crafted | name tag or poppy |
+
+A spirit born before this wants one of: golden apple, diamond, compass, clock, name tag, jukebox, poppy, cake, iron pickaxe, lantern, emerald, spyglass. Breaking a gravestone angers your spirits (0.2).
 
 ## Torn Page
 

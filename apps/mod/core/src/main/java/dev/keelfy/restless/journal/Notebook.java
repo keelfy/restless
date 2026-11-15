@@ -150,7 +150,7 @@ public record Notebook(
         /** The first clue: reading clues, and that some lie. */
         CLUES(4),
         /** The first photo, which names a type: natures, forms, the altar and the ritual. */
-        WEAKNESS(5),
+        WEAKNESS(6),
         /** The first grave or word of one: unfinished business. */
         GRAVES(2),
         /** The first time the edges darken. */
